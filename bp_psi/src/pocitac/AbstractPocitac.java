@@ -11,6 +11,11 @@ package pocitac;
  */
 
 public class AbstractPocitac {
+    Komunikace komunikace;
+    ParserPrikazu parser;
 
+    public AbstractPocitac(){
+
+    }
 
 }
