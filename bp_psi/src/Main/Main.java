@@ -1,6 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Projekt založen v pondělí 4.1.2010
  */
 
 package Main;
