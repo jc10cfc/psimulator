@@ -11,7 +11,16 @@ package datoveStruktury;
  */
 public class IpAdresa {
 
-    private int adresa;
+    private int[] adresa;
+
+    // muze se hodit pro testovani
+    public IpAdresa() {
+        adresa = new int[4];
+        adresa[0] = 6;
+        adresa[1] = 7;
+        adresa[2] = 8;
+        adresa[3] = 9;
+    }
 
     /**
      * Nastavi adresu na pozadovanou hodnotu. Predpoklada string s IP bez mezer na zacatku nebo na konci.
@@ -20,7 +29,19 @@ public class IpAdresa {
     public void nastavIP(String adr){
         int[]bajty=new int[4];
         int posT=adr.indexOf(".");
-        String bajt
+        //String bajt
+        
+        // kontrola
+        if (! adr.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")) {
+            System.out.println("chyba | vyjimka");
+        }
+
+        
+        
+
     }
 
+    
+
 }
+
