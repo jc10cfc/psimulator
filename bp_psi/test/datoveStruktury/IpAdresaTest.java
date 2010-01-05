@@ -37,6 +37,14 @@ public class IpAdresaTest {
     public void tearDown() {
     }
 
+    private void vypisIP(IpAdresa adr) {
+        int[]ip = adr.dejIP();
+        for (int i = 0; i < 4; i++) {
+            System.out.print(ip[i]+" ");
+        }
+        System.out.println("");
+    }
+
     /**
      * Test of nastavIP method, of class IpAdresa.
      */
@@ -46,9 +54,7 @@ public class IpAdresaTest {
         String adr = "147.32.125.138";
         IpAdresa ip = new IpAdresa();
         ip.nastavIP(adr);
-
-        
-        
+        vypisIP(ip);
     }
 
 }
