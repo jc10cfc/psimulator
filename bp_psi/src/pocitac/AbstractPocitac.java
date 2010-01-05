@@ -15,6 +15,7 @@ public class AbstractPocitac {
     ParserPrikazu parser;
 
     public AbstractPocitac(){
+        komunikace=new Komunikace(3567, this);
 
     }
 

@@ -28,8 +28,9 @@ public class Komunikace extends Thread
 
     public Komunikace(int cisloPortu, AbstractPocitac pc){
         this.cisloPortu=cisloPortu;
-        this.start(); //tohle casem spusti metodu run()
         this.pc=pc;
+        this.start(); //tohle casem spusti metodu run()
+        
     }
 
     @Override
@@ -48,18 +49,19 @@ public class Komunikace extends Thread
                         //ale nemelo stat. Dalo by se to spravit, kdyby promenna ss byla deklarovana az v tyhle metode
                         //nebo kdyby byla final, to by se ale pak zase ten socket nedal vytvorit.
                     Socket s = ss.accept(); // wait for client call
-                    Konsole v = new Konsole(s,pc); // create another clerk
+                    Konsole v = new Konsole(s,pc,seznamSpojeni.size()); // create another clerk
+                    seznamSpojeni.add(v);
                     System.out.println("akceptoval jsem vlakno c. " + (seznamSpojeni.size()-1) + " "
                             + s.getInetAddress() + ":" + s.getPort());
                 }
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         try {
             ss.close();
         } catch (IOException ex) {
-
+            ex.printStackTrace();
         }
 
     }
