@@ -22,6 +22,7 @@ public class Konsole extends Thread{
     AbstractPocitac pocitac;
     ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
+    String prompt="dsy@dsnlab1:~$ ";
 
     public Konsole(Socket s,AbstractPocitac pc, int cislo){
         this.s=s;
@@ -33,7 +34,7 @@ public class Konsole extends Thread{
 
 
     /**
-     * metoda nacita z proudu dokud neprijde \ret\n
+     * metoda nacita z proudu dokud neprijde \r\n
      * Prevzata z KarelServer, ale pak jsem ji stejne celou prepsal.
      * @param in
      * @return celej radek do \r\n jako string. kterej to \r\n uz ale neobsahuje
@@ -71,6 +72,11 @@ public class Konsole extends Thread{
         System.out.println("(socket c. "+cislo+" posilam): "+ret);
     }
 
+    public void vypisPrompt(OutputStream out) throws IOException{
+        out.write((prompt).getBytes());
+        //System.out.println("(socket c. "+cislo+" posilam): "+ret);
+    }
+
     @Override
     public void run(){
         OutputStream out = null;
@@ -83,8 +89,8 @@ public class Konsole extends Thread{
             in = new BufferedReader(new InputStreamReader(s.getInputStream( ) ) );
             out = s.getOutputStream();
             ukoncit=false;
-            posli(out,"prompt");
             while(! ukoncit ) {
+                vypisPrompt(out);
                 radek = ctiRadek(in);
                 System.out.println("(klient c. "+cislo+" poslal): " + radek);
                 System.out.println("dylka predchoziho radku: "+radek.length());
