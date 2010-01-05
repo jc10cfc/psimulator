@@ -57,4 +57,35 @@ public class IpAdresaTest {
         vypisIP(ip);
     }
 
+
+    @Test
+    public void testIPMaska(){
+        System.out.println("------------------------------------------");
+        IpAdresa adr=new IpAdresa();
+
+        adr.nastavMasku(24);
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"255.255.255.0");
+
+        adr.nastavMasku(25);
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"255.255.255.128");
+
+        adr.nastavMasku(23);
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"255.255.254.0");
+
+        adr.nastavMasku(0);
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"0.0.0.0");
+
+        adr.nastavMasku(32);
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"255.255.255.255");
+        
+        adr.nastavMasku(8);
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"255.0.0.0");
+    }
+
 }

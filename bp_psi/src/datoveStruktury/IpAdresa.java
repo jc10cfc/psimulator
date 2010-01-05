@@ -11,7 +11,9 @@ package datoveStruktury;
 public class IpAdresa {
 
     private int[] adresa;
+    private int maska; //dal bych ji sem jako pocet bytu cisla site
     // muze se hodit pro testovani
+
     public IpAdresa() {
         adresa = new int[4];
         adresa[0] = 6;
@@ -22,6 +24,39 @@ public class IpAdresa {
 
     public int[] dejIP() {
         return adresa;
+    }
+
+    /**
+     * Vraci ip adresu jako string
+     * @return
+     */
+    public String vypisIP(){
+        return (adresa[0]+"."+adresa[1]+"."+adresa[2]+"."+adresa[3]);
+    }
+
+    public void nastavMasku(int maska){
+        this.maska=maska;
+    }
+
+    private int mocninaDvojky(int naKolikatou){
+        int c=1;
+        for(int i=0;i<naKolikatou;i++){
+            c=c*2;
+        }
+        return c;
+    }
+
+    public String vypisMasku(){
+        int [] pole = new int[4];
+        int i;
+        for(i=0;i<maska/8;i++){ //to, co je cely plny se vyplni.
+            pole[i]=255;
+        }
+        int m = maska % 8;
+        if(i<4 && m!=0){
+            pole[i]=256-mocninaDvojky(8-m);
+        }
+        return (pole[0]+"."+pole[1]+"."+pole[2]+"."+pole[3]);
     }
 
     /**
