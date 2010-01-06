@@ -6,7 +6,9 @@
 package datoveStruktury;
 
 /**
- *
+ * Hele, clovece, premejslel jsem dneska, jak dodelat ty metody, ktery budou pocitat cislo site a tak
+ * a nakonec jsem tu implementaci zmenil na jeden integer, cislo site a pocitace a podobny veci se pak pocitaj
+ * lip.
  * @author neiss
  */
 public class AlternativniIpAdresa {
@@ -14,7 +16,9 @@ public class AlternativniIpAdresa {
     int adresa; //32 bitu ip adresy, zachazi se s tim pomoci bitovejch operaci
     int maska; //stejne jako skutecna maska, tzn. 32 bitu
 
+    public AlternativniIpAdresa(){
 
+    }
 
     public String vypisIP(){
 //        System.out.println("vypisuji: adresa="+adresa);
@@ -66,14 +70,28 @@ public class AlternativniIpAdresa {
 
     }
 
-    public String cisloSite(){
+
+    public int cisloSite(){
+        return maska & adresa;
+    }
+
+    public int cisloPocitaceVSiti(){
+        return (~ maska) & adresa;
+    }
+
+    public String vypisCisloSite(){
         int cs=maska & adresa;
         return vypisPole(prevedNaPole(cs));
     }
 
-    public String cisloPocitaceVSiti(){
+    public String vypisCisloPocitaceVSiti(){
         int cs=(~ maska) & adresa;
         return vypisPole(prevedNaPole(cs));
+    }
+
+    public boolean jeVeStejnySiti(AlternativniIpAdresa jina){
+        if (this.cisloSite()==jina.cisloSite()) return true;
+        return false;
     }
 
     int[] prevedNaPole(int cislo){ //prevadi masku nebo adresu do citelny podoby
@@ -81,8 +99,7 @@ public class AlternativniIpAdresa {
         int tmp;
         for(int i=0;i<4;i++){
             tmp= cislo & ( 255 << (3-i)*8);
-            pole[i]=tmp >> ((3-i)*8);
-            if(pole[i]<0)pole[i]=256+pole[i]; //kvuli prvnimu bajtu, doplnuje se totiz jednicka
+            pole[i]=tmp >>> ((3-i)*8);
         }
         return pole;
     }
@@ -91,4 +108,6 @@ public class AlternativniIpAdresa {
         String ret=pole[0]+"."+pole[1]+"."+pole[2]+"."+pole[3];
         return ret;
     }
+
+
 }

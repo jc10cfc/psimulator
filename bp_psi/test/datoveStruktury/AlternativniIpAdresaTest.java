@@ -111,17 +111,17 @@ public class AlternativniIpAdresaTest {
         adr = "147.32.125.138";
         ip.nastavIP(adr);
         ip.nastavMasku(24);
-        assertEquals(ip.cisloSite(), "147.32.125.0");
+        assertEquals(ip.vypisCisloSite(), "147.32.125.0");
 
         adr = "147.32.125.138";
         ip.nastavIP(adr);
         ip.nastavMasku(23);
-        assertEquals(ip.cisloSite(), "147.32.124.0");
+        assertEquals(ip.vypisCisloSite(), "147.32.124.0");
 
         adr = "147.32.125.138";
         ip.nastavIP(adr);
         ip.nastavMasku(25);
-        assertEquals(ip.cisloSite(), "147.32.125.128");
+        assertEquals(ip.vypisCisloSite(), "147.32.125.128");
     }
 
 
@@ -133,17 +133,17 @@ public class AlternativniIpAdresaTest {
         adr = "147.32.125.138";
         ip.nastavIP(adr);
         ip.nastavMasku(24);
-        assertEquals(ip.cisloPocitaceVSiti(), "0.0.0.138");
+        assertEquals(ip.vypisCisloPocitaceVSiti(), "0.0.0.138");
 
         adr = "147.32.125.138";
         ip.nastavIP(adr);
         ip.nastavMasku(23);
-        assertEquals(ip.cisloPocitaceVSiti(), "0.0.1.138");
+        assertEquals(ip.vypisCisloPocitaceVSiti(), "0.0.1.138");
 
         adr = "147.32.125.138";
         ip.nastavIP(adr);
         ip.nastavMasku(25);
-        assertEquals(ip.cisloPocitaceVSiti(), "0.0.0.10");
+        assertEquals(ip.vypisCisloPocitaceVSiti(), "0.0.0.10");
     }
 
 
