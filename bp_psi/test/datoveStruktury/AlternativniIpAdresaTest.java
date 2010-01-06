@@ -5,6 +5,7 @@
 
 package datoveStruktury;
 
+import javax.print.attribute.standard.MediaSize.NA;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,11 +15,11 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author haldyr
+ * @author neiss
  */
-public class IpAdresaTest {
+public class AlternativniIpAdresaTest {
 
-    public IpAdresaTest() {
+    public AlternativniIpAdresaTest() {
     }
 
     @BeforeClass
@@ -37,23 +38,20 @@ public class IpAdresaTest {
     public void tearDown() {
     }
 
-    private void vypisIP(IpAdresa adr) {
-        int[]ip = adr.dejIP();
-        for (int i = 0; i < 4; i++) {
-            System.out.print(ip[i]+" ");
-        }
-        System.out.println("");
-    }
+    // TODO add test methods here.
+    // The methods must be annotated with annotation @Test. For example:
+    //
+    // @Test
+    // public void hello() {}
 
-    /**
-     * Test of nastavIP method, of class IpAdresa.
-     */
+
     @Test
     public void testNastavIP() {
 
-        IpAdresa ip = new IpAdresa();
+        AlternativniIpAdresa ip = new AlternativniIpAdresa();
+        String adr;
 
-        String adr = "147.32.125.138";
+        adr = "147.32.125.138";
         ip.nastavIP(adr);
         assertEquals(ip.vypisIP(), adr);
 
@@ -78,7 +76,7 @@ public class IpAdresaTest {
     @Test
     public void testIPMaska(){
         System.out.println("------------------------------------------");
-        IpAdresa adr=new IpAdresa();
+        AlternativniIpAdresa adr=new AlternativniIpAdresa();
 
         adr.nastavMasku(24);
         System.out.println(adr.vypisMasku());
@@ -99,10 +97,61 @@ public class IpAdresaTest {
         adr.nastavMasku(32);
         System.out.println(adr.vypisMasku());
         assertEquals(adr.vypisMasku(),"255.255.255.255");
-        
-        adr.nastavMasku(8);
+
+        adr.nastavMasku(7);
         System.out.println(adr.vypisMasku());
-        assertEquals(adr.vypisMasku(),"255.0.0.0");
+        assertEquals(adr.vypisMasku(),"254.0.0.0");
+    }
+
+    @Test
+    public void testCisloSite(){
+        AlternativniIpAdresa ip = new AlternativniIpAdresa();
+        String adr;
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(24);
+        assertEquals(ip.cisloSite(), "147.32.125.0");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(23);
+        assertEquals(ip.cisloSite(), "147.32.124.0");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(25);
+        assertEquals(ip.cisloSite(), "147.32.125.128");
+    }
+
+
+    @Test
+    public void testCisloPocitaceVSiti(){
+        AlternativniIpAdresa ip = new AlternativniIpAdresa();
+        String adr;
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(24);
+        assertEquals(ip.cisloPocitaceVSiti(), "0.0.0.138");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(23);
+        assertEquals(ip.cisloPocitaceVSiti(), "0.0.1.138");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(25);
+        assertEquals(ip.cisloPocitaceVSiti(), "0.0.0.10");
+    }
+
+
+//    @Test
+    public void pokus(){
+        int a=0;
+        a=a|1<<3;
+        System.out.println(a);
     }
 
 }
