@@ -5,6 +5,8 @@
 
 package pocitac;
 
+import prikazy.ParserPrikazu;
+
 /**
  * Virtualni pocitac, predek Linuxu a Cisca
  * @author neiss
@@ -12,7 +14,6 @@ package pocitac;
 
 public class AbstractPocitac {
     Komunikace komunikace;
-    ParserPrikazu parser;
 
     public AbstractPocitac(){
         komunikace=new Komunikace(3567, this);

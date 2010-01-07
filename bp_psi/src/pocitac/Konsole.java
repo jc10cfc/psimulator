@@ -5,6 +5,7 @@
 
 package pocitac;
 
+import prikazy.ParserPrikazu;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,14 +21,17 @@ import java.util.logging.Logger;
 public class Konsole extends Thread{
     Socket s;
     AbstractPocitac pocitac;
-    ParserPrikazu parser;
+    private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
     String prompt="dsy@dsnlab1:~$ ";
+    boolean ukoncit;
+    OutputStream out;
+    BufferedReader in;
 
     public Konsole(Socket s,AbstractPocitac pc, int cislo){
         this.s=s;
         pocitac=pc;
-        parser=pocitac.parser;
+        parser=new ParserPrikazu(pc, this);
         this.cislo=cislo;
         this.start();
     }
@@ -67,22 +71,25 @@ public class Konsole extends Thread{
      * @param ret
      * @throws java.io.IOException
      */
-    public void posli(OutputStream out,String ret) throws IOException{
-        out.write((ret + "\r\n").getBytes());
-        System.out.println("(socket c. "+cislo+" posilam): "+ret);
+    public void posli(String ret){
+        try {
+            out.write((ret + "\r\n").getBytes());
+            System.out.println("(socket c. " + cislo + " posilam): " + ret);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public void vypisPrompt(OutputStream out) throws IOException{
+    public void vypisPrompt() throws IOException{
         out.write((prompt).getBytes());
         //System.out.println("(socket c. "+cislo+" posilam): "+ret);
     }
 
     @Override
     public void run(){
-        OutputStream out = null;
-        BufferedReader in = null;
+        
         String radek;
-        boolean ukoncit;
+        
         System.out.println("vlakno c. "+cislo+" startuje");
 
         try {//vsechno je hozeny do ochrannyho bloku
@@ -90,11 +97,12 @@ public class Konsole extends Thread{
             out = s.getOutputStream();
             ukoncit=false;
             while(! ukoncit ) {
-                vypisPrompt(out);
+                vypisPrompt();
                 radek = ctiRadek(in);
                 System.out.println("(klient c. "+cislo+" poslal): " + radek);
-                System.out.println("dylka predchoziho radku: "+radek.length());
+                //System.out.println("dylka predchoziho radku: "+radek.length());
                 //posli(out,radek);
+                parser.zpracujRadek(radek);
             }
 
         } catch ( Exception ex ) {
@@ -107,6 +115,10 @@ public class Konsole extends Thread{
             } catch (IOException ex) { ex.printStackTrace();}
         }
 
+    }
+
+    public void ukonciSpojeni() {
+        ukoncit=true;
     }
 
 }

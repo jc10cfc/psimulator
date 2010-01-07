@@ -3,6 +3,8 @@
  * and open the template in the editor.
  */
 
+package prikazy;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author neiss
  */
-public class NewEmptyJUnitTest {
+public class ParserPrikazuTest {
 
-    public NewEmptyJUnitTest() {
+    public ParserPrikazuTest() {
     }
 
     @BeforeClass
@@ -40,5 +42,11 @@ public class NewEmptyJUnitTest {
     //
     // @Test
     // public void hello() {}
+
+    @Test
+    public void pokusIndexOf(){
+        ParserPrikazu par =new ParserPrikazu(null,null);
+        par.zpracujRadek("ifconfig wlan0 1.2.3.4/24");
+    }
 
 }
