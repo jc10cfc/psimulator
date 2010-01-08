@@ -5,7 +5,9 @@
 
 package pocitac;
 
-import prikazy.ParserPrikazu;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Virtualni pocitac, predek Linuxu a Cisca
@@ -14,9 +16,11 @@ import prikazy.ParserPrikazu;
 
 public class AbstractPocitac {
     Komunikace komunikace;
+    List <SitoveRozhrani>rozhrani;
 
     public AbstractPocitac(){
         komunikace=new Komunikace(3567, this);
+        rozhrani=new ArrayList<SitoveRozhrani>();
 
     }
 

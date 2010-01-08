@@ -16,6 +16,7 @@ public class Exit extends AbstraktniPrikaz{
 
     public Exit(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc,kon,slova);
+        vykonejPrikaz();
     }
 
     @Override

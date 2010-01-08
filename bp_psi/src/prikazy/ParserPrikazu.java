@@ -31,9 +31,15 @@ public class ParserPrikazu {
         slova=new LinkedList<String>();
         rozsekej();
         if(slova.size()<1)return;
+
         if(slova.get(0).equals("exit")){
-//            System.out.println("mel bych skoncit pripojeni");
             pr=new Exit(pc, kon, slova);
+        }
+        else if(slova.get(0).equals("ifconfig")){
+            pr=new Ifconfig(pc, kon, slova);
+        }
+        else{
+            kon.posli("bash: "+slova.get(0)+": command not found");
         }
 
 

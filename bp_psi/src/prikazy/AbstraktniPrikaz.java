@@ -21,8 +21,6 @@ public abstract class AbstraktniPrikaz {
         this.pc = pc;
         this.kon = kon;
         this.slova = slova;
-        nastavPrikaz();
-        vykonejPrikaz();
     }
 
     protected abstract void nastavPrikaz();
@@ -32,6 +30,26 @@ public abstract class AbstraktniPrikaz {
         try {
             int a = Integer.parseInt(ret);
         }catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Vraci true, kdyz string obsahuje 4 maximalne trojciferny cisla oddeleny teckou. Neresi se tedy spravnej
+     * rozsah cisel.
+     * @param ret
+     * @return
+     */
+    boolean moznaIP(String ret){
+        if (!ret.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")) {
+            return false;
+        }
+        return true;
+    }
+
+    boolean moznaIPsMaskou(String ret){
+        if (!ret.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]++")) {
             return false;
         }
         return true;
