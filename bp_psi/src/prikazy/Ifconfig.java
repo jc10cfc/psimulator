@@ -42,7 +42,7 @@ public class Ifconfig extends AbstraktniPrikaz {
     protected void nastavPrikaz() {
         String tempRet;
         int ind = 1; //index v seznamu, zacina se jedicko, protoze prvnim slovem je ifconfig
-        //volby:
+        // prepinace:
         while ( ind<slova.size() && slova.get(ind).indexOf("-")==0 ) { //kdyz je prvnim znakem slova minus
             if (slova.get(ind).equals("-a")) minus_a = true;
             else if (slova.get(ind).equals("-v"))minus_v = true;

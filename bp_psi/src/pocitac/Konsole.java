@@ -19,14 +19,14 @@ import java.util.logging.Logger;
  * @author neiss
  */
 public class Konsole extends Thread{
-    Socket s;
-    AbstractPocitac pocitac;
+    private Socket s;
+    private AbstractPocitac pocitac;
     private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
-    String prompt="dsy@dsnlab1:~# ";
+    public String prompt="dsy@dsnlab1:~# ";
     boolean ukoncit;
-    OutputStream out;
-    BufferedReader in;
+    private OutputStream out;
+    private BufferedReader in;
 
     public Konsole(Socket s,AbstractPocitac pc, int cislo){
         this.s=s;

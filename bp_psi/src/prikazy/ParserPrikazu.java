@@ -33,6 +33,7 @@ public class ParserPrikazu {
      * @param s
      */
     public void zpracujRadek(String s){
+//        System.out.println("zacatek metody zpracujRadek()");
         AbstraktniPrikaz pr;
         radek=s;
         slova=new LinkedList<String>();        
