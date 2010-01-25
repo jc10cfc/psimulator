@@ -23,7 +23,7 @@ public class Konsole extends Thread{
     AbstractPocitac pocitac;
     private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
-    String prompt="dsy@dsnlab1:~$ ";
+    String prompt="dsy@dsnlab1:~# ";
     boolean ukoncit;
     OutputStream out;
     BufferedReader in;
@@ -65,7 +65,7 @@ public class Konsole extends Thread{
     }
 
     /**
-     * Metoda na posilani do produ vystupniho a zaroven na standartni vystup
+     * Metoda na posilani do výstupního proudu a zaroven vypisuje poslané řetězce na standartni vystup
      * Prevzata z KarelServer
      * @param out
      * @param ret
@@ -85,6 +85,9 @@ public class Konsole extends Thread{
         //System.out.println("(socket c. "+cislo+" posilam): "+ret);
     }
 
+    /**
+     * Hlavni bezici metoda Konsole, bezi v nekonecny smycce a zastavuje se booleanem ukoncit.
+     */
     @Override
     public void run(){
         

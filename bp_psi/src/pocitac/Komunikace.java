@@ -14,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Trida pro sitovou dokumentaci s uzivatelem.
+ * Prevzato z KarelServer.
+ * Posloucha na zadaným portu a vytváří vlákna pro jednotlivý Konsole (připojení)
  * Nakonec jsem sem tu tridu pro tu sitovou komunikaci stejne hodil. Bude to prehlednejsi i vzhledem k tem vlaknum
  * a tak.
  * @author neiss
@@ -41,6 +44,7 @@ public class Komunikace extends Thread
             System.err.println("Nemuzu poslouchat na portu "+cisloPortu+".");
             System.exit(1);
         }
+        System.out.println("Posloucham na portu " + cisloPortu);
 
         try {
             while (true) { // endless loop

@@ -16,7 +16,7 @@ import pocitac.*;
 public class ParserPrikazu {
     
     private String radek;
-    private List<String> slova;
+    private List<String> slova; //seznam jednotlivejch slov ze vstupniho stringu
     private AbstractPocitac pc;
     private Konsole kon;
 
@@ -46,6 +46,9 @@ public class ParserPrikazu {
 
     }
 
+    /**
+     * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
+     */
     private void rozsekej(){
         int i=0;
         int j=0;

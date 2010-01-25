@@ -83,7 +83,7 @@ public class Ifconfig extends AbstraktniPrikaz {
                 }else{
                     ip=tempRet;
                 }
-                kon.posli("jsem tady");
+//                kon.posli("jsem tady");
             }
             ind++;
         }
