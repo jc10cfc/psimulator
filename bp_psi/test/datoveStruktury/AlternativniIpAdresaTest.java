@@ -48,7 +48,7 @@ public class AlternativniIpAdresaTest {
     @Test
     public void testNastavIP() {
 
-        AlternativniIpAdresa ip = new AlternativniIpAdresa();
+        IpAdresa ip = new IpAdresa();
         String adr;
 
         adr = "147.32.125.138";
@@ -76,7 +76,7 @@ public class AlternativniIpAdresaTest {
     @Test
     public void testIPMaska(){
         System.out.println("------------------------------------------");
-        AlternativniIpAdresa adr=new AlternativniIpAdresa();
+        IpAdresa adr=new IpAdresa();
 
         adr.nastavMasku(24);
         System.out.println(adr.vypisMasku());
@@ -105,7 +105,7 @@ public class AlternativniIpAdresaTest {
 
     @Test
     public void testCisloSite(){
-        AlternativniIpAdresa ip = new AlternativniIpAdresa();
+        IpAdresa ip = new IpAdresa();
         String adr;
 
         adr = "147.32.125.138";
@@ -127,7 +127,7 @@ public class AlternativniIpAdresaTest {
 
     @Test
     public void testCisloPocitaceVSiti(){
-        AlternativniIpAdresa ip = new AlternativniIpAdresa();
+        IpAdresa ip = new IpAdresa();
         String adr;
 
         adr = "147.32.125.138";

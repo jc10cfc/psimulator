@@ -4,8 +4,8 @@
 
 package pocitac;
 
-import datoveStruktury.AlternativniIpAdresa;
 import datoveStruktury.IpAdresa;
+import datoveStruktury.IpAdresaStara;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class SitoveRozhrani {
 
-    public AlternativniIpAdresa ip;
+    public IpAdresa ip;
     public String jmeno;
     public String macAdresa;
     public SitoveRozhrani pripojenoK; //sitove rozhrani, se kterym je toto rozhrani spojeno

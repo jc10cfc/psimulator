@@ -37,7 +37,7 @@ public class IpAdresaTest {
     public void tearDown() {
     }
 
-    private void vypisIP(IpAdresa adr) {
+    private void vypisIP(IpAdresaStara adr) {
         int[]ip = adr.dejIP();
         for (int i = 0; i < 4; i++) {
             System.out.print(ip[i]+" ");
@@ -46,12 +46,12 @@ public class IpAdresaTest {
     }
 
     /**
-     * Test of nastavIP method, of class IpAdresa.
+     * Test of nastavIP method, of class IpAdresaStara.
      */
     @Test
     public void testNastavIP() {
 
-        IpAdresa ip = new IpAdresa();
+        IpAdresaStara ip = new IpAdresaStara();
 
         String adr = "147.32.125.138";
         ip.nastavIP(adr);
@@ -78,7 +78,7 @@ public class IpAdresaTest {
     @Test
     public void testIPMaska(){
         System.out.println("------------------------------------------");
-        IpAdresa adr=new IpAdresa();
+        IpAdresaStara adr=new IpAdresaStara();
 
         adr.nastavMasku(24);
         System.out.println(adr.vypisMasku());
