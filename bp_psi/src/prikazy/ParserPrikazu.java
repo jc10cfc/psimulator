@@ -35,11 +35,16 @@ public class ParserPrikazu {
     public void zpracujRadek(String s){
         AbstraktniPrikaz pr;
         radek=s;
-        slova=new LinkedList<String>();
+        slova=new LinkedList<String>();        
 
-        rozsekej();
-        //rozsekejLepe();
+        //rozsekej();
+        rozsekejLepe();
+
         if(slova.size()<1)return;
+
+        if (slova.get(0).equals("")) {
+            return; // prazdny Enter
+        }
 
         if(slova.get(0).equals("exit")){
             pr=new Exit(pc, kon, slova);
@@ -74,12 +79,6 @@ public class ParserPrikazu {
         for (String s : pole) {
             slova.add(s);
         }
-
-       
-
-        //for (String s : pole) {
-          //  kon.posliRadek(s+" ");
-        //}
     }
 
     /*
