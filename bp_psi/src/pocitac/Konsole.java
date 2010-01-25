@@ -65,7 +65,7 @@ public class Konsole extends Thread{
     }
 
     /**
-     * Metoda na posilani do výstupního proudu a zaroven vypisuje poslané řetězce na standartni vystup
+     * Metoda na posilani celeho radku do výstupního proudu. Zaroven vypisuje poslané řetězce na standartni vystup.
      * Prevzata z KarelServer
      * @param out
      * @param ret
@@ -81,7 +81,7 @@ public class Konsole extends Thread{
     }
 
     /**
-     * Metoda na posilani do výstupního proudu a zaroven vypisuje poslané řetězce na standartni vystup
+     * Metoda na posilani do výstupního proudu. Zaroven vypisuje poslané řetězce na standartni vystup.
      * Prevzata z KarelServer
      * @param out
      * @param ret
