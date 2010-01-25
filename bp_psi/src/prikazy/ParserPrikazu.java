@@ -10,7 +10,8 @@ import java.util.List;
 import pocitac.*;
 
 /**
- *
+ * Metoda zpracujRadek(String s) prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej() rozseka na jednotlivy
+ * slova. Pak se testuje,
  * @author neiss
  */
 public class ParserPrikazu {
@@ -25,6 +26,12 @@ public class ParserPrikazu {
         this.kon=kon;
     }
 
+    /**
+     * Prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej() rozseka na jednotlivy slova.
+     * Pak se testuje, jestli prvni slovo je nazev nejakyho podporovanyho prikazu, jestlize ne, tak se vypise
+     * "command not found", jinak se preda rizeni tomu spravnymu prikazu.
+     * @param s
+     */
     public void zpracujRadek(String s){
         AbstraktniPrikaz pr;
         radek=s;

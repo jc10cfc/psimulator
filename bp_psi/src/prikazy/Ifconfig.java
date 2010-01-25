@@ -58,7 +58,7 @@ public class Ifconfig extends AbstraktniPrikaz {
         rozhrani=slova.get(ind);
         ind++;if(ind>=slova.size())return;
         //parametry:
-        //Zjistil jsem, ze neznamen parametr se povazuje za adresu nebo za adresu s maskou.
+        //Zjistil jsem, ze neznamej parametr se povazuje za adresu nebo za adresu s maskou.
         while(ind<slova.size()){
             tempRet=slova.get(ind);
             if(tempRet.equals("netmask")){//maska
