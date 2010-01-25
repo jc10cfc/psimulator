@@ -36,7 +36,9 @@ public class ParserPrikazu {
         AbstraktniPrikaz pr;
         radek=s;
         slova=new LinkedList<String>();
+
         rozsekej();
+        //rozsekejLepe();
         if(slova.size()<1)return;
 
         if(slova.get(0).equals("exit")){
@@ -46,7 +48,7 @@ public class ParserPrikazu {
             pr=new Ifconfig(pc, kon, slova);
         }
         else{
-            kon.posli("bash: "+slova.get(0)+": command not found");
+            kon.posliRadek("bash: "+slova.get(0)+": command not found");
         }
 
 
@@ -67,4 +69,26 @@ public class ParserPrikazu {
         }
     }
 
+    private void rozsekejLepe() {
+        String [] pole = radek.split(" ");
+        for (String s : pole) {
+            slova.add(s);
+        }
+
+       
+
+        //for (String s : pole) {
+          //  kon.posliRadek(s+" ");
+        //}
+    }
+
+    /*
+    public void setRadek(String s) {
+        radek = s;
+    }
+
+    public void getRadek() {
+        System.out.println(radek);
+    }
+     */
 }

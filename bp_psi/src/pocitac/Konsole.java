@@ -71,9 +71,25 @@ public class Konsole extends Thread{
      * @param ret
      * @throws java.io.IOException
      */
-    public void posli(String ret){
+    public void posliRadek(String ret){
         try {
             out.write((ret + "\r\n").getBytes());
+            System.out.println("(socket c. " + cislo + " posilam radek): " + ret);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Metoda na posilani do výstupního proudu a zaroven vypisuje poslané řetězce na standartni vystup
+     * Prevzata z KarelServer
+     * @param out
+     * @param ret
+     * @throws java.io.IOException
+     */
+    public void posli(String ret){
+        try {
+            out.write((ret).getBytes());
             System.out.println("(socket c. " + cislo + " posilam): " + ret);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -104,7 +120,7 @@ public class Konsole extends Thread{
                 radek = ctiRadek(in);
                 System.out.println("(klient c. "+cislo+" poslal): " + radek);
                 //System.out.println("dylka predchoziho radku: "+radek.length());
-                //posli(out,radek);
+                //posliRadek(out,radek);
                 parser.zpracujRadek(radek);
             }
 

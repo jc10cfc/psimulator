@@ -5,7 +5,7 @@
 package datoveStruktury;
 
 /**
- *
+ * Puvodni trida pro IP adresu. Nehodi se pro "pocitani" -> zavrzena.
  * @author neiss
  */
 @Deprecated

@@ -21,12 +21,12 @@ public class Exit extends AbstraktniPrikaz{
 
     @Override
     protected void vykonejPrikaz() {
-        kon.posli("logout");
+        kon.posliRadek("logout");
         if(slova.size()==2 ){
-            if (! jeInteger(slova.get(1))) kon.posli("-bash: exit: "+slova.get(1)+": numeric argument required");
+            if (! jeInteger(slova.get(1))) kon.posliRadek("-bash: exit: "+slova.get(1)+": numeric argument required");
         }
         if(slova.size()>2 ){
-            kon.posli("-bash: exit: too many arguments");
+            kon.posliRadek("-bash: exit: too many arguments");
             return;
         }
         kon.ukonciSpojeni();

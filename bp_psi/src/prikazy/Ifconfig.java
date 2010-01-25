@@ -83,23 +83,23 @@ public class Ifconfig extends AbstraktniPrikaz {
                 }else{
                     ip=tempRet;
                 }
-//                kon.posli("jsem tady");
+//                kon.posliRadek("jsem tady");
             }
             ind++;
         }
 
-        kon.posli("Parsovani ifconfig probehlo v poradku.");
+        kon.posliRadek("Parsovani ifconfig probehlo v poradku.");
     }
 
     private void errNeznamyPrepinac(String ret){
-        kon.posli("ifconfig: neznámá volba `"+ret+"'.");
-        kon.posli("ifconfig: `--help' vypíše návod k použití.");
+        kon.posliRadek("ifconfig: neznámá volba `"+ret+"'.");
+        kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
         navratovyKodParseru = 1;
     }
 
     @Override
     protected void vykonejPrikaz() {
-        kon.posli(toString());
+        kon.posliRadek(toString());
     }
 
     @Override
