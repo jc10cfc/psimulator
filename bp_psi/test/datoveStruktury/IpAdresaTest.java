@@ -104,6 +104,25 @@ public class IpAdresaTest {
     }
 
     @Test
+    public void testIPMaskaString(){
+        System.out.println("------------------------------------------");
+        IpAdresa adr=new IpAdresa();
+
+        adr.nastavMasku("255.255.255.0");
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"255.255.255.0");
+
+        adr.nastavMasku("255.255.255.128");
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"255.255.255.128");
+
+        adr.nastavMasku("43.23.234.43");
+        System.out.println(adr.vypisMasku());
+        assertEquals(adr.vypisMasku(),"43.23.234.43");
+        fail(); // tady by to melo spadnout
+    }
+
+    @Test
     public void testCisloSite(){
         IpAdresa ip = new IpAdresa();
         String adr;
@@ -144,6 +163,37 @@ public class IpAdresaTest {
         ip.nastavIP(adr);
         ip.nastavMasku(25);
         assertEquals(ip.vypisCisloPocitaceVSiti(), "0.0.0.10");
+    }
+
+    @Test
+    public void testAdresaSMaskou(){
+        IpAdresa ip = new IpAdresa();
+        String adr;
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(24);
+        assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/24");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(23);
+        assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/23");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(25);
+        assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/25");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(0);
+        assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/0");
+
+        adr = "147.32.125.138";
+        ip.nastavIP(adr);
+        ip.nastavMasku(32);
+        assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/32");
     }
 
 
