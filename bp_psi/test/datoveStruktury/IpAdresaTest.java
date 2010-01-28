@@ -11,6 +11,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import vyjimky.SpatnaMaskaException;
 import static org.junit.Assert.*;
 
 /**
@@ -116,10 +117,26 @@ public class IpAdresaTest {
         System.out.println(adr.vypisMasku());
         assertEquals(adr.vypisMasku(),"255.255.255.128");
 
-        adr.nastavMasku("43.23.234.43");
-        System.out.println(adr.vypisMasku());
-        assertEquals(adr.vypisMasku(),"43.23.234.43");
-        fail(); // tady by to melo spadnout
+        try{
+            adr.nastavMasku("43.23.234.43");
+            fail();
+        } catch (SpatnaMaskaException ex){}
+    }
+
+    @Test
+    public void testBroadcast(){
+        System.out.println("------------------------------------------");
+        IpAdresa adr=new IpAdresa("192.168.1.0",24);
+        assertEquals(adr.vypisBroadcast(),"192.168.1.255");
+
+        adr.nastavMasku(0); //vsechno je cislo pocitace -> cislo site je 0.0.0.0/32
+        assertEquals(adr.vypisBroadcast(),"255.255.255.255");
+
+        adr.nastavMasku(32); //vsechno je cislo site -> cislo site je 192.168.1.0/32
+        assertEquals(adr.vypisBroadcast(),"192.168.1.0");
+
+        adr.nastavMasku(30); //  cislo site je 192.168.1.0/30
+        assertEquals(adr.vypisBroadcast(),"192.168.1.3");
     }
 
     @Test

@@ -15,8 +15,8 @@ import java.util.List;
  */
 
 public class AbstractPocitac {
-    Komunikace komunikace;
-    List <SitoveRozhrani>rozhrani;
+    public Komunikace komunikace;
+    public List <SitoveRozhrani>rozhrani;
 
     public AbstractPocitac(){
         komunikace=new Komunikace(3567, this);

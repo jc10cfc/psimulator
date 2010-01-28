@@ -1,5 +1,7 @@
 package datoveStruktury;
 
+import vyjimky.*;
+
 /**
  * Hele, clovece, premejslel jsem dneska, jak dodelat ty metody, ktery budou pocitat cislo site a tak
  * a nakonec jsem tu implementaci zmenil na jeden integer, cislo site a pocitace a podobny veci se pak pocitaj
@@ -61,7 +63,6 @@ public class IpAdresa {
         }
     }
 
-
     public void nastavIP(String adr) {
         if(!jeSpravnaIP(adr)){
             throw new RuntimeException("spatna adresa: "+adr);
@@ -74,10 +75,10 @@ public class IpAdresa {
             throw new RuntimeException("spatna maska: "+maska);
         }
         int moznaMaska = integerZeStringu(maska);
-        if(jeSpravnaMaska(moznaMaska)){
+        if(jeMaskou(moznaMaska)){
             this.maska=moznaMaska;
         } else {
-            throw new RuntimeException("Spatna maska, nejsou to jednickyu a pak nuly");
+            throw new SpatnaMaskaException("Spatna maska, nejsou to jednicky a pak nuly");
         }
     }
 
@@ -99,8 +100,7 @@ public class IpAdresa {
     }
 
     public String vypisCisloPocitaceVSiti() {
-        int cs = (~maska) & adresa;
-        return vypisPole(prevedNaPole(cs));
+        return vypisPole(prevedNaPole(cisloPocitaceVSiti()));
     }
 
     public boolean jeVeStejnySiti(IpAdresa jina) {
@@ -110,6 +110,18 @@ public class IpAdresa {
         return false;
     }
 
+    public String vypisBroadcast() {
+        return vypisPole(prevedNaPole(broadcast()));
+    }
+
+    /**
+     * vraci true, kdyz IP adresa neni skutecnou IP adresou ale jenomcislem site
+     * @return
+     */
+    public boolean jeCislemSite(){
+        if(adresa == cisloSite())return true;
+        return false;
+    }
     /**
      * Převádí ip nebo masku z bitový podoby na pole integeru.
      * @param cislo
@@ -150,7 +162,7 @@ public class IpAdresa {
         return true;
     }
 
-    private int integerZeStringu(String ret){
+    private static int integerZeStringu(String ret){
         int a = 0;
         String[] pole = ret.split("\\.");
         int n;
@@ -172,7 +184,7 @@ public class IpAdresa {
         return pocet;
     }
 
-    private boolean jeSpravnaMaska(int maska){
+    private static boolean jeMaskou(int maska){ //jestli je zadany integer maskou
         int i=0;
         while ( i<32 && ( maska & 1) == 0 ){ //tady prochazeji nuly
             i++;
@@ -184,5 +196,9 @@ public class IpAdresa {
         }
         if(i==32) return true;
         return false;
+    }
+
+    private int broadcast(){ //vraci 32 bitu adresy broadcastu site
+        return ( cisloSite() | (~maska) );
     }
 }
