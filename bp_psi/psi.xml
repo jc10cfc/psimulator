@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE konfigurak SYSTEM "psi.dtd">
+
+<konfigurak>
+<pocitac id="1">
+	<rozhrani id="1-1">
+		<jmeno>eth0</jmeno>
+		<ip>143.32.125.138</ip>
+		<mac>00:01:02:03:04:05</mac>
+		<pripojenoK></pripojenoK>
+	</rozhrani>
+	<rozhrani id="1-2">
+		<jmeno>eth1</jmeno>
+		<ip>143.32.125.160</ip>
+		<mac>0a:00:77:03:24:d5</mac>
+		<pripojenoK>2-1</pripojenoK>
+	</rozhrani>
+</pocitac>
+
+<pocitac id="2">
+	<rozhrani id="2-1">
+		<jmeno>eth0</jmeno>
+		<ip>127.1.1.138</ip>
+		<mac>00:0b:0c:0d:0a:01</mac>
+		<pripojenoK>1-2</pripojenoK>
+	</rozhrani>
+	<rozhrani id="2-2">
+		<jmeno>eth1</jmeno>
+		<ip>192.168.1.160</ip>
+		<mac>03:08:b7:30:24:e1</mac>
+		<pripojenoK></pripojenoK>
+	</rozhrani>
+</pocitac>
+
+
+</konfigurak>

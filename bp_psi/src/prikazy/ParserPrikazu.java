@@ -64,6 +64,7 @@ public class ParserPrikazu {
     /**
      * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
      */
+    @Deprecated
     private void rozsekej(){
         int i=0;
         int j=0;
@@ -75,6 +76,9 @@ public class ParserPrikazu {
         }
     }
 
+    /**
+     * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
+     */
     private void rozsekejLepe() {
         String [] pole = radek.split(" ");
         for (String s : pole) {

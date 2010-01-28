@@ -1,0 +1,17 @@
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+
+<!ELEMENT ip ( #PCDATA ) >
+
+<!ELEMENT jmeno ( #PCDATA ) >
+
+<!ELEMENT konfigurak ( pocitac+ ) >
+
+<!ELEMENT mac ( #PCDATA ) >
+
+<!ELEMENT pocitac ( rozhrani+ ) >
+<!ATTLIST pocitac id NMTOKEN #REQUIRED >
+
+<!ELEMENT pripojenoK ( #PCDATA ) >
+
+<!ELEMENT rozhrani ( jmeno, ip, mac, pripojenoK ) >
+<!ATTLIST rozhrani id NMTOKEN #REQUIRED >
