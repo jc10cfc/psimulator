@@ -89,7 +89,9 @@ public class Main {
             }
             cisloPC++;
         }
-        System.exit(0);
+
+        // pro testovani, abych to nemusel furt vypinat rucne
+//        System.exit(0);
     }
 
 }
