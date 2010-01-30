@@ -7,7 +7,7 @@
 		<jmeno>eth0</jmeno>
 		<ip>143.32.125.138</ip>
 		<mac>00:01:02:03:04:05</mac>
-		<pripojenoK></pripojenoK>
+		<pripojenoK>2-2</pripojenoK>
 	</rozhrani>
 	<rozhrani id="1-2">
 		<jmeno>eth1</jmeno>
@@ -20,15 +20,15 @@
 <pocitac id="2">
 	<rozhrani id="2-1">
 		<jmeno>eth0</jmeno>
-		<ip>127.1.1.138</ip>
+		<ip>127.1.1.8</ip>
 		<mac>00:0b:0c:0d:0a:01</mac>
 		<pripojenoK>1-2</pripojenoK>
 	</rozhrani>
 	<rozhrani id="2-2">
 		<jmeno>eth1</jmeno>
-		<ip>192.168.1.160</ip>
+		<ip>192.168.1.24</ip>
 		<mac>03:08:b7:30:24:e1</mac>
-		<pripojenoK></pripojenoK>
+		<pripojenoK>1-1</pripojenoK>
 	</rozhrani>
 </pocitac>
 

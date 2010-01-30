@@ -24,4 +24,8 @@ public class AbstractPocitac {
 
     }
 
+    public AbstractPocitac(int port) {
+        komunikace = new Komunikace(port, this);
+    }
+
 }

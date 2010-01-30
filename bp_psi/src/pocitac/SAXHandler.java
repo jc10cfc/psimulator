@@ -15,13 +15,21 @@ import org.xml.sax.Attributes;
  * XML dokumentu (včetně původního vnoření elementu a jmenných prostorů).
  * Znaková data ignorujte. Zanorené elementy formátujte odstavením pomocí tabulátoru.
  * pouzito http://www.ksi.mff.cuni.cz/~mlynkova/Y36XML/indexCV.html
+ * 
+ * @author haldyr
  */
+
+
+/**
+ * presunuto do Main.java
+ */
+/*
 public class SAXHandler {
 
     public static void main(String[] args) {
 
         // Cesta ke zdrojovému XML dokumentu
-        String sourcePath = "psi.xml";
+        final String sourcePath = "psi.xml";
 
         try {
 
@@ -44,13 +52,13 @@ public class SAXHandler {
         }
 
     }
-}
+}*/
 
 /**
  * Náš vlastní content handler pro obsluhu SAX událostí.
  * Implementuje metody interface ContentHandler.
  */
-class MujContentHandler implements ContentHandler {
+public class SAXHandler implements ContentHandler {
 
     // Umožnuje zacílit místo v dokumentu, kde vznikla aktualní událost
     Locator locator;
@@ -238,7 +246,11 @@ class MujContentHandler implements ContentHandler {
     @Override
     public void endDocument() throws SAXException {
         
-        System.out.println("vsechno:  " + vsechno);
+//        System.out.println("vsechno:  " + vsechno);
 
+    }
+
+    public Object vratNastaveni(){
+        return vsechno;
     }
 }
