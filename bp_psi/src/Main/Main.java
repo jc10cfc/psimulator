@@ -57,8 +57,8 @@ public class Main {
         
 
 
-        AbstractPocitac pc=new AbstractPocitac();
-//        AbstractPocitac pc2= new AbstractPocitac(3566);
+//        AbstractPocitac pc=new AbstractPocitac();
+//        AbstractPocitac pc2= new AbstractPocitac(3567);
 
         Object nastaveni = vratNastaveni();
 

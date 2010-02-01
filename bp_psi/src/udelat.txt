@@ -1,0 +1,3 @@
+Udělat třídy pro linux a cisco.
+Do xml přidat jméno počítače, počáteční port a druh počítače.
+Do SAXu udělat vytváření objektů AbstractPocitac a SitoveRozhrani

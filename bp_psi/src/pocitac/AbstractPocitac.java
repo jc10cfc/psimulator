@@ -17,15 +17,23 @@ import java.util.List;
 public class AbstractPocitac {
     public Komunikace komunikace;
     public List <SitoveRozhrani>rozhrani;
+    public String jmeno; //jmeno pocitace
 
-    public AbstractPocitac(){
+
+    public AbstractPocitac(String jmeno){
         komunikace=new Komunikace(3567, this);
         rozhrani=new ArrayList<SitoveRozhrani>();
-
+        this.jmeno=jmeno;
     }
 
-    public AbstractPocitac(int port) {
+    public AbstractPocitac(String jmeno, int port) {
         komunikace = new Komunikace(port, this);
+        rozhrani=new ArrayList<SitoveRozhrani>();
+        this.jmeno=jmeno;
+    }
+
+    public void pridejRozhrani(SitoveRozhrani sr){
+        rozhrani.add(sr);
     }
 
 }

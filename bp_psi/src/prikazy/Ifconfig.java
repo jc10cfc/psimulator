@@ -37,6 +37,7 @@ public class Ifconfig extends AbstraktniPrikaz {
      * 5: neplatna IP adresa
      * 6: pocet bitu masky vetsi nez 32
      * 7: neplatna IP adresa parametru add
+     * 8: neplatna IP adresaparametru del
      */
     int navratovyKod = 0;
     SitoveRozhrani rozhrani; //rozhrani, se kterym se bude operovat
@@ -123,32 +124,37 @@ public class Ifconfig extends AbstraktniPrikaz {
 
     /**
      * Tahlecta metoda kontroluje jen hodnoty parametru, na nektery chyby, napr. gramaticky (nespravny
-     * prepinace, vice parametru netmask ap.), predpokladam, ze uz se prislo.
+     * prepinace, vice parametru netmask ap.), predpokladam, ze uz se prislo. Posila klientovi hlaseni
+     * o chybach.
      */
     private void zkontrolujPrikaz(){
         if (jmenoRozhrani==null) return; //uzivatel zadal jen ifconfig, mozna nejaky prepinace, ale nic vic
         //-------------------
+        //kontrola existence rozhrani
         for ( SitoveRozhrani rozhr: pc.rozhrani){ //hledani spravneho rozhrani
             if(rozhr.jmeno.equals(jmenoRozhrani)) rozhrani=rozhr;
         }
         if (rozhrani==null){
+            //tady se nic nevypisuje, protoze ostatni se v ifconfigu asi vyhodnocuje driv
             navratovyKod=3;
-            return;
         }
         //------------------------
+        //kontrola IP
         if(seznamIP.size()>1){ //jestli neni moc IP adres
             navratovyKod=4;
-            return;
         }
         for (int i=0;i<seznamIP.size();i++){ //kontrola spravnosti IP
             if(IpAdresa.jeSpravnaIP(seznamIP.get(i))){
                 pouzitIp=i;
             } else {
+                kon.posliRadek(seznamIP.get(i)+": unknown host");
+                kon.posli("ifconfig: `--help' vypíše návod k použití.");
                 navratovyKod=5; //neplatna IP
             }
 
         }
         //--------------------
+        //kontrola masky
         //string masky se nekontroluje, protoze pro to IpAdresa nema metodu, kontroluje se az pri nastavovani
         if(pocetBituMasky!=-1){ //kontrola pocetBituMasky
             if(pocetBituMasky>32){//mensi totiz bejt nemuze, to se kontroluje driv
@@ -157,8 +163,18 @@ public class Ifconfig extends AbstraktniPrikaz {
             }
         }
         //---------------------
+        //kontrola IP adresy add (pridavani nove IP)
         if(!IpAdresa.jeSpravnaIP(add)){
             navratovyKod=7;
+        }
+        //---------------------
+        //kontrola IP adres del (odebirani existujici IP)
+        for(int i=0;i<del.size();i++){
+            if(!IpAdresa.jeSpravnaIP(del.get(i))){
+                navratovyKod=8;
+                kon.posliRadek(del.get(i)+": unknown host"); //musim to posilat uz tady, protoze to hendka smazu
+                del.remove(i); //ta spatna IP adresa se odebere
+            }
         }
         
     }

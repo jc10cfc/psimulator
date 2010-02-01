@@ -1,4 +1,4 @@
-package pocitac;
+package Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,40 +19,6 @@ import org.xml.sax.Attributes;
  * @author haldyr
  */
 
-
-/**
- * presunuto do Main.java
- */
-/*
-public class SAXHandler {
-
-    public static void main(String[] args) {
-
-        // Cesta ke zdrojovému XML dokumentu
-        final String sourcePath = "psi.xml";
-
-        try {
-
-            // Vytvoříme instanci parseru.
-            XMLReader parser = XMLReaderFactory.createXMLReader();
-
-            // Vytvoříme vstupní proud XML dat.
-            InputSource source = new InputSource(sourcePath);
-
-            // Nastavíme náš vlastní content handler pro obsluhu SAX událostí.
-            parser.setContentHandler(new MujContentHandler());
-
-            // Zpracujeme vstupní proud XML dat.
-            parser.parse(source);
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        }
-
-    }
-}*/
 
 /**
  * Náš vlastní content handler pro obsluhu SAX událostí.
