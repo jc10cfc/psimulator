@@ -276,8 +276,6 @@ public class SAXHandler implements ContentHandler {
     @Override
     public void endDocument() throws SAXException {
 
-//        System.out.println("vsechno:  " + vsechno);
-
         for (Object pc : (List) vsechno) { // prichazim pocitace
             List pcList = (List) pc;
 
@@ -285,7 +283,6 @@ public class SAXHandler implements ContentHandler {
 
             String PCjmeno = "";
             String PCtyp = "";
-            //TODO: nastavit typ PC (linux|cisco)
 
             if (vypis2) {
                 System.out.println("PC");
@@ -303,7 +300,7 @@ public class SAXHandler implements ContentHandler {
                 absPocitac = new CiscoPocitac(PCjmeno, port++);
             } else if (PCtyp.equals("linux")) {
                 absPocitac = new LinuxPocitac(PCjmeno, port++);
-            } else throw new ChybaKonfigurakuException("Pocitaci chybi nejaky parametr.");
+            } else throw new ChybaKonfigurakuException("Pocitac nema nastaven typ - linux | cisco.");
 
 
 
