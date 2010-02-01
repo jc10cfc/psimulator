@@ -34,17 +34,14 @@ public class SAXHandler implements ContentHandler {
     String tabs = "";
     String namespaces = "";
     String jmenoElementu = "";
-    List vsechno = new ArrayList<List>();
-    List pocitac = new ArrayList<List>();
-    List pocitac2 = new ArrayList<String[]>();
-    List rozhrani = new ArrayList<String>();
     final int velikostPoleRozhrani = 10;
-    String[] rozhrani2 = new String[velikostPoleRozhrani]; //naddimenzovano
-    // pro vypis kostry xml dokumentu
-    boolean vypis = false;
-    boolean vypis2 = true;
+    List hotovePocitace = new ArrayList<AbstractPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
+    List vsechno = new ArrayList<List>(); // pomocny seznam
+    List pocitac = new ArrayList<String[]>();
+    String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
+    boolean vypis = false; // pro vypis kostry xml dokumentu
+    boolean vypis2 = true; // vypis pocitacu
     public int port = -1;
-    List hotovePocitace = new ArrayList<AbstractPocitac>();
     String jmenoPC = "";
     String typPC = "";
 
@@ -81,7 +78,7 @@ public class SAXHandler implements ContentHandler {
     /**
      * Pomocna metoda pro pristup k poli (prvky 1 rozhrani jsou v poli)
      * @param s   - co chceme z pole
-     * @return  index v poli
+     * @return  index v poli, kde se hledana hodnota naleza
      */
     private int dejIndex(String s) {
 
@@ -134,21 +131,13 @@ public class SAXHandler implements ContentHandler {
         }
 
         if (localName.equals("pocitac")) {
-//            pocitac.clear();
-            pocitac2.clear();
-
-
+            pocitac.clear();
         }
 
         if (localName.equals("rozhrani")) {
-//            rozhrani.clear();
-
-            // vymaz rozhrani
-
-
             for (int i = 0; i
-                    < rozhrani2.length; i++) {
-                rozhrani2[i] = "";
+                    < rozhrani.length; i++) {
+                rozhrani[i] = "";
             }
         }
 
@@ -170,30 +159,15 @@ public class SAXHandler implements ContentHandler {
 
         if (localName.equals("rozhrani")) {
 
-
-
-            String[] pole = new String[rozhrani2.length];
-            for (int i = 0; i < rozhrani2.length; i++) {
-                pole[i] = rozhrani2[i];
+            String[] pole = new String[rozhrani.length];
+            for (int i = 0; i < rozhrani.length; i++) {
+                pole[i] = rozhrani[i];
             }
-            pocitac2.add(pole);
-
-
-            /*
-            List rozhraniNove = new ArrayList<String>();
-
-            for (Object o : rozhrani) {
-            rozhraniNove.add(o);
-            }
-            pocitac.add(rozhraniNove);
-             */
-
+            pocitac.add(pole);
         }
-
 
         if (localName.equals("pocitac")) {
 
-//            List pocitacNovy = new ArrayList<List>();
             List pocitacNovy = new ArrayList<String[]>();
 
             String[] jmenoPCaTyp = new String[2];
@@ -201,7 +175,7 @@ public class SAXHandler implements ContentHandler {
             jmenoPCaTyp[1] = typPC;
             pocitacNovy.add(jmenoPCaTyp);
 
-            for (Object o : pocitac2) { // v pocitaci je nekolik rozhrani=pole stringu
+            for (Object o : pocitac) { // v pocitaci je nekolik rozhrani=pole stringu
 
                 String[] p = (String[]) o;
                 String[] pnove = new String[p.length];
@@ -209,26 +183,14 @@ public class SAXHandler implements ContentHandler {
                     pnove[i] = p[i];
                 }
                 pocitacNovy.add(pnove);
-
-//                String jm = (String)(((List)o).get(0));
-//                ((List)o).remove(0);
-//                List l = zkopirujListStringu((List) o);
-//                l.add(0, jm);
-//                pocitacNovy.add(zkopirujListStringu((List) o));
-//                pocitacNovy.add(l);
-            } //            System.out.println("pocitacNovy: " + pocitacNovy);
+            }
 
             vsechno.add(pocitacNovy);
-
-
         }
 
         if (vypis) {
             System.out.printf("%s</%s>\n", tabs, qName);
-
-
         }
-
     }
 
     /**
@@ -245,47 +207,24 @@ public class SAXHandler implements ContentHandler {
 
         String s = new String(ch, start, length);
 
-
-
         if (vypis) { // tisk
             System.out.println(tabs + s);
-
-
         }
 
         if (jmenoElementu.equals("port") && s.length() > 2) {
 //            System.out.println("jsem u portu: "+s+" "+s.length());
             try {
                 port = Integer.valueOf(s);
-
-
             } catch (Exception e) {
                 System.out.println("Specifikace portu musi byt ciselna.\nChyba: " + s);
                 System.exit(1);
-
-
             }
-
             return;
         }
 
-//        if (jmenoElementu.equals("typ")) {
-//            pocitac.add(s);
-//        }
-
-//        if (jmenoElementu.equals("maska")) {
-//            System.out.println("velikost: " + s.length());
-
-
-//        } //        System.out.println("jmenoElementu: "+jmenoElementu);
-
         if (patriDoRozhrani(jmenoElementu)) {
-//            rozhrani.add(s);
-
-            rozhrani2[dejIndex(jmenoElementu)] = s;
-
+            rozhrani[dejIndex(jmenoElementu)] = s;
         }
-
     }
 
     /**
@@ -342,10 +281,6 @@ public class SAXHandler implements ContentHandler {
 
 //        System.out.println("vsechno:  " + vsechno);
 
-        String jmenoPC = "";
-
-
-
         for (Object pc : (List) vsechno) { // prichazim pocitace
             List pcList = (List) pc;
 
@@ -367,8 +302,8 @@ public class SAXHandler implements ContentHandler {
                     PCtyp = iface[1];
 
                     if (vypis2) {
-                        System.out.println(" jmeno: "+PCjmeno);
-                        System.out.println(" typ:   "+PCtyp);
+                        System.out.println(" jmeno: " + PCjmeno);
+                        System.out.println(" typ:   " + PCtyp);
                     }
 
                     continue;
@@ -400,7 +335,7 @@ public class SAXHandler implements ContentHandler {
     }
 
     public Object vratNastaveni() {
-        return vsechno;
+        return hotovePocitace;
 
     }
 }

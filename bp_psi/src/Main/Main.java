@@ -15,7 +15,7 @@ import pocitac.*;
  */
 public class Main {
 
-    static private Object vratNastaveni(){
+    static private Object nacti(){
 
         // Cesta ke zdrojovému XML dokumentu
         final String sourcePath = "psi.xml";
@@ -60,13 +60,12 @@ public class Main {
 //        AbstractPocitac pc=new AbstractPocitac();
 //        AbstractPocitac pc2= new AbstractPocitac(3567);
 
-        Object nastaveni = vratNastaveni();
+        Object nastaveni = nacti();
 
         if ( nastaveni == null) {
             System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");
             System.exit(131);
         }
-//        System.exit(0);
 
         // --------vypis---------
 //        System.out.println(nastaveni);
