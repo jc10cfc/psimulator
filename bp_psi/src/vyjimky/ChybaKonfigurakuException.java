@@ -6,7 +6,7 @@
 package vyjimky;
 
 /**
- * Tahleta vyjimka se hazi, kdyz chvi nastavit masku, ale ta ma nespravny cisla, napr. maska 32.123.12.23
+ * Tahleta vyjimka se hazi, kdyz nastane nejaka chyba pri cteni z XML konfiguraku.
  * @author neiss
  */
 public class ChybaKonfigurakuException extends RuntimeException {

@@ -294,6 +294,10 @@ public class SAXHandler implements ContentHandler {
                 if (iface.length == 2) { // pole se jmenem a typem pocitace
                     PCjmeno = iface[0];
                     PCtyp = iface[1];
+                    if (vypis2) {
+                        System.out.println(" jmeno: " + PCjmeno);
+                        System.out.println(" typ:   " + PCtyp);
+                    }
                 }
             }
             if (PCtyp.equals("cisco")) {
@@ -307,10 +311,6 @@ public class SAXHandler implements ContentHandler {
                 String[] iface = (String[]) rozh;
 
                 if (iface.length == 2) { // pole se jmenem a typem pocitace
-                    if (vypis2) {
-                        System.out.println(" jmeno: " + PCjmeno);
-                        System.out.println(" typ:   " + PCtyp);
-                    }
                     continue;
                 }
 

@@ -33,6 +33,7 @@ public abstract class AbstractPocitac {
         this.jmeno=jmeno;
     }
 
+    @Deprecated
     public AbstractPocitac(int port) {
         komunikace = new Komunikace(port, this);
         rozhrani=new ArrayList<SitoveRozhrani>();
@@ -42,6 +43,7 @@ public abstract class AbstractPocitac {
         rozhrani.add(sr);
     }
 
+    @Deprecated
     public void nastavJmeno(String jm) {
         this.jmeno = jm;
     }
