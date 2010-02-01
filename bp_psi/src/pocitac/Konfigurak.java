@@ -9,6 +9,7 @@ import java.util.logging.Logger;
  *
  * @author haldyr
  */
+@Deprecated
 public class Konfigurak {
 
     public static void nactiTextak() {
