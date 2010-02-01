@@ -15,6 +15,10 @@ import pocitac.*;
  */
 public class Main {
 
+    /**
+     * Vrati List vytvorenych pocitacu
+     * @return
+     */
     static private Object nacti(){
 
         // Cesta ke zdrojovému XML dokumentu
@@ -54,45 +58,16 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        
 
+        // 
+        Object pocitace = nacti();
 
-//        AbstractPocitac pc=new AbstractPocitac();
-//        AbstractPocitac pc2= new AbstractPocitac(3567);
-
-        Object nastaveni = nacti();
-
-        if ( nastaveni == null) {
+        if ( pocitace == null) {
             System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");
             System.exit(131);
         }
 
-        // --------vypis---------
-//        System.out.println(nastaveni);
-
-        // --------vypis---------
-        /*
-        int cisloPC = 1;
-        int cisloRozhrani = 1;
-        for (Object computer : (List)nastaveni) {
-
-            cisloRozhrani = 1;
-            System.out.println("PC"+cisloPC);
-            for (Object rozh : (List)computer) {
-                System.out.println(" rozhrani c."+cisloRozhrani);
-//                System.out.println("  "+rozh);
-                System.out.println("   jmeno:      "+((List)rozh).get(0));
-                System.out.println("   ip:         "+((List)rozh).get(1));
-                System.out.println("   mac:        "+((List)rozh).get(2));
-                System.out.println("   pripojenoK: "+((List)rozh).get(3));
-
-                System.out.println("");
-                cisloRozhrani++;
-            }
-            cisloPC++;
-        }
-         */
-
+       
         // pro testovani, abych to nemusel furt vypinat rucne
 //        System.exit(0);
     }
