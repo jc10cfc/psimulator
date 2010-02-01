@@ -1,5 +1,6 @@
 package Main;
 
+import datoveStruktury.IpAdresa;
 import java.util.ArrayList;
 import java.util.List;
 import org.xml.sax.ContentHandler;
@@ -9,6 +10,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.Attributes;
+import pocitac.AbstractPocitac;
+import pocitac.SitoveRozhrani;
 
 /**
  * Na základě SAX událostí rekonstruujte elementy a atributy původního
@@ -35,7 +38,10 @@ public class SAXHandler implements ContentHandler {
     List pocitac = new ArrayList<List>();
     List rozhrani = new ArrayList<String>();
     // pro vypis kostry xml dokumentu
-    boolean vypis = false;
+    boolean vypis = true;
+    public int port = -1;
+
+    List hotovePocitace = new ArrayList<AbstractPocitac>();
 
     /**
      * Nastaví locator
@@ -76,6 +82,7 @@ public class SAXHandler implements ContentHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 
+        
         String attsStr = "";
         for (int i = 0; i < atts.getLength(); i++) {
             attsStr += (" " + atts.getQName(i) + "=\"" + atts.getValue(i) + "\"");
@@ -122,7 +129,12 @@ public class SAXHandler implements ContentHandler {
 
             List pocitacNovy = new ArrayList<List>();
             for (Object o : pocitac) {
+//                String jm = (String)(((List)o).get(0));
+//                ((List)o).remove(0);
+//                List l = zkopirujListStringu((List) o);
+//                l.add(0, jm);
                 pocitacNovy.add(zkopirujListStringu((List) o));
+//                pocitacNovy.add(l);
             }
 //            System.out.println("pocitacNovy: " + pocitacNovy);
             vsechno.add(pocitacNovy);
@@ -150,6 +162,22 @@ public class SAXHandler implements ContentHandler {
 
         if (vypis) { // tisk
             System.out.println(tabs + s);
+        }
+
+        if (jmenoElementu.equals("port") && s.length() > 2) {
+//            System.out.println("jsem u portu: "+s+" "+s.length());
+            try {
+                port = Integer.valueOf(s);
+            } catch (Exception e) {
+                System.out.println("Specifikace portu musi byt ciselna.\nChyba: "+s);
+                System.exit(1);
+            }
+
+            return;
+        }
+
+        if (jmenoElementu.equals("typ")) {
+            pocitac.add(s);
         }
 
 //        System.out.println("jmenoElementu: "+jmenoElementu);
@@ -213,6 +241,34 @@ public class SAXHandler implements ContentHandler {
     public void endDocument() throws SAXException {
         
 //        System.out.println("vsechno:  " + vsechno);
+
+
+
+
+        String jmenoPC = "";
+
+        for (Object pc : (List)vsechno) {
+            List pcList = (List)pc;
+
+            AbstractPocitac absPocitac = new AbstractPocitac(port++);
+            
+//            jmenoPC = (String)((pcList).get(0));
+//            pcList.remove(0); // mazu typ PC, abych to mohl prochazet jako seznamy
+            for (Object rozh : pcList) {
+//                System.out.println("   jmeno:      "+((List)rozh).get(0));
+//                System.out.println("   ip:         "+((List)rozh).get(1));
+//                System.out.println("   mac:        "+((List)rozh).get(2));
+//                System.out.println("   pripojenoK: "+((List)rozh).get(3));
+                SitoveRozhrani sr = new SitoveRozhrani(jmenoPC, absPocitac, (String)((List)rozh).get(2));
+                sr.jmeno = (String)((List)rozh).get(0);
+                IpAdresa ip = new IpAdresa((String)((List)rozh).get(1), "255.255.255.0");
+
+
+            }
+
+
+            
+        }
 
     }
 

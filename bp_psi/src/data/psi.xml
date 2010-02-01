@@ -1,8 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- DTD tady musi byt!!! -->
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
+<!--
+Struktura xml dokumentu musi byt zachovana. Nemenit poradi elementu.
 <konfigurak>
+	<port></port>
+	<pocitac>
+		<typ></typ>
+		<rozhrani>
+			<jmeno></jmeno>
+			<ip></ip>
+			<mac></mac>
+			<pripojenoK></pripojenoK>
+		</rozhrani>
+	</pocitac>
+</konfigurak>
+-->
+
+
+
+<konfigurak>
+<port>3567</port>
+
 <pocitac id="1">
+<!-- 	<typ>linux</typ> -->
 	<rozhrani id="1-1">
 		<jmeno>eth0</jmeno>
 		<ip>143.32.125.138</ip>
@@ -18,6 +40,7 @@
 </pocitac>
 
 <pocitac id="2">
+<!-- 	<typ>cisco</typ> -->
 	<rozhrani id="2-1">
 		<jmeno>eth0</jmeno>
 		<ip>127.1.1.8</ip>

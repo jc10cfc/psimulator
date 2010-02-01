@@ -66,6 +66,7 @@ public class Main {
             System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");
             System.exit(131);
         }
+//        System.exit(0);
 
         // --------vypis---------
 //        System.out.println(nastaveni);

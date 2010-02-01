@@ -5,14 +5,19 @@
 
 <!ELEMENT jmeno ( #PCDATA ) >
 
-<!ELEMENT konfigurak ( pocitac+ ) >
+<!ELEMENT konfigurak ( port, pocitac+ ) >
 
 <!ELEMENT mac ( #PCDATA ) >
 
-<!ELEMENT pocitac ( rozhrani+ ) >
+<!ELEMENT pocitac ( typ, rozhrani+ ) >
 <!ATTLIST pocitac id NMTOKEN #REQUIRED >
+
+<!ELEMENT port ( #PCDATA ) >
 
 <!ELEMENT pripojenoK ( #PCDATA ) >
 
 <!ELEMENT rozhrani ( jmeno, ip, mac, pripojenoK ) >
 <!ATTLIST rozhrani id NMTOKEN #REQUIRED >
+
+<!ELEMENT typ ( #PCDATA ) >
+
