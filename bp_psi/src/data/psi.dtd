@@ -1,4 +1,4 @@
-<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!-- <?xml version="1.0" encoding="UTF-8" ?> -->
 <!-- http://www.hitsw.com/xml_utilites/ -->
 
 <!ELEMENT ip ( #PCDATA ) >
@@ -9,15 +9,18 @@
 
 <!ELEMENT mac ( #PCDATA ) >
 
-<!ELEMENT pocitac ( typ, rozhrani+ ) >
+<!ELEMENT maska ( #PCDATA ) >
+
+<!ELEMENT pocitac ( rozhrani+ ) >
 <!ATTLIST pocitac id NMTOKEN #REQUIRED >
+<!ATTLIST pocitac jmeno NMTOKEN #REQUIRED >
+<!ATTLIST pocitac typ NMTOKEN #REQUIRED >
 
 <!ELEMENT port ( #PCDATA ) >
 
 <!ELEMENT pripojenoK ( #PCDATA ) >
 
-<!ELEMENT rozhrani ( jmeno, ip, mac, pripojenoK ) >
+<!ELEMENT rozhrani ( jmeno, ip, maska, mac, pripojenoK ) >
 <!ATTLIST rozhrani id NMTOKEN #REQUIRED >
 
-<!ELEMENT typ ( #PCDATA ) >
 

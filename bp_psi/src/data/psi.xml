@@ -7,10 +7,10 @@ Struktura xml dokumentu musi byt zachovana. Nemenit poradi elementu.
 <konfigurak>
 	<port></port>
 	<pocitac>
-		<typ></typ>
 		<rozhrani>
 			<jmeno></jmeno>
 			<ip></ip>
+			<maska></maska>
 			<mac></mac>
 			<pripojenoK></pripojenoK>
 		</rozhrani>
@@ -23,39 +23,46 @@ Struktura xml dokumentu musi byt zachovana. Nemenit poradi elementu.
 <konfigurak>
 <port>3567</port>
 
-<pocitac id="1">
+<pocitac id="1" jmeno="linux1" typ="cisco">
+<!-- 	<jmenoPC>linux1</jmenoPC> -->
 <!-- 	<typ>linux</typ> -->
 	<rozhrani id="1-1">
 		<jmeno>eth0</jmeno>
 		<ip>143.32.125.138</ip>
+		<maska>255.255.255.0</maska>
 		<mac>00:01:02:03:04:05</mac>
 		<pripojenoK>2-2</pripojenoK>
 	</rozhrani>
 	<rozhrani id="1-2">
 		<jmeno>eth1</jmeno>
 		<ip>143.32.125.160</ip>
+		<maska>255.255.255.0</maska>
 		<mac>0a:00:77:03:24:d5</mac>
 		<pripojenoK>2-1</pripojenoK>
 	</rozhrani>
 </pocitac>
 
 <pocitac id="2">
+<!-- 	<jmenoPC>cisco1</jmenoPC> -->
 <!-- 	<typ>cisco</typ> -->
 	<rozhrani id="2-1">
 		<jmeno>eth0</jmeno>
 		<ip>127.1.1.8</ip>
+		<maska>255.255.255.0</maska>
 		<mac>00:0b:0c:0d:0a:01</mac>
 		<pripojenoK>1-2</pripojenoK>
 	</rozhrani>
 	<rozhrani id="2-2">
 		<jmeno>eth1</jmeno>
 		<ip>192.168.1.24</ip>
+		<maska>255.255.255.0</maska>
 		<mac>03:08:b7:30:24:e1</mac>
 		<pripojenoK>1-1</pripojenoK>
 	</rozhrani>
 	<rozhrani id="2-3">
 		<jmeno>eth2</jmeno>
 		<ip>192.168.1.25</ip>
+		<maska>255.255.255.0</maska>
 		<mac>03:08:b7:30:24:e2</mac>
 		<pripojenoK>1-1</pripojenoK>
 	</rozhrani>

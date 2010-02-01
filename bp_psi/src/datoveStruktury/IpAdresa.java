@@ -156,6 +156,7 @@ public class IpAdresa {
     }
 
     private static boolean jednoduchaKontrola(String adr) { //kontrola IP, jestli to jsou cisla s teckama
+        if (adr == null) System.out.println("Chyba: ip adresa je null!"); // pro testovani, pak smazat
         if (!adr.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")) {
             return false;
         }

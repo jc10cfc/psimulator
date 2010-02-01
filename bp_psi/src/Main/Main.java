@@ -72,6 +72,7 @@ public class Main {
 //        System.out.println(nastaveni);
 
         // --------vypis---------
+        /*
         int cisloPC = 1;
         int cisloRozhrani = 1;
         for (Object computer : (List)nastaveni) {
@@ -91,6 +92,7 @@ public class Main {
             }
             cisloPC++;
         }
+         */
 
         // pro testovani, abych to nemusel furt vypinat rucne
 //        System.exit(0);
