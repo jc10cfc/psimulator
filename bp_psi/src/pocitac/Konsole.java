@@ -74,7 +74,7 @@ public class Konsole extends Thread{
     public void posliRadek(String ret){
         try {
             out.write((ret + "\r\n").getBytes());
-            System.out.println("(socket c. " + cislo + " posilam radek): " + ret);
+            pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class Konsole extends Thread{
     public void posli(String ret){
         try {
             out.write((ret).getBytes());
-            System.out.println("(socket c. " + cislo + " posilam): " + ret);
+            pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -98,7 +98,7 @@ public class Konsole extends Thread{
 
     public void vypisPrompt() throws IOException{
         out.write((prompt).getBytes());
-        //System.out.println("(socket c. "+cislo+" posilam): "+ret);
+        //pocitac.vypis("(socket c. "+cislo+" posilam): "+ret);
     }
 
     /**
@@ -109,7 +109,7 @@ public class Konsole extends Thread{
         
         String radek;
         
-        System.out.println("vlakno c. "+cislo+" startuje");
+        pocitac.vypis("vlakno c. "+cislo+" startuje");
 
         try {//vsechno je hozeny do ochrannyho bloku
             in = new BufferedReader(new InputStreamReader(s.getInputStream( ) ) );
@@ -118,17 +118,17 @@ public class Konsole extends Thread{
             while(! ukoncit ) {
                 vypisPrompt();
                 radek = ctiRadek(in);
-                System.out.println("(klient c. "+cislo+" poslal): " + radek);
-                //System.out.println("dylka predchoziho radku: "+radek.length());
+                pocitac.vypis("(klient c. "+cislo+" poslal): " + radek);
+                //pocitac.vypis("dylka predchoziho radku: "+radek.length());
                 //posliRadek(out,radek);
                 parser.zpracujRadek(radek);
             }
 
         } catch ( Exception ex ) {
             ex.printStackTrace();
-            System.err.println( "nastala nejaka chyba" );
+            pocitac.vypis( "nastala nejaka chyba" );
         } finally {
-            System.out.println("Ukoncuji vlakno a socket c. "+cislo);
+            pocitac.vypis("Ukoncuji vlakno a socket c. "+cislo);
             try { //ten socket sice urcite existuje, ale java to jinak nedovoli
                 s.close();
             } catch (IOException ex) { ex.printStackTrace();}

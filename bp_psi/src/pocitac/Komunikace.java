@@ -41,10 +41,10 @@ public class Komunikace extends Thread
         try { //pokus o vytvareni socketu
             ss = new ServerSocket(cisloPortu);
         } catch (IOException e) {
-            System.err.println("Nemuzu poslouchat na portu "+cisloPortu+".");
+            pc.vypis("Nemuzu poslouchat na portu "+cisloPortu+".");
             System.exit(1);
         }
-        System.out.println("Posloucham na portu " + cisloPortu);
+        pc.vypis("Posloucham na portu " + cisloPortu);
 
         try {
             while (true) { // endless loop
@@ -55,7 +55,7 @@ public class Komunikace extends Thread
                     Socket s = ss.accept(); // wait for client call
                     Konsole v = new Konsole(s,pc,seznamSpojeni.size()); // create another clerk
                     seznamSpojeni.add(v);
-                    System.out.println("akceptoval jsem vlakno c. " + (seznamSpojeni.size()-1) + " "
+                    pc.vypis("akceptoval jsem vlakno c. " + (seznamSpojeni.size()-1) + " "
                             + s.getInetAddress() + ":" + s.getPort());
                 }
             }

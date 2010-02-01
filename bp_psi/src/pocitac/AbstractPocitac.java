@@ -45,4 +45,14 @@ public class AbstractPocitac {
         this.jmeno = jm;
     }
 
+    /**
+     * Tahle metoda vypisuje na standartni vystup. Pouzivat pro vypisy v Komunikaci, Konsoli i Parseru atd.
+     * pro snadnejsi debugovani, aby se vedelo, co kterej pocitac dela.
+     * @param ret
+     */
+    public void vypis(String ret){
+        System.out.println("("+jmeno+":) "+ret);
+    }
+
+
 }
