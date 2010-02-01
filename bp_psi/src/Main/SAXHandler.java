@@ -299,6 +299,7 @@ public class SAXHandler implements ContentHandler {
                         System.out.println(" jmeno: " + PCjmeno);
                         System.out.println(" typ:   " + PCtyp);
                     }
+                    absPocitac.nastavJmeno(PCjmeno);
 
                     continue;
                 }
@@ -317,12 +318,13 @@ public class SAXHandler implements ContentHandler {
                 SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndex("jmeno")], absPocitac, iface[dejIndex("mac")]);
                 IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
                 sr.ip = ip;
-
+                
                 absPocitac.pridejRozhrani(sr);
 
                 //TODO: nastvavit pripojenoK
             }
 
+//            absPocitac.vypisRozhrani();
             hotovePocitace.add(absPocitac);
         }
 

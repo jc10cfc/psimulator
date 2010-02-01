@@ -54,5 +54,15 @@ public class AbstractPocitac {
         System.out.println("("+jmeno+":) "+ret);
     }
 
+    // zatim pomocna metoda, pak se muze smazat
+    public void vypisRozhrani(){
 
+        for (SitoveRozhrani iface : rozhrani) {
+            System.out.println("("+jmeno+":) "+iface.jmeno);
+            System.out.println("("+jmeno+":) "+iface.ip.vypisIP());
+            System.out.println("("+jmeno+":) "+iface.ip.vypisMasku());
+            System.out.println("("+jmeno+":) "+iface.macAdresa);
+            System.out.println("("+jmeno+":)");
+        }
+    }
 }

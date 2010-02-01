@@ -41,7 +41,7 @@ public class Ifconfig extends AbstraktniPrikaz {
      */
     int navratovyKod = 0;
     SitoveRozhrani rozhrani; //rozhrani, se kterym se bude operovat
-    int pouzitIp=-1; //cislo seznamIP, ktera IP se ma pouzit
+    int pouzitIp = -1; //cislo seznamIP, ktera IP se ma pouzit
 
 
     public Ifconfig(AbstractPocitac pc, Konsole kon, List<String> slova) {
