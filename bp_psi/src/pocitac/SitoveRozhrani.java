@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class SitoveRozhrani {
 
+    //ahoj
     public IpAdresa ip;
     public String jmeno;
     public String macAdresa;
