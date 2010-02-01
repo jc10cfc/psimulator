@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import pocitac.AbstractPocitac;
 import pocitac.SitoveRozhrani;
+import vyjimky.ChybaKonfigurakuException;
 
 /**
  * Na základě SAX událostí rekonstruujte elementy a atributy původního
@@ -35,7 +36,7 @@ public class SAXHandler implements ContentHandler {
     List pocitac = new ArrayList<String[]>();
     String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
     boolean vypis = false; // pro vypis kostry xml dokumentu
-    boolean vypis2 = true; // vypis pocitacu
+    boolean vypis2 = false; // vypis pocitacu
     public int port = -1;
     String jmenoPC = "";
     String typPC = "";
@@ -278,7 +279,7 @@ public class SAXHandler implements ContentHandler {
         for (Object pc : (List) vsechno) { // prichazim pocitace
             List pcList = (List) pc;
 
-            AbstractPocitac absPocitac = new AbstractPocitac(port++);
+            AbstractPocitac absPocitac;
 
             String PCjmeno = "";
             String PCtyp = "";
@@ -299,10 +300,11 @@ public class SAXHandler implements ContentHandler {
                         System.out.println(" jmeno: " + PCjmeno);
                         System.out.println(" typ:   " + PCtyp);
                     }
+                    absPocitac = new AbstractPocitac(port++);
                     absPocitac.nastavJmeno(PCjmeno);
 
                     continue;
-                }
+                } else throw new ChybaKonfigurakuException("Pocitaci chybi nejaky parametr.");
 
                 if (vypis2) {
                     System.out.println("  jmeno: " + iface[dejIndex("jmeno")]);

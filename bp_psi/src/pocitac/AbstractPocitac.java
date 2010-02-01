@@ -14,12 +14,13 @@ import java.util.List;
  * @author neiss
  */
 
-public class AbstractPocitac {
+public abstract class AbstractPocitac {
     public Komunikace komunikace;
     public List <SitoveRozhrani>rozhrani;
     public String jmeno; //jmeno pocitace
 
 
+    @Deprecated
     public AbstractPocitac(String jmeno){
         komunikace=new Komunikace(3567, this);
         rozhrani=new ArrayList<SitoveRozhrani>();
@@ -36,7 +37,7 @@ public class AbstractPocitac {
         komunikace = new Komunikace(port, this);
         rozhrani=new ArrayList<SitoveRozhrani>();
     }
-
+    
     public void pridejRozhrani(SitoveRozhrani sr){
         rozhrani.add(sr);
     }
