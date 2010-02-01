@@ -3,7 +3,6 @@
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
 <!--
-Struktura xml dokumentu musi byt zachovana. Nemenit poradi elementu.
 <konfigurak>
 	<port></port>
 	<pocitac>
@@ -23,9 +22,7 @@ Struktura xml dokumentu musi byt zachovana. Nemenit poradi elementu.
 <konfigurak>
 <port>3567</port>
 
-<pocitac id="1" jmeno="linux1" typ="cisco">
-<!-- 	<jmenoPC>linux1</jmenoPC> -->
-<!-- 	<typ>linux</typ> -->
+<pocitac id="1" jmeno="linux1" typ="linux">
 	<rozhrani id="1-1">
 		<jmeno>eth0</jmeno>
 		<ip>143.32.125.138</ip>
@@ -42,9 +39,7 @@ Struktura xml dokumentu musi byt zachovana. Nemenit poradi elementu.
 	</rozhrani>
 </pocitac>
 
-<pocitac id="2">
-<!-- 	<jmenoPC>cisco1</jmenoPC> -->
-<!-- 	<typ>cisco</typ> -->
+<pocitac id="2" jmeno="cisco1" typ="cisco">
 	<rozhrani id="2-1">
 		<jmeno>eth0</jmeno>
 		<ip>127.1.1.8</ip>
@@ -68,6 +63,5 @@ Struktura xml dokumentu musi byt zachovana. Nemenit poradi elementu.
 	</rozhrani>
 
 </pocitac>
-
 
 </konfigurak>

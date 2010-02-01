@@ -3,14 +3,9 @@ package Main;
 import datoveStruktury.IpAdresa;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-import javax.print.DocFlavor.STRING;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 import org.xml.sax.Attributes;
 import pocitac.AbstractPocitac;
 import pocitac.SitoveRozhrani;
@@ -212,7 +207,6 @@ public class SAXHandler implements ContentHandler {
         }
 
         if (jmenoElementu.equals("port") && s.length() > 2) {
-//            System.out.println("jsem u portu: "+s+" "+s.length());
             try {
                 port = Integer.valueOf(s);
             } catch (Exception e) {
