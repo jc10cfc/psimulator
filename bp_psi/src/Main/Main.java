@@ -27,6 +27,7 @@ public class Main {
             // Vytvoříme instanci parseru.
             XMLReader parser = XMLReaderFactory.createXMLReader();
 
+            // Vytvoříme vlastní content handler.
             SAXHandler sax = new SAXHandler();
 
             // Vytvoříme vstupní proud XML dat.
