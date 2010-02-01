@@ -21,7 +21,7 @@ public class Ifconfig extends AbstraktniPrikaz {
     String maska;
     String broadcast;
     int pocetBituMasky = -1; //maska zadana formou /24 totiz ma vetsi prioritu nez 255.255.255.0
-    String add; //ipadresa, ktera se ma pridat
+    String add; //IP adresa, ktera se ma pridat
     List <String> del=new ArrayList<String>();  //ipadresa, ktera se ma odebrat
     boolean minus_a = false;
     boolean minus_v = false;
