@@ -1,8 +1,11 @@
+zbyva:
 Udělat třídy pro linux a cisco.
-Do xml přidat jméno počítače, počáteční port a druh počítače.
+
+rozpracovano:
 Do SAXu udělat vytváření objektů AbstractPocitac a SitoveRozhrani
 
-2standa: dodelat masku site do xml a SAXu
+hotovo:
+Do xml přidat jméno počítače, počáteční port a druh počítače.
 
 
 
