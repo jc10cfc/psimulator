@@ -302,22 +302,15 @@ public class SAXHandler implements ContentHandler {
                 absPocitac = new LinuxPocitac(PCjmeno, port++);
             } else throw new ChybaKonfigurakuException("Pocitac nema nastaven typ - linux | cisco.");
 
-
-
+            
             for (Object rozh : pcList) { // prochazim rozhrani u 1 PC
                 String[] iface = (String[]) rozh;
 
                 if (iface.length == 2) { // pole se jmenem a typem pocitace
-                    PCjmeno = iface[0];
-                    PCtyp = iface[1];
-
                     if (vypis2) {
                         System.out.println(" jmeno: " + PCjmeno);
                         System.out.println(" typ:   " + PCtyp);
                     }
-//                    absPocitac = new AbstractPocitac(port++);
-//                    absPocitac.nastavJmeno(PCjmeno);
-
                     continue;
                 }
 
