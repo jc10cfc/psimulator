@@ -8,6 +8,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
 import pocitac.AbstractPocitac;
+import pocitac.CiscoPocitac;
+import pocitac.LinuxPocitac;
 import pocitac.SitoveRozhrani;
 import vyjimky.ChybaKonfigurakuException;
 
@@ -295,16 +297,32 @@ public class SAXHandler implements ContentHandler {
                 if (iface.length == 2) { // pole se jmenem a typem pocitace
                     PCjmeno = iface[0];
                     PCtyp = iface[1];
+                }
+            }
+            if (PCtyp.equals("cisco")) {
+                absPocitac = new CiscoPocitac(PCjmeno, port++);
+            } else if (PCtyp.equals("linux")) {
+                absPocitac = new LinuxPocitac(PCjmeno, port++);
+            } else throw new ChybaKonfigurakuException("Pocitaci chybi nejaky parametr.");
+
+
+
+            for (Object rozh : pcList) { // prochazim rozhrani u 1 PC
+                String[] iface = (String[]) rozh;
+
+                if (iface.length == 2) { // pole se jmenem a typem pocitace
+                    PCjmeno = iface[0];
+                    PCtyp = iface[1];
 
                     if (vypis2) {
                         System.out.println(" jmeno: " + PCjmeno);
                         System.out.println(" typ:   " + PCtyp);
                     }
-                    absPocitac = new AbstractPocitac(port++);
-                    absPocitac.nastavJmeno(PCjmeno);
+//                    absPocitac = new AbstractPocitac(port++);
+//                    absPocitac.nastavJmeno(PCjmeno);
 
                     continue;
-                } else throw new ChybaKonfigurakuException("Pocitaci chybi nejaky parametr.");
+                }
 
                 if (vypis2) {
                     System.out.println("  jmeno: " + iface[dejIndex("jmeno")]);
