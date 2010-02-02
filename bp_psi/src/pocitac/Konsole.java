@@ -33,8 +33,9 @@ public class Konsole extends Thread{
         pocitac=pc;
         parser=new ParserPrikazu(pc, this);
         this.cislo=cislo;
-        this.start();
         prompt=pc.jmeno+":~# ";
+
+        this.start();
     }
 
 

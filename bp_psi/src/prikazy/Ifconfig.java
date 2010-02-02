@@ -9,6 +9,7 @@ import datoveStruktury.IpAdresa;
 import java.util.ArrayList;
 import java.util.List;
 import pocitac.*;
+import vyjimky.SpatnaMaskaException;
 
 /**
  *
@@ -135,7 +136,8 @@ public class Ifconfig extends AbstraktniPrikaz {
             if(rozhr.jmeno.equals(jmenoRozhrani)) rozhrani=rozhr;
         }
         if (rozhrani==null){
-            //tady se nic nevypisuje, protoze ostatni se v ifconfigu asi vyhodnocuje driv
+            //tady se nic nevypisuje, protoze ostatni se v ifconfigu asi vyhodnocuje driv (kdyz je spatne
+            //rozhrani i ipadresa, tak se jako spatna ukaze IP adresa
             navratovyKod=3;
         }
         //------------------------
@@ -164,8 +166,10 @@ public class Ifconfig extends AbstraktniPrikaz {
         }
         //---------------------
         //kontrola IP adresy add (pridavani nove IP)
-        if(!IpAdresa.jeSpravnaIP(add)){
-            navratovyKod=7;
+        if(add!=null){
+            if(!IpAdresa.jeSpravnaIP(add)){
+                navratovyKod=7;
+            }
         }
         //---------------------
         //kontrola IP adres del (odebirani existujici IP)
@@ -187,7 +191,74 @@ public class Ifconfig extends AbstraktniPrikaz {
 
     @Override
     protected void vykonejPrikaz() {
-        kon.posliRadek(toString());
+        switch (navratovyKod){
+            case 0:{
+                if(rozhrani==null){
+                    for(SitoveRozhrani rozhr : pc.rozhrani){
+                        vypisRozhrani(rozhr);
+                    }
+                }else{ //rozhrani bylo zadano
+                    if( seznamIP.size()==0 && add==null && del.size()==0 && maska==null && broadcast==null){
+                        //jenom vypis rozhrani
+                        vypisRozhrani(rozhrani);
+                    }else{
+                        nastavMasku(rozhrani);
+                        nastavIP(rozhrani);
+                    }
+                }
+            }
+            case 1:{} //spatnej prepinac
+            case 2:{
+
+            }
+        }
+    }
+
+    private void vypisRozhrani(SitoveRozhrani r){
+        //je to jen provizorni vypis
+        kon.posliRadek(r.jmeno+"\tLink encap:Ethernet  HWadr "+r.macAdresa);
+        kon.posliRadek("\tinet adr:"+r.ip.vypisIP()+"  Všesměr:"+r.ip.vypisBroadcast()+
+                "  Maska:"+r.ip.vypisMasku());
+        kon.posliRadek("\tAKTIVOVÁNO VŠESMĚROVÉ_VYSÍLÁNÍ BĚŽÍ MULTICAST  MTU:1500  Metrika:1"); //asi ne cesky
+        kon.posliRadek("\tRX packets:169765 errors:2 dropped:14 overruns:2 frame:0"); //ty cisla by chtely generovat
+        kon.posliRadek("\tTX packets:157184 errors:0 dropped:0 overruns:0 carrier:0");
+        kon.posliRadek("\tkolizí:0 délka odchozí fronty:1000");
+        kon.posliRadek("\tPřijato bajtů: 155979699 (155.9 MB) Odesláno bajtů: 26830180 (26.8 MB)");
+        kon.posliRadek("\tPřerušení:21 Vstupně/Výstupní port:0xa000");
+        kon.posliRadek("");
+    }
+
+    private void nastavIP(SitoveRozhrani r){ //nastavuje ip
+        if(pouzitIp==-1)return;
+        String nastavit=seznamIP.get(pouzitIp);
+        if(pocetBituMasky==-1){ //zadana jen IP bez masky
+            if(nastavit.equals(r.ip.vypisIP())){//stejna ip, nic se nemeni
+            }else{
+                boolean nastavitDefaultniMasku=true;
+                r.ip.nastavIP(nastavit);
+                for(int i=pouzitIp;i<slova.size();i++){ //je nutny to takhle cyklem prochazet, protoze
+                          //pocetBituMasky ma sice vetsi prioritu, ale pokud tam neni tak zalezi na poradi:
+                          //kdyz je parametr netmask po adrese, tak se pouzije, jinak ne
+                    if(slova.get(i).equals("netmask"))nastavitDefaultniMasku=false;
+                }
+                if(nastavitDefaultniMasku){
+                    r.ip.nastavMasku("255.0.0.0");
+                }
+            }
+        }else{
+            r.ip.nastavIP(nastavit);
+            r.ip.nastavMasku(pocetBituMasky);
+        }
+    }
+
+    private void nastavMasku(SitoveRozhrani r){//pokusi se nastavit masku
+        if (maska==null)return;
+        //je potreba zkontrolovat spravnost masky!!!
+        try{
+            r.ip.nastavMasku(maska);
+        }catch(SpatnaMaskaException ex){
+            kon.posliRadek("SIOCSIFNETMASK: Invalid argument");
+        }
     }
 
     @Override

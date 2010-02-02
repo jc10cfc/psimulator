@@ -70,6 +70,10 @@ public class IpAdresa {
         adresa = integerZeStringu(adr);
     }
 
+    /**
+     * Nastavi masku ze Stringu, pokud je maska spatna, ponecha starou masku!!!
+     * @param maska
+     */
     public void nastavMasku(String maska) {
         if(!jeSpravnaIP(maska)){
             throw new RuntimeException("spatna maska: "+maska);
@@ -115,11 +119,16 @@ public class IpAdresa {
     }
 
     /**
-     * vraci true, kdyz IP adresa neni skutecnou IP adresou ale jenomcislem site
+     * vraci true, kdyz IP adresa neni skutecnou IP adresou ale jenom cislem site
      * @return
      */
     public boolean jeCislemSite(){
         if(adresa == cisloSite())return true;
+        return false;
+    }
+
+    public boolean stejnaAdresa(IpAdresa jina){
+        if (this.adresa==jina.adresa) return true;
         return false;
     }
     /**

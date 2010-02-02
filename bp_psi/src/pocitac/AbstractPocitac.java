@@ -28,9 +28,9 @@ public abstract class AbstractPocitac {
     }
 
     public AbstractPocitac(String jmeno, int port) {
-        komunikace = new Komunikace(port, this);
-        rozhrani=new ArrayList<SitoveRozhrani>();
         this.jmeno=jmeno;
+        rozhrani=new ArrayList<SitoveRozhrani>();
+        komunikace = new Komunikace(port, this);
     }
 
     @Deprecated
