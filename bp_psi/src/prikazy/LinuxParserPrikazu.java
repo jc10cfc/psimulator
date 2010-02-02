@@ -9,7 +9,7 @@ import pocitac.AbstractPocitac;
 import pocitac.Konsole;
 
 /**
- *
+ * Parser prikazu pro linux, zde se volaji prikazy dle toho, co poslal uzivatel.
  * @author haldyr
  */
 public class LinuxParserPrikazu extends ParserPrikazu {

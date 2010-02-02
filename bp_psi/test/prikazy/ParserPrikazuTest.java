@@ -46,7 +46,7 @@ public class ParserPrikazuTest {
     // public void hello() {}
     @Test
     public void pokusIndexOf() {
-        ParserPrikazu par = new ParserPrikazu(null, null);
+        ParserPrikazu par = new LinuxParserPrikazu(null, null);
         par.zpracujRadek("ifconfig wlan0 1.2.3.4/24");
     }
 
@@ -73,7 +73,7 @@ public class ParserPrikazuTest {
         System.out.println("testZpracujLepe");
 
         //Konsole k = new Konsole(null, null, 0);
-        ParserPrikazu pp = new ParserPrikazu(null, null);
+        ParserPrikazu pp = new LinuxParserPrikazu(null, null);
 
         //pp.setRadek("ip link set wlan0 down");
 

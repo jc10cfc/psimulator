@@ -1,10 +1,14 @@
 zbyva:
-Udělat třídy pro linux a cisco.
+parser prikazu pro cisco - haldyr
+vyresit ukoncovani vlaken pri odpojeni uzivatele
+routovaci tabulky
+ping
 
 rozpracovano:
 
 
 hotovo:
+Udělat třídy pro linux a cisco.
 Do SAXu udělat vytváření objektů AbstractPocitac a SitoveRozhrani
 Do xml přidat jméno počítače, počáteční port a druh počítače.
 

@@ -9,7 +9,7 @@ import pocitac.AbstractPocitac;
 import pocitac.Konsole;
 
 /**
- *
+ * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
  * @author haldyr
  */
 public class CiscoParserPrikazu extends ParserPrikazu {
@@ -21,11 +21,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     @Override
     public void zpracujRadek(String s) {
         
-        AbstraktniPrikaz pr;
+        AbstraktniPrikaz prikaz;
         radek = s;
         slova = new LinkedList<String>();
-
-        //rozsekej();
+        
         rozsekejLepe();
 
         if (slova.size() < 1) {
@@ -37,9 +36,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (slova.get(0).equals("exit")) {
-            pr = new Exit(pc, kon, slova);
+            prikaz = new Exit(pc, kon, slova);
         } else if (slova.get(0).equals("ifconfig")) {
-            pr = new Ifconfig(pc, kon, slova);
+            prikaz = new Ifconfig(pc, kon, slova);
         } else {
             kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
         }
