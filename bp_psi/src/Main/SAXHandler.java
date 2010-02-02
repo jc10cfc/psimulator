@@ -61,19 +61,6 @@ public class SAXHandler implements ContentHandler {
     }
 
     /**
-     * pomocna metoda
-     * @param l
-     * @return
-     */
-    private List zkopirujListStringu(List l) {
-        List novy = new ArrayList<String>();
-        for (Object o : l) {
-            novy.add(o);
-        }
-        return novy;
-    }
-
-    /**
      * Pomocna metoda pro pristup k poli (prvky 1 rozhrani jsou v poli)
      * @param s   - co chceme z pole
      * @return  index v poli, kde se hledana hodnota naleza

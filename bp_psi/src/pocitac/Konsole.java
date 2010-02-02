@@ -11,8 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import prikazy.CiscoParserPrikazu;
+import prikazy.LinuxParserPrikazu;
+import vyjimky.NeznamyTypPcException;
 
 /**
  *
@@ -29,11 +30,16 @@ public class Konsole extends Thread{
     private BufferedReader in;
 
     public Konsole(Socket s,AbstractPocitac pc, int cislo){
-        this.s=s;
-        pocitac=pc;
-        parser=new ParserPrikazu(pc, this);
+        this.s = s;
+        pocitac = pc;
+        if (pc instanceof LinuxPocitac) {
+            parser=new LinuxParserPrikazu(pc, this);
+            prompt = pc.jmeno+":~# ";
+        } else if (pc instanceof CiscoPocitac) {
+            parser = new CiscoParserPrikazu(pc, this);
+            prompt = pc.jmeno+">";
+        } else throw new NeznamyTypPcException("Neznamy typ PC. Nelze pro nej vytvorit parser.");
         this.cislo=cislo;
-        prompt=pc.jmeno+":~# ";
 
         this.start();
     }

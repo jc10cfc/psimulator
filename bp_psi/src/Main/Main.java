@@ -3,11 +3,9 @@
  */
 
 package Main;
-import java.util.List;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
-import pocitac.*;
 
 /**
  *
