@@ -17,7 +17,7 @@ import vyjimky.SpatnaMaskaException;
  */
 public class Ifconfig extends AbstraktniPrikaz {
 
-    boolean vypisovani=true; //jestli se maj vypisovat informace pro ladeni
+    boolean ladiciVypisovani=true; //jestli se maj vypisovat informace pro ladeni
 
     String jmenoRozhrani;
     List <String> seznamIP=new ArrayList<String>();
@@ -152,7 +152,7 @@ public class Ifconfig extends AbstraktniPrikaz {
                 pouzitIp=i;
             } else {
                 kon.posliRadek(seznamIP.get(i)+": unknown host");
-                kon.posli("ifconfig: `--help' vypíše návod k použití.");
+                kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
                 navratovyKod=5; //neplatna IP
             }
 
@@ -197,41 +197,49 @@ public class Ifconfig extends AbstraktniPrikaz {
         switch (navratovyKod){
             case 0:{
                 proved();
+                break;
             }
-            case 1:{} //spatnej prepinac, to se nic neprovadi
+            case 1:{break;} //spatnej prepinac, to se nic neprovadi
             case 2:{ //nejaka chyba v gramatice
                 proved();
                 vypisHelp();
-                if(vypisovani)kon.posliRadek("blok pro navratovy kod 2, navratovy kod:"+navratovyKod);
+                if(ladiciVypisovani) kon.posliRadek("blok pro navratovy kod 2, navratovy kod:"+navratovyKod);
+                break;
             }
             case 3:{ //rozhrani neexistuje
                 kon.posliRadek(jmenoRozhrani+": chyba při získávání informací o rozhraní Zařízení nebylo nalezeno");
+                break;
             }
             case 4:{ //zadano vice ip adres
                 proved();
+                break;
             }
             case 5:{ //neplatna ip adresa, v tomto pripade se musi provist vsechno, co je pred tou spatnou IP
                 proved(); //takze tohle je spatne, protoze nezalezi na poradi!!!!!
                 //ten chybovej vypis uz provede metoda zkontrolujPrikaz
+                break;
             }
             case 6:{ //pocetBituMasky byl vetsi nez 32, nicmene metoda zkontrolujPrikaz to uz opravila
                 proved();
+                break;
             }
             case 7:{ //neplatna adresa add
                 proved();
+                break;
             }
             case 8:{//neplatna adresa del
                 proved(); //muzu to v klidu provist, protoze se ta spatna adresa uz stejne smazala
+                break;
             }
         }
-        if(vypisovani){
+        if(ladiciVypisovani){
             kon.posliRadek("");
             kon.posliRadek("navratovy kod:"+navratovyKod);
         }
     }
 
     private void proved() { //nastavuje
-        if(vypisovani){
+        if(ladiciVypisovani){
             kon.posliRadek("Spoustim metodu proved(): navratovy kod:"+navratovyKod);
         }
         if (rozhrani == null) {
@@ -248,6 +256,9 @@ public class Ifconfig extends AbstraktniPrikaz {
                 //nastavovani broadcastu zatim nepodporuju
                 if(navratovyKod!=7 && add !=null){ //parametr add byl zadan a je spravnej
                     //ale zatim ho nepodporuju
+                    //POZOR pri implementaci:
+                    //Je to jediny nastaveni, u kteryho se rozhoduje podle navratovyho kodu, na ten se ale neda
+                    //spolehat, protoze se muze prepsat
                 }
                 //nastavovani parametru del zatim nepodporuju
             }
@@ -301,7 +312,7 @@ public class Ifconfig extends AbstraktniPrikaz {
         }
     }
 
-    private void vypisHelp(){ // funkce na vypisovani napovedy --help
+    private void vypisHelp(){ // funkce na ladiciVypisovani napovedy --help
         kon.posliRadek("Použití: (...)");
     }
 
