@@ -17,6 +17,8 @@ import vyjimky.SpatnaMaskaException;
  */
 public class Ifconfig extends AbstraktniPrikaz {
 
+    boolean vypisovani=true; //jestli se maj vypisovat informace pro ladeni
+
     String jmenoRozhrani;
     List <String> seznamIP=new ArrayList<String>();
     String maska;
@@ -169,6 +171,7 @@ public class Ifconfig extends AbstraktniPrikaz {
         if(add!=null){
             if(!IpAdresa.jeSpravnaIP(add)){
                 navratovyKod=7;
+                kon.posliRadek(add+": unknown host");
             }
         }
         //---------------------
@@ -193,23 +196,60 @@ public class Ifconfig extends AbstraktniPrikaz {
     protected void vykonejPrikaz() {
         switch (navratovyKod){
             case 0:{
-                if(rozhrani==null){
-                    for(SitoveRozhrani rozhr : pc.rozhrani){
-                        vypisRozhrani(rozhr);
-                    }
-                }else{ //rozhrani bylo zadano
-                    if( seznamIP.size()==0 && add==null && del.size()==0 && maska==null && broadcast==null){
-                        //jenom vypis rozhrani
-                        vypisRozhrani(rozhrani);
-                    }else{
-                        nastavMasku(rozhrani);
-                        nastavIP(rozhrani);
-                    }
-                }
+                proved();
             }
-            case 1:{} //spatnej prepinac
-            case 2:{
+            case 1:{} //spatnej prepinac, to se nic neprovadi
+            case 2:{ //nejaka chyba v gramatice
+                proved();
+                vypisHelp();
+                if(vypisovani)kon.posliRadek("blok pro navratovy kod 2, navratovy kod:"+navratovyKod);
+            }
+            case 3:{ //rozhrani neexistuje
+                kon.posliRadek(jmenoRozhrani+": chyba při získávání informací o rozhraní Zařízení nebylo nalezeno");
+            }
+            case 4:{ //zadano vice ip adres
+                proved();
+            }
+            case 5:{ //neplatna ip adresa, v tomto pripade se musi provist vsechno, co je pred tou spatnou IP
+                proved(); //takze tohle je spatne, protoze nezalezi na poradi!!!!!
+                //ten chybovej vypis uz provede metoda zkontrolujPrikaz
+            }
+            case 6:{ //pocetBituMasky byl vetsi nez 32, nicmene metoda zkontrolujPrikaz to uz opravila
+                proved();
+            }
+            case 7:{ //neplatna adresa add
+                proved();
+            }
+            case 8:{//neplatna adresa del
+                proved(); //muzu to v klidu provist, protoze se ta spatna adresa uz stejne smazala
+            }
+        }
+        if(vypisovani){
+            kon.posliRadek("");
+            kon.posliRadek("navratovy kod:"+navratovyKod);
+        }
+    }
 
+    private void proved() { //nastavuje
+        if(vypisovani){
+            kon.posliRadek("Spoustim metodu proved(): navratovy kod:"+navratovyKod);
+        }
+        if (rozhrani == null) {
+            for (SitoveRozhrani rozhr : pc.rozhrani) {
+                vypisRozhrani(rozhr);
+            }
+        } else { //rozhrani bylo zadano
+            if (seznamIP.size() == 0 && add == null && del.size() == 0 && maska == null && broadcast == null) {
+                //jenom vypis rozhrani
+                vypisRozhrani(rozhrani);
+            } else { //nastavovani
+                nastavMasku(rozhrani);
+                nastavIP(rozhrani);
+                //nastavovani broadcastu zatim nepodporuju
+                if(navratovyKod!=7 && add !=null){ //parametr add byl zadan a je spravnej
+                    //ale zatim ho nepodporuju
+                }
+                //nastavovani parametru del zatim nepodporuju
             }
         }
     }
@@ -253,12 +293,22 @@ public class Ifconfig extends AbstraktniPrikaz {
 
     private void nastavMasku(SitoveRozhrani r){//pokusi se nastavit masku
         if (maska==null)return;
-        //je potreba zkontrolovat spravnost masky!!!
+        //je potreba zkontrolovat spravnost masky!!! //proto vyjimka
         try{
             r.ip.nastavMasku(maska);
         }catch(SpatnaMaskaException ex){
             kon.posliRadek("SIOCSIFNETMASK: Invalid argument");
         }
+    }
+
+    private void vypisHelp(){ // funkce na vypisovani napovedy --help
+        kon.posliRadek("Použití: (...)");
+    }
+
+    @Deprecated //zjistil jsem, ze tahle metoda vlastne neni vubec potreba
+    private void unknownHost(String vypsat){
+        kon.posliRadek(vypsat+": Unknown host");
+        kon.posliRadek("ifconfig: `--help' vypíše návod k použití.)");
     }
 
     @Override

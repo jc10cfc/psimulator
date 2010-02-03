@@ -35,6 +35,7 @@ public abstract class AbstractPocitac {
 
     @Deprecated
     public AbstractPocitac(int port) {
+        vypis("Pouziva se deprecated metoda AbstractPocitac(int port)");
         komunikace = new Komunikace(port, this);
         rozhrani=new ArrayList<SitoveRozhrani>();
     }
@@ -45,6 +46,7 @@ public abstract class AbstractPocitac {
 
     @Deprecated
     public void nastavJmeno(String jm) {
+        vypis("Pouziva se deprecated metoda nastavJmeno(String jm)");
         this.jmeno = jm;
     }
 

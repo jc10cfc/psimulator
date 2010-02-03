@@ -24,7 +24,7 @@ public class Konsole extends Thread{
     private AbstractPocitac pocitac;
     private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
-    public String prompt="dsy@dsnlab1:~# ";
+    public String prompt="divnej defaultni promt:~# ";
     boolean ukoncit;
     private OutputStream out;
     private BufferedReader in;
