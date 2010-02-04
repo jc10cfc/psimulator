@@ -99,21 +99,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /**
-     * pomocna metoda pro vypis povolenych prikazu
-     * @param n seznam, ktery se bude prochazet po prvcich a posilat uzivateli
-     */
-    private void posliList(List n) {
-        Collections.sort(n);
-        for (Object s : n) {
-            kon.posliRadek((String) s);
-        }
-    }
-
     @Override
     public void zpracujRadek(String s) {
 
-        List napoveda = new ArrayList<String>();
+        
         AbstraktniPrikaz prikaz;
         radek = s;
         slova.clear();
@@ -134,48 +123,13 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             }
         }
 
-
         if (slova.get(0).equals("")) {
             return; // prazdny Enter
         }
 
         if (slova.get(0).equals("?")) {
-            switch (stav) {
-                case USER:
-                    kon.posliRadek("Exec commands:");
-                    napoveda.add("  enable           Turn on privileged commands");
-                    napoveda.add("  exit             Exit from the EXEC");
-                    napoveda.add("  ping             Send echo messages");
-                    napoveda.add("  show             Show running system information");
-                    break;
-
-                case ROOT:
-                    kon.posliRadek("Exec commands:");
-                    napoveda.add("  configure        Enter configuration mode");
-                    napoveda.add("  disable          Turn off privileged commands");
-                    napoveda.add("  enable           Turn on privileged commands");
-                    napoveda.add("  ping             Send echo messages");
-                    napoveda.add("  show             Show running system information");
-                    break;
-
-                case CONFIG:
-                    kon.posliRadek("Configure commands:");
-                    napoveda.add("  interface                   Select an interface to configure");
-                    napoveda.add("  ip                          Global IP configuration subcommands");
-                    napoveda.add("  exit                        Exit from configure mode");
-                    napoveda.add("  access-list                 Add an access list entry");
-                    break;
-
-                case IFACE:
-                    kon.posliRadek("Interface configuration commands:");
-                    napoveda.add("  exit                    Exit from interface configuration mode");
-                    napoveda.add("  ip                      Interface Internet Protocol config commands");
-                    napoveda.add("  no                      Negate a command or set its defaults");
-            }
-            posliList(napoveda);
+            prikaz = new Otaznik(pc, kon, slova, stav);
             return;
-
-
         }
 
 // == stavy ==
