@@ -41,21 +41,21 @@
 
 <pocitac id="2" jmeno="cisco1" typ="cisco">
 	<rozhrani id="2-1">
-		<jmeno>eth0</jmeno>
+		<jmeno>FastEthernet0/0</jmeno>
 		<ip>127.1.1.8</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:0b:0c:0d:0a:01</mac>
 		<pripojenoK>1-2</pripojenoK>
 	</rozhrani>
 	<rozhrani id="2-2">
-		<jmeno>eth1</jmeno>
+		<jmeno>FastEthernet0/1</jmeno>
 		<ip>192.168.1.24</ip>
 		<maska>255.255.255.0</maska>
 		<mac>03:08:b7:30:24:e1</mac>
 		<pripojenoK>1-1</pripojenoK>
 	</rozhrani>
 	<rozhrani id="2-3">
-		<jmeno>eth2</jmeno>
+		<jmeno>FastEthernet0/2</jmeno>
 		<ip>192.168.1.25</ip>
 		<maska>255.255.255.0</maska>
 		<mac>03:08:b7:30:24:e2</mac>

@@ -28,6 +28,7 @@ public class Konsole extends Thread{
     boolean ukoncit;
     private OutputStream out;
     private BufferedReader in;
+    public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
 
     public Konsole(Socket s,AbstractPocitac pc, int cislo){
         this.s = s;
@@ -124,7 +125,9 @@ public class Konsole extends Thread{
             out = s.getOutputStream();
             ukoncit=false;
             while(! ukoncit ) {
-                vypisPrompt();
+                if (vypisPrompt) {
+                    vypisPrompt();
+                }
                 radek = ctiRadek(in);
                 pocitac.vypis("(klient c. "+cislo+" poslal): " + radek);
                 //pocitac.vypis("dylka predchoziho radku: "+radek.length());

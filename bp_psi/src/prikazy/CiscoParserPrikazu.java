@@ -1,22 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package prikazy;
 
 import datoveStruktury.CiscoStavy;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import static datoveStruktury.CiscoStavy.*;
 import java.util.LinkedList;
 import java.util.List;
 import pocitac.AbstractPocitac;
 import pocitac.Konsole;
+import pocitac.SitoveRozhrani;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -29,22 +24,63 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         slova = new LinkedList<String>();
     }
     CiscoStavy stav = USER;
+    boolean configure1 = false;
 
     private void ping() {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     private void show() {
+
+        switch (stav) {
+            case USER:
+                break;
+
+            case ROOT:
+                if (slova.size() == 2) {
+                    if (slova.get(1).equals("running-config")) {
+                        runningconfig();
+                        return;
+                    }
+                }
+                break;
+        }
     }
 
+    // hotov
     private void configure() {
-        if (slova.get(1).equals("terminal")){
-            stav = CONFIG;
-            kon.prompt = pc.jmeno + "(config)#";
-            kon.posliRadek("Enter configuration commands, one per line.  End with exit."); // zmena oproti ciscu: End with CNTL/Z.
+
+        if (slova.size() == 1 && !configure1) {
+            kon.posli("Configuring from terminal, memory, or network [terminal]? ");
+            kon.vypisPrompt = false;
+            configure1 = true;
+            return;
         }
 
+        int cis = 1;
+        if (configure1) {
+            cis = 0;
+        }
+        if (slova.get(cis).equals("terminal") || configure1) {
+            stav = CONFIG;
+            kon.prompt = pc.jmeno + "(config)#";
+            kon.posliRadek("Enter configuration commands, one per line.  End with 'exit'."); // zmena oproti ciscu: End with CNTL/Z.
+            configure1 = false;
+            kon.vypisPrompt = true;
+            return;
+        }
 
-        //
+        int pocet = pc.jmeno.length() + 1 + slova.get(0).length() + 1;
+        String ret = "";
+
+        for (int i = 0; i
+                < pocet; i++) {
+            ret += " ";
+        }
+        ret += "^";
+        kon.posliRadek(ret);
+        kon.posliRadek("% Invalid input detected at '^' marker.");
+        kon.posliRadek("");
     }
 
     private void iproute() {
@@ -63,11 +99,14 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    private void posli(List n) {
+    /**
+     * pomocna metoda pro vypis povolenych prikazu
+     * @param n seznam, ktery se bude prochazet po prvcich a posilat uzivateli
+     */
+    private void posliList(List n) {
         Collections.sort(n);
-
         for (Object s : n) {
-            kon.posliRadek("  " + (String) s);
+            kon.posliRadek((String) s);
         }
     }
 
@@ -82,49 +121,61 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         rozsekejLepe();
 
         if (slova.size() < 1) {
-            return;
+            return; // jen mezera
         }
+
+        if (configure1) {
+            if (slova.get(0).equals("terminal") || slova.get(0).equals("")) {
+                configure();
+                return;
+            } else {
+                kon.posliRadek("?Must be \"terminal\"");
+                return;
+            }
+        }
+
 
         if (slova.get(0).equals("")) {
             return; // prazdny Enter
         }
 
-
         if (slova.get(0).equals("?")) {
             switch (stav) {
                 case USER:
                     kon.posliRadek("Exec commands:");
-                    napoveda.add("enable");
-                    napoveda.add("exit");
-                    napoveda.add("ping");
-                    napoveda.add("show");
+                    napoveda.add("  enable           Turn on privileged commands");
+                    napoveda.add("  exit             Exit from the EXEC");
+                    napoveda.add("  ping             Send echo messages");
+                    napoveda.add("  show             Show running system information");
                     break;
 
                 case ROOT:
                     kon.posliRadek("Exec commands:");
-                    napoveda.add("configure");
-                    napoveda.add("disable");
-                    napoveda.add("enable");
-                    napoveda.add("ping");
-                    napoveda.add("show");
+                    napoveda.add("  configure        Enter configuration mode");
+                    napoveda.add("  disable          Turn off privileged commands");
+                    napoveda.add("  enable           Turn on privileged commands");
+                    napoveda.add("  ping             Send echo messages");
+                    napoveda.add("  show             Show running system information");
                     break;
 
                 case CONFIG:
                     kon.posliRadek("Configure commands:");
-                    napoveda.add("interface");
-                    napoveda.add("ip");
-                    napoveda.add("exit");
-                    napoveda.add("access-list");
+                    napoveda.add("  interface                   Select an interface to configure");
+                    napoveda.add("  ip                          Global IP configuration subcommands");
+                    napoveda.add("  exit                        Exit from configure mode");
+                    napoveda.add("  access-list                 Add an access list entry");
                     break;
 
                 case IFACE:
                     kon.posliRadek("Interface configuration commands:");
-                    napoveda.add("exit");
-                    napoveda.add("ip");
-                    napoveda.add("no");
+                    napoveda.add("  exit                    Exit from interface configuration mode");
+                    napoveda.add("  ip                      Interface Internet Protocol config commands");
+                    napoveda.add("  no                      Negate a command or set its defaults");
             }
-            posli(napoveda);
+            posliList(napoveda);
             return;
+
+
         }
 
 // == stavy ==
@@ -136,7 +187,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         switch (stav) {
             case USER:
-                if (slova.get(0).equals("enable")) {
+                if (slova.get(0).equals("e")) {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     return;
@@ -202,7 +253,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 }
                 break;
 
-                //ip address, no shutdown, exit   (jmeno(config-if)#)
+            //ip address, no shutdown, exit   (jmeno(config-if)#)
             case IFACE:
                 if (slova.get(0).equals("exit")) {
                     stav = CONFIG;
@@ -219,16 +270,73 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 }
         }
 
-
-
-
-        if (slova.get(0).equals("exit")) {
-            prikaz = new Exit(pc, kon, slova);
-        } else if (slova.get(0).equals("ifconfig")) {
+        // pak zrusit ifconfig
+        if (slova.get(0).equals("ifconfig")) {
             prikaz = new Ifconfig(pc, kon, slova);
-        } else {
+        } else { // pak se budou resit asi jmena pocitacu
             kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
         }
+    }
+
+    private void runningconfig() {
+        kon.posliRadek("Building configuration...\n"
+                + "\n"
+                + "Current configuration : 827 bytes\n"
+                + "!\n"
+                + "version 12.4\n"
+                + "service timestamps debug datetime msec\n"
+                + "service timestamps log datetime msec\n"
+                + "no service password-encryption\n"
+                + "!\n"
+                + "hostname " + pc.jmeno + "\n"
+                + "!\n"
+                + "boot-start-marker\n"
+                + "boot-end-marker\n"
+                + "!\n"
+                + "!\n"
+                + "no aaa new-model\n"
+                + "!\n"
+                + "resource policy\n"
+                + "!\n"
+                + "mmi polling-interval 60\n"
+                + "no mmi auto-configure\n"
+                + "no mmi pvc\n"
+                + "mmi snmp-timeout 180\n"
+                + "ip subnet-zero\n"
+                + "ip cef\n"
+                + "!\n"
+                + "!\n"
+                + "no ip dhcp use vrf connected\n"
+                + "!\n"
+                + "!\n"
+                + "ip name-server 147.32.80.9\n"
+                + "ip name-server 147.32.80.105\n"
+                + "!\n"
+                + "!\n"
+                + "!\n"
+                + "!");
+        for (Object o : pc.rozhrani) {
+            SitoveRozhrani sr = (SitoveRozhrani) o;
+            kon.posliRadek("interface " + sr.jmeno + "\n"
+                    + " ip address " + sr.ip.vypisIP() + " " + sr.ip.vypisMasku() + "\n"
+                    + " duplex auto\n"
+                    + " speed auto\n!"
+                    + "ip classless\n"
+                    + "!\n");
+        }
+
+        kon.posliRadek("ip http server\n"
+                + "!\n"
+                + "!\n"
+                + "control-plane\n"
+                + "!\n"
+                + "!\n"
+                + "line con 0\n"
+                + "line aux 0\n"
+                + "line vty 0 4\n"
+                + " login\n"
+                + "!\n"
+                + "end\n");
     }
 }
 
