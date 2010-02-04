@@ -1,10 +1,11 @@
 zbyva:
-parser prikazu pro cisco - haldyr
 vyresit ukoncovani vlaken pri odpojeni uzivatele
 routovaci tabulky
 ping
 
+
 rozpracovano:
+parser prikazu pro cisco - haldyr
 
 
 hotovo:
