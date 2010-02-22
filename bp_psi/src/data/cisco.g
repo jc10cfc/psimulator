@@ -1,6 +1,8 @@
 grammar cisco;
 options {k=1;}
 
+// asi smazat
+
 start
 :   show
 |   enable;

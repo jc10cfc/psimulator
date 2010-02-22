@@ -3,12 +3,9 @@ package prikazy;
 import datoveStruktury.CiscoStavy;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import static datoveStruktury.CiscoStavy.*;
 import java.util.LinkedList;
-import java.util.List;
 import pocitac.AbstractPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
@@ -73,8 +70,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         int pocet = pc.jmeno.length() + 1 + slova.get(0).length() + 1;
         String ret = "";
 
-        for (int i = 0; i
-                < pocet; i++) {
+        for (int i = 0; i < pocet; i++) {
             ret += " ";
         }
         ret += "^";
@@ -102,7 +98,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     @Override
     public void zpracujRadek(String s) {
 
-        
         AbstraktniPrikaz prikaz;
         radek = s;
         slova.clear();
