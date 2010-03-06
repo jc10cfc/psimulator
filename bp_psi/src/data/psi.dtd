@@ -12,7 +12,7 @@
 <!ELEMENT maska ( #PCDATA ) >
 
 <!ELEMENT pocitac ( rozhrani+ ) >
-<!ATTLIST pocitac id NMTOKEN #REQUIRED >
+<!--<!ATTLIST pocitac id NMTOKEN #REQUIRED >-->
 <!ATTLIST pocitac jmeno NMTOKEN #REQUIRED >
 <!ATTLIST pocitac typ NMTOKEN #REQUIRED >
 
@@ -21,6 +21,6 @@
 <!ELEMENT pripojenoK ( #PCDATA ) >
 
 <!ELEMENT rozhrani ( jmeno, ip, maska, mac, pripojenoK ) >
-<!ATTLIST rozhrani id NMTOKEN #REQUIRED >
+<!--<!ATTLIST rozhrani id NMTOKEN #REQUIRED >-->
 
 

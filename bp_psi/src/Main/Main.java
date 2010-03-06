@@ -44,6 +44,7 @@ public class Main {
 
         } catch (Exception e) {
 
+            // TODO: zakomentovat, az bude vse hotovo
             e.printStackTrace();
 
         }
