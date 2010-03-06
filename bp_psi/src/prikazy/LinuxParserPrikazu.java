@@ -25,7 +25,6 @@ public class LinuxParserPrikazu extends ParserPrikazu {
         radek = s;
         slova = new LinkedList<String>();
 
-        //rozsekej();
         rozsekejLepe();
 
         if (slova.size() < 1) {

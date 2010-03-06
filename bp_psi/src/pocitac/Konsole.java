@@ -29,6 +29,7 @@ public class Konsole extends Thread{
     private OutputStream out;
     private BufferedReader in;
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
+    public boolean doplnovani = false;
 
     public Konsole(Socket s,AbstractPocitac pc, int cislo){
         this.s = s;
@@ -58,7 +59,15 @@ public class Konsole extends Thread{
         for(;;){
             try {
                 z = (char) in.read();
+
+//                System.out.println(z);
+
+                if (z == '\t') {
+                    doplnovani = true;
+                    break;
+                }
                 ret+=z;
+                
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -129,7 +138,7 @@ public class Konsole extends Thread{
                     vypisPrompt();
                 }
                 radek = ctiRadek(in);
-                pocitac.vypis("(klient c. "+cislo+" poslal): " + radek);
+                pocitac.vypis("(klient c. "+cislo+" poslal): '" + radek+"'");
                 //pocitac.vypis("dylka predchoziho radku: "+radek.length());
                 //posliRadek(out,radek);
                 parser.zpracujRadek(radek);

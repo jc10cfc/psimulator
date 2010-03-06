@@ -33,15 +33,16 @@ public class SAXHandler implements ContentHandler {
     String namespaces = "";
     String jmenoElementu = "";
     final int velikostPoleRozhrani = 10;
-    List hotovePocitace = new ArrayList<AbstractPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
+    List<AbstractPocitac> hotovePocitace = new ArrayList<AbstractPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
     List vsechno = new ArrayList<List>(); // pomocny seznam
     List pocitac = new ArrayList<String[]>();
     String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
     boolean vypis = false; // pro vypis kostry xml dokumentu
-    boolean vypis2 = false; // vypis pocitacu
+    boolean vypis2 = true; // vypis pocitacu
     public int port = -1;
     String jmenoPC = "";
     String typPC = "";
+    List<List> pripojeno = new ArrayList<List>();
 
     /**
      * Nastaví locator
@@ -291,9 +292,11 @@ public class SAXHandler implements ContentHandler {
                 absPocitac = new CiscoPocitac(PCjmeno, port++);
             } else if (PCtyp.equals("linux")) {
                 absPocitac = new LinuxPocitac(PCjmeno, port++);
-            } else throw new ChybaKonfigurakuException("Pocitac nema nastaven typ - linux | cisco.");
+            } else {
+                throw new ChybaKonfigurakuException("Pocitac nema nastaven typ - linux | cisco.");
+            }
 
-            
+
             for (Object rozh : pcList) { // prochazim rozhrani u 1 PC
                 String[] iface = (String[]) rozh;
 
@@ -315,16 +318,75 @@ public class SAXHandler implements ContentHandler {
                 SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndex("jmeno")], absPocitac, iface[dejIndex("mac")]);
                 IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
                 sr.ip = ip;
-                
+
                 absPocitac.pridejRozhrani(sr);
 
                 //TODO: nastvavit pripojenoK
+
+
+                if (iface[dejIndex("pripojenoK")].contains(":")) {
+                    List prip = new ArrayList<String>();
+                    prip.add(absPocitac.jmeno);
+                    prip.add(sr.jmeno);
+
+                    String[] pole = iface[dejIndex("pripojenoK")].split(":");
+                    if (pole.length == 2) {
+                        prip.add(pole[0]);
+                        prip.add(pole[1]);
+                        pripojeno.add(prip);
+                    } else {
+                        System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
+                        System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
+                    }
+                } else if (!iface[dejIndex("pripojenoK")].equals("")) {
+                    System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
+                    System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
+                }
             }
 
 //            absPocitac.vypisRozhrani();
             hotovePocitace.add(absPocitac);
+
+
+
+
+
+
         }
 
+        // tady poresim, natazeni dratu (odkazu) mezi rozhranimi spojenych pocitacu
+        for (List l : pripojeno) {
+            SitoveRozhrani najiteRozhrani = najdiDaneRozhrani(l.get(0), l.get(1));
+            SitoveRozhrani najiteRozhrani2 = najdiDaneRozhrani(l.get(2), l.get(3));
+            if (najiteRozhrani == null || najiteRozhrani2 == null) break;
+            if (najiteRozhrani.equals(najiteRozhrani2)) {
+                System.out.println("Bylo nalezeno stejne rozhrani -> break;");
+                break;
+            }
+
+            najiteRozhrani.pripojenoK = najiteRozhrani2;
+        }
+    }
+
+    /**
+     * Vraci rozhrani, ktere odpovida jmenu pocitaci + jmenu rozhrani dle parametru.
+     * @param pc
+     * @param rozhrani
+     * @return
+     */
+    private SitoveRozhrani najdiDaneRozhrani(Object pc0, Object rozhrani0) {
+        String pc = (String)pc0;
+        String rozhr = (String)rozhrani0;
+        for (AbstractPocitac apc : hotovePocitace) {
+            if (apc.jmeno.equals(pc)) {
+                for (SitoveRozhrani iface : apc.rozhrani) {
+                    if (iface.jmeno.equals(rozhr)) {
+                        return iface;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public Object vratNastaveni() {

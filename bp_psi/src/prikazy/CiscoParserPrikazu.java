@@ -102,11 +102,21 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         radek = s;
         slova.clear();
 
+        
+        if (kon.doplnovani) {
+            System.out.println("chci napovedet co dal napsat: '"+radek+"'");
+            kon.doplnovani = false;
+            return;
+        }
+        
+
         rozsekejLepe();
 
         if (slova.size() < 1) {
             return; // jen mezera
         }
+
+//        kon.posliRadek("Doplnovani: '"+radek+"'");
 
         if (configure1) {
             if (slova.get(0).equals("terminal") || slova.get(0).equals("")) {

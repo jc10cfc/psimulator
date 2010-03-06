@@ -18,6 +18,7 @@ public abstract class AbstractPocitac {
     public Komunikace komunikace;
     public List <SitoveRozhrani>rozhrani;
     public String jmeno; //jmeno pocitace
+    
 
 
     @Deprecated
