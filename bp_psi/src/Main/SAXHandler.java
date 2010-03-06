@@ -313,15 +313,16 @@ public class SAXHandler implements ContentHandler {
                     System.out.println("");
                 }
 
-                //TODO: kontrola?? Spis bych to nechal kontrolat nekde nahore, at to tady neni moc slozity
-
-                // TODO: dodelat, aby mohla byt policka (IP, maska) v konfiguraku prazdna
                 SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndex("jmeno")], absPocitac, iface[dejIndex("mac")]);
-                IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
-                sr.ip = ip;
+                
+                // osetreni prazdne IP nebo masky
+                // kdyz chybi IP nebo maska, tak se ani nevytvori IpAdresa
+                if (! iface[dejIndex("ip")].equals("") && ! iface[dejIndex("maska")].equals("")) {
+                    IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
+                    sr.ip = ip;
+                }
 
                 absPocitac.pridejRozhrani(sr);
-
 
                 if (iface[dejIndex("pripojenoK")].contains(":")) {
                     List prip = new ArrayList<String>();
@@ -335,17 +336,13 @@ public class SAXHandler implements ContentHandler {
                         pripojeno.add(prip);
                     } else {
                         vypisChybuPriZpracovaniPripojenoKXML(iface);
-//                        System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
-//                        System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
                     }
                 } else if (!iface[dejIndex("pripojenoK")].equals("")) {
                     vypisChybuPriZpracovaniPripojenoKXML(iface);
-//                    System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
-//                    System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
                 }
             }
 
-//            absPocitac.vypisRozhrani();
+//            absPocitac.vypisRozhrani(); //hodi se pro debug
             hotovePocitace.add(absPocitac);
         }
 
