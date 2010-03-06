@@ -68,6 +68,7 @@ public abstract class AbstractPocitac {
             System.out.println("("+jmeno+":) "+iface.ip.vypisIP());
             System.out.println("("+jmeno+":) "+iface.ip.vypisMasku());
             System.out.println("("+jmeno+":) "+iface.macAdresa);
+            if (iface.pripojenoK != null) System.out.println("("+jmeno+":) "+iface.pripojenoK.jmeno);
             System.out.println("("+jmeno+":)");
         }
     }

@@ -38,7 +38,7 @@ public class SAXHandler implements ContentHandler {
     List pocitac = new ArrayList<String[]>();
     String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
     boolean vypis = false; // pro vypis kostry xml dokumentu
-    boolean vypis2 = true; // vypis pocitacu
+    boolean vypis2 = false; // vypis pocitacu
     public int port = -1;
     String jmenoPC = "";
     String typPC = "";
@@ -315,13 +315,12 @@ public class SAXHandler implements ContentHandler {
 
                 //TODO: kontrola?? Spis bych to nechal kontrolat nekde nahore, at to tady neni moc slozity
 
+                // TODO: dodelat, aby mohla byt policka (IP, maska) v konfiguraku prazdna
                 SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndex("jmeno")], absPocitac, iface[dejIndex("mac")]);
                 IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
                 sr.ip = ip;
 
                 absPocitac.pridejRozhrani(sr);
-
-                //TODO: nastvavit pripojenoK
 
 
                 if (iface[dejIndex("pripojenoK")].contains(":")) {
@@ -335,37 +334,51 @@ public class SAXHandler implements ContentHandler {
                         prip.add(pole[1]);
                         pripojeno.add(prip);
                     } else {
-                        System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
-                        System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
+                        vypisChybuPriZpracovaniPripojenoKXML(iface);
+//                        System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
+//                        System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
                     }
                 } else if (!iface[dejIndex("pripojenoK")].equals("")) {
-                    System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
-                    System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
+                    vypisChybuPriZpracovaniPripojenoKXML(iface);
+//                    System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
+//                    System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
                 }
             }
 
 //            absPocitac.vypisRozhrani();
             hotovePocitace.add(absPocitac);
-
-
-
-
-
-
         }
 
         // tady poresim, natazeni dratu (odkazu) mezi rozhranimi spojenych pocitacu
         for (List l : pripojeno) {
             SitoveRozhrani najiteRozhrani = najdiDaneRozhrani(l.get(0), l.get(1));
+            if (najiteRozhrani == null) {
+                vypisChybuPriHledaniRozhrani(l.get(0), l.get(1));
+                break;
+            }
+
             SitoveRozhrani najiteRozhrani2 = najdiDaneRozhrani(l.get(2), l.get(3));
-            if (najiteRozhrani == null || najiteRozhrani2 == null) break;
+            if (najiteRozhrani2 == null) {
+                vypisChybuPriHledaniRozhrani(l.get(2), l.get(3));
+                break;
+            }
+
             if (najiteRozhrani.equals(najiteRozhrani2)) {
-                System.out.println("Bylo nalezeno stejne rozhrani -> break;");
+                System.out.println("Nemuze byt pripojeno rozhrabi samo na sebe -> break;");
                 break;
             }
 
             najiteRozhrani.pripojenoK = najiteRozhrani2;
         }
+    }
+
+    private void vypisChybuPriZpracovaniPripojenoKXML(String[] iface) {
+        System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
+        System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
+    }
+
+    private void vypisChybuPriHledaniRozhrani(Object o1, Object o2) {
+        System.out.println("Nepodarilo se najit pocitac " + o1 + " s rozhranim " + o2 + ". Preskakuji..");
     }
 
     /**
@@ -375,8 +388,8 @@ public class SAXHandler implements ContentHandler {
      * @return
      */
     private SitoveRozhrani najdiDaneRozhrani(Object pc0, Object rozhrani0) {
-        String pc = (String)pc0;
-        String rozhr = (String)rozhrani0;
+        String pc = (String) pc0;
+        String rozhr = (String) rozhrani0;
         for (AbstractPocitac apc : hotovePocitace) {
             if (apc.jmeno.equals(pc)) {
                 for (SitoveRozhrani iface : apc.rozhrani) {
@@ -390,6 +403,11 @@ public class SAXHandler implements ContentHandler {
     }
 
     public Object vratNastaveni() {
+
+//        for (AbstractPocitac apc : hotovePocitace) {
+//            apc.vypisRozhrani();
+//            System.out.println("-----\n");
+//        }
         return hotovePocitace;
 
     }
