@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package pocitac;
 
 import java.io.IOException;
@@ -19,27 +18,32 @@ import java.util.List;
  * a tak.
  * @author neiss
  */
-public class Komunikace extends Thread
-{
+public class Komunikace extends Thread {
 
     private ServerSocket ss; //socket, kterej posloucha
     int cisloPortu;
-    List<Konsole> seznamSpojeni=new ArrayList();
+    List<Konsole> seznamSpojeni = new ArrayList();
     AbstractPocitac pc;//odkaz na pocitac
 
-    public Komunikace(int cisloPortu, AbstractPocitac pc){
-        this.cisloPortu=cisloPortu;
-        this.pc=pc;
+    public Komunikace(int cisloPortu, AbstractPocitac pc) {
+        this.cisloPortu = cisloPortu;
+        this.pc = pc;
         this.start(); //tohle casem spusti metodu run()
-        
+    }
+
+    /**
+     * Vrati cislo portu.
+     */
+    public int getPort() {
+        return cisloPortu;
     }
 
     @Override
-    public void run(){
+    public void run() {
         try { //pokus o vytvareni socketu
             ss = new ServerSocket(cisloPortu);
         } catch (IOException e) {
-            pc.vypis("Nemuzu poslouchat na portu "+cisloPortu+".");
+            pc.vypis("Nemuzu poslouchat na portu " + cisloPortu + ".");
             System.exit(1);
         }
         pc.vypis("Posloucham na portu " + cisloPortu);
@@ -47,13 +51,13 @@ public class Komunikace extends Thread
         try {
             while (true) { // endless loop
                 synchronized (ss) { // pri akceptovani vlakna zamykame, po vytvoreni jedeme dal
-                        //Krici tady varovani, aby totiz nekdo jinej nechtel synchronisovat ten socket, to by se
-                        //ale nemelo stat. Dalo by se to spravit, kdyby promenna ss byla deklarovana az v tyhle metode
-                        //nebo kdyby byla final, to by se ale pak zase ten socket nedal vytvorit.
+                    //Krici tady varovani, aby totiz nekdo jinej nechtel synchronisovat ten socket, to by se
+                    //ale nemelo stat. Dalo by se to spravit, kdyby promenna ss byla deklarovana az v tyhle metode
+                    //nebo kdyby byla final, to by se ale pak zase ten socket nedal vytvorit.
                     Socket s = ss.accept(); // wait for client call
-                    Konsole v = new Konsole(s,pc,seznamSpojeni.size()); // create another clerk
+                    Konsole v = new Konsole(s, pc, seznamSpojeni.size()); // create another clerk
                     seznamSpojeni.add(v);
-                    pc.vypis("akceptoval jsem vlakno c. " + (seznamSpojeni.size()-1) + " "
+                    pc.vypis("akceptoval jsem vlakno c. " + (seznamSpojeni.size() - 1) + " "
                             + s.getInetAddress() + ":" + s.getPort());
                 }
             }
@@ -67,5 +71,4 @@ public class Komunikace extends Thread
         }
 
     }
-
 }

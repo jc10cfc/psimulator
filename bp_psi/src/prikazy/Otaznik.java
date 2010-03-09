@@ -74,8 +74,4 @@ public class Otaznik extends AbstraktniPrikaz{
             kon.posliRadek((String) s);
         }
     }
-
-    @Override
-    protected void nastavPrikaz() { //neni potreba, dela se to vsechno az ve vykonejPrikaz
-    }
 }

@@ -7,7 +7,7 @@ package pocitac;
 
 /**
  *
- * @author neiss
+ * @author haldyr
  */
 public class CiscoPocitac extends AbstractPocitac{
 

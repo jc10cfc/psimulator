@@ -39,7 +39,7 @@ public class SAXHandler implements ContentHandler {
     String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
     boolean vypis = false; // pro vypis kostry xml dokumentu
     boolean vypis2 = false; // vypis pocitacu
-    public int port = -1;
+    static public int port = -1;
     String jmenoPC = "";
     String typPC = "";
     List<List> pripojeno = new ArrayList<List>();
@@ -52,6 +52,11 @@ public class SAXHandler implements ContentHandler {
         this.locator = locator;
     }
 
+    /**
+     * Vrati true, pokud localName je jmeno elementu, ktere patri do rozhrani.
+     * @param localName
+     * @return
+     */
     private boolean patriDoRozhrani(String localName) {
         if (localName.equals("jmeno") || localName.equals("ip") || localName.equals("mac") || localName.equals("pripojenoK")
                 || localName.equals("maska")) {
@@ -62,7 +67,7 @@ public class SAXHandler implements ContentHandler {
     }
 
     /**
-     * Pomocna metoda pro pristup k poli (prvky 1 rozhrani jsou v poli)
+     * Pomocna metoda pro pristup k poli (prvky rozhrani jsou v poli)
      * @param s   - co chceme z pole
      * @return  index v poli, kde se hledana hodnota naleza
      */
@@ -121,8 +126,7 @@ public class SAXHandler implements ContentHandler {
         }
 
         if (localName.equals("rozhrani")) {
-            for (int i = 0; i
-                    < rozhrani.length; i++) {
+            for (int i = 0; i < rozhrani.length; i++) {
                 rozhrani[i] = "";
             }
         }
@@ -190,14 +194,13 @@ public class SAXHandler implements ContentHandler {
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
 
-
         String s = new String(ch, start, length);
 
         if (vypis) { // tisk
             System.out.println(tabs + s);
         }
 
-        if (jmenoElementu.equals("port") && s.length() > 2) {
+        if (jmenoElementu.equals("port")) {
             try {
                 port = Integer.valueOf(s);
             } catch (Exception e) {
@@ -259,7 +262,8 @@ public class SAXHandler implements ContentHandler {
     }
 
     /**
-     * Obsluha události "konec dokumentu"
+     * Obsluha události "konec dokumentu".
+     * V teto metode se vyraveji vsechny pocitace, natahujou draty mezi "fyzicky" spojenymi rozhranimi.
      */
     @Override
     public void endDocument() throws SAXException {
@@ -314,10 +318,10 @@ public class SAXHandler implements ContentHandler {
                 }
 
                 SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndex("jmeno")], absPocitac, iface[dejIndex("mac")]);
-                
+
                 // osetreni prazdne IP nebo masky
                 // kdyz chybi IP nebo maska, tak se ani nevytvori IpAdresa
-                if (! iface[dejIndex("ip")].equals("") && ! iface[dejIndex("maska")].equals("")) {
+                if (!iface[dejIndex("ip")].equals("") && !iface[dejIndex("maska")].equals("")) {
                     IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
                     sr.ip = ip;
                 }
@@ -369,19 +373,29 @@ public class SAXHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Vypise na standartni chybovy vystup hlasku o zpracovani elementu propojenoK.
+     * Kdyz je obsah elementu ve spatnem formatu, tak to vypise hlasku a preskoci tento element.
+     * @param iface - pole stringu, ve kterem je ulozen obsah elemetu pripojenoK
+     */
     private void vypisChybuPriZpracovaniPripojenoKXML(String[] iface) {
-        System.out.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
-        System.out.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
+        System.err.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
+        System.err.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
     }
 
+    /**
+     * Vypise na standartni chybovy vystup hlasku, ze nebyl nalezen zadny pocitac s danym rozhranim.
+     * @param o1, reference na jmeno pocitace
+     * @param o2, reference na jmeno rozhrani
+     */
     private void vypisChybuPriHledaniRozhrani(Object o1, Object o2) {
-        System.out.println("Nepodarilo se najit pocitac " + o1 + " s rozhranim " + o2 + ". Preskakuji..");
+        System.err.println("Nepodarilo se najit pocitac " + o1 + " s rozhranim " + o2 + ". Preskakuji..");
     }
 
     /**
      * Vraci rozhrani, ktere odpovida jmenu pocitaci + jmenu rozhrani dle parametru.
-     * @param pc
-     * @param rozhrani
+     * @param pc0, reference na jmeno pocitace
+     * @param rozhrani0, reference na jmeno rozhrani
      * @return
      */
     private SitoveRozhrani najdiDaneRozhrani(Object pc0, Object rozhrani0) {
@@ -399,13 +413,11 @@ public class SAXHandler implements ContentHandler {
         return null;
     }
 
+    /**
+     * Jednoduchy getter pro Main. 
+     * @return
+     */
     public Object vratNastaveni() {
-
-//        for (AbstractPocitac apc : hotovePocitace) {
-//            apc.vypisRozhrani();
-//            System.out.println("-----\n");
-//        }
         return hotovePocitace;
-
     }
 }

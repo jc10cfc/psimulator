@@ -232,7 +232,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         // pak zrusit ifconfig
         if (slova.get(0).equals("ifconfig")) {
             prikaz = new Ifconfig(pc, kon, slova);
-        } else { // pak se budou resit asi jmena pocitacu
+        } if (slova.get(0).equals("save")) {
+            prikaz = new Uloz(pc, kon, slova, Main.Main.vsechno);
+        }
+        else { // pak se budou resit asi jmena pocitacu
             kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
         }
     }

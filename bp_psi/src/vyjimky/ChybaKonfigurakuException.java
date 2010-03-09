@@ -7,7 +7,7 @@ package vyjimky;
 
 /**
  * Tahleta vyjimka se hazi, kdyz nastane nejaka chyba pri cteni z XML konfiguraku.
- * @author neiss
+ * @author haldyr
  */
 public class ChybaKonfigurakuException extends RuntimeException {
 

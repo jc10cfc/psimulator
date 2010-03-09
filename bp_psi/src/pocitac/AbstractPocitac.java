@@ -19,6 +19,7 @@ public abstract class AbstractPocitac {
 
     @Deprecated
     public AbstractPocitac(String jmeno) {
+        vypis("Pouziva se deprecated metoda AbstractPocitac(String jmeno)");
         komunikace = new Komunikace(3567, this);
         rozhrani = new ArrayList<SitoveRozhrani>();
         this.jmeno = jmeno;
@@ -37,8 +38,12 @@ public abstract class AbstractPocitac {
         rozhrani = new ArrayList<SitoveRozhrani>();
     }
 
-    public void pridejRozhrani(SitoveRozhrani sr) {
-        rozhrani.add(sr);
+    /**
+     * Prida rozhrani iface do seznamu rozhrani.
+     * @param iface
+     */
+    public void pridejRozhrani(SitoveRozhrani iface) {
+        rozhrani.add(iface);
     }
 
     @Deprecated

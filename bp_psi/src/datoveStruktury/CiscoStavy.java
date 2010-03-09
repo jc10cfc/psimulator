@@ -1,5 +1,9 @@
 package datoveStruktury;
 
+/**
+ * Tento enum obsahuje vsechny podporovane stavy, ve kterych se muze nachazet Cisco pocitac.
+ * @author haldyr
+ */
 public enum CiscoStavy {
 
         USER("user"),

@@ -54,7 +54,6 @@ public class Ifconfig extends AbstraktniPrikaz {
         vykonejPrikaz();
     }
 
-    @Override
     protected void nastavPrikaz() {
         String tempRet;
         int ind = 1; //index v seznamu, zacina se jedicko, protoze prvnim slovem je ifconfig

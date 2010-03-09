@@ -5,7 +5,6 @@
 package pocitac;
 
 import datoveStruktury.IpAdresa;
-import datoveStruktury.IpAdresaStara;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +22,13 @@ public class SitoveRozhrani {
     private List<SitoveRozhrani> seznamPodrazenych; //seznam podrazenych rozhrani
     SitoveRozhrani nadrizene;
 
+    /**
+     * Getter pro pocitac, ktery drzi toto rozhrani.
+     * @return
+     */
+    public AbstractPocitac getPc(){
+        return pc;
+    }
 
     public SitoveRozhrani(String jmeno, AbstractPocitac pc, String macAdresa) {
         this.pc=pc;

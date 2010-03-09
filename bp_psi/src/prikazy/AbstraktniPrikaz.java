@@ -23,7 +23,11 @@ public abstract class AbstraktniPrikaz {
         this.slova = slova;
     }
 
-    protected abstract void nastavPrikaz();
+//    protected abstract void nastavPrikaz();
+    
+    /**
+     * Tato metoda vykona vlastni prikaz.
+     */
     protected abstract void vykonejPrikaz();
 
     boolean jeInteger(String ret) {

@@ -31,8 +31,4 @@ public class Exit extends AbstraktniPrikaz{
         }
         kon.ukonciSpojeni();
     }
-
-    @Override
-    protected void nastavPrikaz() { //nen9 potreba, dela se to vsechno az ve vykonejPrikaz
-    }
 }

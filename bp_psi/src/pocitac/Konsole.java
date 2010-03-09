@@ -114,6 +114,10 @@ public class Konsole extends Thread{
         }
     }
 
+    /**
+     * Vypise prompt na prikazou radku.
+     * @throws IOException
+     */
     public void vypisPrompt() throws IOException{
         out.write((prompt).getBytes());
         //pocitac.vypis("(socket c. "+cislo+" posilam): "+ret);
@@ -156,6 +160,9 @@ public class Konsole extends Thread{
 
     }
 
+    /**
+     * Ukonci spojeni.
+     */
     public void ukonciSpojeni() {
         ukoncit=true;
     }

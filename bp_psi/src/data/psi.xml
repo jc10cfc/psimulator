@@ -2,25 +2,8 @@
 <!-- DTD tady musi byt!!! -->
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
-<!--
 <konfigurak>
-	<port></port>
-	<pocitac>
-		<rozhrani>
-			<jmeno></jmeno>
-			<ip></ip>
-			<maska></maska>
-			<mac></mac>
-			<pripojenoK></pripojenoK>
-		</rozhrani>
-	</pocitac>
-</konfigurak>
--->
-
-
-
-<konfigurak>
-<port>3567</port>
+<port>35</port>
 
 <pocitac jmeno="linux1" typ="linux">
 	<rozhrani>
@@ -61,7 +44,6 @@
 		<mac>03:08:b7:30:24:e2</mac>
 		<pripojenoK></pripojenoK>
 	</rozhrani>
-
 </pocitac>
 
 </konfigurak>

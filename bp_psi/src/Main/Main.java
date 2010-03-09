@@ -14,10 +14,15 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class Main {
 
     /**
-     * Vrati List vytvorenych pocitacu
+     * Object vsechno je refence na seznam vsech pocitacu, ktere se nacetly z konfiguraku.
+     */
+    public static Object vsechno;
+
+    /**
+     * Vrati List vytvorenych pocitacu.
      * @return
      */
-    static private Object nacti(){
+    public static Object nacti(){
 
         // Cesta ke zdrojovému XML dokumentu
         final String sourcePath = "psi.xml";
@@ -56,12 +61,10 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
         
-        // 
-        Object pocitace = nacti();
+        vsechno = nacti();
 
-        if ( pocitace == null) {
+        if ( vsechno == null) {
             System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");
             System.exit(131);
         }
