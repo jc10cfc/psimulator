@@ -58,6 +58,21 @@ public abstract class ParserPrikazu {
         }
     }
 
+    /**
+     * V teto metode je se kontroluje, zda neprisel nejaky spolecny prikaz, jako napr. save ci v budoucnu jeste jine.
+     * @return vrati true, kdyz konkretni parser uz nema pokracovat dal v parsovani (tj. jednalo se o spolecny prikaz)
+     */
+    protected boolean spolecnePrikazy(){
+        // pak zrusit ifconfig
+        AbstraktniPrikaz prikaz;
+
+        if (slova.get(0).equals("save")) {
+            prikaz = new Uloz(pc, kon, slova, Main.Main.vsechno);
+            return true;
+        }
+        return false;
+    }
+
     /*
     public void setRadek(String s) {
         radek = s;

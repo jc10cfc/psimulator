@@ -102,13 +102,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         radek = s;
         slova.clear();
 
-        
         if (kon.doplnovani) {
-            System.out.println("chci napovedet co dal napsat: '"+radek+"'");
+            System.out.println("chci napovedet co dal napsat: '" + radek + "'");
             kon.doplnovani = false;
             return;
         }
-        
+
 
         rozsekejLepe();
 
@@ -130,6 +129,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         if (slova.get(0).equals("")) {
             return; // prazdny Enter
+        }
+
+        boolean nepokracuj = spolecnePrikazy();
+        if (nepokracuj) {
+            return;
         }
 
         if (slova.get(0).equals("?")) {
@@ -229,15 +233,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 }
         }
 
-        // pak zrusit ifconfig
-        if (slova.get(0).equals("ifconfig")) {
+        if (slova.get(0).equals("ifconfig")) { // pak smazat
             prikaz = new Ifconfig(pc, kon, slova);
-        } if (slova.get(0).equals("save")) {
-            prikaz = new Uloz(pc, kon, slova, Main.Main.vsechno);
-        }
-        else { // pak se budou resit asi jmena pocitacu
+        } else {
             kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
         }
+
     }
 
     private void runningconfig() {

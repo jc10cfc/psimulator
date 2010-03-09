@@ -89,7 +89,6 @@ public class Uloz extends AbstraktniPrikaz {
             zapis(vratElement("ip", rozhrani.ip.vypisIP()));
             zapis(vratElement("maska", rozhrani.ip.vypisMasku()));
         }
-        
         zapis(vratElement("mac", rozhrani.macAdresa));
         if (rozhrani.pripojenoK == null) {
             zapis(vratElement("pripojenoK", ""));
