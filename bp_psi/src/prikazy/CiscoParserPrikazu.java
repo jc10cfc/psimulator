@@ -22,7 +22,21 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         slova = new LinkedList<String>();
     }
     CiscoStavy stav = USER;
+
+    /**
+     * True znamena, ze staci psat zkratkovite prikazy (configure - c, interface - i, enable - e)
+     */
+    boolean usnadneni = true;
+    
+    /**
+     * Indikuje stav, kdy uzivatel napise jen configure. Pak se mu nevypise promt, ale staci zmacknout Enter
+     * pro potvrzeni prikazu 'configure terminal'
+     */
     boolean configure1 = false;
+
+    /**
+     * Rozhrani, ktere se bude upravovat ve stavu IFACE
+     */
     SitoveRozhrani aktualni = null;
 
     private void ping() {
@@ -39,20 +53,22 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
             case ROOT:
                 if (slova.size() == 2) {
-                    if (slova.get(1).equals("running-config")) {
+                    if (slova.get(1).equals("running-config") || usnadneniPrace("rc", 1)) {
                         runningconfig();
                         return;
                     }
+                } else if (slova.size() == 1) {
+                    kon.posliRadek("% Type \"show ?\" for a list of subcommands");
+                    return;
                 }
                 break;
 
             case USER:
-                // TODO: tady asi jeste neco bude?
+            // TODO: tady asi jeste neco bude?
 
             default:
                 invalidInputDetected();
         }
-        invalidInputDetected();
     }
 
     /**
@@ -124,11 +140,27 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 return;
         }
 
+        String cisloRozh = "";
+        if (usnadneni) {
+            if (rozh.length() >= 3) {
+                cisloRozh = rozh.substring(rozh.length() - 3);
+            } else {
+                cisloRozh = rozh;
+            }
+        }
+
         boolean nalezeno = false;
         for (SitoveRozhrani iface : pc.rozhrani) {
-            if (iface.jmeno.equalsIgnoreCase(rozh)) {
-                aktualni = iface;
-                nalezeno = true;
+            if (usnadneni) {
+                if (iface.jmeno.equalsIgnoreCase(rozh) || iface.jmeno.endsWith(cisloRozh)) {
+                    aktualni = iface;
+                    nalezeno = true;
+                }
+            } else {
+                if (iface.jmeno.equalsIgnoreCase(rozh)) {
+                    aktualni = iface;
+                    nalezeno = true;
+                }
             }
         }
 
@@ -152,7 +184,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Vypise chybovou hlasku pri zadani neplatneho vstupu.
      */
     private void invalidInputDetected() {
-        kon.posliRadek("% Invalid input detected.");
+        kon.posliRadek("\n% Invalid input detected.\n");
     }
 
     private void accesslist() {
@@ -161,6 +193,21 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     private void noshutdown() {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+    
+    /**
+     * Kdyz je nastavena tridni promenna usnadneni na true, tak se pak vraci true, pokud 1. slovo prikaz je rovno parametru s.
+     * @param s
+     * @return
+     */
+    private boolean usnadneniPrace(String s, int index) {
+        if (usnadneni == false) {
+            return false;
+        }
+        if (slova.get(index).equals(s)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -216,7 +263,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         switch (stav) {
             case USER:
-                if (slova.get(0).equals("e")) {
+                if (slova.get(0).equals("enable") || usnadneniPrace("e", 0) ) {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     return;
@@ -225,18 +272,18 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     ping();
                     return;
                 }
-                if (slova.get(0).equals("show")) {
+                if (slova.get(0).equals("show") || usnadneniPrace("s", 0)) {
                     show();
                     return;
                 }
                 if (slova.get(0).equals("exit")) {
-                    kon.ukonciSpojeni(); //TODO: cisco neukonci, co s tim?
+                    kon.ukonciSpojeni();
                     return;
                 }
                 break;
 
             case ROOT:
-                if (slova.get(0).equals("enable")) {
+                if (slova.get(0).equals("enable")) { // funguje v cisco taky, ale nic nedela
                     return;
                 }
                 if (slova.get(0).equals("disable")) {
@@ -244,15 +291,15 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     kon.prompt = pc.jmeno + ">";
                     return;
                 }
-                if (slova.get(0).equals("ping")) {
+                if (slova.get(0).equals("ping") || usnadneniPrace("p", 0)) {
                     ping();
                     return;
                 }
-                if (slova.get(0).equals("configure")) {
+                if (slova.get(0).equals("configure") || usnadneniPrace("c", 0)) {
                     configure();
                     return;
                 }
-                if (slova.get(0).equals("show")) {
+                if (slova.get(0).equals("show") || usnadneniPrace("s", 0)) {
                     show();
                     return;
                 }
@@ -272,7 +319,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     iproute();
                     return;
                 }
-                if (slova.get(0).equals("interface")) {
+                if (slova.get(0).equals("interface") || usnadneniPrace("i", 0)) {
                     iface();
                     return;
                 }
@@ -302,7 +349,19 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (slova.get(0).equals("ifconfig")) { // pak smazat
             prikaz = new Ifconfig(pc, kon, slova);
         } else {
-            kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
+
+            switch (stav) {
+                case CONFIG:
+                case IFACE:
+                    invalidInputDetected();
+                    break;
+
+                default:
+                    kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
+
+            }
+
+
         }
     }
 
@@ -383,7 +442,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
 
-        aktualni.ip = new IpAdresa(slova.get(2), slova.get(3));
+        try {
+            aktualni.ip = new IpAdresa(slova.get(2), slova.get(3));
+        } catch (Exception e) {
+            invalidInputDetected();
+        }
+
     }
 }
 
