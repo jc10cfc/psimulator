@@ -17,7 +17,7 @@ import vyjimky.SpatnaMaskaException;
  */
 public class Ifconfig extends AbstraktniPrikaz {
 
-    boolean ladiciVypisovani=true; //jestli se maj vypisovat informace pro ladeni
+    boolean ladiciVypisovani=false; //jestli se maj vypisovat informace pro ladeni
 
     String jmenoRozhrani;
     List <String> seznamIP=new ArrayList<String>();
@@ -238,17 +238,17 @@ public class Ifconfig extends AbstraktniPrikaz {
     }
 
     private void proved() { //nastavuje
-        if(ladiciVypisovani){
+        if(ladiciVypisovani){ //jen ladeni
             kon.posliRadek("Spoustim metodu proved(): navratovy kod:"+navratovyKod);
         }
-        if (rozhrani == null) {
+        if (rozhrani == null) { //vypsat vsechno
             for (SitoveRozhrani rozhr : pc.rozhrani) {
                 vypisRozhrani(rozhr);
             }
         } else { //rozhrani bylo zadano
             if (seznamIP.size() == 0 && add == null && del.size() == 0 && maska == null && broadcast == null) {
-                //jenom vypis rozhrani
-                vypisRozhrani(rozhrani);
+                        //jenom vypis rozhrani
+                if(navratovyKod==0) vypisRozhrani(rozhrani); //vypisuje se jen kdyz to bylo spravne zadano
             } else { //nastavovani
                 nastavMasku(rozhrani);
                 nastavIP(rozhrani);
@@ -301,6 +301,7 @@ public class Ifconfig extends AbstraktniPrikaz {
         }
     }
 
+    //TODO: POZOR, tady nefunguje nastavovani spatny masky, napr ifconfig eth0 netmask aaa!!!
     private void nastavMasku(SitoveRozhrani r){//pokusi se nastavit masku
         if (maska==null)return;
         //je potreba zkontrolovat spravnost masky!!! //proto vyjimka
