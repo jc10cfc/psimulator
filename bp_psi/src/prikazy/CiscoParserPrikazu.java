@@ -47,6 +47,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 break;
 
             case USER:
+                // TODO: tady asi jeste neco bude?
 
             default:
                 invalidInputDetected();
@@ -140,10 +141,16 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         kon.prompt = pc.jmeno + "(config-if)#";
     }
 
+    /**
+     * Vypise chybovou hlasku pri zadani nekompletniho prikazu.
+     */
     private void incompleteCommand() {
         kon.posliRadek("% Incomplete command.");
     }
 
+    /**
+     * Vypise chybovou hlasku pri zadani neplatneho vstupu.
+     */
     private void invalidInputDetected() {
         kon.posliRadek("% Invalid input detected.");
     }
@@ -169,13 +176,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
 
-
         rozsekejLepe();
 
         if (slova.size() < 1) {
             return; // jen mezera
         }
-
 //        kon.posliRadek("Doplnovani: '"+radek+"'");
 
         if (configure1) {
@@ -299,7 +304,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         } else {
             kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
         }
-
     }
 
     /**

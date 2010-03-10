@@ -25,8 +25,8 @@
 <pocitac jmeno="cisco1" typ="cisco">
 	<rozhrani>
 		<jmeno>FastEthernet0/0</jmeno>
-		<ip>127.1.1.8</ip>
-		<maska>255.255.255.0</maska>
+		<ip>1.1.1.1</ip>
+		<maska>255.255.0.0</maska>
 		<mac>00:0b:0c:0d:0a:01</mac>
 		<pripojenoK>linux1:eth1</pripojenoK>
 	</rozhrani>

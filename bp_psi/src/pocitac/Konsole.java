@@ -56,8 +56,17 @@ public class Konsole extends Thread{
     public String ctiRadek(BufferedReader in){
         String ret = ""; //radek nacitany
         char z;
+        int citac = 0;
+
         for(;;){
             try {
+                
+                citac++;
+                if (citac > 1000) { // pocitam, ze zadny prikaz nebude delsi, mozna muzem i snizit
+                    ukonciSpojeni();
+                    break;
+                }
+
                 z = (char) in.read();
 
 //                System.out.println(z);
