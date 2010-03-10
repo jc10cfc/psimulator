@@ -1,6 +1,7 @@
 package prikazy;
 
 import datoveStruktury.CiscoStavy;
+import datoveStruktury.IpAdresa;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,16 +23,19 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
     CiscoStavy stav = USER;
     boolean configure1 = false;
+    SitoveRozhrani aktualni = null;
 
     private void ping() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /**
+     * V teto metode se vola runningconfig(). Kdyz je spatny vstup (tj. jiny nez 'show running-config' ve stavu ROOT),
+     * tak to vyvola chybovou hlasku.
+     */
     private void show() {
 
         switch (stav) {
-            case USER:
-                break;
 
             case ROOT:
                 if (slova.size() == 2) {
@@ -41,10 +45,18 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     }
                 }
                 break;
+
+            case USER:
+
+            default:
+                invalidInputDetected();
         }
+        invalidInputDetected();
     }
 
-    // hotov
+    /**
+     * Prepina cisco do stavu config (CONFIG).
+     */
     private void configure() {
 
         if (slova.size() == 1 && !configure1) {
@@ -83,8 +95,57 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /**
+     * interface fastEthernet0/1
+     * Prepne cisco do stavu config-if (IFACE).
+     * Kdyz ma prikaz interface 2 argumenty, tak se sloucej do jednoho (pripad: interface fastEthernet 0/0).
+     * 0 nebo vice nez argumenty znamena chybovou hlasku.
+     * Do globalni promenne 'aktualni' uklada referenci na rozhrani, ktere chce uzivatel konfigurovat.
+     */
     private void iface() {
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        String rozh = "";
+        switch (slova.size()) {
+            case 1:
+                incompleteCommand();
+                return;
+
+            case 2:
+                rozh = slova.get(1);
+                break;
+
+            case 3:
+                rozh = slova.get(1) + slova.get(2);
+                break;
+
+            default:
+                invalidInputDetected();
+                return;
+        }
+
+        boolean nalezeno = false;
+        for (SitoveRozhrani iface : pc.rozhrani) {
+            if (iface.jmeno.equalsIgnoreCase(rozh)) {
+                aktualni = iface;
+                nalezeno = true;
+            }
+        }
+
+        if (nalezeno == false) {
+            invalidInputDetected();
+            return;
+        }
+
+        stav = IFACE;
+        kon.prompt = pc.jmeno + "(config-if)#";
+    }
+
+    private void incompleteCommand() {
+        kon.posliRadek("% Incomplete command.");
+    }
+
+    private void invalidInputDetected() {
+        kon.posliRadek("% Invalid input detected.");
     }
 
     private void accesslist() {
@@ -224,7 +285,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (slova.get(0).equals("ip")) {
-                    iproute();
+                    ipaddress();
                     return;
                 }
                 if (slova.get(0).equals("no")) {
@@ -241,6 +302,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     }
 
+    /**
+     * Prikaz 'show running-config' ve stavu # (ROOT).
+     * Aneb vypis rozhrani v uplne silenem formatu.
+     */
     private void runningconfig() {
         kon.posliRadek("Building configuration...\n"
                 + "\n"
@@ -300,6 +365,21 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 + " login\n"
                 + "!\n"
                 + "end\n");
+    }
+
+    /**
+     * Nastavi ip adresu na rozhrani specifikovane v predchozim stavu cisco (promenna aktualni)
+     * prikaz ip musi mit 3 argumenty, jina chybova hlaska.
+     */
+    private void ipaddress() {
+        //ip address 192.168.2.129 255.255.255.128
+
+        if ((slova.size() != 4) || (!slova.get(1).equals("address"))) {
+            incompleteCommand();
+            return;
+        }
+
+        aktualni.ip = new IpAdresa(slova.get(2), slova.get(3));
     }
 }
 

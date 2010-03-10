@@ -67,7 +67,7 @@ public abstract class ParserPrikazu {
         AbstraktniPrikaz prikaz;
 
         if (slova.get(0).equals("save")) {
-            prikaz = new Uloz(pc, kon, slova, Main.Main.vsechno);
+            prikaz = new Uloz(pc, kon, slova);
             return true;
         }
         return false;

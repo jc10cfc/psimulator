@@ -23,9 +23,9 @@ public class Uloz extends AbstraktniPrikaz {
     String tabs = "";
     String soubor = "psi2.xml";
 
-    public Uloz(AbstractPocitac pc, Konsole kon, List<String> slova, Object o) {
+    public Uloz(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
-        pocitace = (List<AbstractPocitac>) o;
+        pocitace = (List<AbstractPocitac>) Main.Main.vsechno;
         if (slova.size() >= 2) {
             soubor = slova.get(1);
         }
@@ -112,7 +112,7 @@ public class Uloz extends AbstraktniPrikaz {
     @Override
     public void vykonejPrikaz() {
 
-        kon.posliRadek("Ukladam do souboru " + soubor + "..");
+        kon.posliRadek("Saving to file " + soubor + "..");
 
         try {
             out = new BufferedWriter(new FileWriter(soubor));
@@ -135,15 +135,4 @@ public class Uloz extends AbstraktniPrikaz {
             e.printStackTrace();
         }
     }
-
-    /*
-    public static void main(String[] args) {
-
-    Object o = Main.Main.nacti();
-
-    //Uloz ukladac = new Uloz(Main.Main.vsechno);
-    Uloz ukladac = new Uloz(o);
-    ukladac.vykonejPrikaz(null);
-    }
-     */
 }
