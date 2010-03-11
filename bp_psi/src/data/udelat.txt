@@ -1,11 +1,11 @@
 zbyva:
 vyresit ukoncovani vlaken pri odpojeni uzivatele
-routovaci tabulky
 ping
 
 
 rozpracovano:
 parser prikazu pro cisco - haldyr
+routovaci tabulky, routovani
 
 
 hotovo:

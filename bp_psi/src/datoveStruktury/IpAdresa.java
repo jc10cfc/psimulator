@@ -116,6 +116,9 @@ public class IpAdresa {
         return vypisPole(prevedNaPole(cisloPocitaceVSiti()));
     }
 
+    /**
+     * Vraci true, kdyz maji stejny cislo site. Pozor, pro 147.32.125.128/25 a 147.32.125.128/24 vrati false!
+     */
     public boolean jeVeStejnySiti(IpAdresa jina) {
         if (this.cisloSite() == jina.cisloSite()) {
             return true;

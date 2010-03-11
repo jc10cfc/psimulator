@@ -35,12 +35,12 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             return; // prazdny Enter
         }
 
-        boolean nepokracuj = spolecnePrikazy();
-        if (nepokracuj) {
+        boolean nepokracuj = spolecnePrikazy(); //tady se zkousi, jestli prikaz nepatri ke spolecnejm prikazum,
+        if (nepokracuj) {                           //jestli ano, tak se spusti a konci
             return;
         }
 
-        if (slova.get(0).equals("exit")) {
+        if (slova.get(0).equals("exit")) {      //tady se zkousej jednotlivy prikazy
             pr = new Exit(pc, kon, slova);
         } else if (slova.get(0).equals("ifconfig")) {
             pr = new Ifconfig(pc, kon, slova);

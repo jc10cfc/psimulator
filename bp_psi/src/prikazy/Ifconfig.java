@@ -253,8 +253,8 @@ public class Ifconfig extends AbstraktniPrikaz {
                 nastavMasku(rozhrani);
                 nastavIP(rozhrani);
                 //nastavovani broadcastu zatim nepodporuju
-                if(navratovyKod!=7 && add !=null){ //parametr add byl zadan a je spravnej
-                    //ale zatim ho nepodporuju
+                if(navratovyKod!=7 && add !=null){ //parametr add byl zadan a je spravnej ale zatim
+                    // ho nepodporuju
                     //POZOR pri implementaci:
                     //Je to jediny nastaveni, u kteryho se rozhoduje podle navratovyho kodu, na ten se ale neda
                     //spolehat, protoze se muze prepsat

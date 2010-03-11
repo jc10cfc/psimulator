@@ -9,8 +9,8 @@ import java.util.List;
 import pocitac.*;
 
 /**
- * Metoda zpracujRadek(String s) prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej() rozseka na jednotlivy
- * slova. Pak se testuje,
+ * Metoda zpracujRadek(String s) prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej()
+ * rozseka na jednotlivy slova. Pak se testuje,
  * @author neiss & haldyr
  */
 public abstract class ParserPrikazu {
