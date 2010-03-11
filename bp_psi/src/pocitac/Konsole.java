@@ -25,7 +25,7 @@ public class Konsole extends Thread{
     private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
     public String prompt="divnej defaultni promt:~# ";
-    boolean ukoncit;
+    private boolean ukoncit;
     private OutputStream out;
     private BufferedReader in;
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu

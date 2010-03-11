@@ -72,14 +72,4 @@ public abstract class ParserPrikazu {
         }
         return false;
     }
-
-    /*
-    public void setRadek(String s) {
-        radek = s;
-    }
-
-    public void getRadek() {
-        System.out.println(radek);
-    }
-     */
 }

@@ -320,10 +320,15 @@ public class SAXHandler implements ContentHandler {
                 SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndex("jmeno")], absPocitac, iface[dejIndex("mac")]);
 
                 // osetreni prazdne IP nebo masky
-                // kdyz chybi IP nebo maska, tak se ani nevytvori IpAdresa
-                if (!iface[dejIndex("ip")].equals("") && !iface[dejIndex("maska")].equals("")) {
+                // kdyz chybi maska, tak se dopocita v kontruktou IpAdresy, kdyz chybi IP, tak se maska neresi
+                if (iface[dejIndex("maska")].equals("") && !iface[dejIndex("ip")].equals("")) { // chybi maska, ale IP je, pak se maska dopocita
+                    IpAdresa ip = new IpAdresa(iface[dejIndex("ip")]);
+                    sr.ip = ip;
+                } else if (!iface[dejIndex("ip")].equals("") && !iface[dejIndex("maska")].equals("")) { // kdyz je tu oboje
                     IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
                     sr.ip = ip;
+                } else if (! iface[dejIndex("maska")].equals("") && iface[dejIndex("ip")].equals("")) { // vypisem, ze preskakujem
+                   System.err.println("Preskakuji masku z duvodu nepritomnosti IP adresy..");
                 }
 
                 absPocitac.pridejRozhrani(sr);

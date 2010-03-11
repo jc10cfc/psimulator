@@ -147,7 +147,7 @@ public class Ifconfig extends AbstraktniPrikaz {
             navratovyKod=4;
         }
         for (int i=0;i<seznamIP.size();i++){ //kontrola spravnosti IP
-            if(IpAdresa.jeSpravnaIP(seznamIP.get(i))){
+            if(IpAdresa.jeSpravnaIP(seznamIP.get(i), false)){
                 pouzitIp=i;
             } else {
                 kon.posliRadek(seznamIP.get(i)+": unknown host");
@@ -168,7 +168,7 @@ public class Ifconfig extends AbstraktniPrikaz {
         //---------------------
         //kontrola IP adresy add (pridavani nove IP)
         if(add!=null){
-            if(!IpAdresa.jeSpravnaIP(add)){
+            if(!IpAdresa.jeSpravnaIP(add, false)){
                 navratovyKod=7;
                 kon.posliRadek(add+": unknown host");
             }
@@ -176,7 +176,7 @@ public class Ifconfig extends AbstraktniPrikaz {
         //---------------------
         //kontrola IP adres del (odebirani existujici IP)
         for(int i=0;i<del.size();i++){
-            if(!IpAdresa.jeSpravnaIP(del.get(i))){
+            if(!IpAdresa.jeSpravnaIP(del.get(i), false)){
                 navratovyKod=8;
                 kon.posliRadek(del.get(i)+": unknown host"); //musim to posilat uz tady, protoze to hendka smazu
                 del.remove(i); //ta spatna IP adresa se odebere

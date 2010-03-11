@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import pocitac.AbstractPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
+import vyjimky.NeznamyTypPcException;
+import vyjimky.ZakazanaIpAdresa;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -444,6 +446,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         try {
             aktualni.ip = new IpAdresa(slova.get(2), slova.get(3));
+        } catch (ZakazanaIpAdresa e) {
+            kon.posliRadek("Not a valid host address - "+slova.get(2));
         } catch (Exception e) {
             invalidInputDetected();
         }
