@@ -80,6 +80,10 @@ public class IpAdresa {
 //*****************************************************************************************************************
 //porovnavaci a zjistovaci metody
 
+    public int dejMasku(){
+        return maska;
+    }
+
     /**
      * Vraci true, kdyz maji stejny cislo site a masku. Pozor, pro 147.32.125.128/25 a 147.32.125.128/24 vrati false!
      */
@@ -95,7 +99,9 @@ public class IpAdresa {
      * spada do rozsahu moji site.
      */
     public boolean jeNadsiti(IpAdresa jina){
-        return !jeVRozsahu(jina);
+        int pomocny = jina.adresa & cisloSite();
+        if (pomocny == cisloSite()) return true;
+        else return false;
     }
 
     /**
@@ -132,8 +138,15 @@ public class IpAdresa {
         return false;
     }
 
+
+    @Override
+    public boolean equals(Object obj){
+        if ( maska==((IpAdresa)obj).maska && adresa==((IpAdresa)obj).adresa ) return true;
+        return false;
+    }
+
 //**************************************************************************************************************
-//staticky metody
+//verejny staticky metody
 
     /**
      * Zkontroluje, jestli zadany retezec je IP adresa (bez masky za lomitkem)
@@ -152,7 +165,7 @@ public class IpAdresa {
 
         if (! jeToMaska) { // je to IP
             if (Integer.valueOf(pole[0]) >= 224 && Integer.valueOf(pole[0]) <= 255) { // adresy rozsahu 224.* - 239.* jsou vyhrazeny pro multicast, vyssi ifconfig nezere
-                throw new ZakazanaIpAdresa(adr);
+                throw new ZakazanaIpAdresaException(adr);
             }
         }
 

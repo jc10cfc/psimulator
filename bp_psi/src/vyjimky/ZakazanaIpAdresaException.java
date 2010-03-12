@@ -9,12 +9,12 @@ package vyjimky;
  * Tahleta vyjimka se hazi, kdyz chci nastavit ip, ktera je v zakazanem rozsahu 224.* - 255.* (rezervovane pro multicast + do zasoby)
  * @author haldyr
  */
-public class ZakazanaIpAdresa extends RuntimeException {
+public class ZakazanaIpAdresaException extends RuntimeException {
 
-    public ZakazanaIpAdresa() {
+    public ZakazanaIpAdresaException() {
     }
 
-    public ZakazanaIpAdresa(String msg) {
+    public ZakazanaIpAdresaException(String msg) {
         super("Tato adresa neni povolena byti IP adresou: "+msg+ "  (adresa je v zakazanem rozsahu 224.* - 255.*)");
     }
 }

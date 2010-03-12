@@ -28,12 +28,12 @@ public class RoutovaciTabulka {
             this.adresat=adresat;
             this.rozhrani=rozhrani;
         }
-        public Zaznam(IpAdresa adresat, IpAdresa brana){
+        public Zaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhrani){
             this.adresat=adresat;
             this.brana=brana;
+            this.rozhrani=rozhrani;
         }
     }
-
     private AbstractList<Zaznam>radky; //jednotlive radky routovaci tabulky
     private AbstractPocitac pc; //odkaz na pocitac, mozna nebude potreba
 
@@ -52,43 +52,80 @@ public class RoutovaciTabulka {
      * @param cil - IP, na kterou je paket posilan
      * @return null - nenasel se zadnej zaznam, kterej by se pro tuhle adresu hodil
      */
-    public SitoveRozhrani najdiRozhrani(IpAdresa cil){
-        int r=najdiOdpovidajiciRadek(cil);
-        if (r >= 0) return radky.get(r).rozhrani;
+    public SitoveRozhrani najdiSpravnyRozhrani(IpAdresa cil){
+        for( Zaznam z:radky){
+            if(cil.jeVRozsahu(z.adresat)) return z.rozhrani; //vraci prvni odpovidajici rozhrani
+        }
         return null;
     }
+
     /**
-     * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese.
+     * prida novej zaznam, priznaku UG. V okamziku pridani musi bejt brana dosazitelna s priznakem U,
+     * tzn na rozhrani, ne gw
+     * @param adresat
+     * @param brana
+     * @param posice
+     */
+    public int pridejZaznam(IpAdresa adresat, IpAdresa brana){
+        
+        return 0;
+    }
+
+    /**
+     * Prida novej zaznam priznaku U.
+     * @param adresat - ocekava IpAdresu, ktera je cislem site
+     * @param rozhr - predpoklada se, ze rozhrani na pocitaci existuje
+     * @return
+     */
+    public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr){
+        Zaznam z=new Zaznam(adresat, rozhr);
+        if(existujeStejnyZaznam(z))return 1;
+        int i=najdiSpravnouPosici(z);
+        radky.add(i,z);
+        return 0;
+    }
+
+    private boolean existujeStejnyZaznam(Zaznam zazn){
+        for(Zaznam z:radky){
+            if( z.adresat.equals(zazn.adresat) && z.brana.jeStejnaAdresa(zazn.brana))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Najde spravnou posici pro pridani novyho zaznamu. Skutecny poradi rout je totalne zmatecny (viz. soubor
+     * route.txt v package data), takze to radim jenom podle masky, nakonec ani priznaky nerozhodujou.
+     * @param z
+     * @return
+     */
+    private int najdiSpravnouPosici(Zaznam z){
+        int i=0;
+        //preskakovani delsich masek:
+        while( i<radky.size() && radky.get(i).adresat.dejMasku() > z.adresat.dejMasku() ){
+            i++;
+        }//zastavi se na stejny nebo vetsi masce, nez ma pridavanej zaznam
+        //vic se nakonec uz nic neposouva...
+        return i;
+    }
+
+
+    /**
+     * Tahleta metoda hleda v routovaci tabulce zaznam s priznakem U, ktery odpovida zadane IP adrese.
+     * Pouziva se pro pridavani novych zaznamu do routovaci tabulky.
      * @param vstupni
      * @return cislo radku odpovidajici zadane IP nebo -1, kdyz zadnej radek neodpovida
      */
-    public int najdiOdpovidajiciRadek(IpAdresa vstupni){
+    private int najdiOdpovidajiciRadek(IpAdresa vstupni){
         for (int i=0;i<radky.size();i++){
-            if ( vstupni.jeVRozsahu(radky.get(i).adresat) ){ //kdyz je vstupni v rozsahu adresata
+            if ( vstupni.jeVRozsahu(radky.get(i).adresat) && radky.get(i).brana ==null ){
+                    //kdyz je vstupni v rozsahu adresata a zaroven je priznak U
                 return i;
             }
         }
         return -1;
     }
 
-    /**
-     * prida novej zaznam na urcenou posici
-     * @param adresat
-     * @param rozhr
-     * @param posice
-     */
-    public void pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr, int posice){
-        radky.add(posice,new Zaznam(adresat, rozhr));
-    }
-
-    /**
-     * prida novej zaznam na urcenou posici
-     * @param adresat
-     * @param brana
-     * @param posice
-     */
-    public void pridejZaznam(IpAdresa adresat, IpAdresa brana, int posice){
-        radky.add(posice,new Zaznam(adresat, brana));
-    }
+    
 
 }
