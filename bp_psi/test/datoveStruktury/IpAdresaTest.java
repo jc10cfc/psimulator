@@ -42,7 +42,7 @@ public class IpAdresaTest {
     @Test
     public void testNastavIP() {
 
-        IpAdresa ip = new IpAdresa();
+        IpAdresa ip = new IpAdresa("1.1.1.1");
         String adr;
 
         adr = "147.32.125.138";
@@ -50,10 +50,6 @@ public class IpAdresaTest {
         assertEquals(ip.vypisIP(), adr);
 
         adr = "0.0.0.0";
-        ip.nastavIP(adr);
-        assertEquals(ip.vypisIP(), adr);
-
-        adr = "255.255.255.255";
         ip.nastavIP(adr);
         assertEquals(ip.vypisIP(), adr);
 
@@ -70,7 +66,7 @@ public class IpAdresaTest {
     @Test
     public void testIPMaska(){
         System.out.println("------------------------------------------");
-        IpAdresa adr=new IpAdresa();
+        IpAdresa adr = new IpAdresa("1.1.1.1");
 
         adr.nastavMasku(24);
         System.out.println(adr.vypisMasku());
@@ -100,7 +96,7 @@ public class IpAdresaTest {
     @Test
     public void testIPMaskaString(){
         System.out.println("------------------------------------------");
-        IpAdresa adr=new IpAdresa();
+        IpAdresa adr=new IpAdresa("1.1.1.1");
 
         adr.nastavMasku("255.255.255.0");
         System.out.println(adr.vypisMasku());
@@ -134,7 +130,7 @@ public class IpAdresaTest {
 
     @Test
     public void testCisloSite(){
-        IpAdresa ip = new IpAdresa();
+        IpAdresa ip = new IpAdresa("1.1.1.1");
         String adr;
 
         adr = "147.32.125.138";
@@ -156,7 +152,7 @@ public class IpAdresaTest {
 
     @Test
     public void testCisloPocitaceVSiti(){
-        IpAdresa ip = new IpAdresa();
+        IpAdresa ip = new IpAdresa("1.1.1.1");
         String adr;
 
         adr = "147.32.125.138";
@@ -177,7 +173,7 @@ public class IpAdresaTest {
 
     @Test
     public void testAdresaSMaskou(){
-        IpAdresa ip = new IpAdresa();
+        IpAdresa ip = new IpAdresa("1.1.1.1");
         String adr;
 
         adr = "147.32.125.138";
@@ -204,6 +200,32 @@ public class IpAdresaTest {
         ip.nastavIP(adr);
         ip.nastavMasku(32);
         assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/32");
+    }
+
+    @Test
+    public void testJeNadsiti(){
+        IpAdresa adr =new IpAdresa("0.0.0.0",0);
+        assertTrue(adr.jeNadsiti(new IpAdresa("1.1.1.1",24)));
+        assertTrue(adr.jeNadsiti(new IpAdresa("0.0.0.0",0)));
+
+        adr =new IpAdresa("89.190.94.1",24);
+        assertTrue(adr.jeNadsiti(new IpAdresa("89.190.94.128",25)));
+        assertTrue(adr.jeNadsiti(new IpAdresa("89.190.94.0",8)));
+        assertFalse(adr.jeNadsiti(new IpAdresa("89.190.93.0",8)));
+        assertTrue(adr.jeNadsiti(new IpAdresa("89.190.94.1",24)));
+    }
+
+    @Test
+    public void testJeVRozsahu(){
+        IpAdresa adr =new IpAdresa("0.0.0.0",0);
+        assertTrue(new IpAdresa("1.1.1.1",24).jeVRozsahu(adr));
+        assertTrue(new IpAdresa("0.0.0.0",0).jeVRozsahu(adr));
+
+        adr =new IpAdresa("89.190.94.1",24);
+        assertTrue(new IpAdresa("89.190.94.128",25).jeVRozsahu(adr));
+        assertTrue(new IpAdresa("89.190.94.0",8).jeVRozsahu(adr));
+        assertFalse(new IpAdresa("89.190.93.0",8).jeVRozsahu(adr));
+        assertTrue(new IpAdresa("89.190.94.1",24).jeVRozsahu(adr));
     }
 
 

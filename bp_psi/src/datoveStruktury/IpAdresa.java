@@ -23,7 +23,7 @@ public class IpAdresa {
      */
     public IpAdresa(String adr) {
         nastavIP(adr);
-        nastavMasku(vratMaskuzIPadresy(adr));
+        //nastavMasku(vratMaskuzIPadresy(adr));
     }
 
     public IpAdresa(String adr, String maska) {
@@ -88,6 +88,25 @@ public class IpAdresa {
             return true;                                                 //jinak by 1.1.1.0/24 a 1.1.1.0/25 davaly
         }                                                                //stejnej vysledek
         return false;
+    }
+
+    /**
+     * Vraci true, pokud moje adresa je nadsiti jine adresy, tzn, pokud jina IpAdresa, nehlede na jeji masku,
+     * spada do rozsahu moji site.
+     */
+    public boolean jeNadsiti(IpAdresa jina){
+        return !jeVRozsahu(jina);
+    }
+
+    /**
+     * Vraci true, pokud tato IP, nehlede na jeji masku, spada do rozsahu jine IP. Opacna metoda k jeNadsiti.
+     * Napr. do rozsahu 0.0.0.0/0 patri celej internet, do rozsahu 1.1.1.0/24 patri i adresa 1.1.1.129/25,
+     * ackoliv nemaji stejny cislo site.
+     */
+    public boolean jeVRozsahu(IpAdresa jina){
+        int pomocny = adresa & jina.cisloSite();
+        if (pomocny == jina.cisloSite()) return true;
+        else return false;
     }
 
     /**
