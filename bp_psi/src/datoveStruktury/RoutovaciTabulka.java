@@ -64,7 +64,7 @@ public class RoutovaciTabulka {
      */
     public int najdiOdpovidajiciRadek(IpAdresa vstupni){
         for (int i=0;i<radky.size();i++){
-            if (radky.get(i).adresat.jeVeStejnySiti(vstupni)){
+            if (radky.get(i).adresat.jeStejnyCisloSite(vstupni)){
                 return i;
             }
         }
