@@ -12,6 +12,9 @@ import pocitac.SitoveRozhrani;
 
 /**
  * Trida, ktera representuje routovaci tabulku pocitace, jak linuxoveho, tak ciscoveho.
+ * Pozn:
+ * Zaznamy se nakonec budou radit jen podle masky. Pro pridavani novyho zaznamu UG plati podminka, za nove
+ * zadavana brana musi jiz bejt dosazitelna priznakem U.
  * @author neiss
  */
 public class RoutovaciTabulka {
