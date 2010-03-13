@@ -27,18 +27,31 @@ public class RoutovaciTabulka {
         IpAdresa brana;
         SitoveRozhrani rozhrani;
 
-        public Zaznam(IpAdresa adresat, SitoveRozhrani rozhrani){
+        private Zaznam(IpAdresa adresat, SitoveRozhrani rozhrani){
             this.adresat=adresat;
             this.rozhrani=rozhrani;
         }
-        public Zaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhrani){
+        private Zaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhrani){
             this.adresat=adresat;
             this.brana=brana;
             this.rozhrani=rozhrani;
         }
+
+        private String vypisSeLinuxove() {
+            String v="";
+            v+=adresat.vypisIP()+"\t";
+            if(brana==null){
+                v+="0.0.0.0\t"+adresat.vypisMasku()+"\tU\t";
+            } else{
+                v+=brana.vypisIP()+"\t"+adresat.vypisMasku()+"\tUG\t";
+            }
+            v+="0\t0\t0\t"+rozhrani.jmeno+"\n";
+            return v;
+        }
     }
     private AbstractList<Zaznam>radky; //jednotlive radky routovaci tabulky
     private AbstractPocitac pc; //odkaz na pocitac, mozna nebude potreba
+    private boolean ladiciVypisovani=true;
 
     /**
      * V konstruktoru se hazi odkaz na pocitac, aby byl prostup k jeho rozhranim.
@@ -52,7 +65,7 @@ public class RoutovaciTabulka {
     /**
      * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese. Slouzi predevsim pro
      * samotne routovani.
-     * @param cil - IP, na kterou je paket posilan
+     * @param cil IP, na kterou je paket posilan
      * @return null - nenasel se zadnej zaznam, kterej by se pro tuhle adresu hodil
      */
     public SitoveRozhrani najdiSpravnyRozhrani(IpAdresa cil){
@@ -67,18 +80,32 @@ public class RoutovaciTabulka {
      * tzn na rozhrani, ne gw
      * @param adresat
      * @param brana
-     * @param posice
+     * @return 0: v poradku<br /> 1: existuje stejny zaznam;<br />
+     * 2: rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U<br />
      */
     public int pridejZaznam(IpAdresa adresat, IpAdresa brana){
-        
+        SitoveRozhrani rozhr=null;
+        for (Zaznam z:radky){ //hledani spravnyho rozhrani
+            if( z.brana == null ){ //tohle by moh bejt zaznam potrebnej zaznam priznaku U
+                if( rozhr==null && brana.jeVRozsahu(z.adresat)){
+                    rozhr=z.rozhrani; //takhle to opravdu funguje, 1. polozka se pocita
+                }
+            }
+            
+        }
+        if (rozhr==null)return 2; // rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U
+        Zaznam z=new Zaznam(adresat, brana, rozhr);
+        if(existujeStejnyZaznam(z))return 1;
+        int i=najdiSpravnouPosici(z);
+        radky.add(i,z);
         return 0;
     }
 
     /**
      * Prida novej zaznam priznaku U.
-     * @param adresat - ocekava IpAdresu, ktera je cislem site
-     * @param rozhr - predpoklada se, ze rozhrani na pocitaci existuje
-     * @return
+     * @param adresat ocekava IpAdresu, ktera je cislem site
+     * @param rozhr predpoklada se, ze rozhrani na pocitaci existuje
+     * @return 0: v poradku<br /> 1: existuje stejny zaznam;<br />
      */
     public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr){
         Zaznam z=new Zaznam(adresat, rozhr);
@@ -88,9 +115,21 @@ public class RoutovaciTabulka {
         return 0;
     }
 
+    public String vypisSeLinuxove(){
+        String v="";
+        v+="Směrovací tabulka v jádru pro IP\n";
+        v+="Adresát         Brána           Maska           Přízn\t Metrik\t Odkaz\t  Užt\t Rozhraní\n";
+        for (Zaznam z:radky){
+            v+=z.vypisSeLinuxove();
+        }
+        return v;
+    }
+
+//****************************************************************************************************
+//privatni metody
     private boolean existujeStejnyZaznam(Zaznam zazn){
         for(Zaznam z:radky){
-            if( z.adresat.equals(zazn.adresat) && z.brana.jeStejnaAdresa(zazn.brana))
+            if( z.adresat.equals(zazn.adresat) && z.brana.jeStejnaAdresa(zazn.brana) && z.rozhrani==zazn.rozhrani)
                 return true;
         }
         return false;
@@ -103,9 +142,13 @@ public class RoutovaciTabulka {
      * @return
      */
     private int najdiSpravnouPosici(Zaznam z){
+        if(z.adresat.dejMasku()==0)return radky.size();
         int i=0;
         //preskakovani delsich masek:
-        while( i<radky.size() && radky.get(i).adresat.dejMasku() > z.adresat.dejMasku() ){
+            //pozor, problemy v implementaci kvuli doplnkovymu kodu
+        while( i<radky.size() //neprekrocit meze
+                && radky.get(i).adresat.dejMasku() > z.adresat.dejMasku() //dokud je vkladana maska mensi
+                && radky.get(i).adresat.dejMasku() !=0 ){ //pozor na nulu
             i++;
         }//zastavi se na stejny nebo vetsi masce, nez ma pridavanej zaznam
         //vic se nakonec uz nic neposouva...
