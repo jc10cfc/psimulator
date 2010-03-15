@@ -19,9 +19,15 @@ public abstract class ParserPrikazu {
     protected AbstractPocitac pc;
     protected Konsole kon;
 
-    public ParserPrikazu(AbstractPocitac pc, Konsole kon) {
-        this.pc = pc;
-        this.kon = kon;
+    /**
+     * Konstruktor. Kazda konsole si uchovava prave jeden parser. Tenhle konstruktor se tedy vola
+     * v konstruktoru konsole.
+     * @param pc
+     * @param kon
+     */
+    public ParserPrikazu(AbstractPocitac pc,Konsole kon){
+        this.pc=pc;
+        this.kon=kon;
     }
 
     /**
@@ -34,6 +40,7 @@ public abstract class ParserPrikazu {
 
     /**
      * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
+     * @autor neiss
      */
     @Deprecated
     protected void rozsekej() {
@@ -53,6 +60,7 @@ public abstract class ParserPrikazu {
 
     /**
      * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
+     * @autor haldyr
      */
     protected void rozsekejLepe() {
 
@@ -72,9 +80,9 @@ public abstract class ParserPrikazu {
     /**
      * V teto metode je se kontroluje, zda neprisel nejaky spolecny prikaz, jako napr. save ci v budoucnu jeste jine.
      * @return vrati true, kdyz konkretni parser uz nema pokracovat dal v parsovani (tj. jednalo se o spolecny prikaz)
+     * @autor haldyr
      */
     protected boolean spolecnePrikazy() {
-        // pak zrusit ifconfig
         AbstraktniPrikaz prikaz;
 
         if (slova.get(0).equals("save")) {

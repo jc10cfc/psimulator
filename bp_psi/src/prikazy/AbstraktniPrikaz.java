@@ -8,7 +8,8 @@ import java.util.List;
 import pocitac.*;
 
 /**
- *
+ * Predek vsech, linuxovejch i cicsovejch prikazu. Dulezity jsou jen promenny a abstraktni metoda vykonejPrikaz().
+ * Ostatni jsou jen nejaky uzitecny staticky metody.
  * @author neiss
  */
 public abstract class AbstraktniPrikaz {
@@ -23,14 +24,16 @@ public abstract class AbstraktniPrikaz {
         this.slova = slova;
     }
 
-//    protected abstract void nastavPrikaz();
     
     /**
      * Tato metoda vykona vlastni prikaz.
      */
     protected abstract void vykonejPrikaz();
 
-    boolean jeInteger(String ret) {
+//*****************************************************************************************************************
+//staticky metody:
+
+    public static boolean jeInteger(String ret) {
         try {
             int a = Integer.parseInt(ret);
         }catch (Exception e) {
@@ -45,14 +48,14 @@ public abstract class AbstraktniPrikaz {
      * @param ret
      * @return
      */
-    boolean moznaIP(String ret){
+    public static boolean moznaIP(String ret){
         if (!ret.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")) {
             return false;
         }
         return true;
     }
 
-    boolean moznaIPsMaskou(String ret){
+    public static boolean moznaIPsMaskou(String ret){
         if (!ret.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]++")) {
             return false;
         }

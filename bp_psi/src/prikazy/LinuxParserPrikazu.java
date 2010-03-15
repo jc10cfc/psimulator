@@ -14,10 +14,21 @@ import pocitac.Konsole;
  */
 public class LinuxParserPrikazu extends ParserPrikazu {
 
+    /**
+     * Volan jen v konstruktoru konsole.
+     * @param pc
+     * @param kon
+     */
     public LinuxParserPrikazu(AbstractPocitac pc, Konsole kon) {
         super(pc, kon);
     }    
-
+    
+    /**
+     * Prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej() rozseka na jednotlivy slova.
+     * Pak se testuje, jestli prvni slovo je nazev nejakyho podporovanyho prikazu, jestlize ne, tak se vypise
+     * "command not found", jinak se preda rizeni tomu spravnymu prikazu.
+     * @param s
+     */
     @Override
     public void zpracujRadek(String s) {
         //        System.out.println("zacatek metody zpracujRadek()");
@@ -44,6 +55,8 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new Exit(pc, kon, slova);
         } else if (slova.get(0).equals("ifconfig")) {
             pr = new Ifconfig(pc, kon, slova);
+        } else if (slova.get(0).equals("route")) {
+            pr = new LinuxRoute(pc, kon, slova);
         } else {
             kon.posliRadek("bash: " + slova.get(0) + ": command not found");
         }
