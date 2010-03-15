@@ -137,8 +137,8 @@ public class RoutovaciTabulka {
         for(int i=0;i<radky.size();i++){
             z=radky.get(i);
             if(z.adresat.equals(adresat)){ //adresati se rovnaj -> adept na smazani
-                if( ( brana == null ) && ( brana!=null && z.brana.jeStejnaAdresa(brana) ) ){
-                            //-> brana nezadana nebo zadana a je stejna -> adept na smazani
+                if( ( brana == null ) || ( z.brana!=null && z.brana.jeStejnaAdresa(brana) ) ){//zkracene vyhodnocovani
+                            //-> brana nezadana nebo zadana a stejna existuje u zaznamu -> adept na smazani
                     if( rozhr==null || (rozhr!=null && rozhr==z.rozhrani)){  //rozhrani nezadano, nebo zadano a
                         radky.remove(i);                                     //odpovida -> smazat
                         return true;
@@ -164,7 +164,7 @@ public class RoutovaciTabulka {
     }
 
     /**
-     * Vrati zaynam na urceny posici, rozhrani pro vypisovaci metody.
+     * Vrati zaznam na urceny posici, rozhrani pro vypisovaci metody.
      * @param posice
      * @return
      */
@@ -173,10 +173,26 @@ public class RoutovaciTabulka {
     }
 //****************************************************************************************************
 //privatni metody
+    /**
+     * Kontroluje, jestli tabulka uz pridavany radek neobsahuje. Zaznam musi obsahovat adresata a rozhrani, brana
+     * se kontroluje, jen kdyz neni null
+     * @param zazn
+     * @return
+     */
     private boolean existujeStejnyZaznam(Zaznam zazn){
         for(Zaznam z:radky){
-            if( z.adresat.equals(zazn.adresat) && z.brana.jeStejnaAdresa(zazn.brana) && z.rozhrani==zazn.rozhrani)
-                return true;
+            if( z.adresat.equals(zazn.adresat) ){   // adresati se rovnaji
+                if ( z.brana==null && zazn.brana==null){ //obe brany jsou null
+                    if( z.rozhrani==zazn.rozhrani){
+                        return true;
+                    }
+                }
+                if(z.brana!=null && zazn.brana!=null){ //obe brany nejsou null a rovnaji se
+                    if(z.brana.jeStejnaAdresa(zazn.brana) && z.rozhrani==zazn.rozhrani){
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
