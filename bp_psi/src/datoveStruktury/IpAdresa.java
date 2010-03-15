@@ -151,7 +151,7 @@ public class IpAdresa {
     /**
      * Zkontroluje, jestli zadany retezec je IP adresa (bez masky za lomitkem)
      * @param adr - kontrolovana adresa
-     * @param jeToMask - urcuje, zda to chci kontrolovat jako IP (1.* - 223.*) nebo jako masku (1.* - 255.*)
+     * @param jeToMaska - urcuje, zda to chci kontrolovat jako IP (1.* - 223.*) nebo jako masku (1.* - 255.*)
      * @return true, kdyz je adresa spravna
      * @author haldyr
      */
