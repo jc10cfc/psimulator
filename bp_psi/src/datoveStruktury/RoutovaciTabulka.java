@@ -22,10 +22,20 @@ public class RoutovaciTabulka {
     /**
      * Representuje jeden radek v routovaci tabulce
      */
-    private class Zaznam{
-        IpAdresa adresat;
-        IpAdresa brana;
-        SitoveRozhrani rozhrani;
+    public class Zaznam{
+        private IpAdresa adresat;   // ty promenny jsou privatni, nechci, aby se daly zvenci upravovat
+        private IpAdresa brana;
+        private SitoveRozhrani rozhrani;
+
+        public IpAdresa getAdresat() {  //getry pro vypis
+            return adresat;
+        }
+        public IpAdresa getBrana() {
+            return brana;
+        }
+        public SitoveRozhrani getRozhrani() {
+            return rozhrani;
+        }
 
         private Zaznam(IpAdresa adresat, SitoveRozhrani rozhrani){
             this.adresat=adresat;
@@ -115,6 +125,30 @@ public class RoutovaciTabulka {
         return 0;
     }
 
+    /**
+     * Metoda na mazani zaznamu.
+     * @param adresat musi byt zadan
+     * @param brana muze byt null
+     * @param rozhr muze byt null
+     * @return true - zaznam smazan<br /> false - zaznam nenalezen - nic nesmazano
+     */
+    public boolean smazZaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhr){
+        Zaznam z;
+        for(int i=0;i<radky.size();i++){
+            z=radky.get(i);
+            if(z.adresat.equals(adresat)){ //adresati se rovnaj -> adept na smazani
+                if( ( brana == null ) && ( brana!=null && z.brana.jeStejnaAdresa(brana) ) ){
+                            //-> brana nezadana nebo zadana a je stejna -> adept na smazani
+                    if( rozhr==null || (rozhr!=null && rozhr==z.rozhrani)){  //rozhrani nezadano, nebo zadano a
+                        radky.remove(i);                                     //odpovida -> smazat
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public String vypisSeLinuxove(){
         String v="";
         v+="Směrovací tabulka v jádru pro IP\n";
@@ -125,6 +159,18 @@ public class RoutovaciTabulka {
         return v;
     }
 
+    public int pocetZaznamu(){
+        return radky.size();
+    }
+
+    /**
+     * Vrati zaynam na urceny posici, rozhrani pro vypisovaci metody.
+     * @param posice
+     * @return
+     */
+    public Zaznam vratZaznam(int posice){
+        return radky.get(posice);
+    }
 //****************************************************************************************************
 //privatni metody
     private boolean existujeStejnyZaznam(Zaznam zazn){
