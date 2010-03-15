@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package prikazy;
 
 import java.util.List;
@@ -14,15 +13,15 @@ import pocitac.*;
  * @author neiss & haldyr
  */
 public abstract class ParserPrikazu {
-    
-    protected  String radek;
-    protected  List<String> slova; //seznam jednotlivejch slov ze vstupniho stringu
+
+    protected String radek;
+    protected List<String> slova; //seznam jednotlivejch slov ze vstupniho stringu
     protected AbstractPocitac pc;
     protected Konsole kon;
 
-    public ParserPrikazu(AbstractPocitac pc,Konsole kon){
-        this.pc=pc;
-        this.kon=kon;
+    public ParserPrikazu(AbstractPocitac pc, Konsole kon) {
+        this.pc = pc;
+        this.kon = kon;
     }
 
     /**
@@ -37,14 +36,18 @@ public abstract class ParserPrikazu {
      * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
      */
     @Deprecated
-    protected void rozsekej(){
-        int i=0;
-        int j=0;
-        while(j<radek.length()){
-            j=radek.indexOf(' ',i);
-            if(j==-1)j=radek.length();
-            if(i!=j) slova.add(radek.substring(i,j)); //pri pridavani nepridavam vic mezer
-            i=j+1;
+    protected void rozsekej() {
+        int i = 0;
+        int j = 0;
+        while (j < radek.length()) {
+            j = radek.indexOf(' ', i);
+            if (j == -1) {
+                j = radek.length();
+            }
+            if (i != j) {
+                slova.add(radek.substring(i, j)); //pri pridavani nepridavam vic mezer
+            }
+            i = j + 1;
         }
     }
 
@@ -52,7 +55,15 @@ public abstract class ParserPrikazu {
      * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
      */
     protected void rozsekejLepe() {
-        String [] pole = radek.split(" ");
+
+        String[] bileZnaky = {" ", "\t"};
+        for (int i = 0; i < bileZnaky.length; i++) { // odstraneni bylych znaku
+            while (radek.contains(bileZnaky[i] + bileZnaky[i])) {
+                radek = radek.replace(bileZnaky[i] + bileZnaky[i], bileZnaky[i]);
+            }
+        }
+        
+        String[] pole = radek.split(" ");
         for (String s : pole) {
             slova.add(s);
         }
@@ -62,7 +73,7 @@ public abstract class ParserPrikazu {
      * V teto metode je se kontroluje, zda neprisel nejaky spolecny prikaz, jako napr. save ci v budoucnu jeste jine.
      * @return vrati true, kdyz konkretni parser uz nema pokracovat dal v parsovani (tj. jednalo se o spolecny prikaz)
      */
-    protected boolean spolecnePrikazy(){
+    protected boolean spolecnePrikazy() {
         // pak zrusit ifconfig
         AbstraktniPrikaz prikaz;
 
