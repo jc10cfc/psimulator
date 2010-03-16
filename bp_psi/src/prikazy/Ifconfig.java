@@ -133,9 +133,7 @@ public class Ifconfig extends AbstraktniPrikaz {
         if (jmenoRozhrani==null) return; //uzivatel zadal jen ifconfig, mozna nejaky prepinace, ale nic vic
         //-------------------
         //kontrola existence rozhrani
-        for ( SitoveRozhrani rozhr: pc.rozhrani){ //hledani spravneho rozhrani
-            if(rozhr.jmeno.equals(jmenoRozhrani)) rozhrani=rozhr;
-        }
+        rozhrani=pc.najdiRozhrani(jmenoRozhrani);
         if (rozhrani==null){
             //tady se nic nevypisuje, protoze ostatni se v ifconfigu asi vyhodnocuje driv (kdyz je spatne
             //rozhrani i ipadresa, tak se jako spatna ukaze IP adresa

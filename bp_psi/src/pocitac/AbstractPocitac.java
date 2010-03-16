@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class AbstractPocitac {
 
     public Komunikace komunikace;
-    public List<SitoveRozhrani> rozhrani;
+    public List<SitoveRozhrani> rozhrani; //kvuli vypisum to musi bejt verejny
     public String jmeno; //jmeno pocitace
 
     @Deprecated
@@ -50,6 +50,16 @@ public abstract class AbstractPocitac {
     public void nastavJmeno(String jm) {
         vypis("Pouziva se deprecated metoda nastavJmeno(String jm)");
         this.jmeno = jm;
+    }
+
+    public SitoveRozhrani najdiRozhrani(String jemno){
+        if(jemno==null){
+            return null;
+        }
+        for(SitoveRozhrani rozhr : rozhrani){
+            if(rozhr.jmeno.equals(jemno)) return rozhr;
+        }
+        return null;
     }
 
     /**
