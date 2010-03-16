@@ -34,7 +34,7 @@ public class Uloz extends AbstraktniPrikaz {
 
     /**
      * Zapise do souboru dany pocitac v XML formatu.
-     * @param pocitac, ktery chceme zapsat
+     * @param pocitac pocitac, ktery chceme zapsat
      * @throws IOException
      */
     private void ulozPC(AbstractPocitac pocitac) throws IOException {
@@ -60,8 +60,8 @@ public class Uloz extends AbstraktniPrikaz {
 
     /**
      * Vrati element, ktery vyrobi na zaklade parametru.
-     * @param jmeno - jmeno elementu
-     * @param obsah - obsah elementu
+     * @param jmeno jmeno elementu
+     * @param obsah obsah elementu
      * @return
      */
     private String vratElement(String jmeno, String obsah) {
@@ -74,7 +74,7 @@ public class Uloz extends AbstraktniPrikaz {
 
     /**
      * Zapise do souboru dane rozhrani v XML formatu.
-     * @param rozhrani, ktere chceme zapsat
+     * @param rozhrani rozhrani, ktere chceme zapsat
      * @throws IOException
      */
     private void ulozRozhrani(SitoveRozhrani rozhrani) throws IOException {
@@ -102,7 +102,7 @@ public class Uloz extends AbstraktniPrikaz {
 
     /**
      * Pomocna metoda na zapis do souboru. Pridava odsazeni, ktere je udrzovano pomoci jinych metod (a podle umisteni v souboru).
-     * @param s - text, ktery chceme zapsat.
+     * @param s text, ktery chceme zapsat.
      * @throws IOException
      */
     private void zapis(String s) throws IOException {

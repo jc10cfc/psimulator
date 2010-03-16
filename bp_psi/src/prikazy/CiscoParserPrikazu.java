@@ -193,13 +193,23 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /**
+     * Tento prikaz zapne rozhrani, ktere je definovano v aktualnim nastovacim rezimu (napr.: interface fastEthernet0/0)
+     */
     private void noshutdown() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (slova.size() != 2) {
+            incompleteCommand();
+            return;
+        }
+        if (slova.get(1).equals("shutdown")) {
+            aktualni.nastavRozhrani(true);
+        }
     }
     
     /**
-     * Kdyz je nastavena tridni promenna usnadneni na true, tak se pak vraci true, pokud 1. slovo prikaz je rovno parametru s.
-     * @param s
+     * Kdyz je nastavena tridni promenna usnadneni na true, tak se pak vraci true, pokud 1. slovo (prikaz) je roven parametru s.
+     * @param s s se porovnava s 'slova' na indexu 'index'
+     * @param index na kterem indexu v 'slova' to ma porovnavat
      * @return
      */
     private boolean usnadneniPrace(String s, int index) {
@@ -219,11 +229,13 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         radek = s;
         slova.clear();
 
+        /*
         if (kon.doplnovani) {
             System.out.println("chci napovedet co dal napsat: '" + radek + "'");
             kon.doplnovani = false;
             return;
         }
+         */
 
         rozsekejLepe();
 
@@ -336,6 +348,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 if (slova.get(0).equals("exit")) {
                     stav = CONFIG;
                     kon.prompt = pc.jmeno + "(config)#";
+                    aktualni = null; // zrusime odkaz na menene rozhrani
                     return;
                 }
                 if (slova.get(0).equals("ip")) {
@@ -411,8 +424,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         for (Object o : pc.rozhrani) {
             SitoveRozhrani sr = (SitoveRozhrani) o;
             kon.posliRadek("interface " + sr.jmeno + "\n"
-                    + " ip address " + sr.ip.vypisIP() + " " + sr.ip.vypisMasku() + "\n"
-                    + " duplex auto\n"
+                    + " ip address " + sr.ip.vypisIP() + " " + sr.ip.vypisMasku());
+            if (sr.vratStavRozhrani() == false) {
+                kon.posliRadek(" shutdown");
+            }
+            kon.posliRadek(" duplex auto\n"
                     + " speed auto\n!"
                     + "ip classless\n"
                     + "!\n");
