@@ -4,6 +4,7 @@
  */
 package pocitac;
 
+import datoveStruktury.RoutovaciTabulka;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public abstract class AbstractPocitac {
     public Komunikace komunikace;
     public List<SitoveRozhrani> rozhrani; //kvuli vypisum to musi bejt verejny
     public String jmeno; //jmeno pocitace
+    public RoutovaciTabulka routovaciTabulka;
 
     @Deprecated
     public AbstractPocitac(String jmeno) {
@@ -29,6 +31,7 @@ public abstract class AbstractPocitac {
         this.jmeno = jmeno;
         rozhrani = new ArrayList<SitoveRozhrani>();
         komunikace = new Komunikace(port, this);
+        routovaciTabulka = new RoutovaciTabulka(this);
     }
 
     @Deprecated

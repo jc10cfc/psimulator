@@ -20,6 +20,13 @@
 		<mac>0a:00:77:03:24:d5</mac>
 		<pripojenoK>cisco1:FastEthernet0/0</pripojenoK>
 	</rozhrani>
+        <routy>
+            <zaznam>
+                <adresat>1.1.1.0</adresat>
+                <brana>143.32.125.1</brana>  <!-- nepovinny udaj -->
+                <rozhraniKam>eth1</rozhraniKam>
+            </zaznam>
+        </routy>
 </pocitac>
 
 <pocitac jmeno="cisco1" typ="cisco">
