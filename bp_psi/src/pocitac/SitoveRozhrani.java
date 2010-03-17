@@ -21,10 +21,15 @@ public class SitoveRozhrani {
     private AbstractPocitac pc; //pocitac, kteremu toto rozhrani patri
     private List<SitoveRozhrani> seznamPodrazenych; //seznam podrazenych rozhrani
     SitoveRozhrani nadrizene;
+    
+    /**
+     * Stav rozhrani. True..zapnuto, false..vypnuto. <br />
+     * Cisco je defaultne vypnute, linux zapnuty.
+     */
     private boolean zapnute;
 
     /**
-     * Vrati stav rozhrani - zapnuto/vypnuto
+     * Vrati stav rozhrani - zapnuto/vypnuto. True..zapnuto, false..vypnuto
      * @return
      */
     public boolean vratStavRozhrani() {

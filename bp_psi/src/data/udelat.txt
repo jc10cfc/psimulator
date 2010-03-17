@@ -3,6 +3,12 @@ vyresit ukoncovani vlaken pri odpojeni uzivatele
 ping
 
 
+haldyr:
+nacitani a ukladani do XML routovaci tabulka
+prikaz pro ovladani cisco tabulky prikazu
+doplnovani + historie prikazu??
+
+
 rozpracovano:
 parser prikazu pro cisco - haldyr
 routovaci tabulky, routovani

@@ -24,6 +24,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         slova = new LinkedList<String>();
     }
     CiscoStavy stav = USER;
+    DateFormat formator = new SimpleDateFormat("MMM  d HH:mm:ss.SSS");
 
     /**
      * True znamena, ze staci psat zkratkovite prikazy (configure - c, interface - i, enable - e)
@@ -202,6 +203,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
         if (slova.get(1).equals("shutdown")) {
+            if (aktualni.vratStavRozhrani() == false) { // kdyz nahazuju rozhrani
+                Date d = new Date();
+                kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface "+aktualni.jmeno+", changed state to up");
+                kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface "+aktualni.jmeno+", changed state to up");
+            }
+
             aktualni.nastavRozhrani(true);
         }
     }
@@ -325,7 +332,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     Date d = new Date();
-                    DateFormat formator = new SimpleDateFormat("MMM  d HH:mm:ss.SSS");
                     kon.posliRadek(formator.format(d) + ": %SYS-5-CONFIG_I: Configured from console by console");
                     return;
                 }
