@@ -174,8 +174,8 @@ public class RoutovaciTabulka {
 //****************************************************************************************************
 //privatni metody
     /**
-     * Kontroluje, jestli tabulka uz pridavany radek neobsahuje. Zaznam musi obsahovat adresata a rozhrani, brana
-     * se kontroluje, jen kdyz neni null
+     * Kontroluje, jestli tabulka uz pridavany radek neobsahuje. Zaznam musi obsahovat adresata a rozhrani 
+     * (to je predem zjisteno), brana se kontroluje, jen kdyz neni null.
      * @param zazn
      * @return
      */
