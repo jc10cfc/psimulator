@@ -27,6 +27,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
     boolean minus_n=false;
     boolean minus_v=false;
     boolean minus_e=false;
+    private boolean add=false;
+    private boolean del=false;
     private String adr; //adresat
     private String brana;
     private String maska;
@@ -108,7 +110,19 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
 
     private void nastavAdd() { //i ukazuje na posici prvniho prvku za add
+        add = true;
+        nastavAddNeboDel();
+    }
 
+    private void nastavDel() {
+        del=true;
+        nastavAddNeboDel();
+    }
+
+    /**
+     * Protoze add a del maji stejnou syntaxi, spolecnej kod z jejich metod jsem hodil do tyhle metody.
+     */
+    private void nastavAddNeboDel(){
         if(slovo.equals("")){ //konec
             navratovyKod=navratovyKod|2;
             vypisKratkouNapovedu();
@@ -123,12 +137,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
         }
     }
 
-    private void nastavDel() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
     private void nastavFlush() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        kon.posliRadek("flush neni podporovano");
     }
 
     private void nastavMinus_net() {
@@ -180,6 +190,9 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }else if(slovo.equals("dev")){
                 slovo=dalsiSlovo();
                 nastavDev();
+            }else if(slovo.equals("netmask")){ //on to pozna a hodi chybu
+                kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
+                navratovyKod |= 128; //nejakej dalsi nesmysl
             }else{ //cokoliv ostatniho, i nic, se povazuje za rozhrani
                 poDevNepokracovat=true;
                 nastavDev();

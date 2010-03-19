@@ -20,6 +20,8 @@ import vyjimky.NeznamyTypPcException;
  * @author neiss
  */
 public class Konsole extends Thread{
+    boolean ladiciVypisovani = true;
+
     private Socket s;
     private AbstractPocitac pocitac;
     private ParserPrikazu parser;
@@ -68,15 +70,13 @@ public class Konsole extends Thread{
                 }
 
                 z = (char) in.read();
-
-//                System.out.println(z);
-
-                if (z == '\t') {
-                    doplnovani = true;
-                    break;
-                }
+//TODO: copak ma tohle znamenat? Hazi to tam nesmyslne moc promptu na tabelator.
+//                if (z == '\t') {
+//                    doplnovani = true;
+//                    break;
+//                }
                 ret+=z;
-                
+                                
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -85,6 +85,9 @@ public class Konsole extends Thread{
                     ret=ret.substring(0, ret.length()-2);
                     break;
                 }
+            }
+            if(ladiciVypisovani){
+                pocitac.vypis("vypisuju po znaku: "+ret);
             }
 
         }
