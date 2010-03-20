@@ -64,7 +64,7 @@ public class Konsole extends Thread{
             try {
                 
                 citac++;
-                if (citac > 1000) { // pocitam, ze zadny prikaz nebude delsi, mozna muzem i snizit
+                if (citac > 200) { // pocitam, ze zadny prikaz nebude delsi, mozna muzem i snizit
                     ukonciSpojeni();
                     break;
                 }

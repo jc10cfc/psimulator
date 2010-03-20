@@ -54,6 +54,8 @@ public class Uloz extends AbstraktniPrikaz {
             ulozRozhrani(iface);
         }
 
+        ulozRoutovaciTabulku(pocitac);
+
         tabs = tabs.substring(1);
         zapis("</pocitac>\n\n");
     }
@@ -98,6 +100,38 @@ public class Uloz extends AbstraktniPrikaz {
 
         tabs = tabs.substring(1);
         zapis("</rozhrani>\n");
+    }
+
+    /**
+     * Zapise do souboru routovaci tabulku pro dany pocitac v XML formatu.
+     * @param pc pocitac u ktereho chceme zapsat routovaci tabulku
+     * @throws IOException
+     */
+    private void ulozRoutovaciTabulku(AbstractPocitac pc) throws IOException {
+        zapis("<routy>\n");
+        tabs += "\t";
+
+        for (int i = 0; i < pc.routovaciTabulka.pocetZaznamu(); i++) {
+
+            zapis("<zaznam>\n");
+            tabs += "\t";
+
+            zapis(vratElement("adresat", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisIP()));
+            zapis(vratElement("maskaAdresata", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisMasku()));
+            
+            if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
+                zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisIP()));
+            } else {
+                zapis(vratElement("brana", ""));
+            }
+            zapis(vratElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno));
+
+            tabs = tabs.substring(1);
+            zapis("</zaznam>\n");
+        }
+
+        tabs = tabs.substring(1);
+        zapis("</routy>\n");
     }
 
     /**

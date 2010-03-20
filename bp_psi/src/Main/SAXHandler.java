@@ -32,17 +32,16 @@ public class SAXHandler implements ContentHandler {
     String tabs = "";
     String namespaces = "";
     String jmenoElementu = "";
-    final int velikostPoleRozhrani = 10;
+    final int velikostPoleRozhrani = 6;
     List<AbstractPocitac> hotovePocitace = new ArrayList<AbstractPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
-    List vsechno = new ArrayList<List>(); // pomocny seznam
-    List pocitac = new ArrayList<String[]>();
     String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
+    String[] zaznam = new String[4]; //adresat, maskaAdresata, brana, rozhrani
     boolean vypis = false; // pro vypis kostry xml dokumentu
     boolean vypis2 = false; // vypis pocitacu
     static public int port = -1;
-    String jmenoPC = "";
-    String typPC = "";
     List<List> pripojeno = new ArrayList<List>();
+    List<PocitacBuilder> seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
+    private int aktualniPC = -1;
 
     /**
      * Nastaví locator
@@ -53,25 +52,71 @@ public class SAXHandler implements ContentHandler {
     }
 
     /**
-     * Vrati true, pokud localName je jmeno elementu, ktere patri do rozhrani.
-     * @param localName
+     * Vrati odkaz na aktualne zpracovavane PC.
      * @return
      */
-    private boolean patriDoRozhrani(String localName) {
-        if (localName.equals("jmeno") || localName.equals("ip") || localName.equals("mac") || localName.equals("pripojenoK")
-                || localName.equals("maska")) {
-            return true;
-        } else {
-            return false;
-        }
+    private PocitacBuilder dejOdkazNaAktualniPC() {
+        return seznamPocitacBuilder.get(aktualniPC);
     }
 
     /**
-     * Pomocna metoda pro pristup k poli (prvky rozhrani jsou v poli)
+     * Vrati true, pokud localName je jmeno elementu, ktere patri do rozhrani.
+     * @param localName jmeno elementu
+     * @return
+     */
+    private boolean patriDoRozhrani(String localName) {
+        String[] pole = {"jmeno", "ip", "mac", "pripojenoK", "maska"};
+
+        for (String s : pole) {
+            if (localName.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Vrati true, pokud localName je jmeno elementu, ktere patri do zaznamu.
+     * @param localName jmeno elementu
+     * @return
+     */
+    private boolean patriDoZaznamu(String localName) {
+        String[] pole = {"adresat", "maskaAdresata", "brana", "rozhraniKam"};
+
+        for (String s : pole) {
+            if (localName.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Pomocna metoda pro pristup k poli (prvky pole jsou casti zaznamu)
      * @param s   - co chceme z pole
      * @return  index v poli, kde se hledana hodnota naleza
      */
-    private int dejIndex(String s) {
+    private int dejIndexVZaznamu(String s) {
+        int i = 9;
+        if (s.equals("adresat")) {
+            i = 0;
+        } else if (s.equals("maskaAdresata")) {
+            i = 1;
+        } else if (s.equals("brana")) {
+            i = 2;
+        } else if (s.equals("rozhraniKam")) {
+            i = 3;
+        }
+
+        return i;
+    }
+
+    /**
+     * Pomocna metoda pro pristup k poli (prvky pole jsou casti rozhrani)
+     * @param s   - co chceme z pole
+     * @return  index v poli, kde se hledana hodnota naleza
+     */
+    private int dejIndexVRozhrani(String s) {
 
         int i = 9;
         if (s.equals("jmeno")) {
@@ -101,33 +146,36 @@ public class SAXHandler implements ContentHandler {
 
         jmenoElementu = localName;
         String attsStr = "";
-        // pro vypis
-        for (int i = 0; i < atts.getLength(); i++) {
+
+        for (int i = 0; i < atts.getLength(); i++) { // pro vypis
             attsStr += (" " + atts.getQName(i) + "=\"" + atts.getValue(i) + "\"");
         }
 
         if (localName.equals("pocitac")) {
 
-            jmenoPC = "";// dulezite
-            typPC = "";// dulezite
+            aktualniPC++;
+            PocitacBuilder pcbuilder = new PocitacBuilder();
+            seznamPocitacBuilder.add(pcbuilder);
 
             for (int i = 0; i < atts.getLength(); i++) {
                 if (atts.getQName(i).equals("jmeno")) {
-                    jmenoPC = atts.getValue(i);
+                    dejOdkazNaAktualniPC().jmeno = atts.getValue(i);
                 }
                 if (atts.getQName(i).equals("typ")) {
-                    typPC = atts.getValue(i);
+                    dejOdkazNaAktualniPC().typ = atts.getValue(i);
                 }
             }
-        }
-
-        if (localName.equals("pocitac")) {
-            pocitac.clear();
         }
 
         if (localName.equals("rozhrani")) {
             for (int i = 0; i < rozhrani.length; i++) {
                 rozhrani[i] = "";
+            }
+        }
+
+        if (localName.equals("zaznam")) {
+            for (int i = 0; i < zaznam.length; i++) {
+                zaznam[i] = "";
             }
         }
 
@@ -153,29 +201,18 @@ public class SAXHandler implements ContentHandler {
             for (int i = 0; i < rozhrani.length; i++) {
                 pole[i] = rozhrani[i];
             }
-            pocitac.add(pole);
+
+            dejOdkazNaAktualniPC().rozhrani.add(pole);
         }
 
-        if (localName.equals("pocitac")) {
+        if (localName.equals("zaznam")) {
 
-            List pocitacNovy = new ArrayList<String[]>();
-
-            String[] jmenoPCaTyp = new String[2];
-            jmenoPCaTyp[0] = jmenoPC;
-            jmenoPCaTyp[1] = typPC;
-            pocitacNovy.add(jmenoPCaTyp);
-
-            for (Object o : pocitac) { // v pocitaci je nekolik rozhrani=pole stringu
-
-                String[] p = (String[]) o;
-                String[] pnove = new String[p.length];
-                for (int i = 0; i < p.length; i++) {
-                    pnove[i] = p[i];
-                }
-                pocitacNovy.add(pnove);
+            String[] pole = new String[zaznam.length];
+            for (int i = 0; i < zaznam.length; i++) {
+                pole[i] = zaznam[i];
             }
 
-            vsechno.add(pocitacNovy);
+            dejOdkazNaAktualniPC().routovaciTabulka.add(pole);
         }
 
         if (vypis) {
@@ -210,8 +247,12 @@ public class SAXHandler implements ContentHandler {
             return;
         }
 
+        if (patriDoZaznamu(jmenoElementu)) {
+            zaznam[dejIndexVZaznamu(jmenoElementu)] = s;
+        }
+
         if (patriDoRozhrani(jmenoElementu)) {
-            rozhrani[dejIndex(jmenoElementu)] = s;
+            rozhrani[dejIndexVRozhrani(jmenoElementu)] = s;
         }
     }
 
@@ -263,82 +304,62 @@ public class SAXHandler implements ContentHandler {
 
     /**
      * Obsluha události "konec dokumentu".
-     * V teto metode se vyraveji vsechny pocitace, natahujou draty mezi "fyzicky" spojenymi rozhranimi.
+     * V teto metode se vyrabeji vsechny pocitace, natahujou draty mezi "fyzicky" spojenymi rozhranimi.
      */
     @Override
     public void endDocument() throws SAXException {
 
-        for (Object pc : (List) vsechno) { // prichazim pocitace
-            List pcList = (List) pc;
 
-            AbstractPocitac absPocitac;
+        for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
+            AbstractPocitac pocitac;
 
-            String PCjmeno = "";
-            String PCtyp = "";
-
-            if (vypis2) {
-                System.out.println("PC");
-            }
-
-            for (Object rozh : pcList) { // prochazim rozhrani u 1 PC
-                String[] iface = (String[]) rozh;
-
-                if (iface.length == 2) { // pole se jmenem a typem pocitace
-                    PCjmeno = iface[0];
-                    PCtyp = iface[1];
-                    if (vypis2) {
-                        System.out.println(" jmeno: " + PCjmeno);
-                        System.out.println(" typ:   " + PCtyp);
-                    }
-                }
-            }
-            if (PCtyp.equals("cisco")) {
-                absPocitac = new CiscoPocitac(PCjmeno, port++);
-            } else if (PCtyp.equals("linux")) {
-                absPocitac = new LinuxPocitac(PCjmeno, port++);
+            if (pcbuilder.typ.equals("cisco")) {
+                pocitac = new CiscoPocitac(pcbuilder.jmeno, port++);
+            } else if (pcbuilder.typ.equals("linux")) {
+                pocitac = new LinuxPocitac(pcbuilder.jmeno, port++);
             } else {
                 throw new ChybaKonfigurakuException("Pocitac nema nastaven typ - linux | cisco.");
             }
 
+            if (vypis2) {
+                System.out.println("\nPC");
+                System.out.println(" jmeno: " + pcbuilder.jmeno);
+                System.out.println(" typ:   " + pcbuilder.typ + "\n");
+            }
 
-            for (Object rozh : pcList) { // prochazim rozhrani u 1 PC
-                String[] iface = (String[]) rozh;
-
-                if (iface.length == 2) { // pole se jmenem a typem pocitace
-                    continue;
-                }
+            for (String[] iface : pcbuilder.rozhrani) { // prochazim a pridavam rozhrani k PC
 
                 if (vypis2) {
-                    System.out.println("  jmeno: " + iface[dejIndex("jmeno")]);
-                    System.out.println("  ip:    " + iface[dejIndex("ip")]);
-                    System.out.println("  maska: " + iface[dejIndex("maska")]);
-                    System.out.println("  mac:   " + iface[dejIndex("mac")]);
-                    System.out.println("  conn:  " + iface[dejIndex("pripojenoK")]);
+                    System.out.println("  jmeno: " + iface[dejIndexVRozhrani("jmeno")]);
+                    System.out.println("  ip:    " + iface[dejIndexVRozhrani("ip")]);
+                    System.out.println("  maska: " + iface[dejIndexVRozhrani("maska")]);
+                    System.out.println("  mac:   " + iface[dejIndexVRozhrani("mac")]);
+                    System.out.println("  conn:  " + iface[dejIndexVRozhrani("pripojenoK")]);
                     System.out.println("");
                 }
 
-                SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndex("jmeno")], absPocitac, iface[dejIndex("mac")]);
+                SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndexVRozhrani("jmeno")], pocitac, iface[dejIndexVRozhrani("mac")]);
 
                 // osetreni prazdne IP nebo masky
                 // kdyz chybi maska, tak se dopocita v kontruktou IpAdresy, kdyz chybi IP, tak se maska neresi
-                if (iface[dejIndex("maska")].equals("") && !iface[dejIndex("ip")].equals("")) { // chybi maska, ale IP je, pak se maska dopocita
-                    IpAdresa ip = new IpAdresa(iface[dejIndex("ip")]);
+                if (iface[dejIndexVRozhrani("maska")].equals("") && !iface[dejIndexVRozhrani("ip")].equals("")) { // chybi maska, ale IP je, pak se maska dopocita
+                    IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")]);
                     sr.ip = ip;
-                } else if (!iface[dejIndex("ip")].equals("") && !iface[dejIndex("maska")].equals("")) { // kdyz je tu oboje
-                    IpAdresa ip = new IpAdresa(iface[dejIndex("ip")], iface[dejIndex("maska")]);
+                } else if (!iface[dejIndexVRozhrani("ip")].equals("") && !iface[dejIndexVRozhrani("maska")].equals("")) { // kdyz je tu oboje
+                    IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")], iface[dejIndexVRozhrani("maska")]);
                     sr.ip = ip;
-                } else if (! iface[dejIndex("maska")].equals("") && iface[dejIndex("ip")].equals("")) { // vypisem, ze preskakujem
-                   System.err.println("Preskakuji masku z duvodu nepritomnosti IP adresy..");
+                } else if (!iface[dejIndexVRozhrani("maska")].equals("") && iface[dejIndexVRozhrani("ip")].equals("")) { // vypisem, ze preskakujem
+                    System.err.println("Preskakuji masku z duvodu nepritomnosti IP adresy..");
                 }
 
-                absPocitac.pridejRozhrani(sr);
+                pocitac.pridejRozhrani(sr);
 
-                if (iface[dejIndex("pripojenoK")].contains(":")) {
+                if (iface[dejIndexVRozhrani("pripojenoK")].contains(":")) {
                     List prip = new ArrayList<String>();
-                    prip.add(absPocitac.jmeno);
+                    prip.add(pocitac.jmeno);
                     prip.add(sr.jmeno);
 
-                    String[] pole = iface[dejIndex("pripojenoK")].split(":");
+                    String[] pole = iface[dejIndexVRozhrani("pripojenoK")].split(":");
                     if (pole.length == 2) {
                         prip.add(pole[0]);
                         prip.add(pole[1]);
@@ -346,16 +367,58 @@ public class SAXHandler implements ContentHandler {
                     } else {
                         vypisChybuPriZpracovaniPripojenoKXML(iface);
                     }
-                } else if (!iface[dejIndex("pripojenoK")].equals("")) {
+                } else if (!iface[dejIndexVRozhrani("pripojenoK")].equals("")) {
                     vypisChybuPriZpracovaniPripojenoKXML(iface);
                 }
             }
 
-//            absPocitac.vypisRozhrani(); //hodi se pro debug
-            hotovePocitace.add(absPocitac);
+            for (String[] mujzaznam : pcbuilder.routovaciTabulka) { // tady resim routovaci tabulku
+
+                if (vypis2) {
+                    System.out.print(" ");
+                    for (String s : mujzaznam) {
+                        System.out.print(s + "\t");
+                    }
+                    System.out.println("");
+                }
+
+                IpAdresa adresat = new IpAdresa(mujzaznam[dejIndexVZaznamu("adresat")], mujzaznam[dejIndexVZaznamu("maskaAdresata")]);
+
+                if (mujzaznam[dejIndexVZaznamu("brana")].equals("") ||
+                        mujzaznam[dejIndexVZaznamu("brana")].equals("0.0.0.0")) { // kdyz to je bez brany
+
+                    SitoveRozhrani iface = null;
+                    String jmeno = mujzaznam[dejIndexVZaznamu("rozhraniKam")];
+                    for (SitoveRozhrani sr : pocitac.rozhrani) {
+                        if (sr.jmeno.equals(jmeno)) {
+                            iface = sr;
+                        }
+                    }
+                    if (iface == null) {
+                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno);
+                        System.err.println("Preskakuji tento zaznam v routovaci tabulce..");
+                        continue;
+                    }
+                    pocitac.routovaciTabulka.pridejZaznam(adresat, iface);
+
+                } else {
+                    IpAdresa brana = new IpAdresa(mujzaznam[dejIndexVZaznamu("brana")]);
+                    int n = pocitac.routovaciTabulka.pridejZaznam(adresat, brana);
+                    if (n == 2) {
+                        System.err.println("rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U");
+                        System.err.print(" ");
+                        for (String s : mujzaznam) {
+                            System.err.print(s + "\t");
+                        }
+                        System.err.println("");
+                    }
+                }
+            }
+
+            hotovePocitace.add(pocitac);
         }
 
-        // tady poresim, natazeni dratu (odkazu) mezi rozhranimi spojenych pocitacu
+        // tady resim natazeni dratu (odkazu) mezi rozhranimi spojenych pocitacu
         for (List l : pripojeno) {
             SitoveRozhrani najiteRozhrani = najdiDaneRozhrani(l.get(0), l.get(1));
             if (najiteRozhrani == null) {
@@ -370,7 +433,7 @@ public class SAXHandler implements ContentHandler {
             }
 
             if (najiteRozhrani.equals(najiteRozhrani2)) {
-                System.out.println("Nemuze byt pripojeno rozhrabi samo na sebe -> break;");
+                System.out.println("Nemuze byt pripojeno rozhrani samo na sebe -> break;");
                 break;
             }
 
@@ -384,7 +447,7 @@ public class SAXHandler implements ContentHandler {
      * @param iface - pole stringu, ve kterem je ulozen obsah elemetu pripojenoK
      */
     private void vypisChybuPriZpracovaniPripojenoKXML(String[] iface) {
-        System.err.println("Ignoruji volbu pripojenoK: '" + iface[dejIndex("pripojenoK")] + "'");
+        System.err.println("Ignoruji volbu pripojenoK: '" + iface[dejIndexVRozhrani("pripojenoK")] + "'");
         System.err.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
     }
 
@@ -423,6 +486,11 @@ public class SAXHandler implements ContentHandler {
      * @return
      */
     public Object vratNastaveni() {
+
+//        for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
+//            System.out.println(pcbuilder);
+//        }
+
         return hotovePocitace;
     }
 }

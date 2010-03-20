@@ -7,7 +7,6 @@ package datoveStruktury;
 
 import java.util.AbstractList;
 import java.util.LinkedList;
-import pocitac.AbstractPocitac;
 import pocitac.SitoveRozhrani;
 
 /**
@@ -22,7 +21,7 @@ public class RoutovaciTabulka {
     /**
      * Representuje jeden radek v routovaci tabulce
      */
-    public class Zaznam{
+    public class Zaznam {
         private IpAdresa adresat;   // ty promenny jsou privatni, nechci, aby se daly zvenci upravovat
         private IpAdresa brana;
         private SitoveRozhrani rozhrani;
@@ -60,16 +59,16 @@ public class RoutovaciTabulka {
         }
     }
     private AbstractList<Zaznam>radky; //jednotlive radky routovaci tabulky
-    private AbstractPocitac pc; //odkaz na pocitac, mozna nebude potreba
+//    private AbstractPocitac pc; //odkaz na pocitac, mozna nebude potreba
     private boolean ladiciVypisovani=true;
 
     /**
      * V konstruktoru se hazi odkaz na pocitac, aby byl prostup k jeho rozhranim.
      * @param pc
      */
-    public RoutovaciTabulka(AbstractPocitac pc){
+    public RoutovaciTabulka(){
         radky=new LinkedList<Zaznam>();
-        this.pc=pc;
+//        this.pc=pc;
     }
 
     /**

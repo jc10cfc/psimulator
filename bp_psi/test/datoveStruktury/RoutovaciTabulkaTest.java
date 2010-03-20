@@ -45,7 +45,7 @@ public class RoutovaciTabulkaTest {
         SitoveRozhrani eth0=new SitoveRozhrani("eth0", null, null);
         SitoveRozhrani wlan0=new SitoveRozhrani("wlan0", null, null);
         
-        RoutovaciTabulka rt=new RoutovaciTabulka(null);
+        RoutovaciTabulka rt=new RoutovaciTabulka();
         assertEquals( 2 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1")));
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.1.0",24), eth0));
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1")));

@@ -31,7 +31,7 @@ public abstract class AbstractPocitac {
         this.jmeno = jmeno;
         rozhrani = new ArrayList<SitoveRozhrani>();
         komunikace = new Komunikace(port, this);
-        routovaciTabulka = new RoutovaciTabulka(this);
+        routovaciTabulka = new RoutovaciTabulka();
     }
 
     @Deprecated

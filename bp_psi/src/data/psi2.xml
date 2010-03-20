@@ -20,19 +20,33 @@
 		<mac>0a:00:77:03:24:d5</mac>
 		<pripojenoK>cisco1:FastEthernet0/0</pripojenoK>
 	</rozhrani>
+	<routy>
+		<zaznam>
+			<adresat>143.32.125.128</adresat>
+			<maskaAdresata>255.255.255.128</maskaAdresata>
+			<brana></brana>
+			<rozhraniKam>eth1</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>143.32.125.129</brana>
+			<rozhraniKam>eth1</rozhraniKam>
+		</zaznam>
+	</routy>
 </pocitac>
 
 <pocitac jmeno="cisco1" typ="cisco">
 	<rozhrani>
 		<jmeno>FastEthernet0/0</jmeno>
-		<ip>1.1.1.1</ip>
-		<maska>255.255.0.0</maska>
+		<ip>127.1.1.8</ip>
+		<maska>255.255.255.0</maska>
 		<mac>00:0b:0c:0d:0a:01</mac>
 		<pripojenoK>linux1:eth1</pripojenoK>
 	</rozhrani>
 	<rozhrani>
 		<jmeno>FastEthernet0/1</jmeno>
-		<ip>192.168.1.24</ip>
+		<ip>192.168.2.24</ip>
 		<maska>255.255.255.0</maska>
 		<mac>03:08:b7:30:24:e1</mac>
 		<pripojenoK>linux1:eth0</pripojenoK>
@@ -44,6 +58,20 @@
 		<mac>03:08:b7:30:24:e2</mac>
 		<pripojenoK></pripojenoK>
 	</rozhrani>
+	<routy>
+		<zaznam>
+			<adresat>192.168.2.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<brana></brana>
+			<rozhraniKam>FastEthernet0/1</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>192.168.2.1</brana>
+			<rozhraniKam>FastEthernet0/1</rozhraniKam>
+		</zaznam>
+	</routy>
 </pocitac>
 
 </konfigurak>

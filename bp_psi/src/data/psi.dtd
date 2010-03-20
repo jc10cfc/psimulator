@@ -1,6 +1,10 @@
 <!-- <?xml version="1.0" encoding="UTF-8" ?> -->
 <!-- http://www.hitsw.com/xml_utilites/ -->
 
+<!ELEMENT adresat ( #PCDATA ) >
+
+<!ELEMENT brana ( #PCDATA ) >
+
 <!ELEMENT ip ( #PCDATA ) >
 
 <!ELEMENT jmeno ( #PCDATA ) >
@@ -11,8 +15,9 @@
 
 <!ELEMENT maska ( #PCDATA ) >
 
-<!ELEMENT pocitac ( rozhrani+ ) >
-<!--<!ATTLIST pocitac id NMTOKEN #REQUIRED >-->
+<!ELEMENT maskaAdresata ( #PCDATA ) >
+
+<!ELEMENT pocitac ( rozhrani+, routy? ) >
 <!ATTLIST pocitac jmeno NMTOKEN #REQUIRED >
 <!ATTLIST pocitac typ NMTOKEN #REQUIRED >
 
@@ -20,7 +25,10 @@
 
 <!ELEMENT pripojenoK ( #PCDATA ) >
 
+<!ELEMENT routy ( zaznam+ ) >
+
 <!ELEMENT rozhrani ( jmeno, ip, maska, mac, pripojenoK ) >
-<!--<!ATTLIST rozhrani id NMTOKEN #REQUIRED >-->
 
+<!ELEMENT rozhraniKam ( #PCDATA ) >
 
+<!ELEMENT zaznam ( adresat, maskaAdresata, brana, rozhraniKam ) >
