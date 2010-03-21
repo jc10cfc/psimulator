@@ -37,7 +37,7 @@ public class SAXHandler implements ContentHandler {
     String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
     String[] zaznam = new String[4]; //adresat, maskaAdresata, brana, rozhrani
     boolean vypis = false; // pro vypis kostry xml dokumentu
-    boolean vypis2 = false; // vypis pocitacu
+    boolean vypis2 = true; // vypis pocitacu
     static public int port = -1;
     List<List> pripojeno = new ArrayList<List>();
     List<PocitacBuilder> seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
@@ -65,7 +65,7 @@ public class SAXHandler implements ContentHandler {
      * @return
      */
     private boolean patriDoRozhrani(String localName) {
-        String[] pole = {"jmeno", "ip", "mac", "pripojenoK", "maska"};
+        String[] pole = {"jmeno", "ip", "mac", "pripojenoK", "maska", "nahozene"};
 
         for (String s : pole) {
             if (localName.equals(s)) {
@@ -129,6 +129,8 @@ public class SAXHandler implements ContentHandler {
             i = 3;
         } else if (s.equals("pripojenoK")) {
             i = 4;
+        } else if (s.equals("nahozene")) {
+            i = 5;
         }
 
         return i;
@@ -335,6 +337,7 @@ public class SAXHandler implements ContentHandler {
                     System.out.println("  maska: " + iface[dejIndexVRozhrani("maska")]);
                     System.out.println("  mac:   " + iface[dejIndexVRozhrani("mac")]);
                     System.out.println("  conn:  " + iface[dejIndexVRozhrani("pripojenoK")]);
+                    System.out.println("  nahoze:" + iface[dejIndexVRozhrani("nahozene")]);
                     System.out.println("");
                 }
 
@@ -350,6 +353,12 @@ public class SAXHandler implements ContentHandler {
                     sr.ip = ip;
                 } else if (!iface[dejIndexVRozhrani("maska")].equals("") && iface[dejIndexVRozhrani("ip")].equals("")) { // vypisem, ze preskakujem
                     System.err.println("Preskakuji masku z duvodu nepritomnosti IP adresy..");
+                }
+
+                if (iface[dejIndexVRozhrani("nahozene")].equals("1") || iface[dejIndexVRozhrani("nahozene")].equals("true")) {
+                    sr.nastavRozhrani(true);
+                } else if (iface[dejIndexVRozhrani("nahozene")].equals("0") || iface[dejIndexVRozhrani("nahozene")].equals("false")) {
+                    sr.nastavRozhrani(false);
                 }
 
                 pocitac.pridejRozhrani(sr);

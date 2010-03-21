@@ -26,22 +26,22 @@ public class SitoveRozhrani {
      * Stav rozhrani. True..zapnuto, false..vypnuto. <br />
      * Cisco je defaultne vypnute, linux zapnuty.
      */
-    private boolean zapnute;
+    private boolean nahozene;
 
     /**
      * Vrati stav rozhrani - zapnuto/vypnuto. True..zapnuto, false..vypnuto
      * @return
      */
     public boolean vratStavRozhrani() {
-        return zapnute;
+        return nahozene;
     }
 
     /**
      * Nastavi stav rozhrani
-     * @param zapnute stav, ktery chceme nastavit
+     * @param stav stav, ktery chceme nastavit
      */
-    public void nastavRozhrani(boolean zapnute) {
-        this.zapnute = zapnute;
+    public void nastavRozhrani(boolean stav) {
+        this.nahozene = stav;
     }
 
     /**
@@ -58,9 +58,9 @@ public class SitoveRozhrani {
         this.macAdresa=macAdresa;
 
         if (pc instanceof LinuxPocitac) {
-            this.zapnute = true;
+            this.nahozene = true;
         } else if (pc instanceof CiscoPocitac) {
-            this.zapnute = false;
+            this.nahozene = false;
         }
 
         

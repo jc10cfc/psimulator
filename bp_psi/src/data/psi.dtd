@@ -17,6 +17,8 @@
 
 <!ELEMENT maskaAdresata ( #PCDATA ) >
 
+<!ELEMENT nahozene ( #PCDATA ) >
+
 <!ELEMENT pocitac ( rozhrani+, routy? ) >
 <!ATTLIST pocitac jmeno NMTOKEN #REQUIRED >
 <!ATTLIST pocitac typ NMTOKEN #REQUIRED >
@@ -25,10 +27,11 @@
 
 <!ELEMENT pripojenoK ( #PCDATA ) >
 
-<!ELEMENT routy ( zaznam+ ) >
+<!ELEMENT routy ( zaznam ) >
 
-<!ELEMENT rozhrani ( jmeno, ip, maska, mac, pripojenoK ) >
+<!ELEMENT rozhrani ( jmeno, ip, maska, mac, pripojenoK, nahozene? ) >
 
 <!ELEMENT rozhraniKam ( #PCDATA ) >
 
 <!ELEMENT zaznam ( adresat, maskaAdresata, brana, rozhraniKam ) >
+
