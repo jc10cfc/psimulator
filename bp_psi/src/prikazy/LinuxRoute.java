@@ -101,9 +101,11 @@ public class LinuxRoute extends AbstraktniPrikaz{
             nastavAdd();
         }
         if ( slovo.equals("del") ){
+            slovo=dalsiSlovo();
             nastavDel();
         }
         if ( slovo.equals("flush") ){
+            slovo=dalsiSlovo();
             nastavFlush();
         }
     }
