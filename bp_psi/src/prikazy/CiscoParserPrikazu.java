@@ -25,18 +25,15 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
     CiscoStavy stav = USER;
     DateFormat formator = new SimpleDateFormat("MMM  d HH:mm:ss.SSS");
-
     /**
      * True znamena, ze staci psat zkratkovite prikazy (configure - c, interface - i, enable - e)
      */
     boolean usnadneni = true;
-    
     /**
      * Indikuje stav, kdy uzivatel napise jen configure. Pak se mu nevypise promt, ale staci zmacknout Enter
      * pro potvrzeni prikazu 'configure terminal'
      */
     boolean configure1 = false;
-
     /**
      * Rozhrani, ktere se bude upravovat ve stavu IFACE
      */
@@ -205,14 +202,14 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (slova.get(1).equals("shutdown")) {
             if (aktualni.vratStavRozhrani() == false) { // kdyz nahazuju rozhrani
                 Date d = new Date();
-                kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface "+aktualni.jmeno+", changed state to up");
-                kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface "+aktualni.jmeno+", changed state to up");
+                kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
+                kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
             }
 
             aktualni.nastavRozhrani(true);
         }
     }
-    
+
     /**
      * Kdyz je nastavena tridni promenna usnadneni na true, tak se pak vraci true, pokud 1. slovo (prikaz) je roven parametru s.
      * @param s s se porovnava s 'slova' na indexu 'index'
@@ -238,9 +235,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         /*
         if (kon.doplnovani) {
-            System.out.println("chci napovedet co dal napsat: '" + radek + "'");
-            kon.doplnovani = false;
-            return;
+        System.out.println("chci napovedet co dal napsat: '" + radek + "'");
+        kon.doplnovani = false;
+        return;
         }
          */
 
@@ -284,7 +281,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         switch (stav) {
             case USER:
-                if (slova.get(0).equals("enable") || usnadneniPrace("e", 0) ) {
+                if (slova.get(0).equals("enable") || usnadneniPrace("e", 0)) {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     return;
@@ -371,6 +368,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             prikaz = new Ifconfig(pc, kon, slova);
         } else if (slova.get(0).equals("route")) {
             prikaz = new LinuxRoute(pc, kon, slova);
+        } else if (slova.get(0).equals("ping")) {
+            //prikaz = new Ping(pc, kon, slova, slova.get(1));
         } else {
 
             switch (stav) {
@@ -437,10 +436,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 kon.posliRadek(" shutdown");
             }
             kon.posliRadek(" duplex auto\n"
-                    + " speed auto\n!"
-                    + "ip classless\n"
-                    + "!\n");
+                    + " speed auto\n!");
         }
+
+        kon.posliRadek(pc.routovaciTabulka.vypisSeCiscove());
+
+        kon.posliRadek("!\n");
 
         kon.posliRadek("ip http server\n"
                 + "!\n"
@@ -471,7 +472,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         try {
             aktualni.ip = new IpAdresa(slova.get(2), slova.get(3));
         } catch (ZakazanaIpAdresaException e) {
-            kon.posliRadek("Not a valid host address - "+slova.get(2));
+            kon.posliRadek("Not a valid host address - " + slova.get(2));
         } catch (Exception e) {
             invalidInputDetected();
         }

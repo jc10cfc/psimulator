@@ -122,7 +122,7 @@ public class Uloz extends AbstraktniPrikaz {
             if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
                 zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisIP()));
             } else {
-                zapis(vratElement("brana", ""));
+                zapis(vratElement("brana", "0.0.0.0"));
             }
             zapis(vratElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno));
 

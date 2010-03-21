@@ -57,6 +57,12 @@ public class RoutovaciTabulka {
             v+="0\t0\t0\t"+rozhrani.jmeno+"\n";
             return v;
         }
+
+        private String vypisSeCiscove() {
+            String s = "";
+            s += "ip route " + adresat.vypisIP() + " " + adresat.vypisMasku() + " " + brana.vypisIP() + "\n";
+            return s;
+        }
     }
     private AbstractList<Zaznam>radky; //jednotlive radky routovaci tabulky
 //    private AbstractPocitac pc; //odkaz na pocitac, mozna nebude potreba
@@ -79,8 +85,11 @@ public class RoutovaciTabulka {
      */
     public SitoveRozhrani najdiSpravnyRozhrani(IpAdresa cil){
         for( Zaznam z:radky){
+            System.out.println("cil: "+cil.vypisIP()); // debug vypis
+            System.out.println("z:   "+z.adresat.vypisIP()); // debug vypis
             if(cil.jeVRozsahu(z.adresat)) return z.rozhrani; //vraci prvni odpovidajici rozhrani
         }
+        System.out.println("ahoj");
         return null;
     }
 
@@ -111,6 +120,25 @@ public class RoutovaciTabulka {
     }
 
     /**
+     * Prida novej zaznam, priznaku UG. Funkce nekontroluje vubec nic.
+     * @param adresat
+     * @param brana
+     */
+    public void pridejZaznamBezKontrol(IpAdresa adresat, IpAdresa brana) {
+        SitoveRozhrani rozhr=null;
+        for (Zaznam z:radky){ //hledani spravnyho rozhrani
+            if( z.brana == null ){ //tohle by moh bejt zaznam potrebnej zaznam priznaku U
+                if( rozhr==null && brana.jeVRozsahu(z.adresat)){
+                    rozhr=z.rozhrani; //takhle to opravdu funguje, 1. polozka se pocita
+                }
+            }
+        }
+        Zaznam z = new Zaznam(adresat, brana, rozhr);
+        int i = najdiSpravnouPosici(z);
+        radky.add(i,z);
+    }
+
+    /**
      * Prida novej zaznam priznaku U.
      * @param adresat ocekava IpAdresu, ktera je cislem site
      * @param rozhr predpoklada se, ze rozhrani na pocitaci existuje
@@ -122,6 +150,17 @@ public class RoutovaciTabulka {
         int i=najdiSpravnouPosici(z);
         radky.add(i,z);
         return 0;
+    }
+
+        /**
+     * Prida novej zaznam priznaku U. Funkce nekontroluje vubec nic.
+     * @param adresat ocekava IpAdresu, ktera je cislem site
+     * @param rozhr predpoklada se, ze rozhrani na pocitaci existuje
+     */
+    public void pridejZaznamBezKontrol(IpAdresa adresat, SitoveRozhrani rozhr){
+        Zaznam z=new Zaznam(adresat, rozhr);
+        int i=najdiSpravnouPosici(z);
+        radky.add(i,z);
     }
 
     /**
@@ -156,6 +195,15 @@ public class RoutovaciTabulka {
             v+=z.vypisSeLinuxove();
         }
         return v;
+    }
+
+    public String vypisSeCiscove() {
+        String s = "";
+        s += "ip classless\n";
+        for (Zaznam z:radky){
+            s += z.vypisSeCiscove();
+        }
+        return s;
     }
 
     public int pocetZaznamu(){

@@ -19,8 +19,8 @@ import vyjimky.NeznamyTypPcException;
  *
  * @author neiss
  */
-public class Konsole extends Thread{
-    boolean ladiciVypisovani = true;
+public class Konsole extends Thread {
+    boolean ladiciVypisovani = false;
 
     private Socket s;
     private AbstractPocitac pocitac;

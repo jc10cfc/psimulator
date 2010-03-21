@@ -4,6 +4,7 @@
  */
 package pocitac;
 
+import datoveStruktury.IpAdresa;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +56,12 @@ public abstract class AbstractPocitac {
         this.jmeno = jm;
     }
 
-    public SitoveRozhrani najdiRozhrani(String jemno){
-        if(jemno==null){
+    public SitoveRozhrani najdiRozhrani(String jmeno){
+        if(jmeno==null){
             return null;
         }
         for(SitoveRozhrani rozhr : rozhrani){
-            if(rozhr.jmeno.equals(jemno)) return rozhr;
+            if(rozhr.jmeno.equals(jmeno)) return rozhr;
         }
         return null;
     }
@@ -72,6 +73,41 @@ public abstract class AbstractPocitac {
      */
     public void vypis(String ret) {
         System.out.println("(" + jmeno + ":) " + ret);
+    }
+
+    // bud pole bitu (pokud bude potreba vic nez 1 informace), jinak klasicky int
+    public int posliPing(IpAdresa cil) {
+        int ret = -1;
+
+        SitoveRozhrani sr = routovaciTabulka.najdiSpravnyRozhrani(cil);
+        if (sr == null) {
+            // neni pro to pravidlo zaznam v routovaci tabulce
+            // konec
+            return 1;
+        }
+        if (sr.pripojenoK == null) {
+            // neni fyzicky pripojeno nikam
+            // konec
+            return 2;
+        }
+
+        ret = sr.pripojenoK.getPc().prijmiPing(cil);
+        return ret;
+    }
+
+    public int prijmiPing(IpAdresa cil) {
+        int ret = -1;
+        for (SitoveRozhrani iface : rozhrani) { // zvazit pouziti metody equals - neco se tam dela s maskou, tak nevim
+            if (iface.ip.vypisIP().equals(cil.vypisIP())) {
+                System.out.println("Ping paket dorazil do cile.");
+                // ping paket dorazil do cile
+                // konec
+                return 0;
+            }
+        }
+
+        ret = posliPing(cil);
+        return ret;
     }
 
     // zatim pomocna metoda, pak se muze smazat

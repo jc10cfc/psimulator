@@ -88,6 +88,9 @@ public abstract class ParserPrikazu {
         if (slova.get(0).equals("save")) {
             prikaz = new Uloz(pc, kon, slova);
             return true;
+        } if (slova.get(0).equals("ping")) {
+            prikaz = new Ping(pc, kon, slova, slova.get(1)); // TODO: prozatim strceno sem.
+            return true;
         }
         return false;
     }

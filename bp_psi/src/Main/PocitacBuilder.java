@@ -14,14 +14,12 @@ import java.util.List;
  */
 public class PocitacBuilder {
 
-    String jmeno;
-    String typ;
+    String jmeno = "";
+    String typ = "";
     List<String[]> rozhrani;
     List<String[]> routovaciTabulka;
 
     public PocitacBuilder() {
-        jmeno = "";
-        typ = "";
         rozhrani = new ArrayList<String[]>();
         routovaciTabulka = new ArrayList<String[]>();
     }
@@ -29,7 +27,6 @@ public class PocitacBuilder {
     @Override
     public String toString() {
         String ret = "";
-
         ret += "PC:  "+jmeno +"\n";
         ret += "typ: "+typ +"\n";
         for (String[] pole : rozhrani) {
@@ -38,8 +35,6 @@ public class PocitacBuilder {
             }
         }
 
-
-//        ret += "velikost rouTable:"+routovaciTabulka.size() +"\n";
         if (routovaciTabulka.size() == 0) return ret;
         ret += "\n";
         for (String[] pole : routovaciTabulka) {

@@ -399,19 +399,30 @@ public class SAXHandler implements ContentHandler {
                         System.err.println("Preskakuji tento zaznam v routovaci tabulce..");
                         continue;
                     }
-                    pocitac.routovaciTabulka.pridejZaznam(adresat, iface);
+                    
+                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, iface);
 
                 } else {
+                    /* TODO: je tam pak v routovaci tabulce nastaveno rozhrani??
+                     *  <adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>143.32.125.254</brana>  <!-- nepovinny udaj -->
+			<rozhraniKam>eth0</rozhraniKam>
+                     */
+
                     IpAdresa brana = new IpAdresa(mujzaznam[dejIndexVZaznamu("brana")]);
+                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana);
+                    /*
                     int n = pocitac.routovaciTabulka.pridejZaznam(adresat, brana);
                     if (n == 2) {
-                        System.err.println("rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U");
+                        System.err.println(pocitac.jmeno+": "+"rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U");
                         System.err.print(" ");
                         for (String s : mujzaznam) {
                             System.err.print(s + "\t");
                         }
                         System.err.println("");
                     }
+                     */
                 }
             }
 
