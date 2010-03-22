@@ -28,8 +28,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
     boolean minus_n=false;
     boolean minus_v=false;
     boolean minus_e=false;
-    private boolean add=false;
-    private boolean del=false;
+    //private boolean add=false;
+    //private boolean del=false;
     private String adr; //adresat
     private String brana;
     private String maska;
@@ -40,6 +40,14 @@ public class LinuxRoute extends AbstraktniPrikaz{
     private boolean nastavenaMaska=false;
     private boolean minusHost = false; //zadano -host
     private boolean minusNet = false; //zadano -net
+
+    /**
+     * Je to pole bitu (bity pocitany odzadu od nuly, jako mocnina):<br />
+     * nevyplneno (0) - zadna akce, jenom vypsat <br />
+     * 0. bit (1) - add <br />
+     * 1. bit (2) - del <br />
+     */
+    private int akce = 0;
 
     /**
      * Je to pole bitu (bity pocitany odzadu od nuly, jako mocnina):<br />
@@ -54,7 +62,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
      * 8. bit (256) - pri parametru -host byla zadana maska -> nic neprovadet <br />
      * 9. bit (512) - maska zadavana vice nez jednou (jakymkoliv zpusobem) -> nic nenastavovat <br />
      * 10. bit (1024) - maska je nespravna <br />
-      */
+     */
     int navratovyKod=0;
     
 
@@ -68,8 +76,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
     @Override
     protected void vykonejPrikaz() {
-        if(!add && !del){
-            kon.posliRadek(vypisTabulku());
+        if(akce == 0){ //nic nedelat, jenom vypsat
+            vypisTabulku();
             return;
         }
         if(ladiciVypisovani){
@@ -117,12 +125,12 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
 
     private void nastavAdd() { //i ukazuje na posici prvniho prvku za add
-        add = true;
+        akce |= 1;
         nastavAddNeboDel();
     }
 
     private void nastavDel() {
-        del=true;
+        akce |= 2;
         nastavAddNeboDel();
     }
 
@@ -378,7 +386,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         return false;
     }
 
-    private String vypisTabulku() {
+    private void vypisTabulku() {
 
         String v = ""; //string na vraceni
         v += "Směrovací tabulka v jádru pro IP\n";
@@ -392,9 +400,9 @@ public class LinuxRoute extends AbstraktniPrikaz{
             } else {
                 v += zarovnej(z.getBrana().vypisIP(),16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UG    ";
             }
-            v += "0      0        0" + z.getRozhrani().jmeno + "\n";
+            v += "0      0        0 " + z.getRozhrani().jmeno + "\n";
         }
-        return v;
+        kon.posli(v);
         
         
     }

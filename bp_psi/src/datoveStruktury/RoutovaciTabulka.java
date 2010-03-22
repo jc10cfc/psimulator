@@ -92,27 +92,40 @@ public class RoutovaciTabulka {
 
     /**
      * prida novej zaznam, priznaku UG. V okamziku pridani musi bejt brana dosazitelna s priznakem U,
-     * tzn na rozhrani, ne gw
+     * tzn. na rozhrani, ne gw. Lze pridat i zaznam s predvyplnenim rozhranim, i takovej ale musi mit branu uz
+     * dosazitelnou na tomhle rozhrani.
      * @param adresat
      * @param brana
      * @return 0: v poradku<br /> 1: existuje stejny zaznam;<br />
      * 2: rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U<br />
      */
-    public int pridejZaznam(IpAdresa adresat, IpAdresa brana){
-        SitoveRozhrani rozhr=null;
-        for (Zaznam z:radky){ //hledani spravnyho rozhrani
-            if( z.brana == null ){ //tohle by moh bejt zaznam potrebnej zaznam priznaku U
-                if( rozhr==null && brana.jeVRozsahu(z.adresat)){
-                    rozhr=z.rozhrani; //takhle to opravdu funguje, 1. polozka se pocita
+    public int pridejZaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhr) {
+        boolean rozhraniNalezeno = false;
+        for (Zaznam z : radky) { //hledani spravnyho rozhrani
+            if (z.brana == null) { //tohle by moh bejt zaznam potrebnej zaznam priznaku U
+                if (!rozhraniNalezeno && brana.jeVRozsahu(z.adresat)) { //nalezl se adresat brane odpovidajici
+                    if (rozhr == null) { //rozhrani neni zadano a je potreba ho priradit
+                        rozhr = z.rozhrani; //takhle to opravdu funguje, 1. polozka se pocita
+                        rozhraniNalezeno = true;
+                        break;
+                    } else { //rozhrani bylo zadano a je potreba zjistit, jestli je brana v dosahu tohodle rozhrani
+                        if (z.rozhrani == rozhr) { //kdyz se rovnaji, je rozhrani nalezeno
+                            rozhraniNalezeno = true;
+                            break;
+                        }
+                    }
                 }
             }
-            
         }
-        if (rozhr==null)return 2; // rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U
-        Zaznam z=new Zaznam(adresat, brana, rozhr);
-        if(existujeStejnyZaznam(z))return 1;
-        int i=najdiSpravnouPosici(z);
-        radky.add(i,z);
+        if (!rozhraniNalezeno) {
+            return 2; // rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U
+        }
+        Zaznam z = new Zaznam(adresat, brana, rozhr);
+        if (existujeStejnyZaznam(z)) {
+            return 1;
+        }
+        int i = najdiSpravnouPosici(z);
+        radky.add(i, z);
         return 0;
     }
 

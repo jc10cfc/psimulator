@@ -40,16 +40,17 @@ public class RoutovaciTabulkaTest {
 
     @Test
     public void prvniTest(){
+        System.out.println("Prvni test ------------------------------------------------------------------------");
         assertTrue(new IpAdresa("1.1.1.1").jeVRozsahu(new IpAdresa("1.1.1.0",24)));
 
         SitoveRozhrani eth0=new SitoveRozhrani("eth0", null, null);
         SitoveRozhrani wlan0=new SitoveRozhrani("wlan0", null, null);
         
         RoutovaciTabulka rt=new RoutovaciTabulka();
-        assertEquals( 2 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1")));
+        assertEquals( 2 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1"), null));
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.1.0",24), eth0));
-        assertEquals( 0 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1")));
-        assertEquals( 1 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1")));
+        assertEquals( 0 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1"), null));
+        assertEquals( 1 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1"), null));
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.2.128",25), wlan0) );
         assertEquals( 1 , rt.pridejZaznam(new IpAdresa("1.1.2.128",25), wlan0) );
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.2.128",25),eth0) );
@@ -67,6 +68,23 @@ public class RoutovaciTabulkaTest {
         assertTrue(rt.smazZaznam((new IpAdresa("2.0.0.0",1)), null, wlan0));
         
         System.out.println(rt.vypisSeLinuxove());
+    }
+
+    @Test
+    public void druhyTest(){
+        System.out.println("Druhy test ------------------------------------------------------------------------");
+
+        SitoveRozhrani eth0=new SitoveRozhrani("eth0", null, null);
+        SitoveRozhrani wlan0=new SitoveRozhrani("wlan0", null, null);
+        RoutovaciTabulka rt=new RoutovaciTabulka();
+
+        assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.2.128",25), wlan0) );
+        assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.2.128",25), eth0) );
+        assertEquals(0, rt.pridejZaznam(new IpAdresa("1.1.2.128",25), new IpAdresa("1.1.2.129"), wlan0));
+        assertEquals(0, rt.pridejZaznam(new IpAdresa("1.1.2.128",25), new IpAdresa("1.1.2.130"), eth0));
+
+        System.out.println(rt.vypisSeLinuxove());
+
     }
 
 }
