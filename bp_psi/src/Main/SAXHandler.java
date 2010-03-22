@@ -37,7 +37,7 @@ public class SAXHandler implements ContentHandler {
     String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
     String[] zaznam = new String[4]; //adresat, maskaAdresata, brana, rozhrani
     boolean vypis = false; // pro vypis kostry xml dokumentu
-    boolean vypis2 = true; // vypis pocitacu
+    boolean vypis2 = false; // vypis pocitacu
     static public int port = -1;
     List<List> pripojeno = new ArrayList<List>();
     List<PocitacBuilder> seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
@@ -392,46 +392,26 @@ public class SAXHandler implements ContentHandler {
                 }
 
                 IpAdresa adresat = new IpAdresa(mujzaznam[dejIndexVZaznamu("adresat")], mujzaznam[dejIndexVZaznamu("maskaAdresata")]);
-
-                if (mujzaznam[dejIndexVZaznamu("brana")].equals("") ||
-                        mujzaznam[dejIndexVZaznamu("brana")].equals("0.0.0.0")) { // kdyz to je bez brany
-
-                    SitoveRozhrani iface = null;
-                    String jmeno = mujzaznam[dejIndexVZaznamu("rozhraniKam")];
-                    for (SitoveRozhrani sr : pocitac.rozhrani) {
-                        if (sr.jmeno.equals(jmeno)) {
-                            iface = sr;
-                        }
+                SitoveRozhrani iface = null;
+                String jmeno = mujzaznam[dejIndexVZaznamu("rozhraniKam")];
+                for (SitoveRozhrani sr : pocitac.rozhrani) {
+                    if (sr.jmeno.equals(jmeno)) {
+                        iface = sr;
                     }
-                    if (iface == null) {
-                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno);
-                        System.err.println("Preskakuji tento zaznam v routovaci tabulce..");
-                        continue;
-                    }
-                    
-                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, iface);
+                }
+                if (iface == null) {
+                    System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno);
+                    System.err.println("Preskakuji tento zaznam v routovaci tabulce..");
+                    continue;
+                }
 
-                } else {
-                    /* TODO: je tam pak v routovaci tabulce nastaveno rozhrani??
-                     *  <adresat>0.0.0.0</adresat>
-			<maskaAdresata>0.0.0.0</maskaAdresata>
-			<brana>143.32.125.254</brana>  <!-- nepovinny udaj -->
-			<rozhraniKam>eth0</rozhraniKam>
-                     */
+                if (mujzaznam[dejIndexVZaznamu("brana")].equals("")
+                        || mujzaznam[dejIndexVZaznamu("brana")].equals("null")) { // kdyz to je bez brany
+                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, null, iface);
 
+                } else { // vcetne brany
                     IpAdresa brana = new IpAdresa(mujzaznam[dejIndexVZaznamu("brana")]);
-                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana);
-                    /*
-                    int n = pocitac.routovaciTabulka.pridejZaznam(adresat, brana);
-                    if (n == 2) {
-                        System.err.println(pocitac.jmeno+": "+"rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U");
-                        System.err.print(" ");
-                        for (String s : mujzaznam) {
-                            System.err.print(s + "\t");
-                        }
-                        System.err.println("");
-                    }
-                     */
+                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana, iface);
                 }
             }
 

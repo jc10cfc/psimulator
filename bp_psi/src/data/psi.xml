@@ -24,7 +24,7 @@
 		<zaznam>
 			<adresat>0.0.0.0</adresat>
 			<maskaAdresata>0.0.0.0</maskaAdresata>
-			<brana>143.32.125.254</brana>  <!-- nepovinny udaj -->
+			<brana>143.32.125.254</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
         </routy>

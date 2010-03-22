@@ -97,6 +97,7 @@ public class Uloz extends AbstraktniPrikaz {
         } else {
             zapis(vratElement("pripojenoK", rozhrani.pripojenoK.getPc().jmeno + ":" + rozhrani.pripojenoK.jmeno));
         }
+        zapis(vratElement("nahozene", rozhrani.vratStavRozhrani() ? "true" : "false"));
 
         tabs = tabs.substring(1);
         zapis("</rozhrani>\n");
@@ -110,7 +111,7 @@ public class Uloz extends AbstraktniPrikaz {
     private void ulozRoutovaciTabulku(AbstractPocitac pc) throws IOException {
         zapis("<routy>\n");
         tabs += "\t";
-
+        
         for (int i = 0; i < pc.routovaciTabulka.pocetZaznamu(); i++) {
 
             zapis("<zaznam>\n");
@@ -122,7 +123,7 @@ public class Uloz extends AbstraktniPrikaz {
             if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
                 zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisIP()));
             } else {
-                zapis(vratElement("brana", "0.0.0.0"));
+                zapis(vratElement("brana", "null"));
             }
             zapis(vratElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno));
 
