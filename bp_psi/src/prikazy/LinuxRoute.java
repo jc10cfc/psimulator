@@ -5,6 +5,7 @@
 package prikazy;
 
 import datoveStruktury.IpAdresa;
+import datoveStruktury.RoutovaciTabulka;
 import java.util.List;
 import pocitac.AbstractPocitac;
 import pocitac.Konsole;
@@ -67,6 +68,10 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
     @Override
     protected void vykonejPrikaz() {
+        if(!add && !del){
+            kon.posliRadek(vypisTabulku());
+            return;
+        }
         if(ladiciVypisovani){
             kon.posliRadek(this.toString());
         }
@@ -371,6 +376,27 @@ public class LinuxRoute extends AbstraktniPrikaz{
         // kdyz se vyskytne nejaka chyba:
         navratovyKod |= 4; //spatny adresat
         return false;
+    }
+
+    private String vypisTabulku() {
+
+        String v = ""; //string na vraceni
+        v += "Směrovací tabulka v jádru pro IP\n";
+        v += "Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní\n";
+        int pocet = pc.routovaciTabulka.pocetZaznamu();
+        for (int i = 0; i < pocet; i++) {
+            RoutovaciTabulka.Zaznam z = pc.routovaciTabulka.vratZaznam(i);
+            v += zarovnej(z.getAdresat().vypisIP(), 16);
+            if (z.getBrana() == null) {
+                v += zarovnej("0.0.0.0",16) + zarovnej(z.getAdresat().vypisMasku(),16) + "U     ";
+            } else {
+                v += zarovnej(z.getBrana().vypisIP(),16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UG    ";
+            }
+            v += "0      0        0" + z.getRozhrani().jmeno + "\n";
+        }
+        return v;
+        
+        
     }
 
     @Override

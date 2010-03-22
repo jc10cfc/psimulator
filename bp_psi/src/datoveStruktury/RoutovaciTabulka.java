@@ -124,6 +124,7 @@ public class RoutovaciTabulka {
      * @param adresat
      * @param brana
      */
+    @Deprecated
     public void pridejZaznamBezKontrol(IpAdresa adresat, IpAdresa brana) {
         SitoveRozhrani rozhr=null;
         for (Zaznam z:radky){ //hledani spravnyho rozhrani
@@ -157,10 +158,27 @@ public class RoutovaciTabulka {
      * @param adresat ocekava IpAdresu, ktera je cislem site
      * @param rozhr predpoklada se, ze rozhrani na pocitaci existuje
      */
+    @Deprecated
     public void pridejZaznamBezKontrol(IpAdresa adresat, SitoveRozhrani rozhr){
         Zaznam z=new Zaznam(adresat, rozhr);
         int i=najdiSpravnouPosici(z);
         radky.add(i,z);
+    }
+
+    /**
+     * Tahleta metoda slouží k přidávání záznamů z konfiguráku. Neprováděj se žádný kontroly, prostě se to tam
+     * přidává v pořadí, v jakým to bylo uloženo. Adresat a rozhrani musej bejt vyplneny, brana jen u priznaku
+     * UG, tzn. u routy na branu.
+     * @param adresat
+     * @param brana
+     * @param rozhr
+     */
+    public void pridejZaznamBezKontrol(IpAdresa adresat,IpAdresa brana,SitoveRozhrani rozhr){
+        if(!adresat.jeCislemSite()){
+            throw new RuntimeException("Chyba v konfiguraku, adresat v routovaci tabulce neni cislem site. Tahleta" +
+                    "pak by to asi chtelo specialni vyjimku, aspon na obecnou chybu v konfiguraku.");
+        }
+        radky.add(new Zaznam(adresat,brana,rozhr)); //pridava se to nakonec, neresi se to
     }
 
     /**
