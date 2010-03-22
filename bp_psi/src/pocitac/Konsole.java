@@ -5,6 +5,8 @@
 
 package pocitac;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import prikazy.ParserPrikazu;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -130,9 +132,13 @@ public class Konsole extends Thread {
      * Vypise prompt na prikazou radku.
      * @throws IOException
      */
-    public void vypisPrompt() throws IOException{
-        out.write((prompt).getBytes());
-        //pocitac.vypis("(socket c. "+cislo+" posilam): "+ret);
+    public void vypisPrompt(){
+        try{
+            out.write((prompt).getBytes());
+            //pocitac.vypis("(socket c. "+cislo+" posilam): "+prompt);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -149,6 +155,7 @@ public class Konsole extends Thread {
             in = new BufferedReader(new InputStreamReader(s.getInputStream( ) ) );
             out = s.getOutputStream();
             ukoncit=false;
+            posliBajtyTelnetu();
             while(! ukoncit ) {
                 if (vypisPrompt) {
                     vypisPrompt();
@@ -177,6 +184,20 @@ public class Konsole extends Thread {
      */
     public void ukonciSpojeni() {
         ukoncit=true;
+    }
+
+    private void posliBajtyTelnetu() {
+        byte[] pole = {
+            /*84*/   (byte) 0xff, (byte) 0xfd, (byte) 0x18, (byte) 0xff, (byte) 0xfd, (byte) 0x20, (byte) 0xff, (byte) 0xfd, (byte) 0x23, (byte) 0xff, (byte) 0xfd, (byte) 0x27,
+            /*88*/   (byte) 0xff, (byte) 0xfa, (byte) 0x20, (byte) 0x01, (byte) 0xff, (byte) 0xf0, (byte) 0xff, (byte) 0xfa, (byte) 0x23, (byte) 0x01, (byte) 0xff, (byte) 0xf0, (byte) 0xff, (byte) 0xfa, (byte) 0x27, (byte) 0x01, (byte) 0xff, (byte) 0xf0, (byte) 0xff, (byte) 0xfa, (byte) 0x18, (byte) 0x01, (byte) 0xff, (byte) 0xf0,
+            /*91*/   (byte) 0xff, (byte) 0xfb, (byte) 0x03, (byte) 0xff, (byte) 0xfd, (byte) 0x01, (byte) 0xff, (byte) 0xfb, (byte) 0x05, (byte) 0xff, (byte) 0xfd, (byte) 0x21,
+            /*93*/   (byte) 0xff, (byte) 0xfb, (byte) 0x01,
+        };
+        try {
+            out.write(pole);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
