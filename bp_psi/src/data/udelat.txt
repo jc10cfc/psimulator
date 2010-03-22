@@ -1,6 +1,11 @@
 zbyva:
-ping
-doplnovani + historie prikazu??
+ping paket
+doplnovani
+historie prikazu
+SNAT, DNAT
+testovani
+
+
 
 haldyr:
 prikaz pro ovladani cisco tabulky prikazu

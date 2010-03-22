@@ -114,6 +114,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         // ip route 0.0.0.0 0.0.0.0 192.168.2.254
         // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
 
+        //TODO: pokracovat
 
         
     }

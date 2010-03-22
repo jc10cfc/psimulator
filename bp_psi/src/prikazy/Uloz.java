@@ -109,6 +109,9 @@ public class Uloz extends AbstraktniPrikaz {
      * @throws IOException
      */
     private void ulozRoutovaciTabulku(AbstractPocitac pc) throws IOException {
+
+        if (pc.routovaciTabulka.pocetZaznamu() == 0) return;
+
         zapis("<routy>\n");
         tabs += "\t";
         
