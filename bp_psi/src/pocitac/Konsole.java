@@ -5,8 +5,6 @@
 
 package pocitac;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import prikazy.ParserPrikazu;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -155,7 +153,7 @@ public class Konsole extends Thread {
             in = new BufferedReader(new InputStreamReader(s.getInputStream( ) ) );
             out = s.getOutputStream();
             ukoncit=false;
-            posliBajtyTelnetu();
+//            posliBajtyTelnetu();
             while(! ukoncit ) {
                 if (vypisPrompt) {
                     vypisPrompt();

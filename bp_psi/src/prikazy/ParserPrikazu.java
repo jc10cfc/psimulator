@@ -63,6 +63,8 @@ public abstract class ParserPrikazu {
      * @autor haldyr
      */
     protected void rozsekejLepe() {
+        
+        radek = radek.trim(); // rusim bile znaky na zacatku a na konci
 
         String[] bileZnaky = {" ", "\t"};
         for (int i = 0; i < bileZnaky.length; i++) { // odstraneni bylych znaku
