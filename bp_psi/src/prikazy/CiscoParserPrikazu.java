@@ -12,7 +12,6 @@ import java.util.List;
 import pocitac.AbstractPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
-import vyjimky.NeznamyTypPcException;
 import vyjimky.ZakazanaIpAdresaException;
 
 /**
@@ -25,12 +24,14 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         super(pc, kon);
         slova = new LinkedList<String>();
     }
-    CiscoStavy stav = USER;
-    DateFormat formator = new SimpleDateFormat("MMM  d HH:mm:ss.SSS");
     /**
-     * True znamena, ze staci psat zkratkovite prikazy (configure - c, interface - i, enable - e)
+     * Stav, ve kterem se aktualne nachazi cisco.
      */
-    boolean usnadneni = true;
+    CiscoStavy stav = USER;
+    /**
+     * Specialni formatovac casu pro vypis servisnich informaci z cisca.
+     */
+    DateFormat formator = new SimpleDateFormat("MMM  d HH:mm:ss.SSS");
     /**
      * Indikuje stav, kdy uzivatel napise jen configure. Pak se mu nevypise promt, ale staci zmacknout Enter
      * pro potvrzeni prikazu 'configure terminal'
@@ -40,17 +41,31 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Rozhrani, ktere se bude upravovat ve stavu IFACE
      */
     SitoveRozhrani aktualni = null;
+    /**
+     * Pomocna promenna pro zachazeni s '% Ambiguous command: '
+     */
     boolean nepokracovat = false;
+    /**
+     * Chyba, ktera se vypise pri '% Ambiguous command: '
+     */
     String chybovyVypis = "";
 
     private void ping() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    private boolean jeToOno(String maByt, String cmd) {
+    /**
+     * Tato metoda simuluje zkracovani prikazu tak, jak cini cisco. 
+     * @param command prikaz, na ktery se zjistuje, zda lze na nej doplnit. 
+     * @param cmd prikaz, ktery zadal uzivatel
+     * @return Vrati true, pokud retezec cmd je jedinym moznym prikazem, na ktery ho lze doplnit.
+     */
+    private boolean kontrola(String command, String cmd) {
 
         int i = 10;
 
+        // Zde jsou zadefinovany vsechny prikazy. Jsou rozdeleny do poli podle poctu znaku,
+        // ktere je potreba k jejich bezpecne identifikaci. Cisla byla ziskana z praveho cisca.
         String[] jedna = {"show", "terminal", "inside", "outside", "source", "static", "pool", "netmask", "permit"};
         // + ip, exit
         String[] dva = {"interface", "address", "no", "shutdown", "enable", "classless", "access-list", "ping"};
@@ -71,13 +86,13 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         for (String[] pole : seznam) { // nastaveni spravne delky dle zarazeni do seznamu
             n++;
             for (String s : pole) {
-                if (s.equals(maByt)) {
+                if (s.equals(command)) {
                     i = n;
                 }
             }
         }
 
-        if (maByt.equals("exit")) { // specialni chovani prikazu exit v ruznych stavech
+        if (command.equals("exit")) { // specialni chovani prikazu exit v ruznych stavech
             switch (stav) {
                 case USER:
                 case ROOT:
@@ -91,7 +106,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             }
         }
 
-        if (maByt.equals("ip")) { // specialni chovani prikazu ip v ruznych stavech
+        if (command.equals("ip")) { // specialni chovani prikazu ip v ruznych stavech
             switch (stav) {
                 case CONFIG:
                     i = 2;
@@ -101,45 +116,23 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             }
         }
 
-        /*
-        for (String s : jedna) {
-        if (s.equals(maByt)) i = 1;
-        }
-        for (String s : dva) {
-        if (s.equals(maByt)) i = 2;
-        }
-        for (String s : tri) {
-        if (s.equals(maByt)) i = 3;
-        }
-        for (String s : ctyri) {
-        if (s.equals(maByt)) i = 4;
-        }
-        for (String s : pet) {
-        if (s.equals(maByt)) i = 5;
-        }
-         */
-        if (cmd.length() >= i && maByt.startsWith(cmd)) {
+        if (cmd.length() >= i && command.startsWith(cmd)) { // lze doplnit na jeden jedinecny prikaz
             return true;
         }
 
-        if (maByt.startsWith(cmd)) {
+        if (command.startsWith(cmd)) {
             chybovyVypis = "% Ambiguous command:  \"";
 
-            if (maByt.equals("show")) {
+            if (command.equals("show")) {
                 chybovyVypis += "show\"\n";
-            } else if (maByt.equals("running-config")) {
+            } else if (command.equals("running-config")) {
                 chybovyVypis += "show " + cmd + "\"\n";
             } else {
                 chybovyVypis += cmd + "\"\n";
             }
 
-
-            if (maByt.equals("running-config")) {
-                System.out.println("nepokracovat = true; (running-config)");
-            }
             nepokracovat = true;
         }
-
 
         return false;
     }
@@ -154,8 +147,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
             case ROOT:
                 if (slova.size() == 2) {
-                    System.out.println("tady: " + slova.get(1));
-                    if (jeToOno("running-config", slova.get(1))) {
+//                    System.out.println("tady: " + slova.get(1));
+                    if (kontrola("running-config", slova.get(1))) {
                         runningconfig();
                         return;
                     }
@@ -192,7 +185,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (configure1) {
             cis = 0;
         }
-        if (jeToOno("terminal", slova.get(cis)) || configure1) {
+        if (kontrola("terminal", slova.get(cis)) || configure1) {
             //if (slova.get(cis).equals("terminal") || configure1) {
             stav = CONFIG;
             kon.prompt = pc.jmeno + "(config)#";
@@ -215,14 +208,64 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
 
     private void iproute() {
-        throw new UnsupportedOperationException("Not yet implemented");
 
+        // ip route 'cil' 'maska cile' 'kam poslat'
         // ip route 0.0.0.0 0.0.0.0 192.168.2.254
         // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
+        // ip route 192.168.2.0 255.255.255.192 fastEthernet0/0
 
-        //TODO: pokracovat
+        if (slova.size() < 5) {
+            incompleteCommand();
+            return;
+        }
 
+        IpAdresa cil = new IpAdresa(slova.get(2), slova.get(3));
 
+        if (slova.size() == 6 || (slova.size() == 5 && ! zacinaCislem(slova.get(4)))) {
+            // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
+
+            SitoveRozhrani sr = null;
+            String rozhrani;
+            if (slova.size() == 6) {
+                rozhrani = slova.get(4) + slova.get(5);
+            } else {
+                rozhrani = slova.get(4);
+            }
+            
+            for (SitoveRozhrani iface : pc.rozhrani) {
+                if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
+                    sr = iface;
+                }
+            }
+            if (sr == null) {
+                invalidInputDetected();
+                return;
+            }
+
+            pc.routovaciTabulka.pridejZaznamBezKontrol(cil, null, sr);
+            
+        } else if (slova.size() == 5) { // ip route 0.0.0.0 0.0.0.0 192.168.2.254
+            IpAdresa brana = new IpAdresa(slova.get(4));
+//            pc.routovaciTabulka.
+            //TODO: tady pokracovat - vyzkoumat, jak se chova cisco
+            pc.routovaciTabulka.pridejZaznamBezKontrol(cil, brana, null);
+        } else {
+            invalidInputDetected();
+        }
+    }
+
+    private boolean zacinaCislem(String s) {
+
+        String pismeno = s.substring(0, 1);
+        int i = -1;
+
+        try {
+            i = Integer.parseInt(pismeno);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -234,18 +277,18 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     private void iface() {
 
-        String rozh = "";
+        String rozhrani = "";
         switch (slova.size()) {
             case 1:
                 incompleteCommand();
                 return;
 
             case 2:
-                rozh = slova.get(1);
+                rozhrani = slova.get(1);
                 break;
 
             case 3:
-                rozh = slova.get(1) + slova.get(2);
+                rozhrani = slova.get(1) + slova.get(2);
                 break;
 
             default:
@@ -253,27 +296,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 return;
         }
 
-        String cisloRozh = "";
-        if (usnadneni) {
-            if (rozh.length() >= 3) {
-                cisloRozh = rozh.substring(rozh.length() - 3);
-            } else {
-                cisloRozh = rozh;
-            }
-        }
-
         boolean nalezeno = false;
         for (SitoveRozhrani iface : pc.rozhrani) {
-            if (usnadneni) {
-                if (iface.jmeno.equalsIgnoreCase(rozh) || iface.jmeno.endsWith(cisloRozh)) {
-                    aktualni = iface;
-                    nalezeno = true;
-                }
-            } else {
-                if (iface.jmeno.equalsIgnoreCase(rozh)) {
-                    aktualni = iface;
-                    nalezeno = true;
-                }
+            if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
+                aktualni = iface;
+                nalezeno = true;
             }
         }
 
@@ -312,7 +339,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             incompleteCommand();
             return;
         }
-        if (jeToOno("shutdown", slova.get(1))) {
+        if (kontrola("shutdown", slova.get(1))) {
             //if (slova.get(1).equals("shutdown")) {
             if (aktualni.vratStavRozhrani() == false) { // kdyz nahazuju rozhrani
                 Date d = new Date();
@@ -323,24 +350,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             aktualni.nastavRozhrani(true);
         }
         if (nepokracovat) {
-            kon.posliRadek("% Ambiguous command:  \""+radek+"\"");
+            kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
         }
-    }
-
-    /**
-     * Kdyz je nastavena tridni promenna usnadneni na true, tak se pak vraci true, pokud 1. slovo (prikaz) je roven parametru s.
-     * @param s s se porovnava s 'slova' na indexu 'index'
-     * @param index na kterem indexu v 'slova' to ma porovnavat
-     * @return
-     */
-    private boolean usnadneniPrace(String s, int index) {
-        if (usnadneni == false) {
-            return false;
-        }
-        if (slova.get(index).equals(s)) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -352,14 +363,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         nepokracovat = false;
         chybovyVypis = "";
 
-        /*
-        if (kon.doplnovani) {
-        System.out.println("chci napovedet co dal napsat: '" + radek + "'");
-        kon.doplnovani = false;
-        return;
-        }
-         */
-
         rozsekejLepe();
 
         if (slova.size() < 1) {
@@ -370,7 +373,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         String prvniSlovo = slova.get(0);
 
         if (configure1) {
-            if (jeToOno("terminal", prvniSlovo) || prvniSlovo.equals("")) {
+            if (kontrola("terminal", prvniSlovo) || prvniSlovo.equals("")) {
 //            if (slova.get(0).equals("terminal") || slova.get(0).equals("")) {
                 configure();
                 return;
@@ -403,43 +406,43 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         switch (stav) {
             case USER:
-                if (jeToOno("enable", prvniSlovo)) {
+                if (kontrola("enable", prvniSlovo)) {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     return;
                 }
-                if (jeToOno("ping", prvniSlovo)) {
+                if (kontrola("ping", prvniSlovo)) {
                     ping();
                     return;
                 }
-                if (jeToOno("show", prvniSlovo)) {
+                if (kontrola("show", prvniSlovo)) {
                     show();
                     return;
                 }
-                if (jeToOno("exit", prvniSlovo)) {
+                if (kontrola("exit", prvniSlovo)) {
                     kon.ukonciSpojeni();
                     return;
                 }
                 break;
 
             case ROOT:
-                if (jeToOno("enable", prvniSlovo)) { // funguje v cisco taky, ale nic nedela
+                if (kontrola("enable", prvniSlovo)) { // funguje v cisco taky, ale nic nedela
                     return;
                 }
-                if (jeToOno("disable", prvniSlovo)) {
+                if (kontrola("disable", prvniSlovo)) {
                     stav = USER;
                     kon.prompt = pc.jmeno + ">";
                     return;
                 }
-                if (jeToOno("ping", prvniSlovo)) {
+                if (kontrola("ping", prvniSlovo)) {
                     ping();
                     return;
                 }
-                if (jeToOno("configure", prvniSlovo)) {
+                if (kontrola("configure", prvniSlovo)) {
                     configure();
                     return;
                 }
-                if (jeToOno("show", prvniSlovo)) {
+                if (kontrola("show", prvniSlovo)) {
                     show();
                     return;
                 }
@@ -447,22 +450,22 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
             //ip route, interface, access-list, exit
             case CONFIG:
-                if (jeToOno("exit", prvniSlovo)) {
+                if (kontrola("exit", prvniSlovo)) {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     Date d = new Date();
                     kon.posliRadek(formator.format(d) + ": %SYS-5-CONFIG_I: Configured from console by console");
                     return;
                 }
-                if (jeToOno("ip", prvniSlovo)) {
+                if (kontrola("ip", prvniSlovo)) {
                     iproute();
                     return;
                 }
-                if (jeToOno("interface", prvniSlovo)) {
+                if (kontrola("interface", prvniSlovo)) {
                     iface();
                     return;
                 }
-                if (jeToOno("access-list", prvniSlovo)) {
+                if (kontrola("access-list", prvniSlovo)) {
                     accesslist();
                     return;
                 }
@@ -470,17 +473,17 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
             //ip address, no shutdown, exit   (jmeno(config-if)#)
             case IFACE:
-                if (jeToOno("exit", prvniSlovo)) {
+                if (kontrola("exit", prvniSlovo)) {
                     stav = CONFIG;
                     kon.prompt = pc.jmeno + "(config)#";
                     aktualni = null; // zrusime odkaz na menene rozhrani
                     return;
                 }
-                if (jeToOno("ip", prvniSlovo)) {
+                if (kontrola("ip", prvniSlovo)) {
                     ipaddress();
                     return;
                 }
-                if (jeToOno("no", prvniSlovo)) {
+                if (kontrola("no", prvniSlovo)) {
                     noshutdown();
                     return;
                 }
@@ -591,7 +594,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     private void ipaddress() {
         //ip address 192.168.2.129 255.255.255.128
 
-        if ((slova.size() != 4) || (!jeToOno("address", slova.get(1)))) {
+        if ((slova.size() != 4) || (!kontrola("address", slova.get(1)))) {
 //        if ((slova.size() != 4) || (!slova.get(1).equals("address"))) {
             if (nepokracovat) {
                 kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");

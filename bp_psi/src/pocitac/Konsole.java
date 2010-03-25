@@ -70,11 +70,6 @@ public class Konsole extends Thread {
                 }
 
                 z = (char) in.read();
-//TODO: copak ma tohle znamenat? Hazi to tam nesmyslne moc promptu na tabelator.
-//                if (z == '\t') {
-//                    doplnovani = true;
-//                    break;
-//                }
                 ret+=z;
                                 
             } catch (Exception ex) {
