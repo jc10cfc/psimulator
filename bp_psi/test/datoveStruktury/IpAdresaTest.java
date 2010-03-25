@@ -228,6 +228,21 @@ public class IpAdresaTest {
         assertTrue(new IpAdresa("89.190.94.1",24).jeVRozsahu(adr));
     }
 
+    @Test //jen takovej neuplnej test
+    public void vytvareniIp(){
+        IpAdresa ip;
+        ip=new IpAdresa("1.1.1.1");
+        ip=new IpAdresa("19.255.255.0");
+        ip=new IpAdresa("10.0.0.0");
+        ip=new IpAdresa("192.168.1.1");
+        try{
+            ip=new IpAdresa("255.255.255.0");
+            fail();
+        }catch(RuntimeException e){
+        }
+    }
+
+
 
 //    @Test
     public void pokus(){

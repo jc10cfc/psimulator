@@ -17,7 +17,7 @@ import pocitac.SitoveRozhrani;
  * @author neiss
  */
 public class RoutovaciTabulka {
-    
+
     /**
      * Representuje jeden radek v routovaci tabulce
      */
@@ -91,11 +91,12 @@ public class RoutovaciTabulka {
     }
 
     /**
-     * prida novej zaznam, priznaku UG. V okamziku pridani musi bejt brana dosazitelna s priznakem U,
+     * Prida novej zaznam, priznaku UG, tzn na branu. V okamziku pridani musi bejt brana dosazitelna s priznakem U,
      * tzn. na rozhrani, ne gw. Lze pridat i zaznam s predvyplnenim rozhranim, i takovej ale musi mit branu uz
      * dosazitelnou na tomhle rozhrani.
-     * @param adresat
-     * @param brana
+     * @param adresat musi bejt vyplnenej
+     * @param brana musi bejt vyplneny
+     * @param rozhr muze bejt null
      * @return 0: v poradku<br /> 1: existuje stejny zaznam;<br />
      * 2: rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U<br />
      */
@@ -141,6 +142,10 @@ public class RoutovaciTabulka {
         int i=najdiSpravnouPosici(z);
         radky.add(i,z);
         return 0;
+    }
+
+    public void smazVsechnyZaznamy() {
+        radky=new LinkedList<Zaznam>();
     }
 
     /**

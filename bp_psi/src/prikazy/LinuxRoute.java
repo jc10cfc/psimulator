@@ -7,6 +7,7 @@ package prikazy;
 import datoveStruktury.IpAdresa;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.List;
+import javax.xml.bind.annotation.XmlElement.DEFAULT;
 import pocitac.AbstractPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
@@ -28,24 +29,25 @@ public class LinuxRoute extends AbstraktniPrikaz{
     boolean minus_n=false;
     boolean minus_v=false;
     boolean minus_e=false;
-    //private boolean add=false;
-    //private boolean del=false;
     private String adr; //adresat
-    private String brana;
     private String maska;
     private int pocetBituMasky;
-    private SitoveRozhrani rozhr; // rozhrani
-    private boolean nastavenaBrana=false; // jestli uz byla zadana brana
-    private boolean nastavenoRozhrani=false; // jestli uz bylo zadano rozhrani
-    private boolean nastavenaMaska=false;
+    private SitoveRozhrani rozhr=null; // rozhrani
+    private boolean nastavovanaBrana=false; // jestli uz byla zadana brana
+    private boolean nastavovanoRozhrani=false; // jestli uz bylo zadano rozhrani
+    private boolean nastavovanaMaska=false;
     private boolean minusHost = false; //zadano -host
     private boolean minusNet = false; //zadano -net
+    private IpAdresa ipAdresa;
+    private IpAdresa brana;
+    boolean defaultni=false; //jestli neni defaultni routa (0.0.0.0/0)
 
     /**
      * Je to pole bitu (bity pocitany odzadu od nuly, jako mocnina):<br />
      * nevyplneno (0) - zadna akce, jenom vypsat <br />
      * 0. bit (1) - add <br />
      * 1. bit (2) - del <br />
+     * 2. bit (4) - flush <br />
      */
     private int akce = 0;
 
@@ -62,10 +64,12 @@ public class LinuxRoute extends AbstraktniPrikaz{
      * 8. bit (256) - pri parametru -host byla zadana maska -> nic neprovadet <br />
      * 9. bit (512) - maska zadavana vice nez jednou (jakymkoliv zpusobem) -> nic nenastavovat <br />
      * 10. bit (1024) - maska je nespravna <br />
+     * 11. bit (2048) - IP adresata neni cislem site
      */
     int navratovyKod=0;
-    
+    int navratovyKodProvedeni=0; // 1 - stejnej zaznam existuje, 2 - brana neni dosazitelna U priznakem
 
+    
     LinuxRoute(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon,slova);
         nastavPrikaz();
@@ -76,19 +80,33 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
     @Override
     protected void vykonejPrikaz() {
-        if(akce == 0){ //nic nedelat, jenom vypsat
-            vypisTabulku();
-            return;
-        }
-        if(ladiciVypisovani){
+        if (ladiciVypisovani) {
             kon.posliRadek(this.toString());
+        }
+        if (navratovyKod == 0) { //bez chyby
+            if (akce == 0) { //nic nedelat, jenom vypsat
+                vypisTabulku();
+            }
+            if (akce == 1) { //add
+                if (brana == null) { //brana nezadana
+                    pc.routovaciTabulka.pridejZaznam(ipAdresa, rozhr);
+                } else {
+                    pc.routovaciTabulka.pridejZaznam(ipAdresa, brana, rozhr);
+                }
+            }
+            if (akce==2){
+                pc.routovaciTabulka.smazZaznam(ipAdresa, brana, rozhr);
+            }
+            if(akce==4){
+                pc.routovaciTabulka.smazVsechnyZaznamy();
+            }
         }
     }
 //*******************************************************************************************************
 //metody na parsovani prikazu:
 
     /**
-     * Precte prikaz a nastavi mu parametry.
+     * Precte prikaz a nastavi mu parametry. Rovnou kontroluje, spravnost parametru.
      */
     private void nastavPrikaz() {
         // prepinace:
@@ -153,14 +171,17 @@ public class LinuxRoute extends AbstraktniPrikaz{
     }
 
     private void nastavFlush() {
-        kon.posliRadek("flush neni podporovano");
+        kon.posliRadek("Flush normalne neni podporovano.");
+        akce=4;
     }
 
     private void nastavMinus_net() {
         minusNet=true;
         boolean bezChyby=true;
         //cteni stringu:
-        if(slovo.contains("/")){ // slovo obsahuje lomitko -> mohla by to bejt adresa s maskou
+        if( slovo.equals("default") || slovo.equals("0.0.0.0") || slovo.equals("0.0.0.0/0") ){ //default
+            nastavDefault();
+        }else if(slovo.contains("/")){ // slovo obsahuje lomitko -> mohla by to bejt adresa s maskou
             bezChyby=prectiIpSMaskou(slovo);
         }else{ // slovo neobsahuje lomitko -> mohla by to bejt samotna IP adresa
             if(IpAdresa.jeSpravnaIP(slovo, false)){ //samotna IP je spravna
@@ -182,22 +203,38 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }else if(slovo.equals("netmask")){
                 slovo=dalsiSlovo();
                 nastavNetmask();
+            }else if(slovo.equals("") && akce ==2){ //prazdnej retezec u akce del
+                //konec prikazu
             }else{ //cokoliv ostatniho, i nic, se povazuje za rozhrani
                 poDevNepokracovat=true;
                 nastavDev();
+            }
+            //tedka je jeste nutno zjistit, jestli byla nastavena maska
+            if(nastavovanaMaska && navratovyKod==0 && ! defaultni){
+                nastavAdresu();
+            }else{
+                navratovyKod |=4;
+                kon.posliRadek("SIOCADDRT: Invalid argument");
             }
         }
 
 
     }
 
-    private void nastavMinus_host() {
+    private void nastavMinus_host() { //predpokladam, ze ve slove je ulozena uz ta adresa
         minusHost=true;
-        if( ! IpAdresa.jeSpravnaIP(slovo,false)){
+        boolean chyba=false;
+        if(slovo.equals("default")){
+            nastavDefault();
+        }else if( ! IpAdresa.jeSpravnaIP(slovo,false)){ //adresa je spatna
             kon.posliRadek(slovo+": unknown host");
             navratovyKod |= 4;
-        }else{
+            chyba=true;
+        }else{ //adresa je dobra
             adr=slovo;
+            ipAdresa=new IpAdresa(adr,32); // a adresa se rovnou vytvori
+        }
+        if(!chyba){ //kdyz nenastala chyba, tak se rozhoduje, co bude dal
             slovo=dalsiSlovo();
             if(slovo.equals("gw")){
                 slovo=dalsiSlovo();
@@ -208,6 +245,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }else if(slovo.equals("netmask")){ //on to pozna a hodi chybu
                 kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
                 navratovyKod |= 128; //nejakej dalsi nesmysl
+            }else if(slovo.equals("") && akce ==2){ //prazdnej retezec u akce del
+                //konec prikazu
             }else{ //cokoliv ostatniho, i nic, se povazuje za rozhrani
                 poDevNepokracovat=true;
                 nastavDev();
@@ -216,17 +255,26 @@ public class LinuxRoute extends AbstraktniPrikaz{
     }
 
     private void nastavGw() {//ceka, ze ve slove je uz ta IP adresa
-        if(nastavenaBrana){ //kontroluje se, jestli se to necykli s nastavDev()
+        if(nastavovanaBrana){ //kontroluje se, jestli se to necykli s nastavDev()
             vypisKratkouNapovedu();
             navratovyKod |= 16;
             return;
         }
-        nastavenaBrana=true;
-        if ( ! IpAdresa.jeSpravnaIP(slovo, false)){
+        nastavovanaBrana=true;
+        boolean chyba=false;
+        try{
+            brana = new IpAdresa(slovo,32);
+        }catch (RuntimeException e){
+            chyba = true;
+            if(ladiciVypisovani){
+                pc.vypis("doslo na vyjimku");
+                e.printStackTrace();
+            }
+        }
+        if ( chyba ){
             kon.posliRadek(slovo+": unknown host");
             navratovyKod |= 8;
         }else{ //spravna brana
-            brana=slovo;
             slovo=dalsiSlovo();
             if(slovo.equals("dev")){
                 slovo=dalsiSlovo();
@@ -243,11 +291,11 @@ public class LinuxRoute extends AbstraktniPrikaz{
     }
 
     private void nastavDev() {
-        if(nastavenoRozhrani){ //kontroluje se, jestli se to necykli s nastavGw()
+        if(nastavovanoRozhrani){ //kontroluje se, jestli se to necykli s nastavGw()
             vypisKratkouNapovedu();
             navratovyKod |= 16;
         }
-        nastavenoRozhrani=true;
+        nastavovanoRozhrani=true;
         rozhr=pc.najdiRozhrani(slovo);
         if(rozhr==null){ // rozhrani nebylo nalezeno
             if(ladiciVypisovani)rozhr=new SitoveRozhrani(slovo, null, null);
@@ -287,12 +335,12 @@ public class LinuxRoute extends AbstraktniPrikaz{
             vypisDelsiNapovedu();
             return; //nic se nema nastavovat
         }
-        if(nastavenaMaska){ // kontrola, jestli uz maska nebyla nastavena
+        if(nastavovanaMaska){ // kontrola, jestli uz maska nebyla nastavena
             navratovyKod |= 512; //maska nastavovana dvakrat
             vypisKratkouNapovedu();
             return; //nic se nema nastavovat
         }
-        nastavenaMaska=true;
+        nastavovanaMaska=true;
         if ( ! IpAdresa.jeSpravnaIP(slovo, true)){
             kon.posliRadek("route: síťová maska "+slovo+"je nesprávná");
             navratovyKod |= 1024;
@@ -311,6 +359,14 @@ public class LinuxRoute extends AbstraktniPrikaz{
                 nastavDev();
             }
         }
+    }
+
+    private void nastavDefault() { //slouzi k nastavovani deafult
+        adr="default";
+        pocetBituMasky=0;
+        ipAdresa=new IpAdresa("0.0.0.0",0); // a adresa se rovnou vytvori
+        defaultni=true;
+        nastavovanaMaska=true;
     }
 
     /**
@@ -342,12 +398,13 @@ public class LinuxRoute extends AbstraktniPrikaz{
     /**
      * Kdyz obsahuje 
      * lomitko, pred lomitkem precte IP adresu a za lomitkem pocet bitu masky, zada to do tridnich promennejch 
-     * adr a pocetBituMasky a vyplni nastavenaMaska na true. Kdyz je neco spatne, vrati false a nastavi
-     * navratovy kod na |= 4;
+     * adr a pocetBituMasky a vyplni nastavovanaMaska na true. Kdyz je neco spatne, vrati false a nastavi
+     * navratovy kod na |= 4. Kdyz vsechno probehne v poradku, tak se nakonec pokusi vytvori IP adresu adresata.
      * @param adrm
      * @return
      */
     private boolean prectiIpSMaskou(String adrm){
+        nastavovanaMaska = true;
         int lomitko=adrm.indexOf('/');
         if ( lomitko == -1 ) {// string musi obsahovat lomitko
             throw new RuntimeException("Tohle by nikdy nemelo nastat.");
@@ -370,7 +427,6 @@ public class LinuxRoute extends AbstraktniPrikaz{
                         if( pocetBituMasky == 0 ) { //tohle jediny neni povoleny, opravdu
                             kon.posliRadek("SIOCADDRT: Invalid argument");//napr: route add -net 128.0.0.0/64 dev eth0
                         }else{ //konecne vsechno spravne
-                            nastavenaMaska = true;
                             return true; // NAVRAT Z METODY, KDYZ JE VSECHNO SPRAVNE
                         }
                     }
@@ -386,13 +442,37 @@ public class LinuxRoute extends AbstraktniPrikaz{
         return false;
     }
 
+    /**
+     * Tahlecta metoda vezme String adr a String maska nebo int pocetBituMasky a udela z nich instanci
+     * tridy IpAdresa.
+     */
+    private void nastavAdresu(){
+        if (!nastavovanaMaska){
+            throw new RuntimeException("K tomuhle by nikdy nemelo dojit. Tahleta metoda se vola, az kdyz" +
+                    "je adresa i maska nastavena.");
+        }
+        if(navratovyKod == 0){ //doted musi bejt vsechno v poradku
+            if(maska != null){//maska byla zadana parametrem netmask
+                ipAdresa = new IpAdresa(adr, maska);
+            }else{//maska byla zadana za lomitkem
+                ipAdresa = new IpAdresa( adr, pocetBituMasky);
+            }
+            if( ! ipAdresa.jeCislemSite() ) { //adresa neni cislem site, to je chyba
+                navratovyKod |= 2048; //adresat neni cislem site
+                kon.posliRadek("route: síťová maska nevyhovuje adrese cesty");
+                vypisDelsiNapovedu();
+            }
+        }
+    }
+
     private void vypisTabulku() {
 
-        String v = ""; //string na vraceni
-        v += "Směrovací tabulka v jádru pro IP\n";
-        v += "Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní\n";
+        String v; //string na vraceni
+        kon.posliRadek("Směrovací tabulka v jádru pro IP");
+        kon.posliRadek("Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní");
         int pocet = pc.routovaciTabulka.pocetZaznamu();
         for (int i = 0; i < pocet; i++) {
+            v="";
             RoutovaciTabulka.Zaznam z = pc.routovaciTabulka.vratZaznam(i);
             v += zarovnej(z.getAdresat().vypisIP(), 16);
             if (z.getBrana() == null) {
@@ -400,40 +480,49 @@ public class LinuxRoute extends AbstraktniPrikaz{
             } else {
                 v += zarovnej(z.getBrana().vypisIP(),16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UG    ";
             }
-            v += "0      0        0 " + z.getRozhrani().jmeno + "\n";
-        }
-        kon.posli(v);
-        
-        
+            v += "0      0        0 " + z.getRozhrani().jmeno;
+            kon.posliRadek(v);
+        }  
     }
 
+    /**
+     * Jen pro ladeni.
+     * @return
+     */
     @Override
     public String toString(){
-        String vratit = "Parametry prikazy route:\n navratovyKodParseru: " + navratovyKod;
-        vratit+="\n prepinace: ";
+        String vratit = "Parametry prikazy route:\r\n navratovyKodParseru: " + navratovyKod;
+        vratit += "\r\n akce (1=add, 2=del): " + akce;
+        vratit+="\r\n prepinace: ";
         if(minus_n)vratit+=" -n";if(minus_e)vratit+=" -e";if(minus_v)vratit+=" -v";
         if (adr != null) {
-            vratit += "\n ip: " + adr;
-        }
-        if (nastavenaMaska) {
-            vratit += "\n pocetBituMasky: " + pocetBituMasky;
-            vratit += "\n maska: " + maska;
-        }
-        if(nastavenaBrana){
-            vratit+="\n brana: "+brana;
-        }
-        if (nastavenoRozhrani) {
-            if ( (navratovyKod & 32) ==32 ){ //rozhrani neexistuje
-                vratit += "\n rozhrani neexistuje: " + rozhr.jmeno;
+            vratit += "\r\n ip: " + adr;
+            if (ipAdresa != null) {
+                vratit += "\r\n vypsana ipAdresa, ktera se nastavi: " + ipAdresa.vypisAdresuSMaskou();
             }else{
-                vratit += "\n rozhrani: " + rozhr.jmeno;
+                vratit += "\r\n vypsana ipAdresa, ktera se nastavi: NEPODARILO SE NASTAVIT";
+            }
+        }
+        if (nastavovanaMaska) {
+            vratit += "\r\n pocetBituMasky: " + pocetBituMasky;
+            vratit += "\r\n maska: " + maska;
+        }
+        if(nastavovanaBrana){
+            if(brana != null){
+                vratit+="\r\n brana: "+brana.vypisAdresuSMaskou();
+            }else{
+                vratit+="\r\n brana: null";
+            }
+        }
+        if (nastavovanoRozhrani) {
+            if ( (navratovyKod & 32) ==32 ){ //rozhrani neexistuje
+                vratit += "\r\n rozhrani neexistuje: " + rozhr.jmeno;
+            }else{
+                vratit += "\r\n rozhrani: " + rozhr.jmeno;
             }
         }
 
         return vratit;
     }
-
-
-
 
 }
