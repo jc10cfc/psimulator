@@ -67,7 +67,13 @@ public class LinuxRoute extends AbstraktniPrikaz{
      * 11. bit (2048) - IP adresata neni cislem site
      */
     int navratovyKod=0;
-    int navratovyKodProvedeni=0; // 1 - stejnej zaznam existuje, 2 - brana neni dosazitelna U priznakem
+
+    /**
+     * 1 - stejnej zaznam existuje, resp. neexistuje (u del)
+     * 2 - brana neni dosazitelna U priznakem
+     * 4 - zaznam ke smazani neexistuje
+     */
+    int navratovyKodProvedeni=0; 
 
     
     LinuxRoute(AbstractPocitac pc, Konsole kon, List<String> slova) {
@@ -89,15 +95,21 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }
             if (akce == 1) { //add
                 if (brana == null) { //brana nezadana
-                    pc.routovaciTabulka.pridejZaznam(ipAdresa, rozhr);
+                    navratovyKodProvedeni=pc.routovaciTabulka.pridejZaznam(ipAdresa, rozhr);
                 } else {
-                    pc.routovaciTabulka.pridejZaznam(ipAdresa, brana, rozhr);
+                    navratovyKodProvedeni=pc.routovaciTabulka.pridejZaznam(ipAdresa, brana, rozhr);
                 }
-            }
-            if (akce==2){
-                pc.routovaciTabulka.smazZaznam(ipAdresa, brana, rozhr);
-            }
-            if(akce==4){
+                if(navratovyKodProvedeni == 1){
+                    kon.posliRadek("SIOCADDRT: File exists");
+                }else if(navratovyKodProvedeni == 2){
+                    kon.posliRadek("SIOCADDRT: No such process");
+                }
+            }else if (akce==2){
+                if ( ! pc.routovaciTabulka.smazZaznam(ipAdresa, brana, rozhr) ){
+                    kon.posliRadek("SIOCDELRT: No such process");
+                    navratovyKodProvedeni=4;
+                }
+            }else if(akce==4){
                 pc.routovaciTabulka.smazVsechnyZaznamy();
             }
         }
@@ -491,34 +503,34 @@ public class LinuxRoute extends AbstraktniPrikaz{
      */
     @Override
     public String toString(){
-        String vratit = "Parametry prikazy route:\r\n navratovyKodParseru: " + navratovyKod;
-        vratit += "\r\n akce (1=add, 2=del): " + akce;
-        vratit+="\r\n prepinace: ";
+        String vratit = "   Parametry prikazy route:\r\n\tnavratovyKodParseru: " + navratovyKod;
+        vratit += "\r\n\takce (1=add, 2=del): " + akce;
+        vratit+="\r\n\tprepinace: ";
         if(minus_n)vratit+=" -n";if(minus_e)vratit+=" -e";if(minus_v)vratit+=" -v";
         if (adr != null) {
-            vratit += "\r\n ip: " + adr;
+            vratit += "\r\n\tip: " + adr;
             if (ipAdresa != null) {
-                vratit += "\r\n vypsana ipAdresa, ktera se nastavi: " + ipAdresa.vypisAdresuSMaskou();
+                vratit += "\r\n\tvypsana ipAdresa, ktera se nastavi: " + ipAdresa.vypisAdresuSMaskou();
             }else{
-                vratit += "\r\n vypsana ipAdresa, ktera se nastavi: NEPODARILO SE NASTAVIT";
+                vratit += "\r\n\tvypsana ipAdresa, ktera se nastavi: NEPODARILO SE NASTAVIT";
             }
         }
         if (nastavovanaMaska) {
-            vratit += "\r\n pocetBituMasky: " + pocetBituMasky;
-            vratit += "\r\n maska: " + maska;
+            vratit += "\r\n\tpocetBituMasky: " + pocetBituMasky;
+            vratit += "\r\n\tmaska: " + maska;
         }
         if(nastavovanaBrana){
             if(brana != null){
-                vratit+="\r\n brana: "+brana.vypisAdresuSMaskou();
+                vratit+="\r\n\tbrana: "+brana.vypisAdresuSMaskou();
             }else{
-                vratit+="\r\n brana: null";
+                vratit+="\r\n\tbrana: null";
             }
         }
         if (nastavovanoRozhrani) {
             if ( (navratovyKod & 32) ==32 ){ //rozhrani neexistuje
-                vratit += "\r\n rozhrani neexistuje: " + rozhr.jmeno;
+                vratit += "\r\n\trozhrani neexistuje: " + rozhr.jmeno;
             }else{
-                vratit += "\r\n rozhrani: " + rozhr.jmeno;
+                vratit += "\r\n\trozhrani: " + rozhr.jmeno;
             }
         }
 
