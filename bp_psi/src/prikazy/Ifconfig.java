@@ -1,7 +1,11 @@
 /*
- * http://www.benak.net/pocitace/os/linux/ifconfig.php
- * http://books.google.cz/books?id=1x-6XBk8bKoC&pg=PT26&lpg=PT26&dq=ifconfig&source=bl&ots=E5ys4iqBVw&sig=0LU94iuXjoBE3WDxYGnTHChcx9Q&hl=cs&ei=O1lGS6CFHoOCnQOZzP3vAg&sa=X&oi=book_result&ct=result&resnum=8&ved=0CBkQ6AEwBw#v=onepage&q=ifconfig&f=false
- * http://www.starhill.org/man/8_ifconfig.html
+ * Materiály:
+ *      http://www.benak.net/pocitace/os/linux/ifconfig.php
+ *      http://books.google.cz/books?id=1x-6XBk8bKoC&pg=PT26&lpg=PT26&dq=ifconfig&source=bl&ots=E5ys4iqBVw&sig=0LU94iuXjoBE3WDxYGnTHChcx9Q&hl=cs&ei=O1lGS6CFHoOCnQOZzP3vAg&sa=X&oi=book_result&ct=result&resnum=8&ved=0CBkQ6AEwBw#v=onepage&q=ifconfig&f=false
+ *      http://www.starhill.org/man/8_ifconfig.html
+ * Dodělat:
+ *      Nastavování routovací tabulky při přidání nebo odebrání adresy.
+ *      ifconfig wlan0 0.0.0.0 by mělo odebrat adresu z royhraní.
  */
 package prikazy;
 

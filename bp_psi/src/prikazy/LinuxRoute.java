@@ -1,5 +1,8 @@
 /*
  * Gegründet am Montag 15.3.2010.
+ * 
+ * Jeste dodelat:
+ *      i -host by mel umet zpracovat adresu, kdyz mu prijde s maskou - zatím řešený testem na lomítko
  */
 
 package prikazy;
@@ -13,7 +16,7 @@ import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 
 /**
- *
+ * Linuxovy prokaz route.
  * @author neiss
  */
 public class LinuxRoute extends AbstraktniPrikaz{
@@ -199,6 +202,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
             if(IpAdresa.jeSpravnaIP(slovo, false)){ //samotna IP je spravna
                 adr=slovo;
             }else{ //samotna IP neni spravna
+                kon.posliRadek(adr+": unknown host");
                 navratovyKod |= 4; //spatny adresat
                 bezChyby=false;
             }
@@ -239,8 +243,15 @@ public class LinuxRoute extends AbstraktniPrikaz{
         if(slovo.equals("default")){
             nastavDefault();
         }else if( ! IpAdresa.jeSpravnaIP(slovo,false)){ //adresa je spatna
-            kon.posliRadek(slovo+": unknown host");
-            navratovyKod |= 4;
+            if(slovo.contains("/")){ //kdyz je zadana IP adresa s maskou (zatim na to kaslu a kontroluju jen lomitko)
+                                     //vypise se jina hlaska, ney normalne.
+                kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
+                vypisDelsiNapovedu();
+                navratovyKod |= 256;
+            }else{
+                kon.posliRadek(slovo+": unknown host");
+                navratovyKod |= 4;
+            }
             chyba=true;
         }else{ //adresa je dobra
             adr=slovo;
@@ -399,13 +410,6 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
 //*********************************************************************************************************
 //dalsi funkce:
-
-    private void vypisKratkouNapovedu() {
-        kon.posliRadek("Tohle je kratka napoveda.");
-    }
-    private void vypisDelsiNapovedu() {
-        kon.posliRadek("Tohle je delsi napoveda.");
-    }
     
     /**
      * Kdyz obsahuje 
@@ -535,6 +539,42 @@ public class LinuxRoute extends AbstraktniPrikaz{
         }
 
         return vratit;
+    }
+
+    /**
+     * Tyto metody byly udělány nahrazením v Kate. Znak pro začátek řádku je ^ a pro konec řádku $.
+     */
+    private void vypisKratkouNapovedu() {
+        kon.posliRadek("Použití: inet_route [-vF] del {-host|-net} Cíl[/prefix] [gw Gw] [metrika M] [[dev] If]");
+        kon.posliRadek("       inet_route [-vF] add {-host|-net} Cíl[/prefix] [gw Gw] [metrika M]");
+        kon.posliRadek("                              [netmask N] [mss Mss] [window W] [irtt I]");
+        kon.posliRadek("                              [mod] [dyn] [reinstate] [[dev] If]");
+        kon.posliRadek("       inet_route [-vF] add {-host|-net} Cíl/[prefix] [metrika M] reject");
+        kon.posliRadek("       inet_route [-FC] flush      NENÍ podporováno");
+    }
+
+    private void vypisDelsiNapovedu() {
+        kon.posliRadek("Použití: route [-nNvee] [-FC] [<AF>]         Zobrazí směrovací tabulky v jádru");
+        kon.posliRadek("       route [-v] [-FC] {add|del|flush} ...  Změní směrovací tabulku pro AF.");
+        kon.posliRadek("");
+        kon.posliRadek("       route {-h|--help [<AF>]               Nápověda pro použití s AF.");
+        kon.posliRadek("       route {-V|--version}                  Vypíše označení verze a autora");
+        kon.posliRadek("                                             programu.");
+        kon.posliRadek("");
+        kon.posliRadek("        -v, --verbose            bude vypisovat podrobné zprávy");
+        kon.posliRadek("                                 o činnosti");
+        kon.posliRadek("        -n, --numeric nepřekládat číselné adresy na jména");
+        kon.posliRadek("        -e, --extend             vypíše podrobnější informace");
+        kon.posliRadek("        -F, --fib                zobrazí Forwarding Infomation Base");
+        kon.posliRadek("                                  (implicitní)");
+        kon.posliRadek("        -C, --cache              místo FIB zobrazí směrovací cache");
+        kon.posliRadek("");
+        kon.posliRadek("  <AF>=Use '-A <af>' or '--<af>'; default: inet");
+        kon.posliRadek("  Seznam možných tříd adres (podporujících směrování):");
+        kon.posliRadek("    inet (DARPA Internet) inet6 (IPv6) ax25 (AMPR AX.25)");
+        kon.posliRadek("    netrom (AMPR NET/ROM) ipx (Novell IPX) ddp (Appletalk DDP)");
+        kon.posliRadek("    x25 (CCITT X.25)");
+
     }
 
 }
