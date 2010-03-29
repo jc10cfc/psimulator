@@ -23,7 +23,7 @@ public class IpAdresa {
      */
     public IpAdresa(String adr) {
         nastavIP(adr);
-        //nastavMasku(vratMaskuzIPadresy(adr));
+        dopocitejMasku();
     }
 
     public IpAdresa(String adr, String maska) {
@@ -45,7 +45,7 @@ public class IpAdresa {
      */
     public void nastavMasku(int pocetBitu) {
         if (pocetBitu > 32 || pocetBitu < 0) {
-            throw new RuntimeException("Zadany pocet bitu masky je nesmyslny: " + pocetBitu);
+            throw new SpatnaMaskaException("Zadany pocet bitu masky je nesmyslny: " + pocetBitu);
         }
         this.maska = 0;
         for (int i = 0; i < pocetBitu; i++) {
@@ -53,9 +53,13 @@ public class IpAdresa {
         }
     }
 
+    /**
+     * Nastavi novou adresu, s maskou nic nedela.
+     * @param adr
+     */
     public void nastavIP(String adr) {
         if (!jeSpravnaIP(adr, false)) {
-            throw new RuntimeException("spatna adresa: " + adr);
+            throw new SpatnaAdresaException("spatna adresa: " + adr);
         }
         adresa = integerZeStringu(adr);
     }
@@ -67,20 +71,27 @@ public class IpAdresa {
      */
     public void nastavMasku(String maska) {
         if (!jeSpravnaIP(maska, true)) {
-            throw new RuntimeException("spatna maska: " + maska);
+            throw new SpatnaMaskaException("spatna maska: " + maska);
         }
-        int moznaMaska = integerZeStringu(maska);
-        if (jeMaskou(moznaMaska)) {
-            this.maska = moznaMaska;
-        } else {
-            throw new SpatnaMaskaException("Spatna maska, nejsou to jednicky a pak nuly");
-        }
+        this.maska = integerZeStringu(maska);
     }
 
 //*****************************************************************************************************************
 //porovnavaci a zjistovaci metody
 
-    public int dejMasku(){
+    /**
+     * Vrati cislo site jako IpAdresu, maska je stejna, jako ma tato adresa.
+     * @return
+     */
+    public IpAdresa vratCisloSite() {
+        return new IpAdresa ( this.vypisCisloSite(), this.pocetBituMasky() );
+    }
+
+    /**
+     * vrati masku jako 32 bit integer
+     * @return
+     */
+    public int dej32BitMasku(){
         return maska;
     }
 
@@ -138,6 +149,23 @@ public class IpAdresa {
         return false;
     }
 
+    /**
+     * Vrati pocet jednickovych bitu masky.
+     * @return
+     */
+    public int pocetBituMasky() {
+        if (maska == 0) {
+            return 0;
+        }
+        int pocet = 32;
+        int maska = this.maska;
+        while ((maska & 1) == 0) {
+            maska = maska >> 1;
+            pocet--;
+        }
+        return pocet;
+    }
+
 
     @Override
     public boolean equals(Object obj){
@@ -164,7 +192,8 @@ public class IpAdresa {
         int n;
 
         if (! jeToMaska) { // je to IP
-            if (Integer.valueOf(pole[0]) >= 224 && Integer.valueOf(pole[0]) <= 255) { // adresy rozsahu 224.* - 239.* jsou vyhrazeny pro multicast, vyssi ifconfig nezere
+            if (Integer.valueOf(pole[0]) >= 224 && Integer.valueOf(pole[0]) <= 255) {
+                              // -> adresy rozsahu 224.* - 239.* jsou vyhrazeny pro multicast, vyssi ifconfig nezere
                 throw new ZakazanaIpAdresaException(adr);
             }
         }
@@ -176,6 +205,10 @@ public class IpAdresa {
                 return false;
             }
         }
+        if(jeToMaska){ //kontroluje se, jestli to je spravna maska
+            int m=integerZeStringu(adr);
+            return jeMaskou(m);
+        }
         return true;
     }
 
@@ -186,14 +219,15 @@ public class IpAdresa {
      * @return
      * @author haldyr
      */
+    @Deprecated
     public static int vratMaskuzIPadresy(String ip) {
         /*
-    A 	0 	0–127    	255.0.0.0 	7 	24 	126 	16 777 214
-    B 	10 	128-191 	255.255.0.0 	14 	16 	16384 	65534
-    C 	110 	192-223 	255.255.255.0 	21 	8 	2 097 152 	254
-    D 	1110 	224-239 	multicast
-    E 	1111 	240-255 	vyhrazeno jako rezerva
-     */
+            A 	0 	0–127    	255.0.0.0 	7 	24 	126 	16 777 214
+            B 	10 	128-191 	255.255.0.0 	14 	16 	16384 	65534
+            C 	110 	192-223 	255.255.255.0 	21 	8 	2 097 152 	254
+            D 	1110 	224-239 	multicast
+            E 	1111 	240-255 	vyhrazeno jako rezerva
+        */
         String[] pole = ip.split(".");
         int cislo;
         int mask = -1;
@@ -264,21 +298,24 @@ public class IpAdresa {
     }
 
     /**
-     * Vrati pocet jednickovych bitu masky.
-     * @return
+     * Dopocita masku, podle tridy IP. Vyuziva se v konstruktoru, kdyz neni maska zadana.
      */
-    private int pocetBituMasky() {
-        if (maska == 0) {
-            return 0;
-        }
-        int pocet = 32;
-        int maska = this.maska;
-        while ((maska & 1) == 0) {
-            maska = maska >> 1;
-            pocet--;
-        }
-        return pocet;
+    private void dopocitejMasku(){
+        int bajt = prevedNaPole(adresa)[0]; //tady je ulozenej prvni bajt adresy
+        /*
+            A 	0 	0–127    	255.0.0.0 	7 	24 	126 	16 777 214
+            B 	10 	128-191 	255.255.0.0 	14 	16 	16384 	65534
+            C 	110 	192-223 	255.255.255.0 	21 	8 	2 097 152 	254
+            D 	1110 	224-239 	multicast
+            E 	1111 	240-255 	vyhrazeno jako rezerva
+        */
+        if( bajt<128 ) nastavMasku(8);
+        if( bajt>=128 && bajt<192 ) nastavMasku(16);
+        if( bajt>=192 ) nastavMasku(24);
+        //System.out.println("1. bajt je "+ bajt+" a tak jsem nastavil "+ pocetBituMasky());
     }
+
+    
 
     private int broadcast() { //vraci 32 bitu adresy broadcastu site
         return (cisloSite() | (~maska));

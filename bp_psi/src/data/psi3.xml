@@ -8,8 +8,8 @@
 <pocitac jmeno="linux1" typ="linux">
 	<rozhrani>
 		<jmeno>eth0</jmeno>
-		<ip>143.32.125.138</ip>
-		<maska>255.255.255.0</maska>
+		<ip>147.32.125.234</ip>
+		<maska>255.255.255.128</maska>
 		<mac>00:01:02:03:04:05</mac>
 		<pripojenoK>cisco1:FastEthernet0/1</pripojenoK>
 		<nahozene>true</nahozene>
@@ -30,8 +30,8 @@
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
-			<adresat>147.32.125.0</adresat>
-			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<adresat>147.32.125.128</adresat>
+			<maskaAdresata>255.255.255.128</maskaAdresata>
 			<brana>null</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>

@@ -5,8 +5,8 @@
 
 package datoveStruktury;
 
-import java.util.AbstractList;
 import java.util.LinkedList;
+import java.util.List;
 import pocitac.SitoveRozhrani;
 
 /**
@@ -64,7 +64,7 @@ public class RoutovaciTabulka {
             return s;
         }
     }
-    private AbstractList<Zaznam>radky; //jednotlive radky routovaci tabulky
+    private List<Zaznam>radky; //jednotlive radky routovaci tabulky
 //    private AbstractPocitac pc; //odkaz na pocitac, mozna nebude potreba
     private boolean ladiciVypisovani=true;
 
@@ -188,6 +188,29 @@ public class RoutovaciTabulka {
         return false;
     }
 
+    /**
+     * Smaze vsechny zaznamy (U i UG) na zadanem rozhrani. Potreba pro mazani rout, kdyz se zmeni adresa nebo maska
+     * na rozhrani.
+     * @param rozhr
+     * @return pocet smazanych rozhrani (spis pro ladeni, jinej efekt to asi nema)
+     */
+    public int smazVsechnyZaznamyNaRozhrani(SitoveRozhrani rozhr){
+        int p = 0; //pocet smazanych zaznamu
+        List <Zaznam>smazat = new LinkedList(); //dela se to pres pomocnej seznam, protoze jinak hazela
+                                                // java vyjimku ConcurrentModificationException
+        for(Zaznam z:radky){
+            if (z.rozhrani == rozhr){
+                smazat.add(z);
+                p++;
+            }
+        }
+        for(Zaznam z:smazat){
+            radky.remove(z);
+        }
+        return p;
+    }
+
+    @Deprecated
     public String vypisSeLinuxove(){
         String v="";
         v+="Směrovací tabulka v jádru pro IP\n";
@@ -198,6 +221,7 @@ public class RoutovaciTabulka {
         return v;
     }
 
+    @Deprecated
     public String vypisSeCiscove() {
         String s = "";
         s += "ip classless\n";
@@ -252,13 +276,13 @@ public class RoutovaciTabulka {
      * @return
      */
     private int najdiSpravnouPosici(Zaznam z){
-        if(z.adresat.dejMasku()==0)return radky.size();
+        if(z.adresat.dej32BitMasku()==0)return radky.size();
         int i=0;
         //preskakovani delsich masek:
             //pozor, problemy v implementaci kvuli doplnkovymu kodu
         while( i<radky.size() //neprekrocit meze
-                && radky.get(i).adresat.dejMasku() > z.adresat.dejMasku() //dokud je vkladana maska mensi
-                && radky.get(i).adresat.dejMasku() !=0 ){ //pozor na nulu
+                && radky.get(i).adresat.dej32BitMasku() > z.adresat.dej32BitMasku() //dokud je vkladana maska mensi
+                && radky.get(i).adresat.dej32BitMasku() !=0 ){ //pozor na nulu
             i++;
         }//zastavi se na stejny nebo vetsi masce, nez ma pridavanej zaznam
         //vic se nakonec uz nic neposouva...

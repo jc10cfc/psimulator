@@ -4,8 +4,8 @@
  *      http://books.google.cz/books?id=1x-6XBk8bKoC&pg=PT26&lpg=PT26&dq=ifconfig&source=bl&ots=E5ys4iqBVw&sig=0LU94iuXjoBE3WDxYGnTHChcx9Q&hl=cs&ei=O1lGS6CFHoOCnQOZzP3vAg&sa=X&oi=book_result&ct=result&resnum=8&ved=0CBkQ6AEwBw#v=onepage&q=ifconfig&f=false
  *      http://www.starhill.org/man/8_ifconfig.html
  * Dodělat:
- *      Nastavování routovací tabulky při přidání nebo odebrání adresy.
- *      ifconfig wlan0 0.0.0.0 by mělo odebrat adresu z royhraní.
+ *      Nastavování routovací tabulky při změně masky parametrem netmask.
+ *      ifconfig wlan0 0.0.0.0 by mělo odebrat adresu z rozhraní.
  */
 package prikazy;
 
@@ -24,6 +24,9 @@ public class Ifconfig extends AbstraktniPrikaz {
     boolean ladiciVypisovani=false; //jestli se maj vypisovat informace pro ladeni
 
     String jmenoRozhrani;
+    /**
+     * Do tyhle promenny se uklada jenom IP adresa bez masky za lomitkem.
+     */
     List <String> seznamIP=new ArrayList<String>();
     String maska;
     String broadcast;
@@ -253,7 +256,7 @@ public class Ifconfig extends AbstraktniPrikaz {
                 if(navratovyKod==0) vypisRozhrani(rozhrani); //vypisuje se jen kdyz to bylo spravne zadano
             } else { //nastavovani
                 nastavMasku(rozhrani);
-                nastavIP(rozhrani);
+                nastavAdresuAMasku(rozhrani);
                 //nastavovani broadcastu zatim nepodporuju
                 if(navratovyKod!=7 && add !=null){ //parametr add byl zadan a je spravnej ale zatim
                     // ho nepodporuju
@@ -280,26 +283,32 @@ public class Ifconfig extends AbstraktniPrikaz {
         kon.posliRadek("");
     }
 
-    private void nastavIP(SitoveRozhrani r){ //nastavuje ip
-        if(pouzitIp==-1)return;
-        String nastavit=seznamIP.get(pouzitIp);
-        if(pocetBituMasky==-1){ //zadana jen IP bez masky
-            if(nastavit.equals(r.ip.vypisIP())){//stejna ip, nic se nemeni
-            }else{
-                boolean nastavitDefaultniMasku=true;
-                r.ip.nastavIP(nastavit);
-                for(int i=pouzitIp;i<slova.size();i++){ //je nutny to takhle cyklem prochazet, protoze
-                          //pocetBituMasky ma sice vetsi prioritu, ale pokud tam neni tak zalezi na poradi:
-                          //kdyz je parametr netmask po adrese, tak se pouzije, jinak ne
-                    if(slova.get(i).equals("netmask"))nastavitDefaultniMasku=false;
-                }
-                if(nastavitDefaultniMasku){
-                    r.ip.nastavMasku("255.0.0.0");
-                }
+    /**
+     * Nastavi adresu a masku. Kdyz zadna maska za lomitkem neni, nastavi masku na defaultni masku
+     * podle tridy  IP adresy (o to se stara primo konstruktor IP adresy). Kdyz je adresa  i maska stejna,
+     * nic nemeni.
+     * @param r
+     */
+    private void nastavAdresuAMasku(SitoveRozhrani r) { //nastavuje ip
+        if (pouzitIp == -1){ //kontrola, jestli byla adresa vubec zadana
+            return;
+        }
+        String nastavit = seznamIP.get(pouzitIp);
+        if (pocetBituMasky == -1) { //zadana jen IP bez masky za lomitkem
+            if (nastavit.equals(r.ip.vypisIP())) {//stejna ip, nic se nemeni
+            } else { //IP adresa neni stejna, bude se menit
+                r.ip = new IpAdresa(nastavit);
+                pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
+                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), rozhrani);
             }
-        }else{
-            r.ip.nastavIP(nastavit);
-            r.ip.nastavMasku(pocetBituMasky);
+        } else { // zadana adresa s masko za lomitkem
+            if ( ! (nastavit.equals(r.ip.vypisIP()) && pocetBituMasky == r.ip.pocetBituMasky() ) ) {
+                // -> zadany hodnoty nejsou stejny, budou se menit
+                r.ip = new IpAdresa(nastavit);
+                r.ip.nastavMasku(pocetBituMasky);
+                pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
+                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), rozhrani);
+            }
         }
     }
 

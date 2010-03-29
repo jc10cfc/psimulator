@@ -64,7 +64,7 @@ public class IpAdresaTest {
 
 
     @Test
-    public void testIPMaska(){
+    public void testNastavMasku(){
         System.out.println("------------------------------------------");
         IpAdresa adr = new IpAdresa("1.1.1.1");
 
@@ -240,6 +240,19 @@ public class IpAdresaTest {
             fail();
         }catch(RuntimeException e){
         }
+    }
+
+    @Test
+    public void testJeSpravnaIP(){
+        assertTrue(IpAdresa.jeSpravnaIP("255.255.255.0", true));
+        assertTrue(IpAdresa.jeSpravnaIP("0.0.0.0", true));
+        assertTrue(IpAdresa.jeSpravnaIP("255.255.255.255", true));
+        assertTrue(IpAdresa.jeSpravnaIP("255.255.255.128", true));
+        assertTrue(IpAdresa.jeSpravnaIP("192.0.0.0", true));
+        assertFalse(IpAdresa.jeSpravnaIP("255.255.255.3", true));
+        assertFalse(IpAdresa.jeSpravnaIP("255.255.255.32", true));
+        assertFalse(IpAdresa.jeSpravnaIP("255.255.255.129", true));
+        assertFalse(IpAdresa.jeSpravnaIP("255.0.155.0", true));
     }
 
 
