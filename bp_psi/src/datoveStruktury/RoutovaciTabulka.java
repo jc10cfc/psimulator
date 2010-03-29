@@ -48,11 +48,11 @@ public class RoutovaciTabulka {
 
         private String vypisSeLinuxove() {
             String v="";
-            v+=adresat.vypisIP()+"\t";
+            v+=adresat.vypisAdresu()+"\t";
             if(brana==null){
                 v+="0.0.0.0\t"+adresat.vypisMasku()+"\tU\t";
             } else{
-                v+=brana.vypisIP()+"\t"+adresat.vypisMasku()+"\tUG\t";
+                v+=brana.vypisAdresu()+"\t"+adresat.vypisMasku()+"\tUG\t";
             }
             v+="0\t0\t0\t"+rozhrani.jmeno+"\n";
             return v;
@@ -60,7 +60,7 @@ public class RoutovaciTabulka {
 
         private String vypisSeCiscove() {
             String s = "";
-            s += "ip route " + adresat.vypisIP() + " " + adresat.vypisMasku() + " " + brana.vypisIP() + "\n";
+            s += "ip route " + adresat.vypisAdresu() + " " + adresat.vypisMasku() + " " + brana.vypisAdresu() + "\n";
             return s;
         }
     }

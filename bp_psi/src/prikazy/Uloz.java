@@ -88,7 +88,7 @@ public class Uloz extends AbstraktniPrikaz {
             zapis(vratElement("ip", ""));
             zapis(vratElement("maska", ""));
         } else {
-            zapis(vratElement("ip", rozhrani.ip.vypisIP()));
+            zapis(vratElement("ip", rozhrani.ip.vypisAdresu()));
             zapis(vratElement("maska", rozhrani.ip.vypisMasku()));
         }
         zapis(vratElement("mac", rozhrani.macAdresa));
@@ -120,11 +120,11 @@ public class Uloz extends AbstraktniPrikaz {
             zapis("<zaznam>\n");
             tabs += "\t";
 
-            zapis(vratElement("adresat", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisIP()));
+            zapis(vratElement("adresat", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisAdresu()));
             zapis(vratElement("maskaAdresata", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisMasku()));
             
             if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
-                zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisIP()));
+                zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisAdresu()));
             } else {
                 zapis(vratElement("brana", "null"));
             }

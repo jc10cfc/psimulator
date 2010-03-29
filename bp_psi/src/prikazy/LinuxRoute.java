@@ -490,11 +490,11 @@ public class LinuxRoute extends AbstraktniPrikaz{
         for (int i = 0; i < pocet; i++) {
             v="";
             RoutovaciTabulka.Zaznam z = pc.routovaciTabulka.vratZaznam(i);
-            v += zarovnej(z.getAdresat().vypisIP(), 16);
+            v += zarovnej(z.getAdresat().vypisAdresu(), 16);
             if (z.getBrana() == null) {
                 v += zarovnej("0.0.0.0",16) + zarovnej(z.getAdresat().vypisMasku(),16) + "U     ";
             } else {
-                v += zarovnej(z.getBrana().vypisIP(),16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UG    ";
+                v += zarovnej(z.getBrana().vypisAdresu(),16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UG    ";
             }
             v += "0      0        0 " + z.getRozhrani().jmeno;
             kon.posliRadek(v);

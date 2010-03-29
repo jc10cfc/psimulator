@@ -47,19 +47,19 @@ public class IpAdresaTest {
 
         adr = "147.32.125.138";
         ip.nastavAdresu(adr);
-        assertEquals(ip.vypisIP(), adr);
+        assertEquals(ip.vypisAdresu(), adr);
 
         adr = "0.0.0.0";
         ip.nastavAdresu(adr);
-        assertEquals(ip.vypisIP(), adr);
+        assertEquals(ip.vypisAdresu(), adr);
 
         adr = "1.1.1.1";
         ip.nastavAdresu(adr);
-        assertEquals(ip.vypisIP(), adr);
+        assertEquals(ip.vypisAdresu(), adr);
 
         adr = "192.168.1.0";
         ip.nastavAdresu(adr);
-        assertEquals(ip.vypisIP(), adr);
+        assertEquals(ip.vypisAdresu(), adr);
     }
 
 

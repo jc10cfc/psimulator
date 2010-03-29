@@ -561,7 +561,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         for (Object o : pc.rozhrani) {
             SitoveRozhrani sr = (SitoveRozhrani) o;
             kon.posliRadek("interface " + sr.jmeno + "\n"
-                    + " ip address " + sr.ip.vypisIP() + " " + sr.ip.vypisMasku());
+                    + " ip address " + sr.ip.vypisAdresu() + " " + sr.ip.vypisMasku());
             if (sr.vratStavRozhrani() == false) {
                 kon.posliRadek(" shutdown");
             }

@@ -79,7 +79,7 @@ public abstract class AbstractPocitac {
 
     private boolean jsemVCili(IpAdresa cil) {
         for (SitoveRozhrani iface : rozhrani) { // zvazit pouziti metody equals - neco se tam dela s maskou, tak nevim
-            if (iface.ip.vypisIP().equals(cil.vypisIP())) {
+            if (iface.ip.vypisAdresu().equals(cil.vypisAdresu())) {
                 System.out.println("Ping paket dorazil do cile.");
                 return true;
             }
@@ -131,7 +131,7 @@ public abstract class AbstractPocitac {
         for (SitoveRozhrani iface : rozhrani) {
             System.out.println("(" + jmeno + ":) " + iface.jmeno);
             if (iface.ip != null) {
-                System.out.println("(" + jmeno + ":) " + iface.ip.vypisIP());
+                System.out.println("(" + jmeno + ":) " + iface.ip.vypisAdresu());
                 System.out.println("(" + jmeno + ":) " + iface.ip.vypisMasku());
             }
             System.out.println("(" + jmeno + ":) " + iface.macAdresa);

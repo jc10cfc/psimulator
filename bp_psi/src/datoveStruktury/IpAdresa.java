@@ -18,7 +18,7 @@ public class IpAdresa {
 //konstruktory
 
     /**
-     * Kdyz uzivatel nezada masku, tak se tato musi dopocitat dle rozsahu.
+     * Kdyz uzivatel nezada masku, tak se tato musi dopocitat dle jeji tridy.
      * @param adr
      */
     public IpAdresa(String adr) {
@@ -77,7 +77,7 @@ public class IpAdresa {
     }
 
 //*****************************************************************************************************************
-//porovnavaci a zjistovaci metody
+//porovnavaci, zjistovaci a vraceci metody
 
     /**
      * Vrati cislo site jako IpAdresu, maska je stejna, jako ma tato adresa.
@@ -214,8 +214,8 @@ public class IpAdresa {
     }
 
      /**
-     * Vrati pocet bitu masky ze zadane IP ve tvaru stringu. Vyuziva se, kdyz uzivatel zada jen IP bez masky
-     * a ta se pak musi doplnit automaticky.
+     * Vrati pocet bitu masky ze zadane IP ve tvaru stringu. Vyuziva se, kdyz uzivatel zada
+     * jen IP bez masky a ta se pak musi doplnit automaticky.
      * @param ip
      * @return
      * @author haldyr
@@ -260,7 +260,11 @@ public class IpAdresa {
 //****************************************************************************************************************
 //tady zacinaj verejny metody pro pekny vypis adresy, masky atd. jako String
 
-    public String vypisIP() {
+    /**
+     * vrati IP jako String
+     * @return
+     */
+    public String vypisAdresu() {
         return vypisPole(prevedNaPole(adresa));
     }
 
@@ -316,9 +320,11 @@ public class IpAdresa {
         //System.out.println("1. bajt je "+ bajt+" a tak jsem nastavil "+ pocetBituMasky());
     }
 
-    
-
-    private int broadcast() { //vraci 32 bitu adresy broadcastu site
+    /**
+     * vraci 32 bitu adresy broadcastu site
+     * @return
+     */
+    private int broadcast() { 
         return (cisloSite() | (~maska));
     }
 
@@ -360,7 +366,7 @@ public class IpAdresa {
      */
     private static boolean jednoduchaKontrola(String adr) { //kontrola IP, jestli to jsou cisla s teckama
         if (adr == null) {
-            System.out.println("Chyba: ip adresa je null!"); // pro testovani, pak smazat
+            //System.out.println("Chyba: ip adresa je null!"); // pro testovani, pak smazat
         }
         if (!adr.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")) {
             return false;
@@ -402,7 +408,7 @@ public class IpAdresa {
     }
 
     /**
-     * Vraci true, kdyz zadane cislo je v intervalu od a do z. Nevyuziva zadne privatni promenne.
+     * Vraci true, kdyz zadane cislo je v intervalu od a do z.
      */
     private static boolean jeVIntervalu(int a, int z, int cislo) {
         if (cislo >= a && cislo <= z) {

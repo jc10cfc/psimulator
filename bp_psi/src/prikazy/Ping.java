@@ -39,11 +39,11 @@ public class Ping extends AbstraktniPrikaz {
         if (ret == 0) {
             String s = "";
             if (pc instanceof LinuxPocitac) {
-                s += "PING " + adresa.vypisIP() + " 56(84) bytes of data.\n";
+                s += "PING " + adresa.vypisAdresu() + " 56(84) bytes of data.\n";
                 for (int i = 0; i < 4; i++) {
-                    s += "64 bytes from " + adresa.vypisIP() + ": icmp_seq=" + i + " ttl=255 time=118 ms\n";
+                    s += "64 bytes from " + adresa.vypisAdresu() + ": icmp_seq=" + i + " ttl=255 time=118 ms\n";
                 }
-                s += "--- " + adresa.vypisIP() + " ping statistics ---\n"
+                s += "--- " + adresa.vypisAdresu() + " ping statistics ---\n"
                         + "1 packets transmitted, 1 received, 0% packet loss, time 0ms\n"
                         + "rtt min/avg/max/mdev = 2.284/2.284/2.284/0.000 ms\n";
 
@@ -55,7 +55,7 @@ public class Ping extends AbstraktniPrikaz {
             if (pc instanceof CiscoPocitac) {
 
                 s += "\nType escape sequence to abort.\n";
-                s += "Sending 5, 100-byte ICMP Echos to " + adresa.vypisIP() + ", timeout is 2 seconds:\n";
+                s += "Sending 5, 100-byte ICMP Echos to " + adresa.vypisAdresu() + ", timeout is 2 seconds:\n";
                 s += "!!!!\n";
                 s += "Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms\n";
 

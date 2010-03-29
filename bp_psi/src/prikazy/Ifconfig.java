@@ -4,7 +4,6 @@
  *      http://books.google.cz/books?id=1x-6XBk8bKoC&pg=PT26&lpg=PT26&dq=ifconfig&source=bl&ots=E5ys4iqBVw&sig=0LU94iuXjoBE3WDxYGnTHChcx9Q&hl=cs&ei=O1lGS6CFHoOCnQOZzP3vAg&sa=X&oi=book_result&ct=result&resnum=8&ved=0CBkQ6AEwBw#v=onepage&q=ifconfig&f=false
  *      http://www.starhill.org/man/8_ifconfig.html
  * Dodělat:
- *      Nastavování routovací tabulky při změně masky parametrem netmask.
  *      ifconfig wlan0 0.0.0.0 by mělo odebrat adresu z rozhraní.
  */
 package prikazy;
@@ -28,6 +27,9 @@ public class Ifconfig extends AbstraktniPrikaz {
      * Do tyhle promenny se uklada jenom IP adresa bez masky za lomitkem.
      */
     List <String> seznamIP=new ArrayList<String>();
+    /**
+     * Maska jako String (napr. 255.255.255.0);
+     */
     String maska;
     String broadcast;
     int pocetBituMasky = -1; //maska zadana formou /24 totiz ma vetsi prioritu nez 255.255.255.0
@@ -272,7 +274,7 @@ public class Ifconfig extends AbstraktniPrikaz {
     private void vypisRozhrani(SitoveRozhrani r){
         //je to jen provizorni vypis
         kon.posliRadek(r.jmeno+"\tLink encap:Ethernet  HWadr "+r.macAdresa);
-        kon.posliRadek("\tinet adr:"+r.ip.vypisIP()+"  Všesměr:"+r.ip.vypisBroadcast()+
+        kon.posliRadek("\tinet adr:"+r.ip.vypisAdresu()+"  Všesměr:"+r.ip.vypisBroadcast()+
                 "  Maska:"+r.ip.vypisMasku());
         kon.posliRadek("\tAKTIVOVÁNO VŠESMĚROVÉ_VYSÍLÁNÍ BĚŽÍ MULTICAST  MTU:1500  Metrika:1"); //asi ne cesky
         kon.posliRadek("\tRX packets:169765 errors:2 dropped:14 overruns:2 frame:0"); //ty cisla by chtely generovat
@@ -295,32 +297,35 @@ public class Ifconfig extends AbstraktniPrikaz {
         }
         String nastavit = seznamIP.get(pouzitIp);
         if (pocetBituMasky == -1) { //zadana jen IP bez masky za lomitkem
-            if (nastavit.equals(r.ip.vypisIP())) {//stejna ip, nic se nemeni
+            if (nastavit.equals(r.ip.vypisAdresu())) {//stejna ip, nic se nemeni
             } else { //IP adresa neni stejna, bude se menit
                 r.ip = new IpAdresa(nastavit);
                 pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
-                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), rozhrani);
+                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
             }
         } else { // zadana adresa s masko za lomitkem
-            if ( ! (nastavit.equals(r.ip.vypisIP()) && pocetBituMasky == r.ip.pocetBituMasky() ) ) {
+            if ( ! (nastavit.equals(r.ip.vypisAdresu()) && pocetBituMasky == r.ip.pocetBituMasky() ) ) {
                 // -> zadany hodnoty nejsou stejny, budou se menit
                 r.ip = new IpAdresa(nastavit);
                 r.ip.nastavMasku(pocetBituMasky);
                 pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
-                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), rozhrani);
+                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
             }
         }
     }
 
-    //TODO: POZOR, tady nefunguje nastavovani spatny masky, napr ifconfig eth0 netmask aaa!!!
+    
     private void nastavMasku(SitoveRozhrani r){//pokusi se nastavit masku
-        if (maska==null)return;
-        //je potreba zkontrolovat spravnost masky!!! //proto vyjimka
-        try{
+        if (maska==null)return; //kdyz neni maska nastavena, nic se nedela
+        if (maska.equals(r.ip.vypisMasku())) return; //kdyz je stejna, taky se nic nedela
+        try{//je potreba zkontrolovat spravnost masky!!! //proto vyjimka
             r.ip.nastavMasku(maska);
         }catch(SpatnaMaskaException ex){
             kon.posliRadek("SIOCSIFNETMASK: Invalid argument");
+            return;
         }
+        pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r);
+        pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
     }
 
     private void vypisHelp(){ // funkce na ladiciVypisovani napovedy --help
