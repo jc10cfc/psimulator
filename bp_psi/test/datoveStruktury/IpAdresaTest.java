@@ -46,19 +46,19 @@ public class IpAdresaTest {
         String adr;
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         assertEquals(ip.vypisIP(), adr);
 
         adr = "0.0.0.0";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         assertEquals(ip.vypisIP(), adr);
 
         adr = "1.1.1.1";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         assertEquals(ip.vypisIP(), adr);
 
         adr = "192.168.1.0";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         assertEquals(ip.vypisIP(), adr);
     }
 
@@ -134,17 +134,17 @@ public class IpAdresaTest {
         String adr;
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(24);
         assertEquals(ip.vypisCisloSite(), "147.32.125.0");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(23);
         assertEquals(ip.vypisCisloSite(), "147.32.124.0");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(25);
         assertEquals(ip.vypisCisloSite(), "147.32.125.128");
     }
@@ -156,17 +156,17 @@ public class IpAdresaTest {
         String adr;
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(24);
         assertEquals(ip.vypisCisloPocitaceVSiti(), "0.0.0.138");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(23);
         assertEquals(ip.vypisCisloPocitaceVSiti(), "0.0.1.138");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(25);
         assertEquals(ip.vypisCisloPocitaceVSiti(), "0.0.0.10");
     }
@@ -177,27 +177,27 @@ public class IpAdresaTest {
         String adr;
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(24);
         assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/24");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(23);
         assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/23");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(25);
         assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/25");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(0);
         assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/0");
 
         adr = "147.32.125.138";
-        ip.nastavIP(adr);
+        ip.nastavAdresu(adr);
         ip.nastavMasku(32);
         assertEquals(ip.vypisAdresuSMaskou(), "147.32.125.138/32");
     }

@@ -4,8 +4,8 @@ import vyjimky.*;
 
 /**
  * Hele, clovece, premejslel jsem dneska, jak dodelat ty metody, ktery budou pocitat cislo site a tak
- * a nakonec jsem tu implementaci zmenil na jeden integer, cislo site a pocitace a podobny veci se pak pocitaj
- * lip.
+ * a nakonec jsem tu implementaci zmenil na jeden integer, cislo site a pocitace a podobny veci se
+ * pak pocitaj lip.
  * @author neiss
  */
 public class IpAdresa {
@@ -22,22 +22,33 @@ public class IpAdresa {
      * @param adr
      */
     public IpAdresa(String adr) {
-        nastavIP(adr);
+        nastavAdresu(adr);
         dopocitejMasku();
     }
 
     public IpAdresa(String adr, String maska) {
-        nastavIP(adr);
+        nastavAdresu(adr);
         nastavMasku(maska);
     }
 
     public IpAdresa(String adr, int maska) {
-        nastavIP(adr);
+        nastavAdresu(adr);
         nastavMasku(maska);
     }
 
 //**************************************************************************************
 //metody, ktere slouzi k nastavovani parametru IP, vsechny zacinaji slovem "nastav"
+
+    /**
+     * Nastavi novou adresu, s maskou nic nedela.
+     * @param adr
+     */
+    public void nastavAdresu(String adr) {
+        if (!jeSpravnaIP(adr, false)) {
+            throw new SpatnaAdresaException("spatna adresa: " + adr);
+        }
+        adresa = integerZeStringu(adr);
+    }
 
     /**
      * Ocekava to masku jako integer, kolik prvnich bitu maj bejt jednicky
@@ -51,17 +62,6 @@ public class IpAdresa {
         for (int i = 0; i < pocetBitu; i++) {
             maska = maska | 1 << (31 - i);
         }
-    }
-
-    /**
-     * Nastavi novou adresu, s maskou nic nedela.
-     * @param adr
-     */
-    public void nastavIP(String adr) {
-        if (!jeSpravnaIP(adr, false)) {
-            throw new SpatnaAdresaException("spatna adresa: " + adr);
-        }
-        adresa = integerZeStringu(adr);
     }
 
     /**
@@ -169,6 +169,7 @@ public class IpAdresa {
 
     @Override
     public boolean equals(Object obj){
+        if(obj.getClass()!=IpAdresa.class) return false;
         if ( maska==((IpAdresa)obj).maska && adresa==((IpAdresa)obj).adresa ) return true;
         return false;
     }
