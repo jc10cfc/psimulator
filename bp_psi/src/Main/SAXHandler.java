@@ -400,23 +400,27 @@ public class SAXHandler implements ContentHandler {
                 }
                 if (pocitac instanceof LinuxPocitac) {
                     if (iface == null) {
-                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno);
-                        System.err.println("Preskakuji tento zaznam v routovaci tabulce..");
+                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno +
+                        ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
                         continue;
                     }
                 }
 
                 if (pocitac instanceof CiscoPocitac) {//TODO: if (!adresat.jeCislemSite()) dat i pro linux?
                     if (!adresat.jeCislemSite()) {
-                        throw  new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresu() + " neni cislem site!");
+                        throw new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresuSMaskou() + " neni cislem site!");
                     }
                 }
 
                 if (mujzaznam[dejIndexVZaznamu("brana")].equals("")
-                        || mujzaznam[dejIndexVZaznamu("brana")].equals("null")) { // kdyz to je bez brany
+                        || mujzaznam[dejIndexVZaznamu("brana")].equals("null")) { // kdyz to je na rozhrani
 
                     if (pocitac instanceof CiscoPocitac) {
-
+                        if (iface == null) {
+                            System.err.println("Nepodarilo se najit rozhrani s nazvem " + jmeno
+                                    + ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
+                            continue;
+                        }
                         ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, iface);
                     } else {
                         pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, null, iface);

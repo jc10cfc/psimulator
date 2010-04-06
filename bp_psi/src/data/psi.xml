@@ -39,7 +39,7 @@
                 <adresat>0.0.0.0</adresat>
                 <maskaAdresata>0.0.0.0</maskaAdresata>
                 <brana>147.32.125.129</brana>
-                <rozhraniKam>eth0</rozhraniKam>
+                <rozhraniKam>eth0aaa</rozhraniKam>
             </zaznam>
         </routy>
     </pocitac>
@@ -74,19 +74,16 @@
                 <adresat>147.32.125.0</adresat>
                 <maskaAdresata>255.255.255.0</maskaAdresata>
                 <brana>1.1.1.1</brana>
-                <rozhraniKam></rozhraniKam>
             </zaznam>
             <zaznam>
                 <adresat>1.1.0.0</adresat>
                 <maskaAdresata>255.255.0.0</maskaAdresata>
-                <brana>null</brana>
                 <rozhraniKam>FastEthernet0/1</rozhraniKam>
             </zaznam>
             <zaznam>
                 <adresat>21.21.21.0</adresat>
                 <maskaAdresata>255.255.255.0</maskaAdresata>
                 <brana>4.4.4.4</brana>
-                <rozhraniKam></rozhraniKam>
             </zaznam>
         </routy>
     </pocitac>

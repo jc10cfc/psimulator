@@ -76,7 +76,7 @@ public class WrapperRoutovaciTabulkyCisco {
         ip route 147.32.125.100 255.255.255.128 1.1.1.1
         ip route 1.1.0.0 255.255.0.0 FastEthernet0/1
      */
-    public void update() { // TODO: zde chyba
+    public void update() { // TODO: zde chyba??
         // smazu RT
         routovaciTabulka.smazVsechnyZaznamy();
 
@@ -135,6 +135,12 @@ public class WrapperRoutovaciTabulkyCisco {
      */
 // TODO: vypis routovaci tabulky
     // pocitam, ze v RT jsou uz routy pro vlastni rozhrani
+    /**
+     * Vrati rozhrani, na ktere se ma odesilat, kdyz je zaznam na branu.
+     * Tato metoda pocita s tim, ze v RT uz jsou zaznamy pro nahozena rozhrani.
+     * @param brana
+     * @return kdyz nelze nalezt zadne rozhrani, tak vrati null
+     */
     SitoveRozhrani najdiRozhraniProBranu(IpAdresa brana) {
         SitoveRozhrani iface = null;
         boolean hledat = true;
@@ -167,9 +173,6 @@ public class WrapperRoutovaciTabulkyCisco {
      * @param brana
      */
     public void pridejZaznam(IpAdresa adresa, IpAdresa brana) {
-
-        // TODO: (adresa.jeCislemSite())
-        
         CiscoZaznam z = new CiscoZaznam(adresa, brana);
         pridejZaznam(z);
     }
@@ -184,6 +187,11 @@ public class WrapperRoutovaciTabulkyCisco {
         pridejZaznam(z);
     }
 
+    /**
+     * Prida do wrapperu novou routu na rozhrani. Pote updatuje RT je-li potreba.
+     * V teto metode se kontroluje, zda adresat je cislem site.
+     * @param zaznam, ktery chci vlozit
+     */
     private void pridejZaznam(CiscoZaznam zaznam) {
 
         if (!zaznam.getAdresat().jeCislemSite()) {
@@ -289,8 +297,7 @@ public class WrapperRoutovaciTabulkyCisco {
      * Pro vypis pres 'sh run'
      * @return
      */
-    @Override
-    public String toString() {
+    public String vypisRunningConfig() {
         String s = "";
         for (CiscoZaznam z : radky) {
             s += "ip route " + z.adresat.vypisAdresu() + " " + z.adresat.vypisMasku() + " ";
@@ -318,6 +325,10 @@ public class WrapperRoutovaciTabulkyCisco {
     S       172.18.1.0 is directly connected, FastEthernet0/0
     192.168.2.0/30 is subnetted, 1 subnets
     C       192.168.2.8 is directly connected, FastEthernet0/1
+     */
+    /**
+     * Vrati vypis routovaci tabulky.
+     * @return
      */
     public String vypisRT() {
         String s = "";

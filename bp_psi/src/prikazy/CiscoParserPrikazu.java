@@ -589,11 +589,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 + "no ip dhcp use vrf connected\n"
                 + "!\n"
                 + "!\n"
-                + "ip name-server 147.32.80.9\n"
-                + "ip name-server 147.32.80.105\n"
-                + "!\n"
-                + "!\n"
-                + "!\n"
                 + "!");
         for (Object o : pc.rozhrani) {
             SitoveRozhrani sr = (SitoveRozhrani) o;
@@ -602,11 +597,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             if (sr.jeNahozene() == false) {
                 kon.posliRadek(" shutdown");
             }
-            kon.posliRadek(" duplex auto\n"
-                    + " speed auto\n!");
+            kon.posliRadek(" duplex auto\n speed auto\n!");
         }
 
-        kon.posliRadek(((CiscoPocitac)pc).getWrapper().toString());
+        kon.posliRadek(((CiscoPocitac)pc).getWrapper().vypisRunningConfig());
 
 //        kon.posliRadek("!\n");
 
