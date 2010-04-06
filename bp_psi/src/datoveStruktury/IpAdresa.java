@@ -96,6 +96,14 @@ public class IpAdresa {
     }
 
     /**
+     * vrati adresu jako 32 bit integer
+     * @return
+     */
+    public int dej32BitAdresu(){
+        return adresa;
+    }
+
+    /**
      * Vraci true, kdyz maji stejny cislo site a masku. Pozor, pro 147.32.125.128/25 a 147.32.125.128/24 vrati false!
      */
     public boolean jeStejnyCisloSite(IpAdresa jina) {
@@ -138,6 +146,17 @@ public class IpAdresa {
     }
 
     /**
+     * vraci true, kdyz IP adresa neni skutecnou IP adresou ale jenom broadcastem site
+     * @return
+     */
+    public boolean jeBroadcastemSite() {
+        if (adresa == broadcast()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Vrati true, kdyz je stejna adresa, na masce nezalezi.
      * @param jina
      * @return
@@ -167,6 +186,11 @@ public class IpAdresa {
     }
 
 
+    /**
+     * Kontroluje zda je typu IpAdresa + se museji rovnat adresy i masky.
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj){
         if(obj.getClass()!=IpAdresa.class) return false;

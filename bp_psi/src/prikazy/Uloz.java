@@ -1,6 +1,7 @@
 package prikazy;
 
 import Main.SAXHandler.*;
+import datoveStruktury.WrapperRoutovaciTabulkyCisco.CiscoZaznam;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class Uloz extends AbstraktniPrikaz {
         } else {
             zapis(vratElement("pripojenoK", rozhrani.pripojenoK.getPc().jmeno + ":" + rozhrani.pripojenoK.jmeno));
         }
-        zapis(vratElement("nahozene", rozhrani.vratStavRozhrani() ? "true" : "false"));
+        zapis(vratElement("nahozene", rozhrani.jeNahozene() ? "true" : "false"));
 
         tabs = tabs.substring(1);
         zapis("</rozhrani>\n");
@@ -110,28 +111,58 @@ public class Uloz extends AbstraktniPrikaz {
      */
     private void ulozRoutovaciTabulku(AbstractPocitac pc) throws IOException {
 
-        if (pc.routovaciTabulka.pocetZaznamu() == 0) return;
+        if (pc.routovaciTabulka.pocetZaznamu() == 0) {
+            return;
+        }
 
         zapis("<routy>\n");
         tabs += "\t";
-        
-        for (int i = 0; i < pc.routovaciTabulka.pocetZaznamu(); i++) {
 
-            zapis("<zaznam>\n");
-            tabs += "\t";
+        if (pc instanceof LinuxPocitac) {
 
-            zapis(vratElement("adresat", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisAdresu()));
-            zapis(vratElement("maskaAdresata", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisMasku()));
-            
-            if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
-                zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisAdresu()));
-            } else {
-                zapis(vratElement("brana", "null"));
+            for (int i = 0; i < pc.routovaciTabulka.pocetZaznamu(); i++) {
+
+                zapis("<zaznam>\n");
+                tabs += "\t";
+
+                zapis(vratElement("adresat", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisAdresu()));
+                zapis(vratElement("maskaAdresata", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisMasku()));
+
+                if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
+                    zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisAdresu()));
+                } else {
+                    zapis(vratElement("brana", "null"));
+                }
+                zapis(vratElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno));
+
+                tabs = tabs.substring(1);
+                zapis("</zaznam>\n");
             }
-            zapis(vratElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno));
+        }
 
-            tabs = tabs.substring(1);
-            zapis("</zaznam>\n");
+        if (pc instanceof CiscoPocitac) {
+
+            CiscoPocitac poc = (CiscoPocitac)pc;
+            for (int i = 0; i < poc.getWrapper().size(); i++) {
+                CiscoZaznam zaznam = poc.getWrapper().vratZaznam(i);
+
+                zapis("<zaznam>\n");
+                tabs += "\t";
+
+                zapis(vratElement("adresat", zaznam.getAdresat().vypisAdresu()));
+                zapis(vratElement("maskaAdresata", zaznam.getAdresat().vypisMasku()));
+
+                if (zaznam.getBrana() != null) {
+                    zapis(vratElement("brana", zaznam.getBrana().vypisAdresu()));
+                }
+
+                if (zaznam.getRozhrani() != null) {
+                    zapis(vratElement("rozhraniKam", zaznam.getRozhrani().jmeno));
+                }
+
+                tabs = tabs.substring(1);
+                zapis("</zaznam>\n");
+            }
         }
 
         tabs = tabs.substring(1);

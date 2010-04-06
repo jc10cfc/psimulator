@@ -1,3 +1,334 @@
+?
+I. RT
+    1/ vlastni wrapper nad RT, ktery si bude drzet seznam vsech prikazu a doplnovat je do RT
+    2/ vsechno sypat rovnou do RT a pak pri kazdym pridani routy/IP kontrolovat
+        vsechny ostatni routy (pridelovat/rusit jim rozhrani), pri vypisu pak jen ty s gw != null
+
+II. existujeStejnyZaznam()
+
+III. kontrola shozenych rozhrani - routy
+
+IV. kontrola IP
+  cislo site (cisco ok, linux ?)
+    Router(config-if)#ip address 147.32.120.0 255.255.255.0
+    Bad mask /24 for address 147.32.120.0 
+
+  broadcast (cisco ok, linux ?)
+    cisco1(config-if)#ip address 1.1.1.255 255.255.255.0
+    Bad mask /24 for address 1.1.1.255
+
+  neodpovidajici IP masce (cisco ok, linux ?)
+    Router(config)#ip route 192.1.1.1 255.255.255.0 fastEthernet0/0
+    %Inconsistent address and mask
+
+
+
+Cisco routovaci tabulka
+pridani:
+    neprida se pouze na neexistujici rozhrani a totozny zaznam
+    pokud pridam na neexistujici IP1 (mimo dosah), tak se prida, ale nic to nedela (logicky) - az kdyz je dostupna IP1,
+        tak zaznam nabyde platnosti
+    po zmene RT to nektere routy prida az po cca 20s 
+
+vypis:
+    1/ show running-config: abecedne podle IP adresy cilove site
+    2/ show ip route: abecedne, zobrazi jen routy u nahozenych rozhranich + dosazitelne! pr.:
+     192.168.2.0/24 is variably subnetted, 2 subnets, 2 masks
+C       192.168.2.64/26 is directly connected, FastEthernet0/0
+C       192.168.2.128/25 is directly connected, FastEthernet0/1
+
+vypisou jen connected + dosazitelne dle adres siti
+" is variably subnetted, 2 subnets, 2 masks" pro vsechny site krom A rozsahu
+vypis jen tech siti, ktere maji v podstate prideleno rozhrani
+ostatni tam v podstate cekaji na doplneni
+
+
+vymaz: 
+    1/ no ip route IP maska + a volitelne treti zaznam, kdyz je bez 3.zaznamu a tak se smaze vsechno co sedi dle 1. a 2.
+            + prekontrolovat vsechny routy a zrusit jim pripadne rozhrani (kdyz budou nedostupny)
+    2/ clear ip route *
+
+
+
+1/ pri nastavovani IP adresy se rovnou da zapis do RT, ze stejna sit se odesila na toto rozhrani (adresat, maska, rozhrani)
+2/ shazovani rozhrani - menit zaznam v RT
+
+
+a) vyresit zhozene rozhrani
+ - routovat _pouze_ na nahozenych rozhranich
+
+ 
+
+b) vyresit routovani na vlastni rozhrani (jeho IP) - zaznam do RT
+ - pridat routu na vlastni rozhrani a pri vypisu to spravne vypisovat + pri zmene rozhrani menit
+
+
+priklad:
+
+// Příkaz ip classless zajišťuje slučitelnost s technologií CIDR (classless routing).
+// ip classless - use with static routing to allow packets destined for unrecognized subnets to use the best possible route
+ip classless
+ip route 192.168.2.0 255.255.255.192 192.168.2.126
+ip route 192.168.100.0 255.255.255.0 FastEthernet0/1
+
+
+
+// V konfiguračním módu přidá statický směrovací záznam.
+ip route <cílová síť> <maska> <next_hop | exit_interface>
+
+next_hop je IP adresa dalšího routeru v cestě, přesněji, je to adresa interfacu sousedního routeru,
+který sousedí s tímto routerem.
+exit_interface je jméno lokálního výstupního interfacu (třeba s0),
+přes který vede cesta k cílové síti.
+
+// Výchozí brána pro nepřímo připojené sítě.
+ip route 0.0.0.0 0.0.0.0 <odchozí rozhraní>
+
+// Zobrazí směrovací tabulku.
+show ip route
+
+// Nastaví defaultní cestu.
+ip default-network <adresa sítě>
+
+
+
+// nastaveni rozhrani
+ip address 192.168.2.65 255.255.255.192
+ip address 192.168.2.129 255.255.255.128
+
+Gateway of last resort is not set
+
+     192.168.2.0/24 is variably subnetted, 2 subnets, 2 masks
+C       192.168.2.64/26 is directly connected, FastEthernet0/0
+C       192.168.2.128/25 is directly connected, FastEthernet0/1
+
+
+>> pridani staticke routy:
+ip route 0.0.0.0 0.0.0.0 192.168.2.254
+
+Gateway of last resort is 192.168.2.254 to network 0.0.0.0
+
+     192.168.2.0/24 is variably subnetted, 2 subnets, 2 masks
+C       192.168.2.64/26 is directly connected, FastEthernet0/0
+C       192.168.2.128/25 is directly connected, FastEthernet0/1
+S*   0.0.0.0/0 [1/0] via 192.168.2.254
+
+
+
+
+
+ip address 192.168.2.254 255.255.255.128
+ip address 172.18.0.1 255.255.255.252
+
+
+Gateway of last resort is not set
+
+     172.18.0.0/30 is subnetted, 1 subnets
+C       172.18.0.0 is directly connected, FastEthernet0/1
+     192.168.2.0/25 is subnetted, 1 subnets
+C       192.168.2.128 is directly connected, FastEthernet0/0
+
+
+Priznaky RT Cisco:
+S - staticka
+C - connected
+* - default gw
+
+//-------------------------------------------------------------------------
+
+Router#s run
+ip classless
+ip route 0.0.0.0 0.0.0.0 FastEthernet0/0
+ip route 3.3.3.0 255.255.255.0 2.2.2.2
+ip route 8.0.0.0 255.0.0.0 9.9.9.254
+ip route 13.0.0.0 255.0.0.0 6.6.6.6
+ip route 18.18.18.0 255.255.255.0 51.51.51.9
+ip route 51.51.51.0 255.255.255.0 21.21.21.244
+ip route 172.18.1.0 255.255.255.252 FastEthernet0/0
+ip route 192.168.9.0 255.255.255.0 2.2.2.2
+
+Router#s ip route
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
+
+     51.0.0.0/24 is subnetted, 1 subnets
+S       51.51.51.0 [1/0] via 21.21.21.244
+     18.0.0.0/24 is subnetted, 1 subnets
+S       18.18.18.0 [1/0] via 51.51.51.9
+     3.0.0.0/24 is subnetted, 1 subnets
+S       3.3.3.0 [1/0] via 2.2.2.2
+     21.0.0.0/24 is subnetted, 1 subnets
+C       21.21.21.0 is directly connected, FastEthernet0/0
+S    192.168.9.0/24 [1/0] via 2.2.2.2
+     172.18.0.0/30 is subnetted, 1 subnets
+S       172.18.1.0 is directly connected, FastEthernet0/0
+S    8.0.0.0/8 [1/0] via 9.9.9.254
+S    13.0.0.0/8 [1/0] via 6.6.6.6
+     192.168.2.0/30 is subnetted, 1 subnets
+C       192.168.2.8 is directly connected, FastEthernet0/1
+S*   0.0.0.0/0 is directly connected, FastEthernet0/0
+
+
+//-------------------------------------------------------------------------
+
+// bez default gw (zadny rozdil!)
+
+ip classless
+ip route 3.3.3.0 255.255.255.0 2.2.2.2
+ip route 8.0.0.0 255.0.0.0 9.9.9.254
+ip route 13.0.0.0 255.0.0.0 6.6.6.6
+ip route 18.18.18.0 255.255.255.0 51.51.51.9
+ip route 51.51.51.0 255.255.255.0 21.21.21.244
+ip route 172.18.1.0 255.255.255.252 FastEthernet0/0
+ip route 192.168.9.0 255.255.255.0 2.2.2.2
+
+Router#s ip route
+Gateway of last resort is not set
+
+     51.0.0.0/24 is subnetted, 1 subnets
+S       51.51.51.0 [1/0] via 21.21.21.244
+     18.0.0.0/24 is subnetted, 1 subnets
+S       18.18.18.0 [1/0] via 51.51.51.9
+     3.0.0.0/24 is subnetted, 1 subnets
+S       3.3.3.0 [1/0] via 2.2.2.2
+     21.0.0.0/24 is subnetted, 1 subnets
+C       21.21.21.0 is directly connected, FastEthernet0/0
+S    192.168.9.0/24 [1/0] via 2.2.2.2
+     172.18.0.0/30 is subnetted, 1 subnets
+S       172.18.1.0 is directly connected, FastEthernet0/0
+S    8.0.0.0/8 [1/0] via 9.9.9.254
+S    13.0.0.0/8 [1/0] via 6.6.6.6
+     192.168.2.0/30 is subnetted, 1 subnets
+C       192.168.2.8 is directly connected, FastEthernet0/1
+
+
+//-------------------------------------------------------------------------
+
+
+ip classless
+ip route 3.3.3.0 255.255.255.0 192.168.100.5
+ip route 8.0.0.0 255.0.0.0 9.9.9.254
+ip route 13.0.0.0 255.0.0.0 6.6.6.6
+ip route 18.18.18.0 255.255.255.0 51.51.51.9
+ip route 51.51.51.0 255.255.255.0 21.21.21.244
+ip route 172.18.1.0 255.255.255.252 FastEthernet0/0
+ip route 192.168.9.0 255.255.255.0 2.2.2.2
+
+Router#s ip route
+Gateway of last resort is not set
+
+     51.0.0.0/24 is subnetted, 1 subnets
+S       51.51.51.0 [1/0] via 21.21.21.244
+     18.0.0.0/24 is subnetted, 1 subnets
+S       18.18.18.0 [1/0] via 51.51.51.9
+     21.0.0.0/24 is subnetted, 1 subnets
+C       21.21.21.0 is directly connected, FastEthernet0/0
+     172.18.0.0/30 is subnetted, 1 subnets
+S       172.18.1.0 is directly connected, FastEthernet0/0
+     192.168.2.0/30 is subnetted, 1 subnets
+C       192.168.2.8 is directly connected, FastEthernet0/1
+
+
+
+
+//-------------------------------------------------------------------------
+
+ip classless
+ip route 3.3.3.0 255.255.255.0 2.2.2.2
+ip route 8.0.0.0 255.0.0.0 9.9.9.254
+ip route 13.0.0.0 255.0.0.0 6.6.6.6
+ip route 18.18.18.0 255.255.255.0 51.51.51.9
+ip route 51.51.51.0 255.255.255.0 21.21.21.244
+ip route 172.18.1.0 255.255.255.252 FastEthernet0/0
+ip route 192.168.9.0 255.255.255.0 2.2.2.2
+
+Router#s ip route
+Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     51.0.0.0/24 is subnetted, 1 subnets
+S       51.51.51.0 [1/0] via 21.21.21.244
+     18.0.0.0/24 is subnetted, 1 subnets
+S       18.18.18.0 [1/0] via 51.51.51.9
+     21.0.0.0/24 is subnetted, 1 subnets
+C       21.21.21.0 is directly connected, FastEthernet0/0
+     172.18.0.0/30 is subnetted, 1 subnets
+S       172.18.1.0 is directly connected, FastEthernet0/0
+     192.168.2.0/30 is subnetted, 1 subnets
+C       192.168.2.8 is directly connected, FastEthernet0/1
+
+
+A 	0 	0–127    	255.0.0.0 	7 	24 	126 	16 777 214
+B 	10 	128-191 	255.255.0.0 	14 	16 	16384 	65534
+C 	110 	192-223 	255.255.255.0 	21 	8 	2 097 152 	254
+D 	1110 	224-239 	multicast
+E 	1111 	240-255 	vyhrazeno jako rezerva
+
+
+//-------------------------------------------------------------------------
+
+
+Ping Results
+! 	success
+, 	timeout
+U 	destination unreachable
+? 	unknown packet type
+& 	TTL exceeded
+
+Traceroute Results
+!H 	router rec'd, but didn't forward because of access-list
+P 	protocol unreachable
+N 	network unreachable
+U 	port unreachable
+, 	timeout
+
+
+//-------------------------------------------------------------------------
+
+
+ip classless
+ip route 3.3.3.0 255.255.255.0 2.2.2.2
+ip route 8.0.0.0 255.0.0.0 9.9.9.254
+ip route 9.9.9.0 255.255.255.0 172.18.1.99
+ip route 11.11.0.0 255.255.0.0 223.1.1.1
+ip route 11.11.0.0 255.255.0.0 223.255.255.2
+ip route 13.0.0.0 255.0.0.0 6.6.6.6
+ip route 18.18.18.0 255.255.255.0 51.51.51.9
+ip route 51.51.51.0 255.255.255.0 21.21.21.244
+ip route 80.80.80.0 255.255.255.0 8.1.1.1
+ip route 172.18.1.0 255.255.255.0 FastEthernet0/0
+ip route 192.168.9.0 255.255.255.0 2.2.2.2
+
+Router#s ip ro
+Gateway of last resort is not set
+
+     51.0.0.0/24 is subnetted, 1 subnets
+S       51.51.51.0 [1/0] via 21.21.21.244
+     18.0.0.0/24 is subnetted, 1 subnets
+S       18.18.18.0 [1/0] via 51.51.51.9
+     21.0.0.0/24 is subnetted, 1 subnets
+C       21.21.21.0 is directly connected, FastEthernet0/0
+     172.18.0.0/24 is subnetted, 1 subnets
+S       172.18.1.0 is directly connected, FastEthernet0/0
+     192.168.2.0/30 is subnetted, 1 subnets
+C       192.168.2.8 is directly connected, FastEthernet0/1
+
+po x vterinach..
+
+
+//-------------------------------------------------------------------------
+
+
+
+
+
+
 Router#show interfaces
 FastEthernet0/0 is up, line protocol is up
   Hardware is Gt96k FE, address is 001b.d5a5.e286 (bia 001b.d5a5.e286)
@@ -124,6 +455,7 @@ FastEthernet0/1 is up, line protocol is up
 
 
 
+//-------------------------------------------------------------------------
 
 
 
@@ -143,17 +475,6 @@ C    1.0.0.0/8 is directly connected, Serial0/1/0
 C       172.18.0.0 is directly connected, FastEthernet0/1
      192.168.2.0/25 is subnetted, 1 subnets
 C       192.168.2.128 is directly connected, FastEthernet0/0
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,24 +1,32 @@
 zbyva:
+cisco routovani
 ping paket
-doplnovani
-historie prikazu
 SNAT, DNAT
 testovani
-
+reakce na signaly Ctrl+C, Ctrl+Z (cisco)
 
 
 haldyr:
 prikaz pro ovladani cisco tabulky prikazu
+ - overit, zda kdyz zmenim IP na rozhrani, jestli se smazou vsechny routy na toto rozhrani!
+prikaz no *
+prikaz ?
+prikaz reload - pecem na to
+prikaz write (=uloz) pro routovaci tabulku!!!
 
-specialni metoda pro pridavani zaznamu do routovaci tabulky bez kontrol
-
-
-rozpracovano:
-parser prikazu pro cisco - haldyr
-routovaci tabulky, routovani
+pozor:
+pri zmene/mazani IP je potreba take zmenit/smazat prislusnou routu!!!
+kontrola IP
+    Router(config-if)#ip address 147.32.120.0 255.255.255.0
+    Bad mask /24 for address 147.32.120.0 (mam poreseny)
+routovat _pouze_ na nahozenych rozhranich
+pri nacitani Cisco stroje z konfiguraku se pri route na GW vubec nekouka na rozhrani!!! (jen adresat + brana)
 
 
 hotovo:
+prikaz end a logout; nova metoda jeBroadcastemSite() + dej32BitAdresu() u IpAdresy; wrapper pro praci s routovaci tabulkou pod ciscem (zatim moc neotestovany);
+prikaz 'show ip route';
+
 Udělat třídy pro linux a cisco.
 Do SAXu udělat vytváření objektů AbstractPocitac a SitoveRozhrani
 Do xml přidat jméno počítače, počáteční port a druh počítače.

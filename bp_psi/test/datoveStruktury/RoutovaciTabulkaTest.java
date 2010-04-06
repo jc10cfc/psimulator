@@ -19,6 +19,11 @@ import static org.junit.Assert.*;
  */
 public class RoutovaciTabulkaTest {
 
+    RoutovaciTabulka rt;
+    SitoveRozhrani eth0;
+    SitoveRozhrani wlan0;
+
+
     public RoutovaciTabulkaTest() {
     }
 
@@ -32,6 +37,9 @@ public class RoutovaciTabulkaTest {
 
     @Before
     public void setUp() {
+        rt = new RoutovaciTabulka();
+        eth0=new SitoveRozhrani("eth0", null, null);
+        wlan0=new SitoveRozhrani("wlan0", null, null);
     }
 
     @After
@@ -42,11 +50,7 @@ public class RoutovaciTabulkaTest {
     public void prvniTest(){
         System.out.println("Prvni test ------------------------------------------------------------------------");
         assertTrue(new IpAdresa("1.1.1.1").jeVRozsahu(new IpAdresa("1.1.1.0",24)));
-
-        SitoveRozhrani eth0=new SitoveRozhrani("eth0", null, null);
-        SitoveRozhrani wlan0=new SitoveRozhrani("wlan0", null, null);
         
-        RoutovaciTabulka rt=new RoutovaciTabulka();
         assertEquals( 2 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1"), null));
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.1.0",24), eth0));
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("0.0.0.0",0),new IpAdresa("1.1.1.1"), null));
@@ -72,11 +76,7 @@ public class RoutovaciTabulkaTest {
 
     @Test
     public void druhyTest(){
-        System.out.println("Druhy test ------------------------------------------------------------------------");
-
-        SitoveRozhrani eth0=new SitoveRozhrani("eth0", null, null);
-        SitoveRozhrani wlan0=new SitoveRozhrani("wlan0", null, null);
-        RoutovaciTabulka rt=new RoutovaciTabulka();
+        System.out.println("Druhy test ------------------------------------------------------------------------");        
 
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.2.128",25), wlan0) );
         assertEquals( 0 , rt.pridejZaznam(new IpAdresa("1.1.2.128",25), eth0) );
@@ -86,5 +86,5 @@ public class RoutovaciTabulkaTest {
         System.out.println(rt.vypisSeLinuxove());
 
     }
-
+    
 }

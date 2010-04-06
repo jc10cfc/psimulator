@@ -32,7 +32,7 @@ public class SitoveRozhrani {
      * Vrati stav rozhrani - zapnuto/vypnuto. True..zapnuto, false..vypnuto
      * @return
      */
-    public boolean vratStavRozhrani() {
+    public boolean jeNahozene() {
         return nahozene;
     }
 

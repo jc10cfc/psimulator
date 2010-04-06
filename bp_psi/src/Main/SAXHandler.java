@@ -32,16 +32,15 @@ public class SAXHandler implements ContentHandler {
     String tabs = "";
     String namespaces = "";
     String jmenoElementu = "";
-    final int velikostPoleRozhrani = 6;
     List<AbstractPocitac> hotovePocitace = new ArrayList<AbstractPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
-    String[] rozhrani = new String[velikostPoleRozhrani]; //naddimenzovano do budoucna
+    String[] rozhrani = new String[6]; // jmeno, ip mac, maska, pripojenoK, nahozene
     String[] zaznam = new String[4]; //adresat, maskaAdresata, brana, rozhrani
-    boolean vypis = false; // pro vypis kostry xml dokumentu
-    boolean vypis2 = false; // vypis pocitacu
     static public int port = -1;
     List<List> pripojeno = new ArrayList<List>();
     List<PocitacBuilder> seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
     private int aktualniPC = -1;
+    boolean vypis = false; // pro vypis kostry xml dokumentu
+    boolean vypis2 = false; // vypis pocitacu
 
     /**
      * Nastaví locator
@@ -399,19 +398,38 @@ public class SAXHandler implements ContentHandler {
                         iface = sr;
                     }
                 }
-                if (iface == null) {
-                    System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno);
-                    System.err.println("Preskakuji tento zaznam v routovaci tabulce..");
-                    continue;
+                if (pocitac instanceof LinuxPocitac) {
+                    if (iface == null) {
+                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno);
+                        System.err.println("Preskakuji tento zaznam v routovaci tabulce..");
+                        continue;
+                    }
+                }
+
+                if (pocitac instanceof CiscoPocitac) {//TODO: if (!adresat.jeCislemSite()) dat i pro linux?
+                    if (!adresat.jeCislemSite()) {
+                        throw  new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresu() + " neni cislem site!");
+                    }
                 }
 
                 if (mujzaznam[dejIndexVZaznamu("brana")].equals("")
                         || mujzaznam[dejIndexVZaznamu("brana")].equals("null")) { // kdyz to je bez brany
-                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, null, iface);
+
+                    if (pocitac instanceof CiscoPocitac) {
+
+                        ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, iface);
+                    } else {
+                        pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, null, iface);
+                    }
 
                 } else { // vcetne brany
                     IpAdresa brana = new IpAdresa(mujzaznam[dejIndexVZaznamu("brana")]);
-                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana, iface);
+
+                    if (pocitac instanceof CiscoPocitac) {
+                        ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, brana);
+                    } else {
+                        pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana, iface);
+                    }
                 }
             }
 

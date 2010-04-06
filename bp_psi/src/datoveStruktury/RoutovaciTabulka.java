@@ -8,6 +8,7 @@ package datoveStruktury;
 import java.util.LinkedList;
 import java.util.List;
 import pocitac.SitoveRozhrani;
+import vyjimky.ChybaKonfigurakuException;
 
 /**
  * Trida, ktera representuje routovaci tabulku pocitace, jak linuxoveho, tak ciscoveho.
@@ -95,7 +96,7 @@ public class RoutovaciTabulka {
      * tzn. na rozhrani, ne gw. Lze pridat i zaznam s predvyplnenim rozhranim, i takovej ale musi mit branu uz
      * dosazitelnou na tomhle rozhrani.
      * @param adresat musi bejt vyplnenej
-     * @param brana musi bejt vyplneny
+     * @param brana musi bejt vyplnena
      * @param rozhr muze bejt null
      * @return 0: v poradku<br /> 1: existuje stejny zaznam;<br />
      * 2: rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U<br />
@@ -132,6 +133,7 @@ public class RoutovaciTabulka {
 
     /**
      * Prida novej zaznam priznaku U.
+     * Spolecna metoda pro linux i cisco.
      * @param adresat ocekava IpAdresu, ktera je cislem site
      * @param rozhr predpoklada se, ze rozhrani na pocitaci existuje
      * @return 0: v poradku<br /> 1: existuje stejny zaznam;<br />
@@ -158,8 +160,9 @@ public class RoutovaciTabulka {
      */
     public void pridejZaznamBezKontrol(IpAdresa adresat,IpAdresa brana,SitoveRozhrani rozhr){
         if(!adresat.jeCislemSite()){
-            throw new RuntimeException("Chyba v konfiguraku, adresat v routovaci tabulce neni cislem site. Tahleta" +
-                    "pak by to asi chtelo specialni vyjimku, aspon na obecnou chybu v konfiguraku.");
+            throw new ChybaKonfigurakuException("Chyba v konfiguraku, adresat "+ adresat.vypisAdresuSMaskou() +
+                    " v routovaci tabulce neni cislem site. " +
+                    "mozna pak by to asi chtelo specialni vyjimku");
         }
         radky.add(new Zaznam(adresat,brana,rozhr)); //pridava se to nakonec, neresi se to
     }
@@ -230,7 +233,7 @@ public class RoutovaciTabulka {
         }
         return s;
     }
-
+    
     public int pocetZaznamu(){
         return radky.size();
     }
