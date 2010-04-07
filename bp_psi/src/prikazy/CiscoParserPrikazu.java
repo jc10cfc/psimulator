@@ -651,7 +651,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (slova.get(0).equals("ifconfig")) { // pak smazat
-            prikaz = new Ifconfig(pc, kon, slova);
+            prikaz = new LinuxIfconfig(pc, kon, slova);
         } else if (slova.get(0).equals("route")) {
             prikaz = new LinuxRoute(pc, kon, slova);
         } else {

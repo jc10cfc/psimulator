@@ -123,21 +123,32 @@ public abstract class AbstractPocitac {
      * @return false - ping se nepodarilo odeslat <br />
      *          true - ping byl odeslan
      */
-    public boolean posliPing(IpAdresa cil, int typ, int kod, double cas, int icmp_seq, AbstraktniPing prikaz){
+    public boolean posliNovejPaket(IpAdresa cil, int typ, int kod, double cas, int icmp_seq, AbstraktniPing prikaz) {
         IpAdresa zdroj; //IP, ktera bude jako adresa zdroje v paketu
-        SitoveRozhrani rozhr; //rozhrani, kterym budu paket posilat
+        SitoveRozhrani mojeRozhr; //rozhrani, pres ktery budu paket posilat
+        SitoveRozhrani ciziRozhr=null; //rozhrani, na ktery budu paket posilat
         //hledani rozhrani, pres ktery se to bude posilat:
-        rozhr=najdiMeziRozhranima(cil);//nejdriv se hleda cil mezi mejma adresama
-        if(rozhr==null){ //kdyz adresa neni moje, zkousim hladat v routovaci tabulce
-            rozhr=routovaciTabulka.najdiSpravnyRozhrani(cil);
+        mojeRozhr = najdiMeziRozhranima(cil);//nejdriv se hleda cil mezi mejma adresama
+        if (mojeRozhr == null) { //kdyz adresa neni moje, zkousim hladat v routovaci tabulce
+            mojeRozhr = routovaciTabulka.najdiSpravnyRozhrani(cil);
+            if (mojeRozhr != null) { //nejaky se naslo
+                ciziRozhr = mojeRozhr.pripojenoK; //pridava se to, ktery se mo pouzitreturn true;
+                if (ciziRozhr == null) {
+                    return true;
+                }
+            }
+        } else {
+            ciziRozhr = mojeRozhr;
         }
-        if(rozhr==null){ //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
+        if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
             return false;
         }
-        zdroj=rozhr.ip;
+        zdroj = mojeRozhr.ip;
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, 64, prikaz);
-        if(ladeni)vypis("posilam novej paket");
-        rozhr.pripojenoK.getPc().prijmiPing(paket);
+        if (ladeni) {
+            vypis("posilam novej paket: " + paket.toString());
+        }
+        ciziRozhr.getPc().prijmiPaket(paket);
         return true;
     }
 
@@ -145,13 +156,17 @@ public abstract class AbstractPocitac {
      * Slouzi k preposilani paketu. Neni-li paket kam dorucit, posle se zpatky zprava, ze nelze dorucit.
      * @param paket
      */
-    public void posliPing(Paket paket) {
+    public void preposliPaket(Paket paket) {
+        paket.ttl -=1;
+        if (paket.ttl==0){
+            return;
+        }
         SitoveRozhrani rozhr = routovaciTabulka.najdiSpravnyRozhrani(paket.cil);
         if (rozhr != null) { //rozhrani nalezeno
-            if(ladeni)vypis("preposilam paket");
-            rozhr.pripojenoK.getPc().prijmiPing(paket);
+            if(ladeni)vypis("preposilam paket na rozhrani "+rozhr.jmeno+"paket: "+paket.toString());
+            rozhr.pripojenoK.getPc().prijmiPaket(paket);
         } else {//rozhrani nenalezeno - paket neni kam poslat
-            posliPing(paket.zdroj, 3, 0,paket.cas, paket.icmp_seq, paket.prikaz); //net unreachable
+            posliNovejPaket(paket.zdroj, 3, 0,paket.cas, paket.icmp_seq, paket.prikaz); //net unreachable
         }
     }
 
@@ -160,19 +175,19 @@ public abstract class AbstractPocitac {
      * urcen pro me, posle paket dal.
      * @param paket
      */
-    public void prijmiPing(Paket paket) {
-        if(ladeni)vypis("prijal jsem paket");
+    public void prijmiPaket(Paket paket) {
+        if(ladeni)vypis("prijal jsem paket "+paket.toString());
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);
         if (rozhr != null) { //paket je u me v cili
             if(paket.typ==8){ //icmp request
-                posliPing(paket.zdroj, 0, 0, paket.cas, paket.icmp_seq,paket.prikaz); //zpatky se
+                posliNovejPaket(paket.zdroj, 0, 0, paket.cas, paket.icmp_seq,paket.prikaz); //zpatky se
                                                                                     //posila icmp reply
-            }else  if(paket.typ==0){ //paket je urcen pro me
+            }else { //paket je urcen pro me
                 paket.prikaz.zpracujPaket(paket);
             }
         } else { // paket se musi poslat dal
-            posliPing(paket);
+            preposliPaket(paket);
         }
     }
 

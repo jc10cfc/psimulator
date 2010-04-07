@@ -2,55 +2,100 @@
 <!-- DTD tady musi byt!!! -->
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
-<konfigurak>
-    <port>3567</port>
+    <konfigurak>
+        <port>3567</port>
 
-    <pocitac jmeno="linux1" typ="linux">
-        <rozhrani>
-            <jmeno>eth0</jmeno>
-            <ip>192.168.1.1</ip>
-            <maska>255.255.255.0</maska>
-            <mac>00:01:02:03:04:05</mac>
-            <pripojenoK>linux2:eth0</pripojenoK>
-            <nahozene>true</nahozene>
-        </rozhrani>
-        <routy>
-            <zaznam>
-                <adresat>192.168.1.0</adresat>
-                <maskaAdresata>255.255.255.0</maskaAdresata>
-                <brana>null</brana>
-                <rozhraniKam>eth0</rozhraniKam>
-            </zaznam>
-            <zaznam>
-                <adresat>0.0.0.0</adresat>
-                <maskaAdresata>0.0.0.0</maskaAdresata>
-                <brana>192.168.1.2</brana>
-                <rozhraniKam>eth0</rozhraniKam>
-            </zaznam>
-        </routy>
-    </pocitac>
-
-
-    <pocitac jmeno="linux2" typ="linux">
-        <rozhrani>
-            <jmeno>eth0</jmeno>
-            <ip>192.168.1.2</ip>
-            <maska>255.255.255.0</maska>
-            <mac>00:01:02:03:04:06</mac>
-            <pripojenoK>linux1:eth0</pripojenoK>
-            <nahozene>true</nahozene>
-        </rozhrani>
-        <routy>
-            <zaznam>
-                <adresat>192.168.1.0</adresat>
-                <maskaAdresata>255.255.255.0</maskaAdresata>
-                <brana>null</brana>
-                <rozhraniKam>eth0</rozhraniKam>
-            </zaznam>
-        </routy>
-    </pocitac>
+        <pocitac jmeno="linux1" typ="linux">
+            <rozhrani>
+                <jmeno>eth0</jmeno>
+                <ip>192.168.1.1</ip>
+                <maska>255.255.255.0</maska>
+                <mac>00:01:02:03:04:05</mac>
+                <pripojenoK>linux2:eth0</pripojenoK>
+                <nahozene>true</nahozene>
+            </rozhrani>
+            <routy>
+                <zaznam>
+                    <adresat>192.168.1.0</adresat>
+                    <maskaAdresata>255.255.255.0</maskaAdresata>
+                    <brana>null</brana>
+                    <rozhraniKam>eth0</rozhraniKam>
+                </zaznam>
+                <zaznam>
+                    <adresat>0.0.0.0</adresat>
+                    <maskaAdresata>0.0.0.0</maskaAdresata>
+                    <brana>192.168.1.2</brana>
+                    <rozhraniKam>eth0</rozhraniKam>
+                </zaznam>
+            </routy>
+        </pocitac>
 
 
+        <pocitac jmeno="linux2" typ="linux">
+            <rozhrani>
+                <jmeno>eth0</jmeno>
+                <ip>192.168.1.2</ip>
+                <maska>255.255.255.0</maska>
+                <mac>00:01:02:03:04:06</mac>
+                <pripojenoK>linux1:eth0</pripojenoK>
+                <nahozene>true</nahozene>
+            </rozhrani>
+            <rozhrani>
+                <jmeno>eth1</jmeno>
+                <ip>192.168.2.1</ip>
+                <maska>255.255.255.0</maska>
+                <mac>00:01:02:d3:04:06</mac>
+                <pripojenoK>linux3:eth0</pripojenoK>
+                <nahozene>true</nahozene>
+            </rozhrani>
+            <routy>
+                <zaznam>
+                    <adresat>192.168.1.0</adresat>
+                    <maskaAdresata>255.255.255.0</maskaAdresata>
+                    <brana>null</brana>
+                    <rozhraniKam>eth0</rozhraniKam>
+                </zaznam>
+                <zaznam>
+                    <adresat>192.168.2.0</adresat>
+                    <maskaAdresata>255.255.255.0</maskaAdresata>
+                    <brana>null</brana>
+                    <rozhraniKam>eth1</rozhraniKam>
+                </zaznam>
+                <zaznam>
+                    <adresat>0.0.0.0</adresat>
+                    <maskaAdresata>0.0.0.0</maskaAdresata>
+                    <brana>192.168.2.2</brana>
+                    <rozhraniKam>eth0</rozhraniKam>
+                </zaznam>
+            </routy>
+        </pocitac>
+
+
+
+        <pocitac jmeno="linux3" typ="linux">
+            <rozhrani>
+                <jmeno>eth0</jmeno>
+                <ip>192.168.2.2</ip>
+                <maska>255.255.255.0</maska>
+                <mac>00:01:02:03:04:07</mac>
+                <pripojenoK>linux2:eth1</pripojenoK>
+                <nahozene>true</nahozene>
+            </rozhrani>
+            <routy>
+                <zaznam>
+                    <adresat>192.168.2.0</adresat>
+                    <maskaAdresata>255.255.255.0</maskaAdresata>
+                    <brana>null</brana>
+                    <rozhraniKam>eth0</rozhraniKam>
+                </zaznam>
+                <zaznam>
+                    <adresat>192.168.1.0</adresat>
+                    <maskaAdresata>255.255.255.0</maskaAdresata>
+                    <brana>192.168.2.1</brana>
+                    <rozhraniKam>eth0</rozhraniKam>
+                </zaznam>
+            </routy>
+        </pocitac>
 
 
 </konfigurak>

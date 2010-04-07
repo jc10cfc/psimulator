@@ -54,7 +54,7 @@ public class LinuxParserPrikazu extends ParserPrikazu {
         if (slova.get(0).equals("exit")) {      //tady se zkousej jednotlivy prikazy
             pr = new Exit(pc, kon, slova);
         } else if (slova.get(0).equals("ifconfig")) {
-            pr = new Ifconfig(pc, kon, slova);
+            pr = new LinuxIfconfig(pc, kon, slova);
         } else if (slova.get(0).equals("route")) {
             pr = new LinuxRoute(pc, kon, slova);
         } else if (slova.get(0).equals("ping")) {

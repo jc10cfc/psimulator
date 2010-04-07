@@ -42,14 +42,16 @@ public class LinuxPing extends AbstraktniPing{
 
     @Override
     protected void vykonejPrikaz() {
-        if(pc.posliPing(cil, 8, 0, 0, 0, this)){
-            for (int i=1;i<9;i++){
+        if(pc.posliNovejPaket(cil, 8, 0, 0, 0, this)){
+            for (int i=1;i<1;i++){
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                 }
-                pc.posliPing(cil, 8, 0, 0, i, this);
+                pc.posliNovejPaket(cil, 8, 0, 0, i, this);
             }
+        }else{
+            kon.posliRadek("connect: Network is unreachable");
         }
         
     }
@@ -62,9 +64,12 @@ public class LinuxPing extends AbstraktniPing{
             kon.posliRadek("64 bytes from "+p.zdroj.vypisAdresu()+": icmp_seq="+
                     p.icmp_seq+" ttl="+p.ttl+" time="+((double)Math.round(p.cas*1000))/1000+" ms");
         }else if(p.typ==3){
-
+            if(p.kod==0){
+                kon.posliRadek("From "+p.zdroj.vypisAdresu()+": icmp_seq="+
+                    p.icmp_seq+" Destination Net Unreachable");
+            }
         }else if(p.typ==11){
-
+            kon.posliRadek("From "+p.zdroj.vypisAdresu()+" icmp_seq="+p.icmp_seq +"Time to live exceeded");
         }
     }
 

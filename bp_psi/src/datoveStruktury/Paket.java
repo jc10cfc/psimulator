@@ -67,6 +67,11 @@ public class Paket {
         this.cas=cas;
     }
 
+    @Override
+    public String toString(){
+        return "z: "+zdroj.vypisAdresu()+"; c: "+cil.vypisAdresu()+"; typ: "+typ+"; ttl: "+ttl;
+    }
+
 
 
 }

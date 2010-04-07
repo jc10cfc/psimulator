@@ -21,9 +21,7 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz{
     }
 
     @Override
-    protected void vykonejPrikaz() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    protected abstract void vykonejPrikaz();
 
     public abstract void zpracujPaket(Paket p);
 

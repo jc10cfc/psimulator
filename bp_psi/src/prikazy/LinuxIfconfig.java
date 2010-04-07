@@ -5,7 +5,7 @@
  *      http://www.starhill.org/man/8_ifconfig.html
  * Dodělat:
  *      ifconfig wlan0 0.0.0.0 by mělo odebrat adresu z rozhraní.
- *      osetrit vyjimky u zakazanejch IP adres (255. ...)
+ *      dodelat chyby u zakazanejch adres 255.1.1.1 ap.
  */
 package prikazy;
 
@@ -19,7 +19,7 @@ import vyjimky.SpatnaMaskaException;
  *
  * @author neiss
  */
-public class Ifconfig extends AbstraktniPrikaz {
+public class LinuxIfconfig extends AbstraktniPrikaz {
 
     boolean ladiciVypisovani=false; //jestli se maj vypisovat informace pro ladeni
 
@@ -57,7 +57,7 @@ public class Ifconfig extends AbstraktniPrikaz {
     int pouzitIp = -1; //cislo seznamIP, ktera IP se ma pouzit
 
 
-    public Ifconfig(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxIfconfig(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         nastavPrikaz();
         zkontrolujPrikaz();
