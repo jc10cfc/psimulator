@@ -39,7 +39,7 @@
                 <adresat>0.0.0.0</adresat>
                 <maskaAdresata>0.0.0.0</maskaAdresata>
                 <brana>147.32.125.129</brana>
-                <rozhraniKam>eth0aaa</rozhraniKam>
+                <rozhraniKam>eth0</rozhraniKam>
             </zaznam>
         </routy>
     </pocitac>

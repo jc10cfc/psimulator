@@ -57,6 +57,8 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new Ifconfig(pc, kon, slova);
         } else if (slova.get(0).equals("route")) {
             pr = new LinuxRoute(pc, kon, slova);
+        } else if (slova.get(0).equals("ping")) {
+            pr = new LinuxPing(pc, kon, slova);
         } else {
             kon.posliRadek("bash: " + slova.get(0) + ": command not found");
         }

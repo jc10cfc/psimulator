@@ -6,6 +6,8 @@
 
 package datoveStruktury;
 
+import prikazy.AbstraktniPrikaz;
+
 /**
  * Třída representující paket pro ping, kterej si budou počítače mezi sebou předávat.
  * @author neiss
@@ -18,7 +20,7 @@ public class Paket {
      * 8 	Žádost o ozvěnu (icmp request) <br />
      * 11 	Čas (ttl) vypršel<br />
      */
-    int typ;
+    public int typ;
 
     /**
      * Podtypy icmp paketu, pro kazdej typ jinej vyznam, u nas to ma vyznam jen pro typ 3. Jinak defaultne vetsinou
@@ -31,9 +33,25 @@ public class Paket {
      * 5 – nutná fragmentace, ale není povolena<br />
      * 6 – neznámá cílová síť (destination network unknown) <br />
      */
-    int kod;
+    public int kod;
 
-    IpAdresa zdroj;
-    IpAdresa cil;
+    public IpAdresa zdroj;
+    public IpAdresa cil;
+    public int ttl;
+    public int icmp_seq;
+    public int cas; //cas, kterej jakoby paket bezi
+    public AbstraktniPrikaz prikaz; //paket si nese odkaz na ping, kterej ho poslal, aby po stastnym navratu
+                                        //moh o sobe vypsat informace
+    
+    public Paket(IpAdresa zdroj, IpAdresa cil, int typ, int kod, int ttl, int icmp_seq){
+        this.cil=cil;
+        this.zdroj=zdroj;
+        this.typ=typ;
+        this.ttl=ttl;
+        this.icmp_seq=icmp_seq;
+        this.kod=kod; //defaultni
+    }
+
+
 
 }

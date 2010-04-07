@@ -32,7 +32,7 @@ public class Ping extends AbstraktniPrikaz {
     @Override
     protected void vykonejPrikaz() {
         IpAdresa adresa = new IpAdresa(ip); // predpokladam, ze se tam konaj kontroly na spravnost IP
-        int ret = pc.posliPing(adresa);
+        int ret = pc.posliPingStarej(adresa);
         System.out.println("navratovy kod: " + ret);
 
 

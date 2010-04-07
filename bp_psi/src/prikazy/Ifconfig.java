@@ -5,6 +5,7 @@
  *      http://www.starhill.org/man/8_ifconfig.html
  * Dodělat:
  *      ifconfig wlan0 0.0.0.0 by mělo odebrat adresu z rozhraní.
+ *      osetrit vyjimky u zakazanejch IP adres (255. ...)
  */
 package prikazy;
 

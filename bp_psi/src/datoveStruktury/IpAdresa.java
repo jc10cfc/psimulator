@@ -1,3 +1,7 @@
+/*
+ * DODELAT:
+ *      osetrit vyjimky u zakazanejch IP adres
+ */
 package datoveStruktury;
 
 import vyjimky.*;
@@ -44,7 +48,7 @@ public class IpAdresa {
      * @param adr
      */
     public void nastavAdresu(String adr) {
-        if (!jeSpravnaIP(adr, false)) {
+        if (!jeSpravnaAdresaNebMaska(adr, false)) {
             throw new SpatnaAdresaException("spatna adresa: " + adr);
         }
         adresa = integerZeStringu(adr);
@@ -70,7 +74,7 @@ public class IpAdresa {
      * @autor neiss
      */
     public void nastavMasku(String maska) {
-        if (!jeSpravnaIP(maska, true)) {
+        if (!jeSpravnaAdresaNebMaska(maska, true)) {
             throw new SpatnaMaskaException("spatna maska: " + maska);
         }
         this.maska = integerZeStringu(maska);
@@ -201,40 +205,12 @@ public class IpAdresa {
 //**************************************************************************************************************
 //verejny staticky metody
 
-    /**
-     * Zkontroluje, jestli zadany retezec je IP adresa (bez masky za lomitkem)
-     * @param adr kontrolovana adresa
-     * @param jeToMaska urcuje, zda to chci kontrolovat jako IP (1.* - 223.*) nebo jako masku (1.* - 255.*)
-     * @return true, kdyz je adresa spravna
-     * @author haldyr
-     */
-    public static boolean jeSpravnaIP(String adr, boolean jeToMaska) {
-        if (!jednoduchaKontrola(adr)) {
-            return false;
+    public static boolean jeSpravnaIP(String adresa, boolean jeToMaska){
+        try{
+            return jeSpravnaAdresaNebMaska(adresa, jeToMaska);
+        }catch(ZakazanaIpAdresaException ex){
+            return true;
         }
-        //kontrola spravnosti jednotlivejch cisel:
-        String[] pole = adr.split("\\.");
-        int n;
-
-        if (! jeToMaska) { // je to IP
-            if (Integer.valueOf(pole[0]) >= 224 && Integer.valueOf(pole[0]) <= 255) {
-                              // -> adresy rozsahu 224.* - 239.* jsou vyhrazeny pro multicast, vyssi ifconfig nezere
-                throw new ZakazanaIpAdresaException(adr);
-            }
-        }
-
-        for (int i = 0; i < 4; i++) {
-
-            n = Integer.valueOf(pole[i]);
-            if (n < 0 || n > 255) { //podle me ta kontrola musi bejt takhle
-                return false;
-            }
-        }
-        if(jeToMaska){ //kontroluje se, jestli to je spravna maska
-            int m=integerZeStringu(adr);
-            return jeMaskou(m);
-        }
-        return true;
     }
 
      /**
@@ -439,5 +415,43 @@ public class IpAdresa {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Zkontroluje, jestli zadany retezec je IP adresa (bez masky za lomitkem)
+     * @param adr kontrolovana adresa
+     * @param jeToMaska urcuje, zda to chci kontrolovat jako IP (1.* - 223.*) nebo jako masku (spravnou)
+     * @return true, kdyz je adresa spravna
+     * @throws ZakazanaIpAdresaException - kdyz je to adresa a je v zakazanym rozsahu
+     * @author haldyr
+     */
+    private static boolean jeSpravnaAdresaNebMaska(String adr, boolean jeToMaska) {
+        if (!jednoduchaKontrola(adr)) {
+            return false;
+        }
+        //kontrola spravnosti jednotlivejch cisel:
+        String[] pole = adr.split("\\.");
+        int n;
+
+        for (int i = 0; i < 4; i++) {
+            n = Integer.valueOf(pole[i]);
+            if (n < 0 || n > 255) { //podle me ta kontrola musi bejt takhle
+                return false;
+            }
+        }
+
+        if(jeToMaska){ //kontroluje se, jestli to je spravna maska
+            int m=integerZeStringu(adr);
+            return jeMaskou(m);
+        }
+
+        if (! jeToMaska) { // je to IP
+            if (Integer.valueOf(pole[0]) >= 224 && Integer.valueOf(pole[0]) <= 255) {
+                              // -> adresy rozsahu 224.* - 239.* jsou vyhrazeny pro multicast, vyssi ifconfig nezere
+                throw new ZakazanaIpAdresaException(adr);
+            }
+        }
+        
+        return true;
     }
 }
