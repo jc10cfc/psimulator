@@ -81,7 +81,6 @@ public class WrapperRoutovaciTabulkyCisco {
             } else {
                 s += brana.vypisAdresu();
             }
-            s += "\n";
             return s;
         }
     }
@@ -114,25 +113,10 @@ public class WrapperRoutovaciTabulkyCisco {
                 if (odeslat != null) {
 //                    System.out.println("nasel jsem pro "+zaznam.adresat.vypisAdresu() + " rozhrani "+odeslat.jmeno);
                     routovaciTabulka.pridejZaznamBezKontrol(zaznam.adresat, zaznam.brana, odeslat);
-                    // TODO: zrusit pridejZaznamBezKontrol()
                 } else {
 //                    System.out.println("nenasel jsem pro "+ zaznam);
                 }
-
             }
-        }
-
-
-    }
-
-    public void neco() {
-        System.out.println("PPPPPPPPPPPPPPPPPPPPPp");
-        IpAdresa ip = new IpAdresa("1.1.1.1");
-        SitoveRozhrani sr = najdiRozhraniProBranu(ip);
-        if (sr == null) {
-            System.out.println("sr je null");
-        } else {
-            System.out.println("sr je " + sr.jmeno);
         }
     }
 
@@ -164,8 +148,9 @@ public class WrapperRoutovaciTabulkyCisco {
         boolean hledat = true;
 
         citac++;
-        if (citac >= 50) return null; // ochrana proti smyckam
-
+        if (citac >= 50) {
+            return null; // ochrana proti smyckam
+        }
         for (CiscoZaznam zaznam : radky) {
             if (hledat == false) {
                 break;
@@ -293,8 +278,8 @@ public class WrapperRoutovaciTabulkyCisco {
      */
     private int dejIndexPozice(CiscoZaznam pridavany) {
         int i = 0;
-        for (CiscoZaznam cz : radky) {
-            if (pridavany.adresat.dej32BitAdresu() < cz.adresat.dej32BitAdresu()) {
+        for (CiscoZaznam cz : radky) { // at zije prasarnicka
+            if (pridavany.adresat.vypisAdresu().getBytes().length < cz.adresat.vypisAdresu().getBytes().length) {
                 break;
             }
             i++;
@@ -326,13 +311,7 @@ public class WrapperRoutovaciTabulkyCisco {
     public String vypisRunningConfig() {
         String s = "";
         for (CiscoZaznam z : radky) {
-            s += "ip route " + z.adresat.vypisAdresu() + " " + z.adresat.vypisMasku() + " ";
-            if (z.rozhrani == null) {
-                s += z.brana.vypisAdresu();
-            } else {
-                s += z.rozhrani.jmeno;
-            }
-            s += "\n";
+            s += z + "\n";
         }
         return s;
     }
@@ -362,19 +341,18 @@ public class WrapperRoutovaciTabulkyCisco {
 
         s += "Codes: C - connected, S - static\n\n";
         boolean defaultGW = false;
-        for (int i = 0; i < ((CiscoPocitac)pc).getWrapper().size(); i++) {
-            if (((CiscoPocitac)pc).getWrapper().vratZaznam(i).adresat.equals(new IpAdresa("0.0.0.0", 0))) {
+        for (int i = 0; i < ((CiscoPocitac) pc).getWrapper().size(); i++) {
+            if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).adresat.equals(new IpAdresa("0.0.0.0", 0))) {
                 defaultGW = true;
             }
         }
+
+        s += "Gateway of last resort is ";
         if (defaultGW) {
-            s += "Gateway of last resort is 0.0.0.0 to network 0.0.0.0\n\n";
+            s += "0.0.0.0 to network 0.0.0.0\n\n";
         } else {
-            s += "Gateway of last resort is not set\n\n";
+            s += "not set\n\n";
         }
-
-
-        String n = "\n\n";
 
         for (int i = 0; i < routovaciTabulka.pocetZaznamu(); i++) {
             Zaznam zaznam = routovaciTabulka.vratZaznam(i);
@@ -396,13 +374,14 @@ public class WrapperRoutovaciTabulkyCisco {
                 } else {
                     s += "S       ";
                 }
-                s +=  zaznam.getAdresat().vypisAdresu();
+                s += zaznam.getAdresat().vypisAdresu();
                 if (zaznam.getBrana() != null) {
 //                System.out.println("tadyyyy: "+zaznam.getAdresat().vypisAdresu() + " " + zaznam.getAdresat().vypisMasku());
-                    s += " [1/0] via " + zaznam.getBrana().vypisAdresu() + "\n";
+                    s += " [1/0] via " + zaznam.getBrana().vypisAdresu();
                 } else {
-                    s += " is directly connected, " + zaznam.getRozhrani().jmeno + "\n";
+                    s += " is directly connected, " + zaznam.getRozhrani().jmeno;
                 }
+                s += "\n";
             }
         }
         return s;

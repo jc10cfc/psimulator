@@ -15,7 +15,6 @@ import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
-import vyjimky.ZakazanaIpAdresaException;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -259,6 +258,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
 
+        if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
+            kon.posliRadek("%Invalid destination prefix");
+            return;
+        }
+
         if (slova.size() == 6 || (slova.size() == 5 && !zacinaCislem(slova.get(4)))) {
             // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
 
@@ -291,8 +295,14 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 invalidInputDetected();
                 return;
             }
+
+            if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
+                kon.posliRadek("%Invalid next hop address");
+                return;
+            }
+
             ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
-        } else {
+        } else { // vice slov nez 6
             invalidInputDetected();
         }
     }
@@ -743,6 +753,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
 
+        if (IpAdresa.jeZakazanaIpAdresa(slova.get(2))) {
+            kon.posliRadek("Not a valid host address - " + slova.get(2));
+            return;
+        }
+
         try {
             IpAdresa ip = new IpAdresa(slova.get(2), slova.get(3));
 
@@ -755,23 +770,19 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 // Router(config-if)#ip address 147.32.120.0 255.255.255.0
                 // Bad mask /24 for address 147.32.120.0
                 kon.posliRadek("Bad mask /" + ip.pocetBituMasky() + " for address " + ip.vypisAdresu());
-            } else {
-                aktualni.ip = ip;
+                return;
             }
-        } catch (ZakazanaIpAdresaException e) {
-            kon.posliRadek("Not a valid host address - " + slova.get(2));
+            aktualni.ip = ip;
+
         } catch (SpatnaMaskaException e) {
             // TODO: Predelat, aby se to dalo resit globalne
-            // podedit IP adresu s tim, ze to bude primo pro broadcast + cislo site
             String[] pole = slova.get(3).split("\\.");
             String s = "";
             int i;
             for (String bajt : pole) {
                 try {
                     i = Integer.parseInt(bajt);
-                    System.out.println("i = " + i);
                     s += Integer.toHexString(i);
-                    System.out.println("+= " + Integer.toHexString(i));
 
                 } catch (NumberFormatException exs) {
                     invalidInputDetected();
@@ -779,14 +790,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 }
             }
             kon.posliRadek("Bad mask 0x" + s.toUpperCase() + " for address " + slova.get(2));
-        } catch (SpatnaAdresaException e) {
-            invalidInputDetected();
         } catch (Exception e) {
             e.printStackTrace();
             invalidInputDetected();
         }
 
-        ((CiscoPocitac)pc).getWrapper().update();
+        ((CiscoPocitac) pc).getWrapper().update();
 
     }
 

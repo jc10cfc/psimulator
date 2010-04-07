@@ -9,6 +9,7 @@ package vyjimky;
  * Tahleta vyjimka se hazi, kdyz chci nastavit ip, ktera je v zakazanem rozsahu 224.* - 255.* (rezervovane pro multicast + do zasoby)
  * @author haldyr
  */
+@Deprecated
 public class ZakazanaIpAdresaException extends RuntimeException {
 
     public ZakazanaIpAdresaException() {
