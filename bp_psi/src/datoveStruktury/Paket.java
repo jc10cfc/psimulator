@@ -6,7 +6,7 @@
 
 package datoveStruktury;
 
-import prikazy.AbstraktniPrikaz;
+import prikazy.*;
 
 /**
  * Třída representující paket pro ping, kterej si budou počítače mezi sebou předávat.
@@ -39,17 +39,32 @@ public class Paket {
     public IpAdresa cil;
     public int ttl;
     public int icmp_seq;
-    public int cas; //cas, kterej jakoby paket bezi
-    public AbstraktniPrikaz prikaz; //paket si nese odkaz na ping, kterej ho poslal, aby po stastnym navratu
+    public double cas; //cas, kterej jakoby paket bezi
+    public AbstraktniPing prikaz; //paket si nese odkaz na ping, kterej ho poslal, aby po stastnym navratu
                                         //moh o sobe vypsat informace
-    
-    public Paket(IpAdresa zdroj, IpAdresa cil, int typ, int kod, int ttl, int icmp_seq){
+
+
+    /**
+     *
+     * @param zdroj
+     * @param cil
+     * @param typ <br /> 0 - reply<br />3 - nedorucen<br />8 - request <br /> 11 - ttl vyprsel<br />
+     * @param kod <br /> 0 - network unreachable <br /> 1 - host unreachable <br />
+     * @param cas - zadava se v miliseknudach
+     * @param icmp_seq
+     * @param ttl
+     * @param prikaz
+     */
+    public Paket(IpAdresa zdroj, IpAdresa cil, int typ, int kod, double cas, int icmp_seq,
+            int ttl, AbstraktniPing prikaz){
         this.cil=cil;
         this.zdroj=zdroj;
         this.typ=typ;
         this.ttl=ttl;
         this.icmp_seq=icmp_seq;
         this.kod=kod; //defaultni
+        this.prikaz=prikaz;
+        this.cas=cas;
     }
 
 

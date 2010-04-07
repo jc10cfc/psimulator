@@ -16,6 +16,7 @@ import pocitac.LinuxPocitac;
  * Tady bude ping, kterej bude volanej jak ve tride LinuxPing, tak i CiscoPing.
  * @author haldyr
  */
+@Deprecated
 public class Ping extends AbstraktniPrikaz {
 
     // je tady proto, ze tento 'abstraktni prikaz' nemuze tusit

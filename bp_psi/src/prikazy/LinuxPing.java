@@ -7,19 +7,22 @@ package prikazy;
 
 import datoveStruktury.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pocitac.*;
 
 /**
  *
  * @author neiss
  */
-public class LinuxPing extends AbstraktniPrikaz{
+public class LinuxPing extends AbstraktniPing{
     
     IpAdresa cil; //adresa, na kterou ping posilam
 
     public LinuxPing(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
+        vykonejPrikaz();
     }
 
     /**
@@ -39,9 +42,30 @@ public class LinuxPing extends AbstraktniPrikaz{
 
     @Override
     protected void vykonejPrikaz() {
-        //nejdriv je potreba zjistit, jakym rozhranim se bude paket posilat, abych vedel, jakou IP adresu
-            //zdroje mam do toho paketu dat
-        pc.posliPing(cil, 8, 0);
+        if(pc.posliPing(cil, 8, 0, 0, 0, this)){
+            for (int i=1;i<9;i++){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                }
+                pc.posliPing(cil, 8, 0, 0, i, this);
+            }
+        }
+        
+    }
+
+    /**
+     * Slouzi ke zpracovani prichoziho paketu (icmp reply, paket nemohl byt dorucen)
+     */
+    public void zpracujPaket(Paket p){
+        if(p.typ==0){
+            kon.posliRadek("64 bytes from "+p.zdroj.vypisAdresu()+": icmp_seq="+
+                    p.icmp_seq+" ttl="+p.ttl+" time="+((double)Math.round(p.cas*1000))/1000+" ms");
+        }else if(p.typ==3){
+
+        }else if(p.typ==11){
+
+        }
     }
 
 }

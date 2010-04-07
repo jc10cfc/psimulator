@@ -8,6 +8,7 @@ import datoveStruktury.*;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.ArrayList;
 import java.util.List;
+import prikazy.AbstraktniPing;
 
 /**
  * Virtualni pocitac, predek Linuxu a Cisca
@@ -19,6 +20,8 @@ public abstract class AbstractPocitac {
     public List<SitoveRozhrani> rozhrani; //kvuli vypisum to musi bejt verejny
     public String jmeno; //jmeno pocitace
     public RoutovaciTabulka routovaciTabulka;
+
+    private boolean ladeni=true;
 
     @Deprecated
     public AbstractPocitac(String jmeno) {
@@ -113,10 +116,14 @@ public abstract class AbstractPocitac {
      * Slouzi k odeslani novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
      * @param cil
      * @param typ
+     * @param kod
+     * @param cas
+     * @param icmp_seq
+     * @param prikaz
      * @return false - ping se nepodarilo odeslat <br />
      *          true - ping byl odeslan
      */
-    public boolean posliPing(IpAdresa cil, int typ, int kod){
+    public boolean posliPing(IpAdresa cil, int typ, int kod, double cas, int icmp_seq, AbstraktniPing prikaz){
         IpAdresa zdroj; //IP, ktera bude jako adresa zdroje v paketu
         SitoveRozhrani rozhr; //rozhrani, kterym budu paket posilat
         //hledani rozhrani, pres ktery se to bude posilat:
@@ -128,34 +135,42 @@ public abstract class AbstractPocitac {
             return false;
         }
         zdroj=rozhr.ip;
-        Paket paket = new Paket(zdroj, cil, typ, kod, 64, 0);
+        Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, 64, prikaz);
+        if(ladeni)vypis("posilam novej paket");
+        rozhr.pripojenoK.getPc().prijmiPing(paket);
         return true;
     }
 
     /**
-     * Slouzi k preposilani paketu.
+     * Slouzi k preposilani paketu. Neni-li paket kam dorucit, posle se zpatky zprava, ze nelze dorucit.
      * @param paket
      */
     public void posliPing(Paket paket) {
         SitoveRozhrani rozhr = routovaciTabulka.najdiSpravnyRozhrani(paket.cil);
         if (rozhr != null) { //rozhrani nalezeno
+            if(ladeni)vypis("preposilam paket");
             rozhr.pripojenoK.getPc().prijmiPing(paket);
         } else {//rozhrani nenalezeno - paket neni kam poslat
-            posliPing(paket.zdroj, 3, 0); //net unreachable
+            posliPing(paket.zdroj, 3, 0,paket.cas, paket.icmp_seq, paket.prikaz); //net unreachable
         }
     }
 
+    /**
+     * Prijima ping. Je-li urcen pro mne, udela patricnou akci (odesle odpoved nebo vypise vypis). Neni-li
+     * urcen pro me, posle paket dal.
+     * @param paket
+     */
     public void prijmiPing(Paket paket) {
+        if(ladeni)vypis("prijal jsem paket");
+        paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);
         if (rozhr != null) { //paket je u me v cili
             if(paket.typ==8){ //icmp request
-                posliPing(paket.zdroj, 0, 0); //zpatke se posila icmp reply
-            }else  if(paket.typ==0){ //icmp reply
-
-            }else if (paket.typ==3){ // paket nelze dorucit
-
+                posliPing(paket.zdroj, 0, 0, paket.cas, paket.icmp_seq,paket.prikaz); //zpatky se
+                                                                                    //posila icmp reply
+            }else  if(paket.typ==0){ //paket je urcen pro me
+                paket.prikaz.zpracujPaket(paket);
             }
-            
         } else { // paket se musi poslat dal
             posliPing(paket);
         }
