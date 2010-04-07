@@ -87,10 +87,8 @@ public class WrapperRoutovaciTabulkyCisco {
 
     /**
      * Tato metoda bude aktualizovat RoutovaciTabulku dle tohoto wrapperu.
-    ip route 147.32.125.100 255.255.255.128 1.1.1.1
-    ip route 1.1.0.0 255.255.0.0 FastEthernet0/1
      */
-    public void update() { // TODO: zde chyba??
+    public void update() {
         // smazu RT
         routovaciTabulka.smazVsechnyZaznamy();
 

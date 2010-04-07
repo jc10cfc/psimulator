@@ -506,13 +506,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (slova.size() < 1) {
             return; // jen mezera
         }
-//        kon.posliRadek("Doplnovani: '"+radek+"'");
+
 
         String prvniSlovo = slova.get(0);
 
         if (configure1) {
             if (kontrola("terminal", prvniSlovo) || prvniSlovo.equals("")) {
-//            if (slova.get(0).equals("terminal") || slova.get(0).equals("")) {
                 configure();
                 return;
             } else {
@@ -672,10 +671,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
                 default:
                     kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
-
             }
-
-
         }
     }
 
@@ -733,7 +729,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
 //        kon.posliRadek("!\n");
 
-//        kon.posliRadek("ip http server\n"+ "!\n"+ "!\n"+ "control-plane\n"+ "!\n"+ "!\n"+ "line con 0\n"+ "line aux 0\n"+"line vty 0 4\n"+ " login\n"+ "!\n"+ "end\n");
+//TODO://        kon.posliRadek("ip http server\n"+ "!\n"+ "!\n"+ "control-plane\n"+ "!\n"+ "!\n"+ "line con 0\n"+ "line aux 0\n"+"line vty 0 4\n"+ " login\n"+ "!\n"+ "end\n");
     }
 
     /**
@@ -775,7 +771,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             aktualni.ip = ip;
 
         } catch (SpatnaMaskaException e) {
-            // TODO: Predelat, aby se to dalo resit globalne
             String[] pole = slova.get(3).split("\\.");
             String s = "";
             int i;
@@ -790,8 +785,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 }
             }
             kon.posliRadek("Bad mask 0x" + s.toUpperCase() + " for address " + slova.get(2));
+        } catch (SpatnaAdresaException e) {
+            invalidInputDetected();
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO: e.printStackTrace(); pak zrusit?
             invalidInputDetected();
         }
 
@@ -799,6 +796,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     }
 
+    /**
+     * Posle vypis pro prikaz 'show ip route'
+     */
     private void showiproute() {
         String s = "";
 
@@ -806,8 +806,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         s += poc.getWrapper().vypisRT();
 
         kon.posli(s);
-
-//        poc.getWrapper().neco();
     }
 }
 
