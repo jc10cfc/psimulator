@@ -63,8 +63,8 @@
         </rozhrani>
         <rozhrani>
             <jmeno>FastEthernet0/2</jmeno>
-            <ip>192.168.2.25</ip>
-            <maska>255.255.255.0</maska>
+            <!--<ip>192.168.2.25</ip>-->
+            <!--<maska>255.255.255.0</maska>-->
             <mac>03:08:b7:30:24:e2</mac>
             <pripojenoK>cisco2:FastEthernet0/0</pripojenoK>
             <nahozene>false</nahozene>

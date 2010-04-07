@@ -1,11 +1,11 @@
 package datoveStruktury;
 
 import vyjimky.WrapperException;
-import com.sun.org.apache.bcel.internal.generic.GOTO;
 import datoveStruktury.RoutovaciTabulka.Zaznam;
 import java.util.ArrayList;
 import java.util.List;
 import pocitac.AbstractPocitac;
+import pocitac.CiscoPocitac;
 import pocitac.SitoveRozhrani;
 
 /**
@@ -18,9 +18,20 @@ import pocitac.SitoveRozhrani;
  */
 public class WrapperRoutovaciTabulkyCisco {
 
+    /**
+     * Jednotlive radky wrapperu.
+     */
     private List<CiscoZaznam> radky;
     AbstractPocitac pc;
+    /**
+     * Odkaz na routovaci tabulku, ktera je wrapperem ovladana.
+     */
     RoutovaciTabulka routovaciTabulka;
+    /**
+     * ochrana proti smyckam v routovaci tabulce.
+     * Kdyz to projede 50 rout, tak se hledani zastavi s tim, ze smula..
+     */
+    int citac = 0;
 
     public WrapperRoutovaciTabulkyCisco(AbstractPocitac pc) {
         radky = new ArrayList<CiscoZaznam>();
@@ -28,6 +39,10 @@ public class WrapperRoutovaciTabulkyCisco {
         this.routovaciTabulka = pc.routovaciTabulka;
     }
 
+    /**
+     * Vnitrni trida pro reprezentaci CiscoZaznamu ve wrapperu.
+     * Adresat neni null, ale bud rozhrani nebo brana je vzdy null.
+     */
     public class CiscoZaznam {
 
         // ip route 192.168.2.0 255.255.255.192 192.168.2.126
@@ -73,12 +88,15 @@ public class WrapperRoutovaciTabulkyCisco {
 
     /**
      * Tato metoda bude aktualizovat RoutovaciTabulku dle tohoto wrapperu.
-        ip route 147.32.125.100 255.255.255.128 1.1.1.1
-        ip route 1.1.0.0 255.255.0.0 FastEthernet0/1
+    ip route 147.32.125.100 255.255.255.128 1.1.1.1
+    ip route 1.1.0.0 255.255.0.0 FastEthernet0/1
      */
     public void update() { // TODO: zde chyba??
         // smazu RT
         routovaciTabulka.smazVsechnyZaznamy();
+
+        // nastavuju citac
+        citac = 0;
 
         // pridam routy na nahozene rozhrani
         for (SitoveRozhrani iface : pc.rozhrani) {
@@ -104,17 +122,17 @@ public class WrapperRoutovaciTabulkyCisco {
             }
         }
 
-        
+
     }
 
-    public void neco(){
+    public void neco() {
         System.out.println("PPPPPPPPPPPPPPPPPPPPPp");
         IpAdresa ip = new IpAdresa("1.1.1.1");
         SitoveRozhrani sr = najdiRozhraniProBranu(ip);
         if (sr == null) {
             System.out.println("sr je null");
         } else {
-            System.out.println("sr je "+sr.jmeno);
+            System.out.println("sr je " + sr.jmeno);
         }
     }
 
@@ -144,6 +162,9 @@ public class WrapperRoutovaciTabulkyCisco {
     SitoveRozhrani najdiRozhraniProBranu(IpAdresa brana) {
         SitoveRozhrani iface = null;
         boolean hledat = true;
+
+        citac++;
+        if (citac >= 50) return null; // ochrana proti smyckam
 
         for (CiscoZaznam zaznam : radky) {
             if (hledat == false) {
@@ -223,26 +244,31 @@ public class WrapperRoutovaciTabulkyCisco {
             return 1;
         }
 
+        // maze se zde pres specialni seznam, inac to hazi concurrent neco vyjimku..
+        List<CiscoZaznam> smazat = new ArrayList();
+
         for (CiscoZaznam z : radky) {
 
             if (!z.adresat.equals(adresa)) {
-                i++;
                 continue;
             }
 
             if (brana == null && rozhrani == null) {
-                radky.remove(i);
+                smazat.add(radky.get(i));
 
             } else if (brana != null && rozhrani == null) {
                 if (z.brana.equals(brana)) {
-                    radky.remove(i);
+                    smazat.add(radky.get(i));
                 }
             } else if (brana == null && rozhrani != null) {
                 if (z.rozhrani.jmeno.equals(rozhrani.jmeno)) {
-                    i++;
+                    smazat.add(radky.get(i));
                 }
             }
-            i++;
+        }
+
+        for (CiscoZaznam zaznam : smazat) {
+            radky.remove(zaznam);
         }
 
         update();
@@ -335,8 +361,18 @@ public class WrapperRoutovaciTabulkyCisco {
         boolean connected;
 
         s += "Codes: C - connected, S - static\n\n";
-        s += "Gateway of last resort is not set\n";
-        s += "Gateway of last resort is 0.0.0.0 to network 0.0.0.0\n\n";
+        boolean defaultGW = false;
+        for (int i = 0; i < ((CiscoPocitac)pc).getWrapper().size(); i++) {
+            if (((CiscoPocitac)pc).getWrapper().vratZaznam(i).adresat.equals(new IpAdresa("0.0.0.0", 0))) {
+                defaultGW = true;
+            }
+        }
+        if (defaultGW) {
+            s += "Gateway of last resort is 0.0.0.0 to network 0.0.0.0\n\n";
+        } else {
+            s += "Gateway of last resort is not set\n\n";
+        }
+
 
         String n = "\n\n";
 
@@ -345,14 +381,22 @@ public class WrapperRoutovaciTabulkyCisco {
 
             connected = false;
             for (SitoveRozhrani iface : pc.rozhrani) {
-                if (zaznam.getAdresat().jeNadsiti(iface.ip)) {
-                    connected = true;
+                if (iface.ip != null && iface.jeNahozene()) {
+                    if (zaznam.getAdresat().jeVRozsahu(iface.ip)) {
+                        connected = true;
+//                        System.out.println("Zaznam "+zaznam.getAdresat().vypisAdresuSMaskou() + " je pripojen k rozhrani "+iface.jmeno + " s "+iface.ip.vypisAdresuSMaskou());
+                    }
                 }
             }
             if (connected) { //C       21.21.21.0 is directly connected, FastEthernet0/0
-                s += "C       " + zaznam.getAdresat().vypisAdresu() + " is directly connected, " + zaznam.getRozhrani().jmeno + "\n";
+                s += "C       " + zaznam.getAdresat().vypisCisloSite() + " is directly connected, " + zaznam.getRozhrani().jmeno + "\n";
             } else { //S       18.18.18.0 [1/0] via 51.51.51.9
-                s += "S       " + zaznam.getAdresat().vypisAdresu();
+                if (zaznam.getAdresat().equals(new IpAdresa("0.0.0.0", 0))) {
+                    s += "S*      ";
+                } else {
+                    s += "S       ";
+                }
+                s +=  zaznam.getAdresat().vypisAdresu();
                 if (zaznam.getBrana() != null) {
 //                System.out.println("tadyyyy: "+zaznam.getAdresat().vypisAdresu() + " " + zaznam.getAdresat().vypisMasku());
                     s += " [1/0] via " + zaznam.getBrana().vypisAdresu() + "\n";
@@ -360,15 +404,7 @@ public class WrapperRoutovaciTabulkyCisco {
                     s += " is directly connected, " + zaznam.getRozhrani().jmeno + "\n";
                 }
             }
-
-//            n += zaznam.getAdresat().vypisAdresu() + " " + zaznam.getAdresat().vypisMasku() + " ";
-//            if (zaznam.getBrana() != null) {
-//                n += zaznam.getBrana().vypisAdresu();
-//            }
-//            n += "\n";
         }
-
-//        s += n;
         return s;
     }
 }

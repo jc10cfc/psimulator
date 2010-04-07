@@ -22,6 +22,9 @@ kontrola IP
 routovat _pouze_ na nahozenych rozhranich
 pri nacitani Cisco stroje z konfiguraku se pri route na GW vubec nekouka na rozhrani!!! (jen adresat + brana)
 
+musi projit na Linuxu:
+route add 255.2.2.2 eth1
+
 
 hotovo:
 prikaz end a logout; nova metoda jeBroadcastemSite() + dej32BitAdresu() u IpAdresy; wrapper pro praci s routovaci tabulkou pod ciscem (zatim moc neotestovany);

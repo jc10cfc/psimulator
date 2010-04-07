@@ -5,7 +5,6 @@
 
 package datoveStruktury;
 
-import javax.print.attribute.standard.MediaSize.NA;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
