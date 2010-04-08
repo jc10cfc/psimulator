@@ -69,7 +69,7 @@ public class Paket {
 
     @Override
     public String toString(){
-        return "z: "+zdroj.vypisAdresu()+"; c: "+cil.vypisAdresu()+"; typ: "+typ+"; ttl: "+ttl;
+        return "Paket: z: "+zdroj.vypisAdresu()+"; c: "+cil.vypisAdresu()+"; typ: "+typ+"; ttl: "+ttl;
     }
 
 

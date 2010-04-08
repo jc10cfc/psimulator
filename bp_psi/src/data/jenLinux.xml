@@ -65,7 +65,7 @@
                     <adresat>0.0.0.0</adresat>
                     <maskaAdresata>0.0.0.0</maskaAdresata>
                     <brana>192.168.2.2</brana>
-                    <rozhraniKam>eth0</rozhraniKam>
+                    <rozhraniKam>eth1</rozhraniKam>
                 </zaznam>
             </routy>
         </pocitac>

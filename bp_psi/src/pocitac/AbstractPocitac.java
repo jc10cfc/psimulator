@@ -113,7 +113,43 @@ public abstract class AbstractPocitac {
     }
 
     /**
+     * Posila paket vedlejsimu pocitaci, pricemz si kontroluje, jestli ho ethernetove muze poslat, tzn.,
+     * jestli je na druhy strane skutecne ta adresa, na kterou to chci poslat.
+     * @param p paket, kterej posilam
+     * @param rozhr rozhrani toho sousedniho pocitace, na kterej to posilam
+     * @param sousedni IP adresa rozhrani na sousednim pocitaci, na kterej to posilam
+     */
+    private void posliEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa sousedni) {
+        if (rozhr != null) { //cizi rozhrani by teoreticky mohlo bejt null
+            if(rozhr.ip.jeStejnaAdresa(sousedni)){ //adresa souhlasi - muzu to poslat
+                rozhr.getPc().prijmiPaket(p);
+            }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
+                //posliNovejPaket(p.zdroj, 3, 1, p.cas, p.icmp_seq, p.prikaz); //net unreachable
+                posliNovejPaketOdpoved(p,rozhr.pripojenoK.ip, 3, 1); //host unreachable
+                            // -> svoji adresu musim dost krkolome zjistovat, ale je to asi nejjednodussi
+                            //    a nemusim se bat, ze tam nekde bude null
+            }
+
+
+        }
+    }
+
+    /**
+     * Slouzi k odeslani odpovedi na icmp request. V odpovednim paketu
+     * se pouzije jako zdrojova adresa cilova adresa puvodniho paketu.
+     * @param puvodni puvodni paket, na kterej se odpovida
+     */
+    private void posliNovejPaketOdpoved(Paket puvodni,IpAdresa spec_zdroj, int typ, int kod){
+        if(spec_zdroj!=null){
+            posliNovejPaket(spec_zdroj, puvodni.zdroj, typ, kod, puvodni.cas, puvodni.icmp_seq,puvodni.prikaz);
+        }else{
+            posliNovejPaket(puvodni.cil, puvodni.zdroj, typ, kod, puvodni.cas, puvodni.icmp_seq,puvodni.prikaz);
+        }
+    }
+
+    /**
      * Slouzi k odeslani novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
+     * Pouziva metodu dolejc, s tim, ze nespecifikuje specialni zdroj.
      * @param cil
      * @param typ
      * @param kod
@@ -123,32 +159,56 @@ public abstract class AbstractPocitac {
      * @return false - ping se nepodarilo odeslat <br />
      *          true - ping byl odeslan
      */
-    public boolean posliNovejPaket(IpAdresa cil, int typ, int kod, double cas, int icmp_seq, AbstraktniPing prikaz) {
+    public boolean posliNovejPaket(IpAdresa cil,int typ,int kod,double cas,int icmp_seq,AbstraktniPing prikaz) {
+        return posliNovejPaket(null, cil, typ, kod, cas, icmp_seq, prikaz);
+    }
+
+    /**
+     * Slouzi k odeslani novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
+     * Kdyz chci odeslat paket s natvrdo zadanym zdrojem, zadam ho do spec_zdroj, jinak tam dam null (pouziva
+     * se pro icmp reply.
+     * @param spec_zdroj IP adresa zdroje, kdyz ji chci natvrdo zadat
+     * @param cil
+     * @param typ
+     * @param kod
+     * @param cas
+     * @param icmp_seq
+     * @param prikaz
+     * @return false - ping se nepodarilo odeslat <br />
+     *          true - ping byl odeslan
+     */
+    private boolean posliNovejPaket(IpAdresa spec_zdroj, IpAdresa cil, int typ, int kod,
+            double cas, int icmp_seq, AbstraktniPing prikaz) {
         IpAdresa zdroj; //IP, ktera bude jako adresa zdroje v paketu
         SitoveRozhrani mojeRozhr; //rozhrani, pres ktery budu paket posilat
         SitoveRozhrani ciziRozhr=null; //rozhrani, na ktery budu paket posilat
-        //hledani rozhrani, pres ktery se to bude posilat:
+        IpAdresa sousedni=cil;//defaultne (kdyz si to posilam sobe, nebo kdyz to posilam na routu na rozhrani (U))
+
+       //hledani rozhrani, pres ktery se to bude posilat:
         mojeRozhr = najdiMeziRozhranima(cil);//nejdriv se hleda cil mezi mejma adresama
-        if (mojeRozhr == null) { //kdyz adresa neni moje, zkousim hladat v routovaci tabulce
-            mojeRozhr = routovaciTabulka.najdiSpravnyRozhrani(cil);
-            if (mojeRozhr != null) { //nejaky se naslo
-                ciziRozhr = mojeRozhr.pripojenoK; //pridava se to, ktery se mo pouzitreturn true;
-                if (ciziRozhr == null) {
-                    return true;
-                }
-            }
-        } else {
+        if (mojeRozhr != null) { //cilova adresa se nasla mezi adresama na mejch rozhranich -> posilam sam sobe
             ciziRozhr = mojeRozhr;
+        } else { //kdyz adresa neni moje, zkousim hladat v routovaci tabulce
+            RoutovaciTabulka.Zaznam z = routovaciTabulka.najdiSpravnejZaznam(cil);
+            if (z != null) { //nejaky zaznam se nasel
+                mojeRozhr = z.getRozhrani(); //nesmi existovat zaznam bez rozhrani
+                ciziRozhr = mojeRozhr.pripojenoK;
+                if (z.getBrana() != null) { //kdyz je zaznam na branu, sousedni adresa musi bejt adresa brany
+                    sousedni = z.getBrana();
+                } //... jinak je sousedni adresa rovnou cilova adresa toho paketu
+            }
         }
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
             return false;
         }
         zdroj = mojeRozhr.ip;
-        Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, 64, prikaz);
-        if (ladeni) {
-            vypis("posilam novej paket: " + paket.toString());
+        if(spec_zdroj!=null){ //kdyz je specifikovano, s jakym zdrojem se ma paket poslat, tak se tak posle
+            zdroj=spec_zdroj;
         }
-        ciziRozhr.getPc().prijmiPaket(paket);
+        Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, 64, prikaz);
+        if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
+                    +sousedni.vypisAdresu()+" "+paket.toString());
+        posliEthernetove(paket, ciziRozhr, sousedni);
         return true;
     }
 
@@ -156,15 +216,22 @@ public abstract class AbstractPocitac {
      * Slouzi k preposilani paketu. Neni-li paket kam dorucit, posle se zpatky zprava, ze nelze dorucit.
      * @param paket
      */
-    public void preposliPaket(Paket paket) {
+    private void preposliPaket(Paket paket) {
+        IpAdresa sousedni = paket.cil; //adresa nejblizsiho pocitace, kam se ma paket poslat, nefaultne cil,
+                                        //kdyztak se to zmeni na branu z routovaci tabulky
         paket.ttl -=1;
         if (paket.ttl==0){
             return;
         }
-        SitoveRozhrani rozhr = routovaciTabulka.najdiSpravnyRozhrani(paket.cil);
-        if (rozhr != null) { //rozhrani nalezeno
-            if(ladeni)vypis("preposilam paket na rozhrani "+rozhr.jmeno+"paket: "+paket.toString());
-            rozhr.pripojenoK.getPc().prijmiPaket(paket);
+        RoutovaciTabulka.Zaznam z = routovaciTabulka.najdiSpravnejZaznam(paket.cil);
+        if (z != null) { //zaznam nalezen
+            SitoveRozhrani rozhr = z.getRozhrani();
+            if(z.getBrana()!=null){
+                sousedni=z.getBrana(); //sousedni uzel je brana z routovaci tabulky
+            }
+            if(ladeni)vypis("preposilam paket na rozhrani "+rozhr.jmeno+" na sousedni adresu "
+                    +sousedni.vypisAdresu()+" "+paket.toString());
+            posliEthernetove(paket, rozhr.pripojenoK, sousedni);
         } else {//rozhrani nenalezeno - paket neni kam poslat
             posliNovejPaket(paket.zdroj, 3, 0,paket.cas, paket.icmp_seq, paket.prikaz); //net unreachable
         }
@@ -181,8 +248,7 @@ public abstract class AbstractPocitac {
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);
         if (rozhr != null) { //paket je u me v cili
             if(paket.typ==8){ //icmp request
-                posliNovejPaket(paket.zdroj, 0, 0, paket.cas, paket.icmp_seq,paket.prikaz); //zpatky se
-                                                                                    //posila icmp reply
+                posliNovejPaketOdpoved(paket,null, 0, 0); //zpatky se posila icmp reply
             }else { //paket je urcen pro me
                 paket.prikaz.zpracujPaket(paket);
             }

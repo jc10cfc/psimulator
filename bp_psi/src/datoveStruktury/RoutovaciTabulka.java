@@ -79,14 +79,28 @@ public class RoutovaciTabulka {
     }
 
     /**
-     * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese. Slouzi predevsim pro
-     * samotne routovani.
+     * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese a vrati jeho rozhrani.
+     * Slouzi predevsim pro samotne routovani.
      * @param cil IP, na kterou je paket posilan
      * @return null - nenasel se zadnej zaznam, kterej by se pro tuhle adresu hodil
      */
     public SitoveRozhrani najdiSpravnyRozhrani(IpAdresa cil){
         for( Zaznam z:radky){
             if(cil.jeVRozsahu(z.adresat)) return z.rozhrani; //vraci prvni odpovidajici rozhrani
+        }
+        return null;
+    }
+
+    /**
+     * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese a cely ho vrati.
+     * Slouzi predevsim pro samotne routovani, kdyz potrebuju znat cely zaznam, a ne jen rozhrani (napr.
+     * na jakou branu to mam poslat, jestli se to odesle.
+     * @param cil IP, na kterou je paket posilan
+     * @return null - nenasel se zadnej zaznam, kterej by se pro tuhle adresu hodil
+     */
+    public Zaznam najdiSpravnejZaznam(IpAdresa cil){
+        for( Zaznam z:radky){
+            if(cil.jeVRozsahu(z.adresat)) return z; //vraci prvni odpovidajici rozhrani
         }
         return null;
     }

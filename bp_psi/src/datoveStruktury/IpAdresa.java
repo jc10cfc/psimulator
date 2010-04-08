@@ -122,7 +122,7 @@ public class IpAdresa {
      * spada do rozsahu moji site.
      */
     public boolean jeNadsiti(IpAdresa jina){
-        int pomocny = jina.adresa & cisloSite();
+        int pomocny = jina.adresa & maska;
         if (pomocny == cisloSite()) return true;
         else return false;
     }
@@ -133,7 +133,7 @@ public class IpAdresa {
      * ackoliv nemaji stejny cislo site.
      */
     public boolean jeVRozsahu(IpAdresa jina){
-        int pomocny = adresa & jina.cisloSite();
+        int pomocny = adresa & jina.maska;
         if (pomocny == jina.cisloSite()) return true;
         else return false;
     }

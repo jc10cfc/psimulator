@@ -59,17 +59,21 @@ public class LinuxPing extends AbstraktniPing{
     /**
      * Slouzi ke zpracovani prichoziho paketu (icmp reply, paket nemohl byt dorucen)
      */
-    public void zpracujPaket(Paket p){
-        if(p.typ==0){
-            kon.posliRadek("64 bytes from "+p.zdroj.vypisAdresu()+": icmp_seq="+
-                    p.icmp_seq+" ttl="+p.ttl+" time="+((double)Math.round(p.cas*1000))/1000+" ms");
-        }else if(p.typ==3){
-            if(p.kod==0){
-                kon.posliRadek("From "+p.zdroj.vypisAdresu()+": icmp_seq="+
-                    p.icmp_seq+" Destination Net Unreachable");
+    @Override
+    public void zpracujPaket(Paket p) {
+        if (p.typ == 0) {
+            kon.posliRadek("64 bytes from " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
+                    p.icmp_seq + " ttl=" + p.ttl + " time=" + ((double) Math.round(p.cas * 1000)) / 1000 + " ms");
+        } else if (p.typ == 3) {
+            if (p.kod == 0) {
+                kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
+                        p.icmp_seq + " Destination Net Unreachable");
+            } else if (p.kod == 1) {
+                kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
+                        p.icmp_seq + " Destination Host Unreachable");
             }
-        }else if(p.typ==11){
-            kon.posliRadek("From "+p.zdroj.vypisAdresu()+" icmp_seq="+p.icmp_seq +"Time to live exceeded");
+        } else if (p.typ == 11) {
+            kon.posliRadek("From " + p.zdroj.vypisAdresu() + " icmp_seq=" + p.icmp_seq + "Time to live exceeded");
         }
     }
 
