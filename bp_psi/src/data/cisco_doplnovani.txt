@@ -1,0 +1,10 @@
+enable
+configure terminal
+interface fastEthernet
+ip address
+ip route
+no shutdown
+exit
+shutdown
+show ip route
+show running-config

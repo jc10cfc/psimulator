@@ -47,7 +47,7 @@
     <pocitac jmeno="cisco1" typ="cisco">
         <rozhrani>
             <jmeno>FastEthernet0/0</jmeno>
-            <ip>192.168.1.120</ip>
+            <ip>1.1.1.128</ip>
             <maska>255.255.255.0</maska>
             <mac>00:0b:0c:0d:0a:01</mac>
             <pripojenoK>linux1:eth1</pripojenoK>
@@ -73,12 +73,17 @@
             <zaznam>
                 <adresat>147.32.125.0</adresat>
                 <maskaAdresata>255.255.255.0</maskaAdresata>
-                <brana>1.1.1.1</brana>
+                <brana>1.1.1.15</brana>
             </zaznam>
             <zaznam>
                 <adresat>1.1.0.0</adresat>
                 <maskaAdresata>255.255.0.0</maskaAdresata>
                 <rozhraniKam>FastEthernet0/1</rozhraniKam>
+            </zaznam>
+            <zaznam>
+                <adresat>1.1.1.0</adresat>
+                <maskaAdresata>255.255.255.0</maskaAdresata>
+                <rozhraniKam>FastEthernet0/0</rozhraniKam>
             </zaznam>
             <zaznam>
                 <adresat>21.21.21.0</adresat>

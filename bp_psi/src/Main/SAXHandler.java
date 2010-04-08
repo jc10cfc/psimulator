@@ -400,8 +400,8 @@ public class SAXHandler implements ContentHandler {
                 }
                 if (pocitac instanceof LinuxPocitac) {
                     if (iface == null) {
-                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno +
-                        ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
+                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno
+                                + ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
                         continue;
                     }
                 }
@@ -410,6 +410,11 @@ public class SAXHandler implements ContentHandler {
                     if (!adresat.jeCislemSite()) {
                         throw new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresuSMaskou() + " neni cislem site!");
                     }
+                }
+
+                if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
+                    System.err.println("IpAdresa " + adresat.vypisAdresuSMaskou() + " je ze zakazaneho rozsahu 224.* - 255.*, preskakuji..");
+                    continue;
                 }
 
                 if (mujzaznam[dejIndexVZaznamu("brana")].equals("")
@@ -430,6 +435,10 @@ public class SAXHandler implements ContentHandler {
                     IpAdresa brana = new IpAdresa(mujzaznam[dejIndexVZaznamu("brana")]);
 
                     if (pocitac instanceof CiscoPocitac) {
+                        if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
+                            System.err.println("IpAdresa " + brana.vypisAdresuSMaskou() + " je ze zakazaneho rozsahu 224.* - 255.*, preskakuji..");
+                            continue;
+                        }
                         ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, brana);
                     } else {
                         pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana, iface);

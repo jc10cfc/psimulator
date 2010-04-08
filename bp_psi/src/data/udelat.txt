@@ -36,6 +36,10 @@ Do xml přidat jméno počítače, počáteční port a druh počítače.
 
 
 
+pokud poustime terminal pro cisco timto prikazem, tak mame funknci i doplnovani
+rlwrap -pcyan -w-3 -b'(){}[],+=&^%0@;|\' -f /home/haldyr/NetBeansProjects/bp_psi/src/data/cisco_doplnovani.txt telnet localhost
+
+
 http://bppsi.beanstalkapp.com/bp_projekt
 http://bppsi.svn.beanstalkapp.com/bp_projekt/
 ucet read-only

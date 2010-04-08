@@ -22,6 +22,17 @@ IV. kontrola IP
     %Inconsistent address and mask
 
 
+Cisco kontrola IP adres:
+    ip address IP MASKA
+    IP - nesmi byt cislo site, broadcast ani zakazana IP
+    MASKA - musi mit byt maskou
+
+    ip route IP MASKA BRANA
+    IP - musi odpovidat masce, nesmi byt zakazana IP
+    BRANA - nesmi byt zakazana IP
+
+
+
 
 Cisco routovaci tabulka
 pridani:

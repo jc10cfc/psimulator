@@ -8,6 +8,9 @@ import pocitac.AbstractPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.SitoveRozhrani;
 
+//TODO: zkontrolovat 2 routy na ruzny prefixy 192.168.1.0/24 a 192.168.1.0/25
+//TODO: chyba pri extra routach, ktere maji stejnyho adresata jako IP na nejakem rozhrani
+
 /**
  * Trida reprezentujici wrapper nad routovaci tabulkou pro system cisco.
  * Tez bude sefovat zmenu v RT dle vlastnich rozhrani.
@@ -82,6 +85,33 @@ public class WrapperRoutovaciTabulkyCisco {
                 s += brana.vypisAdresu();
             }
             return s;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj.getClass()!=CiscoZaznam.class) return false;
+
+            if (adresat.equals(((CiscoZaznam)obj).adresat)) {
+                if (brana != null && ((CiscoZaznam)obj).brana != null) {
+                    if (brana.equals(((CiscoZaznam)obj).brana)) {
+                        return true;
+                    }
+                } else {
+                    if (rozhrani.jmeno.equals(((CiscoZaznam)obj).rozhrani.jmeno)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 37 * hash + (this.adresat != null ? this.adresat.hashCode() : 0);
+            hash = 37 * hash + (this.brana != null ? this.brana.hashCode() : 0);
+            hash = 37 * hash + (this.rozhrani != null ? this.rozhrani.hashCode() : 0);
+            return hash;
         }
     }
 
@@ -198,8 +228,14 @@ public class WrapperRoutovaciTabulkyCisco {
      */
     private void pridejZaznam(CiscoZaznam zaznam) {
 
-        if (!zaznam.getAdresat().jeCislemSite()) {
+        if (!zaznam.getAdresat().jeCislemSite()) { // vyjimka prevazne pro nacitani z konfiguraku
             throw new WrapperException("Adresa " + zaznam.getAdresat().vypisAdresu() + " neni cislem site!");
+        }
+
+        for (CiscoZaznam z : radky) { // zaznamy ulozene v tabulce se uz znovu nepridavaji
+            if (zaznam.equals(z)) {
+                return;
+            }
         }
 
         radky.add(dejIndexPozice(zaznam), zaznam);
@@ -309,7 +345,7 @@ public class WrapperRoutovaciTabulkyCisco {
     public String vypisRunningConfig() {
         String s = "";
         for (CiscoZaznam z : radky) {
-            s += z + "\n";
+            s += "ip route " + z + "\n";
         }
         return s;
     }
