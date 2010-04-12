@@ -8,10 +8,7 @@ import pocitac.AbstractPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.SitoveRozhrani;
 
-//TODO: zkontrolovat 2 routy na ruzny prefixy 192.168.1.0/24 a 192.168.1.0/25
-//TODO: chyba pri extra routach, ktere maji stejnyho adresata jako IP na nejakem rozhrani
-
-/**
+/** 
  * Trida reprezentujici wrapper nad routovaci tabulkou pro system cisco.
  * Tez bude sefovat zmenu v RT dle vlastnich rozhrani.
  * Cisco samo o sobe ma tez 2 tabulky: <br />
@@ -53,6 +50,7 @@ public class WrapperRoutovaciTabulkyCisco {
         private IpAdresa adresat; // s maskou
         private IpAdresa brana;
         private SitoveRozhrani rozhrani;
+        private boolean connected = false;
 
         private CiscoZaznam(IpAdresa adresat, IpAdresa brana) {
             this.adresat = adresat;
@@ -61,6 +59,18 @@ public class WrapperRoutovaciTabulkyCisco {
 
         private CiscoZaznam(IpAdresa adresat, SitoveRozhrani rozhrani) {
             this.adresat = adresat;
+            this.rozhrani = rozhrani;
+        }
+
+        /**
+         * Pouze pro ucely vypisu RT!!!
+         * @param adresat
+         * @param brana
+         * @param rozhrani
+         */
+        private CiscoZaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhrani) {
+            this.adresat = adresat;
+            this.brana = brana;
             this.rozhrani = rozhrani;
         }
 
@@ -76,6 +86,14 @@ public class WrapperRoutovaciTabulkyCisco {
             return rozhrani;
         }
 
+        private void setConnected() {
+            this.connected = true;
+        }
+
+        public boolean isConnected() {
+            return connected;
+        }
+
         @Override
         public String toString() {
             String s = adresat.vypisAdresu() + " " + adresat.vypisMasku() + " ";
@@ -89,15 +107,17 @@ public class WrapperRoutovaciTabulkyCisco {
 
         @Override
         public boolean equals(Object obj) {
-            if(obj.getClass()!=CiscoZaznam.class) return false;
+            if (obj.getClass() != CiscoZaznam.class) {
+                return false;
+            }
 
-            if (adresat.equals(((CiscoZaznam)obj).adresat)) {
-                if (brana != null && ((CiscoZaznam)obj).brana != null) {
-                    if (brana.equals(((CiscoZaznam)obj).brana)) {
+            if (adresat.equals(((CiscoZaznam) obj).adresat)) {
+                if (brana != null && ((CiscoZaznam) obj).brana != null) {
+                    if (brana.equals(((CiscoZaznam) obj).brana)) {
                         return true;
                     }
                 } else {
-                    if (rozhrani.jmeno.equals(((CiscoZaznam)obj).rozhrani.jmeno)) {
+                    if (rozhrani.jmeno.equalsIgnoreCase(((CiscoZaznam) obj).rozhrani.jmeno)) {
                         return true;
                     }
                 }
@@ -114,7 +134,7 @@ public class WrapperRoutovaciTabulkyCisco {
             return hash;
         }
     }
-
+    
     /**
      * Tato metoda bude aktualizovat RoutovaciTabulku dle tohoto wrapperu.
      */
@@ -125,15 +145,15 @@ public class WrapperRoutovaciTabulkyCisco {
         // nastavuju citac
         citac = 0;
 
-        // pridam routy na nahozene rozhrani
+        // pridam routy na nahozena rozhrani
         for (SitoveRozhrani iface : pc.rozhrani) {
             if (iface.jeNahozene()) {
-                routovaciTabulka.pridejZaznam(iface.ip, iface);
+                routovaciTabulka.pridejZaznam(iface.ip, iface, true);
             }
         }
 
         // propocitam a pridam routy s prirazenyma rozhranima
-        for (CiscoZaznam zaznam : radky) { // prochazim radky a jdu propocitavat
+        for (CiscoZaznam zaznam : radky) {
             if (zaznam.rozhrani != null) { // kdyz to je na rozhrani
                 routovaciTabulka.pridejZaznam(zaznam.adresat, zaznam.rozhrani);
             } else { // kdyz to je na branu
@@ -163,7 +183,6 @@ public class WrapperRoutovaciTabulkyCisco {
      *
      * pozor na: ip route 1.1.1.0 255.255.255.0 1.1.1.22
      */
-// TODO: vypis routovaci tabulky
     // pocitam, ze v RT jsou uz routy pro vlastni rozhrani
     /**
      * Vrati rozhrani, na ktere se ma odesilat, kdyz je zaznam na branu.
@@ -173,24 +192,22 @@ public class WrapperRoutovaciTabulkyCisco {
      */
     SitoveRozhrani najdiRozhraniProBranu(IpAdresa brana) {
         SitoveRozhrani iface = null;
-        boolean hledat = true;
 
         citac++;
         if (citac >= 50) {
             return null; // ochrana proti smyckam
         }
-        for (CiscoZaznam zaznam : radky) {
-            if (hledat == false) {
-                break;
-            }
+        for (int i = radky.size()-1; i >= 0; i--) { // prochazim opacne (tedy vybiram s nevyssim poctem jednicek)
 
-            // kdyz to je na rozhrani
+            // kdyz to je na rozsah vlastniho rozhrani
+            //mrknout se jestli to tady vadi!
             iface = routovaciTabulka.najdiSpravnyRozhrani(brana);
             if (iface != null) {
                 return iface;
             }
 
-            // 
+            // kdyz to je na branu
+            CiscoZaznam zaznam = radky.get(i);
             if (brana.jeVRozsahu(zaznam.adresat)) {
                 if (zaznam.rozhrani != null) { // 172.18.1.0 255.255.255.0 FastEthernet0/0
                     return zaznam.rozhrani;
@@ -241,6 +258,12 @@ public class WrapperRoutovaciTabulkyCisco {
         radky.add(dejIndexPozice(zaznam), zaznam);
 
         update();
+    }
+
+    private void pridejRTZaznam(RoutovaciTabulka.Zaznam zaznam) {
+        CiscoZaznam ciscozaznam = new CiscoZaznam(zaznam.getAdresat(), zaznam.getBrana(), zaznam.getRozhrani());
+        if (zaznam.jePrimoPripojene()) ciscozaznam.setConnected();
+        radky.add(dejIndexPozice(ciscozaznam), ciscozaznam);
     }
 
     // 1/ no ip route IP maska + a volitelne treti zaznam, kdyz je bez 3.zaznamu a tak se smaze vsechno co sedi dle 1. a 2.
@@ -312,13 +335,47 @@ public class WrapperRoutovaciTabulkyCisco {
      */
     private int dejIndexPozice(CiscoZaznam pridavany) {
         int i = 0;
-        for (CiscoZaznam cz : radky) { // at zije prasarnicka
-            if (pridavany.adresat.vypisAdresu().getBytes().length < cz.adresat.vypisAdresu().getBytes().length) {
+        for (CiscoZaznam cz : radky) {
+            if (jeMensiIP(pridavany.adresat, cz.adresat)) {
                 break;
             }
             i++;
         }
         return i;
+    }
+
+    /**
+     * Pomocna metoda na vypocet long hodnoty IpAdresy
+     * @param ip
+     * @return
+     */
+    private long dejLongIP(IpAdresa ip) {
+        long l = 0L;
+        String[] pole = ip.vypisAdresu().split("\\.");
+        l += Long.valueOf(pole[0]) * 256 * 256 * 256;
+        l += Long.valueOf(pole[1]) * 256 * 256;
+        l += Long.valueOf(pole[2]) * 256;
+        l += Long.valueOf(pole[3]);
+        return l;
+    }
+
+    /**
+     * Vrati true, pokud je prvni adresa mensi nez druha, pokud se rovnaji, tak rozhoduje maska.
+     * @param prvni
+     * @param druha
+     * @return
+     */
+    private boolean jeMensiIP(IpAdresa prvni, IpAdresa druha) {
+        
+        // kdyz maj stejny IP a ruzny masky
+        if (prvni.vypisAdresu().equals(druha.vypisAdresu())) {
+            if (prvni.pocetBituMasky() < druha.pocetBituMasky()) {
+                return true;
+            }
+        }
+
+        if (dejLongIP(prvni) < dejLongIP(druha)) return true;
+        return false;
     }
 
     /**
@@ -369,9 +426,9 @@ public class WrapperRoutovaciTabulkyCisco {
      * Vrati vypis routovaci tabulky.
      * @return
      */
+    // TODO: vypis routovaci tabulky
     public String vypisRT() {
         String s = "";
-        boolean connected;
 
         s += "Codes: C - connected, S - static\n\n";
         boolean defaultGW = false;
@@ -388,27 +445,42 @@ public class WrapperRoutovaciTabulkyCisco {
             s += "not set\n\n";
         }
 
+        
+        WrapperRoutovaciTabulkyCisco wrapper = new WrapperRoutovaciTabulkyCisco(pc);
         for (int i = 0; i < routovaciTabulka.pocetZaznamu(); i++) {
-            Zaznam zaznam = routovaciTabulka.vratZaznam(i);
+            wrapper.pridejRTZaznam(routovaciTabulka.vratZaznam(i));
+        }
 
-            connected = false;
-            for (SitoveRozhrani iface : pc.rozhrani) {
-                if (iface.ip != null && iface.jeNahozene()) {
-                    if (zaznam.getAdresat().jeVRozsahu(iface.ip)) {
-                        connected = true;
-//                        System.out.println("Zaznam "+zaznam.getAdresat().vypisAdresuSMaskou() + " je pripojen k rozhrani "+iface.jmeno + " s "+iface.ip.vypisAdresuSMaskou());
-                    }
-                }
-            }
-            if (connected) { //C       21.21.21.0 is directly connected, FastEthernet0/0
-                s += "C       " + zaznam.getAdresat().vypisCisloSite() + " is directly connected, " + zaznam.getRozhrani().jmeno + "\n";
+
+
+        pc.vypis("##################################");
+        pc.vypis("\n"+wrapper.vypisRunningConfig());
+
+        for (CiscoZaznam czaznam : wrapper.radky) {
+            
+        }
+
+        pc.vypis("----------------------------------");
+
+
+        for (int i = 0; i < routovaciTabulka.pocetZaznamu(); i++) {
+            s += vypisZaznamDoRT(routovaciTabulka.vratZaznam(i));
+        }
+        return s;
+    }
+
+    private String vypisZaznamDoRT(Zaznam zaznam) {
+        String s = "";
+
+        if (zaznam.jePrimoPripojene()) { //C       21.21.21.0 is directly connected, FastEthernet0/0
+                s += "C       " + zaznam.getAdresat().vypisCisloSite() + "/" + zaznam.getAdresat().pocetBituMasky() + " is directly connected, " + zaznam.getRozhrani().jmeno + "\n";
             } else { //S       18.18.18.0 [1/0] via 51.51.51.9
                 if (zaznam.getAdresat().equals(new IpAdresa("0.0.0.0", 0))) {
                     s += "S*      ";
                 } else {
                     s += "S       ";
                 }
-                s += zaznam.getAdresat().vypisAdresu();
+                s += zaznam.getAdresat().vypisAdresu() + "/" + zaznam.getAdresat().pocetBituMasky();
                 if (zaznam.getBrana() != null) {
 //                System.out.println("tadyyyy: "+zaznam.getAdresat().vypisAdresu() + " " + zaznam.getAdresat().vypisMasku());
                     s += " [1/0] via " + zaznam.getBrana().vypisAdresu();
@@ -417,7 +489,7 @@ public class WrapperRoutovaciTabulkyCisco {
                 }
                 s += "\n";
             }
-        }
+
         return s;
     }
 }

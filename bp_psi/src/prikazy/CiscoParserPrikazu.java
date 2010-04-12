@@ -52,6 +52,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     String chybovyVypis = "";
 
+    /**
+     * Specialni rezim. Dovoluje pouziti prikazu 'ip route' v ROOT rezimu.
+     */
+    boolean debug = true;
+
     private void ping() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
@@ -591,6 +596,17 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 if (kontrola("exit", prvniSlovo) || kontrola("logout", prvniSlovo)) {
                     kon.ukonciSpojeni();
                     return;
+                }
+
+                if (debug) {
+                    if (kontrola("ip", prvniSlovo)) {
+                        iproute();
+                        return;
+                    }
+                    if (kontrola("no", prvniSlovo)) {
+                        noiproute();
+                        return;
+                    }
                 }
                 break;
 

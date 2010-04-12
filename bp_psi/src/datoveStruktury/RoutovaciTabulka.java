@@ -26,6 +26,7 @@ public class RoutovaciTabulka {
         private IpAdresa adresat;   // ty promenny jsou privatni, nechci, aby se daly zvenci upravovat
         private IpAdresa brana;
         private SitoveRozhrani rozhrani;
+        boolean connected = false; // indikuju, zda tento zaznam je na primo pripojene rozhrani, spise pro cisco
 
         public IpAdresa getAdresat() {  //getry pro vypis
             return adresat;
@@ -37,14 +38,38 @@ public class RoutovaciTabulka {
             return rozhrani;
         }
 
+        public boolean jePrimoPripojene() {
+            return connected;
+        }
+
         private Zaznam(IpAdresa adresat, SitoveRozhrani rozhrani){
             this.adresat=adresat;
             this.rozhrani=rozhrani;
         }
+
+        /*
+         * Konstruktur pro cisco.
+         */
+        private Zaznam(IpAdresa adresat, SitoveRozhrani rozhrani, boolean pripojene){
+            this.adresat=adresat;
+            this.rozhrani=rozhrani;
+            this.connected = pripojene;
+        }
+
         private Zaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhrani){
             this.adresat=adresat;
             this.brana=brana;
             this.rozhrani=rozhrani;
+        }
+
+        /*
+         * Konstruktur pro cisco.
+         */
+        private Zaznam(IpAdresa adresat, IpAdresa brana, SitoveRozhrani rozhrani, boolean pripojene){
+            this.adresat=adresat;
+            this.brana=brana;
+            this.rozhrani=rozhrani;
+            this.connected = pripojene;
         }
 
         private String vypisSeLinuxove() {
@@ -81,6 +106,7 @@ public class RoutovaciTabulka {
     /**
      * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese a vrati jeho rozhrani.
      * Slouzi predevsim pro samotne routovani.
+     * Pozor: vrati prvni odpovidajici rozhrani!
      * @param cil IP, na kterou je paket posilan
      * @return null - nenasel se zadnej zaznam, kterej by se pro tuhle adresu hodil
      */
@@ -137,12 +163,21 @@ public class RoutovaciTabulka {
             return 2; // rozhrani nenalezeno, pro zadaneho adresata neexistuje zaznam U
         }
         Zaznam z = new Zaznam(adresat, brana, rozhr);
-        if (existujeStejnyZaznam(z)) {
-            return 1;
-        }
-        int i = najdiSpravnouPosici(z);
-        radky.add(i, z);
-        return 0;
+        return pridejZaznam(z);
+    }
+
+    /**
+     * Prida novy zaznam na vlastni rozhrani.
+     * Extra cisco metoda.
+     * @param adresat
+     * @param rozhr
+     * @param primo
+     * @return
+     * @author haldyr
+     */
+    public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr, boolean primo) {
+        Zaznam z=new Zaznam(adresat, rozhr, primo);
+        return pridejZaznam(z);
     }
 
     /**
@@ -154,10 +189,7 @@ public class RoutovaciTabulka {
      */
     public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr){
         Zaznam z=new Zaznam(adresat, rozhr);
-        if(existujeStejnyZaznam(z))return 1;
-        int i=najdiSpravnouPosici(z);
-        radky.add(i,z);
-        return 0;
+        return pridejZaznam(z);
     }
 
     public void smazVsechnyZaznamy() {
@@ -166,11 +198,12 @@ public class RoutovaciTabulka {
 
     /**
      * Tahleta metoda slouží k přidávání záznamů z konfiguráku. Neprováděj se žádný kontroly, prostě se to tam
-     * přidává v pořadí, v jakým to bylo uloženo. Adresat a rozhrani musej bejt vyplneny, brana jen u priznaku
+     * přidá. Adresat a rozhrani musej bejt vyplneny, brana jen u priznaku
      * UG, tzn. u routy na branu.
      * @param adresat
      * @param brana
      * @param rozhr
+     * @author haldyr
      */
     public void pridejZaznamBezKontrol(IpAdresa adresat,IpAdresa brana,SitoveRozhrani rozhr){
         if(!adresat.jeCislemSite()){
@@ -178,7 +211,8 @@ public class RoutovaciTabulka {
                     " v routovaci tabulce neni cislem site. " +
                     "mozna pak by to asi chtelo specialni vyjimku");
         }
-        radky.add(new Zaznam(adresat,brana,rozhr)); //pridava se to nakonec, neresi se to
+        Zaznam z = new Zaznam(adresat,brana,rozhr);
+        radky.add(najdiSpravnouPosici(z), z);
     }
 
     /**
@@ -323,6 +357,18 @@ public class RoutovaciTabulka {
         return -1;
     }
 
+    /**
+     * Prida zaznam na spravnou pozici.
+     * @param z
+     * @return
+     * @author haldyr
+     */
+    private int pridejZaznam(Zaznam z) {
+        if(existujeStejnyZaznam(z))return 1;
+        int i=najdiSpravnouPosici(z);
+        radky.add(i,z);
+        return 0;
+    }
     
 
 }
