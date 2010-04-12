@@ -51,7 +51,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Chyba, ktera se vypise pri '% Ambiguous command: '
      */
     String chybovyVypis = "";
-
     /**
      * Specialni rezim. Dovoluje pouziti prikazu 'ip route' v ROOT rezimu.
      */
@@ -330,7 +329,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             adresat = new IpAdresa(slova.get(3), slova.get(4));
         } catch (Exception e) {
             invalidInputDetected();
-            e.printStackTrace();
+//            e.printStackTrace();
             return;
         }
 
@@ -666,29 +665,31 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 }
         }
 
-        if (slova.get(0).equals("ifconfig")) { // pak smazat
-            prikaz = new LinuxIfconfig(pc, kon, slova);
-        } else if (slova.get(0).equals("route")) {
-            prikaz = new LinuxRoute(pc, kon, slova);
-        } else {
-
-            if (nepokracovat) {
-                kon.posli(chybovyVypis);
-                nepokracovat = false;
-                chybovyVypis = "";
-                return;
-            }
-
-            switch (stav) {
-                case CONFIG:
-                case IFACE:
-                    invalidInputDetected();
-                    break;
-
-                default:
-                    kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
+        if (debug) {
+            if (slova.get(0).equals("ifconfig")) { // pak smazat
+                prikaz = new LinuxIfconfig(pc, kon, slova);
+            } else if (slova.get(0).equals("route")) {
+                prikaz = new LinuxRoute(pc, kon, slova);
             }
         }
+
+        if (nepokracovat) {
+            kon.posli(chybovyVypis);
+            nepokracovat = false;
+            chybovyVypis = "";
+            return;
+        }
+
+        switch (stav) {
+            case CONFIG:
+            case IFACE:
+                invalidInputDetected();
+                break;
+
+            default:
+                kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
+        }
+
     }
 
     /**

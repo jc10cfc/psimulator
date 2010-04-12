@@ -1,6 +1,6 @@
 enable
 configure terminal
-interface fastEthernet
+interface FastEthernet
 ip address
 ip route
 no shutdown

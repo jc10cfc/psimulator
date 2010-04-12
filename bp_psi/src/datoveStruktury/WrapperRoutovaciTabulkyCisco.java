@@ -262,7 +262,7 @@ public class WrapperRoutovaciTabulkyCisco {
      * @return 0 = ok, 1 = nic se nesmazalo
      */
     public int smazZaznam(IpAdresa adresa, IpAdresa brana, SitoveRozhrani rozhrani) {
-        int i = 0;
+        int i = -1;
 
         if (adresa == null) {
             return 1;
@@ -275,6 +275,7 @@ public class WrapperRoutovaciTabulkyCisco {
         List<CiscoZaznam> smazat = new ArrayList();
 
         for (CiscoZaznam z : radky) {
+            i++;
 
             if (!z.adresat.equals(adresa)) {
                 continue;
