@@ -108,6 +108,22 @@ public class IpAdresa {
     }
 
     /**
+     * Vrati long hodnotu z adresy. Vhodne pro porovnavani adres.
+     * @param ip
+     * @return
+     * @author haldyr
+     */
+    public long dejLongIP() {
+        long l = 0L;
+        String[] pole = vypisAdresu().split("\\.");
+        l += Long.valueOf(pole[0]) * 256 * 256 * 256;
+        l += Long.valueOf(pole[1]) * 256 * 256;
+        l += Long.valueOf(pole[2]) * 256;
+        l += Long.valueOf(pole[3]);
+        return l;
+    }
+
+    /**
      * Vraci true, kdyz maji stejny cislo site a masku. Pozor, pro 147.32.125.128/25 a 147.32.125.128/24 vrati false!
      */
     public boolean jeStejnyCisloSite(IpAdresa jina) {
@@ -169,6 +185,17 @@ public class IpAdresa {
         if (this.adresa == jina.adresa) {
             return true;
         }
+        return false;
+    }
+
+    /**
+     * Vrati true, kdyz IP patri do A tridy.
+     * @return
+     * @author haldyr
+     */
+    public boolean jeAckovehoRozsahu() {
+        int[] pole = prevedNaPole(adresa);
+        if (pole[0] < 128) return true;
         return false;
     }
 
