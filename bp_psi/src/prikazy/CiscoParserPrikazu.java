@@ -2,10 +2,6 @@ package prikazy;
 
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +15,6 @@ import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
-import static prikazy.AbstraktniPrikaz.*;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -740,7 +735,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             SitoveRozhrani sr = (SitoveRozhrani) o;
 
 
-            s += "interface " + sr.jmeno;
+            s += "interface " + sr.jmeno + "\n";
             if (sr.ip != null) {
                 s += " ip address " + sr.ip.vypisAdresu() + " " + sr.ip.vypisMasku() + "\n";
             }
@@ -759,7 +754,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 "line aux 0\n"+"line vty 0 4\n"+ " login\n"+ "!\n"+ "end\n\n";
 
         }
-        posliPoRadcich(s, 10);
+        kon.posliPoRadcich(s, 10);
     }
 
     /**
@@ -835,22 +830,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         CiscoPocitac poc = (CiscoPocitac) pc;
         s += poc.getWrapper().vypisRT();
         
-        posliPoRadcich(s, 80);
-    }
-
-    private void posliPoRadcich(String s, int cekej) {
-        BufferedReader in = new BufferedReader(new StringReader(s));
-        String lajna = "";
-        try {
-            while ((lajna = in.readLine()) != null) {
-                cekej(cekej);
-                kon.posliRadek(lajna);
-            }
-        } catch (IOException e) {
-            //
-        }
-
-
+        kon.posliPoRadcich(s, 80);
     }
 }
 

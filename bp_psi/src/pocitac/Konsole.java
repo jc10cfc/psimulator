@@ -10,10 +10,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.Socket;
 import prikazy.CiscoParserPrikazu;
 import prikazy.LinuxParserPrikazu;
 import vyjimky.NeznamyTypPcException;
+import static prikazy.AbstraktniPrikaz.*;
 
 /**
  *
@@ -122,6 +124,25 @@ public class Konsole extends Thread {
     }
 
     /**
+     * Posila po radcich se zpozdenim. Vyuziva metodu posliRadek().
+     * @param s, retezec, ktery ma posilat
+     * @param cekej, prodleva v ms mezi jednotlivejma radkama
+     * @author haldyr
+     */
+    public void posliPoRadcich(String s, int cekej) {
+        BufferedReader input = new BufferedReader(new StringReader(s));
+        String lajna = "";
+        try {
+            while ((lajna = input.readLine()) != null) {
+                cekej(cekej);
+                posliRadek(lajna);
+            }
+        } catch (IOException e) {
+            //
+        }
+    }
+
+    /**
      * Vypise prompt na prikazou radku.
      * @throws IOException
      */
@@ -179,6 +200,7 @@ public class Konsole extends Thread {
         ukoncit=true;
     }
 
+    @Deprecated
     private void posliBajtyTelnetu() {
         byte[] pole = {
             /*84*/   (byte) 0xff, (byte) 0xfd, (byte) 0x18, (byte) 0xff, (byte) 0xfd, (byte) 0x20, (byte) 0xff, (byte) 0xfd, (byte) 0x23, (byte) 0xff, (byte) 0xfd, (byte) 0x27,

@@ -16,59 +16,130 @@ import pocitac.Konsole;
  */
 public class CiscoPing extends AbstraktniPing {
 
+    /**
+     * Adresa, na kterou posilame ping.
+     */
     IpAdresa cil;
+    /**
+     * Pocet posilanych icmp_req.
+     */
+    int pocet = 5;
+//    /**
+//     * Pocet doslych icmp_reply.
+//     */
+//    int pocetOK = 0;
+    /**
+     * Timeout v ms
+     */
+    int timeout = 1000; // default je 2000
 
     public CiscoPing(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
-        boolean popkracuj = zpracujRadek();
-        if (popkracuj) {
+        boolean pokracovat = zpracujRadek();
+        if (pokracovat) {
             vykonejPrikaz();
         }
+    }
+
+    /**
+     * Tato metoda simuluje zkracovani prikazu tak, jak cini cisco.
+     * @param command prikaz, na ktery se zjistuje, zda lze na nej doplnit.
+     * @param cmd prikaz, ktery zadal uzivatel
+     * @return Vrati true, pokud retezec cmd je jedinym moznym prikazem, na ktery ho lze doplnit.
+     */
+    private boolean kontrola(String command, String cmd) {
+
+        if (cmd.length() >= 1 && command.startsWith(cmd)) { // lze doplnit na jeden jedinecny prikaz
+            return true;
+        }
+        return false;
     }
 
     private boolean zpracujRadek() {
         if (slova.size() < 2) {
             return false;
         }
+        String ip = dalsiSlovo();
         try {
-            cil = new IpAdresa(slova.get(1));
+            cil = new IpAdresa(ip);
         } catch (Exception e) {
-            kon.posliRadek("Translating \"" + slova.get(1) + "\"" + "...domain server (255.255.255.255)");
-            cekej(1000);
+            kon.posliRadek("Translating \"" + ip + "\"" + "...domain server (255.255.255.255)");
+            cekej(500);
             kon.posliRadek("% Unrecognized host or address, or protocol not running.");
             return false;
+        }
+
+        String typVolby = dalsiSlovo();
+        if (typVolby.equals("")) {
+            return true;
+        }
+        if (!kontrola("timeout", typVolby) && !kontrola("repeat", typVolby)) {
+            kon.posliRadek("% Invalid input detected.");
+            return false;
+        }
+
+        String volba = dalsiSlovo();
+
+        if (volba.equals("")) {
+            kon.posliRadek("% Incomplete command.");
+            return false;
+        }
+
+
+        if (kontrola("timeout", typVolby)) {
+            try {
+                timeout = Integer.valueOf(volba) * 1000;
+            } catch (NumberFormatException e) {
+                kon.posliRadek("% Invalid input detected.");
+                return false;
+            }
+        }
+
+        if (kontrola("repeat", typVolby)) {
+            try {
+                pocet = Integer.valueOf(volba);
+            } catch (NumberFormatException e) {
+                kon.posliRadek("% Invalid input detected.");
+                return false;
+            }
         }
         return true;
     }
 
-    
-
     @Override
     protected void vykonejPrikaz() {
-        if (pc.posliIcmpRequest(cil, 0, 64, this)) {
-            for (int i = 1; i < 1; i++) {
-                cekej(1000);
-                pc.posliIcmpRequest(cil, i, 64, this);
+        String s = "";
+        s += "\nType escape sequence to abort.\n"
+                + "Sending " + pocet + ", 100-byte ICMP Echos to " + cil.vypisAdresu() + ", timeout is "+ timeout/1000 +" seconds:";
+
+        kon.posliPoRadcich(s, 20);
+        for (int i = 0; i < pocet; i++) {
+            boolean doslo = pc.posliIcmpRequest(cil, i, 255, this);
+            odeslane++;
+
+            if (!doslo) {
+                cekej(timeout);
+                kon.posli(".");
             }
         }
+
+        aktualizujStatistiky();
+        s = "\nSuccess rate is " + ztrata + " percent (" + prijate + "/" + odeslane + ")";
+        if (prijate > 0) {
+            s += ", round-trip min/avg/max = "+Math.round(min)+"/"+Math.round(avg)+"/"+Math.round(max)+" ms";
+        }
+        kon.posliPoRadcich(s, 10);
     }
 
     @Override
-    //TODO: dodelat ping pro cisco
     public void zpracujPaket(Paket p) {
         if (p.typ == 0) {
-            kon.posliRadek("64 bytes from " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
-                    p.icmp_seq + " ttl=" + p.ttl + " time=" + ((double) Math.round(p.cas * 1000)) / 1000 + " ms");
-        } else if (p.typ == 3) {
-            if (p.kod == 0) {
-                kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
-                        p.icmp_seq + " Destination Net Unreachable");
-            } else if (p.kod == 1) {
-                kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
-                        p.icmp_seq + " Destination Host Unreachable");
-            }
-        } else if (p.typ == 11) {
-            kon.posliRadek("From " + p.zdroj.vypisAdresu() + " icmp_seq=" + p.icmp_seq + "Time to live exceeded");
+//            pocetOK++;
+            odezvy.add(p.cas);
+            kon.posli("!");
+        } else {
+            cekej(timeout);
+            kon.posli(".");
         }
     }
 }

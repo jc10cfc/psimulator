@@ -186,6 +186,16 @@ public abstract class AbstractPocitac {
         return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
+    /**
+     * Slouzi k poslání novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
+     * Sama nic neposila, pouziva metodu odesliNovejPaket, s tim, ze nespecifikuje specialni zdroj.
+     * @param cil
+     * @param icmp_seq
+     * @param ttl
+     * @param prikaz
+     * @return true - naslo se vhodny rozhrani, ping byl odeslan <br />
+     *         false - ping se nepodarilo odeslat, nenaslo se vhodny rozhrani 
+     */
     public boolean posliIcmpRequest(IpAdresa cil, int icmp_seq, int ttl, AbstraktniPing prikaz){
         int typ=8; //icmp request
         int kod=0;
