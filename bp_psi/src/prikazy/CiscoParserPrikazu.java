@@ -52,7 +52,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     String chybovyVypis = "";
     /**
-     * Specialni rezim. Dovoluje pouziti prikazu 'ip route' v ROOT rezimu.
+     * Specialni rezim. Dovoluje pouziti prikazu 'ip route' v ROOT rezimu + dalsi vypisy.
      */
     boolean debug = true;
 
@@ -76,11 +76,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         // ktere je potreba k jejich bezpecne identifikaci. Cisla byla ziskana z praveho cisca.
         String[] jedna = {"terminal", "inside", "outside", "source", "static", "pool", "netmask", "permit"};
         // + ip, exit
-        String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless", "access-list", "ping"};
+        String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless", "access-list", "ping", "logout"};
         // + ip, exit
         String[] tri = {"running-config", "name-server", "nat"};
         // + exit
-        String[] ctyri = {"configure", "disable", "logout"};
+        String[] ctyri = {"configure", "disable"};
         //String[] pet = {"route"};
 
         List<String[]> seznam = new ArrayList<String[]>();
