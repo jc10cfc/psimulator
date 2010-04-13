@@ -95,4 +95,15 @@ public abstract class AbstraktniPrikaz {
         }
         return ret;
     }
+
+    /**
+     * Ceka x milisekund.
+     * @param miliseconds
+     */
+    public static void cekej(int miliseconds) {
+        try {
+            Thread.sleep(miliseconds);
+        } catch (InterruptedException ex) {
+        }
+    }
 }

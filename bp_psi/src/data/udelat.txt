@@ -26,10 +26,6 @@ musi projit na Linuxu:
 route add 255.2.2.2 eth1
 
 
-hotovo:
-prikaz end a logout; nova metoda jeBroadcastemSite() + dej32BitAdresu() u IpAdresy; wrapper pro praci s routovaci tabulkou pod ciscem (zatim moc neotestovany);
-prikaz 'show ip route';
-
 Udělat třídy pro linux a cisco.
 Do SAXu udělat vytváření objektů AbstractPocitac a SitoveRozhrani
 Do xml přidat jméno počítače, počáteční port a druh počítače.

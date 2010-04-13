@@ -2,6 +2,10 @@ package prikazy;
 
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
+import static prikazy.AbstraktniPrikaz.*;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -56,8 +61,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     boolean debug = true;
 
+    AbstraktniPrikaz prikaz;
+
     private void ping() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        prikaz = new CiscoPing(pc, kon, slova);
     }
 
     /**
@@ -498,8 +505,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     @Override
     public void zpracujRadek(String s) {
-
-        AbstraktniPrikaz prikaz;
+        
         radek = s;
         slova.clear();
         nepokracovat = false;
@@ -697,7 +703,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Aneb vypis rozhrani v uplne silenem formatu.
      */
     private void runningconfig() {
-        kon.posliRadek("Building configuration...\n"
+        String s = "";
+
+        s += "Building configuration...\n"
                 + "\n"
                 + "Current configuration : 827 bytes\n"
                 + "!\n"
@@ -727,26 +735,31 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 + "no ip dhcp use vrf connected\n"
                 + "!\n"
                 + "!\n"
-                + "!");
+                + "!\n";
         for (Object o : pc.rozhrani) {
             SitoveRozhrani sr = (SitoveRozhrani) o;
 
 
-            kon.posliRadek("interface " + sr.jmeno);
+            s += "interface " + sr.jmeno;
             if (sr.ip != null) {
-                kon.posliRadek(" ip address " + sr.ip.vypisAdresu() + " " + sr.ip.vypisMasku());
+                s += " ip address " + sr.ip.vypisAdresu() + " " + sr.ip.vypisMasku() + "\n";
             }
             if (sr.jeNahozene() == false) {
-                kon.posliRadek(" shutdown");
+                s += " shutdown" + "\n";
             }
-            kon.posliRadek(" duplex auto\n speed auto\n!");
+            s += " duplex auto\n speed auto\n!\n";
         }
 
-        kon.posliRadek(((CiscoPocitac) pc).getWrapper().vypisRunningConfig());
+        s += ((CiscoPocitac) pc).getWrapper().vypisRunningConfig();
+        
+        if (debug) {
+        s += "!\n\n";
+        s += "ip http server\n"+ "!\n"+ "!\n"+ "control-plane\n"+
+                "!\n"+ "!\n"+ "line con 0\n"+
+                "line aux 0\n"+"line vty 0 4\n"+ " login\n"+ "!\n"+ "end\n\n";
 
-//        kon.posliRadek("!\n");
-
-//TODO://        kon.posliRadek("ip http server\n"+ "!\n"+ "!\n"+ "control-plane\n"+ "!\n"+ "!\n"+ "line con 0\n"+ "line aux 0\n"+"line vty 0 4\n"+ " login\n"+ "!\n"+ "end\n");
+        }
+        posliPoRadcich(s, 10);
     }
 
     /**
@@ -821,8 +834,23 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         CiscoPocitac poc = (CiscoPocitac) pc;
         s += poc.getWrapper().vypisRT();
+        
+        posliPoRadcich(s, 80);
+    }
 
-        kon.posli(s);
+    private void posliPoRadcich(String s, int cekej) {
+        BufferedReader in = new BufferedReader(new StringReader(s));
+        String lajna = "";
+        try {
+            while ((lajna = in.readLine()) != null) {
+                cekej(cekej);
+                kon.posliRadek(lajna);
+            }
+        } catch (IOException e) {
+            //
+        }
+
+
     }
 }
 

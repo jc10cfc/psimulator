@@ -397,15 +397,24 @@ public class WrapperRoutovaciTabulkyCisco {
 
         s += "Codes: C - connected, S - static\n\n";
         boolean defaultGW = false;
+        String brana = null;
         for (int i = 0; i < ((CiscoPocitac) pc).getWrapper().size(); i++) {
             if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).adresat.equals(new IpAdresa("0.0.0.0", 0))) {
+                if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).brana != null) {
+                    brana = ((CiscoPocitac) pc).getWrapper().vratZaznam(i).brana.vypisAdresu();
+                }
                 defaultGW = true;
             }
         }
 
         s += "Gateway of last resort is ";
         if (defaultGW) {
-            s += "0.0.0.0 to network 0.0.0.0\n\n";
+            if (brana != null) {
+                s += brana;
+            } else {
+                s += "0.0.0.0";
+            }
+            s += " to network 0.0.0.0\n\n";
         } else {
             s += "not set\n\n";
         }

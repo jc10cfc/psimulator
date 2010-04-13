@@ -186,9 +186,10 @@ public abstract class AbstractPocitac {
         return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
-    public boolean posliIcmpRequest(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
+    public boolean posliIcmpRequest(IpAdresa cil, int icmp_seq, int ttl, AbstraktniPing prikaz){
         int typ=8; //icmp request
         int kod=0;
+        double cas = 0;
         return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
