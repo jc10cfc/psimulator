@@ -17,6 +17,7 @@ public abstract class AbstraktniPrikaz {
     protected AbstractPocitac pc;
     protected Konsole kon;
     protected List<String> slova;
+    private int uk=1; //ukazatel do seznamu slov, prvni slovo je nazev prikazu
 
     public AbstraktniPrikaz(AbstractPocitac pc, Konsole kon, List<String> slova) {
         this.pc = pc;
@@ -29,6 +30,23 @@ public abstract class AbstraktniPrikaz {
      * Tato metoda vykona vlastni prikaz.
      */
     protected abstract void vykonejPrikaz();
+
+
+    /**
+     * Tahle metoda postupne vraci slova, podle vnitrni promenny uk. Pocita s tim, ze prazdny
+     * retezec ji nemuze prijit.
+     * @return prazdny retezec, kdyz je na konci seznamu
+     */
+    protected String dalsiSlovo(){
+        String vratit;
+        if( uk < slova.size() ){
+            vratit = slova.get(uk);
+            uk++;
+        }else{
+            vratit="";
+        }
+        return vratit;
+    }
 
 //*****************************************************************************************************************
 //staticky metody:

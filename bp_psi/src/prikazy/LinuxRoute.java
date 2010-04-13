@@ -10,7 +10,6 @@ package prikazy;
 import datoveStruktury.IpAdresa;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.List;
-import javax.xml.bind.annotation.XmlElement.DEFAULT;
 import pocitac.AbstractPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
@@ -392,21 +391,6 @@ public class LinuxRoute extends AbstraktniPrikaz{
         nastavovanaMaska=true;
     }
 
-    /**
-     * Tahle metoda postupne vraci slova, podle vnitrni promenny uk. POcita s tim, ze prazdny
-     * retezec ji nemuze prijit.
-     * @return prazdny retezec, kdyz je na konci seznamu
-     */
-    private String dalsiSlovo(){
-        String vratit;
-        if( uk < slova.size() ){
-            vratit = slova.get(uk);
-            uk++;
-        }else{
-            vratit="";
-        }
-        return vratit;
-    }
 
 //*********************************************************************************************************
 //dalsi funkce:

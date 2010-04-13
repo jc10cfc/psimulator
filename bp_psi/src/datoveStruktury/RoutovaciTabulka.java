@@ -167,20 +167,6 @@ public class RoutovaciTabulka {
     }
 
     /**
-     * Prida novy zaznam na vlastni rozhrani.
-     * Extra cisco metoda.
-     * @param adresat
-     * @param rozhr
-     * @param primo
-     * @return
-     * @author haldyr
-     */
-    public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr, boolean primo) {
-        Zaznam z=new Zaznam(adresat, rozhr, primo);
-        return pridejZaznam(z);
-    }
-
-    /**
      * Prida novej zaznam priznaku U.
      * Spolecna metoda pro linux i cisco.
      * @param adresat ocekava IpAdresu, ktera je cislem site
@@ -294,8 +280,38 @@ public class RoutovaciTabulka {
     public Zaznam vratZaznam(int posice){
         return radky.get(posice);
     }
+
+
+    /**
+     * Prida novy zaznam na vlastni rozhrani.
+     * Extra cisco metoda.
+     * @param adresat
+     * @param rozhr
+     * @param primo
+     * @return
+     * @author haldyr
+     */
+    public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr, boolean primo) {
+        Zaznam z=new Zaznam(adresat, rozhr, primo);
+        return pridejZaznam(z);
+    }
+
 //****************************************************************************************************
 //privatni metody
+    
+    /**
+     * Prida zaznam na spravnou pozici. Jen vytazeny radky z puvodnich metod na pridani zaznamu U nebo UG
+     * @param z
+     * @return
+     * @author haldyr
+     */
+    private int pridejZaznam(Zaznam z) {
+        if(existujeStejnyZaznam(z))return 1;
+        int i=najdiSpravnouPosici(z);
+        radky.add(i,z);
+        return 0;
+    }
+
     /**
      * Kontroluje, jestli tabulka uz pridavany radek neobsahuje. Zaznam musi obsahovat adresata a rozhrani 
      * (to je predem zjisteno), brana se kontroluje, jen kdyz neni null.
@@ -357,18 +373,6 @@ public class RoutovaciTabulka {
         return -1;
     }
 
-    /**
-     * Prida zaznam na spravnou pozici.
-     * @param z
-     * @return
-     * @author haldyr
-     */
-    private int pridejZaznam(Zaznam z) {
-        if(existujeStejnyZaznam(z))return 1;
-        int i=najdiSpravnouPosici(z);
-        radky.add(i,z);
-        return 0;
-    }
     
 
 }

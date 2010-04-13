@@ -141,15 +141,15 @@ public abstract class AbstractPocitac {
      */
     private void posliNovejPaketOdpoved(Paket puvodni,IpAdresa spec_zdroj, int typ, int kod){
         if(spec_zdroj!=null){
-            posliNovejPaket(spec_zdroj, puvodni.zdroj, typ, kod, puvodni.cas, puvodni.icmp_seq,puvodni.prikaz);
+            posliNovejPaket(spec_zdroj, puvodni.zdroj, typ,kod,puvodni.cas,puvodni.icmp_seq,64,puvodni.prikaz);
         }else{
-            posliNovejPaket(puvodni.cil, puvodni.zdroj, typ, kod, puvodni.cas, puvodni.icmp_seq,puvodni.prikaz);
+            posliNovejPaket(puvodni.cil, puvodni.zdroj, typ,kod,puvodni.cas,puvodni.icmp_seq,64,puvodni.prikaz);
         }
     }
 
     /**
      * Slouzi k odeslani novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
-     * Pouziva metodu dolejc, s tim, ze nespecifikuje specialni zdroj.
+     * Sama nic neposila, pouziva metodu dolejc, s tim, ze nespecifikuje specialni zdroj.
      * @param cil
      * @param typ
      * @param kod
@@ -159,12 +159,13 @@ public abstract class AbstractPocitac {
      * @return false - ping se nepodarilo odeslat <br />
      *          true - ping byl odeslan
      */
-    public boolean posliNovejPaket(IpAdresa cil,int typ,int kod,double cas,int icmp_seq,AbstraktniPing prikaz) {
-        return posliNovejPaket(null, cil, typ, kod, cas, icmp_seq, prikaz);
+    public boolean posliNovejPaket(IpAdresa cil,int typ,int kod,double cas,int icmp_seq,
+            int ttl, AbstraktniPing prikaz) {
+        return posliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
     /**
-     * Slouzi k odeslani novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
+     * Slouzi k odeslani paketu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
      * Kdyz chci odeslat paket s natvrdo zadanym zdrojem, zadam ho do spec_zdroj, jinak tam dam null (pouziva
      * se pro icmp reply.
      * @param spec_zdroj IP adresa zdroje, kdyz ji chci natvrdo zadat
@@ -178,7 +179,7 @@ public abstract class AbstractPocitac {
      *          true - ping byl odeslan
      */
     private boolean posliNovejPaket(IpAdresa spec_zdroj, IpAdresa cil, int typ, int kod,
-            double cas, int icmp_seq, AbstraktniPing prikaz) {
+            double cas, int icmp_seq, int ttl, AbstraktniPing prikaz) {
         IpAdresa zdroj; //IP, ktera bude jako adresa zdroje v paketu
         SitoveRozhrani mojeRozhr; //rozhrani, pres ktery budu paket posilat
         SitoveRozhrani ciziRozhr=null; //rozhrani, na ktery budu paket posilat
@@ -205,7 +206,7 @@ public abstract class AbstractPocitac {
         if(spec_zdroj!=null){ //kdyz je specifikovano, s jakym zdrojem se ma paket poslat, tak se tak posle
             zdroj=spec_zdroj;
         }
-        Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, 64, prikaz);
+        Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
         if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
                     +sousedni.vypisAdresu()+" "+paket.toString());
         posliEthernetove(paket, ciziRozhr, sousedni);
@@ -233,7 +234,7 @@ public abstract class AbstractPocitac {
                     +sousedni.vypisAdresu()+" "+paket.toString());
             posliEthernetove(paket, rozhr.pripojenoK, sousedni);
         } else {//rozhrani nenalezeno - paket neni kam poslat
-            posliNovejPaket(paket.zdroj, 3, 0,paket.cas, paket.icmp_seq, paket.prikaz); //net unreachable
+            posliNovejPaket(paket.zdroj, 3, 0,paket.cas, paket.icmp_seq, 64, paket.prikaz); //net unreachable
         }
     }
 
