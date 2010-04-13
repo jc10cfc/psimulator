@@ -16,12 +16,18 @@ import pocitac.*;
  */
 public abstract class AbstraktniPing extends AbstraktniPrikaz{
 
+    /**
+     * pocet odeslanych paketu
+     */
+    protected int odeslane=0;
+    /**
+     * pocet prijatych paketu
+     */
+    protected int prijate=0;
+
     public AbstraktniPing(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
     }
-
-    @Override
-    protected abstract void vykonejPrikaz();
 
     public abstract void zpracujPaket(Paket p);
 

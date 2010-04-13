@@ -102,7 +102,22 @@ public abstract class AbstractPocitac {
 //****************************************************************************************************
 //tady zacinaj metody pro posilani pingu:
 
-    //tahle metoda hleda, jestli mezi myma rozhranima neni nejaky se zadanou adresou
+/**
+ * Všeobecný poznámky k posílání paketů:
+ * Ethernetová (linková) vrstva:
+ * - všechny pakety se posílaj metodou odesliEthernetove().
+ * Síťová (IP) vrstva:
+ * - všechny nový pakety se posílaj metodou odesliNovejPaket(...)
+ *   všechny pakety k přeposílání se přeposílaj metodou preposliPaket(...)
+ * - metody začínající slovem posli sloužej k odesílání novejch paketů na vyšší úrovni, nespecifikujou se třeba
+ *   všechny parametry; všechny ale interne používaj metodu odesliNovejPaket(...)
+ */
+    int default_ttl=64; //defaultni ttl
+    /**
+     * Tahle metoda hleda, jestli mezi myma rozhranima neni nejaky se zadanou adresou
+     * @param cil
+     * @return
+     */
     private SitoveRozhrani najdiMeziRozhranima(IpAdresa cil) {
         for (SitoveRozhrani rozhr : rozhrani) {
             if (rozhr.ip.jeStejnaAdresa(cil)) {
@@ -114,17 +129,18 @@ public abstract class AbstractPocitac {
 
     /**
      * Posila paket vedlejsimu pocitaci, pricemz si kontroluje, jestli ho ethernetove muze poslat, tzn.,
-     * jestli je na druhy strane skutecne ta adresa, na kterou to chci poslat.
+     * jestli je na druhy strane skutecne ta adresa, na kterou to chci poslat. Když rozhraní, na který to
+     * posílám neexistuje, metoda nic neudělá.
      * @param p paket, kterej posilam
      * @param rozhr rozhrani toho sousedniho pocitace, na kterej to posilam
      * @param sousedni IP adresa rozhrani na sousednim pocitaci, na kterej to posilam
      */
-    private void posliEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa sousedni) {
+    private void odesliEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa sousedni) {
         if (rozhr != null) { //cizi rozhrani by teoreticky mohlo bejt null
             if(rozhr.ip.jeStejnaAdresa(sousedni)){ //adresa souhlasi - muzu to poslat
                 rozhr.getPc().prijmiPaket(p);
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                //posliNovejPaket(p.zdroj, 3, 1, p.cas, p.icmp_seq, p.prikaz); //net unreachable
+                //odesliNovejPaket(p.zdroj, 3, 1, p.cas, p.icmp_seq, p.prikaz); //net unreachable
                 posliNovejPaketOdpoved(p,rozhr.pripojenoK.ip, 3, 1); //host unreachable
                             // -> svoji adresu musim dost krkolome zjistovat, ale je to asi nejjednodussi
                             //    a nemusim se bat, ze tam nekde bude null
@@ -135,21 +151,26 @@ public abstract class AbstractPocitac {
     }
 
     /**
-     * Slouzi k odeslani odpovedi na icmp request. V odpovednim paketu
+     * Slouzi k odeslani odpovedi - odesila icmp reply nebo host unreachable. V odpovednim paketu
      * se pouzije jako zdrojova adresa cilova adresa puvodniho paketu.
      * @param puvodni puvodni paket, na kterej se odpovida
+     * @param spec_zdroj kdyz chci specifikovat, s jakym zdrojem se ma paket poslat
+     * @param typ typ paketu
+     * @param kod kod paketu
      */
     private void posliNovejPaketOdpoved(Paket puvodni,IpAdresa spec_zdroj, int typ, int kod){
         if(spec_zdroj!=null){
-            posliNovejPaket(spec_zdroj, puvodni.zdroj, typ,kod,puvodni.cas,puvodni.icmp_seq,64,puvodni.prikaz);
+            odesliNovejPaket(spec_zdroj, puvodni.zdroj, typ,
+                    kod,puvodni.cas,puvodni.icmp_seq,default_ttl,puvodni.prikaz);
         }else{
-            posliNovejPaket(puvodni.cil, puvodni.zdroj, typ,kod,puvodni.cas,puvodni.icmp_seq,64,puvodni.prikaz);
+            odesliNovejPaket(puvodni.cil, puvodni.zdroj, typ,
+                    kod,puvodni.cas,puvodni.icmp_seq,default_ttl,puvodni.prikaz);
         }
     }
 
     /**
-     * Slouzi k odeslani novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
-     * Sama nic neposila, pouziva metodu dolejc, s tim, ze nespecifikuje specialni zdroj.
+     * Slouzi k poslání novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
+     * Sama nic neposila, pouziva metodu odesliNovejPaket, s tim, ze nespecifikuje specialni zdroj.
      * @param cil
      * @param typ
      * @param kod
@@ -159,26 +180,41 @@ public abstract class AbstractPocitac {
      * @return false - ping se nepodarilo odeslat <br />
      *          true - ping byl odeslan
      */
+    @Deprecated // udelal jsem specifictejsi metody
     public boolean posliNovejPaket(IpAdresa cil,int typ,int kod,double cas,int icmp_seq,
             int ttl, AbstraktniPing prikaz) {
-        return posliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
+        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
+    }
+
+    public boolean posliIcmpRequest(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
+        int typ=8; //icmp request
+        int kod=0;
+        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
+    }
+
+    public boolean posliNetUnreachable(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
+        int typ=3; //paket nedosel
+        int kod=0; //net unreachable
+        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
     /**
-     * Slouzi k odeslani paketu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
-     * Kdyz chci odeslat paket s natvrdo zadanym zdrojem, zadam ho do spec_zdroj, jinak tam dam null (pouziva
-     * se pro icmp reply.
+     * Slouzi k odeslani novyho paketu z tohodle pocitace, ne k preposilani. Touto metodou se
+     * odesílaj všechny nový pakety z thodle počítače. Metoda najde spravny rozhrani,
+     * kterym se ma paket  poslat, v pripade, ze spec_zdroj je null se paket odesle s adresou
+     * tohoto rozhrani, jinak se odesle s adresou spec_zdroj. K odesilani pouziva metodu odesliEthernetove().
      * @param spec_zdroj IP adresa zdroje, kdyz ji chci natvrdo zadat
      * @param cil
      * @param typ
      * @param kod
      * @param cas
      * @param icmp_seq
+     * @param ttl
      * @param prikaz
-     * @return false - ping se nepodarilo odeslat <br />
-     *          true - ping byl odeslan
+     * @return false - ping se nepodarilo odeslat, nenaslo se vhodny rozhrani <br />
+     *          true - naslo se vhodny rozhrani, ping byl odeslan
      */
-    private boolean posliNovejPaket(IpAdresa spec_zdroj, IpAdresa cil, int typ, int kod,
+    private boolean odesliNovejPaket(IpAdresa spec_zdroj, IpAdresa cil, int typ, int kod,
             double cas, int icmp_seq, int ttl, AbstraktniPing prikaz) {
         IpAdresa zdroj; //IP, ktera bude jako adresa zdroje v paketu
         SitoveRozhrani mojeRozhr; //rozhrani, pres ktery budu paket posilat
@@ -209,7 +245,7 @@ public abstract class AbstractPocitac {
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
         if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
                     +sousedni.vypisAdresu()+" "+paket.toString());
-        posliEthernetove(paket, ciziRozhr, sousedni);
+        odesliEthernetove(paket, ciziRozhr, sousedni);
         return true;
     }
 
@@ -232,9 +268,10 @@ public abstract class AbstractPocitac {
             }
             if(ladeni)vypis("preposilam paket na rozhrani "+rozhr.jmeno+" na sousedni adresu "
                     +sousedni.vypisAdresu()+" "+paket.toString());
-            posliEthernetove(paket, rozhr.pripojenoK, sousedni);
+            odesliEthernetove(paket, rozhr.pripojenoK, sousedni);
         } else {//rozhrani nenalezeno - paket neni kam poslat
-            posliNovejPaket(paket.zdroj, 3, 0,paket.cas, paket.icmp_seq, 64, paket.prikaz); //net unreachable
+            posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
+                // -> net unreachable
         }
     }
 
@@ -261,16 +298,8 @@ public abstract class AbstractPocitac {
 
 
 
-
-
-
-
-
-
-
-
-
-
+//****************************************************************************************************
+// tady zacinaj puvodni Standovy metody pro posilani paketu, da-li se to tak nazvat:
 
     @Deprecated
     private boolean jsemVCili(IpAdresa cil) {
