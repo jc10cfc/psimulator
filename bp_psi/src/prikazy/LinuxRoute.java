@@ -491,7 +491,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
      */
     @Override
     public String toString(){
-        String vratit = "   Parametry prikazy route:\r\n\tnavratovyKodParseru: " + navratovyKod;
+        String vratit = "   Parametry prikazu route:\r\n\tnavratovyKodParseru: " + navratovyKod;
         vratit += "\r\n\takce (1=add, 2=del): " + akce;
         vratit+="\r\n\tprepinace: ";
         if(minus_n)vratit+=" -n";if(minus_e)vratit+=" -e";if(minus_v)vratit+=" -v";

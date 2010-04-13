@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Udelat:
+ * Vraceni chyboveho paketu na vyprseni ttl
  */
 package pocitac;
 
@@ -190,7 +190,7 @@ public abstract class AbstractPocitac {
      * Slouzi k poslání novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
      * Sama nic neposila, pouziva metodu odesliNovejPaket, s tim, ze nespecifikuje specialni zdroj.
      * @param cil
-     * @param icmp_seq
+     * @param icmp_seq kdyz je -1, nic se neodesle, jenom zkusebni
      * @param ttl
      * @param prikaz
      * @return true - naslo se vhodny rozhrani, ping byl odeslan <br />
@@ -219,7 +219,7 @@ public abstract class AbstractPocitac {
      * @param typ
      * @param kod
      * @param cas
-     * @param icmp_seq
+     * @param icmp_seq kdyz je -1, tak se nic neposle, jenom zkusebni, jestli o pujde
      * @param ttl
      * @param prikaz
      * @return false - ping se nepodarilo odeslat, nenaslo se vhodny rozhrani <br />
@@ -254,9 +254,11 @@ public abstract class AbstractPocitac {
             zdroj=spec_zdroj;
         }
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
-        if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
-                    +sousedni.vypisAdresu()+" "+paket.toString());
-        odesliEthernetove(paket, ciziRozhr, sousedni);
+        if(paket.icmp_seq != -1){ //to signalisuje, ze se paket nema odeslat, ale jen se zkousi, jestli to pujde
+            if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
+                        +sousedni.vypisAdresu()+" "+paket.toString());
+            odesliEthernetove(paket, ciziRozhr, sousedni);
+        }
         return true;
     }
 

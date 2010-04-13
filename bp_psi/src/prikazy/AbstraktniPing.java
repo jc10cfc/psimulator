@@ -28,14 +28,20 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
      * Seznam odezev vsech prijatych icmp_reply.
      */
     protected List<Double> odezvy;
-    protected double min;
-    protected double max;
-    protected double avg;
-    protected double celkovyCas;
     /**
      * Ztrata v procentech.
      */
     protected int ztrata;
+    /**
+     * pocet vracenejch paketu o chybach (tzn. typy 3 a 11)
+     */
+    protected int errors;
+    
+    protected double min;
+    protected double max;
+    protected double avg;
+    protected double celkovyCas; //soucet vsech milisekund
+    
 
     public AbstraktniPing(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
