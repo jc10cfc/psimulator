@@ -127,7 +127,7 @@ public class LinuxPing extends AbstraktniPing{
             errors++;
         } else if (p.typ == 11) {
             kon.posliRadek("From " + p.zdroj.vypisAdresu() + " icmp_seq=" + p.icmp_seq 
-                    + "Time to live exceeded");
+                    + " Time to live exceeded");
             errors++;
         }
     }

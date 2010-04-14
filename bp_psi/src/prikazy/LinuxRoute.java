@@ -80,7 +80,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     
     LinuxRoute(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon,slova);
-        nastavPrikaz();
+        parsujPrikaz();
         vykonejPrikaz();
     }
 
@@ -122,7 +122,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     /**
      * Precte prikaz a nastavi mu parametry. Rovnou kontroluje, spravnost parametru.
      */
-    private void nastavPrikaz() {
+    private void parsujPrikaz() {
         // prepinace:
         slovo = dalsiSlovo();
         while( slovo.length()>0 && slovo.charAt(0)=='-'){

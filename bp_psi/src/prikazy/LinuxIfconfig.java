@@ -22,6 +22,7 @@ import vyjimky.SpatnaMaskaException;
 public class LinuxIfconfig extends AbstraktniPrikaz {
 
     boolean ladiciVypisovani=false; //jestli se maj vypisovat informace pro ladeni
+    boolean ladeni=false;
 
     String jmenoRozhrani;
     /**
@@ -33,14 +34,14 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
      */
     String maska;
     String broadcast;
-    int pocetBituMasky = -1; //maska zadana formou /24 totiz ma vetsi prioritu nez 255.255.255.0
+    int pocetBituMasky = -1; //m zadana formou /24 totiz ma vetsi prioritu nez 255.255.255.0
     String add; //IP adresa, ktera se ma pridat
     List <String> del=new ArrayList<String>();  //ipadresa, ktera se ma odebrat
     boolean minus_a = false;
     boolean minus_v = false;
     boolean minus_s = false;
     /**
-     * Do tyhle promenny bude metoda nastavPrikaz zapisovat, jakou chybu nasla:
+     * Do tyhle promenny bude metoda parsujPrikaz zapisovat, jakou chybu nasla:
      * 0: vsechno v poradku
      * 1: spatny prepinac (neznama volba)
      * 2: nejaka chyba v gramatice prikazu (napr: ifconfig wlan0 1.2.3.5 netmask)
@@ -59,12 +60,12 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
 
     public LinuxIfconfig(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
-        nastavPrikaz();
+        parsujPrikaz();
         zkontrolujPrikaz();
         vykonejPrikaz();
     }
 
-    protected void nastavPrikaz() {
+    protected void parsujPrikaz() {
         String tempRet;
         int ind = 1; //index v seznamu, zacina se jedicko, protoze prvnim slovem je ifconfig
         // prepinace:
@@ -95,7 +96,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         try { // celej cyklus je v bloku ,protoze by se mohlo stat, ze za nazvem parametru uz nebude jeho hodnota
             while (ind < slova.size()) {
                 tempRet = slova.get(ind);
-                if (tempRet.equals("netmask")) {//maska
+                if (tempRet.equals("netmask")) {//m
                     ind++;
                     maska = slova.get(ind);
                 } else if (tempRet.equals("broadcast")) {//adresa pro broadcast, ta si vubec dela uplne, co se ji zachce
@@ -193,14 +194,11 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         
     }
 
-    private void errNeznamyPrepinac(String ret) {
-        kon.posliRadek("ifconfig: neznámá volba `" + ret + "'.");
-        kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
-        navratovyKod = 1;
-    }
-
     @Override
     protected void vykonejPrikaz() {
+        if(ladeni){
+            kon.posliRadek(toString());
+        }
         switch (navratovyKod){
             case 0:{
                 proved();
@@ -258,7 +256,6 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
                         //jenom vypis rozhrani
                 if(navratovyKod==0) vypisRozhrani(rozhrani); //vypisuje se jen kdyz to bylo spravne zadano
             } else { //nastavovani
-                nastavMasku(rozhrani);
                 nastavAdresuAMasku(rozhrani);
                 //nastavovani broadcastu zatim nepodporuju
                 if(navratovyKod!=7 && add !=null){ //parametr add byl zadan a je spravnej ale zatim
@@ -275,8 +272,10 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
     private void vypisRozhrani(SitoveRozhrani r){
         //je to jen provizorni vypis
         kon.posliRadek(r.jmeno+"\tLink encap:Ethernet  HWadr "+r.macAdresa);
-        kon.posliRadek("\tinet adr:"+r.ip.vypisAdresu()+"  Všesměr:"+r.ip.vypisBroadcast()+
-                "  Maska:"+r.ip.vypisMasku());
+        if (r.ip != null) {
+            kon.posliRadek("\tinet adr:" + r.ip.vypisAdresu() + "  Všesměr:" + r.ip.vypisBroadcast() +
+                    "  Maska:" + r.ip.vypisMasku());
+        }
         kon.posliRadek("\tAKTIVOVÁNO VŠESMĚROVÉ_VYSÍLÁNÍ BĚŽÍ MULTICAST  MTU:1500  Metrika:1"); //asi ne cesky
         kon.posliRadek("\tRX packets:169765 errors:2 dropped:14 overruns:2 frame:0"); //ty cisla by chtely generovat
         kon.posliRadek("\tTX packets:157184 errors:0 dropped:0 overruns:0 carrier:0");
@@ -287,46 +286,108 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
     }
 
     /**
-     * Nastavi adresu a masku. Kdyz zadna maska za lomitkem neni, nastavi masku na defaultni masku
-     * podle tridy  IP adresy (o to se stara primo konstruktor IP adresy). Kdyz je adresa  i maska stejna,
-     * nic nemeni.
+     * Pokusi se nejprve nastavit adresu (pokud je zadana), pak masku ze Stringu (je-li zadana)
+     * a nakonec i masku z pocetBituMasky (je-li zadana), protoze ta ma vetsi prioritu. Pokud se
+     * provedla nejaka zmena vyridi nakonec routovaci tabulku. Sama nic nenastavuje, ale pouziva
+     * k tomu privatni metody. Je-li zadana maska obema zpusoby, zmeni se dvakrat (tim padem i
+     * routovaci tabulka, i kdyz je vysledek stejnej jako predchozi hodnoty, napr:
+     * ifconfig eth0 1.1.1.1/24 netmask 255.255.0.0 se zmeni nejprv na tu ze stringu, pak na
+     * tu za lomitkem)
      * @param r
      */
     private void nastavAdresuAMasku(SitoveRozhrani r) { //nastavuje ip
-        if (pouzitIp == -1){ //kontrola, jestli byla adresa vubec zadana
-            return;
-        }
-        String nastavit = seznamIP.get(pouzitIp);
-        if (pocetBituMasky == -1) { //zadana jen IP bez masky za lomitkem
-            if (nastavit.equals(r.ip.vypisAdresu())) {//stejna ip, nic se nemeni
+        boolean zmena=false; // jestli se vykonala nejaka zmena, nebo jestli zadany hodnoty byly stejny 
+                                // jako puvodni -> kvuli zmenam routovaci tabulky
+
+        //nastavovani adresy:
+        if (pouzitIp != -1){ //adresa byla zadana, musi se nastavit
+            String nastavit = seznamIP.get(pouzitIp);
+            if (r.ip!=null && nastavit.equals(r.ip.vypisAdresu())) {
+                //ip existuje a je stejna, nic se nemeni
             } else { //IP adresa neni stejna, bude se menit
-                r.ip = new IpAdresa(nastavit);
-                pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
-                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
+                r.ip = vytvorAdresu(nastavit);
+                zmena=true;
             }
-        } else { // zadana adresa s masko za lomitkem
-            if ( ! (nastavit.equals(r.ip.vypisAdresu()) && pocetBituMasky == r.ip.pocetBituMasky() ) ) {
-                // -> zadany hodnoty nejsou stejny, budou se menit
-                r.ip = new IpAdresa(nastavit);
-                r.ip.nastavMasku(pocetBituMasky);
-                pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
-                pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
+        }
+
+        //nastavovani masky ze Stringu m
+        if (maska != null) { //zadana adresa s maskou za lomitkem
+            if(r.ip!=null && r.ip.vypisMasku().equals(maska)){
+                //ip adresa existuje a ma stejnou masku, nic se nemeni
+            }else{//zadana hodnota je jina nez puvodni, musi se menit
+                priradMasku(r.ip, maska);
+                zmena=true;
             }
+        }
+
+        //nastavovani masky za lomitkem
+        if (pocetBituMasky != -1) { //zadana adresa s maskou za lomitkem
+            if(r.ip!=null && r.ip.pocetBituMasky()==pocetBituMasky){
+                //ip adresa existuje a ma stejnou masku, nic se nemeni
+            }else{//zadana hodnota je jina nez puvodni, musi se menit
+                priradMasku(r.ip, pocetBituMasky);
+                zmena=true;
+            }
+        }
+
+        //kdyz se provedla nejaka zmena, musi se to projevit v routovaci tabulce:
+        if(zmena)vyridRoutovani(r);
+
+    }
+
+    /**
+     * Vytvori novou adresu, nenastavuje masku, ale hlida, jestli IpAdresu lze pouzit,
+     * nebo jestli na ni neni nejaka specialni akce.
+     * @param ip
+     * @return null pro 0.0.0.0
+     */
+    private IpAdresa vytvorAdresu(String adr){
+        if(adr.equals("0.0.0.0")){ //mazani adresy z rozhrani
+            return null;
+        }else{
+            return new IpAdresa(adr);
         }
     }
 
-    
-    private void nastavMasku(SitoveRozhrani r){//pokusi se nastavit masku
-        if (maska==null)return; //kdyz neni maska nastavena, nic se nedela
-        if (maska.equals(r.ip.vypisMasku())) return; //kdyz je stejna, taky se nic nedela
+    /**
+     * Zadane IP adrese nastavi masku podle zadaneho poctuBitu (masky). pocetBitu musi bejt spravny cislo.
+     * Kdyz je adresa null, posle chybovy hlaseni a skonci.
+     * @param ip
+     * @param pocetBitu
+     */
+    private void priradMasku(IpAdresa ip, int pocetBitu){
+        if(ip==null){
+            kon.posliRadek("SIOCSIFNETMASK: Cannot assign requested address");
+            return;
+        }else{
+            ip.nastavMasku(pocetBitu);
+        }
+    }
+
+    /**
+     * Pokusi se nastavit masku podle parametru m, ktery musi bejt spravnym stringem.
+     * Je-li zadana IP null, vypise chybovy hlaseni a ukonci se.
+     * @param ip adresa, ktera se ma zmenit
+     * @param m string masky; nesmi bejt null
+     */
+    private void priradMasku(IpAdresa ip, String m){//pokusi se nastavit masku
+        if(ip==null){ //neni nastavena IP adresa, vypise se chybovy hlaseni a skonci se
+            kon.posliRadek("SIOCSIFNETMASK: Cannot assign requested address");
+            return;
+        }
         try{//je potreba zkontrolovat spravnost masky!!! //proto vyjimka
-            r.ip.nastavMasku(maska);
+            ip.nastavMasku(m);
         }catch(SpatnaMaskaException ex){
             kon.posliRadek("SIOCSIFNETMASK: Invalid argument");
             return;
         }
-        pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r);
-        pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
+    }
+
+    private void vyridRoutovani(SitoveRozhrani r){
+        pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
+        if(r.ip!=null){
+            pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
+        }
     }
 
     private void vypisHelp(){ // funkce na ladiciVypisovani napovedy --help
@@ -341,27 +402,34 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
 
     @Override
     public String toString() {
-        String vratit = "Parametry prikazy ifconfig:\n navratovyKodParseru: " + navratovyKod;
+        String vratit = "  Parametry prikazy ifconfig:\n\r\tnavratovyKodParseru: " + navratovyKod;
         if (jmenoRozhrani != null) {
-            vratit += "\n rozhrani: " + jmenoRozhrani;
+            vratit += "\n\r\trozhrani: " + jmenoRozhrani;
         }
         if (seznamIP != null) {
-            vratit += "\n ip: " + seznamIP;
+            vratit += "\n\r\tip: " + seznamIP;
         }
+        vratit+="\n\r\tpouzitIp: "+pouzitIp;
         if (pocetBituMasky != -1) {
-            vratit += "\n pocetBituMasky: " + pocetBituMasky;
+            vratit += "\n\r\tpocetBituMasky: " + pocetBituMasky;
         }
         if (maska != null) {
-            vratit += "\n maska: " + maska;
+            vratit += "\n\r\tmaska: " + maska;
         }
         if (add != null) {
-            vratit += "\n add: " + add;
+            vratit += "\n\r\tadd: " + add;
         }
         if (del != null) {
-            vratit += "\n del: " + del;
+            vratit += "\n\r\tdel: " + del;
         }
 
         return vratit;
 
+    }
+
+    private void errNeznamyPrepinac(String ret) {
+        kon.posliRadek("ifconfig: neznámá volba `" + ret + "'.");
+        kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
+        navratovyKod = 1;
     }
 }

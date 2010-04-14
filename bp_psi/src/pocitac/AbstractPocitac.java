@@ -1,6 +1,7 @@
 /*
  * Udelat:
- * Vraceni chyboveho paketu na vyprseni ttl
+ * Vraceni chyboveho paketu na vyprseni ttl - HOTOVO
+ * Cisco asi bude potrebovat jinou metodu odesliEthernetove(...)
  */
 package pocitac;
 
@@ -145,8 +146,9 @@ public abstract class AbstractPocitac {
                             // -> svoji adresu musim dost krkolome zjistovat, ale je to asi nejjednodussi
                             //    a nemusim se bat, ze tam nekde bude null
             }
-
-
+        }else{
+            //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
+            //a zpatky se nic neposila
         }
     }
 
@@ -209,6 +211,12 @@ public abstract class AbstractPocitac {
         return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
+    public boolean posliTimeExceeded(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
+        int typ=11; //paket nedosel
+        int kod=0; //net unreachable
+        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
+    }
+
     /**
      * Slouzi k odeslani novyho paketu z tohodle pocitace, ne k preposilani. Touto metodou se
      * odesílaj všechny nový pakety z thodle počítače. Metoda najde spravny rozhrani,
@@ -227,6 +235,7 @@ public abstract class AbstractPocitac {
      */
     private boolean odesliNovejPaket(IpAdresa spec_zdroj, IpAdresa cil, int typ, int kod,
             double cas, int icmp_seq, int ttl, AbstraktniPing prikaz) {
+
         IpAdresa zdroj; //IP, ktera bude jako adresa zdroje v paketu
         SitoveRozhrani mojeRozhr; //rozhrani, pres ktery budu paket posilat
         SitoveRozhrani ciziRozhr=null; //rozhrani, na ktery budu paket posilat
@@ -267,24 +276,27 @@ public abstract class AbstractPocitac {
      * @param paket
      */
     private void preposliPaket(Paket paket) {
-        IpAdresa sousedni = paket.cil; //adresa nejblizsiho pocitace, kam se ma paket poslat, nefaultne cil,
-                                        //kdyztak se to zmeni na branu z routovaci tabulky
-        paket.ttl -=1;
-        if (paket.ttl==0){
+        IpAdresa sousedni = paket.cil; //adresa nejblizsiho pocitace, kam se ma paket poslat, defaultne cil,
+        //kdyztak se to zmeni na branu z routovaci tabulky
+        paket.ttl -= 1;
+        if (paket.ttl == 0) {
+            posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
             return;
-        }
-        RoutovaciTabulka.Zaznam z = routovaciTabulka.najdiSpravnejZaznam(paket.cil);
-        if (z != null) { //zaznam nalezen
-            SitoveRozhrani rozhr = z.getRozhrani();
-            if(z.getBrana()!=null){
-                sousedni=z.getBrana(); //sousedni uzel je brana z routovaci tabulky
-            }
-            if(ladeni)vypis("preposilam paket na rozhrani "+rozhr.jmeno+" na sousedni adresu "
-                    +sousedni.vypisAdresu()+" "+paket.toString());
-            odesliEthernetove(paket, rozhr.pripojenoK, sousedni);
-        } else {//rozhrani nenalezeno - paket neni kam poslat
-            posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
+        } else {
+            RoutovaciTabulka.Zaznam z = routovaciTabulka.najdiSpravnejZaznam(paket.cil);
+            if (z != null) { //zaznam nalezen
+                SitoveRozhrani rozhr = z.getRozhrani();
+                if (z.getBrana() != null) {
+                    sousedni = z.getBrana(); //sousedni uzel je brana z routovaci tabulky
+                }
+                if (ladeni) {
+                    vypis("preposilam paket na rozhrani " + rozhr.jmeno + " na sousedni adresu " + sousedni.vypisAdresu() + " " + paket.toString());
+                }
+                odesliEthernetove(paket, rozhr.pripojenoK, sousedni);
+            } else {//rozhrani nenalezeno - paket neni kam poslat
+                posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
                 // -> net unreachable
+            }
         }
     }
 
