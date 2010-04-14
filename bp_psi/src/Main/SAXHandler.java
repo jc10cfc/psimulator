@@ -380,6 +380,10 @@ public class SAXHandler implements ContentHandler {
                 }
             }
 
+            if (pocitac instanceof CiscoPocitac) {
+                ((CiscoPocitac)pocitac).getWrapper().update();
+            }
+
             for (String[] mujzaznam : pcbuilder.routovaciTabulka) { // tady resim routovaci tabulku
 
                 if (vypis2) {

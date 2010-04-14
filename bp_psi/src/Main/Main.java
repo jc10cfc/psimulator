@@ -67,6 +67,7 @@ public class Main {
             vsechno = nacti(args[0]);
         } else {
             vsechno = nacti("psi.xml");
+//            vsechno = nacti("laborka.xml");
         }        
 
         if (vsechno == null) {

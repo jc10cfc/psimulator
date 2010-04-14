@@ -184,10 +184,17 @@ public class CiscoPing extends AbstraktniPing {
             odezvy.add(p.cas);
             kon.posli("!");
         } else if (p.typ == 3) {
-            if (equals(p.kod == 0)) {
-                // cisco posila 'U' i '.', jak se mu chce
-                kon.posli("U");
-//                kon.posli(".");
+            if (p.kod == 0) {
+                // cisco posila 'U' a '.', jak se mu chce
+                if (Math.round(Math.random()) % 2 == 0) {
+                    kon.posli("U");
+                    pc.vypis("posilam random 'U'");
+                } else {
+                    kon.posli(".");
+                    pc.vypis("posilam random '.'");
+                }
+            } else if (p.kod == 1) {
+                kon.posli(".");
             }
         } else {
             cekej(timeout);

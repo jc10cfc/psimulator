@@ -15,6 +15,7 @@ import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
+import prikazy.AbstraktniPrikaz.*;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -55,7 +56,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Specialni rezim. Dovoluje pouziti prikazu 'ip route' v ROOT rezimu + dalsi vypisy.
      */
     boolean debug = true;
-
     AbstraktniPrikaz prikaz;
 
     private void ping() {
@@ -501,7 +501,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     @Override
     public void zpracujRadek(String s) {
-        
+
         radek = s;
         slova.clear();
         nepokracovat = false;
@@ -747,12 +747,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         s += ((CiscoPocitac) pc).getWrapper().vypisRunningConfig();
-        
-        if (debug) {
-        s += "!\n\n";
-        s += "ip http server\n"+ "!\n"+ "!\n"+ "control-plane\n"+
-                "!\n"+ "!\n"+ "line con 0\n"+
-                "line aux 0\n"+"line vty 0 4\n"+ " login\n"+ "!\n"+ "end\n\n";
+
+        if (!debug) {
+            s += "!\n\n";
+            s += "ip http server\n" + "!\n" + "!\n" + "control-plane\n"
+                    + "!\n" + "!\n" + "line con 0\n"
+                    + "line aux 0\n" + "line vty 0 4\n" + " login\n" + "!\n" + "end\n\n";
 
         }
         kon.posliPoRadcich(s, 10);
@@ -826,11 +826,25 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Posle vypis pro prikaz 'show ip route'
      */
     private void showiproute() {
+        // vim jen, ze mam 3 slova
+        //TODO: doparsovat 'show ip ro'
+        if (!kontrola("ip", slova.get(1))) {
+            kon.posliRadek("chyba1");
+            return;
+        }
+
+        if (!kontrola("route", slova.get(2))) {
+            kon.posliRadek("chyba1");
+            return;
+        }
+
+//        if ()
+
         String s = "";
 
         CiscoPocitac poc = (CiscoPocitac) pc;
         s += poc.getWrapper().vypisRT();
-        
+
         kon.posliPoRadcich(s, 80);
     }
 }
