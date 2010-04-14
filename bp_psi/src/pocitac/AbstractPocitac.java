@@ -106,7 +106,10 @@ public abstract class AbstractPocitac {
 /**
  * Všeobecný poznámky k posílání paketů:
  * Ethernetová (linková) vrstva:
- * - všechny pakety se posílaj metodou odesliEthernetove().
+ * - všechny pakety se posílaj metodou odesliEthernetove() a prijimaj prijmiEthernetove()
+ * - IpAdresa sousedni (v metode prijmiEthernetove ocekavana) - IpAdresa pro jeden skok
+ *      - kdyz se posila podle routy na branu, je to adresa brany
+ *      - kdyz se posila podle routy na rozhrani, je to cilova adresa paketu
  * Síťová (IP) vrstva:
  * - všechny nový pakety se posílaj metodou odesliNovejPaket(...)
  *   všechny pakety k přeposílání se přeposílaj metodou preposliPaket(...)
@@ -121,7 +124,7 @@ public abstract class AbstractPocitac {
      */
     private SitoveRozhrani najdiMeziRozhranima(IpAdresa cil) {
         for (SitoveRozhrani rozhr : rozhrani) {
-            if (rozhr.ip.jeStejnaAdresa(cil)) {
+            if (cil.jeStejnaAdresa(rozhr.ip)) {
                 return rozhr;
             }
         }
@@ -129,19 +132,17 @@ public abstract class AbstractPocitac {
     }
 
     /**
-     * Posila paket vedlejsimu pocitaci, pricemz si kontroluje, jestli ho ethernetove muze poslat, tzn.,
-     * jestli je na druhy strane skutecne ta adresa, na kterou to chci poslat. Když rozhraní, na který to
-     * posílám neexistuje, metoda nic neudělá.
+     * Zkousi ethernetove poslat paket vedlejsimu pocitaci, ten ho bud prijme, nebo ho neprijme
+     * a pak musim zpatky poslat host unreachable.
      * @param p paket, kterej posilam
      * @param rozhr rozhrani toho sousedniho pocitace, na kterej to posilam
      * @param sousedni IP adresa rozhrani na sousednim pocitaci, na kterej to posilam
      */
     private void odesliEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa sousedni) {
         if (rozhr != null) { //cizi rozhrani by teoreticky mohlo bejt null
-            if(rozhr.ip.jeStejnaAdresa(sousedni)){ //adresa souhlasi - muzu to poslat
-                rozhr.getPc().prijmiPaket(p);
+            if ( rozhr.getPc().prijmiEthernetove(p, rozhr, sousedni) ){ //adresa souhlasi
+                //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                //odesliNovejPaket(p.zdroj, 3, 1, p.cas, p.icmp_seq, p.prikaz); //net unreachable
                 posliNovejPaketOdpoved(p,rozhr.pripojenoK.ip, 3, 1); //host unreachable
                             // -> svoji adresu musim dost krkolome zjistovat, ale je to asi nejjednodussi
                             //    a nemusim se bat, ze tam nekde bude null
@@ -151,6 +152,16 @@ public abstract class AbstractPocitac {
             //a zpatky se nic neposila
         }
     }
+
+    /**
+     * Ethernetove prijima nebo odmita me poslany pakety
+     * @param p
+     * @param rozhr rozhrani pocitace, kterej ma paket prijmoutm, tzn. tohodle pocitace
+     * @param ocekavana adresa, kterou ocekavam, ze na tom rozhrani bude
+     * @return true, kdyz byl paket prijmut, jinak false
+     */
+    public abstract boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana);
+
 
     /**
      * Slouzi k odeslani odpovedi - odesila icmp reply nebo host unreachable. V odpovednim paketu
@@ -263,7 +274,8 @@ public abstract class AbstractPocitac {
             zdroj=spec_zdroj;
         }
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
-        if(paket.icmp_seq != -1){ //to signalisuje, ze se paket nema odeslat, ale jen se zkousi, jestli to pujde
+        if(paket.icmp_seq != -1 && //to signalisuje, ze se paket nema odeslat, ale jen se zkousi, jestli to pujde
+                paket.zdroj != null ) { //rozhrani, kterym to chci poslat nema prirazenou IP adresu
             if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
                         +sousedni.vypisAdresu()+" "+paket.toString());
             odesliEthernetove(paket, ciziRozhr, sousedni);
@@ -305,7 +317,7 @@ public abstract class AbstractPocitac {
      * urcen pro me, posle paket dal.
      * @param paket
      */
-    public void prijmiPaket(Paket paket) {
+    protected void prijmiPaket(Paket paket) {
         if(ladeni)vypis("prijal jsem paket "+paket.toString());
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);

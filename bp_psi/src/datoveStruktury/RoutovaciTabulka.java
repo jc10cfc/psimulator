@@ -72,6 +72,7 @@ public class RoutovaciTabulka {
             this.connected = pripojene;
         }
 
+        @Deprecated //neni potreba
         private String vypisSeLinuxove() {
             String v="";
             v+=adresat.vypisAdresu()+"\t";
@@ -84,14 +85,16 @@ public class RoutovaciTabulka {
             return v;
         }
 
+        @Deprecated //neni potreba
         private String vypisSeCiscove() {
             String s = "";
             s += "ip route " + adresat.vypisAdresu() + " " + adresat.vypisMasku() + " " + brana.vypisAdresu() + "\n";
             return s;
         }
     }
+
+
     private List<Zaznam>radky; //jednotlive radky routovaci tabulky
-//    private AbstractPocitac pc; //odkaz na pocitac, mozna nebude potreba
     private boolean ladiciVypisovani=true;
 
     /**
@@ -100,19 +103,20 @@ public class RoutovaciTabulka {
      */
     public RoutovaciTabulka(){
         radky=new LinkedList<Zaznam>();
-//        this.pc=pc;
     }
 
     /**
      * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese a vrati jeho rozhrani.
      * Slouzi predevsim pro samotne routovani.
      * Pozor: vrati prvni odpovidajici rozhrani!
+     * Pozor: routuje jen nad nahozenejma rozhranima!
      * @param cil IP, na kterou je paket posilan
      * @return null - nenasel se zadnej zaznam, kterej by se pro tuhle adresu hodil
      */
     public SitoveRozhrani najdiSpravnyRozhrani(IpAdresa cil){
         for( Zaznam z:radky){
-            if(cil.jeVRozsahu(z.adresat)) return z.rozhrani; //vraci prvni odpovidajici rozhrani
+            if(cil.jeVRozsahu(z.adresat) && z.rozhrani.jeNahozene())
+                return z.rozhrani; //vraci prvni odpovidajici rozhrani
         }
         return null;
     }
@@ -121,12 +125,15 @@ public class RoutovaciTabulka {
      * Tahleta metoda hleda zaznam v routovaci tabulce, ktery odpovida zadane IP adrese a cely ho vrati.
      * Slouzi predevsim pro samotne routovani, kdyz potrebuju znat cely zaznam, a ne jen rozhrani (napr.
      * na jakou branu to mam poslat, jestli se to odesle.
+     * Pozor: vrati prvni odpovidajici zaznam!
+     * Pozor: routuje jen nad nahozenejma rozhranima!
      * @param cil IP, na kterou je paket posilan
      * @return null - nenasel se zadnej zaznam, kterej by se pro tuhle adresu hodil
      */
     public Zaznam najdiSpravnejZaznam(IpAdresa cil){
         for( Zaznam z:radky){
-            if(cil.jeVRozsahu(z.adresat)) return z; //vraci prvni odpovidajici rozhrani
+            if(cil.jeVRozsahu(z.adresat) && z.rozhrani.jeNahozene())
+                return z; //vraci prvni odpovidajici rozhrani
         }
         return null;
     }

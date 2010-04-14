@@ -16,7 +16,7 @@ import vyjimky.SpatnaAdresaException;
  */
 public class LinuxPing extends AbstraktniPing{
 
-    private boolean ladeni = true;
+    private boolean ladeni = false;
     
     //parametry prikazu:
     IpAdresa cil; //adresa, na kterou ping posilam

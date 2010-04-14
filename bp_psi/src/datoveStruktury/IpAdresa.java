@@ -127,6 +127,7 @@ public class IpAdresa {
      * Vraci true, kdyz maji stejny cislo site a masku. Pozor, pro 147.32.125.128/25 a 147.32.125.128/24 vrati false!
      */
     public boolean jeStejnyCisloSite(IpAdresa jina) {
+        if(jina==null) return false;
         if (this.cisloSite() == jina.cisloSite() && maska==jina.maska) { //musi se kontrolovat i maska, protoze
             return true;                                                 //jinak by 1.1.1.0/24 a 1.1.1.0/25 davaly
         }                                                                //stejnej vysledek
@@ -182,6 +183,7 @@ public class IpAdresa {
      * @return
      */
     public boolean jeStejnaAdresa(IpAdresa jina) {
+        if(jina==null) return false;
         if (this.adresa == jina.adresa) {
             return true;
         }
