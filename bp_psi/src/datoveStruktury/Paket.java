@@ -24,7 +24,7 @@ public class Paket {
 
     /**
      * Podtypy icmp paketu, pro kazdej typ jinej vyznam, u nas to ma vyznam jen pro typ 3. Jinak defaultne vetsinou
-     * nula.<br />
+     * nula. My u typu 3 posilame jen 0 nebo 1.<br />
      * 0 – nedosažitelná síť (network unreachable)<br />
      * 1 - nedosažitelný uzel (host unreachable)<br />
      * 2 - nedosažitelný protokol (protocol unreachable)<br />

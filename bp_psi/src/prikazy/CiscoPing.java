@@ -28,10 +28,6 @@ public class CiscoPing extends AbstraktniPing {
      * Velikost paketu v bytech (pro okrasu).
      */
     int velikost = 100;
-//    /**
-//     * Pocet doslych icmp_reply.
-//     */
-//    int pocetOK = 0;
     /**
      * Timeout v ms
      */
@@ -123,6 +119,10 @@ public class CiscoPing extends AbstraktniPing {
         return true;
     }
 
+    /**
+     * Parsuje prikaz ping.
+     * @return
+     */
     private boolean zpracujRadek() {
         if (slova.size() < 2) {
             return false;
@@ -161,7 +161,7 @@ public class CiscoPing extends AbstraktniPing {
 
         kon.posliPoRadcich(s, 20);
         for (int i = 0; i < pocet; i++) {
-            boolean doslo = pc.posliIcmpRequest(cil, i, 255, this);
+            boolean doslo = pc.posliIcmpRequest(cil, i, 255, this); // skolni cisca odpovidaj s TTL=255
             odeslane++;
 
             if (!doslo) {
@@ -181,9 +181,14 @@ public class CiscoPing extends AbstraktniPing {
     @Override
     public void zpracujPaket(Paket p) {
         if (p.typ == 0) {
-//            pocetOK++;
             odezvy.add(p.cas);
             kon.posli("!");
+        } else if (p.typ == 3) {
+            if (equals(p.kod == 0)) {
+                // cisco posila 'U' i '.', jak se mu chce
+                kon.posli("U");
+//                kon.posli(".");
+            }
         } else {
             cekej(timeout);
             kon.posli(".");

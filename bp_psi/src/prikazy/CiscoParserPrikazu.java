@@ -315,6 +315,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     /**
      * Prikaz pro mazani zaznamu z routovaci tabulky.
+     * TODO: %No matching route to delete
      */
     public void noiproute() {
         if (slova.size() < 5) {
