@@ -17,10 +17,10 @@ public class LinuxPocitac extends AbstractPocitac {
     }
 
     /**
-     *
+     * Ethernetove prijima nebo odmita me poslany pakety.
      * @param p
      * @param rozhr rozhrani pocitace, kterej ma paket prijmoutm, tzn. tohodle pocitace
-     * @param ocekavana adresa, kterou ocekavam, ze na tom rozhrani bude
+     * @param ocekavana adresa, kterou na rozhrani ocekavam
      * @return true, kdyz byl paket prijmut, jinak false
      */
     @Override

@@ -22,7 +22,7 @@ import vyjimky.SpatnaMaskaException;
 public class LinuxIfconfig extends AbstraktniPrikaz {
 
     boolean ladiciVypisovani=false; //jestli se maj vypisovat informace pro ladeni
-    boolean ladeni=false;
+    boolean ladeni=true;
 
     String jmenoRozhrani;
     /**
@@ -41,19 +41,20 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
     boolean minus_v = false;
     boolean minus_s = false;
     /**
-     * Do tyhle promenny bude metoda parsujPrikaz zapisovat, jakou chybu nasla:
-     * 0: vsechno v poradku
-     * 1: spatny prepinac (neznama volba)
+     * Do tyhle promenny bude metoda parsujPrikaz zapisovat, jakou chybu nasla:<br />
+     * 0: vsechno v poradku<br />
+     * 1: spatny prepinac (neznama volba)<br />
      * 2: nejaka chyba v gramatice prikazu (napr: ifconfig wlan0 1.2.3.5 netmask)
-     *    potreba provest, co je dobre, a vypsat napovedu --help
-     * 3: rozhrani neexistuje
-     * 4: zadano vice ipadres, funguje to, ale je to nesmysl
-     * 5: neplatna IP adresa
-     * 6: pocet bitu masky vetsi nez 32
-     * 7: neplatna IP adresa parametru add
-     * 8: neplatna IP adresaparametru del
+     *    potreba provest, co je dobre, a vypsat napovedu --help<br />
+     * 4: rozhrani neexistuje<br />
+     * 8: zadano vice ipadres, bere se posledni spravna<br />
+     * 16: neplatna nebo zakazana IP adresa<br />
+     * 32: pocet bitu masky vetsi nez 32<br />
+     * 64: neplatna IP adresa parametru add<br />
+     * 128: neplatna IP adresaparametru del<br />
      */
     int navratovyKod = 0;
+    boolean provedeno = false; //jestli jiz byla volana metoda proved()
     SitoveRozhrani rozhrani; //rozhrani, se kterym se bude operovat
     int pouzitIp = -1; //cislo seznamIP, ktera IP se ma pouzit
 
@@ -115,13 +116,13 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
                         try {
                             int temp = Integer.parseInt(tempRet.substring(pos + 1, tempRet.length()));
                             if(temp<0){
-                                navratovyKod=2;
+                                navratovyKod|=2;
                             }else{
                                 seznamIP.add ( tempRet.substring(0, pos) ) ;
                                 pocetBituMasky = temp;
                             }
                         } catch (NumberFormatException ex){
-                            navratovyKod=2;
+                            navratovyKod|=2;
                         }
 
                     } else {
@@ -131,7 +132,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
                 ind++;
             }
         } catch (IndexOutOfBoundsException ex) { //tuhle vyjimku hazi radky s nactenim hodnoty parametru, kdyz
-            navratovyKod = 2;             //tam ta hodnota neni
+            navratovyKod |= 2;             //tam ta hodnota neni
         }
     }
 
@@ -148,20 +149,23 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         if (rozhrani==null){
             //tady se nic nevypisuje, protoze ostatni se v ifconfigu asi vyhodnocuje driv (kdyz je spatne
             //rozhrani i ipadresa, tak se jako spatna ukaze IP adresa
-            navratovyKod=3;
+            navratovyKod |= 4;
         }
         //------------------------
         //kontrola IP
         if(seznamIP.size()>1){ //jestli neni moc IP adres
-            navratovyKod=4;
+            navratovyKod |= 8;
         }
         for (int i=0;i<seznamIP.size();i++){ //kontrola spravnosti IP
-            if(IpAdresa.jeSpravnaIP(seznamIP.get(i), false)){
-                pouzitIp=i;
-            } else {
+            if ( ! IpAdresa.jeSpravnaIP(seznamIP.get(i), false) ) { //adresa neni spravna
                 kon.posliRadek(seznamIP.get(i)+": unknown host");
                 kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
-                navratovyKod=5; //neplatna IP
+                navratovyKod |= 16; //neplatna IP
+            } else if(IpAdresa.jeZakazanaIpAdresa(seznamIP.get(i))){ //adresa je spravna, ale zakazana
+                kon.posliRadek("SIOCSIFADDR: Invalid argument");
+                navratovyKod |= 16; //neplatna IP
+            } else {
+                pouzitIp=i;
             }
 
         }
@@ -170,7 +174,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         //string masky se nekontroluje, protoze pro to IpAdresa nema metodu, kontroluje se az pri nastavovani
         if(pocetBituMasky!=-1){ //kontrola pocetBituMasky
             if(pocetBituMasky>32){//mensi totiz bejt nemuze, to se kontroluje driv
-                navratovyKod=6;
+                navratovyKod |= 32;
                 pocetBituMasky=pocetBituMasky % 32; //takhle se ifconfig opravdu chova, vyzkousel jsem to
             }
         }
@@ -178,7 +182,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         //kontrola IP adresy add (pridavani nove IP)
         if(add!=null){
             if(!IpAdresa.jeSpravnaIP(add, false)){
-                navratovyKod=7;
+                navratovyKod |= 64;
                 kon.posliRadek(add+": unknown host");
             }
         }
@@ -186,7 +190,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         //kontrola IP adres del (odebirani existujici IP)
         for(int i=0;i<del.size();i++){
             if(!IpAdresa.jeSpravnaIP(del.get(i), false)){
-                navratovyKod=8;
+                navratovyKod |= 128;
                 kon.posliRadek(del.get(i)+": unknown host"); //musim to posilat uz tady, protoze to hendka smazu
                 del.remove(i); //ta spatna IP adresa se odebere
             }
@@ -199,57 +203,66 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         if(ladeni){
             kon.posliRadek(toString());
         }
-        switch (navratovyKod){
-            case 0:{
-                proved();
-                break;
-            }
-            case 1:{break;} //spatnej prepinac, to se nic neprovadi
-            case 2:{ //nejaka chyba v gramatice
-                proved();
-                vypisHelp();
-                if(ladiciVypisovani) kon.posliRadek("blok pro navratovy kod 2, navratovy kod:"+navratovyKod);
-                break;
-            }
-            case 3:{ //rozhrani neexistuje
-                kon.posliRadek(jmenoRozhrani+": chyba při získávání informací o rozhraní Zařízení nebylo nalezeno");
-                break;
-            }
-            case 4:{ //zadano vice ip adres
-                proved();
-                break;
-            }
-            case 5:{ //neplatna ip adresa, v tomto pripade se musi provist vsechno, co je pred tou spatnou IP
-                proved(); //takze tohle je spatne, protoze nezalezi na poradi!!!!!
-                //ten chybovej vypis uz provede metoda zkontrolujPrikaz
-                break;
-            }
-            case 6:{ //pocetBituMasky byl vetsi nez 32, nicmene metoda zkontrolujPrikaz to uz opravila
-                proved();
-                break;
-            }
-            case 7:{ //neplatna adresa add
-                proved();
-                break;
-            }
-            case 8:{//neplatna adresa del
-                proved(); //muzu to v klidu provist, protoze se ta spatna adresa uz stejne smazala
-                break;
+
+        // Vykonavani prikazu podle jednotlivejch navratovejch kodu:
+        // V puvodni versi to bylo delany pres switch a break, predelal jsem to na if, s tim, ze metoda
+        // proved se bude diky booleanu provedeno volat jen jednou.
+        // Je-li navratovy kod souctem vice navratovych kodu, provedou se vsechny moznosti, ale metoda
+        // proved() se provede jen jednou.
+        // Serazeny je to i podle priority - co se vypise driv.
+        if (navratovyKod == 0) {
+            proved();
+        }
+        if ((navratovyKod & 1) != 0) {
+            //spatnej prepinac, to se nic neprovadi
+        }
+        if ((navratovyKod & 4) != 0) { //rozhrani neexistuje
+            kon.posliRadek("SIOCSIFADDR: No such device");
+            kon.posliRadek(jmenoRozhrani + ": chyba při získávání informací o rozhraní Zařízení nebylo nalezeno");
+            // -> Opravdu, spatna adresa ma prednost pred spatnym rozhranim, dokonce by se info o spatnym
+            //    rozhrani ani nemelo vypsat. U me se ale vypise.
+        }
+        if ((navratovyKod & 2) != 0) { //nejaka chyba v gramatice
+            proved();
+            vypisHelp();
+            if (ladiciVypisovani) {
+                kon.posliRadek("blok pro navratovy kod 2, navratovy kod:" + navratovyKod);
             }
         }
-        if(ladiciVypisovani){
-            kon.posliRadek("");
-            kon.posliRadek("navratovy kod:"+navratovyKod);
+        if ((navratovyKod & 8) != 0) { //zadano vice ip adres
+            proved();
         }
+        if ((navratovyKod & 16) != 0) {
+            //neplatna ip adresa, v tomto pripade se musi provist vsechno, co je pred tou spatnou IP
+            proved(); //takze tohle je spatne, protoze nezalezi na poradi!!!!!
+            //ten chybovej vypis uz provede metoda zkontrolujPrikaz
+        }
+        if ((navratovyKod & 32) != 0) {
+            //pocetBituMasky byl vetsi nez 32, nicmene metoda zkontrolujPrikaz to uz opravila
+            proved();
+        }
+        if ((navratovyKod & 64) != 0) { //neplatna adresa add
+            proved();
+        }
+        if ((navratovyKod & 128) != 0) {//neplatna adresa del
+            proved(); //muzu to v klidu provist, protoze se ta spatna adresa uz stejne smazala
+        } 
+
     }
 
     private void proved() { //nastavuje
+        if(provedeno)return; //aby se to nevolalo vocekrat
+        provedeno=true;
+
         if(ladiciVypisovani){ //jen ladeni
             kon.posliRadek("Spoustim metodu proved(): navratovy kod:"+navratovyKod);
         }
-        if (rozhrani == null) { //vypsat vsechno
-            for (SitoveRozhrani rozhr : pc.rozhrani) {
-                vypisRozhrani(rozhr);
+
+        if (rozhrani == null ) { //vypsat vsechno
+            if (navratovyKod == 0) { //jen kdyz je to ale vsechno v poradku
+                for (SitoveRozhrani rozhr : pc.rozhrani) {
+                    vypisRozhrani(rozhr);
+                }
             }
         } else { //rozhrani bylo zadano
             if (seznamIP.size() == 0 && add == null && del.size() == 0 && maska == null && broadcast == null) {
@@ -262,7 +275,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
                     // ho nepodporuju
                     //POZOR pri implementaci:
                     //Je to jediny nastaveni, u kteryho se rozhoduje podle navratovyho kodu, na ten se ale neda
-                    //spolehat, protoze se muze prepsat
+                    //spolehat, protoze se muze prepsat - UZ NEPLATI
                 }
                 //nastavovani parametru del zatim nepodporuju
             }
@@ -390,9 +403,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         }
     }
 
-    private void vypisHelp(){ // funkce na ladiciVypisovani napovedy --help
-        kon.posliRadek("Použití: (...)");
-    }
+    
 
     @Deprecated //zjistil jsem, ze tahle metoda vlastne neni vubec potreba
     private void unknownHost(String vypsat){
@@ -432,4 +443,41 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
         navratovyKod = 1;
     }
+
+    private void vypisHelp() { // funkce na ladiciVypisovani napovedy --help
+        kon.posliRadek("Použití:");
+        kon.posliRadek("  ifconfig [-a] [-v] [-s] <rozhraní> [[<AF>] <adresa>]");
+        kon.posliRadek("  [add <adresa>[/<délka prefixu>]]");
+        kon.posliRadek("  [del <adresa>[/<délka prefixu>]]");
+        kon.posliRadek("  [[-]broadcast [<adresa>]]  [[-]pointopoint [<adresa>]]");
+        kon.posliRadek("  [netmask <adresa>]  [dstaddr <adresa>]  [tunnel <adresa>]");
+        kon.posliRadek("  [outfill <NN>] [keepalive <NN>]");
+        kon.posliRadek("  [hw <HW> <adresa>]  [metric <NN>]  [mtu <NN>]");
+        kon.posliRadek("  [[-]trailers]  [[-]arp]  [[-]allmulti]");
+        kon.posliRadek("  [multicast]  [[-]promisc]");
+        kon.posliRadek("  [mem_start <NN>]  [io_addr <NN>]  [irq <NN>]  [media <typ>]");
+        kon.posliRadek("  [txqueuelen délka]");
+        kon.posliRadek("  [[-]dynamic]");
+        kon.posliRadek("  [up|down] ...");
+        kon.posliRadek("");
+        kon.posliRadek("  <HW>=Hardwarový Typ.");
+        kon.posliRadek("  Seznam možných hardwarových typů:");
+        kon.posliRadek("    loop (Místní smyčka) slip (IP po sériové lince) cslip (Vj IP po sériové lince)");
+        kon.posliRadek("    slip6 (6bitový IP po sériové lince) cslip6 (6bitový VJ IP po sériové lince) adaptive (Adaptivní IP po sériové lince)");
+        kon.posliRadek("    strip (Metricom Starmode IP) ash (Ash) ether (Ethernet)");
+        kon.posliRadek("    tr (Token Ring 16/4 Mb/s) tr (Token Ring 16/4 Mb/s) ax25 (AMPR AX.25)");
+        kon.posliRadek("    netrom (AMPR NET/ROM) rose (AMPR ROSE) tunnel (IPIP Tunnel)");
+        kon.posliRadek("    ppp (Point-to-Point Protokol) hdlc ((Cisco)-HDLC) lapb (LAPB)");
+        kon.posliRadek("    arcnet (ARCnet) dlci (Frame Relay DLCI) frad (Přístupové zařízení Frame Relay)");
+        kon.posliRadek("    sit (IPv6-in-IPv4) fddi (Fiber Distributed Data Interface) hippi (HIPPI)");
+        kon.posliRadek("    irda (IrLAP) ec (Econet) x25 (generic X.25)");
+        kon.posliRadek("    eui64 (Generic EUI-64)");
+        kon.posliRadek("  <AF>=třída adres. Implicitní: inet");
+        kon.posliRadek("  Seznam možných tříd adres:");
+        kon.posliRadek("    unix (Doména UNIX) inet (DARPA Internet) inet6 (IPv6)");
+        kon.posliRadek("    ax25 (AMPR AX.25) netrom (AMPR NET/ROM) rose (AMPR ROSE)");
+        kon.posliRadek("    ipx (Novell IPX) ddp (Appletalk DDP) ec (Econet)");
+        kon.posliRadek("    ash (Ash) x25 (CCITT X.25)");
+    }
+    
 }
