@@ -1,11 +1,12 @@
 /*
+ * Předěláno ve čtvrtek 15.4.2010
+ *
  * Materiály:
  *      http://www.benak.net/pocitace/os/linux/ifconfig.php
  *      http://books.google.cz/books?id=1x-6XBk8bKoC&pg=PT26&lpg=PT26&dq=ifconfig&source=bl&ots=E5ys4iqBVw&sig=0LU94iuXjoBE3WDxYGnTHChcx9Q&hl=cs&ei=O1lGS6CFHoOCnQOZzP3vAg&sa=X&oi=book_result&ct=result&resnum=8&ved=0CBkQ6AEwBw#v=onepage&q=ifconfig&f=false
  *      http://www.starhill.org/man/8_ifconfig.html
  * Dodělat:
- *      ifconfig wlan0 0.0.0.0 by mělo odebrat adresu z rozhraní.
- *      dodelat chyby u zakazanejch adres 255.1.1.1 ap.
+ *      Snad už jenom parsujPrikaz() opravit
  */
 package prikazy;
 
@@ -22,24 +23,28 @@ import vyjimky.SpatnaMaskaException;
 public class LinuxIfconfig extends AbstraktniPrikaz {
 
     boolean ladiciVypisovani=false; //jestli se maj vypisovat informace pro ladeni
-    boolean ladeni=true;
+    boolean ladeni=false;
 
-    String jmenoRozhrani;
+    String jmenoRozhrani; //jmeno rozhrani, jak bylo zadano
     /**
      * Do tyhle promenny se uklada jenom IP adresa bez masky za lomitkem.
      */
     List <String> seznamIP=new ArrayList<String>();
+    String spatnaAdresa=null; //prvni ze spatnejch zadanejch adres - ta se totiz vypisuje
     /**
      * Maska jako String (napr. 255.255.255.0);
      */
     String maska;
     String broadcast;
     int pocetBituMasky = -1; //m zadana formou /24 totiz ma vetsi prioritu nez 255.255.255.0
-    String add; //IP adresa, ktera se ma pridat
-    List <String> del=new ArrayList<String>();  //ipadresa, ktera se ma odebrat
+    List <String> add=new ArrayList<String>(); //IP adresy, ktera se ma pridat
+    List <String> del=new ArrayList<String>();  //ipadresy, ktery se maj odebrat
+    List <String> neplatnyAdd=new ArrayList<String>(); //spatny IP adresy, ktera se meli pridat
+    List <String> neplatnyDel=new ArrayList<String>();  //spatny ipadresy, ktery se meli odebrat
     boolean minus_a = false;
     boolean minus_v = false;
     boolean minus_s = false;
+    
     /**
      * Do tyhle promenny bude metoda parsujPrikaz zapisovat, jakou chybu nasla:<br />
      * 0: vsechno v poradku<br />
@@ -48,13 +53,13 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
      *    potreba provest, co je dobre, a vypsat napovedu --help<br />
      * 4: rozhrani neexistuje<br />
      * 8: zadano vice ipadres, bere se posledni spravna<br />
-     * 16: neplatna nebo zakazana IP adresa<br />
+     * 16: spatna  IP adresa<br />
      * 32: pocet bitu masky vetsi nez 32<br />
      * 64: neplatna IP adresa parametru add<br />
-     * 128: neplatna IP adresaparametru del<br />
+     * 128: neplatna IP adresa parametru del<br />
+     * 256: zakazana IP adresa<br />
      */
     int navratovyKod = 0;
-    boolean provedeno = false; //jestli jiz byla volana metoda proved()
     SitoveRozhrani rozhrani; //rozhrani, se kterym se bude operovat
     int pouzitIp = -1; //cislo seznamIP, ktera IP se ma pouzit
 
@@ -63,6 +68,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         super(pc, kon, slova);
         parsujPrikaz();
         zkontrolujPrikaz();
+        vypisChybovyHlaseni();
         vykonejPrikaz();
     }
 
@@ -105,7 +111,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
                     broadcast = slova.get(ind);
                 } else if (tempRet.equals("add")) {//adresa pro broadcast, ta si vubec dela uplne, co se ji zachce
                     ind++;
-                    add = slova.get(ind);
+                    add.add(slova.get(ind));
                 } else if (tempRet.equals("del")) {//adresa pro broadcast, ta si vubec dela uplne, co se ji zachce
                     ind++;
                     del.add(slova.get(ind));
@@ -158,12 +164,13 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         }
         for (int i=0;i<seznamIP.size();i++){ //kontrola spravnosti IP
             if ( ! IpAdresa.jeSpravnaIP(seznamIP.get(i), false) ) { //adresa neni spravna
-                kon.posliRadek(seznamIP.get(i)+": unknown host");
-                kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
+                if(spatnaAdresa==null){
+                    spatnaAdresa=seznamIP.get(i); //prvni ze spatnejch IP adres se uklada pro vypsani hlaseni
+                }
                 navratovyKod |= 16; //neplatna IP
             } else if(IpAdresa.jeZakazanaIpAdresa(seznamIP.get(i))){ //adresa je spravna, ale zakazana
-                kon.posliRadek("SIOCSIFADDR: Invalid argument");
-                navratovyKod |= 16; //neplatna IP
+                
+                navratovyKod |= 256; //neplatna IP
             } else {
                 pouzitIp=i;
             }
@@ -179,123 +186,133 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
             }
         }
         //---------------------
-        //kontrola IP adresy add (pridavani nove IP)
-        if(add!=null){
-            if(!IpAdresa.jeSpravnaIP(add, false)){
+        //kontrola IP adres add (pridavani nove IP)
+        for(int i=0;i<add.size();i++){
+            if( !IpAdresa.jeSpravnaIP(add.get(i), false) || IpAdresa.jeZakazanaIpAdresa(add.get(i)) ){
                 navratovyKod |= 64;
-                kon.posliRadek(add+": unknown host");
+                neplatnyAdd.add(add.get(i));
             }
+        }
+        for(int i=0;i<neplatnyAdd.size();i++){ //musi se to mazat v jinym cyklu, aby to nevylezlo ven
+            add.remove(neplatnyAdd.get(i));
         }
         //---------------------
         //kontrola IP adres del (odebirani existujici IP)
         for(int i=0;i<del.size();i++){
-            if(!IpAdresa.jeSpravnaIP(del.get(i), false)){
+            if ( !IpAdresa.jeSpravnaIP(del.get(i), false) || IpAdresa.jeZakazanaIpAdresa(del.get(i)) ){
                 navratovyKod |= 128;
-                kon.posliRadek(del.get(i)+": unknown host"); //musim to posilat uz tady, protoze to hendka smazu
-                del.remove(i); //ta spatna IP adresa se odebere
+
+                neplatnyDel.add(del.get(i));
             }
         }
-        
+        for(int i=0;i<neplatnyDel.size();i++){ //musi se to mazat v jinym cyklu, aby to nevylezlo ven
+            del.remove(neplatnyDel.get(i));
+        }
+        //---------------------
     }
 
-    @Override
-    protected void vykonejPrikaz() {
+    /**
+     * Metoda na vypisovani chybovejch hlášení. Projde návratovej kód a pošle
+     * hlášení podle jejich priority.
+     * O prioritách více v sešitě (14.4.) a v souboru IfconfigChyby.txt.
+     * Odpovídá  metodě vykonejPrikaz() ve starý versi Ifconfigu.
+     */
+    private void vypisChybovyHlaseni(){
         if(ladeni){
             kon.posliRadek(toString());
+            kon.posliRadek("----------------------------------");
         }
 
-        // Vykonavani prikazu podle jednotlivejch navratovejch kodu:
-        // V puvodni versi to bylo delany pres switch a break, predelal jsem to na if, s tim, ze metoda
-        // proved se bude diky booleanu provedeno volat jen jednou.
-        // Je-li navratovy kod souctem vice navratovych kodu, provedou se vsechny moznosti, ale metoda
-        // proved() se provede jen jednou.
-        // Serazeny je to i podle priority - co se vypise driv.
-        if (navratovyKod == 0) {
-            proved();
+        // Serazeny je to podle priority - co se vypise driv:
+        if (navratovyKod == 0) { // v poradku
+            //nic se nevypisuje
         }
         if ((navratovyKod & 1) != 0) {
-            //spatnej prepinac, to se nic neprovadi
+            //Spatnej prepinac, to se nic neprovadi
+            //Jediny hlaseni, ktery se vypisuje uz driv v parseru, ma stejne nejvyssi prioritu a
+            //nic dalsiho uz se neprovadi, tak by to byla akorat zbytecna prace
+            return; //nic dalsiho se neprovadi
+        }
+        if ((navratovyKod & 16) != 0) { //aspon jedna z adres je neplatna
+            kon.posliRadek(spatnaAdresa+": unknown host");
+            kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
+            return;
         }
         if ((navratovyKod & 4) != 0) { //rozhrani neexistuje
-            kon.posliRadek("SIOCSIFADDR: No such device");
+            if(pouzitIp!=-1) //adresa byla zadana
+                kon.posliRadek("SIOCSIFADDR: No such device");
             kon.posliRadek(jmenoRozhrani + ": chyba při získávání informací o rozhraní Zařízení nebylo nalezeno");
-            // -> Opravdu, spatna adresa ma prednost pred spatnym rozhranim, dokonce by se info o spatnym
-            //    rozhrani ani nemelo vypsat. U me se ale vypise.
+            // vypis o masce ma mensi prioritu, je az pod chybou v gramatice (navratovyKod & 2)
+        }
+        if ((navratovyKod & 256) != 0) {//zakazana ip adresa
+            if((navratovyKod & 4) == 0) //vypisuje se, jen kdyz rozhrani je v poradku
+                kon.posliRadek("SIOCSIFADDR: Invalid argument");
+        }
+        if ((navratovyKod & 64) != 0) { //neplatna adresa add
+            for(int i=0;i<neplatnyAdd.size();i++){ //vsechny se poporade vypisou
+                kon.posliRadek(neplatnyAdd.get(i)+": unknown host");
+            }
+        }
+        if ((navratovyKod & 128) != 0) { //vsechny se poporade vypisou
+            for(int i=0;i<neplatnyDel.size();i++){
+                kon.posliRadek(neplatnyDel.get(i)+": unknown host");
+            }
+        }
+        if ((navratovyKod & 4) != 0) { //rozhrani neexistuje
+            //pokracovani zezhora - vypis o masce ma totiz nizsi prioritu
+            if(pocetBituMasky!=-1 ||maska!=null) //maska byla zadana
+                kon.posliRadek("SIOCSIFNETMASK: No such device");
         }
         if ((navratovyKod & 2) != 0) { //nejaka chyba v gramatice
-            proved();
             vypisHelp();
             if (ladiciVypisovani) {
                 kon.posliRadek("blok pro navratovy kod 2, navratovy kod:" + navratovyKod);
             }
         }
+        
+
+        
         if ((navratovyKod & 8) != 0) { //zadano vice ip adres
-            proved();
+            //nic se nevypisuje
         }
-        if ((navratovyKod & 16) != 0) {
-            //neplatna ip adresa, v tomto pripade se musi provist vsechno, co je pred tou spatnou IP
-            proved(); //takze tohle je spatne, protoze nezalezi na poradi!!!!!
-            //ten chybovej vypis uz provede metoda zkontrolujPrikaz
+        if ((navratovyKod & 32) != 0) {//pocetBituMasky byl vetsi nez 32,
+            // metoda zkontrolujPrikaz to uz opravila
+            // nic se nevypisuje
         }
-        if ((navratovyKod & 32) != 0) {
-            //pocetBituMasky byl vetsi nez 32, nicmene metoda zkontrolujPrikaz to uz opravila
-            proved();
-        }
-        if ((navratovyKod & 64) != 0) { //neplatna adresa add
-            proved();
-        }
-        if ((navratovyKod & 128) != 0) {//neplatna adresa del
-            proved(); //muzu to v klidu provist, protoze se ta spatna adresa uz stejne smazala
-        } 
-
+        
+        
     }
 
-    private void proved() { //nastavuje
-        if(provedeno)return; //aby se to nevolalo vocekrat
-        provedeno=true;
-
-        if(ladiciVypisovani){ //jen ladeni
-            kon.posliRadek("Spoustim metodu proved(): navratovy kod:"+navratovyKod);
-        }
-
-        if (rozhrani == null ) { //vypsat vsechno
-            if (navratovyKod == 0) { //jen kdyz je to ale vsechno v poradku
-                for (SitoveRozhrani rozhr : pc.rozhrani) {
-                    vypisRozhrani(rozhr);
+    /**
+     * Vykonava samotnej prikaz.
+     * U navratovyhoKodu 1 (spatnejPrepinac) a 4 (rozhrani neexistuje) nic neprovadi.
+     * Odpovidá metodě proved() ze starý verse ifconfigu.
+     */
+    @Override
+    protected void vykonejPrikaz() {
+        if ((navratovyKod & 4) != 0 || ((navratovyKod) & 1) != 0) { //kdyz navratovy kod obsahuje 4 nebo 1
+            // U navratovyhoKodu 1 (spatnejPrepinac) a 4 (rozhrani neexistuje) nic neprovadi.
+        } else {
+            if (rozhrani == null) { //vypsat vsechno
+                if (navratovyKod == 0) { //vypisuje se, jen kdyz je to ale vsechno v poradku
+                    for (SitoveRozhrani rozhr : pc.rozhrani) {
+                        vypisRozhrani(rozhr);
+                    }
+                }
+            } else { //rozhrani bylo zadano
+                if (seznamIP.size() == 0 && add.size() == 0 && del.size() == 0
+                        && maska == null && broadcast == null) { //jenom vypis rozhrani
+                    if (navratovyKod == 0) { //vypisuje se, jen kdyz je to ale vsechno v poradku
+                        vypisRozhrani(rozhrani);
+                    }
+                } else { //nastavovani
+                    nastavAdresuAMasku(rozhrani);
+                    //nastavovani broadcastu zatim nepodporuju
+                    //nastavovani parametru add zatim nepodporuju
+                    //nastavovani parametru del zatim nepodporuju
                 }
             }
-        } else { //rozhrani bylo zadano
-            if (seznamIP.size() == 0 && add == null && del.size() == 0 && maska == null && broadcast == null) {
-                        //jenom vypis rozhrani
-                if(navratovyKod==0) vypisRozhrani(rozhrani); //vypisuje se jen kdyz to bylo spravne zadano
-            } else { //nastavovani
-                nastavAdresuAMasku(rozhrani);
-                //nastavovani broadcastu zatim nepodporuju
-                if(navratovyKod!=7 && add !=null){ //parametr add byl zadan a je spravnej ale zatim
-                    // ho nepodporuju
-                    //POZOR pri implementaci:
-                    //Je to jediny nastaveni, u kteryho se rozhoduje podle navratovyho kodu, na ten se ale neda
-                    //spolehat, protoze se muze prepsat - UZ NEPLATI
-                }
-                //nastavovani parametru del zatim nepodporuju
-            }
         }
-    }
-
-    private void vypisRozhrani(SitoveRozhrani r){
-        //je to jen provizorni vypis
-        kon.posliRadek(r.jmeno+"\tLink encap:Ethernet  HWadr "+r.macAdresa);
-        if (r.ip != null) {
-            kon.posliRadek("\tinet adr:" + r.ip.vypisAdresu() + "  Všesměr:" + r.ip.vypisBroadcast() +
-                    "  Maska:" + r.ip.vypisMasku());
-        }
-        kon.posliRadek("\tAKTIVOVÁNO VŠESMĚROVÉ_VYSÍLÁNÍ BĚŽÍ MULTICAST  MTU:1500  Metrika:1"); //asi ne cesky
-        kon.posliRadek("\tRX packets:169765 errors:2 dropped:14 overruns:2 frame:0"); //ty cisla by chtely generovat
-        kon.posliRadek("\tTX packets:157184 errors:0 dropped:0 overruns:0 carrier:0");
-        kon.posliRadek("\tkolizí:0 délka odchozí fronty:1000");
-        kon.posliRadek("\tPřijato bajtů: 155979699 (155.9 MB) Odesláno bajtů: 26830180 (26.8 MB)");
-        kon.posliRadek("\tPřerušení:21 Vstupně/Výstupní port:0xa000");
-        kon.posliRadek("");
     }
 
     /**
@@ -403,7 +420,22 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         }
     }
 
-    
+
+    private void vypisRozhrani(SitoveRozhrani r){
+        //je to jen provizorni vypis
+        kon.posliRadek(r.jmeno+"\tLink encap:Ethernet  HWadr "+r.macAdresa);
+        if (r.ip != null) {
+            kon.posliRadek("\tinet adr:" + r.ip.vypisAdresu() + "  Všesměr:" + r.ip.vypisBroadcast() +
+                    "  Maska:" + r.ip.vypisMasku());
+        }
+        kon.posliRadek("\tAKTIVOVÁNO VŠESMĚROVÉ_VYSÍLÁNÍ BĚŽÍ MULTICAST  MTU:1500  Metrika:1"); //asi ne cesky
+        kon.posliRadek("\tRX packets:169765 errors:2 dropped:14 overruns:2 frame:0"); //ty cisla by chtely generovat
+        kon.posliRadek("\tTX packets:157184 errors:0 dropped:0 overruns:0 carrier:0");
+        kon.posliRadek("\tkolizí:0 délka odchozí fronty:1000");
+        kon.posliRadek("\tPřijato bajtů: 155979699 (155.9 MB) Odesláno bajtů: 26830180 (26.8 MB)");
+        kon.posliRadek("\tPřerušení:21 Vstupně/Výstupní port:0xa000");
+        kon.posliRadek("");
+    }
 
     @Deprecated //zjistil jsem, ze tahle metoda vlastne neni vubec potreba
     private void unknownHost(String vypsat){
