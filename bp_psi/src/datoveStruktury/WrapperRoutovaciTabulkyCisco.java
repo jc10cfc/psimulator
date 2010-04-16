@@ -115,7 +115,7 @@ public class WrapperRoutovaciTabulkyCisco {
                     if (brana.equals(((CiscoZaznam) obj).brana)) {
                         return true;
                     }
-                } else {
+                } else if (rozhrani != null && ((CiscoZaznam) obj).rozhrani != null) {
                     if (rozhrani.jmeno.equalsIgnoreCase(((CiscoZaznam) obj).rozhrani.jmeno)) {
                         return true;
                     }
@@ -147,7 +147,7 @@ public class WrapperRoutovaciTabulkyCisco {
         // pridam routy na nahozena rozhrani
         for (SitoveRozhrani iface : pc.rozhrani) {
             if (iface.jeNahozene()) {
-                routovaciTabulka.pridejZaznam(iface.ip, iface, true);
+                routovaciTabulka.pridejZaznam(iface.vratPrvni(), iface, true);
             }
         }
 
@@ -284,7 +284,7 @@ public class WrapperRoutovaciTabulkyCisco {
             if (brana == null && rozhrani == null) {
                 smazat.add(radky.get(i));
 
-            } else if (brana != null && rozhrani == null) {
+            } else if (brana != null && rozhrani == null && z.brana != null) {
                 if (z.brana.equals(brana)) {
                     smazat.add(radky.get(i));
                 }

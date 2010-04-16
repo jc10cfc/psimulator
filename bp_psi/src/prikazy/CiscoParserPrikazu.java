@@ -318,6 +318,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * TODO: %No matching route to delete
      */
     public void noiproute() {
+
         if (slova.size() < 5) {
             invalidInputDetected();
             return;
@@ -574,7 +575,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 break;
 
             case ROOT:
-                if (kontrola("enable", prvniSlovo)) { // funguje v cisco taky, ale nic nedela
+                if (kontrola("enable", prvniSlovo)) { // funguje u cisco taky, ale nic nedela
                     return;
                 }
                 if (kontrola("disable", prvniSlovo)) {
@@ -601,11 +602,15 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
                 if (debug) {
                     if (kontrola("ip", prvniSlovo)) {
-                        iproute();
+//                        iproute();
+                        pc.vypis("kontrola prosla ip");
+                        prikaz = new CiscoIpRoute(pc, kon, slova, true);
                         return;
                     }
                     if (kontrola("no", prvniSlovo)) {
-                        noiproute();
+//                        noiproute();
+                        pc.vypis("kontrola prosla no ip");
+                        prikaz = new CiscoIpRoute(pc, kon, slova, false);
                         return;
                     }
                 }
@@ -737,8 +742,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
 
             s += "interface " + sr.jmeno + "\n";
-            if (sr.ip != null) {
-                s += " ip address " + sr.ip.vypisAdresu() + " " + sr.ip.vypisMasku() + "\n";
+            if (sr.vratPrvni() != null) {
+                s += " ip address " + sr.vratPrvni().vypisAdresu() + " " + sr.vratPrvni().vypisMasku() + "\n";
             }
             if (sr.jeNahozene() == false) {
                 s += " shutdown" + "\n";
@@ -794,7 +799,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 kon.posliRadek("Bad mask /" + ip.pocetBituMasky() + " for address " + ip.vypisAdresu());
                 return;
             }
-            aktualni.ip = ip;
+            aktualni.pridejNaPrvniPozici(ip); // TODO: prosetrit
 
         } catch (SpatnaMaskaException e) {
             String[] pole = slova.get(3).split("\\.");

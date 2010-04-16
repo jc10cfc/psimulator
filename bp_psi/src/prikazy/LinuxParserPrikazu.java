@@ -55,8 +55,8 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new LinuxExit(pc, kon, slova);
         } else if (slova.get(0).equals("ifconfig")) {
             pr = new LinuxIfconfig(pc, kon, slova);
-        } else if (slova.get(0).equals("stifconfig")) {
-            pr = new LinuxIfconfigStarej(pc, kon, slova);
+//        } else if (slova.get(0).equals("stifconfig")) {
+//            pr = new LinuxIfconfigStarej(pc, kon, slova);
         } else if (slova.get(0).equals("route")) {
             pr = new LinuxRoute(pc, kon, slova);
         } else if (slova.get(0).equals("ping")) {

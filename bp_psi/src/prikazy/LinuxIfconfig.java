@@ -332,30 +332,31 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         //nastavovani adresy:
         if (pouzitIp != -1){ //adresa byla zadana, musi se nastavit
             String nastavit = seznamIP.get(pouzitIp);
-            if (r.ip!=null && nastavit.equals(r.ip.vypisAdresu())) {
+            if (r.vratPrvni()!=null && nastavit.equals(r.vratPrvni().vypisAdresu())) {
                 //ip existuje a je stejna, nic se nemeni
             } else { //IP adresa neni stejna, bude se menit
-                r.ip = vytvorAdresu(nastavit);
+                r.seznamAdres.remove(0);
+                r.pridejNaPrvniPozici(vytvorAdresu(nastavit));
                 zmena=true;
             }
         }
 
         //nastavovani masky ze Stringu m
         if (maska != null) { //zadana adresa s maskou za lomitkem
-            if(r.ip!=null && r.ip.vypisMasku().equals(maska)){
+            if(r.vratPrvni()!=null && r.vratPrvni().vypisMasku().equals(maska)){
                 //ip adresa existuje a ma stejnou masku, nic se nemeni
             }else{//zadana hodnota je jina nez puvodni, musi se menit
-                priradMasku(r.ip, maska);
+                priradMasku(r.vratPrvni(), maska);
                 zmena=true;
             }
         }
 
         //nastavovani masky za lomitkem
         if (pocetBituMasky != -1) { //zadana adresa s maskou za lomitkem
-            if(r.ip!=null && r.ip.pocetBituMasky()==pocetBituMasky){
+            if(r.vratPrvni()!=null && r.vratPrvni().pocetBituMasky()==pocetBituMasky){
                 //ip adresa existuje a ma stejnou masku, nic se nemeni
             }else{//zadana hodnota je jina nez puvodni, musi se menit
-                priradMasku(r.ip, pocetBituMasky);
+                priradMasku(r.vratPrvni(), pocetBituMasky);
                 zmena=true;
             }
         }
@@ -415,8 +416,8 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
 
     private void vyridRoutovani(SitoveRozhrani r){
         pc.routovaciTabulka.smazVsechnyZaznamyNaRozhrani(r); //mazani rout
-        if(r.ip!=null){
-            pc.routovaciTabulka.pridejZaznam(r.ip.vratCisloSite(), r);
+        if(r.vratPrvni()!=null){
+            pc.routovaciTabulka.pridejZaznam(r.vratPrvni().vratCisloSite(), r);
         }
     }
 
@@ -424,9 +425,9 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
     private void vypisRozhrani(SitoveRozhrani r){
         //je to jen provizorni vypis
         kon.posliRadek(r.jmeno+"\tLink encap:Ethernet  HWadr "+r.macAdresa);
-        if (r.ip != null) {
-            kon.posliRadek("\tinet adr:" + r.ip.vypisAdresu() + "  Všesměr:" + r.ip.vypisBroadcast() +
-                    "  Maska:" + r.ip.vypisMasku());
+        if (r.vratPrvni() != null) {
+            kon.posliRadek("\tinet adr:" + r.vratPrvni().vypisAdresu() + "  Všesměr:" + r.vratPrvni().vypisBroadcast() +
+                    "  Maska:" + r.vratPrvni().vypisMasku());
         }
         kon.posliRadek("\tAKTIVOVÁNO VŠESMĚROVÉ_VYSÍLÁNÍ BĚŽÍ MULTICAST  MTU:1500  Metrika:1"); //asi ne cesky
         kon.posliRadek("\tRX packets:169765 errors:2 dropped:14 overruns:2 frame:0"); //ty cisla by chtely generovat

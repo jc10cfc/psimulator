@@ -26,7 +26,7 @@ public class LinuxPocitac extends AbstractPocitac {
      */
     @Override
     public boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana){
-        if (ocekavana.jeStejnaAdresa(rozhr.ip)) { //adresa souhlasi - muzu to prijmout
+        if (rozhr.obsahujeStejnouAdresu(ocekavana)) { //adresa souhlasi - muzu to prijmout
             prijmiPaket(p);
             return true;
         } else {//adresa nesouhlasi, zpatky se musi poslat host unreachable

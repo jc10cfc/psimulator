@@ -4,6 +4,9 @@
  * Predelani ethernetovyho posilani na dve metody - HOTOVO
  * Nastaveni preposilani a ip_forward - ZBYVA zjistit, co se dela, kdyz neni preposilani nastaveny, zatim
  * to proste zahazuje
+ *
+ * odesliEthernetove() - pro odeslani host unreachable vymyslet odesilani se spravnou adresou, zatim se posila prvni.
+ * odesliNovejPaket() - to samy
  */
 package pocitac;
 
@@ -97,9 +100,9 @@ public abstract class AbstractPocitac {
 
         for (SitoveRozhrani iface : rozhrani) {
             System.out.println("(" + jmeno + ":) " + iface.jmeno);
-            if (iface.ip != null) {
-                System.out.println("(" + jmeno + ":) " + iface.ip.vypisAdresu());
-                System.out.println("(" + jmeno + ":) " + iface.ip.vypisMasku());
+            if (iface.vratPrvni() != null) {
+                System.out.println("(" + jmeno + ":) " + iface.vratPrvni().vypisAdresu());
+                System.out.println("(" + jmeno + ":) " + iface.vratPrvni().vypisMasku());
             }
             System.out.println("(" + jmeno + ":) " + iface.macAdresa);
             if (iface.pripojenoK != null) {
@@ -132,9 +135,9 @@ public abstract class AbstractPocitac {
      * @param cil
      * @return
      */
-    private SitoveRozhrani najdiMeziRozhranima(IpAdresa cil) {
+    protected SitoveRozhrani najdiMeziRozhranima(IpAdresa cil) {
         for (SitoveRozhrani rozhr : rozhrani) {
-            if (cil.jeStejnaAdresa(rozhr.ip)) {
+            if (rozhr.obsahujeStejnouAdresu(cil)) {
                 return rozhr;
             }
         }
@@ -153,7 +156,7 @@ public abstract class AbstractPocitac {
             if ( rozhr.getPc().prijmiEthernetove(p, rozhr, sousedni) ){ //adresa souhlasi
                 //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                posliNovejPaketOdpoved(p,rozhr.pripojenoK.ip, 3, 1); //host unreachable
+                posliNovejPaketOdpoved(p,rozhr.pripojenoK.vratPrvni(), 3, 1); //host unreachable
                             // -> svoji adresu musim dost krkolome zjistovat, ale je to asi nejjednodussi
                             //    a nemusim se bat, ze tam nekde bude null
             }
@@ -279,7 +282,7 @@ public abstract class AbstractPocitac {
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
             return false;
         }
-        zdroj = mojeRozhr.ip;
+        zdroj = mojeRozhr.vratPrvni();
         if(spec_zdroj!=null){ //kdyz je specifikovano, s jakym zdrojem se ma paket poslat, tak se tak posle
             zdroj=spec_zdroj;
         }
@@ -346,61 +349,4 @@ public abstract class AbstractPocitac {
         }
     }
 
-
-
-
-//****************************************************************************************************
-// tady zacinaj puvodni Standovy metody pro posilani paketu, da-li se to tak nazvat:
-
-    @Deprecated
-    private boolean jsemVCili(IpAdresa cil) {
-        for (SitoveRozhrani rozhr : rozhrani) {
-            if (rozhr.ip.jeStejnaAdresa(cil)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // bud pole bitu (pokud bude potreba vic nez 1 informace), jinak klasicky int
-    @Deprecated
-    public int posliPingStarej(IpAdresa cil) {
-        int ret = -1;
-
-        if (jsemVCili(cil)) {
-            // ping paket dorazil do cile
-            // konec
-            return 0;
-        }
-
-        SitoveRozhrani sr = routovaciTabulka.najdiSpravnyRozhrani(cil);
-        if (sr == null) {
-            // neni pro to pravidlo zaznam v routovaci tabulce
-            // konec
-            return 1;
-        }
-        if (sr.pripojenoK == null) {
-            // neni fyzicky pripojeno nikam
-            // konec
-            return 2;
-        }
-
-        ret = sr.pripojenoK.getPc().prijmiPingStarej(cil);
-        return ret;
-    }
-
-    @Deprecated
-    public int prijmiPingStarej(IpAdresa cil) {
-        int ret = -1;
-        if (jsemVCili(cil)) {
-            // ping paket dorazil do cile
-            // konec
-            return 0;
-        }
-
-        ret = posliPingStarej(cil);
-        return ret;
-    }
-
-    
 }

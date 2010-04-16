@@ -14,7 +14,7 @@ import pocitac.SitoveRozhrani;
 import vyjimky.NeznamyTypPcException;
 
 /**
- * Prikaz uloz, ktery ulozi do souboru XML vsechny pocitace dle aktualnich nastaveni.
+ * Prikaz ukladani do XML souboru vsechny pocitace dle aktualnich nastaveni.
  * @author haldyr
  */
 public class Uloz extends AbstraktniPrikaz {
@@ -64,7 +64,7 @@ public class Uloz extends AbstraktniPrikaz {
     /**
      * Vrati element, ktery vyrobi na zaklade parametru.
      * @param jmeno jmeno elementu
-     * @param obsah obsah elementu
+     * @param obsah obsah elementu, kdyz je null, tak tam bude prazdnej ""
      * @return
      */
     private String vratElement(String jmeno, String obsah) {
@@ -85,12 +85,12 @@ public class Uloz extends AbstraktniPrikaz {
         tabs += "\t";
 
         zapis(vratElement("jmeno", rozhrani.jmeno));
-        if (rozhrani.ip == null) {
+        if (rozhrani.vratPrvni() == null) {
             zapis(vratElement("ip", ""));
             zapis(vratElement("maska", ""));
         } else {
-            zapis(vratElement("ip", rozhrani.ip.vypisAdresu()));
-            zapis(vratElement("maska", rozhrani.ip.vypisMasku()));
+            zapis(vratElement("ip", rozhrani.vratPrvni().vypisAdresu()));
+            zapis(vratElement("maska", rozhrani.vratPrvni().vypisMasku()));
         }
         zapis(vratElement("mac", rozhrani.macAdresa));
         if (rozhrani.pripojenoK == null) {
@@ -131,7 +131,7 @@ public class Uloz extends AbstraktniPrikaz {
                 if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
                     zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisAdresu()));
                 } else {
-                    zapis(vratElement("brana", "null"));
+//                    zapis(vratElement("brana", "null")); // nakonec to tam nechci
                 }
                 zapis(vratElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno));
 
@@ -141,6 +141,7 @@ public class Uloz extends AbstraktniPrikaz {
         }
 
         if (pc instanceof CiscoPocitac) {
+             // u cisca ukladam jen zadane prikazy, protoze se routy z rozhrani generuji automaticky
 
             CiscoPocitac poc = (CiscoPocitac)pc;
             for (int i = 0; i < poc.getWrapper().size(); i++) {

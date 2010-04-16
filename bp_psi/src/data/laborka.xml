@@ -16,15 +16,8 @@
         </rozhrani>
         <routy>
             <zaznam>
-                <adresat>1.1.1.0</adresat>
-                <maskaAdresata>255.255.255.0</maskaAdresata>
-                <brana>null</brana>
-                <rozhraniKam>eth1</rozhraniKam>
-            </zaznam>
-            <zaznam>
-                <adresat>2.2.2.0</adresat>
-                <maskaAdresata>255.255.255.0</maskaAdresata>
-                <brana>null</brana>
+                <adresat>0.0.0.0</adresat>
+                <maskaAdresata>0.0.0.0</maskaAdresata>
                 <rozhraniKam>eth1</rozhraniKam>
             </zaznam>
         </routy>
@@ -47,6 +40,8 @@
             <pripojenoK>cisco2:FastEthernet0/0</pripojenoK>
             <nahozene>true</nahozene>
         </rozhrani>
+        <routy>
+	</routy>
     </pocitac>
 
     <pocitac jmeno="cisco2" typ="cisco">
@@ -66,6 +61,5 @@
             </zaznam>
         </routy>
     </pocitac>
-
 
 </konfigurak>
