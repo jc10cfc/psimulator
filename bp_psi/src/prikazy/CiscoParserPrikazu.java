@@ -536,7 +536,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("kill")) {
-            prikaz = new Exit(pc, kon, slova);
+            prikaz = new LinuxExit(pc, kon, slova);
             return;
         }
 

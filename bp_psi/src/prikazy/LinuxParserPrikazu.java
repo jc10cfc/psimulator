@@ -52,7 +52,7 @@ public class LinuxParserPrikazu extends ParserPrikazu {
         }
 
         if (slova.get(0).equals("exit")) {      //tady se zkousej jednotlivy prikazy
-            pr = new Exit(pc, kon, slova);
+            pr = new LinuxExit(pc, kon, slova);
         } else if (slova.get(0).equals("ifconfig")) {
             pr = new LinuxIfconfig(pc, kon, slova);
         } else if (slova.get(0).equals("stifconfig")) {

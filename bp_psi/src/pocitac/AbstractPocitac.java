@@ -2,6 +2,8 @@
  * Udelat:
  * Vraceni chyboveho paketu na vyprseni ttl - HOTOVO
  * Predelani ethernetovyho posilani na dve metody - HOTOVO
+ * Nastaveni preposilani a ip_forward - ZBYVA zjistit, co se dela, kdyz neni preposilani nastaveny, zatim
+ * to proste zahazuje
  */
 package pocitac;
 
@@ -17,12 +19,20 @@ import prikazy.AbstraktniPing;
  */
 public abstract class AbstractPocitac {
 
+    private boolean ladeni=true;
+
+    // promenny pro technicky zabezpeceni pocitace:
     public Komunikace komunikace;
+
     public List<SitoveRozhrani> rozhrani; //kvuli vypisum to musi bejt verejny
     public String jmeno; //jmeno pocitace
     public RoutovaciTabulka routovaciTabulka;
-
-    private boolean ladeni=true;
+    /**
+     * Je-li true, preposilaj se pakety, jinak ne.
+     * Obsah linuxoveho souboru /proc/sys/net/ipv4/ip_forward 0=false, 1=true
+     * Pro cisco defaultne true, pro linux false.
+     */
+    public boolean ip_forward = true; //defaultne nastaveno, linux si to v konstruktoru prepise
 
     @Deprecated
     public AbstractPocitac(String jmeno) {
@@ -328,7 +338,11 @@ public abstract class AbstractPocitac {
                 paket.prikaz.zpracujPaket(paket);
             }
         } else { // paket se musi poslat dal
-            preposliPaket(paket);
+            if (ip_forward){ // nastaveno preposilani - v souboru /proc/sys/net/ipv4/ip_forward je jednicka
+                preposliPaket(paket);
+            }else{
+                // Jestli se nepletu, tak paket proste zahodi. Chce to ale jeste overit.
+            }
         }
     }
 

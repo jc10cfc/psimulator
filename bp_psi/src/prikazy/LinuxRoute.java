@@ -19,7 +19,7 @@ import pocitac.SitoveRozhrani;
  * @author neiss
  */
 public class LinuxRoute extends AbstraktniPrikaz{
-    boolean ladiciVypisovani = true; //pro debug
+    boolean ladiciVypisovani = false; //pro debug
 
     // pomocny promenny pro parser prikazu:
     private int uk=1; //ukazatel do seznamu slov, prvni slovo je to route

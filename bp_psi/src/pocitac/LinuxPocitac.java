@@ -14,6 +14,7 @@ public class LinuxPocitac extends AbstractPocitac {
     
     public LinuxPocitac(String jmeno, int port) {
         super(jmeno,port);
+        ip_forward=false; // Linux defaultne nepreposila. Pak, myslim, zpatky nic neposle a paket proste zahodi.
     }
 
     /**
