@@ -135,7 +135,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             }
         }
 
-
         if (cmd.length() >= i && command.startsWith(cmd)) { // lze doplnit na jeden jedinecny prikaz
             return true;
         }
@@ -230,156 +229,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         kon.posliRadek("");
     }
 
-    /**
-     * Zpracovava prikaz 'ip route' tzn. pridava routy do routovaci tabulky.
-     * TODO: refaktorovat - zdvojeny kod pro 'ip route' a 'no ip route'
-     */
-    private void iproute() {
 
-        // ip route 'cil' 'maska cile' 'kam poslat'
-        // ip route 0.0.0.0 0.0.0.0 192.168.2.254
-        // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
-        // ip route 192.168.2.0 255.255.255.192 fastEthernet0/0
-
-        if (slova.size() < 5) {
-            incompleteCommand();
-            return;
-        }
-
-        if (kontrola("address", slova.get(1))) { // alespon zakladni kontrola
-            invalidInputDetected();
-            return;
-        }
-
-        IpAdresa adresat = null;
-        try {
-            adresat = new IpAdresa(slova.get(2), slova.get(3));
-        } catch (Exception e) { // SpatnaMaskaException, SpatnaAdresaException
-            invalidInputDetected();
-            return;
-        }
-
-        if (!adresat.jeCislemSite()) {
-            kon.posliRadek("%Inconsistent address and mask");
-            return;
-        }
-
-        if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
-            kon.posliRadek("%Invalid destination prefix");
-            return;
-        }
-
-        if (slova.size() == 6 || (slova.size() == 5 && !zacinaCislem(slova.get(4)))) {
-            // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
-
-            SitoveRozhrani sr = null;
-            String rozhrani;
-            if (slova.size() == 6) {
-                rozhrani = slova.get(4) + slova.get(5);
-            } else {
-                rozhrani = slova.get(4);
-            }
-
-            for (SitoveRozhrani iface : pc.rozhrani) {
-                if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
-                    sr = iface;
-                }
-            }
-            if (sr == null) { // rozhrani nenalezeno
-                invalidInputDetected();
-                return;
-            }
-
-            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, sr);
-
-        } else if (slova.size() == 5) { // ip route 0.0.0.0 0.0.0.0 192.168.2.254
-
-            IpAdresa brana = null;
-            try {
-                brana = new IpAdresa(slova.get(4));
-            } catch (SpatnaAdresaException e) {
-                invalidInputDetected();
-                return;
-            }
-
-            if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
-                kon.posliRadek("%Invalid next hop address");
-                return;
-            }
-
-            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
-        } else { // vice slov nez 6
-            invalidInputDetected();
-        }
-    }
-
-    /**
-     * Prikaz pro mazani zaznamu z routovaci tabulky.
-     * TODO: %No matching route to delete
-     */
-    public void noiproute() {
-
-        if (slova.size() < 5) {
-            invalidInputDetected();
-            return;
-        }
-        if (!(kontrola("ip", slova.get(1)) && kontrola("route", slova.get(2)))) {
-            invalidInputDetected();
-            return;
-        }
-
-        IpAdresa adresat;
-        try {
-            adresat = new IpAdresa(slova.get(3), slova.get(4));
-        } catch (Exception e) {
-            invalidInputDetected();
-//            e.printStackTrace();
-            return;
-        }
-
-        for (int i = 0; i < ((CiscoPocitac) pc).getWrapper().size(); i++) {
-            if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).getAdresat().equals(adresat)) {
-
-                String rozhrani = "";
-                if (slova.size() == 7) {
-                    rozhrani = slova.get(5) + slova.get(6);
-                } else if (slova.size() == 6) {
-                    rozhrani = slova.get(5);
-                }
-
-                if (slova.size() == 6) {
-                    if (zacinaCislem(slova.get(5))) {
-                        IpAdresa brana = null;
-                        try {
-                            brana = new IpAdresa(slova.get(5));
-                        } catch (Exception e) {
-                            invalidInputDetected();
-                            return;
-                        }
-
-                        ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, brana, null);
-                    } else {
-                        SitoveRozhrani sr = null;
-                        for (SitoveRozhrani iface : pc.rozhrani) {
-                            if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
-                                sr = iface;
-                            }
-                        }
-                        if (sr == null) { // rozhrani nenalezeno
-                            invalidInputDetected();
-                            return;
-                        }
-                        ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, null, sr);
-                    }
-                } else {
-                    ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, null, null);
-                }
-
-            }
-
-
-        }
-    }
 
     /**
      * Pomocna metoda pro rozhodnuti, zda se jedna o IP ci o jmeno rozhrani.
@@ -388,6 +238,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     private boolean zacinaCislem(String s) {
 
+        if (s == null) return false;
         String pismeno = s.substring(0, 1);
         int i = -1;
 
@@ -464,7 +315,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
 
     /**
-     * 
+     * Shodi rozhrani a zaktualizuje routovaci tabulku.
      */
     private void shutdown() {
 
@@ -474,11 +325,13 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             Date d = new Date();
             kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
             kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
+            ((CiscoPocitac)pc).getWrapper().update();
         }
     }
 
     /**
      * Tento prikaz zapne rozhrani, ktere je definovano v aktualnim nastovacim rezimu (napr.: interface fastEthernet0/0)
+     * a aktualizuje routovaci tabulku.
      */
     private void noshutdown() {
         if (slova.size() != 2) {
@@ -494,6 +347,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             }
 
             aktualni.nastavRozhrani(true);
+            ((CiscoPocitac)pc).getWrapper().update();
         }
         if (nepokracovat) {
             kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
@@ -542,7 +396,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("?")) {
-            prikaz = new Otaznik(pc, kon, slova, stav);
+            prikaz = new CiscoOtaznik(pc, kon, slova, stav);
             return;
         }
 
@@ -602,14 +456,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
                 if (debug) {
                     if (kontrola("ip", prvniSlovo)) {
-//                        iproute();
-                        pc.vypis("kontrola prosla ip");
                         prikaz = new CiscoIpRoute(pc, kon, slova, true);
                         return;
                     }
                     if (kontrola("no", prvniSlovo)) {
-//                        noiproute();
-                        pc.vypis("kontrola prosla no ip");
                         prikaz = new CiscoIpRoute(pc, kon, slova, false);
                         return;
                     }
@@ -626,7 +476,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
-                    iproute();
+                    prikaz = new CiscoIpRoute(pc, kon, slova, true);
                     return;
                 }
                 if (kontrola("interface", prvniSlovo)) {
@@ -638,7 +488,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("no", prvniSlovo)) {
-                    noiproute();
+                    prikaz = new CiscoIpRoute(pc, kon, slova, false);
                     return;
                 }
                 break;
@@ -843,14 +693,166 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
 
-//        if ()
-
         String s = "";
 
         CiscoPocitac poc = (CiscoPocitac) pc;
         s += poc.getWrapper().vypisRT();
 
         kon.posliPoRadcich(s, 80);
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+        /**
+     * Zpracovava prikaz 'ip route' tzn. pridava routy do routovaci tabulky.
+     * TODO: refaktorovat - zdvojeny kod pro 'ip route' a 'no ip route'
+     */
+    @Deprecated
+    private void iproute() {
+
+        // ip route 'cil' 'maska cile' 'kam poslat'
+        // ip route 0.0.0.0 0.0.0.0 192.168.2.254
+        // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
+        // ip route 192.168.2.0 255.255.255.192 fastEthernet0/0
+
+        if (slova.size() < 5) {
+            incompleteCommand();
+            return;
+        }
+
+        if (kontrola("address", slova.get(1))) { // alespon zakladni kontrola
+            invalidInputDetected();
+            return;
+        }
+
+        IpAdresa adresat = null;
+        try {
+            adresat = new IpAdresa(slova.get(2), slova.get(3));
+        } catch (Exception e) { // SpatnaMaskaException, SpatnaAdresaException
+            invalidInputDetected();
+            return;
+        }
+
+        if (!adresat.jeCislemSite()) {
+            kon.posliRadek("%Inconsistent address and mask");
+            return;
+        }
+
+        if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
+            kon.posliRadek("%Invalid destination prefix");
+            return;
+        }
+
+        if (slova.size() == 6 || (slova.size() == 5 && !zacinaCislem(slova.get(4)))) {
+            // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
+
+            SitoveRozhrani sr = null;
+            String rozhrani;
+            if (slova.size() == 6) {
+                rozhrani = slova.get(4) + slova.get(5);
+            } else {
+                rozhrani = slova.get(4);
+            }
+
+            for (SitoveRozhrani iface : pc.rozhrani) {
+                if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
+                    sr = iface;
+                }
+            }
+            if (sr == null) { // rozhrani nenalezeno
+                invalidInputDetected();
+                return;
+            }
+
+            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, sr);
+
+        } else if (slova.size() == 5) { // ip route 0.0.0.0 0.0.0.0 192.168.2.254
+
+            IpAdresa brana = null;
+            try {
+                brana = new IpAdresa(slova.get(4));
+            } catch (SpatnaAdresaException e) {
+                invalidInputDetected();
+                return;
+            }
+
+            if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
+                kon.posliRadek("%Invalid next hop address");
+                return;
+            }
+
+            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
+        } else { // vice slov nez 6
+            invalidInputDetected();
+        }
+    }
+
+    /**
+     * Prikaz pro mazani zaznamu z routovaci tabulky.
+     */
+    @Deprecated
+    public void noiproute() {
+
+        if (slova.size() < 5) {
+            invalidInputDetected();
+            return;
+        }
+        if (!(kontrola("ip", slova.get(1)) && kontrola("route", slova.get(2)))) {
+            invalidInputDetected();
+            return;
+        }
+
+        IpAdresa adresat;
+        try {
+            adresat = new IpAdresa(slova.get(3), slova.get(4));
+        } catch (Exception e) {
+            invalidInputDetected();
+//            e.printStackTrace();
+            return;
+        }
+
+        for (int i = 0; i < ((CiscoPocitac) pc).getWrapper().size(); i++) {
+            if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).getAdresat().equals(adresat)) {
+
+                String rozhrani = "";
+                if (slova.size() == 7) {
+                    rozhrani = slova.get(5) + slova.get(6);
+                } else if (slova.size() == 6) {
+                    rozhrani = slova.get(5);
+                }
+
+                if (slova.size() == 6) {
+                    if (zacinaCislem(slova.get(5))) {
+                        IpAdresa brana = null;
+                        try {
+                            brana = new IpAdresa(slova.get(5));
+                        } catch (Exception e) {
+                            invalidInputDetected();
+                            return;
+                        }
+
+                        ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, brana, null);
+                    } else {
+                        SitoveRozhrani sr = null;
+                        for (SitoveRozhrani iface : pc.rozhrani) {
+                            if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
+                                sr = iface;
+                            }
+                        }
+                        if (sr == null) { // rozhrani nenalezeno
+                            invalidInputDetected();
+                            return;
+                        }
+                        ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, null, sr);
+                    }
+                } else {
+                    ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, null, null);
+                }
+
+            }
+
+
+        }
     }
 }
 

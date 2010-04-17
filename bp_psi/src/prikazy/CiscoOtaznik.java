@@ -15,9 +15,9 @@ import pocitac.*;
  *
  * @author haldyr
  */
-public class Otaznik extends AbstraktniPrikaz{
+public class CiscoOtaznik extends AbstraktniPrikaz{
 
-    public Otaznik(AbstractPocitac pc, Konsole kon, List<String> slova, CiscoStavy stav) {
+    public CiscoOtaznik(AbstractPocitac pc, Konsole kon, List<String> slova, CiscoStavy stav) {
         super(pc,kon,slova);
         this.stav = stav;
         vykonejPrikaz();

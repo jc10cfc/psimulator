@@ -1,5 +1,11 @@
 /*
- * TODO: Dodelat zpracovani klasik + no
+ * Hotovo:
+ * Dodelat zpracovani klasik + no
+ * %No matching route to delete
+ * Pak to predelat v parseru.
+ *
+ * Dodelat:
+ * 
  */
 
 package prikazy;
@@ -28,43 +34,19 @@ public class CiscoIpRoute extends CiscoPrikaz {
     private IpAdresa brana;
     private SitoveRozhrani rozhrani;
 
+    private boolean debug = false;
+
     public CiscoIpRoute(AbstractPocitac pc, Konsole kon, List<String> slova, boolean pridej) {
         super(pc, kon, slova);
         this.pridej = pridej;
-        pc.vypis("kostruktor: pridej="+this.pridej);
         this.adresat = null;
         this.brana = null;
         this.rozhrani = null;
-        debug = false;
 
         boolean pokracovat = zpracujRadek();
         if (debug) pc.vypis(pokracovat ? "pokracuji" : "nepokracuji");
         if (pokracovat) {
             vykonejPrikaz();
-        }
-    }
-
-    @Override
-    protected void vykonejPrikaz() {
-        if (debug) pc.vypis("pridej="+pridej);
-        if (pridej) {
-            if (brana != null) {
-                if (debug) pc.vypis("prikaz ip route na branu");
-                ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
-            } else {
-                if (rozhrani == null) {
-                    pc.vypis("chyba jako hrom!! Rozhrani je null");
-                    return;
-                }
-                if (debug) pc.vypis("prikaz ip route na rozhrani");
-                ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, rozhrani);
-            }
-        } else { // mazu
-            if (debug) pc.vypis("prikaz no ip route na mazani");
-            int n = ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, brana, rozhrani);
-            if (debug && n != 0) {
-                pc.vypis("Nepodarilo se zmazat z RT vubec nic!");
-            }
         }
     }
 
@@ -118,7 +100,6 @@ public class CiscoIpRoute extends CiscoPrikaz {
                 return false;
             }
 
-//            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
         } else if (!dalsi.equals("")) { // na rozhrani
             String posledni = dalsiSlovo();
             dalsi += posledni; // nemuze byt null
@@ -132,8 +113,6 @@ public class CiscoIpRoute extends CiscoPrikaz {
                 invalidInputDetected();
                 return false;
             }
-
-//            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, sr);
 
         } else { // prazdny
             if (pridej) {
@@ -150,6 +129,23 @@ public class CiscoIpRoute extends CiscoPrikaz {
         return true;
     }
 
-
-
+    @Override
+    protected void vykonejPrikaz() {
+        if (debug) pc.vypis("pridej="+pridej);
+        if (pridej) {
+            if (brana != null) { // na branu
+                ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
+            } else { // na rozhrani
+                if (rozhrani == null) {
+                    return;
+                }
+                ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, rozhrani);
+            }
+        } else { // mazu
+            int n = ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, brana, rozhrani);
+            if (n == 1) {
+                kon.posliRadek("%No matching route to delete");
+            }
+        }
+    }
 }

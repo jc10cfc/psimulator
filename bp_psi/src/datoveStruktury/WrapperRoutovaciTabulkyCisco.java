@@ -142,7 +142,7 @@ public class WrapperRoutovaciTabulkyCisco {
         routovaciTabulka.smazVsechnyZaznamy();
 
         // nastavuju citac
-        citac = 0;
+        this.citac = 0;
 
         // pridam routy na nahozena rozhrani
         for (SitoveRozhrani iface : pc.rozhrani) {
@@ -154,19 +154,23 @@ public class WrapperRoutovaciTabulkyCisco {
         // propocitam a pridam routy s prirazenyma rozhranima
         for (CiscoZaznam zaznam : radky) {
             if (zaznam.rozhrani != null) { // kdyz to je na rozhrani
-                routovaciTabulka.pridejZaznam(zaznam.adresat, zaznam.rozhrani);
+                if (zaznam.rozhrani.jeNahozene()) {
+                    routovaciTabulka.pridejZaznam(zaznam.adresat, zaznam.rozhrani);
+                }
             } else { // kdyz to je na branu
                 SitoveRozhrani odeslat = najdiRozhraniProBranu(zaznam.brana);
                 if (odeslat != null) {
+                    if (odeslat.jeNahozene()) {
 //                    System.out.println("nasel jsem pro "+zaznam.adresat.vypisAdresu() + " rozhrani "+odeslat.jmeno);
-                    routovaciTabulka.pridejZaznamBezKontrol(zaznam.adresat, zaznam.brana, odeslat);
+                        routovaciTabulka.pridejZaznamBezKontrol(zaznam.adresat, zaznam.brana, odeslat);
+                    }
                 } else {
 //                    System.out.println("nenasel jsem pro "+ zaznam);
                 }
             }
         }
     }
-    
+
     /**
      * Vrati rozhrani, na ktere se ma odesilat, kdyz je zaznam na branu.
      * Tato metoda pocita s tim, ze v RT uz jsou zaznamy pro nahozena rozhrani.
@@ -295,6 +299,10 @@ public class WrapperRoutovaciTabulkyCisco {
             }
         }
 
+        if (smazat.size() == 0) {
+            return 1;
+        }
+
         for (CiscoZaznam zaznam : smazat) {
             radky.remove(zaznam);
         }
@@ -303,7 +311,7 @@ public class WrapperRoutovaciTabulkyCisco {
 
         return 0;
     }
-    
+
     /**
      * Smaze vsechny zaznamy ve wrapperu + zaktualizuje RT
      * Prikaz 'clear ip route *'
@@ -428,7 +436,7 @@ public class WrapperRoutovaciTabulkyCisco {
         for (CiscoZaznam czaznam : wrapper.radky) {
             s += vypisZaznamDoRT(czaznam);
         }
-        
+
         return s;
     }
 

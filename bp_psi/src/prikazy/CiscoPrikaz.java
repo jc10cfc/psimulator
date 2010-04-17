@@ -14,11 +14,17 @@ import pocitac.Konsole;
  * @author haldyr
  */
 public abstract class CiscoPrikaz extends AbstraktniPrikaz {
-
-    protected boolean debug = true;
+    
+    protected String radka = "";
 
     public CiscoPrikaz(AbstractPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
+        int i = 0;
+        for (String s : slova) {
+            if (i == 0) radka += s;
+            else radka += " " + s;
+            i++;
+        }
     }
 
     /**
@@ -50,11 +56,11 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
     }
 
     protected void ambigiousCommand(String s) {
-        kon.posliRadek("% Ambiguous command:  \""+s+"\"");
+        kon.posliRadek("% Ambiguous command:  \""+radka+"\"");
     }
 
     protected void invalidInputDetected() {
-        kon.posliRadek("% Invalid input detected.");
+        kon.posliRadek("\n% Invalid input detected.\n");
     }
 
     protected boolean zacinaCislem(String s) {
