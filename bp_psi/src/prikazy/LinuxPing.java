@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * http://jiri.patera.name/!old-data/ppi/ping-linux.html - pekny
+ * http://cs.wikipedia.org/wiki/Ping - jen wikipedie
  */
 
 package prikazy;

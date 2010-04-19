@@ -2,6 +2,7 @@
  * Typy a kódy icmp paketů viz:
  *      http://www.root.cz/clanky/sokety-a-c-icmp-protokol/
  *      http://www.svetsiti.cz/view.asp?rubrika=Technologie&clanekID=36
+ *      http://cs.wikipedia.org/wiki/ICMP
  */
 
 package datoveStruktury;

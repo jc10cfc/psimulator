@@ -61,6 +61,10 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new LinuxRoute(pc, kon, slova);
         } else if (slova.get(0).equals("ping")) {
             pr = new LinuxPing(pc, kon, slova);
+        } else if (slova.get(0).equals("cat")) {
+            pr = new LinuxCat(pc, kon, slova);
+        } else if (slova.get(0).equals("echo")) {
+            pr = new LinuxEcho(pc, kon, slova);
         } else {
             kon.posliRadek("bash: " + slova.get(0) + ": command not found");
         }
