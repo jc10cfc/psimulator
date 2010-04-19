@@ -255,6 +255,23 @@ public class IpAdresa {
         return vratit;
     }
 
+    /**
+     * Jako parametr vstupuje IpAdresa wildcard, ktera ma nastanenou adresu na wildcard (jako maska by to neproslo).
+     * @param wildcard
+     * @return maska - retezec, ktery je maskou z wildcard <br />
+     *         null - kdyz to nebyla validni maska (po preklopeni)
+     */
+    public static String vratMaskuZWildCard(IpAdresa wildcard) {
+        long wc = (long)wildcard.adresa;
+        long broadcast = (long)(new IpAdresa("255.255.255.255").adresa);
+        int mask = (int)(broadcast - wc);
+        if (!jeMaskou(mask)) {
+            return null;
+        }
+        wildcard.maska = mask;
+        return wildcard.vypisMasku();
+    }
+
      /**
      * Vrati pocet bitu masky ze zadane IP ve tvaru stringu. Vyuziva se, kdyz uzivatel zada
      * jen IP bez masky a ta se pak musi doplnit automaticky.

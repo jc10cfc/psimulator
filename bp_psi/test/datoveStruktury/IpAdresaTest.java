@@ -263,8 +263,16 @@ public class IpAdresaTest {
         assertEquals("240.0.1.0", IpAdresa.vratOJednaVetsi(ip).vypisAdresu());
     }
 
-
-
+    @Test
+    public void testVratMaskuZWildCard() {
+        IpAdresa ip = new IpAdresa("0.0.0.31");
+        assertEquals("255.255.255.224", IpAdresa.vratMaskuZWildCard(ip));
+        ip = new IpAdresa("0.0.0.3");
+        assertEquals("255.255.255.252", IpAdresa.vratMaskuZWildCard(ip));
+        ip = new IpAdresa("0.0.0.2");
+        assertEquals(null, IpAdresa.vratMaskuZWildCard(ip));
+    }
+    
 //    @Test
     public void pokus(){
         int a=0;

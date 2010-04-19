@@ -1,11 +1,13 @@
 /*
  * Doresit:
- * dalsi() kdyz dojdou ip v poolu, tak neco urobit
+ * staticky NAT - jen rucne pridana pravidla
+ * natovani z internetu - kontrola kdy natovat (neni nastaven pool atd..)
  */
 package datoveStruktury;
 
 import java.util.ArrayList;
 import java.util.List;
+import pocitac.AbstractPocitac;
 import pocitac.SitoveRozhrani;
 
 /**
@@ -18,7 +20,7 @@ public class NATtabulka {
     List<SitoveRozhrani> inside; // soukroma rozhrani
     SitoveRozhrani verejne;// mozna taky
     public boolean overload; // true, kdyz se vse preklada na 1 IP; false, kdyz se vybira IP z poolu
-    List<AccessList> access; // seznam access-listu (= kdyz zdrojova IP patri do nejakeho access-listu, tak se bude zrovna natovat
+    List<AccessList> seznamAccess; // seznam seznamAccess-listu (= kdyz zdrojova IP patri do nejakeho seznamAccess-listu, tak se bude zrovna natovat
     public int cisloAccess; // cislo pristupoveho listu, dle ktereho se kontroluje pristup
     private int citacPortu = 1025; // tady si drzim citac, odkud mam rozdavat porty
     public List<PoolList> seznamPoolu; // struktura pro pool IP - obsahuje jmeno + seznam IpAdres
@@ -31,11 +33,10 @@ public class NATtabulka {
      */
     public String aktualniPoolJmeno = "";
 
-    // doresit pool
     public NATtabulka() {
         tabulka = new ArrayList<NATzaznam>();
         inside = new ArrayList<SitoveRozhrani>();
-        access = new ArrayList<AccessList>();
+        seznamAccess = new ArrayList<AccessList>();
         seznamPoolu = new ArrayList<PoolList>();
         overload = false;
         cisloAccess = -1;
@@ -56,7 +57,7 @@ public class NATtabulka {
     }
 
     /**
-     * Trida reprezentujici jeden access-list.
+     * Trida reprezentujici jeden seznamAccess-list.
      */
     public class AccessList {
 
@@ -122,16 +123,29 @@ public class NATtabulka {
         }
     }
 
-    public IpAdresa zanatuj(Paket paket) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Vrati paket se prelozenou zdrojovou IP adresou.
+     * @param paket
+     * @return
+     */
+    public Paket zanatuj(Paket paket) {
+        paket.zdroj = zanatujZdrojovouIpAdresu(paket.zdroj, true);
+        return paket;
     }
 
-    public IpAdresa odnatuj(Paket pakets) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    public IpAdresa vratZdroj() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    /**
+     * Pokud je zaznam pro cilovou adresu v NAT tabulce, tak se to prelozi na spravnou soukromou.
+     * Jinak se vrati paket zpet nezmenen.
+     * @param paket
+     * @return
+     */
+    public Paket odnatuj(Paket paket) {
+        IpAdresa prelozena = odnatujZdrojovouIpAdresu(paket.cil);
+        if (prelozena == null) {
+            return paket;
+        }
+        paket.cil = prelozena;
+        return paket;
     }
 
     private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out) {
@@ -145,7 +159,7 @@ public class NATtabulka {
      *         1 - ne, nemam pool - vrat zpatky Destination Host Unreachable <br />
      *         2 - ne, dosli IP adresy z poolu - vrat zpatky Destination Host Unreachable
      *         3 - ne, vstupni neni soukrome nebo vystupni neni verejne <br />
-     *         4 - ne, zdrojova Ip neni v access-listech, tak nechat normalne projit bez natovani <br />
+     *         4 - ne, zdrojova Ip neni v seznamAccess-listech, tak nechat normalne projit bez natovani <br />
      *         5 - ne, neni nastaveno outside rozhrani
      */
     public int mamNatovat(IpAdresa zdroj, SitoveRozhrani vstupni, SitoveRozhrani vystupni) {
@@ -204,6 +218,20 @@ public class NATtabulka {
         return vrat;
     }
 
+    /**
+     * Mrkne se do tabulky a vrati prislusny zaznam pokud existuje.
+     * @param ip
+     * @return null - pokud neexistuje zaznam pro danou ip
+     */
+    private IpAdresa odnatujZdrojovouIpAdresu(IpAdresa ip) {
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.out.jeStejnaAdresa(ip) && zaznam.out.port == ip.port) {
+                return zaznam.out;
+            }
+        }
+        return null;
+    }
+
     /****************************************** nastavovani rozhrani ***************************************************/
 
     /**
@@ -249,47 +277,47 @@ public class NATtabulka {
         verejne = null;
     }
 
-    /****************************************** access-list ***************************************************/
+    /****************************************** seznamAccess-list ***************************************************/
 
     /**
-     * Prida do access-listu dalsi pravidlo. <br />
+     * Prida do seznamAccess-listu dalsi pravidlo. <br />
      * Pocitam s tim, ze ani jedno neni null.
      * @param adresa
      */
     public void pridejAccessList(IpAdresa adresa, int cislo) {
-        for (AccessList zaznam : access) {
+        for (AccessList zaznam : seznamAccess) {
             if (zaznam.ip.equals(adresa)) { // kdyz uz tam je, tak nic nedelat
                 return;
             }
         }
-        access.add(new AccessList(adresa, cislo));
+        seznamAccess.add(new AccessList(adresa, cislo));
     }
 
     /**
-     * Smaze vsechny access-listy s danym cislem.
+     * Smaze vsechny seznamAccess-listy s danym cislem.
      * @param cislo
      */
     public void smazAccessList(int cislo) {
         List<AccessList> smazat = new ArrayList<AccessList>();
-        for (AccessList zaznam : access) {
+        for (AccessList zaznam : seznamAccess) {
             if (zaznam.cislo == cislo) {
                 smazat.add(zaznam);
             }
         }
 
         for (AccessList zaznam : smazat) {
-            access.remove(zaznam);
+            seznamAccess.remove(zaznam);
         }
     }
 
     /**
-     * Zkontroluje access-listy, zda se ma zdrojova IP natovat.
+     * Zkontroluje seznamAccess-listy, zda se ma zdrojova IP natovat.
      * @param zdroj
-     * @return true, kdyz ano (je v uvedena v access-listech)
-     *         false, kdyz ne (nespada do rozsahu zadneho access-listu)
+     * @return true, kdyz ano (je v uvedena v seznamAccess-listech)
+     *         false, kdyz ne (nespada do rozsahu zadneho seznamAccess-listu)
      */
     private boolean jeVAccessListu(IpAdresa zdroj) {
-        for (AccessList zaznam : access) {
+        for (AccessList zaznam : seznamAccess) {
             if (zaznam.cislo == cisloAccess && zdroj.jeVRozsahu(zaznam.ip)) {
                 return true;
             }
@@ -305,11 +333,11 @@ public class NATtabulka {
      * @param konec
      * @param prefix
      * @param jmeno, neni null ani ""
-     * @return 0, ok nastavi pool
-     *         1, kdyz je prvni IP vetsi nez druha IP (%End address less than start address)
-     *         2, pool s timto jmenem je prave pouzivan, tak nic. (%Pool ovrld in use, cannot redefine)
-     *         3, kdyz je spatna maska (% Invalid input detected)
-     *         4, kdyz je start a konec v jine siti (%Start and end addresses on different subnets)
+     * @return 0 - ok nastavi pool <br />
+     *         1 - kdyz je prvni IP vetsi nez druha IP (%End address less than start address) <br />
+     *         2 - pool s timto jmenem je prave pouzivan, tak nic. (%Pool ovrld in use, cannot redefine) <br />
+     *         3 - kdyz je spatna maska (% Invalid input detected) <br />
+     *         4 - kdyz je start a konec v jine siti (%Start and end addresses on different subnets)
      */
     public int pridejPool(IpAdresa start, IpAdresa konec, int prefix, String jmeno) {
         if (start.dejLongIP() > konec.dejLongIP()) {
@@ -330,14 +358,20 @@ public class NATtabulka {
             return 4;
         }
 
-        // smaznout stejne se jmenuji pool
+        // smaznout stejne se jmenujici pool
         smazPool(jmeno);
 
         // tady pridej pool
-        PoolList novy = new PoolList();
-        novy.jmeno = jmeno;
+        PoolList novyPool = new PoolList();
+        novyPool.jmeno = jmeno;
 
-        // TODO: pridejPool() tady pokracovat - nasypat tam IpAdresy
+        // pridavam IP adresy do poolu.
+        IpAdresa ukazatel = start;
+        do {
+            novyPool.pool.add(ukazatel);
+            ukazatel = IpAdresa.vratOJednaVetsi(ukazatel);
+            
+        } while (ukazatel.dejLongIP() < konec.dejLongIP() && ukazatel.jeVRozsahu(start));
 
         return 0;
     }
@@ -349,14 +383,14 @@ public class NATtabulka {
      * Kdyz s takovym jmenem zadny nenajde, tak nastavi null a pak se nemuze natovat a vraci se Destination Host Unreachable
      * @param jmeno
      */
-    public void nastavPool(String jmeno) {
+    public void nastavAktivniPool(String jmeno) {
         for (PoolList pool : seznamPoolu) {
             if (pool.jmeno.equals(jmeno)) {
                 aktualniPool = pool;
                 aktualniPoolJmeno = pool.jmeno;
 
-                if (verejne.seznamAdres.size() != 0) {
-                    verejne.seznamAdres = verejne.seznamAdres.subList(0, 1); // smazu vsechny ostatni krom prvni nastavene
+                if (verejne.seznamAdres.size() != 0) { // smazu vsechny ostatni krom prvni nastavene
+                    verejne.seznamAdres = verejne.seznamAdres.subList(0, 1); 
                 }
                 for (IpAdresa ip : pool.pool) {
                     verejne.seznamAdres.add(ip);
@@ -415,5 +449,39 @@ public class NATtabulka {
             return true;
         }
         return false;
+    }
+
+    /****************************************** Linux *********************************************************/
+
+    /**
+     * Nastavi Linux pocitac pro natovani.
+     * Pocitam s tim, ze ani pc ani rozhrani neni null.
+     * @param pc
+     * @param verejne, urci ze je tohle rozhrani verejne a ostatni jsou automaticky soukroma.
+     */
+    public void nastavLinuxNAT(AbstractPocitac pc, SitoveRozhrani verejne) {
+
+        // nastaveni rozhrani
+        inside.clear();
+        for (SitoveRozhrani iface : pc.rozhrani) {
+            if (iface.jmeno.equals(verejne.jmeno)) {
+                continue; // preskakuju verejny
+            }
+            // vsechny ostatni nastrkam do inside
+            pridejRozhraniInside(iface);
+        }
+        nastavRozhraniOutside(verejne);
+
+        // osefovani access-listu
+        seznamAccess.clear();
+        int cislo = 1;
+        pridejAccessList(new IpAdresa("0.0.0.0", 0), cislo);
+        cisloAccess = cislo;
+
+        // osefovani IP poolu
+        seznamPoolu.clear();
+        String jmenoPoolu = "pool";
+        pridejPool(verejne.vratPrvni(), verejne.vratPrvni(), 24, jmenoPoolu);
+        nastavAktivniPool(jmenoPoolu);
     }
 }
