@@ -253,6 +253,16 @@ public class IpAdresaTest {
         assertFalse(IpAdresa.jeSpravnaIP("255.0.155.0", true));
     }
 
+    @Test
+    public void testVratOJednickuVetsi(){
+        IpAdresa ip= new IpAdresa("1.1.1.1");
+        assertEquals("1.1.1.2", IpAdresa.vratOJednaVetsi(ip).vypisAdresu());
+        ip= new IpAdresa("240.0.0.0");
+        assertEquals("240.0.0.1", IpAdresa.vratOJednaVetsi(ip).vypisAdresu());
+        ip= new IpAdresa("240.0.0.255");
+        assertEquals("240.0.1.0", IpAdresa.vratOJednaVetsi(ip).vypisAdresu());
+    }
+
 
 
 //    @Test

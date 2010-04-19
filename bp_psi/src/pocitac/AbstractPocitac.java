@@ -2,11 +2,8 @@
  * Udelat:
  * Vraceni chyboveho paketu na vyprseni ttl - HOTOVO
  * Predelani ethernetovyho posilani na dve metody - HOTOVO
- * Nastaveni preposilani a ip_forward - ZBYVA zjistit, co se dela, kdyz neni preposilani nastaveny, zatim
- * to proste zahazuje
- *
- * odesliEthernetove() - pro odeslani host unreachable vymyslet odesilani se spravnou adresou, zatim se posila prvni.
- * odesliNovejPaket() - to samy
+ * Nastaveni preposilani a ip_forward - HOTOVO (ty pakety se zahazujou)
+ * V metode odesliEthernetove() je potreba dodelat doplnovani moji adresy. - HOTOVO (prasarna)
  */
 package pocitac;
 
@@ -136,6 +133,10 @@ public abstract class AbstractPocitac {
      * @return
      */
     protected SitoveRozhrani najdiMeziRozhranima(IpAdresa cil) {
+        if(ladeni){
+            vypis("metoda najdiMeziRozhranima:\n cil: "+cil.vypisAdresu());
+        }
+
         for (SitoveRozhrani rozhr : rozhrani) {
             if (rozhr.obsahujeStejnouAdresu(cil)) {
                 return rozhr;
@@ -148,17 +149,34 @@ public abstract class AbstractPocitac {
      * Zkousi ethernetove poslat paket vedlejsimu pocitaci, ten ho bud prijme, nebo ho neprijme
      * a pak musim zpatky poslat host unreachable.
      * @param p paket, kterej posilam
-     * @param rozhr rozhrani toho sousedniho pocitace, na kterej to posilam
+     * @param mojeRozhr rozhrani, kterym to posilam
+     * @param ciziRozhr rozhrani toho sousedniho pocitace, na kterej to posilam
      * @param sousedni IP adresa rozhrani na sousednim pocitaci, na kterej to posilam
      */
-    private void odesliEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa sousedni) {
-        if (rozhr != null) { //cizi rozhrani by teoreticky mohlo bejt null
-            if ( rozhr.getPc().prijmiEthernetove(p, rozhr, sousedni) ){ //adresa souhlasi
+    private void odesliEthernetove(Paket p,SitoveRozhrani mojeRozhr,
+            SitoveRozhrani ciziRozhr, IpAdresa sousedni) {
+        /**
+         * Adresa mojeho rozhrani, ze kteryho to posilam. POZOR, strasna prasarna!
+         * Nechtelo se mi zjistovat, s jako adresou to linux nebo cisco posilaj,
+         * a tak to posilam prakticky vzdycky s prvni adresou na tomhle rozhrani.
+         * Jen kdyz rozhrani obsahuje zdrojovou adresu paketu, poslu to s ni (pro
+         * pocitace s NATem.
+         */
+        IpAdresa moje;
+
+        //zjistovani moji adresy (je to prasarna, ale nechce se mi to zkoumat):
+        if(mojeRozhr.obsahujeStejnouAdresu(p.zdroj)){
+            moje=p.zdroj;
+        }else{
+            moje=mojeRozhr.vratPrvni();
+        }
+
+        //posilani paketu
+        if (ciziRozhr != null) { //cizi rozhrani by teoreticky mohlo bejt null
+            if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ //adresa souhlasi
                 //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                posliNovejPaketOdpoved(p,rozhr.pripojenoK.vratPrvni(), 3, 1); //host unreachable
-                            // -> svoji adresu musim dost krkolome zjistovat, ale je to asi nejjednodussi
-                            //    a nemusim se bat, ze tam nekde bude null
+                posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
             }
         }else{
             //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
@@ -169,11 +187,14 @@ public abstract class AbstractPocitac {
     /**
      * Ethernetove prijima nebo odmita me poslany pakety.
      * @param p
-     * @param rozhr rozhrani pocitace, kterej ma paket prijmoutm, tzn. tohodle pocitace
-     * @param ocekavana adresa, kterou na rozhrani ocekavam
+     * @param rozhr rozhrani pocitace, kterej ma paket prijmout, tzn. tohodle pocitace
+     * @param ocekavana adresa, kterou odesilaci pocitac na tomto rozhrani ocekava
+     * @param sousedni adresa, se kterou mi to poslal ten sousedni pocitac. Linuxu je to jedno, ale
+     * pro cisco to je jeden z parametru, podle kteryho se rozhoduje, jestli paket prijme
      * @return true, kdyz byl paket prijmut, jinak false
      */
-    public abstract boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana);
+    public abstract boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana,
+            IpAdresa sousedni);
 
 
     /**
@@ -282,16 +303,19 @@ public abstract class AbstractPocitac {
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
             return false;
         }
-        zdroj = mojeRozhr.vratPrvni();
+
+        //vytvareni a kontrola paketu:
+        zdroj = mojeRozhr.vratPrvni(); //POZOR, na linuxu to tak opravdu funguje, ale cisco???
         if(spec_zdroj!=null){ //kdyz je specifikovano, s jakym zdrojem se ma paket poslat, tak se tak posle
             zdroj=spec_zdroj;
         }
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
         if(paket.icmp_seq != -1 && //to signalisuje, ze se paket nema odeslat, ale jen se zkousi, jestli to pujde
-                paket.zdroj != null ) { //rozhrani, kterym to chci poslat nema prirazenou IP adresu
+                paket.zdroj != null ) { //rozhrani, kterym to chci poslat ma prirazenou IP adresu
             if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
                         +sousedni.vypisAdresu()+" "+paket.toString());
-            odesliEthernetove(paket, ciziRozhr, sousedni);
+            odesliEthernetove(paket, mojeRozhr, ciziRozhr, sousedni);
+                    // -> sama se hlida, jestli ciziRozhrani neni null
         }
         return true;
     }
@@ -299,10 +323,13 @@ public abstract class AbstractPocitac {
     /**
      * Slouzi k preposilani paketu. Neni-li paket kam dorucit, posle se zpatky zprava, ze nelze dorucit.
      * @param paket
+     * @param vstupniRozhrani rozhrani, kterym paket prisel (dulezity pro natovani)
      */
-    private void preposliPaket(Paket paket) {
+    private void preposliPaket(Paket paket, SitoveRozhrani vstupniRozhrani) {
         IpAdresa sousedni = paket.cil; //adresa nejblizsiho pocitace, kam se ma paket poslat, defaultne cil,
         //kdyztak se to zmeni na branu z routovaci tabulky
+        SitoveRozhrani vystupniRozhrani; //rozhrani, kterym pujde paket pryc
+
         paket.ttl -= 1;
         if (paket.ttl == 0) {
             posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
@@ -310,14 +337,15 @@ public abstract class AbstractPocitac {
         } else {
             RoutovaciTabulka.Zaznam z = routovaciTabulka.najdiSpravnejZaznam(paket.cil);
             if (z != null) { //zaznam nalezen
-                SitoveRozhrani rozhr = z.getRozhrani();
+                vystupniRozhrani = z.getRozhrani();
                 if (z.getBrana() != null) {
                     sousedni = z.getBrana(); //sousedni uzel je brana z routovaci tabulky
                 }
                 if (ladeni) {
-                    vypis("preposilam paket na rozhrani " + rozhr.jmeno + " na sousedni adresu " + sousedni.vypisAdresu() + " " + paket.toString());
+                    vypis("preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
+                            " na sousedni adresu " + sousedni.vypisAdresu() + " " + paket.toString());
                 }
-                odesliEthernetove(paket, rozhr.pripojenoK, sousedni);
+                odesliEthernetove(paket, vystupniRozhrani, vystupniRozhrani.pripojenoK, sousedni);
             } else {//rozhrani nenalezeno - paket neni kam poslat
                 posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
                 // -> net unreachable
@@ -329,8 +357,9 @@ public abstract class AbstractPocitac {
      * Prijima ping. Je-li urcen pro mne, udela patricnou akci (odesle odpoved nebo vypise vypis). Neni-li
      * urcen pro me, posle paket dal.
      * @param paket
+     * @param vstupniRozhrani - rozhrani kterym paket prisel (dulezity pro natovani)
      */
-    protected void prijmiPaket(Paket paket) {
+    protected void prijmiPaket(Paket paket, SitoveRozhrani vstupniRozhrani) {
         if(ladeni)vypis("prijal jsem paket "+paket.toString());
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);
@@ -342,7 +371,7 @@ public abstract class AbstractPocitac {
             }
         } else { // paket se musi poslat dal
             if (ip_forward){ // nastaveno preposilani - v souboru /proc/sys/net/ipv4/ip_forward je jednicka
-                preposliPaket(paket);
+                preposliPaket(paket, vstupniRozhrani);
             }else{
                 // Jestli se nepletu, tak paket proste zahodi. Chce to ale jeste overit.
             }

@@ -243,6 +243,18 @@ public class IpAdresa {
         }
     }
 
+    /**
+     * Udelany metosou pokus - omyl, ale testy prosly.
+     * @param p
+     * @return adresu o jednicku vetsi, maska bude 255.0.0.0
+     */
+    public static IpAdresa vratOJednaVetsi(IpAdresa p){
+        int nova=(int) ( (long)(p.adresa) + 1L );
+        IpAdresa vratit=new IpAdresa("192.168.1.1"); //neco natvrdo musim vytvorit, jinak to nejde
+        vratit.adresa=nova;
+        return vratit;
+    }
+
      /**
      * Vrati pocet bitu masky ze zadane IP ve tvaru stringu. Vyuziva se, kdyz uzivatel zada
      * jen IP bez masky a ta se pak musi doplnit automaticky.

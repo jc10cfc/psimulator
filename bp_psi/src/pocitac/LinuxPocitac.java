@@ -20,14 +20,16 @@ public class LinuxPocitac extends AbstractPocitac {
     /**
      * Ethernetove prijima nebo odmita me poslany pakety.
      * @param p
-     * @param rozhr rozhrani pocitace, kterej ma paket prijmoutm, tzn. tohodle pocitace
-     * @param ocekavana adresa, kterou na rozhrani ocekavam
+     * @param rozhr rozhrani pocitace, kterej ma paket prijmout, tzn. tohodle pocitace
+     * @param ocekavana adresa, kterou odesilaci pocitac na tomto rozhrani ocekava
+     * @param sousedni adresa, se kterou mi to poslal ten sousedni pocitac. Linuxu je to jedno, ale
+     * pro cisco to je jeden z parametru, podle kteryho se rozhoduje, jestli paket prijme
      * @return true, kdyz byl paket prijmut, jinak false
      */
     @Override
-    public boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana){
+    public boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana, IpAdresa sousedni){
         if (rozhr.obsahujeStejnouAdresu(ocekavana)) { //adresa souhlasi - muzu to prijmout
-            prijmiPaket(p);
+            prijmiPaket(p, rozhr);
             return true;
         } else {//adresa nesouhlasi, zpatky se musi poslat host unreachable
             return false;

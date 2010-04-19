@@ -336,7 +336,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
                 //ip existuje a je stejna, nic se nemeni
             } else { //IP adresa neni stejna, bude se menit
                 r.seznamAdres.remove(0);
-                r.pridejNaPrvniPozici(vytvorAdresu(nastavit));
+                r.zmenPrvniAdresu(vytvorAdresu(nastavit));
                 zmena=true;
             }
         }
