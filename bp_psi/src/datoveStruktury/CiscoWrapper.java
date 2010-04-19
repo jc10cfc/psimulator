@@ -15,7 +15,7 @@ import pocitac.SitoveRozhrani;
  *      2. vypocitane routy z tabulky c. 1 (trida RoutovaciTabulka)
  * @author haldyr
  */
-public class WrapperRoutovaciTabulkyCisco {
+public class CiscoWrapper {
 
     /**
      * Jednotlive radky wrapperu.
@@ -32,7 +32,7 @@ public class WrapperRoutovaciTabulkyCisco {
      */
     int citac = 0;
 
-    public WrapperRoutovaciTabulkyCisco(AbstractPocitac pc) {
+    public CiscoWrapper(AbstractPocitac pc) {
         radky = new ArrayList<CiscoZaznam>();
         this.pc = pc;
         this.routovaciTabulka = pc.routovaciTabulka;
@@ -43,9 +43,7 @@ public class WrapperRoutovaciTabulkyCisco {
      * Adresat neni null, ale bud rozhrani nebo brana je vzdy null.
      */
     public class CiscoZaznam {
-
-        // ip route 192.168.2.0 255.255.255.192 192.168.2.126
-        // ip route 192.168.100.0 255.255.255.0 FastEthernet0/1
+        
         private IpAdresa adresat; // s maskou
         private IpAdresa brana;
         private SitoveRozhrani rozhrani;
@@ -247,6 +245,10 @@ public class WrapperRoutovaciTabulkyCisco {
         update();
     }
 
+    /**
+     * Malinko prasacka metoda pro pridani zaznamu do RT pouze pro vypis!
+     * @param zaznam
+     */
     private void pridejRTZaznam(RoutovaciTabulka.Zaznam zaznam) {
         CiscoZaznam ciscozaznam = new CiscoZaznam(zaznam.getAdresat(), zaznam.getBrana(), zaznam.getRozhrani());
         if (zaznam.jePrimoPripojene()) {
@@ -428,7 +430,7 @@ public class WrapperRoutovaciTabulkyCisco {
         }
 
         // vytvarim novy wrapperu kvuli zabudovanemu razeni
-        WrapperRoutovaciTabulkyCisco wrapper = new WrapperRoutovaciTabulkyCisco(pc);
+        CiscoWrapper wrapper = new CiscoWrapper(pc);
         for (int i = 0; i < routovaciTabulka.pocetZaznamu(); i++) {
             wrapper.pridejRTZaznam(routovaciTabulka.vratZaznam(i));
         }

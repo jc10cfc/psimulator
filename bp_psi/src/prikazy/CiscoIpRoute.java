@@ -44,7 +44,6 @@ public class CiscoIpRoute extends CiscoPrikaz {
         this.rozhrani = null;
 
         boolean pokracovat = zpracujRadek();
-        if (debug) pc.vypis(pokracovat ? "pokracuji" : "nepokracuji");
         if (pokracovat) {
             vykonejPrikaz();
         }
@@ -53,6 +52,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
     // ip route 'adresat' 'maska cile' 'kam poslat'
     // ip route 0.0.0.0 0.0.0.0 192.168.2.254
     // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
+    // no ip route ...
     @Override
     protected boolean zpracujRadek() {
 

@@ -703,9 +703,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     // ---------------------------------------------------------------------------------------------
 
-        /**
+    /**
      * Zpracovava prikaz 'ip route' tzn. pridava routy do routovaci tabulky.
-     * TODO: refaktorovat - zdvojeny kod pro 'ip route' a 'no ip route'
      */
     @Deprecated
     private void iproute() {

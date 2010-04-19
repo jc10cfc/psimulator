@@ -16,6 +16,7 @@ public class IpAdresa {
 
     private int adresa; //32 bitu ip adresy, zachazi se s tim pomoci bitovejch operaci
     private int maska; //stejne jako skutecna maska, tzn. 32 bitu
+    public int port = 0; //pro natovani
 
 
 //***************************************************************************************************************

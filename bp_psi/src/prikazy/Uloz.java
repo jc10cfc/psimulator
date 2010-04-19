@@ -1,7 +1,7 @@
 package prikazy;
 
 import Main.SAXHandler.*;
-import datoveStruktury.WrapperRoutovaciTabulkyCisco.CiscoZaznam;
+import datoveStruktury.CiscoWrapper.CiscoZaznam;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

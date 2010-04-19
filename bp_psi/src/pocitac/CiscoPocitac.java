@@ -1,7 +1,7 @@
 package pocitac;
 
 import datoveStruktury.*;
-import datoveStruktury.WrapperRoutovaciTabulkyCisco;
+import datoveStruktury.CiscoWrapper;
 
 /**
  *
@@ -9,14 +9,14 @@ import datoveStruktury.WrapperRoutovaciTabulkyCisco;
  */
 public class CiscoPocitac extends AbstractPocitac{
 
-    private WrapperRoutovaciTabulkyCisco wrapper;
+    private CiscoWrapper wrapper;
 
     public CiscoPocitac(String jmeno, int port) {
         super(jmeno,port);
-        wrapper = new WrapperRoutovaciTabulkyCisco(this);
+        wrapper = new CiscoWrapper(this);
     }
 
-    public WrapperRoutovaciTabulkyCisco getWrapper() {
+    public CiscoWrapper getWrapper() {
         return wrapper;
     }
 
