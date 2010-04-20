@@ -79,7 +79,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     int navratovyKodProvedeni=0; 
 
     
-    LinuxRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon,slova);
         parsujPrikaz();
         vykonejPrikaz();
