@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.Socket;
-import prikazy.CiscoParserPrikazu;
+import prikazy.cisco.CiscoParserPrikazu;
 import prikazy.linux.LinuxParserPrikazu;
 import vyjimky.NeznamyTypPcException;
 import static prikazy.AbstraktniPrikaz.*;

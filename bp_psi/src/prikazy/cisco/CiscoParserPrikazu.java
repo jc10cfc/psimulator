@@ -1,9 +1,5 @@
-package prikazy;
+package prikazy.cisco;
 
-import prikazy.cisco.CiscoIpNatRozhrani;
-import prikazy.cisco.CiscoIpRoute;
-import prikazy.cisco.CiscoPing;
-import prikazy.cisco.CiscoOtaznik;
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
 import java.text.DateFormat;
@@ -17,9 +13,11 @@ import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
+import prikazy.AbstraktniPrikaz;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
 import prikazy.AbstraktniPrikaz.*;
+import prikazy.ParserPrikazu;
 //import prikazy.linux.LinuxExit;
 //import prikazy.linux.LinuxIfconfig;
 //import prikazy.linux.LinuxRoute;
