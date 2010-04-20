@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package prikazy;
+package prikazy.linux;
 
+import prikazy.*;
 import java.util.List;
 import pocitac.*;
 

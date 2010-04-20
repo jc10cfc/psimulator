@@ -8,8 +8,9 @@
  * Dodělat:
  *      Snad už jenom parsujPrikaz() opravit
  */
-package prikazy;
+package prikazy.linux;
 
+import prikazy.*;
 import datoveStruktury.IpAdresa;
 import java.util.ArrayList;
 import java.util.List;

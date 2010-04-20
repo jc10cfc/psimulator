@@ -2,8 +2,9 @@
  * Montag 19.4.2010
  */
 
-package prikazy;
+package prikazy.linux;
 
+import prikazy.*;
 import java.util.List;
 import pocitac.*;
 

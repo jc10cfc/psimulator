@@ -5,8 +5,9 @@
  *      i -host by mel umet zpracovat adresu, kdyz mu prijde s maskou - zatím řešený testem na lomítko
  */
 
-package prikazy;
+package prikazy.linux;
 
+import prikazy.*;
 import datoveStruktury.IpAdresa;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.List;

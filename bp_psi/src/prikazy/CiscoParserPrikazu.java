@@ -1,5 +1,8 @@
 package prikazy;
 
+import prikazy.linux.LinuxExit;
+import prikazy.linux.LinuxIfconfig;
+import prikazy.linux.LinuxRoute;
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
 import java.text.DateFormat;

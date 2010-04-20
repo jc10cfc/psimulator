@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package prikazy;
+package prikazy.linux;
 
+import prikazy.*;
 import Main.Main;
 import datoveStruktury.IpAdresa;
 import java.util.List;
@@ -44,7 +45,8 @@ public class LinuxIptables extends AbstraktniPrikaz{
     /**
      * Navratovy kod pro semantiku
      * 0 - v poradku
-     * 1 - zadan prepinac -o, -j, -i, -d, kterej pro prikaz nema smysl
+     * 1 - navKod neni nula, dalsi kontrola se neprovadi
+     * 2 - zadan prepinac -o, -j, -i, -d, kterej pro prikaz nema smysl
      */
     int semKod = 0;
 
@@ -79,6 +81,7 @@ public class LinuxIptables extends AbstraktniPrikaz{
         super(pc, kon, slova);
         parsujPrikaz();
         zkontrolujGramatikuPrikazu();
+        zkontrolujSemantiku();
         vypisChybovyHlaseni();
         vykonejPrikaz();
     }
@@ -93,7 +96,7 @@ public class LinuxIptables extends AbstraktniPrikaz{
     }
 
     /**
-     * Zpracovava bezny prepinace jako -n, -t, -o, -i, -j, -A, -I, -D, -d.
+     * Zpracovava bezny prepinace jako -n, -t, -o, -i, -j, -A, -I, -D, -L, -d.
      * Pro ty, co maj pak nejakou hodnotu vetsinou vola specialni funkci.
      * Na zacatku tyhle metody by v promenny slovo melo bejt ulozeny prvni
      * slovo prepinace (napr. -t), na konci posledni slovo prepinace (napr.
@@ -181,6 +184,9 @@ public class LinuxIptables extends AbstraktniPrikaz{
             if(slovo.equals("-I")) provest = 2;
             if(slovo.equals("-D")) provest = 3;
             retez=dalsiSlovo();
+            if(provest==2){
+                
+            }
         }
     }
 
@@ -247,22 +253,26 @@ public class LinuxIptables extends AbstraktniPrikaz{
      * Kontroluje, jestli byly zadany spravny parametry
      */
     private void zkontrolujSemantiku(){
+        if(navrKod!=0){
+            semKod=1;
+            return;
+        }
         if(provest==4){ //-L
             if(zadanoMinus_d){
                 kon.posliRadek("iptables v1.4.1.1: Illegal option `-d' with this command");
-                semKod |= 1;
+                semKod |= 2;
             }
             if(zadanoMinus_o){
                 kon.posliRadek("iptables v1.4.1.1: Illegal option `-o' with this command");
-                semKod |= 1;
+                semKod |= 2;
             }
             if(zadanoMinus_i){
                 kon.posliRadek("iptables v1.4.1.1: Illegal option `-i' with this command");
-                semKod |= 1;
+                semKod |= 2;
             }
             if(zadanoMinus_j){
                 kon.posliRadek("iptables v1.4.1.1: Illegal option `-j' with this command");
-                semKod |= 1;
+                semKod |= 2;
             }
         }
     }
@@ -284,7 +294,7 @@ public class LinuxIptables extends AbstraktniPrikaz{
 
         if ( (navrKod&2) != 0 ){ //nezadano jmeno tabulky
             kon.posliRadek(Main.jmenoProgramu+": Normalne by se pouzila tabulka filter, " +
-                    "ta ale v tomto programu neni.");
+                    "ta ale v tomto programu neni. Podporujeme zatim jen tabulku nat.");
         }
         if ( (navrKod&4) != 0 ){ //zadano jen minus_t
             kon.posliRadek("iptables v1.4.1.1: Unknown arg `-t'");
@@ -369,6 +379,7 @@ public class LinuxIptables extends AbstraktniPrikaz{
                 vratit += "\n\r\tcilovaAdr: " + cilovaAdr.vypisAdresu();
             }
         }
+        vratit+="\n\r\tnavratovy kod semantiky: "+semKod;
 
 
 

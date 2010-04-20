@@ -4,6 +4,7 @@
  */
 package prikazy;
 
+import prikazy.linux.LinuxParserPrikazu;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;

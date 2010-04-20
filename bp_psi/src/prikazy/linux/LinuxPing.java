@@ -3,8 +3,9 @@
  * http://cs.wikipedia.org/wiki/Ping - jen wikipedie
  */
 
-package prikazy;
+package prikazy.linux;
 
+import prikazy.*;
 import datoveStruktury.*;
 import java.util.List;
 import pocitac.*;
