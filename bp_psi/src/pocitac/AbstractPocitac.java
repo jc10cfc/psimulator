@@ -27,6 +27,7 @@ public abstract class AbstractPocitac {
     public List<SitoveRozhrani> rozhrani; //kvuli vypisum to musi bejt verejny
     public String jmeno; //jmeno pocitace
     public RoutovaciTabulka routovaciTabulka;
+    public NATtabulka NATtabulka;
     /**
      * Je-li true, preposilaj se pakety, jinak ne.
      * Obsah linuxoveho souboru /proc/sys/net/ipv4/ip_forward 0=false, 1=true
@@ -47,6 +48,7 @@ public abstract class AbstractPocitac {
         rozhrani = new ArrayList<SitoveRozhrani>();
         komunikace = new Komunikace(port, this);
         routovaciTabulka = new RoutovaciTabulka();
+        NATtabulka = new NATtabulka();
     }
 
     @Deprecated

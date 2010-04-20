@@ -1,6 +1,6 @@
 /*
  * UDELAT:
- * Prepsat metodu prijmiEthernetove()
+ * TODO: Prepsat metodu prijmiEthernetove()
  */
 
 

@@ -17,13 +17,35 @@ import pocitac.SitoveRozhrani;
 public class NATtabulka {
 
     List<NATzaznam> tabulka;
-    List<SitoveRozhrani> inside; // soukroma rozhrani
-    SitoveRozhrani verejne;// mozna taky
-    public boolean overload; // true, kdyz se vse preklada na 1 IP; false, kdyz se vybira IP z poolu
-    List<AccessList> seznamAccess; // seznam seznamAccess-listu (= kdyz zdrojova IP patri do nejakeho seznamAccess-listu, tak se bude zrovna natovat
-    public int cisloAccess; // cislo pristupoveho listu, dle ktereho se kontroluje pristup
-    private int citacPortu = 1025; // tady si drzim citac, odkud mam rozdavat porty
-    public List<PoolList> seznamPoolu; // struktura pro pool IP - obsahuje jmeno + seznam IpAdres
+    /**
+     * Seznam soukromych (inside) rozhrani.
+     */
+    List<SitoveRozhrani> inside;
+    /**
+     * Verejne (outside) rozhrani.
+     */
+    SitoveRozhrani verejne;
+    /**
+     * true, kdyz se vse preklada na 1 IP; false, kdyz se vybira IP z poolu
+     */
+    public boolean overload;
+    /**
+     * seznam seznamAccess-listu
+     * (= kdyz zdrojova IP patri do nejakeho seznamAccess-listu, tak se bude zrovna natovat)
+     */
+    List<AccessList> seznamAccess;
+    /**
+     * cislo aktivniho pristupoveho listu, dle ktereho se kontroluje pristup
+     */
+    public int cisloAccess;
+    /**
+     * citac, odkud mam rozdavat porty
+     */
+    private int citacPortu = 1025;
+    /**
+     * Zde si drzim odkaz na vsechny pridane pooly.
+     */
+    public List<PoolList> seznamPoolu;
     /**
      * Aktualne nastaveny pool, kdyz je null, tak to znamena, ze neni
      */
@@ -124,6 +146,22 @@ public class NATtabulka {
     }
 
     /**
+     * Vrati verejne rozhrani.
+     * @return
+     */
+    public SitoveRozhrani vratVerejne() {
+        return verejne;
+    }
+
+    /**
+     * Vrati seznam inside rozhrani.
+     * @return
+     */
+    public List<SitoveRozhrani> vratInside() {
+        return inside;
+    }
+
+    /**
      * Vrati paket se prelozenou zdrojovou IP adresou.
      * @param paket
      * @return
@@ -148,9 +186,7 @@ public class NATtabulka {
         return paket;
     }
 
-    private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out) {
-        tabulka.add(new NATzaznam(in, out));
-    }
+    
 
     /**
      * Dle teto metody se bude pocitac rozhodovat, co delat s paketem.
@@ -198,11 +234,12 @@ public class NATtabulka {
     /**
      * Vrati IpAdresu, ktera se pouzije jako zdrojova pri odeslani paketu.
      * @param ip
-     * @param pridej - true, kdyz natuju, false - kdyz se jen ptam, zda je volno v poolu
-     * @return Adresu - na kterou se to ma prelozit<br />
-     * @return null - kdyz dosel pool IP adress, tak se ma vratit odesilateli Destination Host Unreachable
+     * @param natovani - true, kdyz natuju, false - kdyz se jen ptam, zda je volno v poolu
+     * @return Adresu - na kterou se to ma prelozit <br />
+     *         null - kdyz dosel pool IP adress, tak se ma vratit odesilateli Destination Host Unreachable,
+     *                null by to melo vratit pouze pri natovani==false
      */
-    private IpAdresa zanatujZdrojovouIpAdresu(IpAdresa ip, boolean pridej) {
+    private IpAdresa zanatujZdrojovouIpAdresu(IpAdresa ip, boolean natovani) {
         for (NATzaznam zaznam : tabulka) { // porovnavam i podle portu (mohou byt NATy za sebou..)
             if (zaznam.in.jeStejnaAdresa(ip) && zaznam.in.port == ip.port) {
                 return zaznam.out;
@@ -212,8 +249,10 @@ public class NATtabulka {
         // nenasel jsem stejnej zaznam, tak vygenerujem novy zaznam do tabulky
         IpAdresa vrat = dejIpZPoolu();
         vrat.port = citacPortu++;
-        if (pridej == true) { // jen kdyz opravdu pridavam
+        if (natovani == true) { // jen kdyz opravdu pridavam
             pridejZaznamDoNATtabulky(ip, vrat);
+        } else { // kdyz jen testuju, tak si vratim citac zpatky
+            citacPortu--;
         }
         return vrat;
     }
@@ -230,6 +269,15 @@ public class NATtabulka {
             }
         }
         return null;
+    }
+
+    /**
+     * Prida zaznam do natovaci tabulku. Nic se nekontroluje.
+     * @param in zdrojova IP
+     * @param out nova zdrojova (prelozena)
+     */
+    private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out) {
+        tabulka.add(new NATzaznam(in, out));
     }
 
     /****************************************** nastavovani rozhrani ***************************************************/
@@ -424,7 +472,9 @@ public class NATtabulka {
     }
 
     /**
-     * Vrati pro overload prvni IP z poolu, jinak dalsi volnou IP. Kdyz uz neni volna, tak vrati null.
+     * Vrati pro overload prvni IP z poolu, jinak dalsi volnou IP. Pri testovani vrati null,
+     * kdyz uz neni volna IP v poolu. TO je ale osetreno metodou mamNAtovat(), tak uz pri
+     * samotnem natovani by to null nikdy vracet nemelo.
      * @return
      */
     private IpAdresa dejIpZPoolu() {
@@ -479,6 +529,7 @@ public class NATtabulka {
         cisloAccess = cislo;
 
         // osefovani IP poolu
+        overload = true;
         seznamPoolu.clear();
         String jmenoPoolu = "pool";
         pridejPool(verejne.vratPrvni(), verejne.vratPrvni(), 24, jmenoPoolu);

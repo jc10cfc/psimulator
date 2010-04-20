@@ -76,7 +76,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         // ktere je potreba k jejich bezpecne identifikaci. Cisla byla ziskana z praveho cisca.
         String[] jedna = {"terminal", "inside", "outside", "source", "static", "pool", "netmask", "permit"};
         // + ip, exit
-        String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless", "access-list", "ping", "logout"};
+        String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless", "access-list", "ping", "logout", "nat"};
         // + ip, exit
         String[] tri = {"running-config", "name-server", "nat"};
         // + exit
@@ -229,8 +229,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         kon.posliRadek("");
     }
 
-
-
     /**
      * Pomocna metoda pro rozhodnuti, zda se jedna o IP ci o jmeno rozhrani.
      * @param s, retezec ke kontrole
@@ -238,7 +236,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     private boolean zacinaCislem(String s) {
 
-        if (s == null) return false;
+        if (s == null) {
+            return false;
+        }
         String pismeno = s.substring(0, 1);
         int i = -1;
 
@@ -325,7 +325,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             Date d = new Date();
             kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
             kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
-            ((CiscoPocitac)pc).getWrapper().update();
+            ((CiscoPocitac) pc).getWrapper().update();
         }
     }
 
@@ -347,7 +347,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             }
 
             aktualni.nastavRozhrani(true);
-            ((CiscoPocitac)pc).getWrapper().update();
+            ((CiscoPocitac) pc).getWrapper().update();
         }
         if (nepokracovat) {
             kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
@@ -509,11 +509,33 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
-                    ipaddress();
+                    if (slova.size() >= 2) {
+                        String druheSlovo = slova.get(1);
+                        if (kontrola("nat", druheSlovo)) {
+                            prikaz = new CiscoIpNatRozhrani(pc, kon, slova, aktualni, false);
+                        } else if (kontrola("address", druheSlovo)) {
+                            ipaddress();
+                        } else {
+                            invalidInputDetected();
+                        }
+                    } else {
+                        incompleteCommand();
+                    }
                     return;
                 }
                 if (kontrola("no", prvniSlovo)) {
-                    noshutdown();
+                    if (slova.size() >= 2) {
+                        String druheSlovo = slova.get(1);
+                        if (kontrola("ip", druheSlovo)) {
+                            prikaz = new CiscoIpNatRozhrani(pc, kon, slova, aktualni, true);
+                        } else if (kontrola("shutdown", druheSlovo)) {
+                            noshutdown();
+                        } else {
+                            invalidInputDetected();
+                        }
+                    } else {
+                        incompleteCommand();
+                    }
                     return;
                 }
                 if (kontrola("shutdown", prvniSlovo)) {
@@ -595,6 +617,22 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             if (sr.vratPrvni() != null) {
                 s += " ip address " + sr.vratPrvni().vypisAdresu() + " " + sr.vratPrvni().vypisMasku() + "\n";
             }
+
+            if (pc.NATtabulka.vratVerejne() != null) {
+                if (sr.jmeno.equals(pc.NATtabulka.vratVerejne().jmeno)) {
+                    s += " ip nat outside" + "\n";
+                }
+            }
+
+            if (pc.NATtabulka.vratInside() != null) {
+                for (SitoveRozhrani iface : pc.NATtabulka.vratInside()) {
+                    if (iface.jmeno.equals(sr.jmeno)) {
+                        s += " ip nat inside" + "\n";
+                        break;
+                    }
+                }
+            }
+
             if (sr.jeNahozene() == false) {
                 s += " shutdown" + "\n";
             }
@@ -702,7 +740,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
 
     // ---------------------------------------------------------------------------------------------
-
     /**
      * Zpracovava prikaz 'ip route' tzn. pridava routy do routovaci tabulky.
      */

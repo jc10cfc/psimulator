@@ -42,27 +42,48 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
         }
 
         if (command.startsWith(cmd)) {
-            ambigiousCommand(cmd);
+            ambiguousCommand();
+        } else if (cmd.equals("")) {
+            incompleteCommand();
         } else {
             invalidInputDetected();
         }
         return false;
     }
 
+    /**
+     * Zpracuje radek a vrati zda se ma pokracovat k vykonani prikazu.
+     * @return true - parsovani dobre dopadlo a prikaz bude vykonan. <br />
+     *         false - neco je spatne zadano, dal nic nedelat
+     */
     protected abstract boolean zpracujRadek();
 
+    /**
+     * Vypise hlasku do konzole "% Incomplete command.".
+     */
     protected void incompleteCommand() {
         kon.posliRadek("% Incomplete command.");
     }
 
-    protected void ambigiousCommand(String s) {
+    /**
+     * Vypise hlasku do konzole "% Ambiguous command: ".
+     */
+    protected void ambiguousCommand() {
         kon.posliRadek("% Ambiguous command:  \""+radka+"\"");
     }
 
+    /**
+     * Vypise hlasku do konzole "% Invalid input detected.".
+     */
     protected void invalidInputDetected() {
         kon.posliRadek("\n% Invalid input detected.\n");
     }
 
+    /**
+     * Zjistuje, zda dany retezec zacina cislem.
+     * @param s
+     * @return
+     */
     protected boolean zacinaCislem(String s) {
         if (s.length() == 0) return false;
 
