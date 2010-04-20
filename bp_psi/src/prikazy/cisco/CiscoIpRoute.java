@@ -8,7 +8,7 @@
  * 
  */
 
-package prikazy;
+package prikazy.cisco;
 
 import datoveStruktury.IpAdresa;
 import java.util.List;

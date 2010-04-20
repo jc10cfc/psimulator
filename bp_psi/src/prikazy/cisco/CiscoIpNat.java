@@ -2,8 +2,9 @@
  * Dodelat:
  * prikaz no
  */
-package prikazy;
+package prikazy.cisco;
 
+import prikazy.cisco.CiscoPrikaz;
 import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;

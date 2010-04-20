@@ -3,11 +3,12 @@
  * and open the template in the editor.
  */
 
-package prikazy;
+package prikazy.cisco;
 
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
+import prikazy.AbstraktniPrikaz;
 
 /**
  *

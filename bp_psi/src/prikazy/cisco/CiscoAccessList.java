@@ -10,7 +10,6 @@ package prikazy.cisco;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
-import prikazy.CiscoPrikaz;
 
 /**
  *

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package prikazy;
+package prikazy.cisco;
 
 import java.util.List;
 import pocitac.AbstraktniPocitac;
