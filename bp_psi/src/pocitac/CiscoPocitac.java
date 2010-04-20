@@ -13,7 +13,7 @@ import datoveStruktury.CiscoWrapper;
  *
  * @author haldyr
  */
-public class CiscoPocitac extends AbstractPocitac{
+public class CiscoPocitac extends AbstraktniPocitac{
 
     private CiscoWrapper wrapper;
 

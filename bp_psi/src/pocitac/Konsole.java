@@ -25,7 +25,7 @@ public class Konsole extends Thread {
     boolean ladiciVypisovani = false;
 
     private Socket s;
-    private AbstractPocitac pocitac;
+    private AbstraktniPocitac pocitac;
     private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
     public String prompt="divnej defaultni promt:~# ";
@@ -35,7 +35,7 @@ public class Konsole extends Thread {
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
     public boolean doplnovani = false;
 
-    public Konsole(Socket s,AbstractPocitac pc, int cislo){
+    public Konsole(Socket s,AbstraktniPocitac pc, int cislo){
         this.s = s;
         pocitac = pc;
         if (pc instanceof LinuxPocitac) {

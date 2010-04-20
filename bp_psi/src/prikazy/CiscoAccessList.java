@@ -6,7 +6,7 @@
 package prikazy;
 
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
 /**
@@ -17,7 +17,7 @@ public class CiscoAccessList extends CiscoPrikaz {
 
     boolean no;
 
-    public CiscoAccessList(AbstractPocitac pc, Konsole kon, List<String> slova, boolean no) {
+    public CiscoAccessList(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
         super(pc, kon, slova);
         this.no = no;
     }

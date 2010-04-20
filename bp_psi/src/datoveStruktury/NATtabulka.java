@@ -7,7 +7,7 @@ package datoveStruktury;
 
 import java.util.ArrayList;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.SitoveRozhrani;
 
 /**
@@ -509,7 +509,7 @@ public class NATtabulka {
      * @param pc
      * @param verejne, urci ze je tohle rozhrani verejne a ostatni jsou automaticky soukroma.
      */
-    public void nastavLinuxNAT(AbstractPocitac pc, SitoveRozhrani verejne) {
+    public void nastavLinuxNAT(AbstraktniPocitac pc, SitoveRozhrani verejne) {
 
         // nastaveni rozhrani
         inside.clear();

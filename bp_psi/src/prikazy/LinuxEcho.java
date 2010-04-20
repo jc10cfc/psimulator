@@ -14,7 +14,7 @@ import pocitac.*;
  */
 public class LinuxEcho extends AbstraktniPrikaz{
 
-    public LinuxEcho(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxEcho(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

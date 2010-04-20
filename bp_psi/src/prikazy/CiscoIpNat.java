@@ -6,7 +6,7 @@ package prikazy;
 
 import datoveStruktury.IpAdresa;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
 /**
@@ -24,7 +24,7 @@ public class CiscoIpNat extends CiscoPrikaz {
     int accesslist = -1;
     boolean overload = false;
 
-    public CiscoIpNat(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public CiscoIpNat(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
 
         boolean pokracovat = zpracujRadek();

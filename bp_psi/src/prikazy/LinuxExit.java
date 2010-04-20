@@ -14,7 +14,7 @@ import pocitac.*;
  */
 public class LinuxExit extends AbstraktniPrikaz{
 
-    public LinuxExit(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxExit(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc,kon,slova);
         vykonejPrikaz();
     }

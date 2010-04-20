@@ -5,7 +5,7 @@
 package prikazy;
 
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 
@@ -27,7 +27,7 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
      * @param slova
      * @param rozhrani, ktere se nastavuje v tom prikazu
      */
-    public CiscoIpNatRozhrani(AbstractPocitac pc, Konsole kon, List<String> slova, SitoveRozhrani rozhrani, boolean no) {
+    public CiscoIpNatRozhrani(AbstraktniPocitac pc, Konsole kon, List<String> slova, SitoveRozhrani rozhrani, boolean no) {
         super(pc, kon, slova);
         this.rozhrani = rozhrani;
         this.no = no;

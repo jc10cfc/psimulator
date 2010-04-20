@@ -40,7 +40,7 @@ public class LinuxPing extends AbstraktniPing{
      */
     private int navratovyKod=0;
 
-    public LinuxPing(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxPing(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

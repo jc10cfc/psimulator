@@ -10,7 +10,7 @@ import datoveStruktury.*;
  *
  * @author neiss
  */
-public class LinuxPocitac extends AbstractPocitac {
+public class LinuxPocitac extends AbstraktniPocitac {
     
     public LinuxPocitac(String jmeno, int port) {
         super(jmeno,port);

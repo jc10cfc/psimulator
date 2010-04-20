@@ -43,7 +43,7 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
     protected double celkovyCas; //soucet vsech milisekund
     
 
-    public AbstraktniPing(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public AbstraktniPing(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         odezvy = new ArrayList<Double>() {
 

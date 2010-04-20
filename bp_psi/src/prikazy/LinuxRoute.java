@@ -10,7 +10,7 @@ package prikazy;
 import datoveStruktury.IpAdresa;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 
@@ -78,7 +78,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     int navratovyKodProvedeni=0; 
 
     
-    LinuxRoute(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    LinuxRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon,slova);
         parsujPrikaz();
         vykonejPrikaz();

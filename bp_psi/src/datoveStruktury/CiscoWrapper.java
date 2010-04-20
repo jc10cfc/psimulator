@@ -3,7 +3,7 @@ package datoveStruktury;
 import vyjimky.WrapperException;
 import java.util.ArrayList;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.SitoveRozhrani;
 
@@ -21,7 +21,7 @@ public class CiscoWrapper {
      * Jednotlive radky wrapperu.
      */
     private List<CiscoZaznam> radky;
-    AbstractPocitac pc;
+    AbstraktniPocitac pc;
     /**
      * Odkaz na routovaci tabulku, ktera je wrapperem ovladana.
      */
@@ -32,7 +32,7 @@ public class CiscoWrapper {
      */
     int citac = 0;
 
-    public CiscoWrapper(AbstractPocitac pc) {
+    public CiscoWrapper(AbstraktniPocitac pc) {
         radky = new ArrayList<CiscoZaznam>();
         this.pc = pc;
         this.routovaciTabulka = pc.routovaciTabulka;

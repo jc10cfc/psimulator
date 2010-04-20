@@ -7,7 +7,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.LinuxPocitac;
 import pocitac.SitoveRozhrani;
@@ -32,7 +32,7 @@ public class SAXHandler implements ContentHandler {
     String tabs = "";
     String namespaces = "";
     String jmenoElementu = "";
-    List<AbstractPocitac> hotovePocitace = new ArrayList<AbstractPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
+    List<AbstraktniPocitac> hotovePocitace = new ArrayList<AbstraktniPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
     String[] rozhrani = new String[6]; // jmeno, ip mac, maska, pripojenoK, nahozene
     String[] zaznam = new String[4]; //adresat, maskaAdresata, brana, rozhrani
     static public int port = -1;
@@ -312,7 +312,7 @@ public class SAXHandler implements ContentHandler {
 
 
         for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
-            AbstractPocitac pocitac;
+            AbstraktniPocitac pocitac;
 
             if (pcbuilder.typ.equals("cisco")) {
                 pocitac = new CiscoPocitac(pcbuilder.jmeno, port++);
@@ -504,7 +504,7 @@ public class SAXHandler implements ContentHandler {
     private SitoveRozhrani najdiDaneRozhrani(Object pc0, Object rozhrani0) {
         String pc = (String) pc0;
         String rozhr = (String) rozhrani0;
-        for (AbstractPocitac apc : hotovePocitace) {
+        for (AbstraktniPocitac apc : hotovePocitace) {
             if (apc.jmeno.equals(pc)) {
                 for (SitoveRozhrani iface : apc.rozhrani) {
                     if (iface.jmeno.equals(rozhr)) {

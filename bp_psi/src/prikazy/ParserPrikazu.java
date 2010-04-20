@@ -16,7 +16,7 @@ public abstract class ParserPrikazu {
 
     protected String radek;
     protected List<String> slova; //seznam jednotlivejch slov ze vstupniho stringu
-    protected AbstractPocitac pc;
+    protected AbstraktniPocitac pc;
     protected Konsole kon;
 
     /**
@@ -25,7 +25,7 @@ public abstract class ParserPrikazu {
      * @param pc
      * @param kon
      */
-    public ParserPrikazu(AbstractPocitac pc,Konsole kon){
+    public ParserPrikazu(AbstraktniPocitac pc,Konsole kon){
         this.pc=pc;
         this.kon=kon;
     }

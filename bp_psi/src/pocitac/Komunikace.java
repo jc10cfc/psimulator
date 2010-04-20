@@ -23,9 +23,9 @@ public class Komunikace extends Thread {
     private ServerSocket ss; //socket, kterej posloucha
     int cisloPortu;
     List<Konsole> seznamSpojeni = new ArrayList();
-    AbstractPocitac pc;//odkaz na pocitac
+    AbstraktniPocitac pc;//odkaz na pocitac
 
-    public Komunikace(int cisloPortu, AbstractPocitac pc) {
+    public Komunikace(int cisloPortu, AbstraktniPocitac pc) {
         this.cisloPortu = cisloPortu;
         this.pc = pc;
         this.start(); //tohle casem spusti metodu run()

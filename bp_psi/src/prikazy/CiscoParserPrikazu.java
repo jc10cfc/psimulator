@@ -9,7 +9,7 @@ import java.util.Date;
 import static datoveStruktury.CiscoStavy.*;
 import java.util.LinkedList;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
@@ -23,7 +23,7 @@ import prikazy.AbstraktniPrikaz.*;
  */
 public class CiscoParserPrikazu extends ParserPrikazu {
 
-    public CiscoParserPrikazu(AbstractPocitac pc, Konsole kon) {
+    public CiscoParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
         super(pc, kon);
         slova = new LinkedList<String>();
     }

@@ -64,7 +64,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
     int pouzitIp = -1; //cislo seznamIP, ktera IP se ma pouzit
 
 
-    public LinuxIfconfig(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxIfconfig(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         zkontrolujPrikaz();

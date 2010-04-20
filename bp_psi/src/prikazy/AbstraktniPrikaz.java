@@ -14,12 +14,12 @@ import pocitac.*;
  */
 public abstract class AbstraktniPrikaz {
 
-    protected AbstractPocitac pc;
+    protected AbstraktniPocitac pc;
     protected Konsole kon;
     protected List<String> slova;
     private int uk=1; //ukazatel do seznamu slov, prvni slovo je nazev prikazu
 
-    public AbstraktniPrikaz(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public AbstraktniPrikaz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         this.pc = pc;
         this.kon = kon;
         this.slova = slova;

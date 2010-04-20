@@ -12,7 +12,7 @@ package prikazy;
 
 import datoveStruktury.IpAdresa;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
@@ -36,7 +36,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
 
     private boolean debug = false;
 
-    public CiscoIpRoute(AbstractPocitac pc, Konsole kon, List<String> slova, boolean pridej) {
+    public CiscoIpRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean pridej) {
         super(pc, kon, slova);
         this.pridej = pridej;
         this.adresat = null;

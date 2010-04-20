@@ -35,7 +35,7 @@ public class SitoveRozhrani {
     public String jmeno;
     public String macAdresa;
     public SitoveRozhrani pripojenoK; //sitove rozhrani, se kterym je toto rozhrani spojeno
-    private AbstractPocitac pc; //pocitac, kteremu toto rozhrani patri
+    private AbstraktniPocitac pc; //pocitac, kteremu toto rozhrani patri
     
     /**
      * Stav rozhrani. True..zapnuto, false..vypnuto. <br />
@@ -63,11 +63,11 @@ public class SitoveRozhrani {
      * Getter pro pocitac, ktery drzi toto rozhrani.
      * @return
      */
-    public AbstractPocitac getPc(){
+    public AbstraktniPocitac getPc(){
         return pc;
     }
 
-    public SitoveRozhrani(String jmeno, AbstractPocitac pc, String macAdresa) {
+    public SitoveRozhrani(String jmeno, AbstraktniPocitac pc, String macAdresa) {
         this.pc=pc;
         this.jmeno=jmeno;
         this.macAdresa=macAdresa;

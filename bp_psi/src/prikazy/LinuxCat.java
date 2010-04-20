@@ -13,7 +13,7 @@ import pocitac.*;
  */
 public class LinuxCat extends AbstraktniPrikaz{
 
-    public LinuxCat(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxCat(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

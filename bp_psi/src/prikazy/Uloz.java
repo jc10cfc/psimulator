@@ -6,7 +6,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.Konsole;
 import pocitac.LinuxPocitac;
@@ -19,14 +19,14 @@ import vyjimky.NeznamyTypPcException;
  */
 public class Uloz extends AbstraktniPrikaz {
 
-    List<AbstractPocitac> pocitace;
+    List<AbstraktniPocitac> pocitace;
     BufferedWriter out;
     String tabs = "";
     String soubor = "psi2.xml";
 
-    public Uloz(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public Uloz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
-        pocitace = (List<AbstractPocitac>) Main.Main.vsechno;
+        pocitace = (List<AbstraktniPocitac>) Main.Main.vsechno;
         if (slova.size() >= 2) {
             soubor = slova.get(1);
         }
@@ -38,7 +38,7 @@ public class Uloz extends AbstraktniPrikaz {
      * @param pocitac pocitac, ktery chceme zapsat
      * @throws IOException
      */
-    private void ulozPC(AbstractPocitac pocitac) throws IOException {
+    private void ulozPC(AbstraktniPocitac pocitac) throws IOException {
         out.write("<pocitac jmeno=\"" + pocitac.jmeno + "\" ");
 
         if (pocitac instanceof CiscoPocitac) {
@@ -109,7 +109,7 @@ public class Uloz extends AbstraktniPrikaz {
      * @param pc pocitac u ktereho chceme zapsat routovaci tabulku
      * @throws IOException
      */
-    private void ulozRoutovaciTabulku(AbstractPocitac pc) throws IOException {
+    private void ulozRoutovaciTabulku(AbstraktniPocitac pc) throws IOException {
 
         if (pc.routovaciTabulka.pocetZaznamu() == 0) {
             return;
@@ -193,7 +193,7 @@ public class Uloz extends AbstraktniPrikaz {
 
             zapis(vratElement("port", pocitace.get(0).komunikace.getPort() + "") + "\n");
 
-            for (AbstractPocitac poc : pocitace) {
+            for (AbstraktniPocitac poc : pocitace) {
                 ulozPC(poc);
             }
 

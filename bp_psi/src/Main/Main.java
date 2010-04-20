@@ -13,6 +13,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class Main {
 
+    public static String jmenoProgramu="psi simulator";
+
     /**
      * Object vsechno je refence na seznam vsech pocitacu, ktere se nacetly z konfiguraku.
      */

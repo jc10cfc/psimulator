@@ -5,7 +5,7 @@
 package prikazy;
 
 import java.util.LinkedList;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
 /**
@@ -19,7 +19,7 @@ public class LinuxParserPrikazu extends ParserPrikazu {
      * @param pc
      * @param kon
      */
-    public LinuxParserPrikazu(AbstractPocitac pc, Konsole kon) {
+    public LinuxParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
         super(pc, kon);
     }    
     
@@ -65,6 +65,8 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new LinuxCat(pc, kon, slova);
         } else if (slova.get(0).equals("echo")) {
             pr = new LinuxEcho(pc, kon, slova);
+        } else if (slova.get(0).equals("iptables")) {
+            pr = new LinuxIptables(pc, kon, slova);
         } else {
             kon.posliRadek("bash: " + slova.get(0) + ": command not found");
         }

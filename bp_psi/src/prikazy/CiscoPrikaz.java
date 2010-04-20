@@ -6,7 +6,7 @@
 package prikazy;
 
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
 /**
@@ -17,7 +17,7 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
     
     protected String radka = "";
 
-    public CiscoPrikaz(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public CiscoPrikaz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         int i = 0;
         for (String s : slova) {

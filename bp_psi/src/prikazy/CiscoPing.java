@@ -7,7 +7,7 @@ package prikazy;
 import datoveStruktury.IpAdresa;
 import datoveStruktury.Paket;
 import java.util.List;
-import pocitac.AbstractPocitac;
+import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
 /**
@@ -33,7 +33,7 @@ public class CiscoPing extends AbstraktniPing {
      */
     int timeout = 1000; // default je 2000
 
-    public CiscoPing(AbstractPocitac pc, Konsole kon, List<String> slova) {
+    public CiscoPing(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {

@@ -4,6 +4,7 @@
  * Predelani ethernetovyho posilani na dve metody - HOTOVO
  * Nastaveni preposilani a ip_forward - HOTOVO (ty pakety se zahazujou)
  * V metode odesliEthernetove() je potreba dodelat doplnovani moji adresy. - HOTOVO (prasarna)
+ * Cisco ma misto net unreachable posilat host unreachable
  */
 package pocitac;
 
@@ -17,7 +18,7 @@ import prikazy.AbstraktniPing;
  * Virtualni pocitac, predek Linuxu a Cisca
  * @author neiss
  */
-public abstract class AbstractPocitac {
+public abstract class AbstraktniPocitac {
 
     private boolean ladeni=true;
 
@@ -36,14 +37,14 @@ public abstract class AbstractPocitac {
     public boolean ip_forward = true; //defaultne nastaveno, linux si to v konstruktoru prepise
 
     @Deprecated
-    public AbstractPocitac(String jmeno) {
+    public AbstraktniPocitac(String jmeno) {
         vypis("Pouziva se deprecated metoda AbstractPocitac(String jmeno)");
         komunikace = new Komunikace(3567, this);
         rozhrani = new ArrayList<SitoveRozhrani>();
         this.jmeno = jmeno;
     }
 
-    public AbstractPocitac(String jmeno, int port) {
+    public AbstraktniPocitac(String jmeno, int port) {
         this.jmeno = jmeno;
         rozhrani = new ArrayList<SitoveRozhrani>();
         komunikace = new Komunikace(port, this);
@@ -52,7 +53,7 @@ public abstract class AbstractPocitac {
     }
 
     @Deprecated
-    public AbstractPocitac(int port) {
+    public AbstraktniPocitac(int port) {
         vypis("Pouziva se deprecated metoda AbstractPocitac(int port)");
         komunikace = new Komunikace(port, this);
         rozhrani = new ArrayList<SitoveRozhrani>();
