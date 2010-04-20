@@ -3,13 +3,14 @@
  * and open the template in the editor.
  */
 
-package prikazy;
+package prikazy.cisco;
 
 import datoveStruktury.CiscoStavy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import pocitac.*;
+import prikazy.AbstraktniPrikaz;
 
 /**
  *

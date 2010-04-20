@@ -1,5 +1,7 @@
 package prikazy;
 
+import prikazy.cisco.CiscoPing;
+import prikazy.cisco.CiscoOtaznik;
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
 import java.text.DateFormat;

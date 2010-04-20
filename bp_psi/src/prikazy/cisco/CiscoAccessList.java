@@ -5,11 +5,12 @@
  * http://www.samuraj-cz.com/clanek/cisco-ios-8-access-control-list/
  */
 
-package prikazy;
+package prikazy.cisco;
 
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
+import prikazy.CiscoPrikaz;
 
 /**
  *

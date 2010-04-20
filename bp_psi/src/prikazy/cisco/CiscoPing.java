@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package prikazy;
+package prikazy.cisco;
 
 import datoveStruktury.IpAdresa;
 import datoveStruktury.Paket;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
+import prikazy.AbstraktniPing;
 
 /**
  *
