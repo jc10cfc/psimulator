@@ -8,9 +8,11 @@ import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
+import static Main.Main.*;
 
 /**
  * Cisco trida pro nastavovani inside/outside rozhrani.
+ * Outside rozhrani muze byt pouze jedno. V cisco jde sice i vice, ale pro nasi praci to neni potreba.
  * @author haldyr
  */
 public class CiscoIpNatRozhrani extends CiscoPrikaz {
@@ -21,7 +23,7 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
     boolean no;
 
     /**
-     * 
+     *
      * @param pc
      * @param kon
      * @param slova
@@ -69,7 +71,7 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -90,7 +92,12 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
         if (inside) {
             pc.NATtabulka.pridejRozhraniInside(rozhrani);
         } else if (outside) {
+            if (pc.NATtabulka.vratVerejne() != null) {
+                kon.posliRadek(jmenoProgramu + ": Implementace nepovoluje mit vice nastavenych verejnych rozhrani. "
+                        + "Takze se rusi aktualni verejne: " + pc.NATtabulka.vratVerejne().jmeno+ " a nastavi se "+rozhrani.jmeno);
+            }
             pc.NATtabulka.nastavRozhraniOutside(rozhrani);
+
         }
     }
 }

@@ -1,8 +1,5 @@
 package prikazy;
 
-import prikazy.linux.LinuxExit;
-import prikazy.linux.LinuxIfconfig;
-import prikazy.linux.LinuxRoute;
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
 import java.text.DateFormat;
@@ -19,6 +16,9 @@ import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
 import prikazy.AbstraktniPrikaz.*;
+//import prikazy.linux.LinuxExit;
+//import prikazy.linux.LinuxIfconfig;
+//import prikazy.linux.LinuxRoute;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -66,8 +66,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
 
     /**
-     * Tato metoda simuluje zkracovani prikazu tak, jak cini cisco. 
-     * @param command prikaz, na ktery se zjistuje, zda lze na nej doplnit. 
+     * Tato metoda simuluje zkracovani prikazu tak, jak cini cisco.
+     * @param command prikaz, na ktery se zjistuje, zda lze na nej doplnit.
      * @param cmd prikaz, ktery zadal uzivatel
      * @return Vrati true, pokud retezec cmd je jedinym moznym prikazem, na ktery ho lze doplnit.
      */
@@ -394,7 +394,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("kill")) {
-            prikaz = new LinuxExit(pc, kon, slova);
+            kon.ukonciSpojeni();
             return;
         }
 
@@ -459,11 +459,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
                 if (debug) {
                     if (kontrola("ip", prvniSlovo)) {
-                        prikaz = new CiscoIpRoute(pc, kon, slova, true);
+                        prikaz = new CiscoIpRoute(pc, kon, slova, false);
                         return;
                     }
                     if (kontrola("no", prvniSlovo)) {
-                        prikaz = new CiscoIpRoute(pc, kon, slova, false);
+                        prikaz = new CiscoIpRoute(pc, kon, slova, true);
                         return;
                     }
                 }
@@ -479,7 +479,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
-                    prikaz = new CiscoIpRoute(pc, kon, slova, true);
+                    prikaz = new CiscoIpRoute(pc, kon, slova, false);
                     return;
                 }
                 if (kontrola("interface", prvniSlovo)) {
@@ -491,7 +491,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("no", prvniSlovo)) {
-                    prikaz = new CiscoIpRoute(pc, kon, slova, false);
+                    prikaz = new CiscoIpRoute(pc, kon, slova, true);
                     return;
                 }
                 break;
@@ -549,9 +549,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         if (debug) {
             if (slova.get(0).equals("ifconfig")) { // pak smazat
-                prikaz = new LinuxIfconfig(pc, kon, slova);
+//                prikaz = new LinuxIfconfig(pc, kon, slova);
             } else if (slova.get(0).equals("route")) {
-                prikaz = new LinuxRoute(pc, kon, slova);
+//                prikaz = new LinuxRoute(pc, kon, slova);
             }
         }
 

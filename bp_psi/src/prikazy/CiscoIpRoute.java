@@ -28,7 +28,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
     /**
      * Rika, zda pridavam (true) nebo mazu (false).
      */
-    private boolean pridej;
+    private boolean no;
 
     private IpAdresa adresat;
     private IpAdresa brana;
@@ -36,9 +36,10 @@ public class CiscoIpRoute extends CiscoPrikaz {
 
     private boolean debug = false;
 
-    public CiscoIpRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean pridej) {
+
+    public CiscoIpRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
         super(pc, kon, slova);
-        this.pridej = pridej;
+        this.no = no;
         this.adresat = null;
         this.brana = null;
         this.rozhrani = null;
@@ -56,8 +57,8 @@ public class CiscoIpRoute extends CiscoPrikaz {
     @Override
     protected boolean zpracujRadek() {
 
-        if (pridej == false) {
-            if (debug) pc.vypis("prikaz no, pridej="+pridej);
+        if (no == true) {
+            if (debug) pc.vypis("prikaz no, pridej="+no);
             // tady osetrit, ze ve slova bude 'no ip route ..'
             if (! kontrola("ip", dalsiSlovo(), 2)) {
                 return false;
@@ -67,7 +68,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
         if (! kontrola("route", dalsiSlovo(), 2)) {
             return false;
         }
-        
+
         try {
             adresat = new IpAdresa(dalsiSlovo(), dalsiSlovo());
         } catch (Exception e) { // SpatnaMaskaException, SpatnaAdresaException
@@ -115,7 +116,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
             }
 
         } else { // prazdny
-            if (pridej) {
+            if (no == false) {
                 incompleteCommand();
                 return false;
             }
@@ -131,8 +132,8 @@ public class CiscoIpRoute extends CiscoPrikaz {
 
     @Override
     protected void vykonejPrikaz() {
-        if (debug) pc.vypis("pridej="+pridej);
-        if (pridej) {
+        if (debug) pc.vypis("pridej="+no);
+        if (no == false) {
             if (brana != null) { // na branu
                 ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
             } else { // na rozhrani

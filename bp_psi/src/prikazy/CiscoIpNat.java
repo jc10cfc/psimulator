@@ -17,6 +17,8 @@ import pocitac.Konsole;
  */
 public class CiscoIpNat extends CiscoPrikaz {
 
+    boolean no;
+
     int poolPrefix = -1;
     IpAdresa start = null;
     IpAdresa konec = null;
@@ -24,8 +26,9 @@ public class CiscoIpNat extends CiscoPrikaz {
     int accesslist = -1;
     boolean overload = false;
 
-    public CiscoIpNat(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public CiscoIpNat(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
         super(pc, kon, slova);
+        this.no = no;
 
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
@@ -37,7 +40,15 @@ public class CiscoIpNat extends CiscoPrikaz {
     protected boolean zpracujRadek() {
 
         // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
-        // ip nat inside source list 7 pool ovrld overload
+        // ip nat inside source list 7 pool ovrld overload?
+
+
+        if (no) {
+            if (!dalsiSlovo().equals("ip")) {
+                invalidInputDetected();
+                return false;
+            }
+        }
 
         if (!kontrola("nat", dalsiSlovo(), 3)) {
             return false;
@@ -59,6 +70,23 @@ public class CiscoIpNat extends CiscoPrikaz {
 
     @Override
     protected void vykonejPrikaz() {
+
+        if (no) {
+
+            if (accesslist != -1) { // no ip nat inside source list 7 pool ovrld overload?
+                pc.NATtabulka.aktivniAccess = -1;
+                pc.NATtabulka.aktivniPool = null;
+                pc.NATtabulka.aktivniPoolJmeno = "";
+            }
+//            if (poolPrefix) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
+            //TODO: tady
+
+
+
+            return;
+        }
+
+
         if (poolPrefix != -1) { // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
             int ret = pc.NATtabulka.pridejPool(start, konec, poolPrefix, poolJmeno);
             switch (ret) {
@@ -82,7 +110,7 @@ public class CiscoIpNat extends CiscoPrikaz {
 
         if (accesslist != -1) { // ip nat inside source list 7 pool ovrld overload
             pc.NATtabulka.nastavAktivniPool(poolJmeno);
-            pc.NATtabulka.cisloAccess = accesslist;
+            pc.NATtabulka.aktivniAccess = accesslist;
             pc.NATtabulka.overload = overload;
         }
     }

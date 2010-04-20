@@ -2,6 +2,9 @@
  * Doresit:
  * staticky NAT - jen rucne pridana pravidla
  * natovani z internetu - kontrola kdy natovat (neni nastaven pool atd..)
+ *
+ *
+ * http://www.samuraj-cz.com/clanek/cisco-ios-8-access-control-list/
  */
 package datoveStruktury;
 
@@ -37,7 +40,7 @@ public class NATtabulka {
     /**
      * cislo aktivniho pristupoveho listu, dle ktereho se kontroluje pristup
      */
-    public int cisloAccess;
+    public int aktivniAccess;
     /**
      * citac, odkud mam rozdavat porty
      */
@@ -49,11 +52,11 @@ public class NATtabulka {
     /**
      * Aktualne nastaveny pool, kdyz je null, tak to znamena, ze neni
      */
-    public PoolList aktualniPool = null;
+    public PoolList aktivniPool = null;
     /**
      * Jmeno aktualniho poolu, kdyz je nastaven neexistujici pool, tak se sem ulozi ten binec, jaky zadal uzivatel.
      */
-    public String aktualniPoolJmeno = "";
+    public String aktivniPoolJmeno = "";
 
     public NATtabulka() {
         tabulka = new ArrayList<NATzaznam>();
@@ -61,7 +64,7 @@ public class NATtabulka {
         seznamAccess = new ArrayList<AccessList>();
         seznamPoolu = new ArrayList<PoolList>();
         overload = false;
-        cisloAccess = -1;
+        aktivniAccess = -1;
     }
 
     /**
@@ -186,7 +189,7 @@ public class NATtabulka {
         return paket;
     }
 
-    
+
 
     /**
      * Dle teto metody se bude pocitac rozhodovat, co delat s paketem.
@@ -208,7 +211,7 @@ public class NATtabulka {
             }
         }
 
-        if (aktualniPool == null) {
+        if (aktivniPool == null) {
             return 1;
         }
 
@@ -226,7 +229,7 @@ public class NATtabulka {
 
         if (!jeVAccessListu(zdroj)) {
             return 4;
-        }        
+        }
 
         return 0;
     }
@@ -366,7 +369,7 @@ public class NATtabulka {
      */
     private boolean jeVAccessListu(IpAdresa zdroj) {
         for (AccessList zaznam : seznamAccess) {
-            if (zaznam.cislo == cisloAccess && zdroj.jeVRozsahu(zaznam.ip)) {
+            if (zaznam.cislo == aktivniAccess && zdroj.jeVRozsahu(zaznam.ip)) {
                 return true;
             }
         }
@@ -374,7 +377,7 @@ public class NATtabulka {
     }
 
     /****************************************** IP pool *********************************************************/
-    
+
     /**
      * Prida pool.
      * @param start
@@ -392,7 +395,7 @@ public class NATtabulka {
             return 1;
         }
 
-        if (aktualniPool.jmeno.equals(jmeno)) {
+        if (aktivniPool.jmeno.equals(jmeno)) {
             return 2;
         }
 
@@ -418,7 +421,7 @@ public class NATtabulka {
         do {
             novyPool.pool.add(ukazatel);
             ukazatel = IpAdresa.vratOJednaVetsi(ukazatel);
-            
+
         } while (ukazatel.dejLongIP() < konec.dejLongIP() && ukazatel.jeVRozsahu(start));
 
         return 0;
@@ -426,7 +429,7 @@ public class NATtabulka {
 
     /**
      * Najde pool se stejnym jmenem a nastavi ho jako aktualni. Dale nasype tyto adresy na rozhrani<br />
-     * Dale nastavi aktualniPoolJmeno, kdyz zadal uzivatel nejaky neexistujici pool, tak se sem ulozi ten nesmysl.
+     * Dale nastavi aktivniPoolJmeno, kdyz zadal uzivatel nejaky neexistujici pool, tak se sem ulozi ten nesmysl.
      * (= je to jen pro vypis pres 'show running-config' <br />
      * Kdyz s takovym jmenem zadny nenajde, tak nastavi null a pak se nemuze natovat a vraci se Destination Host Unreachable
      * @param jmeno
@@ -434,11 +437,11 @@ public class NATtabulka {
     public void nastavAktivniPool(String jmeno) {
         for (PoolList pool : seznamPoolu) {
             if (pool.jmeno.equals(jmeno)) {
-                aktualniPool = pool;
-                aktualniPoolJmeno = pool.jmeno;
+                aktivniPool = pool;
+                aktivniPoolJmeno = pool.jmeno;
 
                 if (verejne.seznamAdres.size() != 0) { // smazu vsechny ostatni krom prvni nastavene
-                    verejne.seznamAdres = verejne.seznamAdres.subList(0, 1); 
+                    verejne.seznamAdres = verejne.seznamAdres.subList(0, 1);
                 }
                 for (IpAdresa ip : pool.pool) {
                     verejne.seznamAdres.add(ip);
@@ -447,8 +450,8 @@ public class NATtabulka {
                 return;
             }
         }
-        aktualniPool = null;
-        aktualniPoolJmeno = jmeno;
+        aktivniPool = null;
+        aktivniPoolJmeno = jmeno;
     }
 
     /**
@@ -479,9 +482,9 @@ public class NATtabulka {
      */
     private IpAdresa dejIpZPoolu() {
         if (overload) {
-            return aktualniPool.prvni();
+            return aktivniPool.prvni();
         } else {
-            return aktualniPool.dejIp();
+            return aktivniPool.dejIp();
         }
     }
 
@@ -526,7 +529,7 @@ public class NATtabulka {
         seznamAccess.clear();
         int cislo = 1;
         pridejAccessList(new IpAdresa("0.0.0.0", 0), cislo);
-        cisloAccess = cislo;
+        aktivniAccess = cislo;
 
         // osefovani IP poolu
         overload = true;

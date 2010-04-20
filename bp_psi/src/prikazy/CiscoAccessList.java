@@ -1,6 +1,8 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
+ *
+ * http://www.samuraj-cz.com/clanek/cisco-ios-8-access-control-list/
  */
 
 package prikazy;
@@ -34,6 +36,6 @@ public class CiscoAccessList extends CiscoPrikaz {
     protected void vykonejPrikaz() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 
 }
