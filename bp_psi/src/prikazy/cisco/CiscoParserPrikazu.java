@@ -2,11 +2,15 @@ package prikazy.cisco;
 
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
+import datoveStruktury.NATAccessList.AccessList;
+import datoveStruktury.NATPoolAccess.PoolAccess;
+import datoveStruktury.NATPool.Pool;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import static datoveStruktury.CiscoStavy.*;
+import static Main.Main.*;
 import java.util.LinkedList;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
@@ -18,9 +22,8 @@ import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
 import prikazy.AbstraktniPrikaz.*;
 import prikazy.ParserPrikazu;
-//import prikazy.linux.LinuxExit;
-//import prikazy.linux.LinuxIfconfig;
-//import prikazy.linux.LinuxRoute;
+import prikazy.linux.LinuxIfconfig;
+import prikazy.linux.LinuxRoute;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -396,6 +399,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("kill")) {
+            kon.posliRadek(jmenoProgramu+": servisni ukonceni");
             kon.ukonciSpojeni();
             return;
         }
@@ -551,9 +555,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         if (debug) {
             if (slova.get(0).equals("ifconfig")) { // pak smazat
-//                prikaz = new LinuxIfconfig(pc, kon, slova);
+                prikaz = new LinuxIfconfig(pc, kon, slova);
             } else if (slova.get(0).equals("route")) {
-//                prikaz = new LinuxRoute(pc, kon, slova);
+                prikaz = new LinuxRoute(pc, kon, slova);
             }
         }
 
@@ -646,9 +650,30 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         s += ((CiscoPocitac) pc).getWrapper().vypisRunningConfig();
 
+        s += "!\n";
+        s += "ip http server\n";
+        
+        for (Pool pool : pc.NATtabulka.NATseznamPoolu.seznamPoolu) {
+            s += "ip nat pool "+ pool.jmeno + " "+pool.prvni().vypisAdresu() + " " + pool.posledni().vypisAdresu()
+                    + " prefix-length " + pool.prvni().pocetBituMasky() + "\n";
+        }
+
+        for (PoolAccess pa : pc.NATtabulka.NATseznamPoolAccess.seznamPoolAccess) {
+            s += "ip nat inside source list " + pa.access + " pool " + pa.pool;
+            if (pa.overload) {
+                s += " overload";
+            }
+            s += "\n";
+        }
+
+        s += "!\n";
+
+        for (AccessList access : pc.NATtabulka.NATseznamAccess.seznamAccess) {
+            s += "access-list "+access.cislo+" permit "+access.ip.vypisAdresu()+" "+ access.ip.vypisWildcard()+"\n";
+        }
+
         if (!debug) {
-            s += "!\n\n";
-            s += "ip http server\n" + "!\n" + "!\n" + "control-plane\n"
+            s += "!\n" + "!\n" + "control-plane\n"
                     + "!\n" + "!\n" + "line con 0\n"
                     + "line aux 0\n" + "line vty 0 4\n" + " login\n" + "!\n" + "end\n\n";
 

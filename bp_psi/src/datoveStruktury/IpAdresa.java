@@ -332,6 +332,19 @@ public class IpAdresa {
     }
 
     /**
+     * Spocita wildcard z masky a vrati ho jako retezec.
+     * @return
+     */
+    public String vypisWildcard() {
+        long broadcast = (long)(new IpAdresa("255.255.255.255").adresa);
+        long mask = (long)maska;
+        long wc = broadcast - mask;
+        IpAdresa wildcard = new IpAdresa("1.1.1.1");
+        wildcard.adresa = (int)wc;
+        return wildcard.vypisAdresu();
+    }
+
+    /**
      * Vypise IP jako string s maskou za lomitkem
      */
     public String vypisAdresuSMaskou() {

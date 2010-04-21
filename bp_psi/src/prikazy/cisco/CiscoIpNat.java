@@ -1,10 +1,9 @@
 /*
- * Dodelat:
+ * Hotovo:
  * prikaz no
  */
 package prikazy.cisco;
 
-import prikazy.cisco.CiscoPrikaz;
 import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
@@ -18,6 +17,9 @@ import pocitac.Konsole;
  */
 public class CiscoIpNat extends CiscoPrikaz {
 
+    /**
+     * Rika, ze je to prikaz negovany - "no ...".
+     */
     boolean no;
 
     int poolPrefix = -1;
@@ -73,23 +75,27 @@ public class CiscoIpNat extends CiscoPrikaz {
     protected void vykonejPrikaz() {
 
         if (no) {
-
+            int n;
             if (accesslist != -1) { // no ip nat inside source list 7 pool ovrld overload?
-                pc.NATtabulka.aktivniAccess = -1;
-                pc.NATtabulka.aktivniPool = null;
-                pc.NATtabulka.aktivniPoolJmeno = "";
+
+                n = pc.NATtabulka.NATseznamPoolAccess.smazPoolAccess(accesslist);
+                if (n == 1) {
+                    kon.posliRadek("%Dynamic mapping not found");
+                }
+                return;
             }
-//            if (poolPrefix) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
-            //TODO: tady
+            if (poolJmeno != null) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
 
-
-
+                n  = pc.NATtabulka.NATseznamPoolu.smazPool(poolJmeno);
+                if (n == 1) {
+                    kon.posliRadek("%Pool "+poolJmeno+" not found");
+                }
+            }
             return;
         }
 
-
         if (poolPrefix != -1) { // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
-            int ret = pc.NATtabulka.pridejPool(start, konec, poolPrefix, poolJmeno);
+            int ret = pc.NATtabulka.NATseznamPoolu.pridejPool(start, konec, poolPrefix, poolJmeno);
             switch (ret) {
                 case 1:
                     kon.posliRadek("%End address less than start address");
@@ -110,9 +116,7 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
 
         if (accesslist != -1) { // ip nat inside source list 7 pool ovrld overload
-            pc.NATtabulka.nastavAktivniPool(poolJmeno);
-            pc.NATtabulka.aktivniAccess = accesslist;
-            pc.NATtabulka.overload = overload;
+            pc.NATtabulka.NATseznamPoolAccess.pridejPoolAccess(accesslist, poolJmeno, overload);
         }
     }
 
@@ -137,6 +141,10 @@ public class CiscoIpNat extends CiscoPrikaz {
             return false;
         }
         poolJmeno = dalsi;
+
+        if (no) { // staci po jmeno, dal me to nezajima
+            return true;
+        }
 
         try {
             start = new IpAdresa(dalsiSlovo());
@@ -214,6 +222,10 @@ public class CiscoIpNat extends CiscoPrikaz {
             return false;
         }
         poolJmeno = dalsi;
+
+        if (no) { // pokud mazu, tak pocamcad mi to staci, ale mazu stejnak jen podle cisla:-)
+            return true;
+        }
 
         dalsi = dalsiSlovo();
         if (dalsi.equals("overload")) {
