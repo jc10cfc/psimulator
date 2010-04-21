@@ -57,6 +57,14 @@ public class Uloz extends AbstraktniPrikaz {
 
         ulozRoutovaciTabulku(pocitac);
 
+        if (pocitac instanceof LinuxPocitac) {
+            if (pocitac.ip_forward) {
+                zapis(vratElement("ip_forward", "1"));
+            } else {
+                zapis(vratElement("ip_forward", "0"));
+            }
+        }
+
         tabs = tabs.substring(1);
         zapis("</pocitac>\n\n");
     }
@@ -141,9 +149,9 @@ public class Uloz extends AbstraktniPrikaz {
         }
 
         if (pc instanceof CiscoPocitac) {
-             // u cisca ukladam jen zadane prikazy, protoze se routy z rozhrani generuji automaticky
+            // u cisca ukladam jen zadane prikazy, protoze se routy z rozhrani generuji automaticky
 
-            CiscoPocitac poc = (CiscoPocitac)pc;
+            CiscoPocitac poc = (CiscoPocitac) pc;
             for (int i = 0; i < poc.getWrapper().size(); i++) {
                 CiscoZaznam zaznam = poc.getWrapper().vratZaznam(i);
 

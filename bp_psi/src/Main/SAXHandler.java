@@ -255,6 +255,16 @@ public class SAXHandler implements ContentHandler {
         if (patriDoRozhrani(jmenoElementu)) {
             rozhrani[dejIndexVRozhrani(jmenoElementu)] = s;
         }
+
+        if (jmenoElementu.equals("ip_forward")) {
+            if (s.equals("true") || s.equals("1")) {
+                dejOdkazNaAktualniPC().ip_forward = true;
+            } else if (s.equals("false") || s.equals("0")) {
+                dejOdkazNaAktualniPC().ip_forward = false;
+            } else {
+                System.out.println("ip_forward musi byt bud true/false nebo 1/0, ne todlencto: " + s);
+            }
+        }
     }
 
     /**
@@ -318,6 +328,7 @@ public class SAXHandler implements ContentHandler {
                 pocitac = new CiscoPocitac(pcbuilder.jmeno, port++);
             } else if (pcbuilder.typ.equals("linux")) {
                 pocitac = new LinuxPocitac(pcbuilder.jmeno, port++);
+                pocitac.ip_forward = pcbuilder.ip_forward;
             } else {
                 throw new ChybaKonfigurakuException("Pocitac nema nastaven typ - linux | cisco.");
             }

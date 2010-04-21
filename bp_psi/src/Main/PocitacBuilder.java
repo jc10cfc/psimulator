@@ -18,6 +18,7 @@ public class PocitacBuilder {
     String typ = "";
     List<String[]> rozhrani;
     List<String[]> routovaciTabulka;
+    boolean ip_forward = false;
 
     public PocitacBuilder() {
         rozhrani = new ArrayList<String[]>();
