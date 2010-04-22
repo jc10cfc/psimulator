@@ -27,14 +27,19 @@ import vyjimky.ChybaKonfigurakuException;
  */
 public class SAXHandler implements ContentHandler {
 
-    // Umožnuje zacílit místo v dokumentu, kde vznikla aktualní událost
+    /**
+     *Umožnuje zacílit místo v dokumentu, kde vznikla aktualní událost
+     */
     Locator locator;
     String tabs = "";
     String namespaces = "";
     String jmenoElementu = "";
     List<AbstraktniPocitac> hotovePocitace = new ArrayList<AbstraktniPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
-    String[] rozhrani = new String[6]; // jmeno, ip mac, maska, pripojenoK, nahozene
+    String[] rozhrani = new String[7]; // jmeno, ip mac, maska, pripojenoK, nahozene, nat
     String[] zaznam = new String[4]; //adresat, maskaAdresata, brana, rozhrani
+    String[] accessList = new String[3]; // cislo, ipA, ipAWildcard
+    String[] pool = new String[4]; // pJmeno, ip_start, ip_konec, prefix
+    String[] poolAccess = new String[3]; // accessCislo, poolJmeno, overload
     static public int port = -1;
     List<List> pripojeno = new ArrayList<List>();
     List<PocitacBuilder> seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
@@ -59,19 +64,28 @@ public class SAXHandler implements ContentHandler {
     }
 
     /**
+     * Vrati true, pokud je v poli obsazen retezec s.
+     * @param pole
+     * @param s
+     * @return
+     */
+    private boolean jeTam(String[] pole, String s) {
+        for (String p : pole) {
+            if (p.equals(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Vrati true, pokud localName je jmeno elementu, ktere patri do rozhrani.
      * @param localName jmeno elementu
      * @return
      */
     private boolean patriDoRozhrani(String localName) {
-        String[] pole = {"jmeno", "ip", "mac", "pripojenoK", "maska", "nahozene"};
-
-        for (String s : pole) {
-            if (localName.equals(s)) {
-                return true;
-            }
-        }
-        return false;
+        String[] pole = {"jmeno", "ip", "mac", "pripojenoK", "maska", "nahozene", "nat"};
+        return jeTam(pole, localName);
     }
 
     /**
@@ -81,13 +95,90 @@ public class SAXHandler implements ContentHandler {
      */
     private boolean patriDoZaznamu(String localName) {
         String[] pole = {"adresat", "maskaAdresata", "brana", "rozhraniKam"};
+        return jeTam(pole, localName);
+    }
 
-        for (String s : pole) {
-            if (localName.equals(s)) {
-                return true;
-            }
+    /**
+     * Vrati true, pokud localName je jmeno elementu, ktere patri do poolu.
+     * @param localName jmeno elementu
+     * @return
+     */
+    private boolean patriDoNatPoolu(String localName) {
+        String[] pole = {"pJmeno", "ip_start", "ip_konec", "prefix"};
+        return jeTam(pole, localName);
+    }
+
+    /**
+     * Vrati true, pokud localName je jmeno elementu, ktere patri do Nat prirazeni.
+     * @param localName jmeno elementu
+     * @return
+     */
+    private boolean patriDoNatPrirazeni(String localName) {
+        String[] pole = {"accessCislo", "poolJmeno", "overload"};
+        return jeTam(pole, localName);
+    }
+
+    /**
+     * Vrati true, pokud localName je jmeno elementu, ktere patri do poolu.
+     * @param localName jmeno elementu
+     * @return
+     */
+    private boolean patriDoNatAccessListu(String localName) {
+        String[] pole = {"cislo", "ipA", "ipAWildcard"};
+        return jeTam(pole, localName);
+    }
+
+    /**
+     * Pomocna metoda pro pristup k poli (prvky pole jsou casti zaznamu)
+     * @param s   - co chceme z pole
+     * @return  index v poli, kde se hledana hodnota naleza
+     */
+    private int dejIndexVNatAccessListu(String s) {
+        int i = 9;
+        if (s.equals("cislo")) {
+            i = 0;
+        } else if (s.equals("ipA")) {
+            i = 1;
+        } else if (s.equals("ipAWildcard")) {
+            i = 2;
         }
-        return false;
+        return i;
+    }
+
+    /**
+     * Pomocna metoda pro pristup k poli (prvky pole jsou casti zaznamu)
+     * @param s   - co chceme z pole
+     * @return  index v poli, kde se hledana hodnota naleza
+     */
+    private int dejIndexVNatPoolu(String s) {
+        int i = 9;
+        if (s.equals("pJmeno")) {
+            i = 0;
+        } else if (s.equals("ip_start")) {
+            i = 1;
+        } else if (s.equals("ip_konec")) {
+            i = 2;
+        } else if (s.equals("prefix")) {
+            i = 3;
+        }
+        return i;
+    }
+
+    /**
+     * Pomocna metoda pro pristup k poli (prvky pole jsou casti zaznamu)
+     * @param s   - co chceme z pole
+     * @return  index v poli, kde se hledana hodnota naleza
+     */
+    private int dejIndexVNatPrirazeni(String s) {
+        int i = 9;
+        if (s.equals("accessCislo")) {
+            i = 0;
+        } else if (s.equals("poolJmeno")) {
+            i = 1;
+        } else if (s.equals("overload")) {
+            i = 2;
+        }
+        return i;
     }
 
     /**
@@ -106,7 +197,6 @@ public class SAXHandler implements ContentHandler {
         } else if (s.equals("rozhraniKam")) {
             i = 3;
         }
-
         return i;
     }
 
@@ -130,9 +220,66 @@ public class SAXHandler implements ContentHandler {
             i = 4;
         } else if (s.equals("nahozene")) {
             i = 5;
+        } else if (s.equals("nat")) {
+            i = 6;
         }
-
         return i;
+    }
+
+    /**
+     * Nastavi vsechny prvky na prazdny retezec.
+     * @param pole
+     */
+    private void vymazPole(String[] pole) {
+        for (int i = 0; i < pole.length; i++) {
+            pole[i] = "";
+        }
+    }
+
+    private void vymazVsechnyNATPole() {
+        vymazPole(accessList);
+        vymazPole(pool);
+        vymazPole(poolAccess);
+    }
+
+    /**
+     * Vrati kopii pole.
+     * @param pole
+     */
+    private String[] vratKopiiPole(String[] pole) {
+        String[] nove = new String[pole.length];
+        for (int i = 0; i < pole.length; i++) {
+            nove[i] = pole[i];
+        }
+        return nove;
+    }
+
+    /**
+     * Zjistuje, zda je cele pole naplnene.
+     * @param pole
+     * @return true - pokud zadny prvek neni prazdny retezec
+     *         false - aspon 1 prvek neni prazdny retezec nebo pokud je pole null
+     */
+    private boolean jePolePlne(String[] pole) {
+        for (int i = 0; i < pole.length; i++) {
+            if (pole[i].equals("")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Vrati vypis pole.
+     * @param pole
+     * @return
+     */
+    private String vypisPole(String[] pole) {
+        String s = "";
+        for (int i = 0; i < pole.length; i++) {
+            s += " " + pole[i];
+        }
+        return s;
     }
 
     /**
@@ -166,18 +313,27 @@ public class SAXHandler implements ContentHandler {
                     dejOdkazNaAktualniPC().typ = atts.getValue(i);
                 }
             }
+            vymazVsechnyNATPole();
         }
 
         if (localName.equals("rozhrani")) {
-            for (int i = 0; i < rozhrani.length; i++) {
-                rozhrani[i] = "";
-            }
+            vymazPole(rozhrani);
         }
 
         if (localName.equals("zaznam")) {
-            for (int i = 0; i < zaznam.length; i++) {
-                zaznam[i] = "";
-            }
+            vymazPole(zaznam);
+        }
+
+        if (localName.equals("access-list")) {
+            vymazPole(accessList);
+        }
+
+        if (localName.equals("pool")) {
+            vymazPole(pool);
+        }
+
+        if (localName.equals("prirazeni")) {
+            vymazPole(poolAccess);
         }
 
         if (vypis) {
@@ -197,23 +353,38 @@ public class SAXHandler implements ContentHandler {
         tabs = tabs.substring(1);
 
         if (localName.equals("rozhrani")) {
-
-            String[] pole = new String[rozhrani.length];
-            for (int i = 0; i < rozhrani.length; i++) {
-                pole[i] = rozhrani[i];
-            }
-
-            dejOdkazNaAktualniPC().rozhrani.add(pole);
+            dejOdkazNaAktualniPC().rozhrani.add(vratKopiiPole(rozhrani));
         }
 
         if (localName.equals("zaznam")) {
+            dejOdkazNaAktualniPC().routovaciTabulka.add(vratKopiiPole(zaznam));
+        }
 
-            String[] pole = new String[zaznam.length];
-            for (int i = 0; i < zaznam.length; i++) {
-                pole[i] = zaznam[i];
+        if (localName.equals("pool")) {
+            if (jePolePlne(pool)) {
+                dejOdkazNaAktualniPC().pool.add(vratKopiiPole(pool));
+            } else {
+                System.out.println("Neni uplny zaznam, preskakuji: "+vypisPole(pool));
+            }
+            
+        }
+
+        if (localName.equals("prirazeni")) {
+            if (jePolePlne(poolAccess)) {
+                dejOdkazNaAktualniPC().poolAccess.add(vratKopiiPole(poolAccess));
+            } else {
+                System.out.println("Neni uplny zaznam, preskakuji: "+vypisPole(poolAccess));
+            }
+            
+        }
+
+        if (localName.equals("access-list")) {
+            if (jePolePlne(accessList)) {
+                dejOdkazNaAktualniPC().accessList.add(vratKopiiPole(accessList));
+            } else {
+                System.out.println("Neni uplny zaznam, preskakuji: "+vypisPole(accessList));
             }
 
-            dejOdkazNaAktualniPC().routovaciTabulka.add(pole);
         }
 
         if (vypis) {
@@ -251,9 +422,17 @@ public class SAXHandler implements ContentHandler {
         if (patriDoZaznamu(jmenoElementu)) {
             zaznam[dejIndexVZaznamu(jmenoElementu)] = s;
         }
-
         if (patriDoRozhrani(jmenoElementu)) {
             rozhrani[dejIndexVRozhrani(jmenoElementu)] = s;
+        }
+        if (patriDoNatAccessListu(jmenoElementu)) {
+            accessList[dejIndexVNatAccessListu(jmenoElementu)] = s;
+        }
+        if (patriDoNatPoolu(jmenoElementu)) {
+            pool[dejIndexVNatPoolu(jmenoElementu)] = s;
+        }
+        if (patriDoNatPrirazeni(jmenoElementu)) {
+            poolAccess[dejIndexVNatPrirazeni(jmenoElementu)] = s;
         }
 
         if (jmenoElementu.equals("ip_forward")) {
@@ -339,6 +518,64 @@ public class SAXHandler implements ContentHandler {
                 System.out.println(" typ:   " + pcbuilder.typ + "\n");
             }
 
+            for (String[] pul : pcbuilder.pool) {
+                try {
+                    IpAdresa ip_start = new IpAdresa(pul[dejIndexVNatPoolu("ip_start")]);
+                    IpAdresa ip_konec = new IpAdresa(pul[dejIndexVNatPoolu("ip_konec")]);
+                    String pJmeno = pul[dejIndexVNatPoolu("pJmeno")];
+                    String cislo = pul[dejIndexVNatPoolu("prefix")];
+
+                    int i = Integer.parseInt(cislo);
+
+                    int n = pocitac.NATtabulka.NATseznamPoolu.pridejPool(ip_start, ip_konec, i, pJmeno);
+                    if (n != 0) {
+                        System.err.println("Pool je spatne zadan: " + vypisPole(pul));
+                    }
+                } catch (Exception e) {
+                    System.err.println("Pool je spatne zadan: " + vypisPole(pul)+ ", preskakuji.. ");
+                }
+            }
+
+            for (String[] access : pcbuilder.accessList) {
+                try {
+                    String jmeno = access[dejIndexVNatAccessListu("cislo")];
+                    int cislo = Integer.parseInt(jmeno);
+
+                    IpAdresa ip = new IpAdresa(access[dejIndexVNatAccessListu("ipA")]);
+                    IpAdresa wccc = new IpAdresa(access[dejIndexVNatAccessListu("ipAWildcard")]);
+                    String maska = IpAdresa.vratMaskuZWildCard(wccc);
+                    ip.nastavMasku(maska);
+
+                    pocitac.NATtabulka.NATseznamAccess.pridejAccessList(ip, cislo);
+                } catch (Exception e) {
+                    System.err.println("access-list je spatne zadan: " + vypisPole(accessList) + ", preskakuji.. ");
+                }
+            }
+
+            for (String[] poolAcc : pcbuilder.poolAccess) {
+                try {
+                    String acc = poolAcc[dejIndexVNatPrirazeni("accessCislo")];
+                    int cislo = Integer.parseInt(acc);
+                    String jmeno = poolAcc[dejIndexVNatPrirazeni("poolJmeno")];
+
+                    String overload = poolAcc[dejIndexVNatPrirazeni("overload")];
+
+                    boolean ol;
+                    if (overload.equals("true") || overload.equals("1")) {
+                        ol = true;
+                        pocitac.NATtabulka.NATseznamPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
+                    } else if (overload.equals("false") || overload.equals("0")) {
+                        ol = false;
+                        pocitac.NATtabulka.NATseznamPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
+                    } else {
+                        System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
+                    }
+                } catch (Exception e) {
+                    System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
+                }
+
+            }
+
             for (String[] iface : pcbuilder.rozhrani) { // prochazim a pridavam rozhrani k PC
 
                 if (vypis2) {
@@ -373,6 +610,18 @@ public class SAXHandler implements ContentHandler {
 
                 pocitac.pridejRozhrani(sr);
 
+                // nastaveni inside/outside rozhrani
+                if (iface[dejIndexVRozhrani("nat")].equals("soukrome")) {
+                    pocitac.NATtabulka.pridejRozhraniInside(sr);
+                } else if (iface[dejIndexVRozhrani("nat")].equals("verejne")) {
+                    pocitac.NATtabulka.nastavRozhraniOutside(sr);
+                } else if (iface[dejIndexVRozhrani("nat")].equals("")) {
+                    //ok
+                } else {
+                    System.out.println("Neznama volba " + iface[dejIndexVRozhrani("nat")] + " byla preskocena. "
+                            + "Povolene jsou jen soukrome/verejna");
+                }
+
                 if (iface[dejIndexVRozhrani("pripojenoK")].contains(":")) {
                     List prip = new ArrayList<String>();
                     prip.add(pocitac.jmeno);
@@ -392,7 +641,7 @@ public class SAXHandler implements ContentHandler {
             }
 
             if (pocitac instanceof CiscoPocitac) {
-                ((CiscoPocitac)pocitac).getWrapper().update();
+                ((CiscoPocitac) pocitac).getWrapper().update();
             }
 
             for (String[] mujzaznam : pcbuilder.routovaciTabulka) { // tady resim routovaci tabulku

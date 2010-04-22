@@ -2,6 +2,9 @@ package prikazy;
 
 import Main.SAXHandler.*;
 import datoveStruktury.CiscoWrapper.CiscoZaznam;
+import datoveStruktury.NATAccessList.AccessList;
+import datoveStruktury.NATPool.Pool;
+import datoveStruktury.NATPoolAccess.PoolAccess;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -66,6 +69,8 @@ public class Uloz extends AbstraktniPrikaz {
             }
         }
 
+        ulozNATtabulku(pocitac);
+
         tabs = tabs.substring(1);
         zapis("</pocitac>\n\n");
     }
@@ -92,7 +97,6 @@ public class Uloz extends AbstraktniPrikaz {
     private void ulozRozhrani(SitoveRozhrani rozhrani) throws IOException {
         zapis("<rozhrani>\n");
         tabs += "\t";
-
         zapis(vratElement("jmeno", rozhrani.jmeno));
         if (rozhrani.vratPrvni() == null) {
             zapis(vratElement("ip", ""));
@@ -108,6 +112,16 @@ public class Uloz extends AbstraktniPrikaz {
             zapis(vratElement("pripojenoK", rozhrani.pripojenoK.getPc().jmeno + ":" + rozhrani.pripojenoK.jmeno));
         }
         zapis(vratElement("nahozene", rozhrani.jeNahozene() ? "true" : "false"));
+
+        if (rozhrani.getPc().NATtabulka.vratInside().contains(rozhrani)) {
+            zapis(vratElement("nat", "soukrome"));
+        }
+        if (rozhrani.getPc().NATtabulka.vratVerejne() != null) {
+            if (rozhrani.getPc().NATtabulka.vratVerejne().jmeno.equals(rozhrani.jmeno)) {
+                zapis(vratElement("nat", "verejne"));
+            }
+        }
+
 
         tabs = tabs.substring(1);
         zapis("</rozhrani>\n");
@@ -180,6 +194,84 @@ public class Uloz extends AbstraktniPrikaz {
     }
 
     /**
+     * Zapise do souboru vsechno ohledne nastaveni DNATu.
+     * @throws IOException
+     */
+    private void ulozNATtabulku(AbstraktniPocitac pocitac) throws IOException {
+
+        zapis("<natovani>\n");
+        tabs += "\t";
+
+        ulozNATPooly(pocitac);
+        ulozNATPoolAccess(pocitac);
+        ulozNATAccessList(pocitac);
+
+        tabs = tabs.substring(1);
+        zapis("</natovani>\n");
+
+    }
+
+    private void ulozNATPooly(AbstraktniPocitac pocitac) throws IOException {
+        zapis("<pooly>\n");
+        tabs += "\t";
+
+        for (Pool pool : pocitac.NATtabulka.NATseznamPoolu.seznamPoolu) {
+            zapis("<pool>\n");
+            tabs += "\t";
+            zapis(vratElement("pJmeno", pool.jmeno));
+            zapis(vratElement("ip_start", pool.prvni().vypisAdresu()));
+            zapis(vratElement("ip_konec", pool.posledni().vypisAdresu()));
+            zapis(vratElement("prefix", "" + pool.prvni().pocetBituMasky()));
+            tabs = tabs.substring(1);
+            zapis("</pool>\n");
+        }
+
+        tabs = tabs.substring(1);
+        zapis("</pooly>\n");
+    }
+
+    private void ulozNATPoolAccess(AbstraktniPocitac pocitac) throws IOException {
+        zapis("<prirazeniVice>\n");
+        tabs += "\t";
+
+        for (PoolAccess pa : pocitac.NATtabulka.NATseznamPoolAccess.seznamPoolAccess) {
+            zapis("<prirazeni>\n");
+            tabs += "\t";
+
+            zapis(vratElement("accessCislo", "" + pa.access));
+            zapis(vratElement("poolJmeno", "" + pa.pool));
+            zapis(vratElement("overload", pa.overload ? "true" : "false"));
+
+            tabs = tabs.substring(1);
+            zapis("<prirazeni>\n");
+
+        }
+
+        tabs = tabs.substring(1);
+        zapis("</prirazeniVice>\n");
+    }
+
+    private void ulozNATAccessList(AbstraktniPocitac pocitac) throws IOException {
+        zapis("<access-listy>\n");
+        tabs += "\t";
+
+        for (AccessList access : pocitac.NATtabulka.NATseznamAccess.seznamAccess) {
+            zapis("<access-list>\n");
+            tabs += "\t";
+
+            zapis(vratElement("cislo", "" + access.cislo));
+            zapis(vratElement("ipA", access.ip.vypisAdresu()));
+            zapis(vratElement("ipAWildcard", access.ip.vypisWildcard()));
+
+            tabs = tabs.substring(1);
+            zapis("<access-list>\n");
+        }
+
+        tabs = tabs.substring(1);
+        zapis("</access-listy>\n");
+    }
+
+    /**
      * Pomocna metoda na zapis do souboru. Pridava odsazeni, ktere je udrzovano pomoci jinych metod (a podle umisteni v souboru).
      * @param s text, ktery chceme zapsat.
      * @throws IOException
@@ -191,7 +283,7 @@ public class Uloz extends AbstraktniPrikaz {
     @Override
     public void vykonejPrikaz() {
 
-        kon.posliRadek("Saving to file " + soubor + "..");
+        kon.posliRadek("Ukladam do " + soubor + "..");
 
         try {
             out = new BufferedWriter(new FileWriter(soubor));
@@ -202,8 +294,8 @@ public class Uloz extends AbstraktniPrikaz {
 
             zapis(vratElement("port", pocitace.get(0).komunikace.getPort() + "") + "\n");
 
-            for (AbstraktniPocitac poc : pocitace) {
-                ulozPC(poc);
+            for (AbstraktniPocitac pocitac : pocitace) {
+                ulozPC(pocitac);
             }
 
             out.write("</konfigurak>\n");

@@ -19,10 +19,18 @@ public class PocitacBuilder {
     List<String[]> rozhrani;
     List<String[]> routovaciTabulka;
     boolean ip_forward = false;
+    List<String[]> pool;
+    List<String[]> accessList;
+    List<String[]> poolAccess;
+
+
 
     public PocitacBuilder() {
         rozhrani = new ArrayList<String[]>();
         routovaciTabulka = new ArrayList<String[]>();
+        pool = new ArrayList<String[]>();
+        accessList = new ArrayList<String[]>();
+        poolAccess = new ArrayList<String[]>();
     }
 
     @Override
