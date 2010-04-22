@@ -447,7 +447,8 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
 
     @Override
     public String toString() {
-        String vratit = "  Parametry prikazy ifconfig:\n\r\tnavratovyKodParseru: " + navratovyKod;
+        String vratit = "  Parametry prikazy ifconfig:\n\r\tnavratovyKodParseru: " 
+                + rozlozNaMocniny2(navratovyKod);
         if (jmenoRozhrani != null) {
             vratit += "\n\r\trozhrani: " + jmenoRozhrani;
         }

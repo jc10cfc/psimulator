@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package prikazy.linux;
 
 import prikazy.*;
 import Main.Main;
 import datoveStruktury.IpAdresa;
+import java.util.ArrayList;
 import java.util.List;
 import pocitac.*;
 import vyjimky.SpatnaAdresaException;
@@ -17,81 +17,86 @@ import vyjimky.SpatnaAdresaException;
  *
  * @author neiss
  */
-public class LinuxIptables extends AbstraktniPrikaz{
-    
+public class LinuxIptables extends AbstraktniPrikaz {
+
     boolean ladeni = true;
-    
     /**
      * Navratovy kod parseru a kontroloru.<br />
      * Funguje klasicky po bitech jako v ifconfigu ap.<br />
      * 0 - vsechno v poradku<br />
      * 1 - nejakej nesmysl v gramatice prikazu, je uveden v promenny nesmysl<br />
      * 2 - tabulka nezadana<br />
-     * 4 - zadano -t, ale nic po tom<br />
+     * 4 - prepinac nedokoncen (poslednim slovem je napr -t), uklada se v nedokoncenejPrepinac<br />
      * 8 - spatna tabulka<br />
-     * 16 - vicekrat zadano -o<br />
-     * 32 - zadano jen -o a nic za tim<br />
-     * 64 - vicekrat zadano -i<br />
-     * 128 - zadano jen -i a nic za tim<br />
-     * 256 - vicekrat zadano -j<br />
-     * 512 - zadano jen -j a pak nic<br />
-     * 1024 - neznama akce<br />
-     * 2048 - zadano vice -d<br />
-     * 4096 - zadano jen -d a nic za tim<br />
-     * 8192 - nespravna adresa<br />
-     * 16384 - zadano vic retezu (vic parametru -A, -I, -D)<br />
+     * 16 - vicekrat zadany prepinac(e), uklada se v dvojityPrepinace<br />
+     * 32 - nespravna adresa -d<br />
+     * 64 - spatna adresa --to<br />
+     * 128 - nezadan zadny komand -L, -A, -I, -D
+     * 256 - zadano vic retezu (vic parametru -A, -I, -D)<br />
+     * 512 - spatny cislo pravidla <br />
+     * 1024 - neznama akceJump<br />
+     * 2048 - vzhledem k akci nebo k pravidlu zakazanej prikaz, uklada se do zakazanyPrepinace <br />
+     * 4096 - mozna, ale v nasem simulatoru zatim nepodporovana moznost<br />
+     * 8192 - <br />
+     * 16384 - <br />
+     * 32768 - <br />
+     * 65536 - <br />
+     * 131072 - <br />
      */
     int navrKod = 0;
-    /**
-     * Navratovy kod pro semantiku
-     * 0 - v poradku
-     * 1 - navKod neni nula, dalsi kontrola se neprovadi
-     * 2 - zadan prepinac -o, -j, -i, -d, kterej pro prikaz nema smysl
-     */
-    int semKod = 0;
-
     // ostatni promenny parseru:
     String slovo; //aktualni slovo
     String nesmysl; //k navrKodu 1.
     String tabulka;
     String vstupniRozhr;
     String vystupniRozhr;
-    String akce; //
+    String akceJump; //akce u -j
     String cilAdr;
-    boolean zadanoMinus_o=false;
-    boolean zadanoMinus_i=false;
-    boolean zadanoMinus_j=false;
-    boolean zadanoMinus_d=false;
-    boolean zadanRetez=false;
+    String preklAdr;
+    List<String> dvojityPrepinace = new ArrayList<String>();//prepinace, ktery byly zadany vic nez jednou
+    List<String> nepodporovanyPrepinace = new ArrayList<String>(); //prepinace, ktery jsou v zadany kombinaci normalne
+                                                //mozny, ale zatim nejsou podporovany
+    String nedokoncenejPrepinac;
+    boolean zadanoMinus_o = false;
+    boolean zadanoMinus_i = false;
+    boolean zadanoMinus_j = false;
+    boolean zadanoMinus_d = false;
+    boolean zadanoToDestination = false;
+    boolean zadanRetez = false;
+    String cisloPr; //cislo pravidla jako String
     String retez;
     /**
+     * 0 - nic
      * 1 - append
      * 2 - insert
      * 3 - delete
      * 4 - list (vypsani)
      */
-    int provest=0;
-    int cisloPravidla=-1; //cislo pravidla pro smazani nebo pridani
-    
+    int provest = 0;
+    int cisloPravidla = -1; //cislo pravidla pro smazani nebo pridani
+    List<String> zakazanyPrepinace = new ArrayList<String>();
     //nastaveny promenny:
-    boolean minus_n=true;
+    boolean minus_n = true;
     IpAdresa cilovaAdr;
+    IpAdresa prekladanaAdr;//ip adresa, na kterou se ma prekladat
 
     public LinuxIptables(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
-        zkontrolujGramatikuPrikazu();
-        zkontrolujSemantiku();
+        zkontrolujPrikaz();
         vypisChybovyHlaseni();
         vykonejPrikaz();
     }
 
-
+    /**
+     * Parsuje prikaz, k cemuz vola i metody dole. Kontroluje gramatiku prikazu.
+     *
+     */
     private void parsujPrikaz() {
-        slovo=dalsiSlovo();
-        while( ! slovo.equals("") ){
+        slovo = dalsiSlovo();
+        while (!slovo.equals("")) {
             zpracujBeznyPrepinace();
-            slovo=dalsiSlovo();
+            slovo = dalsiSlovo();
         }
     }
 
@@ -104,7 +109,7 @@ public class LinuxIptables extends AbstraktniPrikaz{
      */
     private void zpracujBeznyPrepinace() {
         if (slovo.equals("-t")) {
-            tabulka = dalsiSlovo();
+            zpracujMinus_t();
         } else if (slovo.equals("-o")) {
             zpracujMinus_o();
         } else if (slovo.equals("-i")) {
@@ -113,11 +118,14 @@ public class LinuxIptables extends AbstraktniPrikaz{
             zpracujMinus_j();
         } else if (slovo.equals("-d")) {
             zpracujMinus_d();
+        } else if (akceJump != null && akceJump.equals("DNAT") && (slovo.equals("--to") || slovo.equals("--to-destination"))) {
+            // -> dokud neni zadan DNAT, neni --to povoleny
+            zpracujToDestination();
         } else if ((slovo.equals("-A")) || (slovo.equals("-I")) || (slovo.equals("-D"))) {
             zpracujRetez();
         } else if (slovo.equals("-L")) {
             if (zadanoMinus_j) {
-                navrKod |= 16384;
+                navrKod |= 256;
             } else {
                 provest = 4;
                 zadanRetez = true;
@@ -134,145 +142,190 @@ public class LinuxIptables extends AbstraktniPrikaz{
         }
     }
 
+    private void zpracujMinus_t() {
+        tabulka = dalsiSlovo();
+        if (!tabulka.equals("nat")) {
+            if (tabulka.equals("")) {
+                navrKod |= 4; //zadano jen -t
+                nedokoncenejPrepinac = "-t";
+            } else {
+                navrKod |= 8;
+            }
+        }
+    }
 
     private void zpracujMinus_o() {
-        if(zadanoMinus_o){
+        if (zadanoMinus_o) {
             navrKod |= 16;
-        }else{
-            zadanoMinus_o=true;
+            dvojityPrepinace.add("-o");
+        } else {
+            zadanoMinus_o = true;
         }
-        vystupniRozhr=dalsiSlovo();
+        vystupniRozhr = dalsiSlovo();
+        if (vystupniRozhr.equals("")) {
+            navrKod |= 4;
+            nedokoncenejPrepinac = "-o";
+        }
     }
 
     private void zpracujMinus_i() {
-        if(zadanoMinus_i){
-            navrKod |= 64;
-        }else{
-            zadanoMinus_i=true;
+        if (zadanoMinus_i) {
+            navrKod |= 16;
+            dvojityPrepinace.add("-i");
+        } else {
+            zadanoMinus_i = true;
         }
-        vstupniRozhr=dalsiSlovo();
+        vstupniRozhr = dalsiSlovo();
+        if (vstupniRozhr.equals("")) {
+            navrKod |= 4;
+            nedokoncenejPrepinac = "-i";
+        }
     }
 
     private void zpracujMinus_j() {
-        if(zadanoMinus_j){
-            navrKod |= 256;
-        }else{
-            zadanoMinus_j=true;
+        if (zadanoMinus_j) {
+            navrKod |= 16;
+            dvojityPrepinace.add("-j");
+        } else {
+            zadanoMinus_j = true;
         }
-        akce=dalsiSlovo();
+        akceJump = dalsiSlovo();
+        if (akceJump.equals("")) {
+            navrKod |= 4;
+            nedokoncenejPrepinac = "-j";
+        } else {
+            if (!(akceJump.equals("MASQUERADE") || akceJump.equals("DNAT"))) {
+                navrKod |= 1024;
+            }
+        }
     }
 
     private void zpracujMinus_d() {
-        if(zadanoMinus_d){
-            navrKod |= 2048;
-        }else{
-            zadanoMinus_d=true;
+        if (zadanoMinus_d) {
+            navrKod |= 16;
+            dvojityPrepinace.add("-d");
+        } else {
+            zadanoMinus_d = true;
         }
-        cilAdr=dalsiSlovo();
+        cilAdr = dalsiSlovo();
+        if (cilAdr.equals("")) {
+            navrKod |= 4;
+            nedokoncenejPrepinac = "-d";
+        } else {
+            try {
+                cilovaAdr = new IpAdresa(cilAdr);
+            } catch (SpatnaAdresaException ex) {
+                navrKod |= 32;
+            }
+        }
+    }
+
+    private void zpracujToDestination() {
+        if (zadanoToDestination) {
+            navrKod |= 16;
+            dvojityPrepinace.add("--to-destination");
+        } else {
+            zadanoToDestination = true;
+        }
+        preklAdr = dalsiSlovo();
+        if (preklAdr.equals("")) {
+            navrKod |= 4;
+            nedokoncenejPrepinac = "--to-destination";
+        } else {
+            try {
+                cilovaAdr = new IpAdresa(cilAdr);
+            } catch (SpatnaAdresaException ex) {
+                navrKod |= 64;
+            }
+        }
     }
 
     /**
      * Zpracovava -A, -I, -D
      */
     private void zpracujRetez() {
-        if (zadanoMinus_j) {
-            navrKod |= 16384;
+        if (zadanRetez) {
+            navrKod |= 256;
         } else {
             provest = 1;
             zadanRetez = true;
-            if(slovo.equals("-A")) provest = 1;
-            if(slovo.equals("-I")) provest = 2;
-            if(slovo.equals("-D")) provest = 3;
-            retez=dalsiSlovo();
-            if(provest==2){
-                
+            if (slovo.equals("-A")) {
+                provest = 1;
             }
-        }
-    }
-
-    /**
-     * Kontroluje gramatiku prikazu, pripadne prirazuje nektery hodnoty.
-     */
-    private void zkontrolujGramatikuPrikazu() {
-
-        //kontrola spravnosti tabulky:
-        if (tabulka == null) {
-            navrKod |= 2; //tabulka nezadana
-        } else {
-            if (!tabulka.equals("nat")) {
-                if (tabulka.equals("")) {
-                    navrKod |= 4; //zadano jen -t
-                }else{
-                    navrKod |= 8;
-                }
+            if (slovo.equals("-I")) {
+                provest = 2;
             }
-        }
-
-        //kontrola spravnosti -o:
-        if (zadanoMinus_o) {
-            if (vystupniRozhr.equals("")) {
-                navrKod |= 32;
+            if (slovo.equals("-D")) {
+                provest = 3;
             }
-        }
-
-        //kontrola spravnosti -i:
-        if (zadanoMinus_i) {
-            if (vstupniRozhr.equals("")) {
-                navrKod |= 128;
-            }
-        }
-
-        //kontrola spravnosti -j:
-        if (zadanoMinus_j) {
-            if (akce.equals("")) {
-                navrKod |= 512;
-            } else {
-                if (!(akce.equals("MASQUERADE") || akce.equals("DNAT"))) {
-                    navrKod |= 1024;
-                }
-            }
-        }
-
-        //kontrola spravnosti -d:
-        if (zadanoMinus_d) {
-            if (cilAdr.equals("")) {
-                navrKod |= 4096;
-            } else {
+            retez = dalsiSlovo();
+            if (provest == 2) {//insert
+                cisloPr = dalsiSlovoAleNezvetsujCitac();
                 try {
-                    cilovaAdr = new IpAdresa(cilAdr);
-                } catch (SpatnaAdresaException ex) {
-                    navrKod |= 8192;
+                    cisloPravidla = Integer.parseInt(cisloPr);
+                    dalsiSlovo(); //zvetsovani citace, kdyz se to povedlo
+                } catch (NumberFormatException ex) {
+                    cisloPravidla = 1;
                 }
             }
+            if (provest == 3) { //delete
+                cisloPr = dalsiSlovo();
+                try {
+                    cisloPravidla = Integer.parseInt(cisloPr);
+                } catch (NumberFormatException ex) {
+                    navrKod |= 512;
+                }
+            }
+            if (cisloPravidla != -1 && cisloPravidla < 1) {
+                navrKod |= 512;
+            }
+
         }
-
-
     }
 
     /**
      * Kontroluje, jestli byly zadany spravny parametry
      */
-    private void zkontrolujSemantiku(){
-        if(navrKod!=0){
-            semKod=1;
-            return;
+    private void zkontrolujPrikaz() {
+
+        //kontrola spravnosti tabulky - pozor, vyplnuje se jeste navrKod:
+        if (tabulka == null) {
+            navrKod |= 2; //tabulka nezadana
         }
-        if(provest==4){ //-L
-            if(zadanoMinus_d){
-                kon.posliRadek("iptables v1.4.1.1: Illegal option `-d' with this command");
-                semKod |= 2;
+
+        if(provest==0){
+            navrKod |= 128;
+        }
+
+        if (provest == 4) { //-L
+            if (zadanoMinus_d) {
+                zakazanyPrepinace.add("-d");
+                navrKod |= 2048;
             }
-            if(zadanoMinus_o){
-                kon.posliRadek("iptables v1.4.1.1: Illegal option `-o' with this command");
-                semKod |= 2;
+            if (zadanoMinus_o) {
+                zakazanyPrepinace.add("-o");
+                navrKod |= 2048;
             }
-            if(zadanoMinus_i){
-                kon.posliRadek("iptables v1.4.1.1: Illegal option `-i' with this command");
-                semKod |= 2;
+            if (zadanoMinus_i) {
+                zakazanyPrepinace.add("-i");
+                navrKod |= 2048;
             }
-            if(zadanoMinus_j){
-                kon.posliRadek("iptables v1.4.1.1: Illegal option `-j' with this command");
-                semKod |= 2;
+            if (zadanoMinus_j) {
+                zakazanyPrepinace.add("-j");
+                navrKod |= 2048;
+            }
+        }
+
+        if(provest==2 ||provest==3){
+            if (retez.equals("POSTROUTING")) {
+                if (zadanoMinus_i) {
+                    zakazanyPrepinace.add("-i");
+                    navrKod |= 2048;
+                }
+                if (zadanoMinus_i) {
+                    nepodporovanyPrepinace.add("-d");
+                    navrKod |= 4096;
+                }
             }
         }
     }
@@ -282,71 +335,80 @@ public class LinuxIptables extends AbstraktniPrikaz{
      * Budou pak chtit seradit podle priority.
      */
     private void vypisChybovyHlaseni() {
-        if(ladeni) {
+        if (ladeni) {
             kon.posliRadek(toString());
             kon.posliRadek("----------------------------");
         }
-        if ( (navrKod&1) != 0){ //nesmysl v gramatice
-            kon.posliRadek("Bad argument `"+nesmysl+"'");
+        if ((navrKod & 1) != 0) { //nesmysl v gramatice
+            kon.posliRadek("Bad argument `" + nesmysl + "'");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
             return; //asi by tadyu melo bejt...
         }
 
-        if ( (navrKod&2) != 0 ){ //nezadano jmeno tabulky
-            kon.posliRadek(Main.jmenoProgramu+": Normalne by se pouzila tabulka filter, " +
+        if ((navrKod & 2) != 0) { //nezadano jmeno tabulky
+            kon.posliRadek(Main.jmenoProgramu + ": Normalne by se pouzila tabulka filter, " +
                     "ta ale v tomto programu neni. Podporujeme zatim jen tabulku nat.");
         }
-        if ( (navrKod&4) != 0 ){ //zadano jen minus_t
-            kon.posliRadek("iptables v1.4.1.1: Unknown arg `-t'");
+        if ((navrKod & 4) != 0) { //prepinac nedokoncen
+            kon.posliRadek("iptables v1.4.1.1: Unknown arg `" + nedokoncenejPrepinac + "'");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&8) != 0 ){ //zadana spatna tabulka
-            kon.posliRadek("iptables v1.4.1.1: can't initialize iptables table `"+tabulka+"': " +
+        if ((navrKod & 8) != 0) { //zadana spatna tabulka
+            kon.posliRadek("iptables v1.4.1.1: can't initialize iptables table `" + tabulka + "': " +
                     "Table does not exist (do you need to insmod?)");
             kon.posliRadek("Perhaps iptables or your kernel needs to be upgraded.");
         }
 
-        if ( (navrKod&16) != 0 ){ //vic -o
-            kon.posliRadek("iptables v1.4.1.1: multiple -o flags not allowed");
+        if ((navrKod & 16) != 0) { //nejakej prepinac zadanej dvakrat
+            kon.posliRadek("iptables v1.4.1.1: multiple " + dvojityPrepinace.get(0) + " flags not allowed");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&32) != 0 ){ //zadano jen minus_o
-            kon.posliRadek("iptables v1.4.1.1: Unknown arg `-o'");
+
+        if ((navrKod & 32) != 0) { //spatna adresa -d
+            kon.posliRadek("iptables v1.4.1.1: host/network `" + cilAdr + "' not found");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&64) != 0 ){ //vic -i
-            kon.posliRadek("iptables v1.4.1.1: multiple -o flags not allowed");
+
+        if ((navrKod & 64) != 0) { //spatna adresa --to-destination
+            kon.posliRadek("iptables v1.4.1.1: Bad IP address `" + preklAdr + "'");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&128) != 0 ){ //zadano jen minus_i
-            kon.posliRadek("iptables v1.4.1.1: Unknown arg `-i'");
+
+        if ((navrKod & 128) != 0) { //nezadan zadny prikaz
+            kon.posliRadek("iptables v1.4.1.1: no command specified");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&256) != 0 ){ //vic -j
-            kon.posliRadek("iptables v1.4.1.1: multiple -j flags not allowed");
+
+        if ((navrKod & 256) != 0) { //vic retezu
+            kon.posliRadek("Parametry -A, -I, -D nemuzete zadavat vicektrat.");
+            // -> normalne to pise: "iptables v1.4.1.1: Can't use -A with -I"  - to se mi nechtelo pamatovat
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&512) != 0 ){ //zadano jen minus_j
-            kon.posliRadek("iptables v1.4.1.1: Unknown arg `-j'");
+
+        if ((navrKod & 512) != 0) { //spatny cislo
+            kon.posliRadek("iptables v1.4.1.1: Invalid rule number `" + cisloPr + "'");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&1024) != 0 ){ //neznama akce
-            kon.posliRadek("iptables v1.4.1.1: Couldn't load target `"+akce+"':/lib/xtables/libipt_"+
-                    akce+".so: cannot open shared object file: No such file or directory");
+
+        if ((navrKod & 1024) != 0) { //neznama akce
+            kon.posliRadek("iptables v1.4.1.1: Couldn't load target `" + akceJump + "':/lib/xtables/libipt_" +
+                    akceJump + ".so: cannot open shared object file: No such file or directory");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&2048) != 0 ){ //vic -d
-            kon.posliRadek("iptables v1.4.1.1: multiple -d flags not allowed");
+
+        if ((navrKod & 2048) != 0) { //neznama akce
+            kon.posliRadek("iptables v1.4.1.1: Illegal option `" + zakazanyPrepinace.get(0)
+                    + "' with this command");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&4096) != 0 ){ //zadano jen minus_d
-            kon.posliRadek("iptables v1.4.1.1: Unknown arg `-d'");
+
+        if ((navrKod & 2048) != 0) { //pro akci zatim nepodporovany prepinac
+            kon.posliRadek(Main.jmenoProgramu+" Takova moznost by sice normalne byla mozna, simulator ji vsak zatim " +
+                    "nepodporuje. Zkuste odstranit prepinac: `"+ nepodporovanyPrepinace.get(0));
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
-        if ( (navrKod&8192) != 0 ){ //neznama adresa -d
-            kon.posliRadek("iptables v1.4.1.1: host/network `"+cilAdr+"' not found");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
-        }
+
+
     }
 
     @Override
@@ -354,37 +416,34 @@ public class LinuxIptables extends AbstraktniPrikaz{
     }
 
     @Override
-    public String toString(){
-        String vratit = "  Parametry prikazu iptables:\n\r\tnavratovyKodParseru: " + navrKod;
+    public String toString() {
+        String vratit = "  Parametry prikazu iptables:\n\r\tnavratovyKodParseru: " + rozlozNaMocniny2(navrKod);
         if (tabulka != null) {
             vratit += "\n\r\ttabulka: " + tabulka;
         }
         if (retez != null) {
             vratit += "\n\r\tretez: " + retez;
         }
-        vratit+="\n\r\tprovest: "+provest;
-        vratit+="\n\r\tcisloPravidla: "+cisloPravidla;
+        vratit += "\n\r\tprovest: " + provest;
+        vratit += "\n\r\tcisloPravidla: " + cisloPravidla;
         if (zadanoMinus_o) {
             vratit += "\n\r\tvystupniRozhr: " + vystupniRozhr;
         }
         if (zadanoMinus_i) {
-            vratit += "\n\r\tvstupniRozhr: " +vstupniRozhr ;
+            vratit += "\n\r\tvstupniRozhr: " + vstupniRozhr;
         }
         if (zadanoMinus_j) {
-            vratit += "\n\r\takce: " + akce;
+            vratit += "\n\r\takceJump: " + akceJump;
         }
         if (zadanoMinus_d) {
             vratit += "\n\r\tcilAdr: " + cilAdr;
-            if(cilovaAdr!=null){
+            if (cilovaAdr != null) {
                 vratit += "\n\r\tcilovaAdr: " + cilovaAdr.vypisAdresu();
             }
         }
-        vratit+="\n\r\tnavratovy kod semantiky: "+semKod;
 
 
 
         return vratit;
     }
-   
-
 }

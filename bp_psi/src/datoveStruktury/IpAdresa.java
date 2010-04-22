@@ -24,6 +24,7 @@ public class IpAdresa {
 
     /**
      * Kdyz uzivatel nezada masku, tak se tato musi dopocitat dle jeji tridy.
+     * @throws SpatnaAdresaException
      * @param adr
      */
     public IpAdresa(String adr) {
@@ -47,6 +48,7 @@ public class IpAdresa {
     /**
      * Nastavi novou adresu, s maskou nic nedela.
      * @param adr
+     * @throws SpatnaAdresaException
      */
     private void nastavAdresu(String adr) {
         if (!jeSpravnaAdresaNebMaska(adr, false)) {

@@ -69,6 +69,8 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new LinuxEcho(pc, kon, slova);
         } else if (slova.get(0).equals("iptables")) {
             pr = new LinuxIptables(pc, kon, slova);
+        } else if (slova.get(0).equals("traceroute")) {
+            pr = new LinuxTraceroute(pc, kon, slova);
         } else {
             kon.posliRadek("bash: " + slova.get(0) + ": command not found");
         }

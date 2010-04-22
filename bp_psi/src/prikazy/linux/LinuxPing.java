@@ -286,13 +286,5 @@ public class LinuxPing extends AbstraktniPing{
         return vratit;
     }
 
-    /**
-     *
-     * @param d
-     * @return
-     */
-    public static double zaokrouhli(double d){
-        return ((double) Math.round(d * 1000)) / 1000;
-    }
-
+    
 }

@@ -56,6 +56,14 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
     }
 
     /**
+     * Vrati odkaz na pocitac, potreba pro prijimani paketu, jestli je opravdu pro me.
+     * @return
+     */
+    public AbstraktniPocitac getPc(){
+        return pc;
+    }
+
+    /**
      * Propocita min, avg, max, celkovyCas, ztrata.<br />
      * Pro spravnou funkci staci, aby konkretni pingy delali 3 veci: <br />
      * 1. pri odeslani icmp_req inkrementovat promennou odeslane <br />
@@ -87,4 +95,13 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
     }
 
     public abstract void zpracujPaket(Paket p);
+
+    /**
+     * Zaokrouhluje na tri desetinna mista.
+     * @param d
+     * @return
+     */
+    public static double zaokrouhli(double d){
+        return ((double) Math.round(d * 1000)) / 1000;
+    }
 }

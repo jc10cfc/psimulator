@@ -48,6 +48,21 @@ public abstract class AbstraktniPrikaz {
         return vratit;
     }
 
+    /**
+     * Tahle metoda postupne dela to samy, co horni, ale nezvysuje citac.
+     * Slouzi, kdyz je potreba zjistit, co je dal za slovo, ale zatim jenom zjistit.
+     * @return prazdny retezec, kdyz je na konci seznamu
+     */
+    protected String dalsiSlovoAleNezvetsujCitac(){
+        String vratit;
+        if( uk < slova.size() ){
+            vratit = slova.get(uk);
+        }else{
+            vratit="";
+        }
+        return vratit;
+    }
+
 //*****************************************************************************************************************
 //staticky metody:
 
@@ -105,5 +120,28 @@ public abstract class AbstraktniPrikaz {
             Thread.sleep(miliseconds);
         } catch (InterruptedException ex) {
         }
+    }
+
+    /**
+     * Rozlozi cislo na mocniny dvojky.
+     * Pouzivam pri vypisovani navratovyho kodu.
+     * @param c
+     * @return
+     */
+    public static String rozlozNaMocniny2(int c){
+        String vratit="";
+        for (int i=0;i<31;i++){
+            if( ( c & (1<<i) ) != 0 ){
+                if(vratit.equals("")){
+                    vratit += (1<<i);
+                }else{
+                    vratit += " + "+(1<<i);
+                }
+            }
+        }
+        if(vratit.equals("")){
+            vratit="0";
+        }
+        return vratit;
     }
 }

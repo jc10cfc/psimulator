@@ -136,10 +136,6 @@ public abstract class AbstraktniPocitac {
      * @return
      */
     protected SitoveRozhrani najdiMeziRozhranima(IpAdresa cil) {
-        if(ladeni){
-            vypis("metoda najdiMeziRozhranima:\n cil: "+cil.vypisAdresu());
-        }
-
         for (SitoveRozhrani rozhr : rozhrani) {
             if (rozhr.obsahujeStejnouAdresu(cil)) {
                 return rozhr;
@@ -184,6 +180,8 @@ public abstract class AbstraktniPocitac {
         }else{
             //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
             //a zpatky se nic neposila
+            if(ladeni)vypis("metoda odesliEthernetove: Nemohu odeslat paket, na sousednim rozhrani nikdo neni "
+                    +mojeRozhr.jmeno+" na sousedni adresu " +sousedni.vypisAdresu()+" "+p.toString());
         }
     }
 
@@ -304,6 +302,8 @@ public abstract class AbstraktniPocitac {
             }
         }
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
+            if(ladeni)vypis("metoda odesliNovejPaket: Nemohu odeslat paket cil: "+cil.vypisAdresu()+
+                    " typ: "+typ);
             return false;
         }
 
@@ -335,9 +335,15 @@ public abstract class AbstraktniPocitac {
 
         paket.ttl -= 1;
         if (paket.ttl == 0) {
-            posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
-            return;
-        } else {
+            if(paket.typ==8){ //kdyz puvodni paket byl icmp request, posila se zpatky ttl exceed
+                posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
+            } else { // jinak to aspon vypisu, co se stalo
+                if (ladeni) {
+                    vypis("Dosel mi paket, kterymu vyprselo ttl. Neni to ICMP request, nic zpatky neposilam. "
+                            + paket.toString());
+                }
+            }
+        } else { //ttl v poradku, muzu pokracovat
             RoutovaciTabulka.Zaznam z = routovaciTabulka.najdiSpravnejZaznam(paket.cil);
             if (z != null) { //zaznam nalezen
                 vystupniRozhrani = z.getRozhrani();
@@ -370,13 +376,23 @@ public abstract class AbstraktniPocitac {
             if(paket.typ==8){ //icmp request
                 posliNovejPaketOdpoved(paket,null, 0, 0); //zpatky se posila icmp reply
             }else { //paket je urcen pro me
-                paket.prikaz.zpracujPaket(paket);
+                if(paket.prikaz.getPc()==this){ // prikay v paketu odpovida
+                    paket.prikaz.zpracujPaket(paket);
+                } else { //prikaz v paketu neodpovida
+                    if (ladeni) {
+                        vypis("Dosel mi paket, kterej sice je pro me, ale prikaz, kterej ho poslal, nesouhlasi." +
+                                " Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
+                                + paket.toString());
+                    }
+                }
             }
         } else { // paket se musi poslat dal
             if (ip_forward){ // nastaveno preposilani - v souboru /proc/sys/net/ipv4/ip_forward je jednicka
                 preposliPaket(paket, vstupniRozhrani);
             }else{
                 // Jestli se nepletu, tak paket proste zahodi. Chce to ale jeste overit.
+                if(ladeni)vypis("metoda prijmiPaket: Nemohu preposlat paket, nemam nastaveno ip_forward "
+                        +paket.toString());
             }
         }
     }

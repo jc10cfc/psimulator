@@ -70,7 +70,7 @@ public class Main {
     public static void main(String[] args) {
         
         if (args.length >= 1) {
-            konfigurak = (String)nacti(args[0]);
+            konfigurak = (String)args[0];
         } else {
 //            konfigurak = "psi.xml";
             konfigurak = "laborka.xml";
