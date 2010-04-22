@@ -22,6 +22,8 @@ import pocitac.SitoveRozhrani;
  */
 public class NATtabulka {
 
+    AbstraktniPocitac pc; //odkaz na pocitac, kterymu tabulka prislusi
+
     List<NATzaznam> tabulka;
     /**
      * seznam poolu IP.
@@ -50,7 +52,8 @@ public class NATtabulka {
      */
     private int citacPortu = 1025;
 
-    public NATtabulka() {
+    public NATtabulka(AbstraktniPocitac pc) {
+        this.pc=pc;
         tabulka = new ArrayList<NATzaznam>();
         inside = new ArrayList<SitoveRozhrani>();
         natSeznamAccess = new NATAccessList(this);
@@ -364,10 +367,14 @@ public class NATtabulka {
     /**
      * Nastavi Linux pocitac pro natovani.
      * Pocitam s tim, ze ani pc ani rozhrani neni null.
+     * Jestli jsem to dobre pochopil, tak tohle je ten zpusob natovani, kdy se vsechny pakety jdouci
+     * ven po nejakym rozhrani prekladaj na nejakou verejnou adresu, a z toho rozhrani zase zpatky.
+     * Prikaz napr: "iptables -t nat -I POSTROUTING -o eth2 -j MASQUERADE" - vsechny pakety jdouci ven
+     * po rozhrani eth2 se prekladaj.
      * @param pc
      * @param verejne, urci ze je tohle rozhrani verejne a ostatni jsou automaticky soukroma.
      */
-    public void nastavLinuxNAT(AbstraktniPocitac pc, SitoveRozhrani verejne) {
+    public void nastavLinuxNAT(SitoveRozhrani verejne) {
 
         // nastaveni rozhrani
         inside.clear();

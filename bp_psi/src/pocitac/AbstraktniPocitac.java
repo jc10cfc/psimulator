@@ -54,7 +54,7 @@ public abstract class AbstraktniPocitac {
         rozhrani = new ArrayList<SitoveRozhrani>();
         komunikace = new Komunikace(port, this);
         routovaciTabulka = new RoutovaciTabulka();
-        natTabulka = new NATtabulka();
+        natTabulka = new NATtabulka(this);
     }
 
     @Deprecated
