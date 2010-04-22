@@ -15,7 +15,7 @@ import java.util.List;
 import prikazy.AbstraktniPing;
 
 /**
- * Virtualni pocitac, predek Linuxu a Cisca
+ * Virtualni pocitac, predek Linuxu a Cisca.
  * @author neiss
  */
 public abstract class AbstraktniPocitac {
