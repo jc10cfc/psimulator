@@ -86,6 +86,10 @@ public class LinuxPing extends AbstraktniPing{
         /*
          * vypisovani konecnej statistik:
          */
+        aktualizujStatistiky();
+        if(ladeni){
+            kon.posliRadek("ztrata: "+ztrata+", odeslane: "+odeslane+", prijate: "+prijate);
+        }
         int cas = (int) (odeslane * interval * 1000 + Math.random() * 10); //na okrasu musim vymyslet nejakej cas
         kon.posliRadek("");
         kon.posliRadek("--- " + cil.vypisAdresu() + " ping statistics ---");
@@ -97,7 +101,6 @@ public class LinuxPing extends AbstraktniPing{
                     ztrata + "% packet loss, time " + cas + "ms");
         }
         if (prijate > 0) { //aspon jeden prijaty paket - vypisuji se statistiky
-            aktualizujStatistiky();
             double mdev = zaokrouhli((((avg - min) + (max - avg)) / 2) * 0.666); //ma to bejt stredni odchylka,
             //je tam jen na okrasu, tak si ji pocitam po svym =)
             kon.posliRadek("rtt min/avg/max/mdev = " + zaokrouhli(min) + "/" + zaokrouhli(max) + "/" +

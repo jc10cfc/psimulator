@@ -7,6 +7,7 @@
 
 package prikazy.linux;
 
+import Main.Main;
 import prikazy.*;
 import datoveStruktury.IpAdresa;
 import datoveStruktury.RoutovaciTabulka;
@@ -186,7 +187,9 @@ public class LinuxRoute extends AbstraktniPrikaz{
     }
 
     private void nastavFlush() {
-        kon.posliRadek("Flush normalne neni podporovano.");
+        kon.posliRadek(Main.jmenoProgramu+": Flush normalne neni podporovano, ale routa se v simulatoru " +
+                "smaze.");
+        kon.posliRadek("Spravny prikaz je: \"ip route flush all\"");
         akce=4;
     }
 
@@ -477,9 +480,20 @@ public class LinuxRoute extends AbstraktniPrikaz{
             RoutovaciTabulka.Zaznam z = pc.routovaciTabulka.vratZaznam(i);
             v += zarovnej(z.getAdresat().vypisAdresu(), 16);
             if (z.getBrana() == null) {
-                v += zarovnej("0.0.0.0",16) + zarovnej(z.getAdresat().vypisMasku(),16) + "U     ";
+                if(z.getAdresat().vypisMasku().equals("255.255.255.255")){
+                    v += zarovnej("0.0.0.0",16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UH    ";
+                }else{
+                    v += zarovnej("0.0.0.0",16) + zarovnej(z.getAdresat().vypisMasku(),16) + "U     ";
+                }
             } else {
-                v += zarovnej(z.getBrana().vypisAdresu(),16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UG    ";
+                if(z.getAdresat().vypisMasku().equals("255.255.255.255")){
+                    v += zarovnej(z.getBrana().vypisAdresu(),16) + zarovnej(z.getAdresat().vypisMasku(),16)
+                            + "UGH   ";
+                }else{
+                    v += zarovnej(z.getBrana().vypisAdresu(),16) + zarovnej(z.getAdresat().vypisMasku(),16) 
+                            + "UG    ";
+                }
+
             }
             v += "0      0        0 " + z.getRozhrani().jmeno;
             kon.posliRadek(v);

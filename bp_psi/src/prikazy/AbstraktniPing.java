@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * UDELAT:
+ * Spatne se pocita statistika - % paket loss
  */
 package prikazy;
 

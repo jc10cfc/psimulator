@@ -20,7 +20,12 @@ import prikazy.AbstraktniPing;
  */
 public abstract class AbstraktniPocitac {
 
-    private boolean ladeni=true;
+    /**
+     * Ladeni paketu, bude se vypisovat i v zaverecny versi programu.
+     */
+    public boolean ladeniPaketu=true;
+
+    private boolean ladeni=false; //obycejny ladeni na ostatni veci...
 
     // promenny pro technicky zabezpeceni pocitace:
     public Komunikace komunikace;
@@ -176,12 +181,14 @@ public abstract class AbstraktniPocitac {
                 //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
                 posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
+                vypisLadeni("metoda odesliEthernetove: Nemohl jsem odeslat paket, poslal jsem Host Unreachable. "
+                        +p.toString());
             }
         }else{
             //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
             //a zpatky se nic neposila
-            if(ladeni)vypis("metoda odesliEthernetove: Nemohu odeslat paket, na sousednim rozhrani nikdo neni "
-                    +mojeRozhr.jmeno+" na sousedni adresu " +sousedni.vypisAdresu()+" "+p.toString());
+            vypisLadeni("metoda odesliEthernetove: K rozhrani "+mojeRozhr.jmeno+" neni nikdo pripojen. " +
+                    "Paket tedy nemohu poslat. "+p.toString());
         }
     }
 
@@ -302,7 +309,8 @@ public abstract class AbstraktniPocitac {
             }
         }
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
-            if(ladeni)vypis("metoda odesliNovejPaket: Nemohu odeslat paket cil: "+cil.vypisAdresu()+
+            vypisLadeni("metoda odesliNovejPaket: Nemohu odeslat paket, nenalezl jsem rozhrani, na ktery" +
+                    "bych to poslal. cil: "+cil.vypisAdresu()+
                     " typ: "+typ);
             return false;
         }
@@ -315,8 +323,8 @@ public abstract class AbstraktniPocitac {
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
         if(paket.icmp_seq != -1 && //to signalisuje, ze se paket nema odeslat, ale jen se zkousi, jestli to pujde
                 paket.zdroj != null ) { //rozhrani, kterym to chci poslat ma prirazenou IP adresu
-            if(ladeni)vypis("posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
-                        +sousedni.vypisAdresu()+" "+paket.toString());
+            vypisLadeni("Posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
+                    +sousedni.vypisAdresu()+" "+paket.toString());
             odesliEthernetove(paket, mojeRozhr, ciziRozhr, sousedni);
                     // -> sama se hlida, jestli ciziRozhrani neni null
         }
@@ -337,11 +345,11 @@ public abstract class AbstraktniPocitac {
         if (paket.ttl == 0) {
             if(paket.typ==8){ //kdyz puvodni paket byl icmp request, posila se zpatky ttl exceed
                 posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
+                vypisLadeni("Dosel mi paket, kterymu vyprselo ttl. Zpatky jsem poslal ICMP Time Exceed. "
+                        + "dosly paket: "+paket.toString());
             } else { // jinak to aspon vypisu, co se stalo
-                if (ladeni) {
-                    vypis("Dosel mi paket, kterymu vyprselo ttl. Neni to ICMP request, nic zpatky neposilam. "
-                            + paket.toString());
-                }
+                vypisLadeni("Dosel mi paket, kterymu vyprselo ttl. Neni to ICMP request, nic zpatky neposilam. "
+                        + paket.toString());
             }
         } else { //ttl v poradku, muzu pokracovat
             RoutovaciTabulka.Zaznam z = routovaciTabulka.najdiSpravnejZaznam(paket.cil);
@@ -350,10 +358,8 @@ public abstract class AbstraktniPocitac {
                 if (z.getBrana() != null) {
                     sousedni = z.getBrana(); //sousedni uzel je brana z routovaci tabulky
                 }
-                if (ladeni) {
-                    vypis("preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
-                            " na sousedni adresu " + sousedni.vypisAdresu() + " " + paket.toString());
-                }
+                vypisLadeni("Preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
+                      " na sousedni adresu " + sousedni.vypisAdresu() + " " + paket.toString());
                 odesliEthernetove(paket, vystupniRozhrani, vystupniRozhrani.pripojenoK, sousedni);
             } else {//rozhrani nenalezeno - paket neni kam poslat
                 posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
@@ -369,7 +375,7 @@ public abstract class AbstraktniPocitac {
      * @param vstupniRozhrani - rozhrani kterym paket prisel (dulezity pro natovani)
      */
     protected void prijmiPaket(Paket paket, SitoveRozhrani vstupniRozhrani) {
-        if(ladeni)vypis("prijal jsem paket "+paket.toString());
+        vypisLadeni("Prijal jsem paket "+paket.toString());
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);
         if (rozhr != null) { //paket je u me v cili
@@ -379,11 +385,9 @@ public abstract class AbstraktniPocitac {
                 if(paket.prikaz.getPc()==this){ // prikay v paketu odpovida
                     paket.prikaz.zpracujPaket(paket);
                 } else { //prikaz v paketu neodpovida
-                    if (ladeni) {
-                        vypis("Dosel mi paket, kterej sice je pro me, ale prikaz, kterej ho poslal, nesouhlasi." +
-                                " Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
-                                + paket.toString());
-                    }
+                    vypisLadeni("Dosel mi paket, kterej sice je pro me, ale prikaz, kterej ho poslal, " +
+                            "nesouhlasi." +" Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
+                            + paket.toString());
                 }
             }
         } else { // paket se musi poslat dal
@@ -391,9 +395,19 @@ public abstract class AbstraktniPocitac {
                 preposliPaket(paket, vstupniRozhrani);
             }else{
                 // Jestli se nepletu, tak paket proste zahodi. Chce to ale jeste overit.
-                if(ladeni)vypis("metoda prijmiPaket: Nemohu preposlat paket, nemam nastaveno ip_forward "
+                vypisLadeni("metoda prijmiPaket: Nemohu preposlat paket, nemam nastaveno ip_forward "
                         +paket.toString());
             }
+        }
+    }
+
+    /**
+     * Pres tuhle metodu se budou vypisovat zpravy o pruchodu paketu.
+     * @param zprava
+     */
+    private void vypisLadeni(String zprava){
+        if( ladeniPaketu ) {
+            this.vypis("Pruchod paketu: "+zprava);
         }
     }
 

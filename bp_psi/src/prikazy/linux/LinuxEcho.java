@@ -4,6 +4,7 @@
 
 package prikazy.linux;
 
+import Main.Main;
 import prikazy.*;
 import java.util.List;
 import pocitac.*;
@@ -32,8 +33,9 @@ public class LinuxEcho extends AbstraktniPrikaz{
 
     private void parsujPrikaz() {
         if(slova.size()!=4){
-            kon.posliRadek("Spravna syntaxe napr: \"echo 1 > jmenoSouboru\".");
-            kon.posliRadek("Podporuji jen tuto variantu zadani prikazu, ty mezery jsou povinny");
+            kon.posliRadek(Main.jmenoProgramu+": Spravna syntaxe napr: \"echo 1 > jmenoSouboru\".");
+            kon.posliRadek(Main.jmenoProgramu+": Podporuji jen tuto variantu zadani prikazu, " +
+                    "ty mezery jsou povinny");
         }
         String hodnota=dalsiSlovo();
 
@@ -53,7 +55,7 @@ public class LinuxEcho extends AbstraktniPrikaz{
         if(soubor.equals("/proc/sys/net/ipv4/ip_forward") || soubor.equals("ip_forward")){
             //v poradku
         }else{
-            kon.posliRadek("echo: neznamy soubor");
+            kon.posliRadek(Main.jmenoProgramu+": echo: neznamy soubor");
             navrKod=1;
         }
 

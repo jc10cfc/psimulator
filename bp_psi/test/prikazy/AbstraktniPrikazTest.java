@@ -53,11 +53,6 @@ public class AbstraktniPrikazTest {
         assertEquals(AbstraktniPrikaz.rozlozNaMocniny2(9), "1 + 8");
     }
 
-    @Test
-    public void pokus1(){
-        for(int i=0;i<50;i++){
-            System.out.println( ((Math.random()/5)+0.9) + "" );
-        }
-    }
+    
 
 }

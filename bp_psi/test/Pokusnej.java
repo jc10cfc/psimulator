@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+import datoveStruktury.IpAdresa;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -63,4 +64,23 @@ public class Pokusnej {
         System.out.println((long)((1<<31)-1));
     }
 
+    @Test
+    public void pokus2(){
+        for(int i=0;i<50;i++){
+            System.out.println( ((Math.random()/5)+0.9) + "" );
+        }
+    }
+
+    /**
+     * To jsem si overoval, ze objekt se vola odkazem. My tohle volani prakticky nepouzivame.
+     */
+    @Test
+    public void pokus3(){
+        IpAdresa prvni=new IpAdresa("1.1.1.1"); //vytvari se s maskou 255.0.0.0
+        zmen(prvni); //tady se maska meni
+        assertEquals(prvni.vypisMasku(), "255.255.255.0");//opravdu se zmenila
+    }
+    private void zmen(IpAdresa keZmeneni){
+        keZmeneni.nastavMasku("255.255.255.0");
+    }
 }
