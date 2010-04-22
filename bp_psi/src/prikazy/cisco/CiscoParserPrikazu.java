@@ -681,14 +681,14 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 s += " ip address " + sr.vratPrvni().vypisAdresu() + " " + sr.vratPrvni().vypisMasku() + "\n";
             }
 
-            if (pc.NATtabulka.vratVerejne() != null) {
-                if (sr.jmeno.equals(pc.NATtabulka.vratVerejne().jmeno)) {
+            if (pc.natTabulka.vratVerejne() != null) {
+                if (sr.jmeno.equals(pc.natTabulka.vratVerejne().jmeno)) {
                     s += " ip nat outside" + "\n";
                 }
             }
 
-            if (pc.NATtabulka.vratInside() != null) {
-                for (SitoveRozhrani iface : pc.NATtabulka.vratInside()) {
+            if (pc.natTabulka.vratInside() != null) {
+                for (SitoveRozhrani iface : pc.natTabulka.vratInside()) {
                     if (iface.jmeno.equals(sr.jmeno)) {
                         s += " ip nat inside" + "\n";
                         break;
@@ -707,12 +707,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         s += "!\n";
         s += "ip http server\n";
 
-        for (Pool pool : pc.NATtabulka.NATseznamPoolu.seznamPoolu) {
+        for (Pool pool : pc.natTabulka.NATseznamPoolu.seznamPoolu) {
             s += "ip nat pool " + pool.jmeno + " " + pool.prvni().vypisAdresu() + " " + pool.posledni().vypisAdresu()
                     + " prefix-length " + pool.prvni().pocetBituMasky() + "\n";
         }
 
-        for (PoolAccess pa : pc.NATtabulka.NATseznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : pc.natTabulka.NATseznamPoolAccess.seznamPoolAccess) {
             s += "ip nat inside source list " + pa.access + " pool " + pa.pool;
             if (pa.overload) {
                 s += " overload";
@@ -722,7 +722,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         s += "!\n";
 
-        for (AccessList access : pc.NATtabulka.NATseznamAccess.seznamAccess) {
+        for (AccessList access : pc.natTabulka.NATseznamAccess.seznamAccess) {
             s += "access-list " + access.cislo + " permit " + access.ip.vypisAdresu() + " " + access.ip.vypisWildcard() + "\n";
         }
 

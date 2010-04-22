@@ -33,7 +33,7 @@ public abstract class AbstraktniPocitac {
     public List<SitoveRozhrani> rozhrani; //kvuli vypisum to musi bejt verejny
     public String jmeno; //jmeno pocitace
     public RoutovaciTabulka routovaciTabulka;
-    public NATtabulka NATtabulka;
+    public NATtabulka natTabulka;
     /**
      * Je-li true, preposilaj se pakety, jinak ne.
      * Obsah linuxoveho souboru /proc/sys/net/ipv4/ip_forward 0=false, 1=true
@@ -54,7 +54,7 @@ public abstract class AbstraktniPocitac {
         rozhrani = new ArrayList<SitoveRozhrani>();
         komunikace = new Komunikace(port, this);
         routovaciTabulka = new RoutovaciTabulka();
-        NATtabulka = new NATtabulka();
+        natTabulka = new NATtabulka();
     }
 
     @Deprecated
@@ -358,6 +358,20 @@ public abstract class AbstraktniPocitac {
                 if (z.getBrana() != null) {
                     sousedni = z.getBrana(); //sousedni uzel je brana z routovaci tabulky
                 }
+               //jeste se musi vyridit natovani:
+                int mamNatovat=natTabulka.mamNatovat(paket.zdroj, vstupniRozhrani, vystupniRozhrani);
+                if(mamNatovat==0){ //mam natovat
+                    vypisLadeni("Natovani: puvodni paket:   "+paket);
+                    paket=natTabulka.zanatuj(paket);
+                    vypisLadeni("Natovani: prelozeny paket: "+paket);
+                }else if(mamNatovat==1||mamNatovat==2){// neni pool nebo dosly IP v poolu
+                    vypisLadeni("Odnatovani: Nepodarilo se prelozit paket: "+paket+
+                            ", posila se host unreachable");
+                    posliNovejPaketOdpoved(paket,vstupniRozhrani.vratPrvni(), 3, 1); //host unreachable
+                } else{
+                    //nic se nedela, posila se dal bez natovani
+                }
+               //natovani vytizeno, posila se:
                 vypisLadeni("Preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
                       " na sousedni adresu " + sousedni.vypisAdresu() + " " + paket.toString());
                 odesliEthernetove(paket, vystupniRozhrani, vystupniRozhrani.pripojenoK, sousedni);
@@ -379,6 +393,12 @@ public abstract class AbstraktniPocitac {
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);
         if (rozhr != null) { //paket je u me v cili
+           // nejdriv se musi odnatovat:
+            if(natTabulka.mamOdnatovat(vstupniRozhrani)){
+                vypisLadeni("Odnatovani: puvodni paket:   "+paket);
+                paket=natTabulka.odnatuj(paket);
+                vypisLadeni("Odnatovani: prelozeny paket: "+paket);
+            }
             if(paket.typ==8){ //icmp request
                 posliNovejPaketOdpoved(paket,null, 0, 0); //zpatky se posila icmp reply
             }else { //paket je urcen pro me

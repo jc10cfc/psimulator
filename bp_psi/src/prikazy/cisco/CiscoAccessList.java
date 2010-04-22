@@ -81,11 +81,11 @@ public class CiscoAccessList extends CiscoPrikaz {
     protected void vykonejPrikaz() {
 
         if (no) {
-            pc.NATtabulka.NATseznamAccess.smazAccessList(access);
+            pc.natTabulka.NATseznamAccess.smazAccessList(access);
             return;
         }
 
-        pc.NATtabulka.NATseznamAccess.pridejAccessList(adr, access);
+        pc.natTabulka.NATseznamAccess.pridejAccessList(adr, access);
     }
 
 

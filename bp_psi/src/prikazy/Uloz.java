@@ -113,11 +113,11 @@ public class Uloz extends AbstraktniPrikaz {
         }
         zapis(vratElement("nahozene", rozhrani.jeNahozene() ? "true" : "false"));
 
-        if (rozhrani.getPc().NATtabulka.vratInside().contains(rozhrani)) {
+        if (rozhrani.getPc().natTabulka.vratInside().contains(rozhrani)) {
             zapis(vratElement("nat", "soukrome"));
         }
-        if (rozhrani.getPc().NATtabulka.vratVerejne() != null) {
-            if (rozhrani.getPc().NATtabulka.vratVerejne().jmeno.equals(rozhrani.jmeno)) {
+        if (rozhrani.getPc().natTabulka.vratVerejne() != null) {
+            if (rozhrani.getPc().natTabulka.vratVerejne().jmeno.equals(rozhrani.jmeno)) {
                 zapis(vratElement("nat", "verejne"));
             }
         }
@@ -215,7 +215,7 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("<pooly>\n");
         tabs += "\t";
 
-        for (Pool pool : pocitac.NATtabulka.NATseznamPoolu.seznamPoolu) {
+        for (Pool pool : pocitac.natTabulka.NATseznamPoolu.seznamPoolu) {
             zapis("<pool>\n");
             tabs += "\t";
             zapis(vratElement("pJmeno", pool.jmeno));
@@ -234,7 +234,7 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("<prirazeniVice>\n");
         tabs += "\t";
 
-        for (PoolAccess pa : pocitac.NATtabulka.NATseznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : pocitac.natTabulka.NATseznamPoolAccess.seznamPoolAccess) {
             zapis("<prirazeni>\n");
             tabs += "\t";
 
@@ -255,7 +255,7 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("<access-listy>\n");
         tabs += "\t";
 
-        for (AccessList access : pocitac.NATtabulka.NATseznamAccess.seznamAccess) {
+        for (AccessList access : pocitac.natTabulka.NATseznamAccess.seznamAccess) {
             zapis("<access-list>\n");
             tabs += "\t";
 

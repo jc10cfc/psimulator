@@ -365,6 +365,14 @@ public class IpAdresa {
         return vypisPole(prevedNaPole(broadcast()));
     }
 
+    /**
+     * Vrati adresu s portem, oddelenym dvojteckou.
+     * @return
+     */
+    public String vypisAdresuSPortem(){
+        return vypisAdresu()+":"+port;
+    }
+
 //*******************************************************************************************************************
 //tady zacinaj dynamicky privatni metody
 

@@ -80,23 +80,23 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
 
         if (no) {
             if (inside) {
-                pc.NATtabulka.smazRozhraniInside(rozhrani);
+                pc.natTabulka.smazRozhraniInside(rozhrani);
             } else if (outside) {
-                if (pc.NATtabulka.vratVerejne().jmeno.equals(rozhrani.jmeno)) {
-                    pc.NATtabulka.smazRozhraniOutside();
+                if (pc.natTabulka.vratVerejne().jmeno.equals(rozhrani.jmeno)) {
+                    pc.natTabulka.smazRozhraniOutside();
                 }
             }
             return;
         }
 
         if (inside) {
-            pc.NATtabulka.pridejRozhraniInside(rozhrani);
+            pc.natTabulka.pridejRozhraniInside(rozhrani);
         } else if (outside) {
-            if (pc.NATtabulka.vratVerejne() != null) {
+            if (pc.natTabulka.vratVerejne() != null) {
                 kon.posliRadek(jmenoProgramu + ": Implementace nepovoluje mit vice nastavenych verejnych rozhrani. "
-                        + "Takze se rusi aktualni verejne: " + pc.NATtabulka.vratVerejne().jmeno+ " a nastavi se "+rozhrani.jmeno);
+                        + "Takze se rusi aktualni verejne: " + pc.natTabulka.vratVerejne().jmeno+ " a nastavi se "+rozhrani.jmeno);
             }
-            pc.NATtabulka.nastavRozhraniOutside(rozhrani);
+            pc.natTabulka.nastavRozhraniOutside(rozhrani);
 
         }
     }
