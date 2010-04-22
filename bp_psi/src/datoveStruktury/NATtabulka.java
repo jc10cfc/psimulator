@@ -15,7 +15,9 @@ import pocitac.AbstraktniPocitac;
 import pocitac.SitoveRozhrani;
 
 /**
- * Datova struktura pro NATovaci tabulku.
+ * Datova struktura pro NATovaci tabulku. <br />
+ * Pri natovani zavolat mamNatovat(), kdyz to vrati 0, tak zavolat metodu zanatuj(). <br />
+ * Pri odnatovani zavolat mamOdnatovat(), kdyz to vrati true, tak zavolat metodu odnatuj().
  * @author haldyr
  */
 public class NATtabulka {
@@ -158,6 +160,19 @@ public class NATtabulka {
         }
 
         return 0;
+    }
+
+    /**
+     * Kontrola, jestli paket prisel do pocitace z verejne site.
+     * @param prichoziRozhrani
+     * @return true - paket z verejne site <br />
+     *         false - paket odjinud - ne-odnatovavat
+     */
+    public boolean mamOdnatovat(SitoveRozhrani prichoziRozhrani) {
+        if (prichoziRozhrani.jmeno.equals(verejne.jmeno)) {
+            return true;
+        }
+        return false;
     }
 
     /**
