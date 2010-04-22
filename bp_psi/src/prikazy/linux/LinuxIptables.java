@@ -35,10 +35,10 @@ public class LinuxIptables extends AbstraktniPrikaz {
      * 256 - zadano vic retezu (vic parametru -A, -I, -D)<br />
      * 512 - spatny cislo pravidla <br />
      * 1024 - neznama akceJump<br />
-     * 2048 - vzhledem k akci nebo k pravidlu zakazanej prikaz, uklada se do zakazanyPrepinace <br />
+     * 2048 - vzhledem k akci nebo k pravidlu zakazanej prepinac, uklada se do zakazanyPrepinace <br />
      * 4096 - mozna, ale v nasem simulatoru zatim nepodporovana moznost<br />
-     * 8192 - <br />
-     * 16384 - <br />
+     * 8192 - vystupni rozhrani neexistuje<br />
+     * 16384 - pro danou moznost chybi nejakej prepinac<br />
      * 32768 - <br />
      * 65536 - <br />
      * 131072 - <br />
@@ -54,8 +54,9 @@ public class LinuxIptables extends AbstraktniPrikaz {
     String cilAdr;
     String preklAdr;
     List<String> dvojityPrepinace = new ArrayList<String>();//prepinace, ktery byly zadany vic nez jednou
-    List<String> nepodporovanyPrepinace = new ArrayList<String>(); //prepinace, ktery jsou v zadany kombinaci normalne
-                                                //mozny, ale zatim nejsou podporovany
+    List<String> nepovolenyPrepinace = new ArrayList<String>(); //prepinace, ktery jsou v zadany kombinaci
+           //nepovoleny, a to budto simulatorem nebo samotnym iptables
+    List<String> chybejiciPrepinace = new ArrayList<String>();//prepinace, ktery pro moje prepinace chybej
     String nedokoncenejPrepinac;
     boolean zadanoMinus_o = false;
     boolean zadanoMinus_i = false;
@@ -66,19 +67,21 @@ public class LinuxIptables extends AbstraktniPrikaz {
     String cisloPr; //cislo pravidla jako String
     String retez;
     /**
-     * 0 - nic
-     * 1 - append
-     * 2 - insert
-     * 3 - delete
-     * 4 - list (vypsani)
+     * 0 - nic<br />
+     * 1 - append<br />
+     * 2 - insert<br />
+     * 3 - delete<br />
+     * 4 - list (vypsani)<br />
      */
     int provest = 0;
     int cisloPravidla = -1; //cislo pravidla pro smazani nebo pridani
     List<String> zakazanyPrepinace = new ArrayList<String>();
+
     //nastaveny promenny:
     boolean minus_n = true;
     IpAdresa cilovaAdr;
     IpAdresa prekladanaAdr;//ip adresa, na kterou se ma prekladat
+    SitoveRozhrani vystupni;
 
     public LinuxIptables(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
@@ -316,15 +319,46 @@ public class LinuxIptables extends AbstraktniPrikaz {
             }
         }
 
-        if(provest==2 ||provest==3){
-            if (retez.equals("POSTROUTING")) {
-                if (zadanoMinus_i) {
-                    zakazanyPrepinace.add("-i");
-                    navrKod |= 2048;
-                }
-                if (zadanoMinus_i) {
-                    nepodporovanyPrepinace.add("-d");
+        if(provest==1 ||provest==2){ //append nebo insert
+            if (zadanoMinus_i) { //-i neni u me povoleny ani v jednom
+                nepovolenyPrepinace.add("-i");
+                navrKod |= 4096;
+            }
+            if (retez.equals("POSTROUTING")) { //klasickej preklad adres na jednom verejnym rozhrani
+                if (zadanoMinus_d) {
+                    nepovolenyPrepinace.add("-d");
                     navrKod |= 4096;
+                }
+                if(zadanoMinus_o){
+                    vystupni=pc.najdiRozhrani(vystupniRozhr);
+                    if(vystupni==null){
+                        navrKod |= 8192;
+                    }
+                }else{
+                    chybejiciPrepinace.add("-o");
+                    navrKod |= 16384;
+                }
+                if(zadanoMinus_j){
+                    if( ! akceJump.equals("MASQUERADE")){
+                        navrKod= 4096;
+                    }
+                }else{
+                    chybejiciPrepinace.add("-j");
+                    navrKod |= 16384;
+                }
+            }
+            if (retez.equals("PREROUTING")){
+                if( zadanoMinus_d  ){
+                    chybejiciPrepinace.add("-d");
+                    navrKod |= 16384;
+                }
+                if( zadanoMinus_j  ){
+                    chybejiciPrepinace.add("-j");
+                    navrKod |= 16384;
+                }
+                if( zadanoToDestination  ){
+                    chybejiciPrepinace.add("--to-destination");
+                    navrKod |= 16384;
                 }
             }
         }
@@ -402,9 +436,9 @@ public class LinuxIptables extends AbstraktniPrikaz {
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
-        if ((navrKod & 2048) != 0) { //pro akci zatim nepodporovany prepinac
+        if ((navrKod & 4096) != 0) { //pro akci zatim nepodporovany prepinac
             kon.posliRadek(Main.jmenoProgramu+" Takova moznost by sice normalne byla mozna, simulator ji vsak zatim " +
-                    "nepodporuje. Zkuste odstranit prepinac: `"+ nepodporovanyPrepinace.get(0));
+                    "nepodporuje. Zkuste odstranit prepinac: `"+ nepovolenyPrepinace.get(0));
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
 

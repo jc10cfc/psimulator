@@ -25,7 +25,7 @@ public abstract class AbstraktniPocitac {
      */
     public boolean ladeniPaketu=true;
 
-    private boolean ladeni=true; //obycejny ladeni na ostatni veci...
+    private boolean ladeni=false; //obycejny ladeni na ostatni veci...
 
     // promenny pro technicky zabezpeceni pocitace:
     public Komunikace komunikace;
@@ -361,16 +361,16 @@ public abstract class AbstraktniPocitac {
                //jeste se musi vyridit natovani:
                 int mamNatovat=natTabulka.mamNatovat(paket.zdroj, vstupniRozhrani, vystupniRozhrani);
                 if(mamNatovat==0){ //mam natovat
-                    vypisLadeni("Natovani: puvodni paket:   "+paket);
+                    vypisLadeni("Zanatovani: puvodni paket:   "+paket);
                     paket=natTabulka.zanatuj(paket);
-                    vypisLadeni("Natovani: prelozeny paket: "+paket);
+                    vypisLadeni("Zanatovani: prelozeny paket: "+paket);
                 }else if(mamNatovat==1||mamNatovat==2){// neni pool nebo dosly IP v poolu
-                    vypisLadeni("Odnatovani: Nepodarilo se prelozit paket: "+paket+
+                    vypisLadeni("Zanatovani: Nepodarilo se prelozit paket: "+paket+
                             ", posila se host unreachable");
                     posliNovejPaketOdpoved(paket,vstupniRozhrani.vratPrvni(), 3, 1); //host unreachable
                 } else{
                     //nic se nedela, posila se dal bez natovani
-                    vypisLadeni("Natovani: Nenatuje se paket:   "+paket);
+                    if(ladeni)vypis("Natovani: Nenatuje se paket:   "+paket);
                 }
                //natovani vytizeno, posila se:
                 vypisLadeni("Preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
@@ -392,20 +392,12 @@ public abstract class AbstraktniPocitac {
     protected void prijmiPaket(Paket paket, SitoveRozhrani vstupniRozhrani) {
         vypisLadeni("Prijal jsem paket "+paket.toString());
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
-        SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil);
-        if (rozhr != null) { //paket je u me v cili
-           // nejdriv se musi odnatovat:
-            if(natTabulka.mamOdnatovat(vstupniRozhrani)){
-                vypisLadeni("Odnatovani: puvodni paket:   "+paket);
-                paket=natTabulka.odnatuj(paket);
-                vypisLadeni("Odnatovani: prelozeny paket: "+paket);
-            } else {
-                vypisLadeni("Natovani: Neodnatovava se paket:   "+paket);
-            }
+        SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil); //hledam, jestli je na mejch rozhranich takova IP
+        if (rozhr != null && paket.cil.port==0) { // takovou IP mam && port je pro me => paket je u me v cili
             if(paket.typ==8){ //icmp request
                 posliNovejPaketOdpoved(paket,null, 0, 0); //zpatky se posila icmp reply
-            }else { //paket je urcen pro me
-                if(paket.prikaz.getPc()==this){ // prikay v paketu odpovida
+            }else { //paket je urcen pro me ke zpracovani
+                if(paket.prikaz.getPc()==this){ // prikaz v paketu odpovida
                     paket.prikaz.zpracujPaket(paket);
                 } else { //prikaz v paketu neodpovida
                     vypisLadeni("Dosel mi paket, kterej sice je pro me, ale prikaz, kterej ho poslal, " +
@@ -413,10 +405,19 @@ public abstract class AbstraktniPocitac {
                             + paket.toString());
                 }
             }
-        } else { // paket se musi poslat dal
-            if(ladeni) {
-                vypis("paket neni pro me "+paket);
-                vypis(vstupniRozhrani.toString());
+        } else { // => cilovou IP nemam, nebo cilovej port != 0 => musim preposlat
+            if (rozhr!=null && paket.cil.port != 0) { // paket byl puvodne pro me, ale musi se odnatovat
+                // nejdriv se musi odnatovat:
+                if (natTabulka.mamOdnatovat(vstupniRozhrani)) {
+                    vypisLadeni("Odnatovani: puvodni paket:   " + paket);
+                    paket = natTabulka.odnatuj(paket);
+                    vypisLadeni("Odnatovani: prelozeny paket: " + paket);
+                } else {
+                    if(ladeni)vypis("Odnatovani: Neodnatovava se paket:   " + paket);
+                }
+            }
+            if (ladeni) {
+                vypis("paket neni pro me " + paket);
             }
             if (ip_forward){ // nastaveno preposilani - v souboru /proc/sys/net/ipv4/ip_forward je jednicka
                 preposliPaket(paket, vstupniRozhrani);

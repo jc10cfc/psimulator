@@ -52,7 +52,7 @@ public class NATtabulka {
      */
     private int citacPortu = 1025;
 
-    boolean debug = true;
+    boolean debug = false;
 
     public NATtabulka(AbstraktniPocitac pc) {
         this.pc=pc;
