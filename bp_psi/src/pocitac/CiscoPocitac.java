@@ -37,11 +37,9 @@ public class CiscoPocitac extends AbstraktniPocitac {
      * pro cisco to je jeden z parametru, podle kteryho se rozhoduje, jestli paket prijme
      * @return true, kdyz byl paket prijmut, jinak false
      *
-     * 
-     *
-     * Ocekavana Ip se vubec nebere v potaz. Prijme paket pouze tehdy, pokud cil paketu je primo na lokalni
-     * rozhrani nebo vi kam ho poslat dal dle routovaci tabulky.
-     *
+     * Kdyz nejde odpovedet sousedovi na ARP request (nemam na nej routu), tak paket neprijmu. <br />
+     * Kdyz mohu odpovedet na ARP && (paket je pro me || vim kam ho poslat dal), tak prijmu. <br />
+     * V ostatnich pripadech neprijimam.
      */
     @Override
     public boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana, IpAdresa sousedni) {
