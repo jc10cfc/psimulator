@@ -162,7 +162,8 @@ public class CiscoPing extends AbstraktniPing {
 
         kon.posliPoRadcich(s, 20);
         for (int i = 0; i < pocet; i++) {
-            boolean doslo = pc.posliIcmpRequest(cil, i, 255, this); // skolni cisca odpovidaj s TTL=255
+            int icmp_seq = i % 65536;
+            boolean doslo = pc.posliIcmpRequest(cil, icmp_seq, 255, this); // skolni cisca odpovidaj s TTL=255
             odeslane++;
 
             if (!doslo) {

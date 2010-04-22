@@ -243,7 +243,7 @@ public class Uloz extends AbstraktniPrikaz {
             zapis(vratElement("overload", pa.overload ? "true" : "false"));
 
             tabs = tabs.substring(1);
-            zapis("<prirazeni>\n");
+            zapis("</prirazeni>\n");
 
         }
 
@@ -264,7 +264,7 @@ public class Uloz extends AbstraktniPrikaz {
             zapis(vratElement("ipAWildcard", access.ip.vypisWildcard()));
 
             tabs = tabs.substring(1);
-            zapis("<access-list>\n");
+            zapis("</access-list>\n");
         }
 
         tabs = tabs.substring(1);

@@ -64,7 +64,7 @@
 			<pool>
 				<pJmeno>ovrld2</pJmeno>
 				<ip_start>2.2.2.70</ip_start>
-				<ip_konec>2.2.2.74</ip_konec>
+				<ip_konec>2.2.2.73</ip_konec>
 				<prefix>24</prefix>
 			</pool>
 		</pooly>
@@ -73,24 +73,24 @@
 				<accessCislo>1</accessCislo>
 				<poolJmeno>ovrld</poolJmeno>
 				<overload>true</overload>
-			<prirazeni>
+			</prirazeni>
 			<prirazeni>
 				<accessCislo>2</accessCislo>
 				<poolJmeno>ovrld3</poolJmeno>
 				<overload>false</overload>
-			<prirazeni>
+			</prirazeni>
 		</prirazeniVice>
 		<access-listy>
 			<access-list>
 				<cislo>1</cislo>
 				<ipA>1.1.1.0</ipA>
 				<ipAWildcard>0.0.0.31</ipAWildcard>
-			<access-list>
+			</access-list>
 			<access-list>
 				<cislo>8</cislo>
 				<ipA>3.3.3.0</ipA>
 				<ipAWildcard>0.0.0.15</ipAWildcard>
-			<access-list>
+			</access-list>
 		</access-listy>
 	</natovani>
 </pocitac>
@@ -121,7 +121,7 @@
 				<cislo>77</cislo>
 				<ipA>6.6.6.0</ipA>
 				<ipAWildcard>0.0.0.31</ipAWildcard>
-			<access-list>
+			</access-list>
 		</access-listy>
 	</natovani>
 </pocitac>

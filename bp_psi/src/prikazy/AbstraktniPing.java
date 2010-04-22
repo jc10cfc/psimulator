@@ -90,7 +90,7 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
             celkovyCas = sum;
         }
         if (odeslane > 0) {
-            ztrata = prijate / odeslane * 100;
+            ztrata = 100 - (int)( (float) prijate / (float) odeslane  * (float)100);
         }
     }
 
