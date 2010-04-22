@@ -399,7 +399,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("kill")) {
-            kon.posliRadek(jmenoProgramu+": servisni ukonceni");
+            kon.posliRadek(jmenoProgramu + ": servisni ukonceni");
             kon.ukonciSpojeni();
             return;
         }
@@ -468,8 +468,27 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                         prikaz = new CiscoIpRoute(pc, kon, slova, false);
                         return;
                     }
+                    if (kontrola("access-list", prvniSlovo)) {
+                        prikaz = new CiscoAccessList(pc, kon, slova, false);
+                        return;
+                    }
                     if (kontrola("no", prvniSlovo)) {
-                        prikaz = new CiscoIpRoute(pc, kon, slova, true);
+                        if (slova.size() >= 2) {
+                            String dalsi = slova.get(1);
+                            if (kontrola("ip", dalsi)) {
+                                prikaz = new CiscoIpRoute(pc, kon, slova, true);
+                            } else if (kontrola("access-list", dalsi)) {
+                                prikaz = new CiscoAccessList(pc, kon, slova, true);
+                            } else if (kontrola("nat", dalsi)) {
+                                prikaz = new CiscoIpNat(pc, kon, slova, true);
+                            } else {
+                                invalidInputDetected();
+                                return;
+                            }
+                        } else {
+                            incompleteCommand();
+                            return;
+                        }
                         return;
                     }
                 }
@@ -485,7 +504,18 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
-                    prikaz = new CiscoIpRoute(pc, kon, slova, false);
+                    if (slova.size() >= 2) {
+                        String dalsi = slova.get(1);
+                        if (kontrola("route", dalsi)) {
+                            prikaz = new CiscoIpRoute(pc, kon, slova, false);
+                        } else if (kontrola("nat", dalsi)) {
+                            prikaz = new CiscoIpNat(pc, kon, slova, false);
+                        } else {
+                            invalidInputDetected();
+                        }
+                        return;
+                    }
+                    incompleteCommand();
                     return;
                 }
                 if (kontrola("interface", prvniSlovo)) {
@@ -493,11 +523,35 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("access-list", prvniSlovo)) {
-                    accesslist();
+                    prikaz = new CiscoAccessList(pc, kon, slova, false);
                     return;
                 }
                 if (kontrola("no", prvniSlovo)) {
-                    prikaz = new CiscoIpRoute(pc, kon, slova, true);
+                    if (slova.size() >= 2) {
+                        String dalsi = slova.get(1);
+                        if (kontrola("ip", dalsi)) {
+                            if (slova.size() <= 2) {
+                                incompleteCommand();
+                                return;
+                            }
+                            dalsi = slova.get(2);
+                            if (kontrola("route", dalsi)) {
+                                prikaz = new CiscoIpRoute(pc, kon, slova, true);
+                            } else if (kontrola("nat", dalsi)) {
+                                prikaz = new CiscoIpNat(pc, kon, slova, true);
+                            } else {
+                                invalidInputDetected();
+                            }
+                        } else if (kontrola("access-list", dalsi)) {
+                            prikaz = new CiscoAccessList(pc, kon, slova, true);
+                        } else {
+                            invalidInputDetected();
+                            return;
+                        }
+                    } else {
+                        incompleteCommand();
+                        return;
+                    }
                     return;
                 }
                 break;
@@ -652,9 +706,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         s += "!\n";
         s += "ip http server\n";
-        
+
         for (Pool pool : pc.NATtabulka.NATseznamPoolu.seznamPoolu) {
-            s += "ip nat pool "+ pool.jmeno + " "+pool.prvni().vypisAdresu() + " " + pool.posledni().vypisAdresu()
+            s += "ip nat pool " + pool.jmeno + " " + pool.prvni().vypisAdresu() + " " + pool.posledni().vypisAdresu()
                     + " prefix-length " + pool.prvni().pocetBituMasky() + "\n";
         }
 
@@ -669,7 +723,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         s += "!\n";
 
         for (AccessList access : pc.NATtabulka.NATseznamAccess.seznamAccess) {
-            s += "access-list "+access.cislo+" permit "+access.ip.vypisAdresu()+" "+ access.ip.vypisWildcard()+"\n";
+            s += "access-list " + access.cislo + " permit " + access.ip.vypisAdresu() + " " + access.ip.vypisWildcard() + "\n";
         }
 
         if (!debug) {

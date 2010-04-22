@@ -19,6 +19,10 @@ public class Main {
      * Object vsechno je refence na seznam vsech pocitacu, ktere se nacetly z konfiguraku.
      */
     public static Object vsechno;
+    /**
+     * Konfigurak se kterym to bylo spusteny.
+     */
+    public static String konfigurak;
 
     /**
      * Vrati List vytvorenych pocitacu.
@@ -64,13 +68,14 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
         if (args.length >= 1) {
-            vsechno = nacti(args[0]);
+            konfigurak = (String)nacti(args[0]);
         } else {
-            vsechno = nacti("psi.xml");
-//            vsechno = nacti("laborka.xml");
-        }        
+            konfigurak = "psi.xml";
+//            konfigurak = "laborka.xml";
+        }
+        vsechno = nacti(konfigurak);
 
         if (vsechno == null) {
             System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");

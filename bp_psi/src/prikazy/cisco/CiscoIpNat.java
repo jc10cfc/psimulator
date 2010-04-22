@@ -18,10 +18,9 @@ import pocitac.Konsole;
 public class CiscoIpNat extends CiscoPrikaz {
 
     /**
-     * Rika, ze je to prikaz negovany - "no ...".
+     * Rika, ze je to prikaz negovany - "no ..."
      */
     boolean no;
-
     int poolPrefix = -1;
     IpAdresa start = null;
     IpAdresa konec = null;
@@ -44,7 +43,6 @@ public class CiscoIpNat extends CiscoPrikaz {
 
         // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
         // ip nat inside source list 7 pool ovrld overload?
-
 
         if (no) {
             if (!dalsiSlovo().equals("ip")) {
@@ -73,7 +71,7 @@ public class CiscoIpNat extends CiscoPrikaz {
 
     @Override
     protected void vykonejPrikaz() {
-
+        
         if (no) {
             int n;
             if (accesslist != -1) { // no ip nat inside source list 7 pool ovrld overload?
@@ -86,9 +84,9 @@ public class CiscoIpNat extends CiscoPrikaz {
             }
             if (poolJmeno != null) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
 
-                n  = pc.NATtabulka.NATseznamPoolu.smazPool(poolJmeno);
+                n = pc.NATtabulka.NATseznamPoolu.smazPool(poolJmeno);
                 if (n == 1) {
-                    kon.posliRadek("%Pool "+poolJmeno+" not found");
+                    kon.posliRadek("%Pool " + poolJmeno + " not found");
                 }
             }
             return;
@@ -97,6 +95,9 @@ public class CiscoIpNat extends CiscoPrikaz {
         if (poolPrefix != -1) { // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
             int ret = pc.NATtabulka.NATseznamPoolu.pridejPool(start, konec, poolPrefix, poolJmeno);
             switch (ret) {
+                case 0:
+                    // ok
+                    break;
                 case 1:
                     kon.posliRadek("%End address less than start address");
                     break;
@@ -125,18 +126,9 @@ public class CiscoIpNat extends CiscoPrikaz {
      * @return
      */
     private boolean zpracujPool() {
-        // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
+        // ip nat pool | ovrld 172.16.10.1 172.16.10.1 prefix 24
 
         String dalsi = dalsiSlovo();
-        if (jePrazdny(dalsi)) {
-            return false;
-        }
-
-        if (!kontrola("pool", dalsi, 1)) {
-            return false;
-        }
-
-        dalsi = dalsiSlovo();
         if (jePrazdny(dalsi)) {
             return false;
         }
@@ -147,23 +139,32 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
 
         try {
-            start = new IpAdresa(dalsiSlovo());
-            konec = new IpAdresa(dalsiSlovo());
+            dalsi = dalsiSlovo();
+            if (jePrazdny(dalsi)) {
+                return false;
+            }
+            start = new IpAdresa(dalsi);
+
+            dalsi = dalsiSlovo();
+            if (jePrazdny(dalsi)) {
+                return false;
+            }
+            konec = new IpAdresa(dalsi);
         } catch (Exception e) {
             invalidInputDetected();
             return false;
         }
-
+        
+        if (!kontrola("prefix-length", dalsiSlovo(), 1)) {
+            return false;
+        }
+        
         dalsi = dalsiSlovo();
         if (jePrazdny(dalsi)) {
             return false;
         }
-        if (!kontrola("prefix-length", dalsi, 1)) {
-            return false;
-        }
-
         try {
-            poolPrefix = Integer.parseInt(dalsiSlovo());
+            poolPrefix = Integer.parseInt(dalsi);
         } catch (NumberFormatException e) {
             invalidInputDetected();
             return false;
@@ -218,7 +219,6 @@ public class CiscoIpNat extends CiscoPrikaz {
 
         dalsi = dalsiSlovo();
         if (jePrazdny(dalsi)) {
-            incompleteCommand();
             return false;
         }
         poolJmeno = dalsi;

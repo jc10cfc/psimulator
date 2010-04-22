@@ -38,14 +38,17 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
      */
     protected boolean kontrola(String command, String cmd, int min) {
 
+        if (cmd.length() == 0) {
+            incompleteCommand();
+            return false;
+        }
+
         if (cmd.length() >= min && command.startsWith(cmd)) { // lze doplnit na jeden jedinecny prikaz
             return true;
         }
 
         if (command.startsWith(cmd)) {
             ambiguousCommand();
-        } else if (cmd.equals("")) {
-            incompleteCommand();
         } else {
             invalidInputDetected();
         }
