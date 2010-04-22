@@ -26,16 +26,16 @@ public class NATtabulka {
     /**
      * seznam poolu IP.
      */
-    public NATPool NATseznamPoolu;
+    public NATPool natSeznamPoolu;
     /**
      * seznam seznamAccess-listu
      * (= kdyz zdrojova IP patri do nejakeho seznamAccess-listu, tak se bude zrovna natovat)
      */
-    public NATAccessList NATseznamAccess;
+    public NATAccessList natSeznamAccess;
     /**
      * seznam prirazenych poolu k access-listum
      */
-    public NATPoolAccess NATseznamPoolAccess;
+    public NATPoolAccess natSeznamPoolAccess;
     /**
      * Seznam soukromych (inside) rozhrani.
      */
@@ -53,9 +53,9 @@ public class NATtabulka {
     public NATtabulka() {
         tabulka = new ArrayList<NATzaznam>();
         inside = new ArrayList<SitoveRozhrani>();
-        NATseznamAccess = new NATAccessList(this);
-        NATseznamPoolu = new NATPool(this);
-        NATseznamPoolAccess = new NATPoolAccess(this);
+        natSeznamAccess = new NATAccessList(this);
+        natSeznamPoolu = new NATPool(this);
+        natSeznamPoolAccess = new NATPoolAccess(this);
     }
 
     /**
@@ -107,7 +107,7 @@ public class NATtabulka {
      * Reprezentuje jeden radek v NAT tabulce.
      */
     public class NATzaznam {
-
+        
         IpAdresa in;
         IpAdresa out;
         boolean staticke;
@@ -190,13 +190,13 @@ public class NATtabulka {
         //-----------------------------------------------------------------------------
 
         // neni v access-listech
-        NATAccessList.AccessList acc = NATseznamAccess.vratAccessListIP(zdroj);
+        NATAccessList.AccessList acc = natSeznamAccess.vratAccessListIP(zdroj);
         if (acc == null) {
             return 4;
         }
 
         // kdyz neni prirazen pool
-        Pool pool = NATseznamPoolu.vratPoolZAccessListu(acc);
+        Pool pool = natSeznamPoolu.vratPoolZAccessListu(acc);
         if (pool == null) {
             return 1;
         }
@@ -213,9 +213,13 @@ public class NATtabulka {
      * Kontrola, jestli paket prisel do pocitace z verejne site.
      * @param prichoziRozhrani
      * @return true - paket z verejne site <br />
-     *         false - paket odjinud - ne-odnatovavat
+     *         false - paket odjinud - ne-odnatovavat nebo kdyz neni nastavene outside rozhrani
      */
     public boolean mamOdnatovat(SitoveRozhrani prichoziRozhrani) {
+        if (verejne == null) {
+            System.err.println("Verejne je null");
+            return false;
+        }
         if (prichoziRozhrani.jmeno.equals(verejne.jmeno)) {
             return true;
         }
@@ -241,9 +245,9 @@ public class NATtabulka {
             }
         }
 
-        NATAccessList.AccessList access = NATseznamAccess.vratAccessListIP(ip);
-        Pool pool = NATseznamPoolu.vratPoolZAccessListu(access);
-        IpAdresa vrat = NATseznamPoolu.dejIpZPoolu(pool);
+        NATAccessList.AccessList access = natSeznamAccess.vratAccessListIP(ip);
+        Pool pool = natSeznamPoolu.vratPoolZAccessListu(access);
+        IpAdresa vrat = natSeznamPoolu.dejIpZPoolu(pool);
 
         vrat.port = citacPortu++; // velikost integeru je dostacujici, tak neresim, ze se porad navysuje jedno pocitadlo
         if (natovani == true) { // jen kdyz opravdu pridavam
@@ -301,7 +305,8 @@ public class NATtabulka {
     }
 
     /**
-     * Prida zaznam do natovaci tabulky. Nic se nekontroluje.
+     * Prida zaznam do natovaci tabulky. Pouziva se to pri dynamickym natovani.
+     * Nic se nekontroluje.
      * @param in zdrojova IP
      * @param out nova zdrojova (prelozena)
      */
@@ -377,15 +382,15 @@ public class NATtabulka {
 
         // osefovani access-listu
         int cislo = 1;
-        NATseznamAccess.smazAccessListyVsechny();
-        NATseznamAccess.pridejAccessList(new IpAdresa("0.0.0.0", 0), cislo);
+        natSeznamAccess.smazAccessListyVsechny();
+        natSeznamAccess.pridejAccessList(new IpAdresa("0.0.0.0", 0), cislo);
 
         // osefovani IP poolu
         String pool = "ovrld";
-        NATseznamPoolu.smazPoolVsechny();
-        NATseznamPoolu.pridejPool(verejne.vratPrvni(), verejne.vratPrvni(), 24, pool);
+        natSeznamPoolu.smazPoolVsechny();
+        natSeznamPoolu.pridejPool(verejne.vratPrvni(), verejne.vratPrvni(), 24, pool);
         
-        NATseznamPoolAccess.smazPoolAccessVsechny();
-        NATseznamPoolAccess.pridejPoolAccess(cislo, pool, true);
+        natSeznamPoolAccess.smazPoolAccessVsechny();
+        natSeznamPoolAccess.pridejPoolAccess(cislo, pool, true);
     }
 }

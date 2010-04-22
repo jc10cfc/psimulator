@@ -215,7 +215,7 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("<pooly>\n");
         tabs += "\t";
 
-        for (Pool pool : pocitac.natTabulka.NATseznamPoolu.seznamPoolu) {
+        for (Pool pool : pocitac.natTabulka.natSeznamPoolu.seznamPoolu) {
             zapis("<pool>\n");
             tabs += "\t";
             zapis(vratElement("pJmeno", pool.jmeno));
@@ -234,7 +234,7 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("<prirazeniVice>\n");
         tabs += "\t";
 
-        for (PoolAccess pa : pocitac.natTabulka.NATseznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : pocitac.natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
             zapis("<prirazeni>\n");
             tabs += "\t";
 
@@ -255,7 +255,7 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("<access-listy>\n");
         tabs += "\t";
 
-        for (AccessList access : pocitac.natTabulka.NATseznamAccess.seznamAccess) {
+        for (AccessList access : pocitac.natTabulka.natSeznamAccess.seznamAccess) {
             zapis("<access-list>\n");
             tabs += "\t";
 

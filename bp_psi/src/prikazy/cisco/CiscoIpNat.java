@@ -76,7 +76,7 @@ public class CiscoIpNat extends CiscoPrikaz {
             int n;
             if (accesslist != -1) { // no ip nat inside source list 7 pool ovrld overload?
 
-                n = pc.natTabulka.NATseznamPoolAccess.smazPoolAccess(accesslist);
+                n = pc.natTabulka.natSeznamPoolAccess.smazPoolAccess(accesslist);
                 if (n == 1) {
                     kon.posliRadek("%Dynamic mapping not found");
                 }
@@ -84,7 +84,7 @@ public class CiscoIpNat extends CiscoPrikaz {
             }
             if (poolJmeno != null) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
 
-                n = pc.natTabulka.NATseznamPoolu.smazPool(poolJmeno);
+                n = pc.natTabulka.natSeznamPoolu.smazPool(poolJmeno);
                 if (n == 1) {
                     kon.posliRadek("%Pool " + poolJmeno + " not found");
                 }
@@ -93,7 +93,7 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
 
         if (poolPrefix != -1) { // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
-            int ret = pc.natTabulka.NATseznamPoolu.pridejPool(start, konec, poolPrefix, poolJmeno);
+            int ret = pc.natTabulka.natSeznamPoolu.pridejPool(start, konec, poolPrefix, poolJmeno);
             switch (ret) {
                 case 0:
                     // ok
@@ -117,7 +117,7 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
 
         if (accesslist != -1) { // ip nat inside source list 7 pool ovrld overload
-            pc.natTabulka.NATseznamPoolAccess.pridejPoolAccess(accesslist, poolJmeno, overload);
+            pc.natTabulka.natSeznamPoolAccess.pridejPoolAccess(accesslist, poolJmeno, overload);
         }
     }
 

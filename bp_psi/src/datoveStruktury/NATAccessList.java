@@ -16,11 +16,11 @@ import java.util.List;
 public class NATAccessList {
 
     public List<AccessList> seznamAccess;
-    NATtabulka NATtabulka;
+    NATtabulka natTabulka;
 
     public NATAccessList(NATtabulka tab) {
         seznamAccess = new ArrayList<AccessList>();
-        this.NATtabulka = tab;
+        this.natTabulka = tab;
     }
 
     /**

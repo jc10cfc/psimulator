@@ -370,6 +370,7 @@ public abstract class AbstraktniPocitac {
                     posliNovejPaketOdpoved(paket,vstupniRozhrani.vratPrvni(), 3, 1); //host unreachable
                 } else{
                     //nic se nedela, posila se dal bez natovani
+                    vypisLadeni("Natovani: Nenatuje se paket:   "+paket);
                 }
                //natovani vytizeno, posila se:
                 vypisLadeni("Preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
@@ -398,6 +399,8 @@ public abstract class AbstraktniPocitac {
                 vypisLadeni("Odnatovani: puvodni paket:   "+paket);
                 paket=natTabulka.odnatuj(paket);
                 vypisLadeni("Odnatovani: prelozeny paket: "+paket);
+            } else {
+                vypisLadeni("Natovani: Neodnatovava se paket:   "+paket);
             }
             if(paket.typ==8){ //icmp request
                 posliNovejPaketOdpoved(paket,null, 0, 0); //zpatky se posila icmp reply

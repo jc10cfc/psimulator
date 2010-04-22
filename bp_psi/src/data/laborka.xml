@@ -20,6 +20,12 @@
 			<maskaAdresata>255.255.255.0</maskaAdresata>
 			<rozhraniKam>eth1</rozhraniKam>
 		</zaznam>
+		<zaznam>
+			<adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>1.1.1.254</brana>
+			<rozhraniKam>eth1</rozhraniKam>
+		</zaznam>
 	</routy>
 	<ip_forward>1</ip_forward>
 	<natovani>
@@ -61,12 +67,6 @@
 				<ip_konec>2.2.2.60</ip_konec>
 				<prefix>24</prefix>
 			</pool>
-			<pool>
-				<pJmeno>ovrld2</pJmeno>
-				<ip_start>2.2.2.70</ip_start>
-				<ip_konec>2.2.2.73</ip_konec>
-				<prefix>24</prefix>
-			</pool>
 		</pooly>
 		<prirazeniVice>
 			<prirazeni>
@@ -74,22 +74,12 @@
 				<poolJmeno>ovrld</poolJmeno>
 				<overload>true</overload>
 			</prirazeni>
-			<prirazeni>
-				<accessCislo>2</accessCislo>
-				<poolJmeno>ovrld3</poolJmeno>
-				<overload>false</overload>
-			</prirazeni>
 		</prirazeniVice>
 		<access-listy>
 			<access-list>
 				<cislo>1</cislo>
 				<ipA>1.1.1.0</ipA>
 				<ipAWildcard>0.0.0.31</ipAWildcard>
-			</access-list>
-			<access-list>
-				<cislo>8</cislo>
-				<ipA>3.3.3.0</ipA>
-				<ipAWildcard>0.0.0.15</ipAWildcard>
 			</access-list>
 		</access-listy>
 	</natovani>
@@ -105,11 +95,6 @@
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<routy>
-		<zaznam>
-			<adresat>1.1.1.0</adresat>
-			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<brana>2.2.2.0</brana>
-		</zaznam>
 	</routy>
 	<natovani>
 		<pooly>
@@ -117,11 +102,6 @@
 		<prirazeniVice>
 		</prirazeniVice>
 		<access-listy>
-			<access-list>
-				<cislo>77</cislo>
-				<ipA>6.6.6.0</ipA>
-				<ipAWildcard>0.0.0.31</ipAWildcard>
-			</access-list>
 		</access-listy>
 	</natovani>
 </pocitac>

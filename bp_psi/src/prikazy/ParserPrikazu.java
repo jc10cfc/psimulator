@@ -87,7 +87,7 @@ public abstract class ParserPrikazu {
     protected boolean spolecnePrikazy() {
         AbstraktniPrikaz prikaz;
 
-        if (slova.get(0).equals("uloz")) {
+        if (slova.get(0).equals("uloz") ||slova.get(0).equals("save")) {
             prikaz = new Uloz(pc, kon, slova);
             return true;
         }

@@ -16,14 +16,12 @@ import java.util.List;
 public class NATPool {
     
     public List <Pool> seznamPoolu;
-    NATtabulka NATtabulka;
-    NATPoolAccess seznamPoolAccess;
+    NATtabulka natTabulka;
 
 
     public NATPool(NATtabulka tab) {
-        this.NATtabulka = tab;
+        this.natTabulka = tab;
         seznamPoolu = new ArrayList<Pool>();
-        seznamPoolAccess = tab.NATseznamPoolAccess;
     }
 
     /**
@@ -130,7 +128,7 @@ public class NATPool {
      * @return
      */
     public PoolAccess vratPoolAccess(Pool pool) {
-        for (PoolAccess pa : seznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
             if (pa.pool.equals(pool.jmeno)) {
                 return pa;
             }
@@ -144,7 +142,7 @@ public class NATPool {
      * @return
      */
     public PoolAccess vratPoolAccessZAccessListu(NATAccessList.AccessList acc) {
-        for (PoolAccess pa : seznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
             if (acc.cislo == pa.access) {
                 return pa;
             }
@@ -159,7 +157,7 @@ public class NATPool {
      *         null - kdyz neni PoolAccess s timto cislem a nebo neni Pool s nazvem u nalezeneho PoolAccessu.
      */
     public Pool vratPoolZAccessListu(NATAccessList.AccessList access) {
-        for (PoolAccess pa : seznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
             if (pa.access == access.cislo) {
                 for (Pool pool : seznamPoolu) {
                     if (pool.jmeno.equals(pa.pool)) {
@@ -247,7 +245,7 @@ public class NATPool {
     @Deprecated
     public boolean doslyIpPoolu(IpAdresa ip) {
 
-        NATAccessList.AccessList acc = NATtabulka.NATseznamAccess.vratAccessListIP(ip);
+        NATAccessList.AccessList acc = natTabulka.natSeznamAccess.vratAccessListIP(ip);
         if (acc == null) {
             return true;
         }

@@ -527,7 +527,7 @@ public class SAXHandler implements ContentHandler {
 
                     int i = Integer.parseInt(cislo);
 
-                    int n = pocitac.natTabulka.NATseznamPoolu.pridejPool(ip_start, ip_konec, i, pJmeno);
+                    int n = pocitac.natTabulka.natSeznamPoolu.pridejPool(ip_start, ip_konec, i, pJmeno);
                     if (n != 0) {
                         System.err.println("Pool je spatne zadan: " + vypisPole(pul));
                     }
@@ -546,7 +546,7 @@ public class SAXHandler implements ContentHandler {
                     String maska = IpAdresa.vratMaskuZWildCard(wccc);
                     ip.nastavMasku(maska);
 
-                    pocitac.natTabulka.NATseznamAccess.pridejAccessList(ip, cislo);
+                    pocitac.natTabulka.natSeznamAccess.pridejAccessList(ip, cislo);
                 } catch (Exception e) {
                     System.err.println("access-list je spatne zadan: " + vypisPole(accessList) + ", preskakuji.. ");
                 }
@@ -563,10 +563,10 @@ public class SAXHandler implements ContentHandler {
                     boolean ol;
                     if (overload.equals("true") || overload.equals("1")) {
                         ol = true;
-                        pocitac.natTabulka.NATseznamPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
+                        pocitac.natTabulka.natSeznamPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
                     } else if (overload.equals("false") || overload.equals("0")) {
                         ol = false;
-                        pocitac.natTabulka.NATseznamPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
+                        pocitac.natTabulka.natSeznamPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
                     } else {
                         System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
                     }
