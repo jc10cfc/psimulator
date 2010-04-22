@@ -59,16 +59,63 @@ public class NATtabulka {
     }
 
     /**
+     * True, pokud je uz tam je zdrojova ip v tabulce.
+     * @param in
+     * @return
+     */
+    private boolean jeTamZdrojova(IpAdresa in) {
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.in.jeStejnaAdresa(in) && zaznam.in.port == in.port) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * True, pokud je uz tam je prelozena ip v tabulce.
+     * @param out
+     * @return
+     */
+    private boolean jeTamPrelozena(IpAdresa out) {
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.out.jeStejnaAdresa(out) && zaznam.out.port == out.port) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Vrati pozici pro pridani do tabulky.
+     * Radi se to dle out adresy vzestupne.
+     * @param out
+     * @return index noveho zaznamu
+     */
+    private int dejIndexVTabulce(IpAdresa out) {
+        int index = 0;
+        for (NATzaznam zaznam : tabulka) {
+            if (out.dejLongIP() > zaznam.out.dejLongIP()) {
+                break;
+            }
+            index++;
+        }
+        return index;
+    }
+
+    /**
      * Reprezentuje jeden radek v NAT tabulce.
      */
     public class NATzaznam {
 
         IpAdresa in;
         IpAdresa out;
+        boolean staticke;
 
-        public NATzaznam(IpAdresa in, IpAdresa out) {
+        public NATzaznam(IpAdresa in, IpAdresa out, boolean staticke) {
             this.in = in;
             this.out = out;
+            this.staticke = staticke;
         }
     }
 
@@ -222,12 +269,44 @@ public class NATtabulka {
     }
 
     /**
-     * Prida zaznam do natovaci tabulku. Nic se nekontroluje.
+     * Prida staticke pravidlo do tabulky.
+     * @param in zdrojova IP urcena pro preklad
+     * @param out nova (prelozena) adresa
+     * @return 0 - ok, zaznam uspesne pridan <br />
+     *         1 - chyba, in adresa tam uz je (% in already mapped (in -> out))
+     *         2 - chyba, out adresa tam uz je (% similar static entry (in -> out) already exists)
+     */
+    public int pridejStatickePravidloCisco(IpAdresa in, IpAdresa out) {
+
+        if(jeTamZdrojova(in)) {
+            return 1;
+        }
+        if(jeTamPrelozena(out)) {
+            return 2;
+        }
+
+        int index = dejIndexVTabulce(out);
+        tabulka.add(index, new NATzaznam(in, out, true));
+
+        return 0;
+    }
+
+    /**
+     * Prida staticke pravidlo do NAT tabulky. Nic se nekontroluje.
+     * @param in zdrojova IP
+     * @param out nova zdrojova (prelozena)
+     */
+    public void pridejStatickePravidloLinux(IpAdresa in, IpAdresa out) {
+        tabulka.add(new NATzaznam(in, out, true));
+    }
+
+    /**
+     * Prida zaznam do natovaci tabulky. Nic se nekontroluje.
      * @param in zdrojova IP
      * @param out nova zdrojova (prelozena)
      */
     private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out) {
-        tabulka.add(new NATzaznam(in, out));
+        tabulka.add(new NATzaznam(in, out, false));
     }
 
     /****************************************** nastavovani rozhrani ***************************************************/
