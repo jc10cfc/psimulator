@@ -47,7 +47,7 @@ public class NATtabulka {
      */
     SitoveRozhrani verejne;
 
-    public boolean linux_nastavena_maskarada = false;
+    private boolean linux_nastavena_maskarada = false;
     
     /**
      * citac, odkud mam rozdavat porty
@@ -438,5 +438,37 @@ public class NATtabulka {
         smazRozhraniOutside();
         smazRozhraniInsideVsechny();
 
+    }
+
+    /**
+     * Nastavi promennou na true.
+     */
+    public void nastavZKonfigurakuLinuxBooleanTrue() {
+        linux_nastavena_maskarada = true;
+    }
+
+    /**
+     * Vrati true, pokud je mozne danou adresu prelozit.
+     * @param adr
+     * @return
+     */
+    public boolean lzePrelozit(IpAdresa adr) {
+
+        NATAccessList.AccessList access = lAccess.vratAccessListIP(adr);
+        if (access == null) {
+            return false;
+        }
+
+        Pool pool = lPool.vratPoolZAccessListu(access);
+        if (pool == null) {
+            return false;
+        }
+
+        IpAdresa nova = pool.dejIp(true);
+        if (nova == null) {
+            return false;
+        }
+
+        return true;
     }
 }

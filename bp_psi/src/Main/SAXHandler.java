@@ -729,6 +729,11 @@ public class SAXHandler implements ContentHandler {
                     }
                 }
             }
+            if (pocitac instanceof LinuxPocitac) {
+                if (pocitac.natTabulka.lzePrelozit(new IpAdresa("1.2.3.4"))) {
+                    pocitac.natTabulka.nastavZKonfigurakuLinuxBooleanTrue();
+                }
+            }
             pocitac.natTabulka.lPool.updateIpNaRozhrani();
             hotovePocitace.add(pocitac);
         }
