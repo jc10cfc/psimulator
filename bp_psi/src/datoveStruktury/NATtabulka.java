@@ -46,6 +46,8 @@ public class NATtabulka {
      * Verejne (outside) rozhrani.
      */
     SitoveRozhrani verejne;
+
+    public boolean linux_nastavena_maskarada = false;
     
     /**
      * citac, odkud mam rozdavat porty
@@ -365,6 +367,16 @@ public class NATtabulka {
         }
     }
 
+    /**
+     * Smaze vsechny inside rozhrani.
+     */
+    public void smazRozhraniInsideVsechny() {
+        inside.clear();
+    }
+
+    /**
+     * Smaze vsechny IP (krom prvni) + smae verejne rozhrani.
+     */
     public void smazRozhraniOutside() {
         verejne.smazVsechnyIpKromPrvni();
         verejne = null;
@@ -382,7 +394,11 @@ public class NATtabulka {
      * @param pc
      * @param verejne, urci ze je tohle rozhrani verejne a ostatni jsou automaticky soukroma.
      */
-    public void nastavLinuxNAT(SitoveRozhrani verejne) {
+    public void nastavLinuxMaskaradu(SitoveRozhrani verejne) {
+
+        if(linux_nastavena_maskarada) {
+            return;
+        }
 
         // nastaveni rozhrani
         inside.clear();
@@ -407,5 +423,20 @@ public class NATtabulka {
         
         lPoolAccess.smazPoolAccessVsechny();
         lPoolAccess.pridejPoolAccess(cislo, pool, true);
+
+        linux_nastavena_maskarada = true;
+    }
+
+    /**
+     * Zrusi linux DNAT.
+     */
+    public void zrusLinuxMaskaradu() {
+
+        lAccess.smazAccessListyVsechny();
+        lPool.smazPoolVsechny();
+        lPoolAccess.smazPoolAccessVsechny();
+        smazRozhraniOutside();
+        smazRozhraniInsideVsechny();
+
     }
 }
