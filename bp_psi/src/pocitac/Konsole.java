@@ -14,6 +14,7 @@ import java.io.StringReader;
 import java.net.Socket;
 import prikazy.cisco.CiscoParserPrikazu;
 import prikazy.linux.LinuxParserPrikazu;
+import vyjimky.ChybaSpojeniException;
 import vyjimky.NeznamyTypPcException;
 import static prikazy.AbstraktniPrikaz.*;
 
@@ -57,7 +58,7 @@ public class Konsole extends Thread {
      * @param in
      * @return celej radek do \r\n jako string. kterej to \r\n uz ale neobsahuje
      */
-    public String ctiRadek(BufferedReader in){
+    public String ctiRadek(BufferedReader in) throws ChybaSpojeniException{
         String ret = ""; //radek nacitany
         char z;
         int citac = 0;
@@ -67,15 +68,16 @@ public class Konsole extends Thread {
                 
                 citac++;
                 if (citac > 200) { // pocitam, ze zadny prikaz nebude delsi, mozna muzem i snizit
-                    ukonciSpojeni();
-                    break;
+                    throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek, " +
+                            "klient poslal moc znaku.");
                 }
 
                 z = (char) in.read();
                 ret+=z;
                                 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
+                throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek, nastala chyba.");
             }
             if(ret.length()>=2){ //tzn. uz je to dost dlouhy na to, aby tam mohlo bejt \r\n
                 if ( ret.charAt(ret.length()-2)=='\r' && ret.charAt(ret.length()-1)=='\n'){ //kdyz uz jsou ukoncovaci znaky
@@ -98,12 +100,13 @@ public class Konsole extends Thread {
      * @param ret
      * @throws java.io.IOException
      */
-    public void posliRadek(String ret){
+    public void posliRadek(String ret) throws ChybaSpojeniException{
         try {
             out.write((ret + "\r\n").getBytes());
             pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posliRadek, nastala chyba.");
         }
     }
 
@@ -114,12 +117,13 @@ public class Konsole extends Thread {
      * @param ret
      * @throws java.io.IOException
      */
-    public void posli(String ret){
+    public void posli(String ret) throws ChybaSpojeniException{
         try {
             out.write((ret).getBytes());
             pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posli, nastala chyba.");
         }
     }
 
@@ -129,7 +133,7 @@ public class Konsole extends Thread {
      * @param cekej, prodleva v ms mezi jednotlivejma radkama
      * @author haldyr
      */
-    public void posliPoRadcich(String s, int cekej) {
+    public void posliPoRadcich(String s, int cekej) throws ChybaSpojeniException {
         BufferedReader input = new BufferedReader(new StringReader(s));
         String lajna = "";
         try {
@@ -137,8 +141,8 @@ public class Konsole extends Thread {
                 cekej(cekej);
                 posliRadek(lajna);
             }
-        } catch (IOException e) {
-            //
+        } catch (IOException e) { //tohleto chyta vyjimku z BufferedReadru, ne z posliRadek
+            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posliPoRadcich, nastala chyba.");
         }
     }
 
@@ -146,12 +150,13 @@ public class Konsole extends Thread {
      * Vypise prompt na prikazou radku.
      * @throws IOException
      */
-    public void vypisPrompt(){
+    public void vypisPrompt() throws ChybaSpojeniException{
         try{
             out.write((prompt).getBytes());
             //pocitac.vypis("(socket c. "+cislo+" posilam): "+prompt);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda vypisPrompt, nastala chyba.");
         }
     }
 
@@ -159,36 +164,43 @@ public class Konsole extends Thread {
      * Hlavni bezici metoda Konsole, bezi v nekonecny smycce a zastavuje se booleanem ukoncit.
      */
     @Override
-    public void run(){
-        
-        String radek;
-        
-        pocitac.vypis("vlakno c. "+cislo+" startuje");
+    public void run() {
 
-        try {//vsechno je hozeny do ochrannyho bloku
-            in = new BufferedReader(new InputStreamReader(s.getInputStream( ) ) );
-            out = s.getOutputStream();
-            ukoncit=false;
+        String radek;
+
+        try {
+            pocitac.vypis("vlakno c. " + cislo + " startuje");
+            try {
+                in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                out = s.getOutputStream();
+            } catch (IOException ex) {
+                throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda run, nastala chyba. " +
+                        "Nepodarilo se inicialisovat vstupni nebo vystupni proud.");
+            }
+            ukoncit = false;
             //posliBajtyTelnetu();
-            while(! ukoncit ) {
+            while (!ukoncit) {
                 if (vypisPrompt) {
                     vypisPrompt();
                 }
                 radek = ctiRadek(in);
-                pocitac.vypis("(klient c. "+cislo+" poslal): '" + radek+"'");
+                pocitac.vypis("(klient c. " + cislo + " poslal): '" + radek + "'");
                 //pocitac.vypis("dylka predchoziho radku: "+radek.length());
                 //posliRadek(out,radek);
                 parser.zpracujRadek(radek);
             }
 
-        } catch ( Exception ex ) {
+        } catch (ChybaSpojeniException ex) {
             ex.printStackTrace();
-            pocitac.vypis( "nastala nejaka chyba" );
+            pocitac.vypis("Nastala chyba v komunikaci: "+ex.getMessage());
         } finally {
-            pocitac.vypis("Ukoncuji vlakno a socket c. "+cislo);
+            pocitac.vypis("Ukoncuji vlakno a socket c. " + cislo);
             try { //ten socket sice urcite existuje, ale java to jinak nedovoli
                 s.close();
-            } catch (IOException ex) { ex.printStackTrace();}
+            } catch (IOException ex) {
+                pocitac.vypis("Konsole cislo " + cislo + ", metoda run: Spojeni se nepodarilo " +
+                        "korektne uzavrit.");
+            }
         }
 
     }
@@ -197,22 +209,8 @@ public class Konsole extends Thread {
      * Ukonci spojeni.
      */
     public void ukonciSpojeni() {
+        pocitac.vypis("Zavolala se metoda ukonci.");
         ukoncit=true;
-    }
-
-    @Deprecated
-    private void posliBajtyTelnetu() {
-        byte[] pole = {
-            /*84*/   (byte) 0xff, (byte) 0xfd, (byte) 0x18, (byte) 0xff, (byte) 0xfd, (byte) 0x20, (byte) 0xff, (byte) 0xfd, (byte) 0x23, (byte) 0xff, (byte) 0xfd, (byte) 0x27,
-            /*88*/   (byte) 0xff, (byte) 0xfa, (byte) 0x20, (byte) 0x01, (byte) 0xff, (byte) 0xf0, (byte) 0xff, (byte) 0xfa, (byte) 0x23, (byte) 0x01, (byte) 0xff, (byte) 0xf0, (byte) 0xff, (byte) 0xfa, (byte) 0x27, (byte) 0x01, (byte) 0xff, (byte) 0xf0, (byte) 0xff, (byte) 0xfa, (byte) 0x18, (byte) 0x01, (byte) 0xff, (byte) 0xf0,
-            /*91*/   (byte) 0xff, (byte) 0xfb, (byte) 0x03, (byte) 0xff, (byte) 0xfd, (byte) 0x01, (byte) 0xff, (byte) 0xfd, (byte) 0x1f, (byte) 0xff, (byte) 0xfb, (byte) 0x05, (byte) 0xff, (byte) 0xfd, (byte) 0x21,
-            /*93*/   (byte) 0xff, (byte) 0xfb, (byte) 0x01,
-        };
-        try {
-            out.write(pole);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 
 }
