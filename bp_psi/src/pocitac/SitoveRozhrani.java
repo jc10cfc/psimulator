@@ -43,6 +43,15 @@ public class SitoveRozhrani {
      */
     private boolean nahozene;
 
+    @Override
+    public String toString() {
+        String s = "";
+        for (IpAdresa adr : seznamAdres) {
+            s += adr.vypisAdresu()+"\n";
+        }
+        return s;
+    }
+
     /**
      * Vrati stav rozhrani - zapnuto/vypnuto. True..zapnuto, false..vypnuto
      * @return
@@ -132,5 +141,14 @@ public class SitoveRozhrani {
         } 
         seznamAdres.add(0, adr);
         
+    }
+
+    /**
+     * Prvni adresu si schovam, vsechny IP smazu a prvni zase pridam.
+     */
+    public void smazVsechnyIpKromPrvni() {
+        IpAdresa prvni = vratPrvni();
+        seznamAdres.clear();
+        seznamAdres.add(prvni);
     }
 }

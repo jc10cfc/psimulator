@@ -78,6 +78,7 @@ public class NATPool {
         novyPool.ukazatel = novyPool.prvni();
 
         seznamPoolu.add(novyPool);
+        updateIpNaRozhrani();
         return 0;
     }
 
@@ -167,7 +168,22 @@ public class NATPool {
             }
         }
         return null;
-    }    
+    }
+
+    /**
+     * Nasype vsechny adresy ze vsech poolu na verejne rozhrani.
+     */
+    public void updateIpNaRozhrani() {
+        if (natTabulka.verejne == null) {
+            return ;
+        }
+        natTabulka.verejne.smazVsechnyIpKromPrvni();
+        for (Pool pool : seznamPoolu) {
+            for (IpAdresa adr : pool.pool) {
+                natTabulka.verejne.seznamAdres.add(adr);
+            }
+        }
+    }
 
     public class Pool {
 

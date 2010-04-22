@@ -52,6 +52,8 @@ public class NATtabulka {
      */
     private int citacPortu = 1025;
 
+    boolean debug = true;
+
     public NATtabulka(AbstraktniPocitac pc) {
         this.pc=pc;
         tabulka = new ArrayList<NATzaznam>();
@@ -156,10 +158,12 @@ public class NATtabulka {
      */
     public Paket odnatuj(Paket paket) {
         IpAdresa prelozena = odnatujZdrojovouIpAdresu(paket.cil);
+        if (debug) pc.vypis("XXXXXX puvodni paket:   "+paket);
         if (prelozena == null) {
             return paket;
         }
         paket.cil = prelozena;
+        if (debug) pc.vypis("XXXXXX prelozeny paket: "+paket);
         return paket;
     }
 
@@ -220,10 +224,12 @@ public class NATtabulka {
      */
     public boolean mamOdnatovat(SitoveRozhrani prichoziRozhrani) {
         if (verejne == null) {
-            System.err.println("Verejne je null");
+            if (debug) pc.vypis("Verejne je null; prichozi rozhrani: "+prichoziRozhrani.jmeno+" pc:"+pc.jmeno);
             return false;
         }
         if (prichoziRozhrani.jmeno.equals(verejne.jmeno)) {
+            if (debug) pc.vypis("prichozi rozhrani '"+prichoziRozhrani.jmeno+"' je verejne, natuji; verejne je "+verejne.jmeno);
+            if (debug) pc.vypis("mamOdnatovat vraci true");
             return true;
         }
         return false;
@@ -269,7 +275,7 @@ public class NATtabulka {
     private IpAdresa odnatujZdrojovouIpAdresu(IpAdresa ip) {
         for (NATzaznam zaznam : tabulka) {
             if (zaznam.out.jeStejnaAdresa(ip) && zaznam.out.port == ip.port) {
-                return zaznam.out;
+                return zaznam.in;
             }
         }
         return null;
@@ -339,6 +345,7 @@ public class NATtabulka {
     * @param iface
     */
     public void nastavRozhraniOutside(SitoveRozhrani iface) {
+        natSeznamPoolu.updateIpNaRozhrani();
         verejne = iface;
     }
 
@@ -359,6 +366,7 @@ public class NATtabulka {
     }
 
     public void smazRozhraniOutside() {
+        verejne.smazVsechnyIpKromPrvni();
         verejne = null;
     }
 

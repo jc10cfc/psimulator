@@ -519,20 +519,40 @@ public class SAXHandler implements ContentHandler {
             }
 
             for (String[] pul : pcbuilder.pool) {
+
+                IpAdresa ip_start = null;
+                IpAdresa ip_konec = null;
+
                 try {
-                    IpAdresa ip_start = new IpAdresa(pul[dejIndexVNatPoolu("ip_start")]);
-                    IpAdresa ip_konec = new IpAdresa(pul[dejIndexVNatPoolu("ip_konec")]);
-                    String pJmeno = pul[dejIndexVNatPoolu("pJmeno")];
-                    String cislo = pul[dejIndexVNatPoolu("prefix")];
+                    ip_start = new IpAdresa(pul[dejIndexVNatPoolu("ip_start")]);
+                } catch (Exception e) {
+                    System.err.println("Prvni IP je spatna: "+pul[dejIndexVNatPoolu("ip_start")]);
+                }
 
-                    int i = Integer.parseInt(cislo);
+                try {
+                    ip_konec = new IpAdresa(pul[dejIndexVNatPoolu("ip_konec")]);
+                } catch (Exception e) {
+                    System.err.println("Druha IP je spatna: "+pul[dejIndexVNatPoolu("ip_konec")]);
+                }
 
+                String pJmeno = pul[dejIndexVNatPoolu("pJmeno")];
+                String cislo = pul[dejIndexVNatPoolu("prefix")];
+
+                int i = -1;
+                try {
+                    i = Integer.parseInt(cislo);
+                } catch (NumberFormatException e) {
+                    System.err.println("Neni cislo: "+cislo);
+                }
+
+                try {
                     int n = pocitac.natTabulka.natSeznamPoolu.pridejPool(ip_start, ip_konec, i, pJmeno);
                     if (n != 0) {
                         System.err.println("Pool je spatne zadan: " + vypisPole(pul));
                     }
                 } catch (Exception e) {
                     System.err.println("Pool je spatne zadan: " + vypisPole(pul)+ ", preskakuji.. ");
+                    e.printStackTrace();
                 }
             }
 
@@ -709,7 +729,7 @@ public class SAXHandler implements ContentHandler {
                     }
                 }
             }
-
+            pocitac.natTabulka.natSeznamPoolu.updateIpNaRozhrani();
             hotovePocitace.add(pocitac);
         }
 

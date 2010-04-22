@@ -25,7 +25,7 @@ public abstract class AbstraktniPocitac {
      */
     public boolean ladeniPaketu=true;
 
-    private boolean ladeni=false; //obycejny ladeni na ostatni veci...
+    private boolean ladeni=true; //obycejny ladeni na ostatni veci...
 
     // promenny pro technicky zabezpeceni pocitace:
     public Komunikace komunikace;
@@ -414,6 +414,10 @@ public abstract class AbstraktniPocitac {
                 }
             }
         } else { // paket se musi poslat dal
+            if(ladeni) {
+                vypis("paket neni pro me "+paket);
+                vypis(vstupniRozhrani.toString());
+            }
             if (ip_forward){ // nastaveno preposilani - v souboru /proc/sys/net/ipv4/ip_forward je jednicka
                 preposliPaket(paket, vstupniRozhrani);
             }else{
