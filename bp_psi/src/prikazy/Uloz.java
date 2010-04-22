@@ -12,6 +12,7 @@ import pocitac.Konsole;
 import pocitac.LinuxPocitac;
 import pocitac.SitoveRozhrani;
 import vyjimky.NeznamyTypPcException;
+import static Main.Main.*;
 
 /**
  * Prikaz ukladani do XML souboru vsechny pocitace dle aktualnich nastaveni.
@@ -22,7 +23,7 @@ public class Uloz extends AbstraktniPrikaz {
     List<AbstraktniPocitac> pocitace;
     BufferedWriter out;
     String tabs = "";
-    String soubor = "psi2.xml";
+    String soubor = konfigurak;
 
     public Uloz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);

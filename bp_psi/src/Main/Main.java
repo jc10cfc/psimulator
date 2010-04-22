@@ -72,8 +72,8 @@ public class Main {
         if (args.length >= 1) {
             konfigurak = (String)nacti(args[0]);
         } else {
-            konfigurak = "psi.xml";
-//            konfigurak = "laborka.xml";
+//            konfigurak = "psi.xml";
+            konfigurak = "laborka.xml";
         }
         vsechno = nacti(konfigurak);
 
