@@ -28,16 +28,16 @@ public class NATtabulka {
     /**
      * seznam poolu IP.
      */
-    public NATPool natSeznamPoolu;
+    public NATPool lPool;
     /**
      * seznam seznamAccess-listu
      * (= kdyz zdrojova IP patri do nejakeho seznamAccess-listu, tak se bude zrovna natovat)
      */
-    public NATAccessList natSeznamAccess;
+    public NATAccessList lAccess;
     /**
      * seznam prirazenych poolu k access-listum
      */
-    public NATPoolAccess natSeznamPoolAccess;
+    public NATPoolAccess lPoolAccess;
     /**
      * Seznam soukromych (inside) rozhrani.
      */
@@ -58,9 +58,9 @@ public class NATtabulka {
         this.pc=pc;
         tabulka = new ArrayList<NATzaznam>();
         inside = new ArrayList<SitoveRozhrani>();
-        natSeznamAccess = new NATAccessList(this);
-        natSeznamPoolu = new NATPool(this);
-        natSeznamPoolAccess = new NATPoolAccess(this);
+        lAccess = new NATAccessList(this);
+        lPool = new NATPool(this);
+        lPoolAccess = new NATPoolAccess(this);
     }
 
     /**
@@ -197,13 +197,13 @@ public class NATtabulka {
         //-----------------------------------------------------------------------------
 
         // neni v access-listech
-        NATAccessList.AccessList acc = natSeznamAccess.vratAccessListIP(zdroj);
+        NATAccessList.AccessList acc = lAccess.vratAccessListIP(zdroj);
         if (acc == null) {
             return 4;
         }
 
         // kdyz neni prirazen pool
-        Pool pool = natSeznamPoolu.vratPoolZAccessListu(acc);
+        Pool pool = lPool.vratPoolZAccessListu(acc);
         if (pool == null) {
             return 1;
         }
@@ -254,9 +254,9 @@ public class NATtabulka {
             }
         }
 
-        NATAccessList.AccessList access = natSeznamAccess.vratAccessListIP(ip);
-        Pool pool = natSeznamPoolu.vratPoolZAccessListu(access);
-        IpAdresa vrat = natSeznamPoolu.dejIpZPoolu(pool);
+        NATAccessList.AccessList access = lAccess.vratAccessListIP(ip);
+        Pool pool = lPool.vratPoolZAccessListu(access);
+        IpAdresa vrat = lPool.dejIpZPoolu(pool);
 
         vrat.port = citacPortu++; // velikost integeru je dostacujici, tak neresim, ze se porad navysuje jedno pocitadlo
         if (natovani == true) { // jen kdyz opravdu pridavam
@@ -345,7 +345,7 @@ public class NATtabulka {
     * @param iface
     */
     public void nastavRozhraniOutside(SitoveRozhrani iface) {
-        natSeznamPoolu.updateIpNaRozhrani();
+        lPool.updateIpNaRozhrani();
         verejne = iface;
     }
 
@@ -397,15 +397,15 @@ public class NATtabulka {
 
         // osefovani access-listu
         int cislo = 1;
-        natSeznamAccess.smazAccessListyVsechny();
-        natSeznamAccess.pridejAccessList(new IpAdresa("0.0.0.0", 0), cislo);
+        lAccess.smazAccessListyVsechny();
+        lAccess.pridejAccessList(new IpAdresa("0.0.0.0", 0), cislo);
 
         // osefovani IP poolu
         String pool = "ovrld";
-        natSeznamPoolu.smazPoolVsechny();
-        natSeznamPoolu.pridejPool(verejne.vratPrvni(), verejne.vratPrvni(), 24, pool);
+        lPool.smazPoolVsechny();
+        lPool.pridejPool(verejne.vratPrvni(), verejne.vratPrvni(), 24, pool);
         
-        natSeznamPoolAccess.smazPoolAccessVsechny();
-        natSeznamPoolAccess.pridejPoolAccess(cislo, pool, true);
+        lPoolAccess.smazPoolAccessVsechny();
+        lPoolAccess.pridejPoolAccess(cislo, pool, true);
     }
 }

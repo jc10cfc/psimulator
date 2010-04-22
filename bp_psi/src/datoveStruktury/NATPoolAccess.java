@@ -17,11 +17,11 @@ import java.util.List;
 public class NATPoolAccess {
 
     NATtabulka natTabulka;
-    public List<PoolAccess> seznamPoolAccess;
+    public List<PoolAccess> seznam;
 
     public NATPoolAccess(NATtabulka NATtabulka) {
         this.natTabulka = NATtabulka;
-        this.seznamPoolAccess = new ArrayList<PoolAccess>();
+        this.seznam = new ArrayList<PoolAccess>();
     }
 
     /**
@@ -34,13 +34,13 @@ public class NATPoolAccess {
 
         PoolAccess novy = new PoolAccess(access, pool, overload);
         int index = 0;
-        for (PoolAccess pa : seznamPoolAccess) {
+        for (PoolAccess pa : seznam) {
             if (novy.access < pa.access) {
                 break;
             }
             index++;
         }
-        seznamPoolAccess.add(index, novy);
+        seznam.add(index, novy);
     }
 
     /**
@@ -51,7 +51,7 @@ public class NATPoolAccess {
      */
     public int smazPoolAccess(int access) {
         PoolAccess smazat = null;
-        for (PoolAccess pa : seznamPoolAccess) {
+        for (PoolAccess pa : seznam) {
             if (pa.access == access) {
                 smazat = pa;
             }
@@ -60,7 +60,7 @@ public class NATPoolAccess {
             return 1;
         }
         
-        seznamPoolAccess.remove(smazat);
+        seznam.remove(smazat);
         return 0;
     }
 
@@ -68,7 +68,7 @@ public class NATPoolAccess {
      * Smaze vsechny PoolAccessy.
      */
     public void smazPoolAccessVsechny() {
-        seznamPoolAccess.clear();
+        seznam.clear();
     }
 
     /**
@@ -77,7 +77,7 @@ public class NATPoolAccess {
      * @return
      */
     public PoolAccess vratPoolAccess(Pool pool) {
-        for (PoolAccess pa : seznamPoolAccess) {
+        for (PoolAccess pa : seznam) {
             if (pa.pool.equals(pool.jmeno)) {
                 return pa;
             }

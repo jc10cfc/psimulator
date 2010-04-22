@@ -45,7 +45,7 @@ public class CiscoPocitac extends AbstraktniPocitac{
      *
      */
     @Override
-    public boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana, IpAdresa sousedni){
+    public boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana, IpAdresa sousedni) {
 
         if (debug) vypis("prijmiEthernetove() zacatek");
         SitoveRozhrani sr = null;

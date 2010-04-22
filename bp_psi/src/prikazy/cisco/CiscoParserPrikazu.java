@@ -707,12 +707,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         s += "!\n";
         s += "ip http server\n";
 
-        for (Pool pool : pc.natTabulka.natSeznamPoolu.seznamPoolu) {
+        for (Pool pool : pc.natTabulka.lPool.seznam) {
             s += "ip nat pool " + pool.jmeno + " " + pool.prvni().vypisAdresu() + " " + pool.posledni().vypisAdresu()
                     + " prefix-length " + pool.prvni().pocetBituMasky() + "\n";
         }
 
-        for (PoolAccess pa : pc.natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : pc.natTabulka.lPoolAccess.seznam) {
             s += "ip nat inside source list " + pa.access + " pool " + pa.pool;
             if (pa.overload) {
                 s += " overload";
@@ -722,7 +722,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         s += "!\n";
 
-        for (AccessList access : pc.natTabulka.natSeznamAccess.seznamAccess) {
+        for (AccessList access : pc.natTabulka.lAccess.seznam) {
             s += "access-list " + access.cislo + " permit " + access.ip.vypisAdresu() + " " + access.ip.vypisWildcard() + "\n";
         }
 

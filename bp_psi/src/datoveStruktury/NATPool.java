@@ -15,13 +15,13 @@ import java.util.List;
  */
 public class NATPool {
     
-    public List <Pool> seznamPoolu;
+    public List <Pool> seznam;
     NATtabulka natTabulka;
 
 
     public NATPool(NATtabulka tab) {
         this.natTabulka = tab;
-        seznamPoolu = new ArrayList<Pool>();
+        seznam = new ArrayList<Pool>();
     }
 
     /**
@@ -46,7 +46,7 @@ public class NATPool {
 //            return 2;
 //        }
 
-//        for (Pool pool : seznamPoolu) {
+//        for (Pool pool : seznam) {
 //            if (pool.jmeno.)
 //        }
 
@@ -77,7 +77,7 @@ public class NATPool {
         } while (ukazatel.dejLongIP() < konec.dejLongIP() && ukazatel.jeVRozsahu(start));
         novyPool.ukazatel = novyPool.prvni();
 
-        seznamPoolu.add(novyPool);
+        seznam.add(novyPool);
         updateIpNaRozhrani();
         return 0;
     }
@@ -90,7 +90,7 @@ public class NATPool {
      */
     public int smazPool(String jmeno) {
         Pool smaznout = null;
-        for (Pool pool : seznamPoolu) {
+        for (Pool pool : seznam) {
             if (pool.jmeno.equals(jmeno)) {
                 smaznout = pool;
             }
@@ -98,7 +98,7 @@ public class NATPool {
         if (smaznout == null) {
             return 1;
         }
-        seznamPoolu.remove(smaznout);
+        seznam.remove(smaznout);
         return 0;
     }
 
@@ -106,7 +106,7 @@ public class NATPool {
      * Smaze vsechny pooly.
      */
     public void smazPoolVsechny() {
-        seznamPoolu.clear();
+        seznam.clear();
     }
 
     /**
@@ -129,7 +129,7 @@ public class NATPool {
      * @return
      */
     public PoolAccess vratPoolAccess(Pool pool) {
-        for (PoolAccess pa : natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : natTabulka.lPoolAccess.seznam) {
             if (pa.pool.equals(pool.jmeno)) {
                 return pa;
             }
@@ -143,7 +143,7 @@ public class NATPool {
      * @return
      */
     public PoolAccess vratPoolAccessZAccessListu(NATAccessList.AccessList acc) {
-        for (PoolAccess pa : natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : natTabulka.lPoolAccess.seznam) {
             if (acc.cislo == pa.access) {
                 return pa;
             }
@@ -158,9 +158,9 @@ public class NATPool {
      *         null - kdyz neni PoolAccess s timto cislem a nebo neni Pool s nazvem u nalezeneho PoolAccessu.
      */
     public Pool vratPoolZAccessListu(NATAccessList.AccessList access) {
-        for (PoolAccess pa : natTabulka.natSeznamPoolAccess.seznamPoolAccess) {
+        for (PoolAccess pa : natTabulka.lPoolAccess.seznam) {
             if (pa.access == access.cislo) {
-                for (Pool pool : seznamPoolu) {
+                for (Pool pool : seznam) {
                     if (pool.jmeno.equals(pa.pool)) {
                         return pool;
                     }
@@ -178,7 +178,7 @@ public class NATPool {
             return ;
         }
         natTabulka.verejne.smazVsechnyIpKromPrvni();
-        for (Pool pool : seznamPoolu) {
+        for (Pool pool : seznam) {
             for (IpAdresa adr : pool.pool) {
                 natTabulka.verejne.seznamAdres.add(adr);
             }
@@ -261,7 +261,7 @@ public class NATPool {
     @Deprecated
     public boolean doslyIpPoolu(IpAdresa ip) {
 
-        NATAccessList.AccessList acc = natTabulka.natSeznamAccess.vratAccessListIP(ip);
+        NATAccessList.AccessList acc = natTabulka.lAccess.vratAccessListIP(ip);
         if (acc == null) {
             return true;
         }
