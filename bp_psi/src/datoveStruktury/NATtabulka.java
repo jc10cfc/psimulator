@@ -385,7 +385,7 @@ public class NATtabulka {
     /****************************************** Linux *********************************************************/
 
     /**
-     * Nastavi Linux pocitac pro natovani.
+     * Nastavi Linux pocitac pro natovani. Kdyz uz je nastavena, nic nedela.
      * Pocitam s tim, ze ani pc ani rozhrani neni null.
      * Jestli jsem to dobre pochopil, tak tohle je ten zpusob natovani, kdy se vsechny pakety jdouci
      * ven po nejakym rozhrani prekladaj na nejakou verejnou adresu, a z toho rozhrani zase zpatky.
@@ -428,7 +428,7 @@ public class NATtabulka {
     }
 
     /**
-     * Zrusi linux DNAT.
+     * Zrusi linux DNAT. Kdyz neni nastavena, nic nedela.
      */
     public void zrusLinuxMaskaradu() {
 
@@ -437,7 +437,11 @@ public class NATtabulka {
         lPoolAccess.smazPoolAccessVsechny();
         smazRozhraniOutside();
         smazRozhraniInsideVsechny();
+        linux_nastavena_maskarada=false;
+    }
 
+    public boolean jeNastavenaLinuxovaMaskarada(){
+        return linux_nastavena_maskarada;
     }
 
     /**

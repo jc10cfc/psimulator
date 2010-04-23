@@ -310,7 +310,7 @@ public abstract class AbstraktniPocitac {
         }
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
             vypisLadeni("metoda odesliNovejPaket: Nemohu odeslat paket, nenalezl jsem rozhrani, na ktery" +
-                    "bych to poslal. cil: "+cil.vypisAdresu()+
+                    " bych ho poslal. cil: "+cil.vypisAdresu()+
                     " typ: "+typ);
             return false;
         }

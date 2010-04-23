@@ -16,12 +16,6 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>1.2.3.4</adresat>
-			<maskaAdresata>255.255.255.255</maskaAdresata>
-			<brana>192.168.1.3</brana>
-			<rozhraniKam>eth0</rozhraniKam>
-		</zaznam>
-		<zaznam>
 			<adresat>192.168.1.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
 			<rozhraniKam>eth0</rozhraniKam>
@@ -34,6 +28,14 @@
 		</zaznam>
 	</routy>
 	<ip_forward>0</ip_forward>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
 </pocitac>
 
 <pocitac jmeno="linux2" typ="linux">
@@ -55,14 +57,14 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>192.168.2.0</adresat>
-			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<rozhraniKam>eth1</rozhraniKam>
-		</zaznam>
-		<zaznam>
 			<adresat>192.168.1.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
 			<rozhraniKam>eth0</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.2.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<rozhraniKam>eth1</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>0.0.0.0</adresat>
@@ -72,6 +74,14 @@
 		</zaznam>
 	</routy>
 	<ip_forward>1</ip_forward>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
 </pocitac>
 
 <pocitac jmeno="linux3" typ="linux">
@@ -93,14 +103,14 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>192.168.1.0</adresat>
+			<adresat>192.168.2.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<brana>192.168.2.1</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
-			<adresat>192.168.2.0</adresat>
+			<adresat>192.168.1.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<brana>192.168.2.1</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
@@ -116,6 +126,14 @@
 		</zaznam>
 	</routy>
 	<ip_forward>1</ip_forward>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
 </pocitac>
 
 </konfigurak>

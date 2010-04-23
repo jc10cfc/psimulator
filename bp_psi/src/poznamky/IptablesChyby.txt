@@ -101,3 +101,22 @@ Try `iptables -h' or 'iptables --help' for more information.
 
 root: /home/neiss# iptables -t bla -t nat -n -L
  // -> v poradku to vypise tabulku nat
+
+
+
+root: /home/neiss# iptn -L -n
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+           all  --  0.0.0.0/0            1.2.3.4
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+MASQUERADE  all  --  0.0.0.0/0            0.0.0.0/0
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination

@@ -1,6 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * DODELAT akutne:
+ *      nastavovani druheho typu natu
+ * DODELAT mozna nekdy, rozhodne ne akutne:
+ *      Seradit chybovy hlaseni podle priorit a pripadne zaridit, aby se nevypisovaly vsechny.
+ *      Udelat seznam zadanejch pravidel, chtelo by nejakej wrapper, zatim nejde mit vic pravidel nez jedno.
+ *
  */
 package prikazy.linux;
 
@@ -19,7 +23,7 @@ import vyjimky.SpatnaAdresaException;
  */
 public class LinuxIptables extends AbstraktniPrikaz {
 
-    boolean ladeni = true;
+    boolean ladeni = false;
     /**
      * Navratovy kod parseru a kontroloru.<br />
      * Funguje klasicky po bitech jako v ifconfigu ap.<br />
@@ -36,11 +40,11 @@ public class LinuxIptables extends AbstraktniPrikaz {
      * 512 - spatny cislo pravidla <br />
      * 1024 - neznama akceJump<br />
      * 2048 - vzhledem k akci nebo k pravidlu zakazanej prepinac, uklada se do zakazanyPrepinace <br />
-     * 4096 - mozna, ale v nasem simulatoru zatim nepodporovana moznost<br />
+     * 4096 - nepodporovany nebo zakazany prepinac nebo akceJump<br />
      * 8192 - vystupni rozhrani neexistuje<br />
      * 16384 - pro danou moznost chybi nejakej prepinac<br />
-     * 32768 - <br />
-     * 65536 - <br />
+     * 32768 - neznamy jmeno retezu<br />
+     * 65536 - moc velky cislo k deletovani<br />
      * 131072 - <br />
      */
     int navrKod = 0;
@@ -282,6 +286,9 @@ public class LinuxIptables extends AbstraktniPrikaz {
             if (cisloPravidla != -1 && cisloPravidla < 1) {
                 navrKod |= 512;
             }
+            if(!retez.equals("PREROUTING") && !retez.equals("POSTROUTING") ){
+                navrKod|=32768;
+            }
 
         }
     }
@@ -300,7 +307,8 @@ public class LinuxIptables extends AbstraktniPrikaz {
             navrKod |= 128;
         }
 
-        if (provest == 4) { //-L
+        if (provest == 4 || provest ==3) { //-L - vypisovani, -D - mazani
+          // -> poustim to zaroven i pri -D, abych si usetril kopirovani
             if (zadanoMinus_d) {
                 zakazanyPrepinace.add("-d");
                 navrKod |= 2048;
@@ -340,7 +348,8 @@ public class LinuxIptables extends AbstraktniPrikaz {
                 }
                 if(zadanoMinus_j){
                     if( ! akceJump.equals("MASQUERADE")){
-                        navrKod= 4096;
+                        navrKod |= 4096;
+                        nepovolenyPrepinace.add("-j "+akceJump); //dam ho tam, i kdyz neni prepinac
                     }
                 }else{
                     chybejiciPrepinace.add("-j");
@@ -348,18 +357,34 @@ public class LinuxIptables extends AbstraktniPrikaz {
                 }
             }
             if (retez.equals("PREROUTING")){
-                if( zadanoMinus_d  ){
+                if( ! zadanoMinus_d  ){
                     chybejiciPrepinace.add("-d");
                     navrKod |= 16384;
                 }
-                if( zadanoMinus_j  ){
+                if( ! zadanoMinus_j  ){
                     chybejiciPrepinace.add("-j");
                     navrKod |= 16384;
+                }else{
+                    if( ! akceJump.equals("DNAT")){
+                        navrKod |= 4096;
+                        nepovolenyPrepinace.add("-j "+akceJump); //dam ho tam, i kdyz neni prepinac
+                    }
                 }
-                if( zadanoToDestination  ){
+                if( ! zadanoToDestination  ){
                     chybejiciPrepinace.add("--to-destination");
                     navrKod |= 16384;
                 }
+                if( zadanoMinus_o  ){
+                    zakazanyPrepinace.add("-o"); //ten je tady zakazanej
+                    navrKod |= 2048;
+                }
+            }
+        }
+
+        if(provest==3){ //delete
+            //prebytecny prepinace se zkoumaly uz s vypisem
+            if(cisloPravidla!=1){
+                navrKod |= 65536;
             }
         }
     }
@@ -391,6 +416,10 @@ public class LinuxIptables extends AbstraktniPrikaz {
             kon.posliRadek("iptables v1.4.1.1: can't initialize iptables table `" + tabulka + "': " +
                     "Table does not exist (do you need to insmod?)");
             kon.posliRadek("Perhaps iptables or your kernel needs to be upgraded.");
+        }
+
+        if ((navrKod & 32768) != 0) { //zadanej spatnej retez
+            kon.posliRadek("iptables: No chain/target/match by that name");
         }
 
         if ((navrKod & 16) != 0) { //nejakej prepinac zadanej dvakrat
@@ -430,16 +459,23 @@ public class LinuxIptables extends AbstraktniPrikaz {
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
-        if ((navrKod & 2048) != 0) { //neznama akce
-            kon.posliRadek("iptables v1.4.1.1: Illegal option `" + zakazanyPrepinace.get(0)
+        if ((navrKod & 2048) != 0) { //zakazanyPrepinace
+            kon.posliRadek("iptables v1.4.1.1: Illegal option `" + vypisSeznam(zakazanyPrepinace)
                     + "' with this command");
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 4096) != 0) { //pro akci zatim nepodporovany prepinac
-            kon.posliRadek(Main.jmenoProgramu+" Takova moznost by sice normalne byla mozna, simulator ji vsak zatim " +
-                    "nepodporuje. Zkuste odstranit prepinac: `"+ nepovolenyPrepinace.get(0));
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.posliRadek(Main.jmenoProgramu+": Takova moznost by mozna normalne byla mozna, simulator ji vsak "
+                    +"zatim nepodporuje. Zkuste odstranit prepinac: "+ vypisSeznam(nepovolenyPrepinace));
+        }
+
+        if ((navrKod & 8192) != 0) { //zadany vystupni rozhrani neexistuje kontroluje se jen na POSTROUTING)
+            kon.posliRadek(Main.jmenoProgramu+": Zadany rozhrani "+vystupniRozhr+" neexistuje.");
+        }
+        if ((navrKod & 16384) != 0) { //zadany vystupni rozhrani neexistuje kontroluje se jen na POSTROUTING)
+            kon.posliRadek(Main.jmenoProgramu+": Pro danou moznost chybeji tyto prepinace: "
+                    +vypisSeznam(chybejiciPrepinace));
         }
 
 
@@ -447,6 +483,43 @@ public class LinuxIptables extends AbstraktniPrikaz {
 
     @Override
     protected void vykonejPrikaz() {
+        if(navrKod!=0){
+            return; // provadi se, jen kdyz je vsechno dobre
+        }
+        if(provest==4){
+            vypis();
+        }
+        if(provest==1 || provest==2){ //-A nebo -I
+            pc.natTabulka.nastavLinuxMaskaradu(vystupni);
+        }
+        if(provest==3){ //mazani
+            pc.natTabulka.zrusLinuxMaskaradu();
+        }
+    }
+
+
+    private void vypis() {
+        kon.posliRadek("Chain PREROUTING (policy ACCEPT)");
+        kon.posliRadek("target     prot opt source               destination");
+        kon.posliRadek("");
+        kon.posliRadek("Chain POSTROUTING (policy ACCEPT)");
+        kon.posliRadek("target     prot opt source               destination");
+        if(pc.natTabulka.jeNastavenaLinuxovaMaskarada())
+            kon.posliRadek("MASQUERADE  all  --  0.0.0.0/0            0.0.0.0/0");
+        kon.posliRadek("");
+        kon.posliRadek("Chain OUTPUT (policy ACCEPT)");
+        kon.posliRadek("target     prot opt source               destination");
+    }
+
+    private String vypisSeznam(List<String> l){
+        String vr="";
+        for(int i=0;i<l.size();i++){
+            if(l.get(i)!=null){
+                if(i!=0)vr+=", ";
+                vr+=l.get(i);
+            }
+        }
+        return vr;
     }
 
     @Override
