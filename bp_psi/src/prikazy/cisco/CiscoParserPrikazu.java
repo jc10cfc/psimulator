@@ -2,9 +2,6 @@ package prikazy.cisco;
 
 import datoveStruktury.CiscoStavy;
 import datoveStruktury.IpAdresa;
-import datoveStruktury.NATAccessList.AccessList;
-import datoveStruktury.NATPoolAccess.PoolAccess;
-import datoveStruktury.NATPool.Pool;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,10 +63,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     boolean debug = true;
     AbstraktniPrikaz prikaz;
 
-    private void ping() {
-        prikaz = new CiscoPing(pc, kon, slova);
-    }
-
     /**
      * Tato metoda simuluje zkracovani prikazu tak, jak cini cisco.
      * @param command prikaz, na ktery se zjistuje, zda lze na nej doplnit.
@@ -85,7 +78,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         String[] jedna = {"terminal", "inside", "outside", "source", "static", "pool", "netmask", "permit"};
         // + ip, exit
         String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless",
-        "access-list", "ping", "logout", "nat", "traceroute"};
+            "access-list", "ping", "logout", "nat", "traceroute"};
         // + ip, exit
         String[] tri = {"running-config", "name-server", "nat"};
         // + exit
@@ -149,213 +142,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (command.startsWith(cmd)) {
-            chybovyVypis = "% Ambiguous command:  \"";
-
-            if (command.equals("show")) {
-                chybovyVypis += "show\"\n";
-            } else if (command.equals("running-config")) {
-                chybovyVypis += "show " + cmd + "\"\n";
-            } else {
-                chybovyVypis += cmd + "\"\n";
-            }
-
+            chybovyVypis = "% Ambiguous command:  \"" + radek + "\"\n";
             nepokracovat = true;
         }
 
         return false;
-    }
-
-    /**
-     * V teto metode se vola runningconfig(). Kdyz je spatny vstup (tj. jiny nez 'show running-config' ve stavu ROOT),
-     * tak to vyvola chybovou hlasku.
-     */
-    private void show() {
-
-        switch (stav) {
-
-            case ROOT:
-                if (slova.size() == 2) {
-//                    System.out.println("tady: " + slova.get(1));
-                    if (kontrola("running-config", slova.get(1))) {
-                        runningconfig();
-                        return;
-                    }
-                    if (nepokracovat) {
-                        kon.posli(chybovyVypis);
-                    }
-                } else if (slova.size() == 1) {
-                    kon.posliRadek("% Type \"show ?\" for a list of subcommands\n");
-                    return;
-                } else if (slova.size() == 3) {
-                    showiproute();
-                    return;
-                }
-                break;
-
-            case USER:
-            // TODO: tady asi jeste neco bude?
-
-            default:
-                invalidInputDetected();
-        }
-    }
-
-    /**
-     * Prepina cisco do stavu config (CONFIG).
-     */
-    private void configure() {
-
-        if (slova.size() == 1 && !configure1) {
-            kon.posli("Configuring from terminal, memory, or network [terminal]? ");
-            kon.vypisPrompt = false;
-            configure1 = true;
-            return;
-        }
-
-        int cis = 1;
-        if (configure1) {
-            cis = 0;
-        }
-        if (kontrola("terminal", slova.get(cis)) || configure1) {
-            //if (slova.get(cis).equals("terminal") || configure1) {
-            stav = CONFIG;
-            kon.prompt = pc.jmeno + "(config)#";
-            kon.posliRadek("Enter configuration commands, one per line.  End with 'exit'."); // zmena oproti ciscu: End with CNTL/Z.
-            configure1 = false;
-            kon.vypisPrompt = true;
-            return;
-        }
-
-        int pocet = pc.jmeno.length() + 1 + slova.get(0).length() + 1;
-        String ret = "";
-
-        for (int i = 0; i < pocet; i++) {
-            ret += " ";
-        }
-        ret += "^";
-        kon.posliRadek(ret);
-        kon.posliRadek("% Invalid input detected at '^' marker.");
-        kon.posliRadek("");
-    }
-
-    /**
-     * Pomocna metoda pro rozhodnuti, zda se jedna o IP ci o jmeno rozhrani.
-     * @param s, retezec ke kontrole
-     * @return Vrati true, pokud je to asi IP.
-     */
-    private boolean zacinaCislem(String s) {
-
-        if (s == null) {
-            return false;
-        }
-        String pismeno = s.substring(0, 1);
-        int i = -1;
-
-        try {
-            i = Integer.parseInt(pismeno);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * interface fastEthernet0/1
-     * Prepne cisco do stavu config-if (IFACE).
-     * Kdyz ma prikaz interface 2 argumenty, tak se sloucej do jednoho (pripad: interface fastEthernet 0/0).
-     * 0 nebo vice nez argumenty znamena chybovou hlasku.
-     * Do globalni promenne 'aktualni' uklada referenci na rozhrani, ktere chce uzivatel konfigurovat.
-     */
-    private void iface() {
-
-        String rozhrani = "";
-        switch (slova.size()) {
-            case 1:
-                incompleteCommand();
-                return;
-
-            case 2:
-                rozhrani = slova.get(1);
-                break;
-
-            case 3:
-                rozhrani = slova.get(1) + slova.get(2);
-                break;
-
-            default:
-                invalidInputDetected();
-                return;
-        }
-
-        boolean nalezeno = false;
-        for (SitoveRozhrani iface : pc.rozhrani) {
-            if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
-                aktualni = iface;
-                nalezeno = true;
-            }
-        }
-
-        if (nalezeno == false) {
-            invalidInputDetected();
-            return;
-        }
-
-        stav = IFACE;
-        kon.prompt = pc.jmeno + "(config-if)#";
-    }
-
-    /**
-     * Vypise chybovou hlasku pri zadani nekompletniho prikazu.
-     */
-    private void incompleteCommand() {
-        kon.posliRadek("% Incomplete command.");
-    }
-
-    /**
-     * Vypise chybovou hlasku pri zadani neplatneho vstupu.
-     */
-    private void invalidInputDetected() {
-        kon.posliRadek("\n% Invalid input detected.\n");
-    }
-
-    /**
-     * Shodi rozhrani a zaktualizuje routovaci tabulku.
-     */
-    private void shutdown() {
-        if (aktualni.jeNahozene()) {
-            aktualni.nastavRozhrani(false);
-
-            Date d = new Date();
-            kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
-            kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
-            ((CiscoPocitac) pc).getWrapper().update();
-        }
-    }
-
-    /**
-     * Tento prikaz zapne rozhrani, ktere je definovano v aktualnim nastovacim rezimu (napr.: interface fastEthernet0/0)
-     * a aktualizuje routovaci tabulku.
-     */
-    private void noshutdown() {
-        if (slova.size() != 2) {
-            incompleteCommand();
-            return;
-        }
-        if (kontrola("shutdown", slova.get(1))) {
-            //if (slova.get(1).equals("shutdown")) {
-            if (aktualni.jeNahozene() == false) { // kdyz nahazuju rozhrani
-                Date d = new Date();
-                kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
-                kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
-            }
-
-            aktualni.nastavRozhrani(true);
-            ((CiscoPocitac) pc).getWrapper().update();
-        }
-        if (nepokracovat) {
-            kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
-        }
     }
 
     @Override
@@ -371,7 +162,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (slova.size() < 1) {
             return; // jen mezera
         }
-
 
         String prvniSlovo = slova.get(0);
 
@@ -420,7 +210,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ping", prvniSlovo)) {
-                    ping();
+                    prikaz = new CiscoPing(pc, kon, slova);
                     return;
                 }
                 if (kontrola("traceroute", prvniSlovo)) {
@@ -428,7 +218,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("show", prvniSlovo)) {
-                    show();
+                    prikaz = new CiscoShow(pc, kon, slova, stav);
                     return;
                 }
                 if (kontrola("exit", prvniSlovo) || kontrola("logout", prvniSlovo)) {
@@ -447,7 +237,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ping", prvniSlovo)) {
-                    ping();
+                    prikaz = new CiscoPing(pc, kon, slova);
                     return;
                 }
                 if (kontrola("traceroute", prvniSlovo)) {
@@ -459,7 +249,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("show", prvniSlovo)) {
-                    show();
+                    prikaz = new CiscoShow(pc, kon, slova, stav);
                     return;
                 }
                 if (kontrola("exit", prvniSlovo) || kontrola("logout", prvniSlovo)) {
@@ -635,108 +425,142 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             default:
                 kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
         }
-
     }
 
     /**
-     * Prikaz 'show running-config' ve stavu # (ROOT).
-     * Aneb vypis rozhrani v uplne silenem formatu.
+     * Prepina cisco do stavu config (CONFIG).
      */
-    private void runningconfig() {
-        String s = "";
+    private void configure() {
 
-        s += "Building configuration...\n"
-                + "\n"
-                + "Current configuration : 827 bytes\n"
-                + "!\n"
-                + "version 12.4\n"
-                + "service timestamps debug datetime msec\n"
-                + "service timestamps log datetime msec\n"
-                + "no service password-encryption\n"
-                + "!\n"
-                + "hostname " + pc.jmeno + "\n"
-                + "!\n"
-                + "boot-start-marker\n"
-                + "boot-end-marker\n"
-                + "!\n"
-                + "!\n"
-                + "no aaa new-model\n"
-                + "!\n"
-                + "resource policy\n"
-                + "!\n"
-                + "mmi polling-interval 60\n"
-                + "no mmi auto-configure\n"
-                + "no mmi pvc\n"
-                + "mmi snmp-timeout 180\n"
-                + "ip subnet-zero\n"
-                + "ip cef\n"
-                + "!\n"
-                + "!\n"
-                + "no ip dhcp use vrf connected\n"
-                + "!\n"
-                + "!\n"
-                + "!\n";
-        for (Object o : pc.rozhrani) {
-            SitoveRozhrani sr = (SitoveRozhrani) o;
-
-
-            s += "interface " + sr.jmeno + "\n";
-            if (sr.vratPrvni() != null) {
-                s += " ip address " + sr.vratPrvni().vypisAdresu() + " " + sr.vratPrvni().vypisMasku() + "\n";
-            }
-
-            if (pc.natTabulka.vratVerejne() != null) {
-                if (sr.jmeno.equals(pc.natTabulka.vratVerejne().jmeno)) {
-                    s += " ip nat outside" + "\n";
-                }
-            }
-
-            if (pc.natTabulka.vratInside() != null) {
-                for (SitoveRozhrani iface : pc.natTabulka.vratInside()) {
-                    if (iface.jmeno.equals(sr.jmeno)) {
-                        s += " ip nat inside" + "\n";
-                        break;
-                    }
-                }
-            }
-
-            if (sr.jeNahozene() == false) {
-                s += " shutdown" + "\n";
-            }
-            s += " duplex auto\n speed auto\n!\n";
+        if (slova.size() == 1 && !configure1) {
+            kon.posli("Configuring from terminal, memory, or network [terminal]? ");
+            kon.vypisPrompt = false;
+            configure1 = true;
+            return;
         }
 
-        s += ((CiscoPocitac) pc).getWrapper().vypisRunningConfig();
-
-        s += "!\n";
-        s += "ip http server\n";
-
-        for (Pool pool : pc.natTabulka.lPool.seznam) {
-            s += "ip nat pool " + pool.jmeno + " " + pool.prvni().vypisAdresu() + " " + pool.posledni().vypisAdresu()
-                    + " prefix-length " + pool.prvni().pocetBituMasky() + "\n";
+        int cis = 1;
+        if (configure1) {
+            cis = 0;
+        }
+        if (kontrola("terminal", slova.get(cis)) || configure1) {
+            //if (slova.get(cis).equals("terminal") || configure1) {
+            stav = CONFIG;
+            kon.prompt = pc.jmeno + "(config)#";
+            kon.posliRadek("Enter configuration commands, one per line.  End with 'exit'."); // zmena oproti ciscu: End with CNTL/Z.
+            configure1 = false;
+            kon.vypisPrompt = true;
+            return;
         }
 
-        for (PoolAccess pa : pc.natTabulka.lPoolAccess.seznam) {
-            s += "ip nat inside source list " + pa.access + " pool " + pa.pool;
-            if (pa.overload) {
-                s += " overload";
+        int pocet = pc.jmeno.length() + 1 + slova.get(0).length() + 1;
+        String ret = "";
+
+        for (int i = 0; i < pocet; i++) {
+            ret += " ";
+        }
+        ret += "^";
+        kon.posliRadek(ret);
+        kon.posliRadek("% Invalid input detected at '^' marker.");
+        kon.posliRadek("");
+    }
+
+    /**
+     * interface fastEthernet0/1
+     * Prepne cisco do stavu config-if (IFACE).
+     * Kdyz ma prikaz interface 2 argumenty, tak se sloucej do jednoho (pripad: interface fastEthernet 0/0).
+     * 0 nebo vice nez argumenty znamena chybovou hlasku.
+     * Do globalni promenne 'aktualni' uklada referenci na rozhrani, ktere chce uzivatel konfigurovat.
+     */
+    private void iface() {
+
+        String rozhrani = "";
+        switch (slova.size()) {
+            case 1:
+                incompleteCommand();
+                return;
+
+            case 2:
+                rozhrani = slova.get(1);
+                break;
+
+            case 3:
+                rozhrani = slova.get(1) + slova.get(2);
+                break;
+
+            default:
+                invalidInputDetected();
+                return;
+        }
+
+        boolean nalezeno = false;
+        for (SitoveRozhrani iface : pc.rozhrani) {
+            if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
+                aktualni = iface;
+                nalezeno = true;
             }
-            s += "\n";
         }
 
-        s += "!\n";
-
-        for (AccessList access : pc.natTabulka.lAccess.seznam) {
-            s += "access-list " + access.cislo + " permit " + access.ip.vypisAdresu() + " " + access.ip.vypisWildcard() + "\n";
+        if (nalezeno == false) {
+            invalidInputDetected();
+            return;
         }
 
-        if (!debug) {
-            s += "!\n" + "!\n" + "control-plane\n"
-                    + "!\n" + "!\n" + "line con 0\n"
-                    + "line aux 0\n" + "line vty 0 4\n" + " login\n" + "!\n" + "end\n\n";
+        stav = IFACE;
+        kon.prompt = pc.jmeno + "(config-if)#";
+    }
 
+    /**
+     * Vypise chybovou hlasku pri zadani nekompletniho prikazu.
+     */
+    private void incompleteCommand() {
+        kon.posliRadek("% Incomplete command.");
+    }
+
+    /**
+     * Vypise chybovou hlasku pri zadani neplatneho vstupu.
+     */
+    private void invalidInputDetected() {
+        kon.posliRadek("\n% Invalid input detected.\n");
+    }
+
+    /**
+     * Shodi rozhrani a zaktualizuje routovaci tabulku.
+     */
+    private void shutdown() {
+        if (aktualni.jeNahozene()) {
+            aktualni.nastavRozhrani(false);
+
+            Date d = new Date();
+            kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
+            kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
+            ((CiscoPocitac) pc).getWrapper().update();
         }
-        kon.posliPoRadcich(s, 10);
+    }
+
+    /**
+     * Tento prikaz zapne rozhrani, ktere je definovano v aktualnim nastovacim rezimu (napr.: interface fastEthernet0/0)
+     * a aktualizuje routovaci tabulku.
+     */
+    private void noshutdown() {
+        if (slova.size() != 2) {
+            incompleteCommand();
+            return;
+        }
+        if (kontrola("shutdown", slova.get(1))) {
+            //if (slova.get(1).equals("shutdown")) {
+            if (aktualni.jeNahozene() == false) { // kdyz nahazuju rozhrani
+                Date d = new Date();
+                kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
+                kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
+            }
+
+            aktualni.nastavRozhrani(true);
+            ((CiscoPocitac) pc).getWrapper().update();
+        }
+        if (nepokracovat) {
+            kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
+        }
     }
 
     /**
@@ -800,183 +624,5 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         ((CiscoPocitac) pc).getWrapper().update();
-
-    }
-
-    /**
-     * Posle vypis pro prikaz 'show ip route'
-     */
-    private void showiproute() {
-        // vim jen, ze mam 3 slova
-        //TODO: doparsovat 'show ip ro'
-        if (!kontrola("ip", slova.get(1))) {
-            kon.posliRadek("chyba1");
-            return;
-        }
-
-        if (!kontrola("route", slova.get(2))) {
-            kon.posliRadek("chyba1");
-            return;
-        }
-
-        String s = "";
-
-        CiscoPocitac poc = (CiscoPocitac) pc;
-        s += poc.getWrapper().vypisRT();
-
-        kon.posliPoRadcich(s, 80);
-    }
-
-    // ---------------------------------------------------------------------------------------------
-    /**
-     * Zpracovava prikaz 'ip route' tzn. pridava routy do routovaci tabulky.
-     */
-    @Deprecated
-    private void iproute() {
-
-        // ip route 'cil' 'maska cile' 'kam poslat'
-        // ip route 0.0.0.0 0.0.0.0 192.168.2.254
-        // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
-        // ip route 192.168.2.0 255.255.255.192 fastEthernet0/0
-
-        if (slova.size() < 5) {
-            incompleteCommand();
-            return;
-        }
-
-        if (kontrola("address", slova.get(1))) { // alespon zakladni kontrola
-            invalidInputDetected();
-            return;
-        }
-
-        IpAdresa adresat = null;
-        try {
-            adresat = new IpAdresa(slova.get(2), slova.get(3));
-        } catch (Exception e) { // SpatnaMaskaException, SpatnaAdresaException
-            invalidInputDetected();
-            return;
-        }
-
-        if (!adresat.jeCislemSite()) {
-            kon.posliRadek("%Inconsistent address and mask");
-            return;
-        }
-
-        if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
-            kon.posliRadek("%Invalid destination prefix");
-            return;
-        }
-
-        if (slova.size() == 6 || (slova.size() == 5 && !zacinaCislem(slova.get(4)))) {
-            // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
-
-            SitoveRozhrani sr = null;
-            String rozhrani;
-            if (slova.size() == 6) {
-                rozhrani = slova.get(4) + slova.get(5);
-            } else {
-                rozhrani = slova.get(4);
-            }
-
-            for (SitoveRozhrani iface : pc.rozhrani) {
-                if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
-                    sr = iface;
-                }
-            }
-            if (sr == null) { // rozhrani nenalezeno
-                invalidInputDetected();
-                return;
-            }
-
-            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, sr);
-
-        } else if (slova.size() == 5) { // ip route 0.0.0.0 0.0.0.0 192.168.2.254
-
-            IpAdresa brana = null;
-            try {
-                brana = new IpAdresa(slova.get(4));
-            } catch (SpatnaAdresaException e) {
-                invalidInputDetected();
-                return;
-            }
-
-            if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
-                kon.posliRadek("%Invalid next hop address");
-                return;
-            }
-
-            ((CiscoPocitac) pc).getWrapper().pridejZaznam(adresat, brana);
-        } else { // vice slov nez 6
-            invalidInputDetected();
-        }
-    }
-
-    /**
-     * Prikaz pro mazani zaznamu z routovaci tabulky.
-     */
-    @Deprecated
-    public void noiproute() {
-
-        if (slova.size() < 5) {
-            invalidInputDetected();
-            return;
-        }
-        if (!(kontrola("ip", slova.get(1)) && kontrola("route", slova.get(2)))) {
-            invalidInputDetected();
-            return;
-        }
-
-        IpAdresa adresat;
-        try {
-            adresat = new IpAdresa(slova.get(3), slova.get(4));
-        } catch (Exception e) {
-            invalidInputDetected();
-//            e.printStackTrace();
-            return;
-        }
-
-        for (int i = 0; i < ((CiscoPocitac) pc).getWrapper().size(); i++) {
-            if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).getAdresat().equals(adresat)) {
-
-                String rozhrani = "";
-                if (slova.size() == 7) {
-                    rozhrani = slova.get(5) + slova.get(6);
-                } else if (slova.size() == 6) {
-                    rozhrani = slova.get(5);
-                }
-
-                if (slova.size() == 6) {
-                    if (zacinaCislem(slova.get(5))) {
-                        IpAdresa brana = null;
-                        try {
-                            brana = new IpAdresa(slova.get(5));
-                        } catch (Exception e) {
-                            invalidInputDetected();
-                            return;
-                        }
-
-                        ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, brana, null);
-                    } else {
-                        SitoveRozhrani sr = null;
-                        for (SitoveRozhrani iface : pc.rozhrani) {
-                            if (iface.jmeno.equalsIgnoreCase(rozhrani)) {
-                                sr = iface;
-                            }
-                        }
-                        if (sr == null) { // rozhrani nenalezeno
-                            invalidInputDetected();
-                            return;
-                        }
-                        ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, null, sr);
-                    }
-                } else {
-                    ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, null, null);
-                }
-
-            }
-
-
-        }
     }
 }
-

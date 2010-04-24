@@ -48,6 +48,10 @@ public class SAXHandler implements ContentHandler {
     boolean vypis2 = false; // vypis pocitacu
 
     /**
+     * Vypis stacktrace pri vyjimkach.
+     */
+    boolean debug = true;
+    /**
      * Nastaví locator
      */
     @Override
@@ -413,6 +417,7 @@ public class SAXHandler implements ContentHandler {
             try {
                 port = Integer.valueOf(s);
             } catch (Exception e) {
+                if (debug) e.printStackTrace();
                 System.out.println("Specifikace portu musi byt ciselna.\nChyba: " + s);
                 System.exit(1);
             }
@@ -526,12 +531,14 @@ public class SAXHandler implements ContentHandler {
                 try {
                     ip_start = new IpAdresa(pul[dejIndexVNatPoolu("ip_start")]);
                 } catch (Exception e) {
+                    if (debug) e.printStackTrace();
                     System.err.println("Prvni IP je spatna: "+pul[dejIndexVNatPoolu("ip_start")]);
                 }
 
                 try {
                     ip_konec = new IpAdresa(pul[dejIndexVNatPoolu("ip_konec")]);
                 } catch (Exception e) {
+                    if (debug) e.printStackTrace();
                     System.err.println("Druha IP je spatna: "+pul[dejIndexVNatPoolu("ip_konec")]);
                 }
 
@@ -542,6 +549,7 @@ public class SAXHandler implements ContentHandler {
                 try {
                     i = Integer.parseInt(cislo);
                 } catch (NumberFormatException e) {
+                    if (debug) e.printStackTrace();
                     System.err.println("Neni cislo: "+cislo);
                 }
 
@@ -551,8 +559,8 @@ public class SAXHandler implements ContentHandler {
                         System.err.println("Pool je spatne zadan: " + vypisPole(pul));
                     }
                 } catch (Exception e) {
+                    if (debug) e.printStackTrace();
                     System.err.println("Pool je spatne zadan: " + vypisPole(pul)+ ", preskakuji.. ");
-                    e.printStackTrace();
                 }
             }
 
@@ -568,6 +576,7 @@ public class SAXHandler implements ContentHandler {
 
                     pocitac.natTabulka.lAccess.pridejAccessList(ip, cislo);
                 } catch (Exception e) {
+                    if (debug) e.printStackTrace();
                     System.err.println("access-list je spatne zadan: " + vypisPole(accessList) + ", preskakuji.. ");
                 }
             }
@@ -591,6 +600,7 @@ public class SAXHandler implements ContentHandler {
                         System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
                     }
                 } catch (Exception e) {
+                    if (debug) e.printStackTrace();
                     System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
                 }
 
@@ -690,7 +700,7 @@ public class SAXHandler implements ContentHandler {
                     }
                 }
 
-                if (pocitac instanceof CiscoPocitac) {//TODO: if (!adresat.jeCislemSite()) dat i pro linux?
+                if (pocitac instanceof CiscoPocitac) {
                     if (!adresat.jeCislemSite()) {
                         throw new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresuSMaskou() + " neni cislem site!");
                     }

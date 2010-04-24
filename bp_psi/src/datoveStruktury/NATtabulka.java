@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.SitoveRozhrani;
+import static prikazy.AbstraktniPrikaz.*;
 
 /**
  * Datova struktura pro NATovaci tabulku. <br />
@@ -23,7 +24,6 @@ import pocitac.SitoveRozhrani;
 public class NATtabulka {
 
     AbstraktniPocitac pc; //odkaz na pocitac, kterymu tabulka prislusi
-
     List<NATzaznam> tabulka;
     /**
      * seznam poolu IP.
@@ -46,18 +46,15 @@ public class NATtabulka {
      * Verejne (outside) rozhrani.
      */
     SitoveRozhrani verejne;
-
     private boolean linux_nastavena_maskarada = false;
-    
     /**
      * citac, odkud mam rozdavat porty
      */
     private int citacPortu = 1025;
-
     boolean debug = false;
 
     public NATtabulka(AbstraktniPocitac pc) {
-        this.pc=pc;
+        this.pc = pc;
         tabulka = new ArrayList<NATzaznam>();
         inside = new ArrayList<SitoveRozhrani>();
         lAccess = new NATAccessList(this);
@@ -114,15 +111,48 @@ public class NATtabulka {
      * Reprezentuje jeden radek v NAT tabulce.
      */
     public class NATzaznam {
-        
+
+        /**
+         * Zdrojova ip.
+         */
         IpAdresa in;
+        /**
+         * Zdrojova prelozena ip.
+         */
         IpAdresa out;
+        /**
+         * Potreba pro vypis v ciscu. Je null, kdyz se vkladaji staticka pravidla.
+         */
+        IpAdresa cil;
+        /**
+         * Vlozeno staticky.
+         */
         boolean staticke;
 
         public NATzaznam(IpAdresa in, IpAdresa out, boolean staticke) {
             this.in = in;
             this.out = out;
+            this.cil = null;
             this.staticke = staticke;
+        }
+
+        public NATzaznam(IpAdresa in, IpAdresa out, IpAdresa cil, boolean staticke) {
+            this.in = in;
+            this.out = out;
+            this.cil = cil;
+            this.staticke = staticke;
+        }
+
+        public IpAdresa vratIn() {
+            return in;
+        }
+
+        public IpAdresa vratOut() {
+            return out;
+        }
+
+        public boolean jeStaticke() {
+            return staticke;
         }
     }
 
@@ -143,12 +173,20 @@ public class NATtabulka {
     }
 
     /**
+     * Vrati tabulku.
+     * @return
+     */
+    public List<NATzaznam> vratTabulku() {
+        return tabulka;
+    }
+
+    /**
      * Vrati paket se prelozenou zdrojovou IP adresou.
      * @param paket
      * @return
      */
     public Paket zanatuj(Paket paket) {
-        paket.zdroj = zanatujZdrojovouIpAdresu(paket.zdroj, true);
+        paket.zdroj = zanatujZdrojovouIpAdresu(paket, true);
         return paket;
     }
 
@@ -160,16 +198,43 @@ public class NATtabulka {
      */
     public Paket odnatuj(Paket paket) {
         IpAdresa prelozena = odnatujZdrojovouIpAdresu(paket.cil);
-        if (debug) pc.vypis("XXXXXX puvodni paket:   "+paket);
+        if (debug) {
+            pc.vypis("XXXXXX puvodni paket:   " + paket);
+        }
         if (prelozena == null) {
             return paket;
         }
         paket.cil = prelozena;
-        if (debug) pc.vypis("XXXXXX prelozeny paket: "+paket);
+        if (debug) {
+            pc.vypis("XXXXXX prelozeny paket: " + paket);
+        }
         return paket;
     }
 
+    /**
+     * Vrati true, pokud je mozne danou adresu prelozit. Jinak vrati false.
+     * @param adr
+     * @return true - musi byt adr v access-listu, k nemu priraznem pool s alespon 1 volnou IP adresou. <br />
+     */
+    public boolean lzePrelozit(IpAdresa adr) {
 
+        NATAccessList.AccessList access = lAccess.vratAccessListIP(adr);
+        if (access == null) {
+            return false;
+        }
+
+        Pool pool = lPool.vratPoolZAccessListu(access);
+        if (pool == null) {
+            return false;
+        }
+
+        IpAdresa nova = pool.dejIp(true);
+        if (nova == null) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Dle teto metody se bude pocitac rozhodovat, co delat s paketem.
@@ -226,12 +291,18 @@ public class NATtabulka {
      */
     public boolean mamOdnatovat(SitoveRozhrani prichoziRozhrani) {
         if (verejne == null) {
-            if (debug) pc.vypis("Verejne je null; prichozi rozhrani: "+prichoziRozhrani.jmeno+" pc:"+pc.jmeno);
+            if (debug) {
+                pc.vypis("Verejne je null; prichozi rozhrani: " + prichoziRozhrani.jmeno + " pc:" + pc.jmeno);
+            }
             return false;
         }
         if (prichoziRozhrani.jmeno.equals(verejne.jmeno)) {
-            if (debug) pc.vypis("prichozi rozhrani '"+prichoziRozhrani.jmeno+"' je verejne, natuji; verejne je "+verejne.jmeno);
-            if (debug) pc.vypis("mamOdnatovat vraci true");
+            if (debug) {
+                pc.vypis("prichozi rozhrani '" + prichoziRozhrani.jmeno + "' je verejne, natuji; verejne je " + verejne.jmeno);
+            }
+            if (debug) {
+                pc.vypis("mamOdnatovat vraci true");
+            }
             return true;
         }
         return false;
@@ -248,7 +319,9 @@ public class NATtabulka {
      *         null - kdyz dosel pool IP adress, tak se ma vratit odesilateli Destination Host Unreachable,
      *                null by to melo vratit pouze pri natovani==false nebo kdyz neni zadnej pouzitelnej pool
      */
-    private IpAdresa zanatujZdrojovouIpAdresu(IpAdresa ip, boolean natovani) {
+    private IpAdresa zanatujZdrojovouIpAdresu(Paket paket, boolean natovani) {
+
+        IpAdresa ip = paket.zdroj;
         // nejdriv kontroluju, jestli uz to nahodou nema zaznam v NATtabulce
         for (NATzaznam zaznam : tabulka) { // porovnavam i podle portu (mohou byt NATy za sebou..)
             if (zaznam.in.jeStejnaAdresa(ip) && zaznam.in.port == ip.port) {
@@ -262,7 +335,7 @@ public class NATtabulka {
 
         vrat.port = citacPortu++; // velikost integeru je dostacujici, tak neresim, ze se porad navysuje jedno pocitadlo
         if (natovani == true) { // jen kdyz opravdu pridavam
-            pridejZaznamDoNATtabulky(ip, vrat);
+            pridejZaznamDoNATtabulky(ip, vrat, paket.cil);
         } else { // kdyz jen testuju, tak si vratim citac zpatky
             citacPortu--;
         }
@@ -284,49 +357,36 @@ public class NATtabulka {
     }
 
     /**
-     * Prida staticke pravidlo do tabulky.
-     * @param in zdrojova IP urcena pro preklad
-     * @param out nova (prelozena) adresa
-     * @return 0 - ok, zaznam uspesne pridan <br />
-     *         1 - chyba, in adresa tam uz je (% in already mapped (in -> out))
-     *         2 - chyba, out adresa tam uz je (% similar static entry (in -> out) already exists)
-     */
-    public int pridejStatickePravidloCisco(IpAdresa in, IpAdresa out) {
-
-        if(jeTamZdrojova(in)) {
-            return 1;
-        }
-        if(jeTamPrelozena(out)) {
-            return 2;
-        }
-
-        int index = dejIndexVTabulce(out);
-        tabulka.add(index, new NATzaznam(in, out, true));
-
-        return 0;
-    }
-
-    /**
-     * Prida staticke pravidlo do NAT tabulky. Nic se nekontroluje.
-     * @param in zdrojova IP
-     * @param out nova zdrojova (prelozena)
-     */
-    public void pridejStatickePravidloLinux(IpAdresa in, IpAdresa out) {
-        tabulka.add(new NATzaznam(in, out, true));
-    }
-
-    /**
      * Prida zaznam do natovaci tabulky. Pouziva se to pri dynamickym natovani.
      * Nic se nekontroluje.
      * @param in zdrojova IP
      * @param out nova zdrojova (prelozena)
      */
-    private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out) {
-        tabulka.add(new NATzaznam(in, out, false));
+    private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out, IpAdresa cil) {
+        tabulka.add(new NATzaznam(in, out, cil, false));
+    }
+
+    /**
+     * Smaze vsechny staticke zaznamy, ktere maji odpovidajici in a out.
+     * @return 0 - alespon 1 zaznam se smazal <br />
+     *         1 - nic se nesmazalo, pac nebyl nalezen odpovidajici zaznam
+     */
+    public int smazStatickyZaznam(IpAdresa in, IpAdresa out) {
+
+        List<NATzaznam> smaznout = new ArrayList<NATzaznam>();
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke && zaznam.in.jeStejnaAdresa(in) && zaznam.out.jeStejnaAdresa(out)) {
+                smaznout.add(zaznam);
+            }
+        }
+        for (NATzaznam z : smaznout) {
+            tabulka.remove(z);
+        }
+        
+        return 0;
     }
 
     /****************************************** nastavovani rozhrani ***************************************************/
-
     /**
      * Prida inside rozhrani. <br />
      * Neprida se pokud uz tam je rozhrani se stejnym jmenem. <br />
@@ -342,10 +402,10 @@ public class NATtabulka {
         inside.add(iface);
     }
 
-   /**
-    * Nastavi outside rozhrani.
-    * @param iface
-    */
+    /**
+     * Nastavi outside rozhrani.
+     * @param iface
+     */
     public void nastavRozhraniOutside(SitoveRozhrani iface) {
         lPool.updateIpNaRozhrani();
         verejne = iface;
@@ -382,8 +442,62 @@ public class NATtabulka {
         verejne = null;
     }
 
-    /****************************************** Linux *********************************************************/
+    /****************************************** Cisco *********************************************************/
+    /**
+     * Prida staticke pravidlo do tabulky.
+     * Razeno vzestupne dle out adresy.
+     * @param in zdrojova IP urcena pro preklad
+     * @param out nova (prelozena) adresa
+     * @return 0 - ok, zaznam uspesne pridan <br />
+     *         1 - chyba, in adresa tam uz je (% in already mapped (in -> out))
+     *         2 - chyba, out adresa tam uz je (% similar static entry (in -> out) already exists)
+     */
+    public int pridejStatickePravidloCisco(IpAdresa in, IpAdresa out) {
 
+        if (jeTamZdrojova(in)) {
+            return 1;
+        }
+        if (jeTamPrelozena(out)) {
+            return 2;
+        }
+
+        int index = dejIndexVTabulce(out);
+        tabulka.add(index, new NATzaznam(in, out, true));
+
+        return 0;
+    }
+
+    /**
+     * Vrati vypis vsech zaznamu v tabulce.
+     * Nejdrive to vypise dynamicka pravidla, pak staticka.
+     * @return
+     */
+    public String vypisZaznamyCisco() {
+        String s = "";
+        s += "Pro Inside global      Inside local       Outside local      Outside global\n";
+
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke == false) {
+                s += zarovnej("icmp " + zaznam.out.vypisAdresuSPortem(), 24)
+                        + zarovnej(zaznam.in.vypisAdresuSPortem(), 20)
+                        + zarovnej(zaznam.cil.vypisAdresuSPortem(), 20)
+                        + zarovnej(zaznam.cil.vypisAdresuSPortem(), 20)+"\n";
+            }
+        }
+
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke) {
+                s += zarovnej("--- " + zaznam.out.vypisAdresu(), 24)
+                        + zarovnej(zaznam.in.vypisAdresu(), 20)
+                        + zarovnej("---", 20)
+                        + zarovnej("---", 20)+"\n";
+            }
+        }
+
+        return s;
+    }
+
+    /****************************************** Linux *********************************************************/
     /**
      * Nastavi Linux pocitac pro natovani. Kdyz uz je nastavena, nic nedela.
      * Pocitam s tim, ze ani pc ani rozhrani neni null.
@@ -396,7 +510,7 @@ public class NATtabulka {
      */
     public void nastavLinuxMaskaradu(SitoveRozhrani verejne) {
 
-        if(linux_nastavena_maskarada) {
+        if (linux_nastavena_maskarada) {
             return;
         }
 
@@ -420,7 +534,7 @@ public class NATtabulka {
         String pool = "ovrld";
         lPool.smazPoolVsechny();
         lPool.pridejPool(verejne.vratPrvni(), verejne.vratPrvni(), 24, pool);
-        
+
         lPoolAccess.smazPoolAccessVsechny();
         lPoolAccess.pridejPoolAccess(cislo, pool, true);
 
@@ -437,10 +551,10 @@ public class NATtabulka {
         lPoolAccess.smazPoolAccessVsechny();
         smazRozhraniOutside();
         smazRozhraniInsideVsechny();
-        linux_nastavena_maskarada=false;
+        linux_nastavena_maskarada = false;
     }
 
-    public boolean jeNastavenaLinuxovaMaskarada(){
+    public boolean jeNastavenaLinuxovaMaskarada() {
         return linux_nastavena_maskarada;
     }
 
@@ -452,27 +566,11 @@ public class NATtabulka {
     }
 
     /**
-     * Vrati true, pokud je mozne danou adresu prelozit.
-     * @param adr
-     * @return
+     * Prida staticke pravidlo do NAT tabulky. Nic se nekontroluje.
+     * @param in zdrojova IP
+     * @param out nova zdrojova (prelozena)
      */
-    public boolean lzePrelozit(IpAdresa adr) {
-
-        NATAccessList.AccessList access = lAccess.vratAccessListIP(adr);
-        if (access == null) {
-            return false;
-        }
-
-        Pool pool = lPool.vratPoolZAccessListu(access);
-        if (pool == null) {
-            return false;
-        }
-
-        IpAdresa nova = pool.dejIp(true);
-        if (nova == null) {
-            return false;
-        }
-
-        return true;
+    public void pridejStatickePravidloLinux(IpAdresa in, IpAdresa out) {
+        tabulka.add(new NATzaznam(in, out, true));
     }
 }

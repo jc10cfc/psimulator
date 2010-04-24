@@ -49,7 +49,7 @@ public abstract class AbstraktniTraceroute extends AbstraktniPing {
      * @param dylka
      * @return
      */
-    protected String zarovnejZLeva(String ret, int dylka) {
+    protected static String zarovnejZLeva(String ret, int dylka) {
         //if (ret.length() >= dylka) return ret;
         int dorovnat = dylka - ret.length();
         String s = "";
