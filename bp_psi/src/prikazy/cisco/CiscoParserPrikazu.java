@@ -84,7 +84,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         // ktere je potreba k jejich bezpecne identifikaci. Cisla byla ziskana z praveho cisca.
         String[] jedna = {"terminal", "inside", "outside", "source", "static", "pool", "netmask", "permit"};
         // + ip, exit
-        String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless", "access-list", "ping", "logout", "nat"};
+        String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless",
+        "access-list", "ping", "logout", "nat", "traceroute"};
         // + ip, exit
         String[] tri = {"running-config", "name-server", "nat"};
         // + exit
@@ -318,15 +319,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         kon.posliRadek("\n% Invalid input detected.\n");
     }
 
-    private void accesslist() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
     /**
      * Shodi rozhrani a zaktualizuje routovaci tabulku.
      */
     private void shutdown() {
-
         if (aktualni.jeNahozene()) {
             aktualni.nastavRozhrani(false);
 
@@ -427,6 +423,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     ping();
                     return;
                 }
+                if (kontrola("traceroute", prvniSlovo)) {
+                    prikaz = new CiscoTraceroute(pc, kon, slova);
+                    return;
+                }
                 if (kontrola("show", prvniSlovo)) {
                     show();
                     return;
@@ -448,6 +448,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 }
                 if (kontrola("ping", prvniSlovo)) {
                     ping();
+                    return;
+                }
+                if (kontrola("traceroute", prvniSlovo)) {
+                    prikaz = new CiscoTraceroute(pc, kon, slova);
                     return;
                 }
                 if (kontrola("configure", prvniSlovo)) {

@@ -55,10 +55,7 @@ public class Main {
             o = sax.vratNastaveni();
 
         } catch (Exception e) {
-
-            // TODO: zakomentovat, az bude vse hotovo
             e.printStackTrace();
-
         }
 
         return o;
@@ -73,7 +70,8 @@ public class Main {
             konfigurak = (String)args[0];
         } else {
 //            konfigurak = "psi.xml";
-            konfigurak = "laborka.xml";
+//            konfigurak = "laborka.xml";
+            konfigurak = "laborka_tr.xml";
         }
         vsechno = nacti(konfigurak);
 

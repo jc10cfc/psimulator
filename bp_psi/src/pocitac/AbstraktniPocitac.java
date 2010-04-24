@@ -136,12 +136,16 @@ public abstract class AbstraktniPocitac {
  */
     int default_ttl=64; //defaultni ttl
     /**
-     * Tahle metoda hleda, jestli mezi myma rozhranima neni nejaky se zadanou adresou
+     * Tahle metoda hleda, jestli mezi myma rozhranima neni nejaky se zadanou adresou.
+     * Rozhrani musi byt nahozene.
      * @param cil
      * @return
      */
     protected SitoveRozhrani najdiMeziRozhranima(IpAdresa cil) {
         for (SitoveRozhrani rozhr : rozhrani) {
+            if (! rozhr.jeNahozene()) {
+                continue;
+            }
             if (rozhr.obsahujeStejnouAdresu(cil)) {
                 return rozhr;
             }

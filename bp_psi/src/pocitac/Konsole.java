@@ -128,7 +128,7 @@ public class Konsole extends Thread {
     }
 
     /**
-     * Posila po radcich se zpozdenim. Vyuziva metodu posliRadek().
+     * Posila po radcich se zpozdenim v ms. Vyuziva metodu posliRadek().
      * @param s, retezec, ktery ma posilat
      * @param cekej, prodleva v ms mezi jednotlivejma radkama
      * @author haldyr

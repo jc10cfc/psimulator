@@ -1,18 +1,16 @@
 zbyva:
-cisco routovani
-ping paket
-SNAT, DNAT
+SNAT
+cisco-traceroute
+windows verze
 testovani
+skript pro spousteni - kvuli doplnovani
 reakce na signaly Ctrl+C, Ctrl+Z (cisco)
 
 
 haldyr:
 prikaz pro ovladani cisco tabulky prikazu
  - overit, zda kdyz zmenim IP na rozhrani, jestli se smazou vsechny routy na toto rozhrani!
-prikaz no *
 prikaz ?
-prikaz reload - pecem na to
-prikaz write (=uloz) pro routovaci tabulku!!!
 
 pozor:
 pri zmene/mazani IP je potreba take zmenit/smazat prislusnou routu!!!

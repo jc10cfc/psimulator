@@ -1,6 +1,6 @@
 /*
  * UDELAT:
- * TODO: Prepsat metodu prijmiEthernetove()
+ * Prepsat metodu prijmiEthernetove() HOTOVO
  */
 package pocitac;
 

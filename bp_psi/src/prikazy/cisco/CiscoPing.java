@@ -190,10 +190,8 @@ public class CiscoPing extends AbstraktniPing {
                 // cisco posila 'U' a '.', jak se mu chce
                 if (Math.round(Math.random()) % 2 == 0) {
                     kon.posli("U");
-                    pc.vypis("posilam random 'U'");
                 } else {
                     kon.posli(".");
-                    pc.vypis("posilam random '.'");
                 }
             } else if (p.kod == 1) {
                 kon.posli(".");
