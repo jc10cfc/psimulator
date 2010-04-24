@@ -1,6 +1,5 @@
 zbyva:
 SNAT
-cisco-traceroute
 windows verze
 testovani
 skript pro spousteni - kvuli doplnovani

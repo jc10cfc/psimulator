@@ -63,7 +63,9 @@ public class CiscoTraceroute extends AbstraktniTraceroute {
             if (prijate < odeslane) { //posledni paket nedorazil
                 stavKonani = 2;
 //                kon.posliRadek("paket timeoutoval");
-                dopisZbylyHvezdicky(i - 1);
+                for (int k = i-1; k < maxTtl; k++) {
+                    kon.posliRadek(zarovnejZLeva((k + 1) + "", 3) + "  *  *  *");
+                }
                 break;
             }
             if (stavKonani == 3) { //vratilo se host nebo net unreachable
@@ -100,6 +102,10 @@ public class CiscoTraceroute extends AbstraktniTraceroute {
                 kon.posli("!N  *  !N");
             } else if (p.kod == 1) {
                 kon.posli("!H  *  !H");
+            } else if (p.kod == 3) {
+                kon.posli("!P  *  !P");
+            } else {
+                kon.posli("?  *  ?");
             }
         } else if (p.typ == 11) { //timeout - musim pokracovat
             kon.posli(vratCasyPaketu(p));

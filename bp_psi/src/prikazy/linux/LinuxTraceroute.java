@@ -120,5 +120,11 @@ public class LinuxTraceroute extends AbstraktniTraceroute {
                     +")  "+zaokrouhli(p.cas)+" ms  "+zaokrouhli(p.cas*k1)+" ms  "+zaokrouhli(p.cas*k2)+" ms ");
         }
     }
+
+    protected void dopisZbylyHvezdicky(int a) {
+        for (int i = a; i < maxTtl; i++) {
+            kon.posliRadek(zarovnej((i + 1) + "", 2) + "  * * *");
+        }
+    }
 }
 

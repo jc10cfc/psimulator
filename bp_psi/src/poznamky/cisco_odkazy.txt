@@ -18,3 +18,21 @@ zdroj:
 http://www.cisco.ac/en/US/products/hw/switches/ps708/products_tech_note09186a00807347ab.shtml
 
 
+== traceroute == 
+http://www.ciscosystems.net.ph/en/US/tech/tk364/technologies_tech_note09186a00801ae32a.shtml
+
+== ping & traceroute ==
+http://www.cisco.com/en/US/products/sw/iosswrel/ps1831/products_tech_note09186a00800a6057.shtml
+
+== access-list ==
+http://www.samuraj-cz.com/clanek/cisco-ios-8-access-control-list/
+
+== how cisco NAT works ==
+http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186a0080094831.shtml
+
+== SNAT + DNAT ==
+http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186a0080093f31.shtml
+
+== Configuring Network Address Translation: Getting Started ==
+http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186a0080094e77.shtml
+

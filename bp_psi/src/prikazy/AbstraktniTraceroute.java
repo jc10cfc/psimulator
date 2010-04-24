@@ -12,8 +12,8 @@ import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
 /**
- *
- * @author haldyr
+ * 
+ * @author neiss
  */
 public abstract class AbstraktniTraceroute extends AbstraktniPing {
 
@@ -57,11 +57,5 @@ public abstract class AbstraktniTraceroute extends AbstraktniPing {
             s += " ";
         }
         return s+ret;
-    }
-
-    protected void dopisZbylyHvezdicky(int a) {
-        for (int i = a; i < maxTtl; i++) {
-            kon.posliRadek(zarovnej((i + 1) + "", 2) + "  * * *");
-        }
     }
 }
