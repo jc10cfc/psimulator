@@ -190,6 +190,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
 
+        if (prvniSlovo.equals("help")) {
+            prikaz = new CiscoHelp(pc, kon, slova);
+            return;
+        }
+
         if (prvniSlovo.equals("?")) {
             prikaz = new CiscoOtaznik(pc, kon, slova, stav);
             return;

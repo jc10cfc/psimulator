@@ -36,3 +36,7 @@ http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186a0080093f
 == Configuring Network Address Translation: Getting Started ==
 http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186a0080094e77.shtml
 
+
+== NAT: Local and Global Definitions ==
+http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186a0080094837.shtml
+

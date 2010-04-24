@@ -13,7 +13,7 @@ import pocitac.*;
 import prikazy.AbstraktniPrikaz;
 
 /**
- *
+ * Zakladni napoveda, jake prikazy to umi.
  * @author haldyr
  */
 public class CiscoOtaznik extends AbstraktniPrikaz{
@@ -37,6 +37,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
                     napoveda.add("  exit             Exit from the EXEC");
                     napoveda.add("  ping             Send echo messages");
                     napoveda.add("  show             Show running system information");
+                    napoveda.add("  traceroute       Trace route to destination");
                     break;
 
                 case ROOT:
@@ -46,14 +47,15 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
                     napoveda.add("  enable           Turn on privileged commands");
                     napoveda.add("  ping             Send echo messages");
                     napoveda.add("  show             Show running system information");
+                    napoveda.add("  traceroute       Trace route to destination");
                     break;
 
                 case CONFIG:
                     kon.posliRadek("Configure commands:");
-                    napoveda.add("  interface                   Select an interface to configure");
-                    napoveda.add("  ip                          Global IP configuration subcommands");
-                    napoveda.add("  exit                        Exit from configure mode");
-                    napoveda.add("  access-list                 Add an access list entry");
+                    napoveda.add("  interface              Select an interface to configure");
+                    napoveda.add("  ip                     Global IP configuration subcommands");
+                    napoveda.add("  exit                   Exit from configure mode");
+                    napoveda.add("  access-list            Add an access list entry");
                     break;
 
                 case IFACE:
@@ -61,6 +63,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
                     napoveda.add("  exit                    Exit from interface configuration mode");
                     napoveda.add("  ip                      Interface Internet Protocol config commands");
                     napoveda.add("  no                      Negate a command or set its defaults");
+                    napoveda.add("  shutdown                Shutdown system elements");
             }
             posliList(napoveda);
     }
@@ -72,7 +75,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
     private void posliList(List n) {
         Collections.sort(n);
         for (Object s : n) {
-            kon.posliRadek((String) s);
+            kon.posliPoRadcich((String) s, 50);
         }
     }
 }

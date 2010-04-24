@@ -25,7 +25,8 @@ public class NATPoolAccess {
     }
 
     /**
-     * Prida novy poolAccess na spravnou pozici.
+     * Prida novy poolAccess na spravnou pozici. Kdyz najde PoolAccess se stejnym jmenem,
+     * tak ho bez milosti premazne.
      * @param access
      * @param pool
      */

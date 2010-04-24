@@ -1,4 +1,6 @@
 /*
+ * TODO: ip nat pool ovrld 172.16.0.1 172.16.0.1 netmask 255.255.255.252 
+ *
  * Hotovo:
  * prikaz no
  */
@@ -8,11 +10,13 @@ import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
+import static prikazy.cisco.CiscoIpNat.Stav.*;
 
 /**
  * Trida pro zpracovani prikazu: <br />
  * ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24 <br />
  * ip nat inside source list 7 pool ovrld overload
+ * ip nat inside source static 10.10.10.2 171.16.68.5
  * @author haldyr
  */
 public class CiscoIpNat extends CiscoPrikaz {
@@ -27,6 +31,13 @@ public class CiscoIpNat extends CiscoPrikaz {
     String poolJmeno = null;
     int accesslist = -1;
     boolean overload = false;
+    Stav stav = null;
+
+    enum Stav {
+        POOL, // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
+        INSIDE, // ip nat inside source list 7 pool ovrld overload?
+        STATIC // ip nat inside source static 10.10.10.1 171.16.68.5 
+    }
 
     public CiscoIpNat(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
         super(pc, kon, slova);
@@ -43,6 +54,7 @@ public class CiscoIpNat extends CiscoPrikaz {
 
         // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
         // ip nat inside source list 7 pool ovrld overload?
+        // ip nat inside source static 10.10.10.1 171.16.68.5 
 
         if (no) {
             if (!dalsiSlovo().equals("ip")) {
@@ -65,34 +77,43 @@ public class CiscoIpNat extends CiscoPrikaz {
             if (kontrola("inside", dalsi, 1)) {
                 return zpracujInside();
             }
+            if (dalsi.startsWith("outside")) {
+                kon.posliRadek(Main.Main.jmenoProgramu+": Tato funkcionalita neni implementovana.");
+            }
             return false;
         }
     }
 
     @Override
     protected void vykonejPrikaz() {
-        
-        if (no) {
-            int n;
-            if (accesslist != -1) { // no ip nat inside source list 7 pool ovrld overload?
 
+        int n;
+        if (no) {
+            if (stav == INSIDE) { // no ip nat inside source list 7 pool ovrld overload?
                 n = pc.natTabulka.lPoolAccess.smazPoolAccess(accesslist);
                 if (n == 1) {
                     kon.posliRadek("%Dynamic mapping not found");
                 }
                 return;
             }
-            if (poolJmeno != null) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
-
+            if (stav == POOL) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
                 n = pc.natTabulka.lPool.smazPool(poolJmeno);
                 if (n == 1) {
                     kon.posliRadek("%Pool " + poolJmeno + " not found");
                 }
             }
+
+            if (stav == STATIC) {
+                n = pc.natTabulka.smazStatickyZaznam(start, konec);
+                if (n == 1) {
+                    kon.posliRadek("% Translation not found");
+                }
+            }
+            
             return;
         }
 
-        if (poolPrefix != -1) { // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
+        if (stav == POOL) { // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
             int ret = pc.natTabulka.lPool.pridejPool(start, konec, poolPrefix, poolJmeno);
             switch (ret) {
                 case 0:
@@ -116,9 +137,20 @@ public class CiscoIpNat extends CiscoPrikaz {
             return;
         }
 
-        if (accesslist != -1) { // ip nat inside source list 7 pool ovrld overload
+        if (stav == INSIDE) { // ip nat inside source list 7 pool ovrld overload
             pc.natTabulka.lPoolAccess.pridejPoolAccess(accesslist, poolJmeno, overload);
         }
+
+        if (stav == STATIC) { // ip nat inside source static 10.10.10.2 171.16.68.5
+                n = pc.natTabulka.pridejStatickePravidloCisco(start, konec);
+                if (n == 1) {
+                    kon.posliRadek("% "+start.vypisAdresu()+" already mapped ("+start.vypisAdresu()+" -> "+konec.vypisAdresu());
+                }
+                if (n == 2) {
+                    kon.posliRadek("% similar static entry ("+start.vypisAdresu()+" -> "+konec.vypisAdresu()+") "+
+                            "already exists");
+                }
+            }
     }
 
     /**
@@ -182,6 +214,8 @@ public class CiscoIpNat extends CiscoPrikaz {
             return false;
         }
 
+        stav = POOL;
+
         return true;
     }
 
@@ -191,6 +225,7 @@ public class CiscoIpNat extends CiscoPrikaz {
      */
     private boolean zpracujInside() {
         // ip nat inside source list 7 pool ovrld overload
+        // ip nat inside source static 10.10.10.1 171.16.68.5 
 
         String dalsi = "";
 
@@ -198,7 +233,12 @@ public class CiscoIpNat extends CiscoPrikaz {
             return false;
         }
 
-        if (!kontrola("list", dalsiSlovo(), 1)) {
+        dalsi = dalsiSlovo();
+        if (dalsi.startsWith("s")) {
+            return zpracujStatic(dalsi);
+        }
+
+        if (!kontrola("list", dalsi, 1)) {
             return false;
         }
 
@@ -244,6 +284,8 @@ public class CiscoIpNat extends CiscoPrikaz {
             return false;
         }
 
+        stav = INSIDE;
+
         return true;
     }
 
@@ -259,5 +301,33 @@ public class CiscoIpNat extends CiscoPrikaz {
             return true;
         }
         return false;
+    }
+
+    private boolean zpracujStatic(String s) {
+        // ip nat inside source static 10.10.10.2 171.16.68.5
+        String dalsi = s;
+        if (!kontrola("static", dalsi, 1)) {
+            return false;
+        }
+
+        try {
+            dalsi = dalsiSlovo();
+            if (jePrazdny(dalsi)) {
+                return false;
+            }
+            start = new IpAdresa(dalsi);
+
+            dalsi = dalsiSlovo();
+            if (jePrazdny(dalsi)) {
+                return false;
+            }
+            konec = new IpAdresa(dalsi);
+        } catch (Exception e) {
+            invalidInputDetected();
+            return false;
+        }
+        stav = STATIC;
+
+        return true;
     }
 }

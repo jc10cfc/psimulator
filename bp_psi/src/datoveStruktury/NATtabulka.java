@@ -4,6 +4,7 @@
  * natovani z internetu - kontrola kdy natovat (neni nastaven pool atd..)
  * doresit metody pro linux
  *
+ * Co delat, kdyz uz jsou dynamicke zaznamy v tabulce a uzivatel zrusi pooly a accesslisty, mam odnatovat?
  *
  */
 package datoveStruktury;
@@ -69,7 +70,7 @@ public class NATtabulka {
      */
     private boolean jeTamZdrojova(IpAdresa in) {
         for (NATzaznam zaznam : tabulka) {
-            if (zaznam.in.jeStejnaAdresa(in) && zaznam.in.port == in.port) {
+            if (zaznam.in.jeStejnaAdresaSPortem(in)) {
                 return true;
             }
         }
@@ -83,7 +84,7 @@ public class NATtabulka {
      */
     private boolean jeTamPrelozena(IpAdresa out) {
         for (NATzaznam zaznam : tabulka) {
-            if (zaznam.out.jeStejnaAdresa(out) && zaznam.out.port == out.port) {
+            if (zaznam.out.jeStejnaAdresaSPortem(out)) {
                 return true;
             }
         }
@@ -99,12 +100,42 @@ public class NATtabulka {
     private int dejIndexVTabulce(IpAdresa out) {
         int index = 0;
         for (NATzaznam zaznam : tabulka) {
-            if (out.dejLongIP() > zaznam.out.dejLongIP()) {
+            if (out.dejLongIP() < zaznam.out.dejLongIP()) {
                 break;
             }
             index++;
         }
         return index;
+    }
+
+    /**
+     * Hleda mezi statickymi pravidly, jestli tam je zaznam pro danou IP.
+     * @param zdroj
+     * @return zanatovana IP <br />
+     *         null pokud nic nenaslo
+     */
+    public IpAdresa najdiStatickePravidloIn(IpAdresa zdroj) {
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke && zaznam.in.jeStejnaAdresa(zdroj)) {
+                return zaznam.out;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Hleda mezi statickymi pravidly, jestli tam je zaznam pro danou IP.
+     * @param zdroj
+     * @return odnatovana IP <br />
+     *         null pokud nic nenaslo
+     */
+    public IpAdresa najdiStatickePravidloOut(IpAdresa zdroj) {
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke && zaznam.out.jeStejnaAdresa(zdroj)) {
+                return zaznam.in;
+            }
+        }
+        return null;
     }
 
     /**
@@ -263,6 +294,10 @@ public class NATtabulka {
         }
         //-----------------------------------------------------------------------------
 
+        if (najdiStatickePravidloIn(zdroj) != null) {
+            return 0;
+        }
+
         // neni v access-listech
         NATAccessList.AccessList acc = lAccess.vratAccessListIP(zdroj);
         if (acc == null) {
@@ -300,9 +335,6 @@ public class NATtabulka {
             if (debug) {
                 pc.vypis("prichozi rozhrani '" + prichoziRozhrani.jmeno + "' je verejne, natuji; verejne je " + verejne.jmeno);
             }
-            if (debug) {
-                pc.vypis("mamOdnatovat vraci true");
-            }
             return true;
         }
         return false;
@@ -324,7 +356,7 @@ public class NATtabulka {
         IpAdresa ip = paket.zdroj;
         // nejdriv kontroluju, jestli uz to nahodou nema zaznam v NATtabulce
         for (NATzaznam zaznam : tabulka) { // porovnavam i podle portu (mohou byt NATy za sebou..)
-            if (zaznam.in.jeStejnaAdresa(ip) && zaznam.in.port == ip.port) {
+            if (zaznam.in.jeStejnaAdresaSPortem(ip)) {
                 return zaznam.out;
             }
         }
@@ -349,7 +381,7 @@ public class NATtabulka {
      */
     private IpAdresa odnatujZdrojovouIpAdresu(IpAdresa ip) {
         for (NATzaznam zaznam : tabulka) {
-            if (zaznam.out.jeStejnaAdresa(ip) && zaznam.out.port == ip.port) {
+            if (zaznam.out.jeStejnaAdresaSPortem(ip)) {
                 return zaznam.in;
             }
         }
@@ -369,15 +401,18 @@ public class NATtabulka {
     /**
      * Smaze vsechny staticke zaznamy, ktere maji odpovidajici in a out.
      * @return 0 - alespon 1 zaznam se smazal <br />
-     *         1 - nic se nesmazalo, pac nebyl nalezen odpovidajici zaznam
+     *         1 - nic se nesmazalo, pac nebyl nalezen odpovidajici zaznam (% Translation not found)
      */
     public int smazStatickyZaznam(IpAdresa in, IpAdresa out) {
 
         List<NATzaznam> smaznout = new ArrayList<NATzaznam>();
         for (NATzaznam zaznam : tabulka) {
-            if (zaznam.staticke && zaznam.in.jeStejnaAdresa(in) && zaznam.out.jeStejnaAdresa(out)) {
+            if (zaznam.staticke && in.jeStejnaAdresa(zaznam.in) && out.jeStejnaAdresa(zaznam.out)) {
                 smaznout.add(zaznam);
             }
+        }
+        if (smaznout.size() == 0) {
+            return 1;
         }
         for (NATzaznam z : smaznout) {
             tabulka.remove(z);
@@ -449,7 +484,7 @@ public class NATtabulka {
      * @param in zdrojova IP urcena pro preklad
      * @param out nova (prelozena) adresa
      * @return 0 - ok, zaznam uspesne pridan <br />
-     *         1 - chyba, in adresa tam uz je (% in already mapped (in -> out))
+     *         1 - chyba, in adresa tam uz je (% in already mapped (in -> out)) <br />
      *         2 - chyba, out adresa tam uz je (% similar static entry (in -> out) already exists)
      */
     public int pridejStatickePravidloCisco(IpAdresa in, IpAdresa out) {

@@ -194,6 +194,19 @@ public class IpAdresa {
     }
 
     /**
+     * Vrati true, kdyz je stejna adresa i port, na masce nezalezi.
+     * @param jina
+     * @return
+     */
+    public boolean jeStejnaAdresaSPortem(IpAdresa jina) {
+        if(jina==null) return false;
+        if (jeStejnaAdresa(jina) && this.port == jina.port) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Vrati true, kdyz IP patri do A tridy.
      * @return
      * @author haldyr

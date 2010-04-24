@@ -16,7 +16,6 @@ import pocitac.CiscoPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 import static prikazy.cisco.CiscoShow.Stav.*;
-import static datoveStruktury.CiscoStavy.*;
 
 /**
  * Trida pro zpracovani a obsluhu prikazu 'show'.
@@ -38,7 +37,7 @@ public class CiscoShow extends CiscoPrikaz {
         }
     }
 
-    enum Stav{
+    enum Stav {
         RUN,
         ROUTE,
         NAT,
@@ -60,11 +59,11 @@ public class CiscoShow extends CiscoPrikaz {
         if (dalsi.equals("?")) {
             String s = "";
             s += Main.Main.jmenoProgramu+": v opravdovem ciscu je tady holy seznam parametru " +
-                    "(tedy bez celeho prikazu jako zde!)\n\n";
+                    "(bez celeho prikazu jako zde!)\n\n";
             s += "  show ip route                   IP routing table\n";
             s += "  show ip nat translations        Translation entries\n";
-            if (stavCisco == ROOT) {
-                s += "  show running-config           Current operating configuration\n";
+            if (stavCisco == CiscoStavy.ROOT) {
+                s += "  show running-config             Current operating configuration\n";
             }
             s += "\n";
             kon.posliPoRadcich(s, 150);
@@ -72,7 +71,7 @@ public class CiscoShow extends CiscoPrikaz {
         }
 
         if (dalsi.startsWith("r")) {
-            if (stavCisco == USER) {
+            if (stavCisco == CiscoStavy.USER) {
                 invalidInputDetected();
                 return false;
             }
@@ -228,7 +227,7 @@ public class CiscoShow extends CiscoPrikaz {
 
         for (NATzaznam zaznam : pc.natTabulka.vratTabulku()) {
             if (zaznam.jeStaticke()) {
-                s += "ip nat inside source static "+zaznam.vratIn()+" "+zaznam.vratOut()+"\n";
+                s += "ip nat inside source static "+zaznam.vratIn().vypisAdresu()+" "+zaznam.vratOut().vypisAdresu()+"\n";
             }
         }
 

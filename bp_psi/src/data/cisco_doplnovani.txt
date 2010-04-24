@@ -13,3 +13,4 @@ ip nat inside source list pool overload
 prefix-length
 traceroute
 ping
+static
