@@ -10,6 +10,7 @@ import datoveStruktury.Paket;
 import java.util.List;
 import pocitac.*;
 import prikazy.AbstraktniPrikaz;
+import prikazy.AbstraktniTraceroute;
 import vyjimky.SpatnaAdresaException;
 
 /**
@@ -19,20 +20,7 @@ import vyjimky.SpatnaAdresaException;
  * jestli neco timeoutovalo.
  * @author neiss
  */
-public class LinuxTraceroute extends prikazy.AbstraktniPing{
-
-    IpAdresa cilAdr;
-    int navrKod=0;
-    int maxTtl=30; //to je to, co se vypisuje jako hops max
-    double interval=0.1; //interval mezi odesilanim v sekudach
-    /**
-     * Stav vykonavani prikazu:
-     * 0 - ceka se na pakety<br />
-     * 1 - vratil se paket od cilovyho pocitace - skoncit<br />
-     * 2 - byl timeout - vypisovat hvezdicky a skoncit<br />
-     * 3 - vratilo se host unreachable nebo net unreachable<br />
-     */
-    int stavKonani=0;
+public class LinuxTraceroute extends AbstraktniTraceroute {
 
     public LinuxTraceroute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
@@ -40,9 +28,10 @@ public class LinuxTraceroute extends prikazy.AbstraktniPing{
         vykonejPrikaz();
     }
 
-    private void parsujPrikaz(){
+    @Override
+    protected void parsujPrikaz(){
         try{
-            cilAdr=new IpAdresa(dalsiSlovo());
+            adr=new IpAdresa(dalsiSlovo());
         }catch(SpatnaAdresaException ex){
             navrKod=1;
             kon.posliRadek(Main.jmenoProgramu + ": traceroute: Chyba v syntaxi prikazu," +
@@ -59,9 +48,9 @@ public class LinuxTraceroute extends prikazy.AbstraktniPing{
          * Neodesilani zkusebniho paketu s icmp_seq -1. Je jen zkusebni, metoda odesliNovejPaket(...)
          * ho zablokuje a nikam se NEPOSILA ani nepocita.
          */
-        if (pc.posliIcmpRequest(cilAdr, -1, maxTtl, this)) {
+        if (pc.posliIcmpRequest(adr, -1, maxTtl, this)) {
             //paket pujde poslat - vypsani prvniho radku:
-            kon.posliRadek("traceroute to "+cilAdr.vypisAdresu()+" ("+cilAdr.vypisAdresu()+
+            kon.posliRadek("traceroute to "+adr.vypisAdresu()+" ("+adr.vypisAdresu()+
                     "), "+maxTtl+" hops max, 40 byte packets");
         } else {
             //paket nepujde poslat, vypise se hlaseni a program se ukonci
@@ -90,7 +79,7 @@ public class LinuxTraceroute extends prikazy.AbstraktniPing{
            //pak se posila novej paket
             int icmp_seq = (i + 1) % 65536; //zacina to od jednicky a po 65535 se jede znova od nuly
             int ttl = i + 1; //ttl se od jednicky postupne zvysuje
-            if (pc.posliIcmpRequest(cilAdr, icmp_seq, ttl, this)) {
+            if (pc.posliIcmpRequest(adr, icmp_seq, ttl, this)) {
                 //paket se odeslal
             } else {
                 //proste to necham timeoutovat
@@ -131,12 +120,5 @@ public class LinuxTraceroute extends prikazy.AbstraktniPing{
                     +")  "+zaokrouhli(p.cas)+" ms  "+zaokrouhli(p.cas*k1)+" ms  "+zaokrouhli(p.cas*k2)+" ms ");
         }
     }
-
-    private void dopisZbylyHvezdicky(int a){
-        for(int i=a;i<maxTtl;i++){
-            kon.posliRadek(zarovnej((i+1)+"", 2)+"  * * *");
-        }
-    }
-
 }
 

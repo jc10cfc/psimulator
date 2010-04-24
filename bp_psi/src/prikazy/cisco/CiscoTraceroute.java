@@ -9,40 +9,28 @@ import datoveStruktury.Paket;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
-import prikazy.AbstraktniPing;
 import prikazy.AbstraktniPrikaz;
+import prikazy.AbstraktniTraceroute;
 import static Main.Main.*;
 
 /**
- *
+ * Prikaz traceroute.
+ * Implementovana je pouze zakladni funkcnost 'traceroute IP'.
+ * Vsechny pakety, ktery mi zpatky dojdou pocitam za prijaty (prijate++), z toho pak pocitam,
+ * jestli neco timeoutovalo.
  * @author haldyr
  */
-public class CiscoTraceroute extends AbstraktniPing {
-
-    IpAdresa adr;
-    int navrKod = 0;
-    int maxTtl = 30; //to je to, co se vypisuje jako hops max
-    double interval = 0.1; //interval mezi odesilanim v sekudach
-    /**
-     * Stav vykonavani prikazu:
-     * 0 - ceka se na pakety<br />
-     * 1 - vratil se paket od cilovyho pocitace - skoncit<br />
-     * 2 - byl timeout - vypisovat hvezdicky a skoncit<br />
-     * 3 - vratilo se host unreachable nebo net unreachable<br />
-     */
-    int stavKonani = 0;
+public class CiscoTraceroute extends AbstraktniTraceroute {
 
     public CiscoTraceroute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
 
-        zpracujRadek();
-        if (navrKod == 0) {
-            vykonejPrikaz();
-        }
+        parsujPrikaz();
+        vykonejPrikaz();
     }
-    boolean debug = true;
 
-    protected void zpracujRadek() {
+    @Override
+    protected void parsujPrikaz() {
         String dalsi = dalsiSlovo();
         try {
             adr = new IpAdresa(dalsi);
@@ -58,6 +46,8 @@ public class CiscoTraceroute extends AbstraktniPing {
 
     @Override
     protected void vykonejPrikaz() {
+        if(navrKod!=0)return;
+        
         kon.posliPoRadcich("\n"
                 + "Type escape sequence to abort.\n"
                 + "Tracing the route to " + adr.vypisAdresu() + "\n\n", 250);
@@ -88,66 +78,48 @@ public class CiscoTraceroute extends AbstraktniPing {
                 //proste to necham timeoutovat
             }
             odeslane++;
-            if (i != maxTtl - 1) //cekani po zadany interval - naposled se neceka
-            {
+            if (i != maxTtl - 1) { //cekani po zadany interval - naposled se neceka
                 AbstraktniPrikaz.cekej((int) (interval * 1000));
             }
-
         }
-
     }
 
     @Override
     public void zpracujPaket(Paket p) {
-        double k1 = (Math.random() / 5) + 0.9; //vraci cisla mezi 0.9 a 1.1
-        double k2 = (Math.random() / 5) + 0.0; //vraci cisla mezi 0.9 a 1.1
         prijate++;
 
         kon.posli(zarovnejZLeva(prijate+"", 3)+" "+p.zdroj.vypisAdresu()+ " ");
 
         if (p.typ == 0) { //icmp reply - jsem v cili
             stavKonani = 1;
-            kon.posli(zaokrouhli(p.cas) + " msec " + zaokrouhli(p.cas * k1) + " msec " + zaokrouhli(p.cas * k2) + " msec");
+            kon.posli(vratCasyPaketu(p));
             
         } else if (p.typ == 3) {
             stavKonani = 3;
             if (p.kod == 0) {
-                kon.posliRadek(zarovnej(prijate + "", 2) + "  " + p.zdroj.vypisAdresu() + " (" + p.zdroj.vypisAdresu()
-                        + ")  " + zaokrouhli(p.cas) + " ms !N  " + zaokrouhli(p.cas * k1) + " ms !N  "
-                        + zaokrouhli(p.cas * k2) + " ms !N");
+                kon.posli("!N  *  !N");
             } else if (p.kod == 1) {
-                kon.posliRadek(zarovnej(prijate + "", 2) + "  " + p.zdroj.vypisAdresu() + " (" + p.zdroj.vypisAdresu()
-                        + ")  " + zaokrouhli(p.cas) + " ms !H  " + zaokrouhli(p.cas * k1) + " ms !H  "
-                        + zaokrouhli(p.cas * k2) + " ms !H");
+                kon.posli("!H  *  !H");
             }
         } else if (p.typ == 11) { //timeout - musim pokracovat
-            kon.posliRadek(zarovnej(prijate + "", 2) + "  " + p.zdroj.vypisAdresu() + " (" + p.zdroj.vypisAdresu()
-                    + ")  " + zaokrouhli(p.cas) + " ms  " + zaokrouhli(p.cas * k1) + " ms  " + zaokrouhli(p.cas * k2) + " ms ");
+            kon.posli(vratCasyPaketu(p));
         }
 
         kon.posli("\n");
     }
 
-    public double zaokrouhliNaCely(double cislo) {
-//        return cislo;
+    public long zaokrouhliNaCely(double cislo) {
         return Math.round(cislo);
     }
 
-    protected String zarovnejZLeva(String ret, int dylka) {
-        //if (ret.length() >= dylka) return ret;
-        int dorovnat = dylka - ret.length();
-        String s = "";
-        for(int i=0;i<dorovnat;i++){
-            s += " ";
-        }
-        return s+ret;
-
-
-    }
-
-    private void dopisZbylyHvezdicky(int a) {
-        for (int i = a; i < maxTtl; i++) {
-            kon.posliRadek(zarovnej((i + 1) + "", 2) + "  * * *");
-        }
+    /**
+     * Vrati casy paketu vhodne pro vypis do konzole.
+     * @param p
+     * @return
+     */
+    private String vratCasyPaketu(Paket p) {
+        double k1 = (Math.random() / 5) + 0.9; //vraci cisla mezi 0.9 a 1.1
+        double k2 = (Math.random() / 5) + 0.0; //vraci cisla mezi 0.9 a 1.1
+        return zaokrouhliNaCely(p.cas) + " msec " + zaokrouhliNaCely(p.cas * k1) + " msec " + zaokrouhliNaCely(p.cas * k2) + " msec";
     }
 }

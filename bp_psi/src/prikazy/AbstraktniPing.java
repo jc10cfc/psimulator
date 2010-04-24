@@ -1,6 +1,6 @@
 /*
  * UDELAT:
- * Spatne se pocita statistika - % paket loss
+ * Spatne se pocita statistika - % paket loss HOTOVO
  */
 package prikazy;
 
