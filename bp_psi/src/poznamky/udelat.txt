@@ -1,13 +1,23 @@
 zbyva:
 SNAT
-windows verze
+windows verze - cygwin
 testovani
 skript pro spousteni - kvuli doplnovani
-reakce na signaly Ctrl+C, Ctrl+Z (cisco)
+rozstipat SAXHandler
+
+
+kubalik:
+udelat help
+preklopit do Aj
+detekce fungujicich prikazu na realnem ciscu u me neprochazenjicich?
+port parametrem
+\r\n
+nacteni z konfiguraku bez dat (jen vytvorit PC+rozhrani)
 
 
 haldyr:
-prikaz pro ovladani cisco tabulky prikazu
+clear ip nat translation
+clear ip route *
  - overit, zda kdyz zmenim IP na rozhrani, jestli se smazou vsechny routy na toto rozhrani!
 prikaz ?
 

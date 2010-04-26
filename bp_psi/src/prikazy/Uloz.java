@@ -292,8 +292,6 @@ public class Uloz extends AbstraktniPrikaz {
                     + "<!DOCTYPE konfigurak SYSTEM \"psi.dtd\">\n\n"
                     + "<konfigurak>\n");
 
-            zapis(vratElement("port", pocitace.get(0).komunikace.getPort() + "") + "\n");
-
             for (AbstraktniPocitac pocitac : pocitace) {
                 ulozPC(pocitac);
             }

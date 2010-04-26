@@ -15,8 +15,11 @@ import pocitac.Konsole;
  */
 public class CiscoHelp extends CiscoPrikaz {
 
-    public CiscoHelp(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    boolean english;
+
+    public CiscoHelp(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean english) {
         super(pc, kon, slova);
+        this.english = english;
         vykonejPrikaz();
     }
 
@@ -28,15 +31,29 @@ public class CiscoHelp extends CiscoPrikaz {
     @Override
     protected void vykonejPrikaz() {
         String s ="";
-        s += "Tento prikaz na realnem cisco stroji neni. \nZde je pouzit pouze pro napovedu, co je v tomto systemu " +
+
+        if (english == false) {
+            s += "Tento prikaz na realnem cisco stroji neni. \nZde je pouzit pouze pro napovedu, co je v tomto systemu " +
                 "implementovano. \nTato implementace ma nekolik prikazu navic oproti realnemu ciscu:\n" +
                 " help - pro vypis teto napovedy\n" +
                 " kill - pro opusteni konzole z jakehokoliv stavu cisca\n" +
-                " save/uloz - pro ulozeni aktualni konfigurace vsech pocitacu do XML konfiguraku\n\n" +
-                
-                "Celkem funguji tyto prikazy:\n" +
-                
-                "\nuzivatelsky mod\n" +
+                " save/uloz - pro ulozeni aktualni konfigurace vsech pocitacu do XML konfiguraku, " +
+                "bez parametru se to ulozi do " +
+                Main.Main.konfigurak+"\n\n" +
+
+                "Celkem funguji tyto prikazy:\n";
+        } else {
+            s += "There is no such command in real cisco. \n" +
+                    "It is used only for a hint. This implementation has more commands then real cisco:\n" +
+                    " help_en - writes this hint\n" +
+                    " kill - for leaving console from any state of cisco\n" +
+                    " save - for saving current configuration of all computers to XML file, " +
+                    "without paramater it saves to "+Main.Main.konfigurak+"\n\n" +
+
+                    "These commands are implemented:\n";
+        }
+   
+        s +=    "\nuser mode\n" +
                 "  show ip nat translations\n"+
                 "  show ip route\n" +
                 "  traceroute\n" +
@@ -44,7 +61,7 @@ public class CiscoHelp extends CiscoPrikaz {
                 "  enable\n" +
                 "  exit\n" +
 
-                "\nprivilegovany mod\n" +
+                "\nprivilege mode\n" +
                 "  configure terminal\n" +
                 "  disable\n" +
                 "  show ip nat translations\n"+
@@ -55,23 +72,21 @@ public class CiscoHelp extends CiscoPrikaz {
                 "  ping\n" +
                 "  exit\n" +
 
-                "\nkonfiguracni mod\n" +
-                "  ip route\n" +
-                "  ip nat pool\n" +
-                "  ip nat inside source list\n" +
-                "  ip nat inside source list static\n" +
+                "\nconfigure mode\n" +
+                "  (no) ip route\n" +
+                "  (no) ip nat pool\n" +
+                "  (no) ip nat inside source list\n" +
+                "  (no) ip nat inside source list static\n" +
                 "  interface\n" +
                 "  end\n" +
                 "  exit\n" +
                 
-                "\nnastavovani rozhrani mod\n" +
-                "  ip address\n" +
+                "\nconfigure interface mode\n" +
+                "  (no) ip address\n" +
                 "  shutdown\n" +
                 "  end\n" +
-                "  exit\n\n\n" +
-                
-
-                "k nastavovacim prikazum je zde moznost negace pres prikaz 'no'\n\n";
+                "  exit\n\n";
+                        
         kon.posliPoRadcich(s, 10);
     }
 

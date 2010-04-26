@@ -3,6 +3,8 @@
  */
 package Main;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -13,8 +15,9 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class Main {
 
-    public static String jmenoProgramu="psi simulator";
-
+    public static String jmenoProgramu = "psi simulator";
+    static int port = 3567;
+    static boolean bezNastaveni = false;
     /**
      * Object vsechno je refence na seznam vsech pocitacu, ktere se nacetly z konfiguraku.
      */
@@ -28,11 +31,11 @@ public class Main {
      * Vrati List vytvorenych pocitacu.
      * @return
      */
-    public static Object nacti(String doc) {
+    public static Object nacti() {
 
         // Cesta ke zdrojovému XML dokumentu
 
-        final String sourcePath = doc;
+        final String sourcePath = konfigurak;
 
         Object o = null;
 
@@ -42,14 +45,14 @@ public class Main {
             XMLReader parser = XMLReaderFactory.createXMLReader();
 
             // Vytvoříme vlastní content handler.
-            SAXHandler sax = new SAXHandler();
+            SAXHandler sax = new SAXHandler(port, bezNastaveni);
 
             // Vytvoříme vstupní proud XML dat.
             InputSource source = new InputSource(sourcePath);
 
             // Nastavíme náš vlastní content handler pro obsluhu SAX událostí.
             parser.setContentHandler(sax);
-
+            int i = 0;
             // Zpracujeme vstupní proud XML dat.
             parser.parse(source);
             o = sax.vratNastaveni();
@@ -65,19 +68,52 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        if (args.length >= 1) {
-            konfigurak = (String)args[0];
-        } else {
-//            konfigurak = "psi.xml";
-//            konfigurak = "laborka.xml";
-            konfigurak = "laborka_tr.xml";
-        }
-        vsechno = nacti(konfigurak);
+
+        parsujParametry(args);
+        vsechno = nacti();
 
         if (vsechno == null) {
             System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");
             System.exit(131);
+        }
+    }
+
+    /**
+     * Zpracuje parametry pri spusteni serveru.
+     * @param args
+     */
+    private static void parsujParametry(String[] args) {
+
+        List<String> param = new ArrayList<String>();
+        for (String s : args) {
+            if (s.equals("-n")) {
+                bezNastaveni = true;
+                continue;
+            }
+            param.add(s);
+        }
+        
+        if (param.size() >= 1) {
+            konfigurak = param.get(0);
+            if (param.size() >= 2) {
+                try {
+                    port = Integer.parseInt(param.get(1));
+                } catch (NumberFormatException e) {
+                    System.err.println(param.get(1) + " neni platne cislo portu.\nUkoncuji..");
+                    System.exit(2);
+                }
+            }
+        } else {
+            //TODO: pak odkomentovat
+//            System.err.println("Parametrem urcete konfiguracni soubor.\nUkoncuji..");
+//            System.exit(3);
+        }
+
+        //TODO: pak smazat
+        if (param.size() == 0) {
+//            konfigurak = "psi.xml";
+//            konfigurak = "laborka.xml";
+            konfigurak = "laborka_tr.xml";
         }
     }
 }

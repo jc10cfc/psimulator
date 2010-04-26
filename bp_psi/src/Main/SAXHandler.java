@@ -34,23 +34,37 @@ public class SAXHandler implements ContentHandler {
     String tabs = "";
     String namespaces = "";
     String jmenoElementu = "";
-    List<AbstraktniPocitac> hotovePocitace = new ArrayList<AbstraktniPocitac>(); // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
-    String[] rozhrani = new String[7]; // jmeno, ip mac, maska, pripojenoK, nahozene, nat
-    String[] zaznam = new String[4]; //adresat, maskaAdresata, brana, rozhrani
-    String[] accessList = new String[3]; // cislo, ipA, ipAWildcard
-    String[] pool = new String[4]; // pJmeno, ip_start, ip_konec, prefix
-    String[] poolAccess = new String[3]; // accessCislo, poolJmeno, overload
-    static public int port = -1;
-    List<List> pripojeno = new ArrayList<List>();
-    List<PocitacBuilder> seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
+    List<AbstraktniPocitac> hotovePocitace; // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
+    String[] rozhrani; // jmeno, ip, mac, maska, pripojenoK, nahozene, nat
+    String[] zaznam; //adresat, maskaAdresata, brana, rozhrani
+    String[] accessList; // cislo, ipA, ipAWildcard
+    String[] pool; // pJmeno, ip_start, ip_konec, prefix
+    String[] poolAccess; // accessCislo, poolJmeno, overload
+    public int port = -1;
+    List<List> pripojeno;
+    List<PocitacBuilder> seznamPocitacBuilder;
     private int aktualniPC = -1;
+    boolean bezNastaveni = false;
     boolean vypis = false; // pro vypis kostry xml dokumentu
     boolean vypis2 = false; // vypis pocitacu
 
+    public SAXHandler(int port, boolean bezNastaveni) {
+        hotovePocitace = new ArrayList<AbstraktniPocitac>();
+        rozhrani = new String[7];
+        zaznam = new String[4];
+        accessList = new String[3];
+        pool = new String[4];
+        poolAccess = new String[3];
+        pripojeno = new ArrayList<List>();
+        seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
+        this.port = port;
+        this.bezNastaveni = bezNastaveni;
+    }
     /**
      * Vypis stacktrace pri vyjimkach.
      */
     boolean debug = true;
+
     /**
      * Nastaví locator
      */
@@ -73,7 +87,7 @@ public class SAXHandler implements ContentHandler {
      * @param s
      * @return
      */
-    private boolean jeTam(String[] pole, String s) {
+    private boolean jeVPoli(String[] pole, String s) {
         for (String p : pole) {
             if (p.equals(s)) {
                 return true;
@@ -89,7 +103,7 @@ public class SAXHandler implements ContentHandler {
      */
     private boolean patriDoRozhrani(String localName) {
         String[] pole = {"jmeno", "ip", "mac", "pripojenoK", "maska", "nahozene", "nat"};
-        return jeTam(pole, localName);
+        return jeVPoli(pole, localName);
     }
 
     /**
@@ -99,7 +113,7 @@ public class SAXHandler implements ContentHandler {
      */
     private boolean patriDoZaznamu(String localName) {
         String[] pole = {"adresat", "maskaAdresata", "brana", "rozhraniKam"};
-        return jeTam(pole, localName);
+        return jeVPoli(pole, localName);
     }
 
     /**
@@ -109,7 +123,7 @@ public class SAXHandler implements ContentHandler {
      */
     private boolean patriDoNatPoolu(String localName) {
         String[] pole = {"pJmeno", "ip_start", "ip_konec", "prefix"};
-        return jeTam(pole, localName);
+        return jeVPoli(pole, localName);
     }
 
     /**
@@ -119,7 +133,7 @@ public class SAXHandler implements ContentHandler {
      */
     private boolean patriDoNatPrirazeni(String localName) {
         String[] pole = {"accessCislo", "poolJmeno", "overload"};
-        return jeTam(pole, localName);
+        return jeVPoli(pole, localName);
     }
 
     /**
@@ -129,7 +143,7 @@ public class SAXHandler implements ContentHandler {
      */
     private boolean patriDoNatAccessListu(String localName) {
         String[] pole = {"cislo", "ipA", "ipAWildcard"};
-        return jeTam(pole, localName);
+        return jeVPoli(pole, localName);
     }
 
     /**
@@ -240,6 +254,9 @@ public class SAXHandler implements ContentHandler {
         }
     }
 
+    /**
+     * Vymaze nastaveni poli urcenych pro ulozeni NATu. (nemaze to nasteveni NATu rozhrani)
+     */
     private void vymazVsechnyNATPole() {
         vymazPole(accessList);
         vymazPole(pool);
@@ -265,6 +282,9 @@ public class SAXHandler implements ContentHandler {
      *         false - aspon 1 prvek neni prazdny retezec nebo pokud je pole null
      */
     private boolean jePolePlne(String[] pole) {
+        if (pole == null) {
+            return false;
+        }
         for (int i = 0; i < pole.length; i++) {
             if (pole[i].equals("")) {
                 return false;
@@ -281,7 +301,11 @@ public class SAXHandler implements ContentHandler {
     private String vypisPole(String[] pole) {
         String s = "";
         for (int i = 0; i < pole.length; i++) {
-            s += " " + pole[i];
+            if (i == 0) {
+                s += pole[i];
+            } else {
+                s += "," + pole[i];
+            }
         }
         return s;
     }
@@ -368,25 +392,25 @@ public class SAXHandler implements ContentHandler {
             if (jePolePlne(pool)) {
                 dejOdkazNaAktualniPC().pool.add(vratKopiiPole(pool));
             } else {
-                System.out.println("Neni uplny zaznam, preskakuji: "+vypisPole(pool));
+                System.err.println("Neni uplny zaznam, preskakuji: " + vypisPole(pool));
             }
-            
+
         }
 
         if (localName.equals("prirazeni")) {
             if (jePolePlne(poolAccess)) {
                 dejOdkazNaAktualniPC().poolAccess.add(vratKopiiPole(poolAccess));
             } else {
-                System.out.println("Neni uplny zaznam, preskakuji: "+vypisPole(poolAccess));
+                System.err.println("Neni uplny zaznam, preskakuji: " + vypisPole(poolAccess));
             }
-            
+
         }
 
         if (localName.equals("access-list")) {
             if (jePolePlne(accessList)) {
                 dejOdkazNaAktualniPC().accessList.add(vratKopiiPole(accessList));
             } else {
-                System.out.println("Neni uplny zaznam, preskakuji: "+vypisPole(accessList));
+                System.err.println("Neni uplny zaznam, preskakuji: " + vypisPole(accessList));
             }
 
         }
@@ -413,31 +437,25 @@ public class SAXHandler implements ContentHandler {
             System.out.println(tabs + s);
         }
 
-        if (jmenoElementu.equals("port")) {
-            try {
-                port = Integer.valueOf(s);
-            } catch (Exception e) {
-                if (debug) e.printStackTrace();
-                System.out.println("Specifikace portu musi byt ciselna.\nChyba: " + s);
-                System.exit(1);
-            }
-            return;
-        }
-
         if (patriDoZaznamu(jmenoElementu)) {
             zaznam[dejIndexVZaznamu(jmenoElementu)] = s;
+            return;
         }
         if (patriDoRozhrani(jmenoElementu)) {
             rozhrani[dejIndexVRozhrani(jmenoElementu)] = s;
+            return;
         }
         if (patriDoNatAccessListu(jmenoElementu)) {
             accessList[dejIndexVNatAccessListu(jmenoElementu)] = s;
+            return;
         }
         if (patriDoNatPoolu(jmenoElementu)) {
             pool[dejIndexVNatPoolu(jmenoElementu)] = s;
+            return;
         }
         if (patriDoNatPrirazeni(jmenoElementu)) {
             poolAccess[dejIndexVNatPrirazeni(jmenoElementu)] = s;
+            return;
         }
 
         if (jmenoElementu.equals("ip_forward")) {
@@ -446,7 +464,8 @@ public class SAXHandler implements ContentHandler {
             } else if (s.equals("false") || s.equals("0")) {
                 dejOdkazNaAktualniPC().ip_forward = false;
             } else {
-                System.out.println("ip_forward musi byt bud true/false nebo 1/0, ne todlencto: " + s);
+                System.err.println("ip_forward musi byt bud true/false nebo 1/0, ne todlencto: " + s);
+
             }
         }
     }
@@ -506,8 +525,11 @@ public class SAXHandler implements ContentHandler {
 
 
         for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
-            AbstraktniPocitac pocitac;
+            if (bezNastaveni) {
+                vymazNastaveni(pcbuilder);
+            }
 
+            AbstraktniPocitac pocitac;
             if (pcbuilder.typ.equals("cisco")) {
                 pocitac = new CiscoPocitac(pcbuilder.jmeno, port++);
             } else if (pcbuilder.typ.equals("linux")) {
@@ -523,222 +545,17 @@ public class SAXHandler implements ContentHandler {
                 System.out.println(" typ:   " + pcbuilder.typ + "\n");
             }
 
-            for (String[] pul : pcbuilder.pool) {
-
-                IpAdresa ip_start = null;
-                IpAdresa ip_konec = null;
-
-                try {
-                    ip_start = new IpAdresa(pul[dejIndexVNatPoolu("ip_start")]);
-                } catch (Exception e) {
-                    if (debug) e.printStackTrace();
-                    System.err.println("Prvni IP je spatna: "+pul[dejIndexVNatPoolu("ip_start")]);
-                }
-
-                try {
-                    ip_konec = new IpAdresa(pul[dejIndexVNatPoolu("ip_konec")]);
-                } catch (Exception e) {
-                    if (debug) e.printStackTrace();
-                    System.err.println("Druha IP je spatna: "+pul[dejIndexVNatPoolu("ip_konec")]);
-                }
-
-                String pJmeno = pul[dejIndexVNatPoolu("pJmeno")];
-                String cislo = pul[dejIndexVNatPoolu("prefix")];
-
-                int i = -1;
-                try {
-                    i = Integer.parseInt(cislo);
-                } catch (NumberFormatException e) {
-                    if (debug) e.printStackTrace();
-                    System.err.println("Neni cislo: "+cislo);
-                }
-
-                try {
-                    int n = pocitac.natTabulka.lPool.pridejPool(ip_start, ip_konec, i, pJmeno);
-                    if (n != 0) {
-                        System.err.println("Pool je spatne zadan: " + vypisPole(pul));
-                    }
-                } catch (Exception e) {
-                    if (debug) e.printStackTrace();
-                    System.err.println("Pool je spatne zadan: " + vypisPole(pul)+ ", preskakuji.. ");
-                }
-            }
-
-            for (String[] access : pcbuilder.accessList) {
-                try {
-                    String jmeno = access[dejIndexVNatAccessListu("cislo")];
-                    int cislo = Integer.parseInt(jmeno);
-
-                    IpAdresa ip = new IpAdresa(access[dejIndexVNatAccessListu("ipA")]);
-                    IpAdresa wccc = new IpAdresa(access[dejIndexVNatAccessListu("ipAWildcard")]);
-                    String maska = IpAdresa.vratMaskuZWildCard(wccc);
-                    ip.nastavMasku(maska);
-
-                    pocitac.natTabulka.lAccess.pridejAccessList(ip, cislo);
-                } catch (Exception e) {
-                    if (debug) e.printStackTrace();
-                    System.err.println("access-list je spatne zadan: " + vypisPole(accessList) + ", preskakuji.. ");
-                }
-            }
-
-            for (String[] poolAcc : pcbuilder.poolAccess) {
-                try {
-                    String acc = poolAcc[dejIndexVNatPrirazeni("accessCislo")];
-                    int cislo = Integer.parseInt(acc);
-                    String jmeno = poolAcc[dejIndexVNatPrirazeni("poolJmeno")];
-
-                    String overload = poolAcc[dejIndexVNatPrirazeni("overload")];
-
-                    boolean ol;
-                    if (overload.equals("true") || overload.equals("1")) {
-                        ol = true;
-                        pocitac.natTabulka.lPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
-                    } else if (overload.equals("false") || overload.equals("0")) {
-                        ol = false;
-                        pocitac.natTabulka.lPoolAccess.pridejPoolAccess(cislo, jmeno, ol);
-                    } else {
-                        System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
-                    }
-                } catch (Exception e) {
-                    if (debug) e.printStackTrace();
-                    System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
-                }
-
-            }
-
-            for (String[] iface : pcbuilder.rozhrani) { // prochazim a pridavam rozhrani k PC
-
-                if (vypis2) {
-                    System.out.println("  jmeno: " + iface[dejIndexVRozhrani("jmeno")]);
-                    System.out.println("  ip:    " + iface[dejIndexVRozhrani("ip")]);
-                    System.out.println("  maska: " + iface[dejIndexVRozhrani("maska")]);
-                    System.out.println("  mac:   " + iface[dejIndexVRozhrani("mac")]);
-                    System.out.println("  conn:  " + iface[dejIndexVRozhrani("pripojenoK")]);
-                    System.out.println("  nahoze:" + iface[dejIndexVRozhrani("nahozene")]);
-                    System.out.println("");
-                }
-
-                SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndexVRozhrani("jmeno")], pocitac, iface[dejIndexVRozhrani("mac")]);
-
-                // osetreni prazdne IP nebo masky
-                // kdyz chybi maska, tak se dopocita v kontruktou IpAdresy, kdyz chybi IP, tak se maska neresi
-                if (iface[dejIndexVRozhrani("maska")].equals("") && !iface[dejIndexVRozhrani("ip")].equals("")) { // chybi maska, ale IP je, pak se maska dopocita
-                    IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")]);
-                    sr.seznamAdres.add(ip);
-                } else if (!iface[dejIndexVRozhrani("ip")].equals("") && !iface[dejIndexVRozhrani("maska")].equals("")) { // kdyz je tu oboje
-                    IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")], iface[dejIndexVRozhrani("maska")]);
-                    sr.seznamAdres.add(ip);
-                } else if (!iface[dejIndexVRozhrani("maska")].equals("") && iface[dejIndexVRozhrani("ip")].equals("")) { // vypisem, ze preskakujem
-                    System.err.println("Preskakuji masku z duvodu nepritomnosti IP adresy..");
-                }
-
-                if (iface[dejIndexVRozhrani("nahozene")].equals("1") || iface[dejIndexVRozhrani("nahozene")].equals("true")) {
-                    sr.nastavRozhrani(true);
-                } else if (iface[dejIndexVRozhrani("nahozene")].equals("0") || iface[dejIndexVRozhrani("nahozene")].equals("false")) {
-                    sr.nastavRozhrani(false);
-                }
-
-                pocitac.pridejRozhrani(sr);
-
-                // nastaveni inside/outside rozhrani
-                if (iface[dejIndexVRozhrani("nat")].equals("soukrome")) {
-                    pocitac.natTabulka.pridejRozhraniInside(sr);
-                } else if (iface[dejIndexVRozhrani("nat")].equals("verejne")) {
-                    pocitac.natTabulka.nastavRozhraniOutside(sr);
-                } else if (iface[dejIndexVRozhrani("nat")].equals("")) {
-                    //ok
-                } else {
-                    System.out.println("Neznama volba " + iface[dejIndexVRozhrani("nat")] + " byla preskocena. "
-                            + "Povolene jsou jen soukrome/verejna");
-                }
-
-                if (iface[dejIndexVRozhrani("pripojenoK")].contains(":")) {
-                    List prip = new ArrayList<String>();
-                    prip.add(pocitac.jmeno);
-                    prip.add(sr.jmeno);
-
-                    String[] pole = iface[dejIndexVRozhrani("pripojenoK")].split(":");
-                    if (pole.length == 2) {
-                        prip.add(pole[0]);
-                        prip.add(pole[1]);
-                        pripojeno.add(prip);
-                    } else {
-                        vypisChybuPriZpracovaniPripojenoKXML(iface);
-                    }
-                } else if (!iface[dejIndexVRozhrani("pripojenoK")].equals("")) {
-                    vypisChybuPriZpracovaniPripojenoKXML(iface);
-                }
-            }
+            zpracujPooly(pcbuilder, pocitac);
+            zpracujAccessListy(pcbuilder, pocitac);
+            zpracujPoolAccess(pcbuilder, pocitac);
+            zpracujRozhrani(pcbuilder, pocitac);
 
             if (pocitac instanceof CiscoPocitac) {
                 ((CiscoPocitac) pocitac).getWrapper().update();
             }
 
-            for (String[] mujzaznam : pcbuilder.routovaciTabulka) { // tady resim routovaci tabulku
+            zpracujRoutovaciTabulku(pcbuilder, pocitac);
 
-                if (vypis2) {
-                    System.out.print(" ");
-                    for (String s : mujzaznam) {
-                        System.out.print(s + "\t");
-                    }
-                    System.out.println("");
-                }
-
-                IpAdresa adresat = new IpAdresa(mujzaznam[dejIndexVZaznamu("adresat")], mujzaznam[dejIndexVZaznamu("maskaAdresata")]);
-                SitoveRozhrani iface = null;
-                String jmeno = mujzaznam[dejIndexVZaznamu("rozhraniKam")];
-                for (SitoveRozhrani sr : pocitac.rozhrani) {
-                    if (sr.jmeno.equals(jmeno)) {
-                        iface = sr;
-                    }
-                }
-                if (pocitac instanceof LinuxPocitac) {
-                    if (iface == null) {
-                        System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno
-                                + ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
-                        continue;
-                    }
-                }
-
-                if (pocitac instanceof CiscoPocitac) {
-                    if (!adresat.jeCislemSite()) {
-                        throw new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresuSMaskou() + " neni cislem site!");
-                    }
-                }
-
-                if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
-                    System.err.println("IpAdresa " + adresat.vypisAdresuSMaskou() + " je ze zakazaneho rozsahu 224.* - 255.*, preskakuji..");
-                    continue;
-                }
-
-                if (mujzaznam[dejIndexVZaznamu("brana")].equals("")
-                        || mujzaznam[dejIndexVZaznamu("brana")].equals("null")) { // kdyz to je na rozhrani
-
-                    if (pocitac instanceof CiscoPocitac) {
-                        if (iface == null) {
-                            System.err.println("Nepodarilo se najit rozhrani s nazvem " + jmeno
-                                    + ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
-                            continue;
-                        }
-                        ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, iface);
-                    } else {
-                        pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, null, iface);
-                    }
-
-                } else { // vcetne brany
-                    IpAdresa brana = new IpAdresa(mujzaznam[dejIndexVZaznamu("brana")]);
-
-                    if (pocitac instanceof CiscoPocitac) {
-                        if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
-                            System.err.println("IpAdresa " + brana.vypisAdresuSMaskou() + " je ze zakazaneho rozsahu 224.* - 255.*, preskakuji..");
-                            continue;
-                        }
-                        ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, brana);
-                    } else {
-                        pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana, iface);
-                    }
-                }
-            }
             if (pocitac instanceof LinuxPocitac) {
                 if (pocitac.natTabulka.lzePrelozit(new IpAdresa("1.2.3.4"))) {
                     pocitac.natTabulka.nastavZKonfigurakuLinuxBooleanTrue();
@@ -822,5 +639,256 @@ public class SAXHandler implements ContentHandler {
 //        }
 
         return hotovePocitace;
+    }
+
+    /**
+     * Kdyz se maji nacitat pouze prazdne pocitace s rozhrani, tak vsechno efektivne nactu a pak zase smazu. uf.
+     * @param pcbuilder
+     */
+    private void vymazNastaveni(PocitacBuilder pcbuilder) {
+        pcbuilder.accessList.clear();
+        pcbuilder.pool.clear();
+        pcbuilder.poolAccess.clear();
+        pcbuilder.routovaciTabulka.clear();
+        for (String[] pole : pcbuilder.rozhrani) {
+            pole[1] = ""; // ip
+            pole[2] = ""; // maska
+            pole[5] = ""; // nahozenost
+            pole[6] = ""; // NAT
+        }
+    }
+
+    private void zpracujPooly(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        for (String[] pul : pcbuilder.pool) {
+
+            IpAdresa ip_start = null;
+            IpAdresa ip_konec = null;
+
+            try {
+                ip_start = new IpAdresa(pul[dejIndexVNatPoolu("ip_start")]);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+                System.err.println("Prvni IP je spatna: " + pul[dejIndexVNatPoolu("ip_start")]);
+            }
+
+            try {
+                ip_konec = new IpAdresa(pul[dejIndexVNatPoolu("ip_konec")]);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+                System.err.println("Druha IP je spatna: " + pul[dejIndexVNatPoolu("ip_konec")]);
+            }
+
+            String pJmeno = pul[dejIndexVNatPoolu("pJmeno")];
+            String cislo = pul[dejIndexVNatPoolu("prefix")];
+
+            int i = -1;
+            try {
+                i = Integer.parseInt(cislo);
+            } catch (NumberFormatException e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+                System.err.println("Neni cislo: " + cislo);
+            }
+
+            try {
+                int n = pocitac.natTabulka.lPool.pridejPool(ip_start, ip_konec, i, pJmeno);
+                if (n != 0) {
+                    System.err.println("Pool je spatne zadan: " + vypisPole(pul));
+                }
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+                System.err.println("Pool je spatne zadan: " + vypisPole(pul) + ", preskakuji.. ");
+            }
+        }
+    }
+
+    private void zpracujAccessListy(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        for (String[] access : pcbuilder.accessList) {
+            try {
+                String jmeno = access[dejIndexVNatAccessListu("cislo")];
+                int cislo = Integer.parseInt(jmeno);
+
+                IpAdresa ip = new IpAdresa(access[dejIndexVNatAccessListu("ipA")]);
+                IpAdresa wccc = new IpAdresa(access[dejIndexVNatAccessListu("ipAWildcard")]);
+                String maska = IpAdresa.vratMaskuZWildCard(wccc);
+                ip.nastavMasku(maska);
+
+                pocitac.natTabulka.lAccess.pridejAccessList(ip, cislo);
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+                System.err.println("access-list je spatne zadan: " + vypisPole(accessList) + ", preskakuji.. ");
+            }
+        }
+    }
+
+    private void zpracujPoolAccess(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        for (String[] poolAcc : pcbuilder.poolAccess) {
+            try {
+                String acc = poolAcc[dejIndexVNatPrirazeni("accessCislo")];
+                int cislo = Integer.parseInt(acc);
+                String jmeno = poolAcc[dejIndexVNatPrirazeni("poolJmeno")];
+
+                String overload = poolAcc[dejIndexVNatPrirazeni("overload")];
+
+                boolean ovrld;
+                if (overload.equals("true") || overload.equals("1")) {
+                    ovrld = true;
+                    pocitac.natTabulka.lPoolAccess.pridejPoolAccess(cislo, jmeno, ovrld);
+                } else if (overload.equals("false") || overload.equals("0")) {
+                    ovrld = false;
+                    pocitac.natTabulka.lPoolAccess.pridejPoolAccess(cislo, jmeno, ovrld);
+                } else {
+                    System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
+                }
+            } catch (Exception e) {
+                if (debug) {
+                    e.printStackTrace();
+                }
+                System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAccess) + ", preskakuji.. ");
+            }
+        }
+    }
+
+    private void zpracujRozhrani(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        for (String[] iface : pcbuilder.rozhrani) { // prochazim a pridavam rozhrani k PC
+
+            if (vypis2) {
+                System.out.println("  jmeno: " + iface[dejIndexVRozhrani("jmeno")]);
+                System.out.println("  ip:    " + iface[dejIndexVRozhrani("ip")]);
+                System.out.println("  maska: " + iface[dejIndexVRozhrani("maska")]);
+                System.out.println("  mac:   " + iface[dejIndexVRozhrani("mac")]);
+                System.out.println("  conn:  " + iface[dejIndexVRozhrani("pripojenoK")]);
+                System.out.println("  nahoze:" + iface[dejIndexVRozhrani("nahozene")]);
+                System.out.println("");
+            }
+
+            SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndexVRozhrani("jmeno")], pocitac, iface[dejIndexVRozhrani("mac")]);
+
+            // osetreni prazdne IP nebo masky
+            // kdyz chybi maska, tak se dopocita v kontruktou IpAdresy, kdyz chybi IP, tak se maska neresi
+            if (iface[dejIndexVRozhrani("maska")].equals("") && !iface[dejIndexVRozhrani("ip")].equals("")) { // chybi maska, ale IP je, pak se maska dopocita
+                IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")]);
+                sr.seznamAdres.add(ip);
+            } else if (!iface[dejIndexVRozhrani("ip")].equals("") && !iface[dejIndexVRozhrani("maska")].equals("")) { // kdyz je tu oboje
+                IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")], iface[dejIndexVRozhrani("maska")]);
+                sr.seznamAdres.add(ip);
+            } else if (!iface[dejIndexVRozhrani("maska")].equals("") && iface[dejIndexVRozhrani("ip")].equals("")) { // vypisem, ze preskakujem
+                System.err.println("Preskakuji masku z duvodu nepritomnosti IP adresy..");
+            }
+
+            if (iface[dejIndexVRozhrani("nahozene")].equals("1") || iface[dejIndexVRozhrani("nahozene")].equals("true")) {
+                sr.nastavRozhrani(true);
+            } else if (iface[dejIndexVRozhrani("nahozene")].equals("0") || iface[dejIndexVRozhrani("nahozene")].equals("false")) {
+                sr.nastavRozhrani(false);
+            }
+
+            pocitac.pridejRozhrani(sr);
+
+            // nastaveni inside/outside rozhrani
+            if (iface[dejIndexVRozhrani("nat")].equals("soukrome")) {
+                pocitac.natTabulka.pridejRozhraniInside(sr);
+            } else if (iface[dejIndexVRozhrani("nat")].equals("verejne")) {
+                pocitac.natTabulka.nastavRozhraniOutside(sr);
+            } else if (iface[dejIndexVRozhrani("nat")].equals("")) {
+                //ok
+            } else {
+                System.out.println("Neznama volba " + iface[dejIndexVRozhrani("nat")] + " byla preskocena. "
+                        + "Povolene jsou jen soukrome/verejna");
+            }
+
+            if (iface[dejIndexVRozhrani("pripojenoK")].contains(":")) {
+                List prip = new ArrayList<String>();
+                prip.add(pocitac.jmeno);
+                prip.add(sr.jmeno);
+
+                String[] pole = iface[dejIndexVRozhrani("pripojenoK")].split(":");
+                if (pole.length == 2) {
+                    prip.add(pole[0]);
+                    prip.add(pole[1]);
+                    pripojeno.add(prip);
+                } else {
+                    vypisChybuPriZpracovaniPripojenoKXML(iface);
+                }
+            } else if (!iface[dejIndexVRozhrani("pripojenoK")].equals("")) {
+                vypisChybuPriZpracovaniPripojenoKXML(iface);
+            }
+        }
+    }
+
+    private void zpracujRoutovaciTabulku(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        for (String[] mujzaznam : pcbuilder.routovaciTabulka) { // tady resim routovaci tabulku
+
+            if (vypis2) {
+                System.out.print(" ");
+                for (String s : mujzaznam) {
+                    System.out.print(s + "\t");
+                }
+                System.out.println("");
+            }
+
+            IpAdresa adresat = new IpAdresa(mujzaznam[dejIndexVZaznamu("adresat")], mujzaznam[dejIndexVZaznamu("maskaAdresata")]);
+            SitoveRozhrani iface = null;
+            String jmeno = mujzaznam[dejIndexVZaznamu("rozhraniKam")];
+            for (SitoveRozhrani sr : pocitac.rozhrani) {
+                if (sr.jmeno.equals(jmeno)) {
+                    iface = sr;
+                }
+            }
+            if (pocitac instanceof LinuxPocitac) {
+                if (iface == null) {
+                    System.err.println("Nepodarilo se najit rozhrani s nazvem: " + jmeno
+                            + ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
+                    continue;
+                }
+            }
+
+            if (pocitac instanceof CiscoPocitac) {
+                if (!adresat.jeCislemSite()) {
+                    throw new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresuSMaskou() + " neni cislem site!");
+                }
+            }
+
+            if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
+                System.err.println("IpAdresa " + adresat.vypisAdresuSMaskou() + " je ze zakazaneho rozsahu 224.* - 255.*, preskakuji..");
+                continue;
+            }
+
+            if (mujzaznam[dejIndexVZaznamu("brana")].equals("")
+                    || mujzaznam[dejIndexVZaznamu("brana")].equals("null")) { // kdyz to je na rozhrani
+
+                if (pocitac instanceof CiscoPocitac) {
+                    if (iface == null) {
+                        System.err.println("Nepodarilo se najit rozhrani s nazvem " + jmeno
+                                + ", Preskakuji zaznam " + adresat.vypisAdresuSMaskou() + " v routovaci tabulce..");
+                        continue;
+                    }
+                    ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, iface);
+                } else {
+                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, null, iface);
+                }
+
+            } else { // vcetne brany
+                IpAdresa brana = new IpAdresa(mujzaznam[dejIndexVZaznamu("brana")]);
+
+                if (pocitac instanceof CiscoPocitac) {
+                    if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
+                        System.err.println("IpAdresa " + brana.vypisAdresuSMaskou() + " je ze zakazaneho rozsahu 224.* - 255.*, preskakuji..");
+                        continue;
+                    }
+                    ((CiscoPocitac) pocitac).getWrapper().pridejZaznam(adresat, brana);
+                } else {
+                    pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana, iface);
+                }
+            }
+        }
     }
 }

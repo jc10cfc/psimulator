@@ -62,6 +62,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     boolean debug = true;
     AbstraktniPrikaz prikaz;
+    private int uk = 1; //ukazatel do seznamu slov, prvni slovo je nazev prikazu
 
     /**
      * Tato metoda simuluje zkracovani prikazu tak, jak cini cisco.
@@ -191,7 +192,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("help")) {
-            prikaz = new CiscoHelp(pc, kon, slova);
+            prikaz = new CiscoHelp(pc, kon, slova, false);
+            return;
+        }
+
+        if (prvniSlovo.equals("help_en")) {
+            prikaz = new CiscoHelp(pc, kon, slova, true);
             return;
         }
 
@@ -272,22 +278,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                         return;
                     }
                     if (kontrola("no", prvniSlovo)) {
-                        if (slova.size() >= 2) {
-                            String dalsi = slova.get(1);
-                            if (kontrola("ip", dalsi)) {
-                                prikaz = new CiscoIpRoute(pc, kon, slova, true);
-                            } else if (kontrola("access-list", dalsi)) {
-                                prikaz = new CiscoAccessList(pc, kon, slova, true);
-                            } else if (kontrola("nat", dalsi)) {
-                                prikaz = new CiscoIpNat(pc, kon, slova, true);
-                            } else {
-                                invalidInputDetected();
-                                return;
-                            }
-                        } else {
-                            incompleteCommand();
-                            return;
-                        }
+                        no();
                         return;
                     }
                 }
@@ -326,31 +317,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("no", prvniSlovo)) {
-                    if (slova.size() >= 2) {
-                        String dalsi = slova.get(1);
-                        if (kontrola("ip", dalsi)) {
-                            if (slova.size() <= 2) {
-                                incompleteCommand();
-                                return;
-                            }
-                            dalsi = slova.get(2);
-                            if (kontrola("route", dalsi)) {
-                                prikaz = new CiscoIpRoute(pc, kon, slova, true);
-                            } else if (kontrola("nat", dalsi)) {
-                                prikaz = new CiscoIpNat(pc, kon, slova, true);
-                            } else {
-                                invalidInputDetected();
-                            }
-                        } else if (kontrola("access-list", dalsi)) {
-                            prikaz = new CiscoAccessList(pc, kon, slova, true);
-                        } else {
-                            invalidInputDetected();
-                            return;
-                        }
-                    } else {
-                        incompleteCommand();
-                        return;
-                    }
+                    no();
                     return;
                 }
                 break;
@@ -471,11 +438,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
 
     /**
-     * interface fastEthernet0/1
      * Prepne cisco do stavu config-if (IFACE).
      * Kdyz ma prikaz interface 2 argumenty, tak se sloucej do jednoho (pripad: interface fastEthernet 0/0).
      * 0 nebo vice nez argumenty znamena chybovou hlasku.
      * Do globalni promenne 'aktualni' uklada referenci na rozhrani, ktere chce uzivatel konfigurovat.
+     * prikaz 'interface fastEthernet0/1'
      */
     private void iface() {
 
@@ -629,5 +596,59 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         ((CiscoPocitac) pc).getWrapper().update();
+    }
+
+    /**
+     * Jednoduchy parser pro prikazy: <br />
+     * no ip nat <br />
+     * no ip route <br />
+     * no access-list
+     */
+    private void no() {
+        String dalsi = dalsiSlovo();
+        if (dalsi.isEmpty()) {
+            incompleteCommand();
+            return;
+        }
+
+        if (kontrola("access-list", dalsi)) {
+            prikaz = new CiscoAccessList(pc, kon, slova, true);
+            return;
+        }
+
+        if (kontrola("ip", dalsi)) {
+            dalsi = dalsiSlovo();
+            if (dalsi.isEmpty()) {
+                incompleteCommand();
+                return;
+            }
+            if (kontrola("nat", dalsi)) {
+                prikaz = new CiscoIpNat(pc, kon, slova, true);
+                return;
+            }
+            if (kontrola("route", dalsi)) {
+                prikaz = new CiscoIpRoute(pc, kon, slova, true);
+                return;
+            }
+        }
+        invalidInputDetected();
+    }
+
+    /**
+     * Tahle metoda postupne vraci slova, podle vnitrni promenny uk. Pocita s tim, ze prazdny
+     * retezec ji nemuze prijit.
+     * Zkopirovana z AbstraktnihoPrikazu
+     * TODO: dat pak do neceho, aby se to dedilo
+     * @return prazdny retezec, kdyz je na konci seznamu
+     */
+    private String dalsiSlovo() {
+        String vratit;
+        if (uk < slova.size()) {
+            vratit = slova.get(uk);
+            uk++;
+        } else {
+            vratit = "";
+        }
+        return vratit;
     }
 }
