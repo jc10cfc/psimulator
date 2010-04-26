@@ -232,8 +232,10 @@ public class LinuxRoute extends AbstraktniPrikaz{
             if(nastavovanaMaska && navratovyKod==0 && ! defaultni){
                 nastavAdresu();
             }else{
-                navratovyKod |=4;
-                kon.posliRadek("SIOCADDRT: Invalid argument");
+                if(! defaultni){ //kdyz bylo zadano defaultni, nic se nedeje
+                    navratovyKod |=4;
+                    kon.posliRadek("SIOCADDRT: Invalid argument");
+                }
             }
         }
 
@@ -246,8 +248,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
         if(slovo.equals("default")){
             nastavDefault();
         }else if( ! IpAdresa.jeSpravnaIP(slovo,false)){ //adresa je spatna
-            if(slovo.contains("/")){ //kdyz je zadana IP adresa s maskou (zatim na to kaslu a kontroluju jen lomitko)
-                                     //vypise se jina hlaska, ney normalne.
+            if(slovo.contains("/")){ //kdyz je zadana IP adresa s maskou (zatim na to kaslu a kontroluju jen 
+                                     //lomitko vypise se jina hlaska, nez normalne.
                 kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
                 vypisDelsiNapovedu();
                 navratovyKod |= 256;

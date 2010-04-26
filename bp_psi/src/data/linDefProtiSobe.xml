@@ -59,14 +59,14 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>192.168.1.0</adresat>
-			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<rozhraniKam>eth0</rozhraniKam>
-		</zaznam>
-		<zaznam>
 			<adresat>192.168.2.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
 			<rozhraniKam>eth1</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.1.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>0.0.0.0</adresat>
@@ -123,6 +123,12 @@
 		<zaznam>
 			<adresat>192.168.2.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<rozhraniKam>eth0</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>192.168.2.1</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 	</routy>
