@@ -91,6 +91,10 @@ public abstract class ParserPrikazu {
             prikaz = new Uloz(pc, kon, slova);
             return true;
         }
+        if (slova.get(0).equals("nat")) {
+            kon.posliPoRadcich(pc.natTabulka.vypisZaznamyDynamicky(), 10);
+            return true;
+        }
         return false;
     }
 }

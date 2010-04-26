@@ -113,10 +113,10 @@ public class CiscoShow extends CiscoPrikaz {
                 runningConfig();
                 break;
             case ROUTE:
-                showIpRoute();
+                ipRoute();
                 break;
             case NAT:
-                showIpNatTranslations();
+                ipNatTranslations();
                 break;
         }
     }
@@ -124,7 +124,7 @@ public class CiscoShow extends CiscoPrikaz {
     /**
      * Posle vypis pro prikaz 'show ip nat translations.
      */
-    private void showIpNatTranslations() {
+    private void ipNatTranslations() {
         String s = "";
         s += pc.natTabulka.vypisZaznamyCisco();
         kon.posliPoRadcich(s, 50);
@@ -133,7 +133,7 @@ public class CiscoShow extends CiscoPrikaz {
     /**
      * Posle vypis pro prikaz 'show ip route'
      */
-    private void showIpRoute() {
+    private void ipRoute() {
         String s = "";
         s += ((CiscoPocitac) pc).getWrapper().vypisRT();
         kon.posliPoRadcich(s, 80);

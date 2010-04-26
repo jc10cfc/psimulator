@@ -4,6 +4,7 @@ windows verze - cygwin
 testovani
 skript pro spousteni - kvuli doplnovani
 rozstipat SAXHandler
+ukladani statickejch pravidel do konfiguraku + nacitani
 
 
 kubalik:
@@ -40,7 +41,7 @@ Do xml přidat jméno počítače, počáteční port a druh počítače.
 
 
 pokud poustime terminal pro cisco timto prikazem, tak mame funknci i doplnovani
-rlwrap -pcyan -w-3 -b'(){}[],+=&^%0@;|\' -f /home/haldyr/NetBeansProjects/bp_psi/src/data/cisco_doplnovani.txt telnet localhost
+rlwrap -pcyan -w-3 -I -b'(){}[],+=&^%0@;|\' -f /home/haldyr/NetBeansProjects/bp_psi/src/data/cisco_doplnovani.txt telnet localhost
 
 
 http://bppsi.beanstalkapp.com/bp_projekt

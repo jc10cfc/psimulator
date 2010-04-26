@@ -51,8 +51,8 @@ public class NATtabulka {
     /**
      * citac, odkud mam rozdavat porty
      */
-    private int citacPortu = 1025;
-    boolean debug = false;
+//    private int citacPortu = 1025;
+    boolean debug = true;
 
     public NATtabulka(AbstraktniPocitac pc) {
         this.pc = pc;
@@ -365,11 +365,12 @@ public class NATtabulka {
         Pool pool = lPool.vratPoolZAccessListu(access);
         IpAdresa vrat = lPool.dejIpZPoolu(pool);
 
-        vrat.port = citacPortu++; // velikost integeru je dostacujici, tak neresim, ze se porad navysuje jedno pocitadlo
+        vrat.port = vygenerujPort(vrat);
         if (natovani == true) { // jen kdyz opravdu pridavam
-            pridejZaznamDoNATtabulky(ip, vrat, paket.cil);
-        } else { // kdyz jen testuju, tak si vratim citac zpatky
-            citacPortu--;
+            // kopiruju si novou IP, pri pridavani do tabulku se pripisovaly zaznamy
+            IpAdresa vratCopy = new IpAdresa(vrat.vypisAdresu());
+            vratCopy.port = vrat.port;
+            pridejZaznamDoNATtabulky(ip, vratCopy, paket.cil);
         }
         return vrat;
     }
@@ -419,6 +420,23 @@ public class NATtabulka {
         }
         
         return 0;
+    }
+
+    /**
+     * Vygeneruje unikatni port pro prelozeny zaznam.
+     * Generuje v rozsahu 1025-65536 <br />
+     * @param vrat 
+     * @return
+     */
+    public int vygenerujPort(IpAdresa vrat) {
+        int port = 333;
+        port = 1025 + (int)(Math.random() * 65536);
+
+        for (NATzaznam z: tabulka) {
+            if (vrat.jeStejnaAdresa(z.out) && z.out.port == port) return vygenerujPort(vrat);
+        }
+
+        return port;
     }
 
     /****************************************** nastavovani rozhrani ***************************************************/
@@ -529,6 +547,21 @@ public class NATtabulka {
             }
         }
 
+        return s;
+    }
+
+    /**
+     * Pomocny servisni vypis.
+     * @return
+     */
+    public String vypisZaznamyDynamicky() {
+        String s = "";
+
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke == false) {
+                s += zaznam.in.vypisAdresuSPortem() + "\t" + zaznam.out.vypisAdresuSPortem() + "\n";
+            }
+        }
         return s;
     }
 
