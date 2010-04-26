@@ -247,6 +247,17 @@ public class IpAdresa {
         return false;
     }
 
+    /**
+     * Vrati kopii IpAdresy se stejnou adresou, maskou a portem.
+     * @return
+     */
+    public IpAdresa vratKopii() {
+        IpAdresa vratCopy = new IpAdresa(this.vypisAdresu());
+        vratCopy.maska = this.maska;
+        vratCopy.port = this.port;
+        return vratCopy;
+    }
+
 //**************************************************************************************************************
 //verejny staticky metody
 

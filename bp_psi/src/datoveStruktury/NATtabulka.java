@@ -51,8 +51,8 @@ public class NATtabulka {
     /**
      * citac, odkud mam rozdavat porty
      */
-//    private int citacPortu = 1025;
-    boolean debug = true;
+
+    boolean debug = false;
 
     public NATtabulka(AbstraktniPocitac pc) {
         this.pc = pc;
@@ -368,16 +368,7 @@ public class NATtabulka {
         vrat.port = vygenerujPort(vrat);
         if (natovani == true) { // jen kdyz opravdu pridavam
             // kopiruju si novou IP, pri pridavani do tabulku se pripisovaly zaznamy
-            IpAdresa vratCopy = new IpAdresa(vrat.vypisAdresu());
-            vratCopy.port = vrat.port;
-            
-            IpAdresa ipCopy = new IpAdresa(ip.vypisAdresu());
-            ipCopy.port = ip.port;
-
-            IpAdresa cilCopy = new IpAdresa(paket.cil.vypisAdresu());
-            cilCopy.port = paket.cil.port;
-
-            pridejZaznamDoNATtabulky(ipCopy, vratCopy, cilCopy);
+            pridejZaznamDoNATtabulky(ip.vratKopii(), vrat.vratKopii(), paket.cil.vratKopii());
         }
         return vrat;
     }
