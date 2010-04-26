@@ -184,9 +184,9 @@ public abstract class AbstraktniPocitac {
             if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ //adresa souhlasi
                 //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
                 vypisLadeni("metoda odesliEthernetove: Nemohl jsem odeslat paket, poslal jsem Host Unreachable. "
                         +p.toString());
+                posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
             }
         }else{
             //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
