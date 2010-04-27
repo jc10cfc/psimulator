@@ -583,7 +583,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 kon.posliRadek("Bad mask /" + ip.pocetBituMasky() + " for address " + ip.vypisAdresu());
                 return;
             }
-            aktualni.zmenPrvniAdresu(ip); // TODO: prosetrit
+            aktualni.zmenPrvniAdresu(ip);
 
         } catch (SpatnaMaskaException e) {
             String[] pole = slova.get(3).split("\\.");

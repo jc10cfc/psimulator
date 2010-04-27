@@ -14,6 +14,7 @@ import java.io.StringReader;
 import java.net.Socket;
 import prikazy.cisco.CiscoParserPrikazu;
 import prikazy.linux.LinuxParserPrikazu;
+import sun.nio.cs.ext.PCK;
 import vyjimky.ChybaSpojeniException;
 import vyjimky.NeznamyTypPcException;
 import static prikazy.AbstraktniPrikaz.*;
@@ -91,6 +92,14 @@ public class Konsole extends Thread {
 
         }
         return ret;
+    }
+
+    /**
+     * Posle servisni vypis pres posliRadek. Prida tam navic jmeno programu s dvojteckou a mezerou.
+     * @param ret
+     */
+    public void posliServisne(String ret) {
+        posliRadek(Main.Main.jmenoProgramu+": "+ret);
     }
 
     /**

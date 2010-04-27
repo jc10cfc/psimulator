@@ -1,8 +1,7 @@
 /*
- * TODO: ip nat pool ovrld 172.16.0.1 172.16.0.1 netmask 255.255.255.252 
- *
  * Hotovo:
  * prikaz no
+ * ip nat pool ovrld 172.16.0.1 172.16.0.1 netmask 255.255.255.252  - nebudu implemetovat
  */
 package prikazy.cisco;
 
@@ -89,7 +88,7 @@ public class CiscoIpNat extends CiscoPrikaz {
                 return zpracujInside();
             }
             if (dalsi.startsWith("outside")) {
-                kon.posliRadek(Main.Main.jmenoProgramu + ": Tato funkcionalita neni implementovana.");
+                kon.posliServisne("Tato funkcionalita neni implementovana.");
             }
             return false;
         }
@@ -204,7 +203,17 @@ public class CiscoIpNat extends CiscoPrikaz {
             return false;
         }
 
-        if (!kontrola("prefix-length", dalsiSlovo(), 1)) {
+        dalsi = dalsiSlovo();
+
+        if(dalsi.startsWith("n")) {
+            if (!kontrola("netmask", dalsi, 1)) {
+                return false;
+            }
+            kon.posliServisne("netmask neni implementovan; pouzijte volbu prefix-length");
+            return false;
+        }
+
+        if (!kontrola("prefix-length", dalsi, 1)) {
             return false;
         }
 
