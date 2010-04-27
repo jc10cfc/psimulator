@@ -52,7 +52,9 @@ public class NATtabulka {
      * citac, odkud mam rozdavat porty
      */
 
+//    private int citacPortu = 1025;
     boolean debug = false;
+
 
     public NATtabulka(AbstraktniPocitac pc) {
         this.pc = pc;
