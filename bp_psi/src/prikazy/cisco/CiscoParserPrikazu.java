@@ -64,6 +64,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     AbstraktniPrikaz prikaz;
     private int uk = 1; //ukazatel do seznamu slov, prvni slovo je nazev prikazu
 
+    private void ladici(String s) {
+        if (debug) {
+            System.out.println("ciscoParserPrikazu: "+s);
+        }
+    }
+
     /**
      * Tato metoda simuluje zkracovani prikazu tak, jak cini cisco.
      * @param command prikaz, na ktery se zjistuje, zda lze na nej doplnit.
@@ -157,6 +163,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         slova.clear();
         nepokracovat = false;
         chybovyVypis = "";
+        uk = 1;
+
+        if(debug && stav == USER) {
+            stav = ROOT;
+            kon.prompt = pc.jmeno + "#";
+        }
 
         rozsekejLepe();
 
@@ -180,7 +192,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return; // prazdny Enter
         }
 
-        boolean nepokracuj = spolecnePrikazy();
+        boolean nepokracuj = spolecnePrikazy(debug);
         if (nepokracuj) {
             return;
         }

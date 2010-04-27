@@ -40,7 +40,7 @@ public class ParserPrikazuTest {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
+
     // The methods must be annotated with annotation @Test. For example:
     //
     // @Test
@@ -60,7 +60,7 @@ public class ParserPrikazuTest {
         String s = "";
         ParserPrikazu instance = null;
         instance.zpracujRadek(s);
-        // TODO review the generated test code and remove the default call to fail.
+
         fail("The test case is a prototype.");
     }
 

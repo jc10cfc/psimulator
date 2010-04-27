@@ -5,7 +5,6 @@
 package prikazy.linux;
 
 import prikazy.*;
-import prikazy.linux.LinuxRoute;
 import java.util.LinkedList;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
@@ -23,7 +22,9 @@ public class LinuxParserPrikazu extends ParserPrikazu {
      */
     public LinuxParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
         super(pc, kon);
-    }    
+    }
+
+    boolean ladici = true;
     
     /**
      * Prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej() rozseka na jednotlivy slova.
@@ -48,7 +49,7 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             return; // prazdny Enter
         }
 
-        boolean nepokracuj = spolecnePrikazy(); //tady se zkousi, jestli prikaz nepatri ke spolecnejm prikazum,
+        boolean nepokracuj = spolecnePrikazy(ladici); //tady se zkousi, jestli prikaz nepatri ke spolecnejm prikazum,
         if (nepokracuj) {                           //jestli ano, tak se spusti a konci
             return;
         }

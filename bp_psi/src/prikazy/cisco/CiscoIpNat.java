@@ -32,8 +32,10 @@ public class CiscoIpNat extends CiscoPrikaz {
     int accesslist = -1;
     boolean overload = false;
     Stav stav = null;
+    boolean debug = false;
 
     enum Stav {
+
         POOL, // ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
         INSIDE, // ip nat inside source list 7 pool ovrld overload?
         STATIC // ip nat inside source static 10.10.10.1 171.16.68.5 
@@ -43,9 +45,17 @@ public class CiscoIpNat extends CiscoPrikaz {
         super(pc, kon, slova);
         this.no = no;
 
+        ladici("vytvoren prikaz CiscoIpNat s no="+no);
+
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
             vykonejPrikaz();
+        }
+    }
+
+    private void ladici(String s) {
+        if (debug) {
+            System.out.println("ciscoIpNat: " + s);
         }
     }
 
@@ -57,16 +67,17 @@ public class CiscoIpNat extends CiscoPrikaz {
         // ip nat inside source static 10.10.10.1 171.16.68.5 
 
         if (no) {
+            ladici("prikaz no");
             if (!dalsiSlovo().equals("ip")) {
                 invalidInputDetected();
                 return false;
             }
         }
-
+        
         if (!kontrola("nat", dalsiSlovo(), 3)) {
             return false;
         }
-
+        
         String dalsi = dalsiSlovo();
         if (dalsi.startsWith("p")) {
             if (kontrola("pool", dalsi, 1)) {
@@ -78,7 +89,7 @@ public class CiscoIpNat extends CiscoPrikaz {
                 return zpracujInside();
             }
             if (dalsi.startsWith("outside")) {
-                kon.posliRadek(Main.Main.jmenoProgramu+": Tato funkcionalita neni implementovana.");
+                kon.posliRadek(Main.Main.jmenoProgramu + ": Tato funkcionalita neni implementovana.");
             }
             return false;
         }
@@ -101,6 +112,9 @@ public class CiscoIpNat extends CiscoPrikaz {
                 if (n == 1) {
                     kon.posliRadek("%Pool " + poolJmeno + " not found");
                 }
+                if (n == 2) {
+                    kon.posliRadek("%Pool " + poolJmeno + " in use, cannot redefine");
+                }
             }
 
             if (stav == STATIC) {
@@ -109,7 +123,7 @@ public class CiscoIpNat extends CiscoPrikaz {
                     kon.posliRadek("% Translation not found");
                 }
             }
-            
+
             return;
         }
 
@@ -142,15 +156,15 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
 
         if (stav == STATIC) { // ip nat inside source static 10.10.10.2 171.16.68.5
-                n = pc.natTabulka.pridejStatickePravidloCisco(start, konec);
-                if (n == 1) {
-                    kon.posliRadek("% "+start.vypisAdresu()+" already mapped ("+start.vypisAdresu()+" -> "+konec.vypisAdresu());
-                }
-                if (n == 2) {
-                    kon.posliRadek("% similar static entry ("+start.vypisAdresu()+" -> "+konec.vypisAdresu()+") "+
-                            "already exists");
-                }
+            n = pc.natTabulka.pridejStatickePravidloCisco(start, konec);
+            if (n == 1) {
+                kon.posliRadek("% " + start.vypisAdresu() + " already mapped (" + start.vypisAdresu() + " -> " + konec.vypisAdresu());
             }
+            if (n == 2) {
+                kon.posliRadek("% similar static entry (" + start.vypisAdresu() + " -> " + konec.vypisAdresu() + ") "
+                        + "already exists");
+            }
+        }
     }
 
     /**
@@ -158,7 +172,7 @@ public class CiscoIpNat extends CiscoPrikaz {
      * @return
      */
     private boolean zpracujPool() {
-        // ip nat pool | ovrld 172.16.10.1 172.16.10.1 prefix 24
+        // ip nat pool ovrld | 172.16.10.1 172.16.10.1 prefix 24
 
         String dalsi = dalsiSlovo();
         if (jePrazdny(dalsi)) {
@@ -166,10 +180,13 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
         poolJmeno = dalsi;
 
+        stav = POOL;
+
+        ladici("tady10");
         if (no) { // staci po jmeno, dal me to nezajima
             return true;
         }
-
+        ladici("tady11");
         try {
             dalsi = dalsiSlovo();
             if (jePrazdny(dalsi)) {
@@ -186,11 +203,11 @@ public class CiscoIpNat extends CiscoPrikaz {
             invalidInputDetected();
             return false;
         }
-        
+
         if (!kontrola("prefix-length", dalsiSlovo(), 1)) {
             return false;
         }
-        
+
         dalsi = dalsiSlovo();
         if (jePrazdny(dalsi)) {
             return false;
@@ -213,8 +230,6 @@ public class CiscoIpNat extends CiscoPrikaz {
             invalidInputDetected();
             return false;
         }
-
-        stav = POOL;
 
         return true;
     }
@@ -263,6 +278,8 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
         poolJmeno = dalsi;
 
+        stav = INSIDE;
+
         if (no) { // pokud mazu, tak pocamcad mi to staci, ale mazu stejnak jen podle cisla:-)
             return true;
         }
@@ -283,8 +300,6 @@ public class CiscoIpNat extends CiscoPrikaz {
             invalidInputDetected();
             return false;
         }
-
-        stav = INSIDE;
 
         return true;
     }

@@ -160,11 +160,14 @@ public class NATtabulka {
          */
         boolean staticke;
 
+        long cas;
+
         public NATzaznam(IpAdresa in, IpAdresa out, boolean staticke) {
             this.in = in;
             this.out = out;
             this.cil = null;
             this.staticke = staticke;
+            this.cas = System.currentTimeMillis();
         }
 
         public NATzaznam(IpAdresa in, IpAdresa out, IpAdresa cil, boolean staticke) {
@@ -172,6 +175,7 @@ public class NATtabulka {
             this.out = out;
             this.cil = cil;
             this.staticke = staticke;
+            this.cas = System.currentTimeMillis();
         }
 
         public IpAdresa vratIn() {
@@ -182,8 +186,19 @@ public class NATtabulka {
             return out;
         }
 
+        public long vratCas() {
+            return cas;
+        }
+
         public boolean jeStaticke() {
             return staticke;
+        }
+
+        /**
+         * Obnovi zaznam na dalsich 10s.
+         */
+        public void touch() {
+            this.cas = System.currentTimeMillis();
         }
     }
 
@@ -239,6 +254,7 @@ public class NATtabulka {
         if (debug) {
             pc.vypis("XXXXXX prelozeny paket: " + paket);
         }
+        smazStareDynamickeZaznamy();
         return paket;
     }
 
@@ -345,6 +361,7 @@ public class NATtabulka {
      * Nejdriv se projde natovaci tabulka, jestli to tam uz neni. Kdyz neni,
      * tak se zkusi vygenerovat novy zaznam. Musi mit ale spravne nakonfigurovany access-listy+pooly.
      * Tato metoda se vola, kdyz uz vim, ze ma prirazeny pool+access-list, tak uz to ma vzdycky vratit prelozenou adresu.
+     * V teto metode se take mazou stare dynamicke zaznamy - jako prvni.
      * @param ip
      * @param natovani - true, kdyz natuju, false - kdyz se jen ptam, zda je volno v poolu
      * @return Adresu - na kterou se to ma prelozit <br />
@@ -353,10 +370,12 @@ public class NATtabulka {
      */
     private IpAdresa zanatujZdrojovouIpAdresu(Paket paket, boolean natovani) {
 
+        smazStareDynamickeZaznamy();
         IpAdresa ip = paket.zdroj;
         // nejdriv kontroluju, jestli uz to nahodou nema zaznam v NATtabulce
         for (NATzaznam zaznam : tabulka) { // porovnavam i podle portu (mohou byt NATy za sebou..)
             if (zaznam.in.jeStejnaAdresaSPortem(ip)) {
+                zaznam.touch();
                 return zaznam.out;
             }
         }
@@ -389,7 +408,6 @@ public class NATtabulka {
 
     /**
      * Prida zaznam do natovaci tabulky. Pouziva se to pri dynamickym natovani.
-     * Nic se nekontroluje.
      * @param in zdrojova IP
      * @param out nova zdrojova (prelozena)
      */
@@ -418,6 +436,27 @@ public class NATtabulka {
         }
         
         return 0;
+    }
+
+    /**
+     * Smaze stare (starsi nez 10s) dynamicke zaznamy v tabulce.
+     * @return pocet dynamickych zaznamu, ktere se smazaly
+     */
+    public int smazStareDynamickeZaznamy() {
+        long now = System.currentTimeMillis();
+        List<NATzaznam> smaznout = new ArrayList<NATzaznam>();
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke == false) { // jen dynamicke zaznamy
+                if (now - zaznam.vratCas() > 10000) {
+                    smaznout.add(zaznam);
+                }
+            }
+        }
+        int pocet = smaznout.size();
+        for (NATzaznam z : smaznout) {
+            tabulka.remove(z);
+        }
+        return pocet;
     }
 
     /**
@@ -521,9 +560,11 @@ public class NATtabulka {
     /**
      * Vrati vypis vsech zaznamu v tabulce.
      * Nejdrive to vypise dynamicka pravidla, pak staticka.
+     * Nejdriv se smazou stare dynamcike zaznamy.
      * @return
      */
     public String vypisZaznamyCisco() {
+        smazStareDynamickeZaznamy();
         String s = "";
         s += "Pro Inside global      Inside local       Outside local      Outside global\n";
 
@@ -550,9 +591,11 @@ public class NATtabulka {
 
     /**
      * Pomocny servisni vypis.
+     * Nejdriv se smazou stare dynamcike zaznamy.
      * @return
      */
     public String vypisZaznamyDynamicky() {
+        smazStareDynamickeZaznamy();
         String s = "";
 
         for (NATzaznam zaznam : tabulka) {

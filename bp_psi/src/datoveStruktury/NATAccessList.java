@@ -43,7 +43,7 @@ public class NATAccessList {
             }
             index++;
         }
-        seznam.add(index, new AccessList(adresa, cislo));
+        seznam.add(index, new AccessList(adresa.vratKopii(), cislo));
     }
 
     /**

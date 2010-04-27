@@ -25,9 +25,9 @@ public abstract class ParserPrikazu {
      * @param pc
      * @param kon
      */
-    public ParserPrikazu(AbstraktniPocitac pc,Konsole kon){
-        this.pc=pc;
-        this.kon=kon;
+    public ParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
+        this.pc = pc;
+        this.kon = kon;
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class ParserPrikazu {
      * @autor haldyr
      */
     protected void rozsekejLepe() {
-        
+
         radek = radek.trim(); // rusim bile znaky na zacatku a na konci
 
         String[] bileZnaky = {" ", "\t"};
@@ -72,7 +72,7 @@ public abstract class ParserPrikazu {
                 radek = radek.replace(bileZnaky[i] + bileZnaky[i], bileZnaky[i]);
             }
         }
-        
+
         String[] pole = radek.split(" ");
         for (String s : pole) {
             slova.add(s);
@@ -84,16 +84,18 @@ public abstract class ParserPrikazu {
      * @return vrati true, kdyz konkretni parser uz nema pokracovat dal v parsovani (tj. jednalo se o spolecny prikaz)
      * @autor haldyr
      */
-    protected boolean spolecnePrikazy() {
+    protected boolean spolecnePrikazy(boolean debug) {
         AbstraktniPrikaz prikaz;
 
-        if (slova.get(0).equals("uloz") ||slova.get(0).equals("save")) {
+        if (slova.get(0).equals("uloz") || slova.get(0).equals("save")) {
             prikaz = new Uloz(pc, kon, slova);
             return true;
         }
-        if (slova.get(0).equals("nat")) {
-            kon.posliPoRadcich(pc.natTabulka.vypisZaznamyDynamicky(), 10);
-            return true;
+        if (debug) {
+            if (slova.get(0).equals("nat")) {
+                kon.posliPoRadcich(pc.natTabulka.vypisZaznamyDynamicky(), 10);
+                return true;
+            }
         }
         return false;
     }

@@ -1,5 +1,5 @@
 /*
- * TODO: zjistit, kdy to posila %Pool ovrld in use, cannot redefine
+ * 
  */
 
 package datoveStruktury;
@@ -41,15 +41,6 @@ public class NATPool {
             return 1;
         }
 
-        //TODO: zjistit, kdy to posila %Pool ovrld in use, cannot redefine
-//        if (aktivniPool.jmeno.equals(jmeno)) {
-//            return 2;
-//        }
-
-//        for (Pool pool : seznam) {
-//            if (pool.jmeno.)
-//        }
-
         if (prefix > 32 || prefix < 1) {
             return 3;
         }
@@ -60,15 +51,17 @@ public class NATPool {
             return 4;
         }
 
-        // smaznout stejne se jmenujici pool
-        smazPool(jmeno);
+        // smaznout stejne se jmenujici pool + kontrola jestli vubec ho muzem prespat
+        if (smazPool(jmeno) == 2) {
+            return 2;
+        }
 
         // tady pridej pool
         Pool novyPool = new Pool();
         novyPool.jmeno = jmeno;
 
         // pridavam IP adresy do poolu.
-        IpAdresa ukazatel = start;
+        IpAdresa ukazatel = start.vratKopii();
         do {
             novyPool.pool.add(ukazatel);
             ukazatel = IpAdresa.vratOJednaVetsi(ukazatel);
@@ -84,11 +77,19 @@ public class NATPool {
 
     /**
      * Smaze pool podle jmena.
+     * Dale maze stare dynamicke zaznamy.
      * @param jmeno
      * @return 0 - ok smazal se takovy pool <br />
-     *         1 - pool s takovym jmenem neni. (%Pool jmeno not found)
+     *         1 - pool s takovym jmenem neni. (%Pool jmeno not found) <br />
+     *         2 - %Pool ovrld in use, cannot redefine
      */
     public int smazPool(String jmeno) {
+
+        natTabulka.smazStareDynamickeZaznamy();
+        if(poolInUse(jmeno)) {
+            return 2;
+        }
+
         Pool smaznout = null;
         for (Pool pool : seznam) {
             if (pool.jmeno.equals(jmeno)) {
@@ -98,6 +99,7 @@ public class NATPool {
         if (smaznout == null) {
             return 1;
         }
+
         seznam.remove(smaznout);
         return 0;
     }
@@ -121,6 +123,24 @@ public class NATPool {
         } else {
             return pool.dejIp(false);
         }
+    }
+
+    /**
+     * Vrati vsechny pooly, ktere obsahuji danou adresu.
+     * @param adr
+     * @return seznam poolu - kdyz to najde alespon 1 pool <br />
+     *         null - kdyz to zadny pool nenajde
+     */
+    public List<Pool> vratPoolProIp(IpAdresa adr) {
+        List<Pool> pseznam = new ArrayList<Pool>();
+        for (Pool pool : seznam) {
+            if (pool.prvni() == null) continue;
+            if (adr.jeVRozsahu(pool.prvni())) {
+                pseznam.add(pool);
+            }
+        }
+        if (pseznam.size() == 0) return null;
+        return pseznam;
     }
 
     /**
@@ -183,6 +203,26 @@ public class NATPool {
                 natTabulka.verejne.seznamAdres.add(adr);
             }
         }
+    }
+
+    /**
+     * Vrati true, pokud se najde nejaky zaznam od toho poolu.
+     * @param jmeno
+     * @return
+     */
+    private boolean poolInUse(String jmeno) {
+        for (NATtabulka.NATzaznam zaznam : natTabulka.tabulka) {
+            if (zaznam.staticke == false) {
+                List<Pool> pseznam = vratPoolProIp(zaznam.out);
+                if (pseznam == null) continue;
+                for (Pool pool : pseznam) {
+                    if (pool.jmeno.equals(jmeno)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public class Pool {
