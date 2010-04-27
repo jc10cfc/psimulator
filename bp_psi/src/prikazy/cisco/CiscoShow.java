@@ -6,6 +6,7 @@
 package prikazy.cisco;
 
 import datoveStruktury.CiscoStavy;
+import datoveStruktury.IpAdresa;
 import datoveStruktury.NATAccessList.AccessList;
 import datoveStruktury.NATPool.Pool;
 import datoveStruktury.NATPoolAccess.PoolAccess;
@@ -182,9 +183,13 @@ public class CiscoShow extends CiscoPrikaz {
 
 
             s += "interface " + sr.jmeno + "\n";
-            if (sr.vratPrvni() != null) {
-                s += " ip address " + sr.vratPrvni().vypisAdresu() + " " + sr.vratPrvni().vypisMasku() + "\n";
+            for (IpAdresa adr : sr.seznamAdres) {
+                s += " ip address " + adr.vypisAdresu() + " " + adr.vypisMasku() + "\n";
+                if (debug == false) { // kdyz neni debug rezim, tak vypis jen prvni IP.
+                    break;
+                }
             }
+
 
             if (pc.natTabulka.vratVerejne() != null) {
                 if (sr.jmeno.equals(pc.natTabulka.vratVerejne().jmeno)) {

@@ -157,7 +157,8 @@ public class CiscoIpNat extends CiscoPrikaz {
         if (stav == STATIC) { // ip nat inside source static 10.10.10.2 171.16.68.5
             n = pc.natTabulka.pridejStatickePravidloCisco(start, konec);
             if (n == 1) {
-                kon.posliRadek("% " + start.vypisAdresu() + " already mapped (" + start.vypisAdresu() + " -> " + konec.vypisAdresu());
+                kon.posliRadek("% " + start.vypisAdresu() + " already mapped (" + start.vypisAdresu() + " -> " 
+                        + konec.vypisAdresu() + ")");
             }
             if (n == 2) {
                 kon.posliRadek("% similar static entry (" + start.vypisAdresu() + " -> " + konec.vypisAdresu() + ") "

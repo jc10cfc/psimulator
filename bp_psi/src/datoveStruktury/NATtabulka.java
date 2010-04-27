@@ -70,9 +70,9 @@ public class NATtabulka {
      * @param in
      * @return
      */
-    private boolean jeTamZdrojova(IpAdresa in) {
+    private boolean jeTamZdrojova(IpAdresa in, boolean staticke) {
         for (NATzaznam zaznam : tabulka) {
-            if (zaznam.in.jeStejnaAdresaSPortem(in)) {
+            if (zaznam.staticke == staticke && zaznam.in.jeStejnaAdresaSPortem(in)) {
                 return true;
             }
         }
@@ -82,11 +82,12 @@ public class NATtabulka {
     /**
      * True, pokud je uz tam je prelozena ip v tabulce.
      * @param out
+     * @param staticke udava, jestli se ma hledat jen mezi statickymi (true) nebo dynamickymi (false)
      * @return
      */
-    private boolean jeTamPrelozena(IpAdresa out) {
+    private boolean jeTamPrelozena(IpAdresa out, boolean staticke) {
         for (NATzaznam zaznam : tabulka) {
-            if (zaznam.out.jeStejnaAdresaSPortem(out)) {
+            if (zaznam.staticke == staticke && zaznam.out.jeStejnaAdresaSPortem(out)) {
                 return true;
             }
         }
@@ -355,6 +356,9 @@ public class NATtabulka {
             }
             return true;
         }
+        if (debug) {
+            pc.vypis("prichozi rozhrani '" + prichoziRozhrani.jmeno + "', nenatuji; verejne je " + verejne.jmeno);
+        }
         return false;
     }
 
@@ -374,9 +378,17 @@ public class NATtabulka {
 
         smazStareDynamickeZaznamy();
         IpAdresa ip = paket.zdroj;
-        // nejdriv kontroluju, jestli uz to nahodou nema zaznam v NATtabulce
+
+        // nejdriv prochazim staticka pravidla
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke && zaznam.in.jeStejnaAdresa(ip)) {
+                return zaznam.out;
+            }
+        }
+
+        // nejdriv kontroluju, jestli uz to nahodou nema dynamicky zaznam v NATtabulce
         for (NATzaznam zaznam : tabulka) { // porovnavam i podle portu (mohou byt NATy za sebou..)
-            if (zaznam.in.jeStejnaAdresaSPortem(ip)) {
+            if (!zaznam.staticke && zaznam.in.jeStejnaAdresaSPortem(ip)) {
                 zaznam.touch();
                 return zaznam.out;
             }
@@ -388,7 +400,7 @@ public class NATtabulka {
 
         vrat.port = vygenerujPort(vrat);
         if (natovani == true) { // jen kdyz opravdu pridavam
-            // kopiruju si novou IP, pri pridavani do tabulku se pripisovaly zaznamy
+            // kopiruju si novou IP, pri pridavani do tabulku se prepisovaly zaznamy
             pridejZaznamDoNATtabulky(ip.vratKopii(), vrat.vratKopii(), paket.cil.vratKopii());
         }
         return vrat;
@@ -415,29 +427,6 @@ public class NATtabulka {
      */
     private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out, IpAdresa cil) {
         tabulka.add(new NATzaznam(in, out, cil, false));
-    }
-
-    /**
-     * Smaze vsechny staticke zaznamy, ktere maji odpovidajici in a out.
-     * @return 0 - alespon 1 zaznam se smazal <br />
-     *         1 - nic se nesmazalo, pac nebyl nalezen odpovidajici zaznam (% Translation not found)
-     */
-    public int smazStatickyZaznam(IpAdresa in, IpAdresa out) {
-
-        List<NATzaznam> smaznout = new ArrayList<NATzaznam>();
-        for (NATzaznam zaznam : tabulka) {
-            if (zaznam.staticke && in.jeStejnaAdresa(zaznam.in) && out.jeStejnaAdresa(zaznam.out)) {
-                smaznout.add(zaznam);
-            }
-        }
-        if (smaznout.size() == 0) {
-            return 1;
-        }
-        for (NATzaznam z : smaznout) {
-            tabulka.remove(z);
-        }
-        
-        return 0;
     }
 
     /**
@@ -476,6 +465,50 @@ public class NATtabulka {
         }
 
         return port;
+    }
+
+    /****************************************** staticke natovani ******************************************************/
+
+    /**
+     * Nasype IpAdresy ze statickych pravidel na dane rozhrani.
+     * @param iface
+     */
+    private void pridejIpAdresyZeStatickychPravidel(SitoveRozhrani iface) {
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke) {
+                iface.seznamAdres.add(zaznam.out.vratKopii());
+            }
+        }
+    }
+
+    /**
+     * Smaze vsechny staticke zaznamy, ktere maji odpovidajici in a out.
+     * Dale aktualizuje verejne rozhrani co se IP tyce. Nejdrive smaze vsechny krom prvni,
+     * a pak postupne prida ze statickych a pak i z poolu.
+     * @return 0 - alespon 1 zaznam se smazal <br />
+     *         1 - nic se nesmazalo, pac nebyl nalezen odpovidajici zaznam (% Translation not found)
+     */
+    public int smazStatickyZaznam(IpAdresa in, IpAdresa out) {
+
+        List<NATzaznam> smaznout = new ArrayList<NATzaznam>();
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke && in.jeStejnaAdresa(zaznam.in) && out.jeStejnaAdresa(zaznam.out)) {
+                smaznout.add(zaznam);
+            }
+        }
+
+        if (smaznout.size() == 0) {
+            return 1;
+        }
+
+        for (NATzaznam z : smaznout) {
+            tabulka.remove(z);
+        }
+        verejne.smazVsechnyIpKromPrvni();
+        pridejIpAdresyZeStatickychPravidel(verejne);
+        lPool.updateIpNaRozhrani();
+
+        return 0;
     }
 
     /****************************************** nastavovani rozhrani ***************************************************/
@@ -546,12 +579,14 @@ public class NATtabulka {
      */
     public int pridejStatickePravidloCisco(IpAdresa in, IpAdresa out) {
 
-        if (jeTamZdrojova(in)) {
+        if (jeTamZdrojova(in, true)) {
             return 1;
         }
-        if (jeTamPrelozena(out)) {
+        if (jeTamPrelozena(out, true)) {
             return 2;
         }
+
+        verejne.seznamAdres.add(out.vratKopii());
 
         int index = dejIndexVTabulce(out);
         tabulka.add(index, new NATzaznam(in, out, true));
@@ -567,8 +602,16 @@ public class NATtabulka {
      */
     public String vypisZaznamyCisco() {
         smazStareDynamickeZaznamy();
+
         String s = "";
-        s += "Pro Inside global      Inside local       Outside local      Outside global\n";
+        if (tabulka.size() == 0) {
+            s += "\n\n";
+            return s;
+        }
+        
+        s += zarovnej("Pro Inside global", 24) + zarovnej("Inside local", 20);
+        s += zarovnej("Outside local", 20) + zarovnej("Outside global", 20);
+        s += "\n";
 
         for (NATzaznam zaznam : tabulka) {
             if (zaznam.staticke == false) {
@@ -682,6 +725,7 @@ public class NATtabulka {
      * @param out nova zdrojova (prelozena)
      */
     public void pridejStatickePravidloLinux(IpAdresa in, IpAdresa out) {
+        verejne.seznamAdres.add(out.vratKopii());
         tabulka.add(new NATzaznam(in, out, true));
     }
 }

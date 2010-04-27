@@ -66,7 +66,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     private void ladici(String s) {
         if (debug) {
-            System.out.println("ciscoParserPrikazu: "+s);
+            System.out.println("ciscoParserPrikazu: " + s);
         }
     }
 
@@ -81,13 +81,13 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         int i = 10;
 
         // Zde jsou zadefinovany vsechny prikazy. Jsou rozdeleny do poli podle poctu znaku,
-        // ktere je potreba k jejich bezpecne identifikaci. Cisla byla ziskana z praveho cisca.
+        // ktere je potreba k jejich bezpecne identifikaci. Cisla byla ziskana z praveho cisca IOS version 12.4
         String[] jedna = {"terminal", "inside", "outside", "source", "static", "pool", "netmask", "permit"};
         // + ip, exit
-        String[] dva = {"show", "interface", "address", "no", "shutdown", "enable", "classless",
+        String[] dva = {"show", "interface", "no", "shutdown", "enable", "classless",
             "access-list", "ping", "logout", "nat", "traceroute"};
         // + ip, exit
-        String[] tri = {"running-config", "name-server", "nat"};
+        String[] tri = {"running-config", "name-server", "nat", "address"};
         // + exit
         String[] ctyri = {"configure", "disable"};
         //String[] pet = {"route"};
@@ -165,7 +165,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         chybovyVypis = "";
         uk = 1;
 
-        if(debug && stav == USER) {
+        if (debug && stav == USER) {
             stav = ROOT;
             kon.prompt = pc.jmeno + "#";
         }
@@ -282,7 +282,18 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
                 if (debug) {
                     if (kontrola("ip", prvniSlovo)) {
-                        prikaz = new CiscoIpRoute(pc, kon, slova, false);
+                        if (slova.size() >= 2) {
+                            String dalsi = slova.get(1);
+                            if (kontrola("route", dalsi)) {
+                                prikaz = new CiscoIpRoute(pc, kon, slova, false);
+                            } else if (kontrola("nat", dalsi)) {
+                                prikaz = new CiscoIpNat(pc, kon, slova, false);
+                            } else {
+                                invalidInputDetected();
+                            }
+                            return;
+                        }
+                        incompleteCommand();
                         return;
                     }
                     if (kontrola("access-list", prvniSlovo)) {
