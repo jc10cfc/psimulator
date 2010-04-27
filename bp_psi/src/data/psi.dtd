@@ -27,7 +27,7 @@
 
 <!ELEMENT jmeno ( #PCDATA ) >
 
-<!ELEMENT konfigurak ( port, pocitac+ ) >
+<!ELEMENT konfigurak ( pocitac+ ) >
 
 <!ELEMENT mac ( #PCDATA ) >
 
@@ -39,7 +39,13 @@
 
 <!ELEMENT nat ( #PCDATA ) >
 
-<!ELEMENT natovani ( pooly, prirazeniVice, access-listy ) >
+<!ELEMENT natovani ( pooly, prirazeniVice, access-listy, staticke? ) >
+
+<!ELEMENT staticke ( in, out ) >
+
+<!ELEMENT in ( #PCDATA ) >
+
+<!ELEMENT out ( #PCDATA ) >
 
 <!ELEMENT overload ( #PCDATA ) >
 

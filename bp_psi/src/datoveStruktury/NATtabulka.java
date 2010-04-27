@@ -1,10 +1,14 @@
 /*
- * Doresit:
+ * Hotovo:
  * staticky NAT - jen rucne pridana pravidla
+ * Co delat, kdyz uz jsou dynamicke zaznamy v tabulce a uzivatel zrusi pooly a accesslisty, mam odnatovat?
+ *              - zaznamy se po 10s smazou a pak uz to nepujde, tak asi netreba resit
+ *
+ * Doresit:
  * natovani z internetu - kontrola kdy natovat (neni nastaven pool atd..)
  * doresit metody pro linux
  *
- * Co delat, kdyz uz jsou dynamicke zaznamy v tabulce a uzivatel zrusi pooly a accesslisty, mam odnatovat?
+ * 
  *
  */
 package datoveStruktury;
@@ -471,9 +475,14 @@ public class NATtabulka {
 
     /**
      * Nasype IpAdresy ze statickych pravidel na dane rozhrani.
-     * @param iface
+     * Kdyz je rozhrani null, tak se nic neudela.
+     * Mimo tridu NATtabulka by se to melo pouzivat jen pri cteni z konfiguraku.
+     * @param iface verejne rozhrani (outside)
      */
-    private void pridejIpAdresyZeStatickychPravidel(SitoveRozhrani iface) {
+    public void pridejIpAdresyZeStatickychPravidel(SitoveRozhrani iface) {
+        if (iface == null) {
+            return;
+        }
         for (NATzaznam zaznam : tabulka) {
             if (zaznam.staticke) {
                 iface.seznamAdres.add(zaznam.out.vratKopii());

@@ -5,6 +5,7 @@ import datoveStruktury.CiscoWrapper.CiscoZaznam;
 import datoveStruktury.NATAccessList.AccessList;
 import datoveStruktury.NATPool.Pool;
 import datoveStruktury.NATPoolAccess.PoolAccess;
+import datoveStruktury.NATtabulka.NATzaznam;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -205,12 +206,18 @@ public class Uloz extends AbstraktniPrikaz {
         ulozNATPooly(pocitac);
         ulozNATPoolAccess(pocitac);
         ulozNATAccessList(pocitac);
+        ulozNATStaticky(pocitac);
 
         tabs = tabs.substring(1);
         zapis("</natovani>\n");
 
     }
 
+    /**
+     * Pomocna metoda pro ulozeni NAT poolu.
+     * @param pocitac
+     * @throws IOException
+     */
     private void ulozNATPooly(AbstraktniPocitac pocitac) throws IOException {
         zapis("<pooly>\n");
         tabs += "\t";
@@ -230,6 +237,11 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("</pooly>\n");
     }
 
+    /**
+     * Pomocna metoda pro ulozeni NAT PoolAcessu.
+     * @param pocitac
+     * @throws IOException
+     */
     private void ulozNATPoolAccess(AbstraktniPocitac pocitac) throws IOException {
         zapis("<prirazeniVice>\n");
         tabs += "\t";
@@ -251,6 +263,11 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("</prirazeniVice>\n");
     }
 
+    /**
+     * Pomocna metoda pro ulozeni NAT access-listu
+     * @param pocitac
+     * @throws IOException
+     */
     private void ulozNATAccessList(AbstraktniPocitac pocitac) throws IOException {
         zapis("<access-listy>\n");
         tabs += "\t";
@@ -269,6 +286,27 @@ public class Uloz extends AbstraktniPrikaz {
 
         tabs = tabs.substring(1);
         zapis("</access-listy>\n");
+    }
+
+    /**
+     * Ulozi staticka pravidla do konfiguraku.
+     * @param pocitac
+     * @throws IOException
+     */
+    private void ulozNATStaticky(AbstraktniPocitac pocitac) throws IOException {
+
+        for (NATzaznam zaznam : pocitac.natTabulka.vratTabulku()) {
+            if (zaznam.jeStaticke()) {
+                zapis("<staticke>\n");
+                tabs += "\t";
+                
+                zapis(vratElement("in", zaznam.vratIn().vypisAdresu()));
+                zapis(vratElement("out", zaznam.vratOut().vypisAdresu()));
+
+                tabs = tabs.substring(1);
+                zapis("</staticke>\n");
+            }
+        }
     }
 
     /**

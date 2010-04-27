@@ -40,6 +40,7 @@ public class SAXHandler implements ContentHandler {
     String[] accessList; // cislo, ipA, ipAWildcard
     String[] pool; // pJmeno, ip_start, ip_konec, prefix
     String[] poolAccess; // accessCislo, poolJmeno, overload
+    String[] staticke;
     public int port = -1;
     List<List> pripojeno;
     List<PocitacBuilder> seznamPocitacBuilder;
@@ -56,6 +57,7 @@ public class SAXHandler implements ContentHandler {
         pool = new String[4];
         poolAccess = new String[3];
         pripojeno = new ArrayList<List>();
+        staticke = new String[2];
         seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
         this.port = port;
         this.bezNastaveni = bezNastaveni;
@@ -360,6 +362,10 @@ public class SAXHandler implements ContentHandler {
             vymazPole(pool);
         }
 
+        if (localName.equals("staticke")) {
+            vymazPole(staticke);
+        }
+
         if (localName.equals("prirazeni")) {
             vymazPole(poolAccess);
         }
@@ -386,6 +392,10 @@ public class SAXHandler implements ContentHandler {
 
         if (localName.equals("zaznam")) {
             dejOdkazNaAktualniPC().routovaciTabulka.add(vratKopiiPole(zaznam));
+        }
+
+        if (localName.equals("staticke")) {
+            dejOdkazNaAktualniPC().staticke.add(vratKopiiPole(staticke));
         }
 
         if (localName.equals("pool")) {
@@ -455,6 +465,15 @@ public class SAXHandler implements ContentHandler {
         }
         if (patriDoNatPrirazeni(jmenoElementu)) {
             poolAccess[dejIndexVNatPrirazeni(jmenoElementu)] = s;
+            return;
+        }
+
+        if (jmenoElementu.equals("in")) {
+            staticke[0] = s;
+            return;
+        }
+        if (jmenoElementu.equals("out")) {
+            staticke[1] = s;
             return;
         }
 
@@ -549,6 +568,7 @@ public class SAXHandler implements ContentHandler {
             zpracujAccessListy(pcbuilder, pocitac);
             zpracujPoolAccess(pcbuilder, pocitac);
             zpracujRozhrani(pcbuilder, pocitac);
+            zpracujStatickyNat(pcbuilder, pocitac);
 
             if (pocitac instanceof CiscoPocitac) {
                 ((CiscoPocitac) pocitac).getWrapper().update();
@@ -562,6 +582,7 @@ public class SAXHandler implements ContentHandler {
                 }
             }
             pocitac.natTabulka.lPool.updateIpNaRozhrani();
+            pocitac.natTabulka.pridejIpAdresyZeStatickychPravidel(pocitac.natTabulka.vratVerejne());
             hotovePocitace.add(pocitac);
         }
 
@@ -889,6 +910,33 @@ public class SAXHandler implements ContentHandler {
                     pocitac.routovaciTabulka.pridejZaznamBezKontrol(adresat, brana, iface);
                 }
             }
+        }
+    }
+
+    private void zpracujStatickyNat(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        for (String[] stat : pcbuilder.staticke) {
+            if (!jePolePlne(stat)) {
+                System.err.println("Staticky zaznam (in/out) pro NAT neni uplny: "+vypisPole(stat) + ", preskakuji..");
+                return;
+            }
+            IpAdresa in;
+            IpAdresa out;
+            try {
+                in = new IpAdresa(stat[0]);
+            } catch (Exception e) {
+                System.err.println("Staticky zaznam, element 'in' neni platnou IP adresou: "+stat[0]+ ", preskakuji..");
+                return;
+            }
+            try {
+                out = new IpAdresa(stat[1]);
+            } catch (Exception e) {
+                System.err.println("Staticky zaznam, element 'out' neni platnou IP adresou: "+stat[1]+ ", preskakuji..");
+                return;
+            }
+            int n = pocitac.natTabulka.pridejStatickePravidloCisco(in, out);
+
+            if ( n == 1 ) System.err.println("chyba, in adresa pro staticky zaznam: "+in.vypisAdresu()+" tam uz je, preskakuji..");
+            if ( n == 2 ) System.err.println("chyba, out adresa pro staticky zaznam: "+out.vypisAdresu()+" tam uz je, preskakuji..");
         }
     }
 }

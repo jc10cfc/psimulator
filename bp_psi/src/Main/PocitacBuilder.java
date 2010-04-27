@@ -22,6 +22,7 @@ public class PocitacBuilder {
     List<String[]> pool;
     List<String[]> accessList;
     List<String[]> poolAccess;
+    List<String[]> staticke;
 
 
 
@@ -31,6 +32,7 @@ public class PocitacBuilder {
         pool = new ArrayList<String[]>();
         accessList = new ArrayList<String[]>();
         poolAccess = new ArrayList<String[]>();
+        staticke = new ArrayList<String[]>();
     }
 
     @Override
@@ -55,6 +57,4 @@ public class PocitacBuilder {
 
         return ret;
     }
-    
-    
 }

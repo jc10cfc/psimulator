@@ -3,9 +3,48 @@
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
 <konfigurak>
-<port>3567</port>
-
 <pocitac jmeno="linux1" typ="linux">
+	<rozhrani>
+		<jmeno>eth1</jmeno>
+		<ip>3.3.3.1</ip>
+		<maska>255.255.255.0</maska>
+		<mac>00:01:02:03:04:05</mac>
+		<pripojenoK>linux2:eth0</pripojenoK>
+		<nahozene>true</nahozene>
+	</rozhrani>
+	<routy>
+		<zaznam>
+			<adresat>3.3.3.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<rozhraniKam>eth1</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>3.3.3.254</brana>
+			<rozhraniKam>eth1</rozhraniKam>
+		</zaznam>
+	</routy>
+	<ip_forward>0</ip_forward>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
+</pocitac>
+
+<pocitac jmeno="linux2" typ="linux">
+	<rozhrani>
+		<jmeno>eth0</jmeno>
+		<ip>3.3.3.254</ip>
+		<maska>255.255.255.0</maska>
+		<mac>00:01:02:03:04:05</mac>
+		<pripojenoK>linux1:eth1</pripojenoK>
+		<nahozene>true</nahozene>
+	</rozhrani>
 	<rozhrani>
 		<jmeno>eth1</jmeno>
 		<ip>1.1.1.1</ip>
@@ -15,6 +54,11 @@
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<routy>
+		<zaznam>
+			<adresat>3.3.3.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<rozhraniKam>eth0</rozhraniKam>
+		</zaznam>
 		<zaznam>
 			<adresat>1.1.1.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
@@ -44,7 +88,7 @@
 		<ip>1.1.1.254</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:0b:0c:0d:0a:01</mac>
-		<pripojenoK>linux1:eth1</pripojenoK>
+		<pripojenoK>linux2:eth1</pripojenoK>
 		<nahozene>true</nahozene>
 		<nat>soukrome</nat>
 	</rozhrani>
@@ -58,6 +102,11 @@
 		<nat>verejne</nat>
 	</rozhrani>
 	<routy>
+		<zaznam>
+			<adresat>3.3.3.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<brana>1.1.1.1</brana>
+		</zaznam>
 	</routy>
 	<natovani>
 		<pooly>
@@ -82,6 +131,10 @@
 				<ipAWildcard>0.0.0.31</ipAWildcard>
 			</access-list>
 		</access-listy>
+		<staticke>
+			<in>3.3.3.1</in>
+			<out>2.2.2.70</out>
+		</staticke>
 	</natovani>
 </pocitac>
 
