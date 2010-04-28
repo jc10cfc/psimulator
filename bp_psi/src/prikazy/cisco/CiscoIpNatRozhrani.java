@@ -20,7 +20,6 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
     SitoveRozhrani rozhrani;
     boolean inside = false;
     boolean outside = false;
-    boolean no;
 
     /**
      *
@@ -29,10 +28,9 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
      * @param slova
      * @param rozhrani, ktere se nastavuje v tom prikazu
      */
-    public CiscoIpNatRozhrani(AbstraktniPocitac pc, Konsole kon, List<String> slova, SitoveRozhrani rozhrani, boolean no) {
-        super(pc, kon, slova);
+    public CiscoIpNatRozhrani(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no, SitoveRozhrani rozhrani) {
+        super(pc, kon, slova, no);
         this.rozhrani = rozhrani;
-        this.no = no;
 
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {

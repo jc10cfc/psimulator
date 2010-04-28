@@ -24,26 +24,18 @@ import vyjimky.SpatnaAdresaException;
  * @author haldyr
  */
 public class CiscoIpRoute extends CiscoPrikaz {
-
-    /**
-     * Rika, zda pridavam (true) nebo mazu (false).
-     */
-    private boolean no;
-
+    
     private IpAdresa adresat;
     private IpAdresa brana;
     private SitoveRozhrani rozhrani;
 
-    private boolean debug = false;
-
-
     public CiscoIpRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
-        super(pc, kon, slova);
-        this.no = no;
+        super(pc, kon, slova, no);
         this.adresat = null;
         this.brana = null;
         this.rozhrani = null;
 
+        debug = false;
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
             vykonejPrikaz();

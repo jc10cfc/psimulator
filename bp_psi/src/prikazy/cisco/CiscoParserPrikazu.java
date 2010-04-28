@@ -1,7 +1,6 @@
 package prikazy.cisco;
 
 import datoveStruktury.CiscoStavy;
-import datoveStruktury.IpAdresa;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,8 +14,6 @@ import pocitac.CiscoPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 import prikazy.AbstraktniPrikaz;
-import vyjimky.SpatnaAdresaException;
-import vyjimky.SpatnaMaskaException;
 import prikazy.AbstraktniPrikaz.*;
 import prikazy.ParserPrikazu;
 import prikazy.linux.LinuxIfconfig;
@@ -218,13 +215,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             return;
         }
 
-// == stavy ==
-// user -                           ping, enable
-// root - enable/disable            ping, enable, configure, reload, show    (jmeno#)
-// konfiguracni rezim - configure terminal/exit             ip route, interface, access-list, exit   (jmeno(config)#)
-// konfigurace interface - interface/exit                   ip address, no shutdown, exit   (jmeno(config-if)#)
-
-
         switch (stav) {
             case USER:
                 if (kontrola("enable", prvniSlovo)) {
@@ -282,18 +272,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
                 if (debug) {
                     if (kontrola("ip", prvniSlovo)) {
-                        if (slova.size() >= 2) {
-                            String dalsi = slova.get(1);
-                            if (kontrola("route", dalsi)) {
-                                prikaz = new CiscoIpRoute(pc, kon, slova, false);
-                            } else if (kontrola("nat", dalsi)) {
-                                prikaz = new CiscoIpNat(pc, kon, slova, false);
-                            } else {
-                                invalidInputDetected();
-                            }
-                            return;
-                        }
-                        incompleteCommand();
+                        prikaz = new CiscoIp(pc, kon, slova, false, stav);
                         return;
                     }
                     if (kontrola("access-list", prvniSlovo)) {
@@ -306,8 +285,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     }
                 }
                 break;
-
-            //ip route, interface, access-list, exit
+            
             case CONFIG:
                 if (kontrola("exit", prvniSlovo) || prvniSlovo.equals("end")) {
                     stav = ROOT;
@@ -317,18 +295,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
-                    if (slova.size() >= 2) {
-                        String dalsi = slova.get(1);
-                        if (kontrola("route", dalsi)) {
-                            prikaz = new CiscoIpRoute(pc, kon, slova, false);
-                        } else if (kontrola("nat", dalsi)) {
-                            prikaz = new CiscoIpNat(pc, kon, slova, false);
-                        } else {
-                            invalidInputDetected();
-                        }
-                        return;
-                    }
-                    incompleteCommand();
+                    prikaz = new CiscoIp(pc, kon, slova, false, stav);
                     return;
                 }
                 if (kontrola("interface", prvniSlovo)) {
@@ -344,8 +311,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 break;
-
-            //ip address, no shutdown, exit   (jmeno(config-if)#)
+            
             case IFACE:
                 if (kontrola("exit", prvniSlovo)) {
                     stav = CONFIG;
@@ -361,33 +327,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
-                    if (slova.size() >= 2) {
-                        String druheSlovo = slova.get(1);
-                        if (kontrola("nat", druheSlovo)) {
-                            prikaz = new CiscoIpNatRozhrani(pc, kon, slova, aktualni, false);
-                        } else if (kontrola("address", druheSlovo)) {
-                            ipaddress();
-                        } else {
-                            invalidInputDetected();
-                        }
-                    } else {
-                        incompleteCommand();
-                    }
+                    prikaz = new CiscoIp(pc, kon, slova, false, stav, aktualni);
                     return;
                 }
                 if (kontrola("no", prvniSlovo)) {
-                    if (slova.size() >= 2) {
-                        String druheSlovo = slova.get(1);
-                        if (kontrola("ip", druheSlovo)) {
-                            prikaz = new CiscoIpNatRozhrani(pc, kon, slova, aktualni, true);
-                        } else if (kontrola("shutdown", druheSlovo)) {
-                            noshutdown();
-                        } else {
-                            invalidInputDetected();
-                        }
-                    } else {
-                        incompleteCommand();
-                    }
+                    no();
                     return;
                 }
                 if (kontrola("shutdown", prvniSlovo)) {
@@ -559,73 +503,14 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
 
     /**
-     * Nastavi ip adresu na rozhrani specifikovane v predchozim stavu cisco (promenna aktualni)
-     * prikaz ip musi mit 3 argumenty, jina chybova hlaska.
-     */
-    private void ipaddress() {
-        //ip address 192.168.2.129 255.255.255.128
-
-        if ((slova.size() != 4) || (!kontrola("address", slova.get(1)))) {
-//        if ((slova.size() != 4) || (!slova.get(1).equals("address"))) {
-            if (nepokracovat) {
-                kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
-            } else {
-                incompleteCommand();
-            }
-            return;
-        }
-
-        if (IpAdresa.jeZakazanaIpAdresa(slova.get(2))) {
-            kon.posliRadek("Not a valid host address - " + slova.get(2));
-            return;
-        }
-
-        try {
-            IpAdresa ip = new IpAdresa(slova.get(2), slova.get(3));
-
-            if (ip.dej32BitAdresu() == 0) {
-                kon.posliRadek("Not a valid host address - " + slova.get(2));
-                return;
-            }
-
-            if (ip.jeCislemSite() || ip.jeBroadcastemSite() || ip.dej32BitMasku() == 0) {
-                // Router(config-if)#ip address 147.32.120.0 255.255.255.0
-                // Bad mask /24 for address 147.32.120.0
-                kon.posliRadek("Bad mask /" + ip.pocetBituMasky() + " for address " + ip.vypisAdresu());
-                return;
-            }
-            aktualni.zmenPrvniAdresu(ip);
-
-        } catch (SpatnaMaskaException e) {
-            String[] pole = slova.get(3).split("\\.");
-            String s = "";
-            int i;
-            for (String bajt : pole) {
-                try {
-                    i = Integer.parseInt(bajt);
-                    s += Integer.toHexString(i);
-
-                } catch (NumberFormatException exs) {
-                    invalidInputDetected();
-                    return;
-                }
-            }
-            kon.posliRadek("Bad mask 0x" + s.toUpperCase() + " for address " + slova.get(2));
-        } catch (SpatnaAdresaException e) {
-            invalidInputDetected();
-        } catch (Exception e) {
-            e.printStackTrace(); //TODO: e.printStackTrace(); pak zrusit?
-            invalidInputDetected();
-        }
-
-        ((CiscoPocitac) pc).getWrapper().update();
-    }
-
-    /**
      * Jednoduchy parser pro prikazy: <br />
-     * no ip nat <br />
+     * no ip nat inside<br />
      * no ip route <br />
-     * no access-list
+     * no access-list <br />
+     * 
+     * no ip address <br />
+     * no ip nat inside/outside <br />
+     * no shutdown
      */
     private void no() {
         String dalsi = dalsiSlovo();
@@ -633,24 +518,23 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             incompleteCommand();
             return;
         }
-
-        if (kontrola("access-list", dalsi)) {
-            prikaz = new CiscoAccessList(pc, kon, slova, true);
-            return;
+        if (stav == CONFIG || (debug && stav == ROOT)) {
+            if (kontrola("access-list", dalsi)) {
+                prikaz = new CiscoAccessList(pc, kon, slova, true);
+                return;
+            }
+            if (kontrola("ip", dalsi)) {
+                prikaz = new CiscoIp(pc, kon, slova, true, stav, aktualni);
+                return;
+            }
         }
-
-        if (kontrola("ip", dalsi)) {
-            dalsi = dalsiSlovo();
-            if (dalsi.isEmpty()) {
-                incompleteCommand();
+        if (stav == IFACE) {
+            if (kontrola("shutdown", dalsi)) {
+                noshutdown();
                 return;
             }
-            if (kontrola("nat", dalsi)) {
-                prikaz = new CiscoIpNat(pc, kon, slova, true);
-                return;
-            }
-            if (kontrola("route", dalsi)) {
-                prikaz = new CiscoIpRoute(pc, kon, slova, true);
+            if (kontrola("ip", dalsi)) {
+                prikaz = new CiscoIp(pc, kon, slova, true, stav, aktualni);
                 return;
             }
         }

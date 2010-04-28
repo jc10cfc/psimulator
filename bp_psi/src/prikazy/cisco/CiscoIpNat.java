@@ -19,11 +19,7 @@ import static prikazy.cisco.CiscoIpNat.Stav.*;
  * @author haldyr
  */
 public class CiscoIpNat extends CiscoPrikaz {
-
-    /**
-     * Rika, ze je to prikaz negovany - "no ..."
-     */
-    boolean no;
+    
     int poolPrefix = -1;
     IpAdresa start = null;
     IpAdresa konec = null;
@@ -31,7 +27,6 @@ public class CiscoIpNat extends CiscoPrikaz {
     int accesslist = -1;
     boolean overload = false;
     Stav stav = null;
-    boolean debug = false;
 
     enum Stav {
 
@@ -41,20 +36,14 @@ public class CiscoIpNat extends CiscoPrikaz {
     }
 
     public CiscoIpNat(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
-        super(pc, kon, slova);
-        this.no = no;
+        super(pc, kon, slova, no);
 
+        debug = false;
         ladici("vytvoren prikaz CiscoIpNat s no="+no);
 
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
             vykonejPrikaz();
-        }
-    }
-
-    private void ladici(String s) {
-        if (debug) {
-            System.out.println("ciscoIpNat: " + s);
         }
     }
 
@@ -312,20 +301,6 @@ public class CiscoIpNat extends CiscoPrikaz {
         }
 
         return true;
-    }
-
-    /**
-     * Zjisti, zda je rezetec prazdny.
-     * Kdyz ano, tak to jeste vypise hlasku incompleteCommand.
-     * @param s
-     * @return
-     */
-    private boolean jePrazdny(String s) {
-        if (s.equals("")) {
-            incompleteCommand();
-            return true;
-        }
-        return false;
     }
 
     private boolean zpracujStatic(String s) {

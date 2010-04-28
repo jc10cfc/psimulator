@@ -31,11 +31,7 @@ public class Main {
      * Vrati List vytvorenych pocitacu.
      * @return
      */
-    public static Object nacti() {
-
-        // Cesta ke zdrojovému XML dokumentu
-
-        final String sourcePath = konfigurak;
+    public Object nacti() {
 
         Object o = null;
 
@@ -48,11 +44,11 @@ public class Main {
             SAXHandler sax = new SAXHandler(port, bezNastaveni);
 
             // Vytvoříme vstupní proud XML dat.
-            InputSource source = new InputSource(sourcePath);
+            InputSource source = new InputSource(konfigurak);
 
             // Nastavíme náš vlastní content handler pro obsluhu SAX událostí.
             parser.setContentHandler(sax);
-            int i = 0;
+            
             // Zpracujeme vstupní proud XML dat.
             parser.parse(source);
             o = sax.vratNastaveni();
@@ -70,7 +66,7 @@ public class Main {
     public static void main(String[] args) {
 
         parsujParametry(args);
-        vsechno = nacti();
+        vsechno = new Main().nacti();
 
         if (vsechno == null) {
             System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");

@@ -301,7 +301,7 @@ public class SAXHandler implements ContentHandler {
      * @return
      */
     private String vypisPole(String[] pole) {
-        String s = "";
+        String s = "[";
         for (int i = 0; i < pole.length; i++) {
             if (i == 0) {
                 s += pole[i];
@@ -309,6 +309,7 @@ public class SAXHandler implements ContentHandler {
                 s += "," + pole[i];
             }
         }
+        s += "]";
         return s;
     }
 
