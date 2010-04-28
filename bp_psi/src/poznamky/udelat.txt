@@ -1,16 +1,14 @@
 zbyva:
-SNAT
 windows verze - cygwin
 testovani
 skript pro spousteni - kvuli doplnovani
 rozstipat SAXHandler
-ukladani statickejch pravidel do konfiguraku + nacitani
 
 
 kubalik:
 udelat help
 preklopit do Aj
-detekce fungujicich prikazu na realnem ciscu u me neprochazenjicich?
+detekce fungujicich prikazu na realnem ciscu u me neprochazejicich?
 port parametrem
 \r\n
 nacteni z konfiguraku bez dat (jen vytvorit PC+rozhrani)

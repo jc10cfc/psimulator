@@ -799,10 +799,10 @@ public class SAXHandler implements ContentHandler {
             // kdyz chybi maska, tak se dopocita v kontruktou IpAdresy, kdyz chybi IP, tak se maska neresi
             if (iface[dejIndexVRozhrani("maska")].equals("") && !iface[dejIndexVRozhrani("ip")].equals("")) { // chybi maska, ale IP je, pak se maska dopocita
                 IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")]);
-                sr.seznamAdres.add(ip);
+                sr.zmenPrvniAdresu(ip);
             } else if (!iface[dejIndexVRozhrani("ip")].equals("") && !iface[dejIndexVRozhrani("maska")].equals("")) { // kdyz je tu oboje
                 IpAdresa ip = new IpAdresa(iface[dejIndexVRozhrani("ip")], iface[dejIndexVRozhrani("maska")]);
-                sr.seznamAdres.add(ip);
+                sr.zmenPrvniAdresu(ip);
             } else if (!iface[dejIndexVRozhrani("maska")].equals("") && iface[dejIndexVRozhrani("ip")].equals("")) { // vypisem, ze preskakujem
                 System.err.println("Preskakuji masku z duvodu nepritomnosti IP adresy..");
             }

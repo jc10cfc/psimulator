@@ -147,7 +147,7 @@ public class SitoveRozhrani {
      * Prvni adresu si schovam, vsechny IP smazu a prvni zase pridam.
      */
     public void smazVsechnyIpKromPrvni() {
-        IpAdresa prvni = vratPrvni();
+        IpAdresa prvni = vratPrvni().vratKopii();
         seznamAdres.clear();
         seznamAdres.add(prvni);
     }

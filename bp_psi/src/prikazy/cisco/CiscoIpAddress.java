@@ -21,12 +21,13 @@ public class CiscoIpAddress extends CiscoPrikaz {
 
     SitoveRozhrani rozhrani;
     IpAdresa adr;
+    boolean noBezAdresy = false;
 
     public CiscoIpAddress(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no, SitoveRozhrani rozhrani) {
         super(pc, kon, slova, no);
         this.rozhrani = rozhrani;
 
-        debug = true;
+        debug = false;
         ladici("konstruktor");
 
         boolean pokracovat = zpracujRadek();
@@ -48,6 +49,12 @@ public class CiscoIpAddress extends CiscoPrikaz {
         ladici("po address");
 
         String ip = dalsiSlovo();
+
+        if (ip.length() == 0){
+            noBezAdresy = true;
+            return true;
+        }
+
         String maska = dalsiSlovo();
         if (jePrazdny(ip) || jePrazdny(maska)) {
             return false;
@@ -107,12 +114,24 @@ public class CiscoIpAddress extends CiscoPrikaz {
     protected void vykonejPrikaz() {
 
         if (no) {
-            //TODO: smazat prvni ip
-//            rozhrani.
+            if (noBezAdresy) {
+                rozhrani.seznamAdres.set(0, null);
+                return;
+            }
+
+            if (rozhrani.vratPrvni().dej32BitAdresu() != adr.dej32BitAdresu()) {
+                kon.posliRadek("Invalid address");
+                return;
+            }
+            if (rozhrani.vratPrvni().dej32BitMasku() != adr.dej32BitMasku()) {
+                kon.posliRadek("Invalid address mask");
+                return;
+            }
+
+            rozhrani.seznamAdres.set(0, null);
             return;
         }
-
-        // TODO: co se stane, kdyz menim ip na rozhrani, na kterem uz je pool ip && neni prirazena IP????
+        
         rozhrani.zmenPrvniAdresu(adr);
 
         ((CiscoPocitac) pc).getWrapper().update();

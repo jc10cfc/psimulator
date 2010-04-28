@@ -26,12 +26,12 @@ public class CiscoShow extends CiscoPrikaz {
 
     Stav stavShow = null;
     CiscoStavy stavCisco;
-    boolean debug = true;
 
     public CiscoShow(AbstraktniPocitac pc, Konsole kon, List<String> slova, CiscoStavy stavCisco) {
         super(pc, kon, slova);
         this.stavCisco = stavCisco;
 
+        debug = true;
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
             vykonejPrikaz();
@@ -184,7 +184,11 @@ public class CiscoShow extends CiscoPrikaz {
 
             s += "interface " + sr.jmeno + "\n";
             for (IpAdresa adr : sr.seznamAdres) {
-                s += " ip address " + adr.vypisAdresu() + " " + adr.vypisMasku() + "\n";
+                if (adr == null) {
+                    s += " no ip address\n";
+                } else {
+                    s += " ip address " + adr.vypisAdresu() + " " + adr.vypisMasku() + "\n";
+                }
                 if (debug == false) { // kdyz neni debug rezim, tak vypis jen prvni IP.
                     break;
                 }
