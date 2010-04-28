@@ -681,6 +681,10 @@ public class SAXHandler implements ContentHandler {
     }
 
     private void zpracujPooly(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        if (bezNastaveni) {
+            return;
+        }
+
         for (String[] pul : pcbuilder.pool) {
 
             IpAdresa ip_start = null;
@@ -732,6 +736,10 @@ public class SAXHandler implements ContentHandler {
     }
 
     private void zpracujAccessListy(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        if (bezNastaveni) {
+            return;
+        }
+
         for (String[] access : pcbuilder.accessList) {
             try {
                 String jmeno = access[dejIndexVNatAccessListu("cislo")];
@@ -753,6 +761,10 @@ public class SAXHandler implements ContentHandler {
     }
 
     private void zpracujPoolAccess(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        if (bezNastaveni) {
+            return;
+        }
+
         for (String[] poolAcc : pcbuilder.poolAccess) {
             try {
                 String acc = poolAcc[dejIndexVNatPrirazeni("accessCislo")];
@@ -847,6 +859,10 @@ public class SAXHandler implements ContentHandler {
     }
 
     private void zpracujRoutovaciTabulku(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        if (bezNastaveni) {
+            return;
+        }
+
         for (String[] mujzaznam : pcbuilder.routovaciTabulka) { // tady resim routovaci tabulku
 
             if (vypis2) {
@@ -915,6 +931,10 @@ public class SAXHandler implements ContentHandler {
     }
 
     private void zpracujStatickyNat(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
+        if (bezNastaveni) {
+            return;
+        }
+
         for (String[] stat : pcbuilder.staticke) {
             if (!jePolePlne(stat)) {
                 System.err.println("Staticky zaznam (in/out) pro NAT neni uplny: "+vypisPole(stat) + ", preskakuji..");
