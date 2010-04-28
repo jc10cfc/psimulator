@@ -51,7 +51,7 @@ public class IpAdresa {
      * @throws SpatnaAdresaException
      */
     private void nastavAdresu(String adr) {
-        if (!jeSpravnaAdresaNebMaska(adr, false)) {
+        if (!spravnaAdresaNebMaska(adr, false)) {
             throw new SpatnaAdresaException("spatna adresa: " + adr);
         }
         adresa = integerZeStringu(adr);
@@ -77,14 +77,14 @@ public class IpAdresa {
      * @autor neiss
      */
     public void nastavMasku(String maska) {
-        if (!jeSpravnaAdresaNebMaska(maska, true)) {
+        if (!spravnaAdresaNebMaska(maska, true)) {
             throw new SpatnaMaskaException("spatna maska: " + maska);
         }
         this.maska = integerZeStringu(maska);
     }
 
 //*****************************************************************************************************************
-//porovnavaci, zjistovaci a vraceci metody
+//verejny porovnavaci, zjistovaci a vraceci metody
 
     /**
      * Vrati cislo site jako IpAdresu, maska je stejna, jako ma tato adresa.
@@ -258,90 +258,6 @@ public class IpAdresa {
         return vratCopy;
     }
 
-//**************************************************************************************************************
-//verejny staticky metody
-
-    public static boolean jeSpravnaIP(String adresa, boolean jeToMaska){
-        try{
-            return jeSpravnaAdresaNebMaska(adresa, jeToMaska);
-        }catch(ZakazanaIpAdresaException ex){
-            return true;
-        }
-    }
-
-    /**
-     * Udelany metosou pokus - omyl, ale testy prosly.
-     * @param p
-     * @return adresu o jednicku vetsi, maska bude 255.0.0.0
-     */
-    public static IpAdresa vratOJednaVetsi(IpAdresa p){
-        int nova=(int) ( (long)(p.adresa) + 1L );
-        IpAdresa vratit=new IpAdresa("192.168.1.1"); //neco natvrdo musim vytvorit, jinak to nejde
-        vratit.adresa=nova;
-        return vratit;
-    }
-
-    /**
-     * Jako parametr vstupuje IpAdresa wildcard, ktera ma nastanenou adresu na wildcard (jako maska by to neproslo).
-     * @param wildcard
-     * @return maska - retezec, ktery je maskou z wildcard <br />
-     *         null - kdyz to nebyla validni maska (po preklopeni)
-     */
-    public static String vratMaskuZWildCard(IpAdresa wildcard) {
-        long wc = (long)wildcard.adresa;
-        long broadcast = (long)(new IpAdresa("255.255.255.255").adresa);
-        int mask = (int)(broadcast - wc);
-        if (!jeMaskou(mask)) {
-            return null;
-        }
-        wildcard.maska = mask;
-        return wildcard.vypisMasku();
-    }
-
-     /**
-     * Vrati pocet bitu masky ze zadane IP ve tvaru stringu. Vyuziva se, kdyz uzivatel zada
-     * jen IP bez masky a ta se pak musi doplnit automaticky.
-     * @param ip
-     * @return
-     * @author haldyr
-     */
-    @Deprecated
-    public static int vratMaskuzIPadresy(String ip) {
-        /*
-            A 	0 	0–127    	255.0.0.0 	7 	24 	126 	16 777 214
-            B 	10 	128-191 	255.255.0.0 	14 	16 	16384 	65534
-            C 	110 	192-223 	255.255.255.0 	21 	8 	2 097 152 	254
-            D 	1110 	224-239 	multicast
-            E 	1111 	240-255 	vyhrazeno jako rezerva
-        */
-        String[] pole = ip.split(".");
-        int cislo;
-        int mask = -1;
-        try {
-            cislo = Integer.parseInt(pole[0]);
-        } catch (NumberFormatException e) {
-            cislo = 0;
-        }
-
-        if (jeVIntervalu(0, 127, cislo)) {
-            mask = 8;
-        }
-        if (jeVIntervalu(128, 191, cislo)) {
-            mask = 16;
-        }
-        if (jeVIntervalu(192, 223, cislo)) {
-            mask = 24;
-        }
-
-        // pro ostatni pripady bude maska 24, k tomu by ale nemelo dochazet (kontrola spravnosti IP adresy
-        //by to mela resit)
-        if (mask == -1) {
-            mask = 24;
-        }
-
-        return mask;
-    }
-
 //****************************************************************************************************************
 //tady zacinaj verejny metody pro pekny vypis adresy, masky atd. jako String
 
@@ -395,6 +311,128 @@ public class IpAdresa {
      */
     public String vypisAdresuSPortem(){
         return vypisAdresu()+":"+port;
+    }
+
+
+//**************************************************************************************************************
+//verejny staticky metody
+
+    /**
+     * Kontroluje, jestli zadanej String je adresa nebo maska. Kdyz je jeToMaska true,
+     * porovnava to jako masku, jinak jako adresu.
+     * @param adresa
+     * @param jeToMaska kdyz je to true, porovnava to jako masku
+     * @return
+     * @author haldyr
+     */
+    public static boolean spravnaAdresaNebMaska(String adresa, boolean jeToMaska){
+        if (!jednoduchaKontrola(adresa)) {
+            return false;
+        }
+        //kontrola spravnosti jednotlivejch cisel:
+        String[] pole = adresa.split("\\."); //pole Stringu s jednotlivejma cislama
+        int n;
+        for (int i = 0; i < 4; i++) {
+            n = Integer.valueOf(pole[i]);
+            if (n < 0 || n > 255) { //podle me ta kontrola musi bejt takhle
+                return false;
+            }
+        }
+
+        if (! jeToMaska){//neni to maska
+            return true; //to uz na kontrolu staci
+        }else{ //ma to bejt maska
+            int m=integerZeStringu(adresa);
+            return jeMaskou(m); //jeste se kontroluje, jestli je to spravna maska
+        }
+
+    }
+
+    /**
+     * Udelany metosou pokus - omyl, ale testy prosly.
+     * @param p
+     * @return adresu o jednicku vetsi, maska bude 255.0.0.0
+     */
+    public static IpAdresa vratOJednaVetsi(IpAdresa p){
+        int nova=(int) ( (long)(p.adresa) + 1L );
+        IpAdresa vratit=new IpAdresa("192.168.1.1"); //neco natvrdo musim vytvorit, jinak to nejde
+        vratit.adresa=nova;
+        return vratit;
+    }
+
+    /**
+     * Jako parametr vstupuje IpAdresa wildcard, ktera ma nastanenou adresu na wildcard (jako maska by to neproslo).
+     * @param wildcard
+     * @return maska - retezec, ktery je maskou z wildcard <br />
+     *         null - kdyz to nebyla validni maska (po preklopeni)
+     */
+    public static String vratMaskuZWildCard(IpAdresa wildcard) {
+        long wc = (long)wildcard.adresa;
+        long broadcast = (long)(new IpAdresa("255.255.255.255").adresa);
+        int mask = (int)(broadcast - wc);
+        if (!jeMaskou(mask)) {
+            return null;
+        }
+        wildcard.maska = mask;
+        return wildcard.vypisMasku();
+    }
+
+    /**
+     * Vrati adresu ze zadaneho Stringu, kde muze nebo nemusi byt zadana adresa za lomitkem.
+     * Adresa i maska musi byt spravna. Maska tedy v intervalu <0,32>
+     * Jestlize zadam adresu bez masky, vrati se adresa s defaultni maskou 32 (255.255.255.255)
+     * Na chybny vstupy to hazi SpatnaMaskaException nebo SpatnaAdresaException, pricemz, kdyz
+     * je spatny oboje, ma SpatnaAdresaException prednost.
+     * @throws SpatnaMaskaException
+     * @throws SpatnaAdresaException
+     * @param adrm
+     * @return
+     * @author neiss
+     */
+    public static IpAdresa vytvorAdresu(String adrm) {
+        int lomitko = adrm.indexOf('/');
+        IpAdresa v = null;
+        if (lomitko == -1) { // retezec neobsahuje lomitko
+            v = new IpAdresa(adrm, 32);
+        } else {  // je to s lomitkem, musi se to s nim zparsovat
+            String adresa = adrm.substring(0, lomitko);
+            v=new IpAdresa(adresa); //vytvari se uz tady, aby prvni vyjimka se hazela na adresu
+            String maska = adrm.substring(lomitko + 1, adrm.length());
+            int m;
+            //kontrola masky, jestli je to integer:
+            try {
+                m = Integer.parseInt(maska);
+            } catch (NumberFormatException ex) {
+                throw new SpatnaMaskaException();
+            }
+            v.nastavMasku(m);  // nastaveni masky
+
+        }
+        return v;
+    }
+
+        /**
+     * Zkontroluje, zda dany retezec je IP adresa z rozsahu (1.* - 223.*).
+     * Ostatni adresy jsou pro multicast + vyhrazeny
+     * @param adr
+     * @return
+     * @author haldyr
+     */
+    public static boolean jeZakazanaIpAdresa(String adr) {
+        /*
+        A 	0 	0–127    	255.0.0.0 	7 	24 	126 	16 777 214
+        B 	10 	128-191 	255.255.0.0 	14 	16 	16384 	65534
+        C 	110 	192-223 	255.255.255.0 	21 	8 	2 097 152 	254
+        D 	1110 	224-239 	multicast
+        E 	1111 	240-255 	vyhrazeno jako rezerva
+         */
+
+        String[] pole = adr.split("\\.");
+        if (Integer.valueOf(pole[0]) >= 224 && Integer.valueOf(pole[0]) <= 255) {
+            // -> adresy rozsahu 224.* - 239.* jsou vyhrazeny pro multicast, vyssi ifconfig nezere
+            return true;
+        }
+        return false;
     }
 
 //*******************************************************************************************************************
@@ -523,50 +561,5 @@ public class IpAdresa {
         return false;
     }
 
-    /**
-     * Zkontroluje, jestli zadany retezec je IP adresa (bez masky za lomitkem)
-     * @param adr kontrolovana adresa
-     * @param jeToMaska urcuje, zda to chci kontrolovat jako masku (spravnou)
-     * @return true, kdyz je adresa spravna
-     * @author haldyr
-     */
-    private static boolean jeSpravnaAdresaNebMaska(String adr, boolean jeToMaska) {
-        if (!jednoduchaKontrola(adr)) {
-            return false;
-        }
-        //kontrola spravnosti jednotlivejch cisel:
-        String[] pole = adr.split("\\.");
-        int n;
 
-        for (int i = 0; i < 4; i++) {
-            n = Integer.valueOf(pole[i]);
-            if (n < 0 || n > 255) { //podle me ta kontrola musi bejt takhle
-                return false;
-            }
-        }
-
-        if(jeToMaska){ //kontroluje se, jestli to je spravna maska
-            int m=integerZeStringu(adr);
-            return jeMaskou(m);
-        }
-        
-        return true;
-    }
-
-    /**
-     * Zkontroluje, zda dany retezec je IP adresa z rozsahu (1.* - 223.*).
-     * Ostatni adresy jsou pro multicast + vyhrazeny 
-     * @param adr
-     * @return
-     * @author haldyr
-     */
-    public static boolean jeZakazanaIpAdresa(String adr) {
-
-        String[] pole = adr.split("\\.");
-        if (Integer.valueOf(pole[0]) >= 224 && Integer.valueOf(pole[0]) <= 255) {
-            // -> adresy rozsahu 224.* - 239.* jsou vyhrazeny pro multicast, vyssi ifconfig nezere
-            return true;
-        }
-        return false;
-    }
 }

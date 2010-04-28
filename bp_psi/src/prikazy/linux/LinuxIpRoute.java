@@ -12,11 +12,10 @@ import prikazy.*;
  *
  * @author neiss
  */
-public class LinuxIpAddr extends AbstraktniPrikaz {
+public class LinuxIpRoute extends AbstraktniPrikaz {
 
-    public LinuxIpAddr(AbstraktniPocitac pc, Konsole kon, List<String> slova, LinuxIp puv) {
+    public LinuxIpRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova, LinuxIp puv) {
         super(pc, kon, slova);
-        parsujPrikaz();
         vykonejPrikaz();
         this.puv=puv;
     }
@@ -24,10 +23,6 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
 
     @Override
     protected void vykonejPrikaz() {
-
-    }
-
-    private void parsujPrikaz() {
 
     }
 }

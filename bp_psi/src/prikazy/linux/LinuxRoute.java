@@ -202,7 +202,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         }else if(slovo.contains("/")){ // slovo obsahuje lomitko -> mohla by to bejt adresa s maskou
             bezChyby=prectiIpSMaskou(slovo);
         }else{ // slovo neobsahuje lomitko -> mohla by to bejt samotna IP adresa
-            if(IpAdresa.jeSpravnaIP(slovo, false)){ //samotna IP je spravna
+            if(IpAdresa.spravnaAdresaNebMaska(slovo, false)){ //samotna IP je spravna
                 adr=slovo;
             }else{ //samotna IP neni spravna
                 kon.posliRadek(adr+": unknown host");
@@ -247,7 +247,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         boolean chyba=false;
         if(slovo.equals("default")){
             nastavDefault();
-        }else if( ! IpAdresa.jeSpravnaIP(slovo,false)){ //adresa je spatna
+        }else if( ! IpAdresa.spravnaAdresaNebMaska(slovo,false)){ //adresa je spatna
             if(slovo.contains("/")){ //kdyz je zadana IP adresa s maskou (zatim na to kaslu a kontroluju jen 
                                      //lomitko vypise se jina hlaska, nez normalne.
                 kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
@@ -369,7 +369,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
             return; //nic se nema nastavovat
         }
         nastavovanaMaska=true;
-        if ( ! IpAdresa.jeSpravnaIP(slovo, true)){
+        if ( ! IpAdresa.spravnaAdresaNebMaska(slovo, true)){
             kon.posliRadek("route: síťová maska "+slovo+"je nesprávná");
             navratovyKod |= 1024;
         }else{ //spravna brana
@@ -418,7 +418,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
             if ( lomitko < adrm.length()-1 ) { // lomitko nesmi byt poslednim znakem retezce
                 String adresa=adrm.substring(0,lomitko);
                 String maska=adrm.substring(lomitko+1, adrm.length());
-                if ( IpAdresa.jeSpravnaIP(adresa, false) ){ //adresa je spravna
+                if ( IpAdresa.spravnaAdresaNebMaska(adresa, false) ){ //adresa je spravna
                     boolean chyba = false;
                     try {        // pokus o parsovani masky
                         pocetBituMasky=Integer.parseInt(maska); //parsuje se jako integer

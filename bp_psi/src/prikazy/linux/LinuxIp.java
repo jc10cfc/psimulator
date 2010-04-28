@@ -4,9 +4,11 @@
  */
 
 package prikazy.linux;
+import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.*;
 import prikazy.*;
+import vyjimky.SpatnaMaskaException;
 //import static prikazy.linux.LinuxIp.Terminal.*; //tohle tady musi bejt, takhle divne
 
 /**
@@ -20,32 +22,51 @@ public class LinuxIp extends AbstraktniPrikaz {
         vykonejPrikaz();
     }
 
+    private boolean ladeni=true;
+
     private final int necoSpatne=1; //neco je spatne, vypise se help
     private final int spatnaFamily=2;
-    private final int neznamyPrepinac=4;
+    private final int neexistujiciPrepinac=4;
+    private final int neexistujiciPrikaz=8;
+    private final int nepodporovanyPrikaz=16;
     int navrKod=0;
 
     String slovo;
+
     final int fam_ipv4=1;
     final int fam_ipv6=2;
     final int fam_ethernet=3;
     int family=0;
-    boolean minus_o=false;
-    boolean minus_V=false;
-    boolean minus_s=false;
-    boolean minus_r=false;
-    boolean minus_h=false;
+
+    //prepinace:
+    public boolean minus_o=false;
+    public boolean minus_V=false;
+    public boolean minus_s=false;
+    public boolean minus_r=false;
+    public boolean minus_h=false;
 
 
-    @Override
-    protected void vykonejPrikaz() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+
+    /**
+     * 1 - link <br />
+     * 2 - addr<br />
+     * 3 - route<br />
+     * 4 - help<br />
+     * 5 - nepodporovany<br />
+     */
+    public int cisloPrikazu=0;
+    private String prikaz;
+
+    private AbstraktniPrikaz pr;
+
 
     private void parsujPrikaz() {
         slovo=dalsiSlovo();
         if(prectiPrepinace()){ //po prepinacich se ma pokracovat...
-
+            prectiPrikaz();
+        }
+        if((navrKod & necoSpatne)!=0){
+            vypisHelp();
         }
         
     }
@@ -75,6 +96,7 @@ public class LinuxIp extends AbstraktniPrikaz {
                     ukoncit=true;
                 }else{
                     navrKod|=spatnaFamily;
+                    kon.posliRadek("Error: argument \"invalid protocol family\" is wrong: "+slovo);
                     ukoncit=true;
                 }
             }else if(slovo.equals("-o")||slovo.equals("-oneline")){
@@ -85,7 +107,8 @@ public class LinuxIp extends AbstraktniPrikaz {
                 minus_h=true;
                 ukoncit=true;
             }else{
-                navrKod|=neznamyPrepinac;
+                navrKod|=neexistujiciPrepinac;
+                kon.posliRadek("Option \""+slovo+"\" is unknown, try \"ip -help\".");
                 ukoncit=true;
             }
             slovo=dalsiSlovo();
@@ -94,11 +117,100 @@ public class LinuxIp extends AbstraktniPrikaz {
     }
     
     /**
-     * Cte prikaz, ocekava ho v promenny slovo. Ocekava jeden jedinej prikaz.
+     * Cte cisloPrikazu, ocekava ho v promenny slovo. Ocekava jeden jedinej cisloPrikazu.
      */
     private void prectiPrikaz(){
-        
+        if(slovo.equals("")){
+            navrKod|=necoSpatne;
+        }else if("link".startsWith(slovo)){
+            cisloPrikazu=1;
+        }else if("address".startsWith(slovo)){
+            cisloPrikazu=2;
+        }else if("route".startsWith(slovo)){
+            cisloPrikazu=3;
+        }else if("help".startsWith(slovo)){
+            cisloPrikazu=4;
+        }else if("addrlabel".startsWith(slovo)){ // addr ma vetsi prioritu
+            cisloPrikazu=5;
+            prikaz= "addrlabel";
+        }else if("neighbour".startsWith(slovo)){
+            cisloPrikazu=5;
+            prikaz= "neighbour";
+        }else if("rule".startsWith(slovo)){ // route ma vetsi prioritu
+            cisloPrikazu=5;
+            prikaz= "rule";
+        }else if("maddress".startsWith(slovo)){
+            cisloPrikazu=5;
+            prikaz= "maddress";
+        }else if("mroute".startsWith(slovo)){
+            cisloPrikazu=5;
+            prikaz= "mroute";
+        }else if("tunnel".startsWith(slovo)){
+            cisloPrikazu=5;
+            prikaz= "tunnel";
+        }else if("xfrm".startsWith(slovo)){
+            cisloPrikazu=5;
+            prikaz= "xfrm";
+        }else{
+            kon.posliRadek("Object \""+slovo+"\" is unknown, try \"ip help\".");
+            navrKod|=neexistujiciPrikaz;
+        }
+        if(cisloPrikazu==5){
+            navrKod |= nepodporovanyPrikaz;
+            kon.posliServisne("Prikaz "+prikaz+" neni v simulatoru zatim podporovan.");
+//            if(ladeni)kon.posliRadek("Jsem tu.");
+        }
     }
+
+    @Override
+    protected void vykonejPrikaz() {
+        if(ladeni)kon.posliRadek(toString());
+        if(minus_V){
+            kon.posliRadek("ip utility, iproute2-ss060323");
+            return;
+        }
+        if(minus_h || cisloPrikazu==4){
+            vypisHelp();
+            return;
+        }
+//        if(cisloPrikazu==link){
+//            pr=new LinuxIpLink(pc, kon, slova, this);
+//        }
+//        if(cisloPrikazu==addr){
+//            pr=new LinuxIpAddr(pc, kon, slova, this);
+//        }
+//        if(cisloPrikazu==route){
+//            pr=new LinuxIpRoute(pc, kon, slova, this);
+//        }
+    }
+
+    private void vypisHelp() {
+        kon.posliRadek("Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }");
+        kon.posliRadek("       ip [ -force ] [-batch filename");
+        kon.posliRadek("where  OBJECT := { link | addr | addrlabel | route | rule | neigh | ntable |");
+        kon.posliRadek("                   tunnel | maddr | mroute | monitor | xfrm }");
+        kon.posliRadek("       OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |");
+        kon.posliRadek("                    -f[amily] { inet | inet6 | ipx | dnet | link } |");
+        kon.posliRadek("                    -o[neline] | -t[imestamp] }");
+    }
+
+/**
+     * Jen pro ladeni.
+     * @return
+     */
+    @Override
+    public String toString(){
+        String vratit = "--------------------------\r\n   Parametry prikazu ip:\r\n\tnavratovyKodParseru: "
+                + rozlozNaMocniny2(navrKod);
+        vratit += "\r\n\tprikaz: " + cisloPrikazu;
+        vratit+="\r\n\tprepinace: ";
+        if(minus_o)vratit+=" -o";if(minus_r)vratit+=" -r";if(minus_s)vratit+=" -s";
+        if(minus_V)vratit+=" -V";if(minus_h)vratit+=" -h";
+        vratit += "\r\n--------------------------";
+        return vratit;
+    }
+
+    
 
 
 
@@ -109,12 +221,12 @@ public class LinuxIp extends AbstraktniPrikaz {
 //        link, set, up, down, show
 //    }
 
-//    private Terminal vratTerm(String s){
-//        if(s.equals("l")||s.equals("li")||s.equals("lin")||s.equals("link")) return link;
-//        if(s.equals("s")||s.equals("se")||s.equals("set"))return set;
-//        if(s.equals("up"))return up;
-//        if(s.equals("down"))return down;
-//        if(s.equals("sh")||s.equals("sho")||s.equals("show"))return show;
+//    private Terminal vratTerm(String adrm){
+//        if(adrm.equals("l")||adrm.equals("li")||adrm.equals("lin")||adrm.equals("link")) return link;
+//        if(adrm.equals("adrm")||adrm.equals("se")||adrm.equals("set"))return set;
+//        if(adrm.equals("up"))return up;
+//        if(adrm.equals("down"))return down;
+//        if(adrm.equals("sh")||adrm.equals("sho")||adrm.equals("show"))return show;
 //    }
 
 }

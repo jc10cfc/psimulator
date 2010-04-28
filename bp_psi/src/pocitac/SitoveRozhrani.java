@@ -43,6 +43,19 @@ public class SitoveRozhrani {
      */
     private boolean nahozene;
 
+    public SitoveRozhrani(String jmeno, AbstraktniPocitac pc, String macAdresa) {
+        this.pc = pc;
+        this.jmeno = jmeno;
+        this.macAdresa = macAdresa;
+        seznamAdres.add(null); //na prvni misto se pridava null, je to jako ta prvni adresa
+
+        if (pc instanceof LinuxPocitac) {
+            this.nahozene = true;
+        } else if (pc instanceof CiscoPocitac) {
+            this.nahozene = false;
+        }
+    }
+
     @Override
     public String toString() {
         String s = "";
@@ -74,21 +87,6 @@ public class SitoveRozhrani {
      */
     public AbstraktniPocitac getPc(){
         return pc;
-    }
-
-    public SitoveRozhrani(String jmeno, AbstraktniPocitac pc, String macAdresa) {
-        this.pc=pc;
-        this.jmeno=jmeno;
-        this.macAdresa=macAdresa;
-
-        if (pc instanceof LinuxPocitac) {
-            this.nahozene = true;
-        } else if (pc instanceof CiscoPocitac) {
-            this.nahozene = false;
-        }
-
-        
-//        seznamPodrazenych=new LinkedList<SitoveRozhrani>();
     }
 
     /**

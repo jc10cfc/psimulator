@@ -164,7 +164,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
             navratovyKod |= 8;
         }
         for (int i=0;i<seznamIP.size();i++){ //kontrola spravnosti IP
-            if ( ! IpAdresa.jeSpravnaIP(seznamIP.get(i), false) ) { //adresa neni spravna
+            if ( ! IpAdresa.spravnaAdresaNebMaska(seznamIP.get(i), false) ) { //adresa neni spravna
                 if(spatnaAdresa==null){
                     spatnaAdresa=seznamIP.get(i); //prvni ze spatnejch IP adres se uklada pro vypsani hlaseni
                 }
@@ -189,7 +189,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         //---------------------
         //kontrola IP adres add (pridavani nove IP)
         for(int i=0;i<add.size();i++){
-            if( !IpAdresa.jeSpravnaIP(add.get(i), false) || IpAdresa.jeZakazanaIpAdresa(add.get(i)) ){
+            if( !IpAdresa.spravnaAdresaNebMaska(add.get(i), false) || IpAdresa.jeZakazanaIpAdresa(add.get(i)) ){
                 navratovyKod |= 64;
                 neplatnyAdd.add(add.get(i));
             }
@@ -200,7 +200,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         //---------------------
         //kontrola IP adres del (odebirani existujici IP)
         for(int i=0;i<del.size();i++){
-            if ( !IpAdresa.jeSpravnaIP(del.get(i), false) || IpAdresa.jeZakazanaIpAdresa(del.get(i)) ){
+            if ( !IpAdresa.spravnaAdresaNebMaska(del.get(i), false) || IpAdresa.jeZakazanaIpAdresa(del.get(i)) ){
                 navratovyKod |= 128;
 
                 neplatnyDel.add(del.get(i));

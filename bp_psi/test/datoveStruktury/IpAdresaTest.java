@@ -10,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
 import static org.junit.Assert.*;
 
@@ -241,16 +242,24 @@ public class IpAdresaTest {
     }
 
     @Test
-    public void testJeSpravnaIP(){
-        assertTrue(IpAdresa.jeSpravnaIP("255.255.255.0", true));
-        assertTrue(IpAdresa.jeSpravnaIP("0.0.0.0", true));
-        assertTrue(IpAdresa.jeSpravnaIP("255.255.255.255", true));
-        assertTrue(IpAdresa.jeSpravnaIP("255.255.255.128", true));
-        assertTrue(IpAdresa.jeSpravnaIP("192.0.0.0", true));
-        assertFalse(IpAdresa.jeSpravnaIP("255.255.255.3", true));
-        assertFalse(IpAdresa.jeSpravnaIP("255.255.255.32", true));
-        assertFalse(IpAdresa.jeSpravnaIP("255.255.255.129", true));
-        assertFalse(IpAdresa.jeSpravnaIP("255.0.155.0", true));
+    public void testSpravnaAdresaNebMaska(){
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("255.255.255.0", true));
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("0.0.0.0", true));
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("255.255.255.255", true));
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("255.255.255.128", true));
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("192.0.0.0", true));
+        
+        assertFalse(IpAdresa.spravnaAdresaNebMaska("255.255.255.3", true));
+        assertFalse(IpAdresa.spravnaAdresaNebMaska("255.255.255.32", true));
+        assertFalse(IpAdresa.spravnaAdresaNebMaska("255.255.255.129", true));
+        assertFalse(IpAdresa.spravnaAdresaNebMaska("255.0.155.0", true));
+
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("192.168.1.1", false));
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("1.1.1.1", false));
+        assertTrue(IpAdresa.spravnaAdresaNebMaska("10.10.10.10", false));
+        
+        assertFalse(IpAdresa.spravnaAdresaNebMaska("0.0.256.0", false));
+        assertFalse(IpAdresa.spravnaAdresaNebMaska("0.0.254.0.9", false));
     }
 
     @Test
@@ -271,6 +280,41 @@ public class IpAdresaTest {
         assertEquals("255.255.255.252", IpAdresa.vratMaskuZWildCard(ip));
         ip = new IpAdresa("0.0.0.2");
         assertEquals(null, IpAdresa.vratMaskuZWildCard(ip));
+    }
+
+    @Test
+    public void testVytvorAdresu(){
+        assertEquals("1.1.1.1/32", IpAdresa.vytvorAdresu("1.1.1.1").vypisAdresuSMaskou());
+        assertEquals("0.0.0.0/0", IpAdresa.vytvorAdresu("0.0.0.0/0").vypisAdresuSMaskou());
+        assertEquals("255.255.255.255/1", IpAdresa.vytvorAdresu("255.255.255.255/1").vypisAdresuSMaskou());
+        assertEquals("1.2.3.4/32", IpAdresa.vytvorAdresu("1.2.3.4").vypisAdresuSMaskou());
+
+        try{
+            IpAdresa.vytvorAdresu("");
+            fail();
+        }catch(SpatnaAdresaException e){}
+        try{
+            IpAdresa.vytvorAdresu("/");
+            fail();
+        }catch(SpatnaAdresaException e){}
+        try{
+            IpAdresa.vytvorAdresu("23.23.23.263/");
+            fail();
+        }catch(SpatnaAdresaException e){}
+
+        try{
+            IpAdresa.vytvorAdresu("23.23.23.23/");
+            fail();
+        }catch(SpatnaMaskaException e){}
+        try{
+            IpAdresa.vytvorAdresu("23.23.23.23/33");
+            fail();
+        }catch(SpatnaMaskaException e){}
+        try{
+            IpAdresa.vytvorAdresu("23.23.23.23/23d");
+            fail();
+        }catch(SpatnaMaskaException e){}
+
     }
     
 //    @Test
