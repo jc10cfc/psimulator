@@ -1,0 +1,81 @@
+<!-- <?xml version="1.0" encoding="UTF-8" ?> -->
+<!-- http://www.hitsw.com/xml_utilites/ -->
+
+<!ELEMENT access-list ( cislo, ipA, ipAWildcard ) >
+
+<!ELEMENT access-listy ( access-list+ ) >
+
+<!ELEMENT accessCislo ( #PCDATA ) >
+
+<!ELEMENT adresat ( #PCDATA ) >
+
+<!ELEMENT brana ( #PCDATA ) >
+
+<!ELEMENT cislo ( #PCDATA ) >
+
+<!ELEMENT ip ( #PCDATA ) >
+
+<!ELEMENT ipA ( #PCDATA ) >
+
+<!ELEMENT ipAWildcard ( #PCDATA ) >
+
+<!ELEMENT ip_forward ( #PCDATA ) >
+
+<!ELEMENT ip_konec ( #PCDATA ) >
+
+<!ELEMENT ip_start ( #PCDATA ) >
+
+<!ELEMENT jmeno ( #PCDATA ) >
+
+<!ELEMENT konfigurak ( pocitac+ ) >
+
+<!ELEMENT mac ( #PCDATA ) >
+
+<!ELEMENT maska ( #PCDATA ) >
+
+<!ELEMENT maskaAdresata ( #PCDATA ) >
+
+<!ELEMENT nahozene ( #PCDATA ) >
+
+<!ELEMENT nat ( #PCDATA ) >
+
+<!ELEMENT natovani ( pooly, prirazeniVice, access-listy, staticke? ) >
+
+<!ELEMENT staticke ( in, out ) >
+
+<!ELEMENT in ( #PCDATA ) >
+
+<!ELEMENT out ( #PCDATA ) >
+
+<!ELEMENT overload ( #PCDATA ) >
+
+<!ELEMENT pJmeno ( #PCDATA ) >
+
+<!ELEMENT pocitac ( rozhrani+, routy, ip_forward?, natovani? ) >
+<!ATTLIST pocitac jmeno NMTOKEN #REQUIRED >
+<!ATTLIST pocitac typ NMTOKEN #REQUIRED >
+
+<!ELEMENT pool ( pJmeno, ip_start, ip_konec, prefix ) >
+
+<!ELEMENT poolJmeno ( #PCDATA ) >
+
+<!ELEMENT pooly ( pool+ ) >
+
+<!ELEMENT port ( #PCDATA ) >
+
+<!ELEMENT prefix ( #PCDATA ) >
+
+<!ELEMENT pripojenoK ( #PCDATA ) >
+
+<!ELEMENT prirazeni ( accessCislo, poolJmeno, overload ) >
+
+<!ELEMENT prirazeniVice ( prirazeni+ ) >
+
+<!ELEMENT routy ( zaznam? ) >
+
+<!ELEMENT rozhrani ( jmeno, ip, maska, mac, pripojenoK, nahozene, nat? ) >
+
+<!ELEMENT rozhraniKam ( #PCDATA ) >
+
+<!ELEMENT zaznam ( adresat, maskaAdresata, rozhraniKam, brana? ) >
+
