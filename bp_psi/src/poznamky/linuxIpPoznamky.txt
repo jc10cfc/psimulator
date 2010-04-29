@@ -1,7 +1,6 @@
-root: /home/neiss# ip a help
-Usage: ip addr {add|change|replace} IFADDR dev STRING [ LIFETIME ]
-                                                      [ CONFFLAG-LIST]
-       ip addr del IFADDR dev STRING
+// na školním počítači:
+node-2:/home/dsn# ip a help
+Usage: ip addr {add|del} IFADDR dev STRING
        ip addr {show|flush} [ dev STRING ] [ scope SCOPE-ID ]
                             [ to PREFIX ] [ FLAG-LIST ] [ label PATTERN ]
 IFADDR := PREFIX | ADDR peer PREFIX
@@ -10,11 +9,8 @@ IFADDR := PREFIX | ADDR peer PREFIX
 SCOPE-ID := [ host | link | global | NUMBER ]
 FLAG-LIST := [ FLAG-LIST ] FLAG
 FLAG  := [ permanent | dynamic | secondary | primary |
-           tentative | deprecated | CONFFLAG-LIST ]
-CONFFLAG-LIST := [ CONFFLAG-LIST ] CONFFLAG
-CONFFLAG  := [ home | nodad ]
-LIFETIME := [ valid_lft LFT ] [ preferred_lft LFT ]
-LFT := forever | SECONDS
+           tentative | deprecated ]
+
 
 
 
@@ -57,4 +53,27 @@ where  OBJECT := { link | addr | addrlabel | route | rule | neigh | ntable |
        OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |
                     -f[amily] { inet | inet6 | ipx | dnet | link } |
                     -o[neline] | -t[imestamp] }
+
+
+
+
+
+// u mě na počítači je to jiný:
+root: /home/neiss# ip a help
+Usage: ip addr {add|change|replace} IFADDR dev STRING [ LIFETIME ]
+                                                      [ CONFFLAG-LIST]
+       ip addr del IFADDR dev STRING
+       ip addr {show|flush} [ dev STRING ] [ scope SCOPE-ID ]
+                            [ to PREFIX ] [ FLAG-LIST ] [ label PATTERN ]
+IFADDR := PREFIX | ADDR peer PREFIX
+          [ broadcast ADDR ] [ anycast ADDR ]
+          [ label STRING ] [ scope SCOPE-ID ]
+SCOPE-ID := [ host | link | global | NUMBER ]
+FLAG-LIST := [ FLAG-LIST ] FLAG
+FLAG  := [ permanent | dynamic | secondary | primary |
+           tentative | deprecated | CONFFLAG-LIST ]
+CONFFLAG-LIST := [ CONFFLAG-LIST ] CONFFLAG
+CONFFLAG  := [ home | nodad ]
+LIFETIME := [ valid_lft LFT ] [ preferred_lft LFT ]
+LFT := forever | SECONDS
 

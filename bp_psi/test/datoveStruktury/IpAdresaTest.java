@@ -284,36 +284,43 @@ public class IpAdresaTest {
 
     @Test
     public void testVytvorAdresu(){
-        assertEquals("1.1.1.1/32", IpAdresa.vytvorAdresu("1.1.1.1").vypisAdresuSMaskou());
-        assertEquals("0.0.0.0/0", IpAdresa.vytvorAdresu("0.0.0.0/0").vypisAdresuSMaskou());
-        assertEquals("255.255.255.255/1", IpAdresa.vytvorAdresu("255.255.255.255/1").vypisAdresuSMaskou());
-        assertEquals("1.2.3.4/32", IpAdresa.vytvorAdresu("1.2.3.4").vypisAdresuSMaskou());
+        new IpAdresa("1.1.1.1",32,false);
+        System.out.println(new IpAdresa("1.1.1.1",32,false).vypisAdresuSMaskou());
+        assertEquals("1.1.1.1/32", new IpAdresa("1.1.1.1",32,false).vypisAdresuSMaskou());
+        assertEquals("0.0.0.0/0", new IpAdresa("0.0.0.0/0",32,false).vypisAdresuSMaskou());
+        assertEquals("255.255.255.255/1", new IpAdresa("255.255.255.255/1",32,false).vypisAdresuSMaskou());
+        assertEquals("1.2.3.4/32", new IpAdresa("1.2.3.4",32,false).vypisAdresuSMaskou());
 
         try{
-            IpAdresa.vytvorAdresu("");
+            new IpAdresa("",32,false);
             fail();
         }catch(SpatnaAdresaException e){}
         try{
-            IpAdresa.vytvorAdresu("/");
+            new IpAdresa("/",32,false);
             fail();
         }catch(SpatnaAdresaException e){}
         try{
-            IpAdresa.vytvorAdresu("23.23.23.263/");
+            new IpAdresa("23.23.23.263/",32,false);
             fail();
         }catch(SpatnaAdresaException e){}
 
         try{
-            IpAdresa.vytvorAdresu("23.23.23.23/");
+            new IpAdresa("23.23.23.23/",32,false);
             fail();
         }catch(SpatnaMaskaException e){}
         try{
-            IpAdresa.vytvorAdresu("23.23.23.23/33");
+            new IpAdresa("23.23.23.23/33",32,false);
             fail();
         }catch(SpatnaMaskaException e){}
         try{
-            IpAdresa.vytvorAdresu("23.23.23.23/23d");
+            new IpAdresa("23.23.23.23/23d",32,false);
             fail();
         }catch(SpatnaMaskaException e){}
+
+        assertEquals("1.1.1.1/0", new IpAdresa("1.1.1.1/32",32,true).vypisAdresuSMaskou());
+        assertEquals("1.1.1.1/0", new IpAdresa("1.1.1.1/64",32,true).vypisAdresuSMaskou());
+        assertEquals("1.1.1.1/8", new IpAdresa("1.1.1.1",-1,true).vypisAdresuSMaskou());
+        assertEquals("1.1.1.1/2", new IpAdresa("1.1.1.1/34",-1,true).vypisAdresuSMaskou());
 
     }
     

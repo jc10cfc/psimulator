@@ -42,6 +42,53 @@ public class IpAdresa {
         nastavMasku(maska);
     }
 
+    /**
+     * Vytvori adresu ze zadaneho Stringu, kde muze nebo nemusi byt zadana adresa za lomitkem. <br />
+     * Je-li moduloMaska nastaveno na true, maska za lomitkem se vymoduluje 32. POZOR: tzn., ze i
+     * maska /32 se vymoduluje na /0! (takhle funguje LinuxIfconfig i LinuxRoute)<br />
+     * Je-li modulo maska nastaveno na false, musi byt maska spravna, tzn. v intervalu <0,32>. <br />
+     * Na chybny vstupy to hazi SpatnaMaskaException nebo SpatnaAdresaException, pricemz, kdyz
+     * je spatny oboje, ma SpatnaAdresaException prednost. <br />
+     * @param adrm
+     * @param defMaska Nabyva hodnot v intervalu <-1,32>. Nastavuje se tehdy, kdyz zadany string masku
+     * za lomitkem neobsahuje. -1 zanmena, ze se ma maska dopocitat podle tridy.
+     * @param moduloMaska
+     * @throws SpatnaMaskaException
+     * @throws SpatnaAdresaException
+     * @author neiss
+     */
+    public IpAdresa(String adrm, int defMaska, boolean moduloMaska) {
+        //nejdriv se pro jistotu zkontrolujou zadany hodnoty:
+        if(moduloMaska && defMaska<-1 && defMaska>32){
+            throw new RuntimeException("V programu nastala chyba, kontaktujte prosim tvurce softwaru.");
+        }
+
+        int lomitko = adrm.indexOf('/');
+        if (lomitko == -1) { // retezec neobsahuje lomitko
+            nastavAdresu(adrm); //nastavuje se adresa
+            if(defMaska<0){
+                dopocitejMasku();
+            }else{
+                nastavMasku(defMaska);
+            }
+        } else {  // je to s lomitkem, musi se to s nim zparsovat
+            String adr = adrm.substring(0, lomitko);
+            nastavAdresu(adr); //nastavuje se uz tady, aby prvni vyjimka se hazela na adresu
+            String maska = adrm.substring(lomitko + 1, adrm.length());
+            int m;
+            //kontrola masky, jestli je to integer:
+            try {
+                m = Integer.parseInt(maska);
+            } catch (NumberFormatException ex) {
+                throw new SpatnaMaskaException();
+            }
+            if (moduloMaska) { //pripadne prepocitani masky:
+                m = m % 32;
+            }
+            nastavMasku(m);  // nastaveni masky
+        }
+    }
+
 //**************************************************************************************
 //metody, ktere slouzi k nastavovani parametru IP, vsechny zacinaji slovem "nastav"
 
@@ -237,11 +284,13 @@ public class IpAdresa {
 
     /**
      * Kontroluje zda je typu IpAdresa + se museji rovnat adresy i masky.
+     * Nemusi se rovnat port.
      * @param obj
      * @return
      */
     @Override
     public boolean equals(Object obj){
+        if(obj==null) return false;
         if(obj.getClass()!=IpAdresa.class) return false;
         if ( maska==((IpAdresa)obj).maska && adresa==((IpAdresa)obj).adresa ) return true;
         return false;
@@ -378,40 +427,6 @@ public class IpAdresa {
     }
 
     /**
-     * Vrati adresu ze zadaneho Stringu, kde muze nebo nemusi byt zadana adresa za lomitkem.
-     * Adresa i maska musi byt spravna. Maska tedy v intervalu <0,32>
-     * Jestlize zadam adresu bez masky, vrati se adresa s defaultni maskou 32 (255.255.255.255)
-     * Na chybny vstupy to hazi SpatnaMaskaException nebo SpatnaAdresaException, pricemz, kdyz
-     * je spatny oboje, ma SpatnaAdresaException prednost.
-     * @throws SpatnaMaskaException
-     * @throws SpatnaAdresaException
-     * @param adrm
-     * @return
-     * @author neiss
-     */
-    public static IpAdresa vytvorAdresu(String adrm) {
-        int lomitko = adrm.indexOf('/');
-        IpAdresa v = null;
-        if (lomitko == -1) { // retezec neobsahuje lomitko
-            v = new IpAdresa(adrm, 32);
-        } else {  // je to s lomitkem, musi se to s nim zparsovat
-            String adresa = adrm.substring(0, lomitko);
-            v=new IpAdresa(adresa); //vytvari se uz tady, aby prvni vyjimka se hazela na adresu
-            String maska = adrm.substring(lomitko + 1, adrm.length());
-            int m;
-            //kontrola masky, jestli je to integer:
-            try {
-                m = Integer.parseInt(maska);
-            } catch (NumberFormatException ex) {
-                throw new SpatnaMaskaException();
-            }
-            v.nastavMasku(m);  // nastaveni masky
-
-        }
-        return v;
-    }
-
-        /**
      * Zkontroluje, zda dany retezec je IP adresa z rozsahu (1.* - 223.*).
      * Ostatni adresy jsou pro multicast + vyhrazeny
      * @param adr
