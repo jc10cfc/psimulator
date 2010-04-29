@@ -83,12 +83,12 @@ public class CiscoHelp extends CiscoPrikaz {
                 
                 "\nconfigure interface mode\n" +
                 "  (no) ip address\n" +
-                "  shutdown\n" +
+                "  (no) ip nat inside\n" +
+                "  (no) ip nat outside\n" +
+                "  (no) shutdown\n" +
                 "  end\n" +
                 "  exit\n\n";
                         
         kon.posliPoRadcich(s, 10);
     }
-
-
 }

@@ -470,6 +470,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (aktualni.jeNahozene()) {
             aktualni.nastavRozhrani(false);
 
+            AbstraktniPrikaz.cekej(250);
             Date d = new Date();
             kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
             kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
@@ -489,6 +490,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (kontrola("shutdown", slova.get(1))) {
             //if (slova.get(1).equals("shutdown")) {
             if (aktualni.jeNahozene() == false) { // kdyz nahazuju rozhrani
+                AbstraktniPrikaz.cekej(500);
                 Date d = new Date();
                 kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
                 kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");

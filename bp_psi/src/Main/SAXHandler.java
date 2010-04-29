@@ -547,6 +547,7 @@ public class SAXHandler implements ContentHandler {
         for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
             if (bezNastaveni) {
                 vymazNastaveni(pcbuilder);
+                System.out.println("Nacitam bez nastaveni.. (parametr -n)");
             }
 
             AbstraktniPocitac pocitac;

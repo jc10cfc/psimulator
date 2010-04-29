@@ -42,6 +42,14 @@ pokud poustime terminal pro cisco timto prikazem, tak mame funknci i doplnovani
 rlwrap -pcyan -w-3 -I -b'(){}[],+=&^%0@;|\' -f /home/haldyr/NetBeansProjects/bp_psi/src/data/cisco_doplnovani.txt telnet localhost
 
 
+rozbehani pod windows:
+stahnout+nainstalovat cygwin
+nainstalovat balicek inetutils (telnet)
+preinstalovat balicek libreadline ten nejnovejsi
+
+
+
+
 http://bppsi.beanstalkapp.com/bp_projekt
 http://bppsi.svn.beanstalkapp.com/bp_projekt/
 ucet read-only

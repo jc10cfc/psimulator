@@ -77,7 +77,7 @@ public class Konsole extends Thread {
                 ret+=z;
                                 
             } catch (Exception ex) {
-                //ex.printStackTrace();
+//                ex.printStackTrace();
                 throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek, nastala chyba.");
             }
             if(ret.length()>=2){ //tzn. uz je to dost dlouhy na to, aby tam mohlo bejt \r\n
