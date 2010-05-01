@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package Main;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Pomocna trida pro vytvareni uz vlastnich pocitacu.
+ * Pomocna trida pro ukladani pocitacu pri nacitani z konfiguraku.
  * @author haldyr
  */
 public class PocitacBuilder {
@@ -24,8 +19,6 @@ public class PocitacBuilder {
     List<String[]> poolAccess;
     List<String[]> staticke;
 
-
-
     public PocitacBuilder() {
         rozhrani = new ArrayList<String[]>();
         routovaciTabulka = new ArrayList<String[]>();
@@ -38,23 +31,39 @@ public class PocitacBuilder {
     @Override
     public String toString() {
         String ret = "";
-        ret += "PC:  "+jmeno +"\n";
-        ret += "typ: "+typ +"\n";
-        for (String[] pole : rozhrani) {
-            for (String s : pole) {
-                ret += s +"\n";
-            }
-        }
-
-        if (routovaciTabulka.size() == 0) return ret;
-        ret += "\n";
-        for (String[] pole : routovaciTabulka) {
-            for (String s : pole) {
-                ret += s + "\n";
-            }
-        }
-        ret += "\n";
+        ret += "PC:  " + jmeno + "\n";
+        ret += "typ: " + typ + "\n";
+        vypisPole(rozhrani, "rozhrani");
+        vypisPole(routovaciTabulka, "routovaci tabulka");
+        vypisPole(pool, "pool");
+        vypisPole(poolAccess, "poolAccess");
+        vypisPole(accessList, "access-list");
+        vypisPole(staticke, "staticke");
 
         return ret;
+    }
+
+    /**
+     * Pomocna metoda pro vypis nactenych veci pro vytvoreni pocitace.
+     * @param seznam seznam retezcu urcenych pro vypis
+     * @param jmeno, ktere identifikuje, co je to za seznam
+     * @return
+     */
+    private String vypisPole(List<String[]> seznam, String jmeno) {
+        String s = "";
+        int i;
+
+        s += jmeno + ":\n";
+        for (String[] pole : seznam) {
+            i = 0;
+            for (String nove : pole) {
+                i++;
+                if (i==0) s += nove;
+                else s += "," + nove;
+            }
+            s += "\n";
+        }
+        s += "\n";
+        return s;
     }
 }

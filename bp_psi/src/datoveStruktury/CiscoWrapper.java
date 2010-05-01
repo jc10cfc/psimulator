@@ -60,7 +60,7 @@ public class CiscoWrapper {
         }
 
         /**
-         * Pouze pro ucely vypisu RT!!!
+         * Pouze pro ucely vypisu RT!!! Jinak nepouzivat!
          * @param adresat
          * @param brana
          * @param rozhrani
@@ -241,7 +241,6 @@ public class CiscoWrapper {
         }
 
         radky.add(dejIndexPozice(zaznam, true), zaznam);
-
         update();
     }
 
@@ -256,12 +255,14 @@ public class CiscoWrapper {
         }
         radky.add(dejIndexPozice(ciscozaznam, false), ciscozaznam);
     }
-
-    // 1/ no ip route IP maska + a volitelne treti zaznam, kdyz je bez 3.zaznamu a tak se smaze vsechno co sedi dle 1. a 2.
-    //        + prekontrolovat vsechny routy a zrusit jim pripadne rozhrani (kdyz budou nedostupny)
+    
     /**
      * Smaze zaznam z wrapperu + aktualizuje RT. Rozhrani maze podle jmena!
      * Muze byt zadana bud adresa nebo adresa+brana nebo adresa+rozhrani.
+     *
+     * no ip route IP MASKA DALSI? <br />
+     * IP a MASKA je povinne, DALSI := { ROZHRANI | BRANA } <br />
+     *
      * @param adresa
      * @param brana
      * @param rozhrani
@@ -289,7 +290,6 @@ public class CiscoWrapper {
 
             if (brana == null && rozhrani == null) {
                 smazat.add(radky.get(i));
-
             } else if (brana != null && rozhrani == null && z.brana != null) {
                 if (z.brana.equals(brana)) {
                     smazat.add(radky.get(i));

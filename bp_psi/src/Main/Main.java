@@ -16,7 +16,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class Main {
 
     public static String jmenoProgramu = "psi simulator";
-    static int port = 3567;
+    static int port = 4000;
     static boolean bezNastaveni = false;
     /**
      * Object vsechno je refence na seznam vsech pocitacu, ktere se nacetly z konfiguraku.
@@ -76,6 +76,8 @@ public class Main {
 
     /**
      * Zpracuje parametry pri spusteni serveru.
+     * Parametr -n se muze vyskytovat kdekoliv,
+     * jinak plati, ze prvni je konfiguracni soubor a pak je port.
      * @param args
      */
     private static void parsujParametry(String[] args) {

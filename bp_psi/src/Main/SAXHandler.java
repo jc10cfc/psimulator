@@ -18,7 +18,10 @@ import vyjimky.ChybaKonfigurakuException;
  * XML dokumentu (včetně původního vnoření elementu a jmenných prostorů).
  * Znaková data ignorujte. Zanorené elementy formátujte odstavením pomocí tabulátoru.
  * pouzito http://www.ksi.mff.cuni.cz/~mlynkova/Y36XML/indexCV.html
- * 
+ *
+ * Nejdrive se vsechno uklada do datove struktury PocitacBuilder,
+ * z nech se pat "stavi" uz vlastni pocitac.
+ *
  * @author haldyr
  */
 /**
@@ -40,14 +43,27 @@ public class SAXHandler implements ContentHandler {
     String[] accessList; // cislo, ipA, ipAWildcard
     String[] pool; // pJmeno, ip_start, ip_konec, prefix
     String[] poolAccess; // accessCislo, poolJmeno, overload
-    String[] staticke;
-    public int port = -1;
+    String[] staticke; // in, out
     List<List> pripojeno;
     List<PocitacBuilder> seznamPocitacBuilder;
     private int aktualniPC = -1;
+    /**
+     * Port, na kterem se ma zacit
+     */
+    public int port;
+    /**
+     * True, pokud program byl spusten s parametrem -n.
+     * Pak se postavijen konstra site s rozhranimi bez nastaveni.
+     */
     boolean bezNastaveni = false;
-    boolean vypis = false; // pro vypis kostry xml dokumentu
-    boolean vypis2 = false; // vypis pocitacu
+    /**
+     * pro vypis kostry xml dokumentu
+     */
+    boolean vypis = false;
+    /**
+     * vypis uz nactenych dat o pocitacich pred vytvoreni vlastnich pocitacu
+     */
+    boolean vypis2 = false;
 
     public SAXHandler(int port, boolean bezNastaveni) {
         hotovePocitace = new ArrayList<AbstraktniPocitac>();
@@ -561,9 +577,7 @@ public class SAXHandler implements ContentHandler {
             }
 
             if (vypis2) {
-                System.out.println("\nPC");
-                System.out.println(" jmeno: " + pcbuilder.jmeno);
-                System.out.println(" typ:   " + pcbuilder.typ + "\n");
+                System.out.println(pcbuilder);
             }
 
             zpracujPooly(pcbuilder, pocitac);
@@ -656,11 +670,6 @@ public class SAXHandler implements ContentHandler {
      * @return
      */
     public Object vratNastaveni() {
-
-//        for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
-//            System.out.println(pcbuilder);
-//        }
-
         return hotovePocitace;
     }
 
@@ -796,16 +805,6 @@ public class SAXHandler implements ContentHandler {
     private void zpracujRozhrani(PocitacBuilder pcbuilder, AbstraktniPocitac pocitac) {
         for (String[] iface : pcbuilder.rozhrani) { // prochazim a pridavam rozhrani k PC
 
-            if (vypis2) {
-                System.out.println("  jmeno: " + iface[dejIndexVRozhrani("jmeno")]);
-                System.out.println("  ip:    " + iface[dejIndexVRozhrani("ip")]);
-                System.out.println("  maska: " + iface[dejIndexVRozhrani("maska")]);
-                System.out.println("  mac:   " + iface[dejIndexVRozhrani("mac")]);
-                System.out.println("  conn:  " + iface[dejIndexVRozhrani("pripojenoK")]);
-                System.out.println("  nahoze:" + iface[dejIndexVRozhrani("nahozene")]);
-                System.out.println("");
-            }
-
             SitoveRozhrani sr = new SitoveRozhrani(iface[dejIndexVRozhrani("jmeno")], pocitac, iface[dejIndexVRozhrani("mac")]);
 
             // osetreni prazdne IP nebo masky
@@ -865,14 +864,6 @@ public class SAXHandler implements ContentHandler {
         }
 
         for (String[] mujzaznam : pcbuilder.routovaciTabulka) { // tady resim routovaci tabulku
-
-            if (vypis2) {
-                System.out.print(" ");
-                for (String s : mujzaznam) {
-                    System.out.print(s + "\t");
-                }
-                System.out.println("");
-            }
 
             IpAdresa adresat = new IpAdresa(mujzaznam[dejIndexVZaznamu("adresat")], mujzaznam[dejIndexVZaznamu("maskaAdresata")]);
             SitoveRozhrani iface = null;

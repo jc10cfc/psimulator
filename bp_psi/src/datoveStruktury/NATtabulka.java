@@ -541,8 +541,8 @@ public class NATtabulka {
      * @param iface
      */
     public void nastavRozhraniOutside(SitoveRozhrani iface) {
-        lPool.updateIpNaRozhrani();
         verejne = iface;
+        lPool.updateIpNaRozhrani();
     }
 
     /**

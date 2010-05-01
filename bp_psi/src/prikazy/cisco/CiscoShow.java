@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package prikazy.cisco;
 
 import datoveStruktury.CiscoStavy;
@@ -178,9 +173,7 @@ public class CiscoShow extends CiscoPrikaz {
                 + "!\n"
                 + "!\n"
                 + "!\n";
-        for (Object o : pc.rozhrani) {
-            SitoveRozhrani sr = (SitoveRozhrani) o;
-
+        for (SitoveRozhrani sr : pc.rozhrani) {
 
             s += "interface " + sr.jmeno + "\n";
             for (IpAdresa adr : sr.seznamAdres) {
@@ -193,7 +186,6 @@ public class CiscoShow extends CiscoPrikaz {
                     break;
                 }
             }
-
 
             if (pc.natTabulka.vratVerejne() != null) {
                 if (sr.jmeno.equals(pc.natTabulka.vratVerejne().jmeno)) {

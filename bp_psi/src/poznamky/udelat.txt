@@ -3,6 +3,7 @@ windows verze - cygwin
 testovani
 skript pro spousteni - kvuli doplnovani
 rozstipat SAXHandler
+co @author? prejmenovat na jmena nebo nechat prezdivky?
 
 
 kubalik:

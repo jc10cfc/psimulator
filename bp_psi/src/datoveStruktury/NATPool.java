@@ -67,7 +67,7 @@ public class NATPool {
             ukazatel = IpAdresa.vratOJednaVetsi(ukazatel);
             ukazatel.nastavMasku(prefix);
 
-        } while (ukazatel.dejLongIP() < konec.dejLongIP() && ukazatel.jeVRozsahu(start));
+        } while (ukazatel.dejLongIP() <= konec.dejLongIP() && ukazatel.jeVRozsahu(start));
         novyPool.ukazatel = novyPool.prvni();
 
         seznam.add(novyPool);
@@ -101,6 +101,7 @@ public class NATPool {
         }
 
         seznam.remove(smaznout);
+        updateIpNaRozhrani();
         return 0;
     }
 
@@ -108,6 +109,7 @@ public class NATPool {
      * Smaze vsechny pooly.
      */
     public void smazPoolVsechny() {
+        updateIpNaRozhrani();
         seznam.clear();
     }
 
@@ -227,7 +229,13 @@ public class NATPool {
 
     public class Pool {
 
+        /**
+         * Jmeno poolu
+         */
         public String jmeno = "";
+        /**
+         * Prirazeny seznam adres.
+         */
         List<IpAdresa> pool;
         /**
          * Ukazuje na volnou IpAdresu z poolu.
@@ -291,36 +299,4 @@ public class NATPool {
             return pool.get(pool.size()-1);
         }
     }
-
-    /**
-     * Zjistuje, zda dosli IP v poolu. Pri overloadu to nenastane nikdy (vrati false)
-     * @param ip
-     * @return true - IP v poolu jsou vycerpany | neni prirazen access-list | neni prirazen PoolAccess <br />
-     *         false - jeste tam jsou volne IP
-     */
-    @Deprecated
-    public boolean doslyIpPoolu(IpAdresa ip) {
-
-        NATAccessList.AccessList acc = natTabulka.lAccess.vratAccessListIP(ip);
-        if (acc == null) {
-            return true;
-        }
-
-        PoolAccess pa2 = vratPoolAccessZAccessListu(acc);
-        if (pa2.overload) {
-            return false;
-        }
-
-        Pool pool = vratPoolZAccessListu(acc);
-        if (pool == null) {
-            return true;
-        }
-
-        if (pool.dejIp(true) == null) {
-            return true;
-        }
-
-        return false;
-    }
-
 }
