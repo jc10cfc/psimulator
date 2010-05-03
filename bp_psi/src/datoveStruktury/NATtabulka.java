@@ -13,6 +13,7 @@
  */
 package datoveStruktury;
 
+import datoveStruktury.NATAccessList.AccessList;
 import datoveStruktury.NATPool.Pool;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,6 @@ public class NATtabulka {
     /**
      * citac, odkud mam rozdavat porty
      */
-
 //    private int citacPortu = 1025;
     boolean debug = false;
 
@@ -71,7 +71,8 @@ public class NATtabulka {
 
     /**
      * True, pokud je uz tam je zdrojova ip v tabulce.
-     * @param in
+     * @param in adresa, kterou chceme porovnavat
+     * @param staticke udava, jestli se ma hledat jen mezi statickymi (true) nebo dynamickymi (false)
      * @return
      */
     private boolean jeTamZdrojova(IpAdresa in, boolean staticke) {
@@ -85,7 +86,7 @@ public class NATtabulka {
 
     /**
      * True, pokud je uz tam je prelozena ip v tabulce.
-     * @param out
+     * @param out adresa, kterou chceme porovnavat
      * @param staticke udava, jestli se ma hledat jen mezi statickymi (true) nebo dynamickymi (false)
      * @return
      */
@@ -163,10 +164,12 @@ public class NATtabulka {
          */
         IpAdresa cil;
         /**
-         * Vlozeno staticky.
+         * Vlozeno staticky - true, dynamicky - false.
          */
         boolean staticke;
-
+        /**
+         * Cas vlozeni v ms (pocet ms od January 1, 1970)
+         */
         long cas;
 
         public NATzaznam(IpAdresa in, IpAdresa out, boolean staticke) {
@@ -272,7 +275,7 @@ public class NATtabulka {
      */
     public boolean lzePrelozit(IpAdresa adr) {
 
-        NATAccessList.AccessList access = lAccess.vratAccessListIP(adr);
+        AccessList access = lAccess.vratAccessListIP(adr);
         if (access == null) {
             return false;
         }
@@ -398,14 +401,15 @@ public class NATtabulka {
             }
         }
 
-        NATAccessList.AccessList access = lAccess.vratAccessListIP(ip);
+        // staticky ani dynamicky zaznam neni, tak vygenerujeme novy
+        AccessList access = lAccess.vratAccessListIP(ip);
         Pool pool = lPool.vratPoolZAccessListu(access);
         IpAdresa vrat = lPool.dejIpZPoolu(pool);
 
         vrat.port = vygenerujPort(vrat);
         if (natovani == true) { // jen kdyz opravdu pridavam
             // kopiruju si novou IP, pri pridavani do tabulku se prepisovaly zaznamy
-            pridejZaznamDoNATtabulky(ip.vratKopii(), vrat.vratKopii(), paket.cil.vratKopii());
+            pridejZaznamDynamcikyDoNATtabulky(ip.vratKopii(), vrat.vratKopii(), paket.cil.vratKopii());
         }
         return vrat;
     }
@@ -429,7 +433,7 @@ public class NATtabulka {
      * @param in zdrojova IP
      * @param out nova zdrojova (prelozena)
      */
-    private void pridejZaznamDoNATtabulky(IpAdresa in, IpAdresa out, IpAdresa cil) {
+    private void pridejZaznamDynamcikyDoNATtabulky(IpAdresa in, IpAdresa out, IpAdresa cil) {
         tabulka.add(new NATzaznam(in, out, cil, false));
     }
 
@@ -547,6 +551,7 @@ public class NATtabulka {
 
     /**
      * Smaze toto rozhrani z inside listu.
+     * Kdyz to rozhrani neni v inside, tak se nestane nic.
      * @param iface
      */
     public void smazRozhraniInside(SitoveRozhrani iface) {
@@ -569,7 +574,7 @@ public class NATtabulka {
     }
 
     /**
-     * Smaze vsechny IP (krom prvni) + smae verejne rozhrani.
+     * Smaze vsechny IP (krom prvni) + smaze verejne rozhrani.
      */
     public void smazRozhraniOutside() {
         verejne.smazVsechnyIpKromPrvni();
@@ -595,7 +600,9 @@ public class NATtabulka {
             return 2;
         }
 
-        verejne.seznamAdres.add(out.vratKopii());
+        if (verejne != null) {
+            verejne.seznamAdres.add(out.vratKopii());
+        }
 
         int index = dejIndexVTabulce(out);
         tabulka.add(index, new NATzaznam(in, out, true));

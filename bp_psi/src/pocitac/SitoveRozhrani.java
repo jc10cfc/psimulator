@@ -6,12 +6,11 @@ package pocitac;
 
 import datoveStruktury.IpAdresa;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Tohleto by měla bejt třída pro jedno síťové rozhraní.
- * @author neiss
+ * @author neiss & haldyr
  *
  * DŮLEŽITÁ POZNÁMKA:
  * V pátek 16.4.2010 jsme zavedli více IpAdres pro jedno rozhraní. Původně jsme všechno
@@ -58,9 +57,16 @@ public class SitoveRozhrani {
 
     @Override
     public String toString() {
-        String s = "";
+        String s = "jmeno: "+jmeno+"\n";
+        s += " mac: "+macAdresa +"\n";
         for (IpAdresa adr : seznamAdres) {
-            s += adr.vypisAdresu()+"\n";
+            s += " adr: " + adr.vypisAdresu()+"\n";
+        }
+        s += " stav: ";
+        s += nahozene ? "nahozene" : "zhozene"+ "\n";
+
+        if (pripojenoK != null) {
+            s += " pripojenoK: "+pripojenoK.getPc().jmeno + ":" + pripojenoK.jmeno+"\n";
         }
         return s;
     }

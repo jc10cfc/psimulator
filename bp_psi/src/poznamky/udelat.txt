@@ -1,7 +1,5 @@
 zbyva:
-windows verze - cygwin
 testovani
-skript pro spousteni - kvuli doplnovani
 rozstipat SAXHandler
 co @author? prejmenovat na jmena nebo nechat prezdivky?
 
@@ -32,21 +30,36 @@ pri nacitani Cisco stroje z konfiguraku se pri route na GW vubec nekouka na rozh
 musi projit na Linuxu:
 route add 255.2.2.2 eth1
 
-
-Udělat třídy pro linux a cisco.
-Do SAXu udělat vytváření objektů AbstractPocitac a SitoveRozhrani
-Do xml přidat jméno počítače, počáteční port a druh počítače.
-
-
-
 pokud poustime terminal pro cisco timto prikazem, tak mame funknci i doplnovani
 rlwrap -pcyan -w-3 -I -b'(){}[],+=&^%0@;|\' -f /home/haldyr/NetBeansProjects/bp_psi/src/data/cisco_doplnovani.txt telnet localhost
 
 
 rozbehani pod windows:
-stahnout+nainstalovat cygwin
-nainstalovat balicek inetutils (telnet)
-preinstalovat balicek libreadline ten nejnovejsi
+1/ nainstalovat JRE:
+    http://www.java.com/en/download/
+2/a/ stahnout+rozbalit cygwin
+2/b/ stahnout+nainstalovat cygwin
+    http://www.cygwin.com/setup.exe
+    nainstalovat balicek inetutils (telnet)
+    preinstalovat balicek libreadline na nejnovejsi
+    zkopirovat si do slozky cygwin/home/<uzivatel>/ vsechny soubory
+        (spustitelne jar, dtd soubor, konfiruraky v xml, skripty cisco.sh + linux.sh + start_server.sh,
+            doplnovani_cisco.txt a doplnovani_linux.txt)
+3/ spustit Cygwin.bat
+
+rozbehani pod OS linux:
+nainstalovat JRE (aptitude java-java6-jre)
+    http://www.java.com/en/download/
+nainstalovat rlwrap (aptitude install rlwrap)
+    http://utopia.knoware.nl/~hlub/rlwrap/
+nainstalovat telnet (aptitude install telnet)
+
+
+spusteni:
+1/ vytvorit server ./start_server.sh <konfigurak> <port>
+    spusteni bez parametru vypise napovedu
+2/a/ pripojit klientem ./cisco.sh <port>
+2/b/ pripojit klientem ./linux.sh <port>
 
 
 

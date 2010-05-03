@@ -4,13 +4,15 @@
 
 package datoveStruktury;
 
+import datoveStruktury.NATAccessList.AccessList;
 import datoveStruktury.NATPoolAccess.PoolAccess;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Datova struktura pro seznam poolu IP adres. <br />
- * Kazdy pool obsahuje jmeno a seznam IpAdres.
+ * Kazdy pool obsahuje jmeno a seznam IpAdres. <br />
+ * (cisco prikaz: "ip nat pool 'jmenoPoolu' 'ip_start' 'ip_konec' prefix 'cislo'" )
  * @author haldyr
  */
 public class NATPool {
@@ -109,8 +111,8 @@ public class NATPool {
      * Smaze vsechny pooly.
      */
     public void smazPoolVsechny() {
-        updateIpNaRozhrani();
         seznam.clear();
+        updateIpNaRozhrani();
     }
 
     /**
@@ -164,7 +166,7 @@ public class NATPool {
      * @param pool
      * @return
      */
-    public PoolAccess vratPoolAccessZAccessListu(NATAccessList.AccessList acc) {
+    public PoolAccess vratPoolAccessZAccessListu(AccessList acc) {
         for (PoolAccess pa : natTabulka.lPoolAccess.seznam) {
             if (acc.cislo == pa.access) {
                 return pa;
@@ -179,7 +181,7 @@ public class NATPool {
      * @return pool - ktery je navazan na access-list <br />
      *         null - kdyz neni PoolAccess s timto cislem a nebo neni Pool s nazvem u nalezeneho PoolAccessu.
      */
-    public Pool vratPoolZAccessListu(NATAccessList.AccessList access) {
+    public Pool vratPoolZAccessListu(AccessList access) {
         for (PoolAccess pa : natTabulka.lPoolAccess.seznam) {
             if (pa.access == access.cislo) {
                 for (Pool pool : seznam) {
@@ -238,12 +240,22 @@ public class NATPool {
          */
         List<IpAdresa> pool;
         /**
-         * Ukazuje na volnou IpAdresu z poolu.
+         * Ukazuje na dalsi volnou IpAdresu z poolu nebo null, kdyz uz neni volna.
          */
         IpAdresa ukazatel = null;
 
         public Pool() {
-            pool = new ArrayList<IpAdresa>();
+            pool = new ArrayList<IpAdresa>(){
+
+                @Override
+                public boolean add(IpAdresa ip) {
+                    if (pool.size()==0) {
+                        ukazatel = ip;
+                    }
+                    return super.add(ip);
+                }
+
+            };
         }
 
         /**
@@ -293,7 +305,7 @@ public class NATPool {
          * @return
          */
         public IpAdresa posledni() {
-            if (pool.size() == 1) {
+            if (pool.size() <= 1) {
                 return prvni();
             }
             return pool.get(pool.size()-1);

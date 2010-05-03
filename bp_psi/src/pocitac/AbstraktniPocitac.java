@@ -104,25 +104,6 @@ public abstract class AbstraktniPocitac {
         System.out.println("(" + jmeno + ":) " + ret);
     }
 
-
-    // zatim pomocna metoda, pak se muze smazat
-    public void vypisRozhrani() {
-
-        for (SitoveRozhrani iface : rozhrani) {
-            System.out.println("(" + jmeno + ":) " + iface.jmeno);
-            if (iface.vratPrvni() != null) {
-                System.out.println("(" + jmeno + ":) " + iface.vratPrvni().vypisAdresu());
-                System.out.println("(" + jmeno + ":) " + iface.vratPrvni().vypisMasku());
-            }
-            System.out.println("(" + jmeno + ":) " + iface.macAdresa);
-            if (iface.pripojenoK != null) {
-                System.out.println("(" + jmeno + ":) " + iface.pripojenoK.jmeno);
-            }
-            System.out.println("(" + jmeno + ":)");
-        }
-    }
-
-
 //****************************************************************************************************
 //tady zacinaj metody pro posilani pingu:
 

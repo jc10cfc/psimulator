@@ -84,13 +84,6 @@ public class RoutovaciTabulka {
             v+="0\t0\t0\t"+rozhrani.jmeno+"\n";
             return v;
         }
-
-        @Deprecated //neni potreba
-        private String vypisSeCiscove() {
-            String s = "";
-            s += "ip route " + adresat.vypisAdresu() + " " + adresat.vypisMasku() + " " + brana.vypisAdresu() + "\n";
-            return s;
-        }
     }
 
 
@@ -263,16 +256,6 @@ public class RoutovaciTabulka {
             v+=z.vypisSeLinuxove();
         }
         return v;
-    }
-
-    @Deprecated
-    public String vypisSeCiscove() {
-        String s = "";
-        s += "ip classless\n";
-        for (Zaznam z:radky){
-            s += z.vypisSeCiscove();
-        }
-        return s;
     }
     
     public int pocetZaznamu(){

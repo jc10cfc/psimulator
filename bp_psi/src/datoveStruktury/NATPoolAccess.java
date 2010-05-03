@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package datoveStruktury;
 
 import datoveStruktury.NATPool.Pool;
@@ -10,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Datova struktura pro seznam PoolAccess 
- * (cisco prikaz: 'ip nat inside source list 'cisloAccessListu' pool 'jmenoPoolu' overload?' )
+ * Datova struktura pro seznam PoolAccess. Jednoznacny identifikator je cislo.
+ * (cisco prikaz: "ip nat inside source list 'cisloAccessListu' pool 'jmenoPoolu' overload?" )
  * @author haldyr
  */
 public class NATPoolAccess {
