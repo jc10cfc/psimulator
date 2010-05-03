@@ -66,7 +66,7 @@ public class Pokusnej {
 
     @Test
     public void pokus2(){
-        for(int i=0;i<50;i++){
+        for(int i=0;i<3;i++){
             System.out.println( ((Math.random()/5)+0.9) + "" );
         }
     }
@@ -82,5 +82,10 @@ public class Pokusnej {
     }
     private void zmen(IpAdresa keZmeneni){
         keZmeneni.nastavMasku("255.255.255.0");
+    }
+
+    @Test
+    public void pokusStartsWith(){
+        assertTrue("ahoj".startsWith(""));
     }
 }

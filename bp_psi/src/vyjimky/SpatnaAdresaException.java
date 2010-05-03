@@ -6,10 +6,11 @@
 package vyjimky;
 
 /**
- *
+ * Hazi se v konstruktoru IpAdresy, kdyz je zadanej spatnej String.
+ * Potomek SpatneVytvorenaAdresaException
  * @author neiss
  */
-public class SpatnaAdresaException extends RuntimeException {
+public class SpatnaAdresaException extends SpatneVytvorenaAdresaException {
 
     /**
      * Creates a new instance of <code>SpatnaAdresaException</code> without detail message.

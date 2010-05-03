@@ -19,6 +19,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
         vykonejPrikaz();
         this.puv=puv;
     }
+    
     private LinuxIp puv;
 
     @Override

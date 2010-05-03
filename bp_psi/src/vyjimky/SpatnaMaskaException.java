@@ -7,9 +7,10 @@ package vyjimky;
 
 /**
  * Tahleta vyjimka se hazi, kdyz chvi nastavit masku, ale ta ma nespravny cisla, napr. maska 32.123.12.23
+ * Potomek SpatneVytvorenaAdresaException
  * @author neiss
  */
-public class SpatnaMaskaException extends RuntimeException {
+public class SpatnaMaskaException extends SpatneVytvorenaAdresaException {
 
     /**
      * Creates a new instance of <code>SpatnaMaskaException</code> without detail message.

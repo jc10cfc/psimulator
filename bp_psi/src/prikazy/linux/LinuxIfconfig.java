@@ -6,7 +6,8 @@
  *      http://books.google.cz/books?id=1x-6XBk8bKoC&pg=PT26&lpg=PT26&dq=ifconfig&source=bl&ots=E5ys4iqBVw&sig=0LU94iuXjoBE3WDxYGnTHChcx9Q&hl=cs&ei=O1lGS6CFHoOCnQOZzP3vAg&sa=X&oi=book_result&ct=result&resnum=8&ved=0CBkQ6AEwBw#v=onepage&q=ifconfig&f=false
  *      http://www.starhill.org/man/8_ifconfig.html
  * Dodělat:
- *      Snad už jenom parsujPrikaz() opravit
+ *      Snad už jenom parsujPrikaz() opravit.
+ *      Ještě by chtělo ověřit divný masky typu: 1.1.1.1/32, 1.1.1.1/64 atp...
  */
 package prikazy.linux;
 

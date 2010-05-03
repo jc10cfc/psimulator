@@ -62,6 +62,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
            //nepovoleny, a to budto simulatorem nebo samotnym iptables
     List<String> chybejiciPrepinace = new ArrayList<String>();//prepinace, ktery pro moje prepinace chybej
     String nedokoncenejPrepinac;
+    boolean minus_h=false;
     boolean zadanoMinus_o = false;
     boolean zadanoMinus_i = false;
     boolean zadanoMinus_j = false;
@@ -103,6 +104,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
         slovo = dalsiSlovo();
         while (!slovo.equals("")) {
             zpracujBeznyPrepinace();
+            if(minus_h)break; // po -h se uz nic dalsiho neparsuje.
             slovo = dalsiSlovo();
         }
     }
@@ -115,7 +117,9 @@ public class LinuxIptables extends AbstraktniPrikaz {
      * nat).
      */
     private void zpracujBeznyPrepinace() {
-        if (slovo.equals("-t")) {
+        if (slovo.equals("-h")) {
+            minus_h=true;
+        }else if (slovo.equals("-t")) {
             zpracujMinus_t();
         } else if (slovo.equals("-o")) {
             zpracujMinus_o();
@@ -297,6 +301,8 @@ public class LinuxIptables extends AbstraktniPrikaz {
      * Kontroluje, jestli byly zadany spravny parametry
      */
     private void zkontrolujPrikaz() {
+
+        if(minus_h)return; //nic se nekontroluje...
 
         //kontrola spravnosti tabulky - pozor, vyplnuje se jeste navrKod:
         if (tabulka == null) {
@@ -486,6 +492,10 @@ public class LinuxIptables extends AbstraktniPrikaz {
         if(navrKod!=0){
             return; // provadi se, jen kdyz je vsechno dobre
         }
+        if(minus_h){
+            vypisHelp();
+            return;
+        }
         if(provest==4){
             vypis();
         }
@@ -533,6 +543,10 @@ public class LinuxIptables extends AbstraktniPrikaz {
         }
         vratit += "\n\r\tprovest: " + provest;
         vratit += "\n\r\tcisloPravidla: " + cisloPravidla;
+        if (minus_h) {
+            vratit += "\n\r\tPOZOR, zadan prepinac -h, tzn., nic dalsiho se neparsuje, nic se nekontro" +
+                    "luje, nic se nevypisuje, jen napoveda se vypise.";
+        }
         if (zadanoMinus_o) {
             vratit += "\n\r\tvystupniRozhr: " + vystupniRozhr;
         }
@@ -553,4 +567,69 @@ public class LinuxIptables extends AbstraktniPrikaz {
 
         return vratit;
     }
+
+    private void vypisHelp() {
+        kon.posliRadek("iptables v1.4.1.1    ");
+        kon.posliRadek("");
+        kon.posliRadek("Usage: iptables -[AD] chain rule-specification [options]");
+        kon.posliRadek("       iptables -[RI] chain rulenum rule-specification [options]");
+        kon.posliRadek("       iptables -D chain rulenum [options]                      ");
+        kon.posliRadek("       iptables -[LS] [chain [rulenum]] [options]               ");
+        kon.posliRadek("       iptables -[FZ] [chain] [options]                         ");
+        kon.posliRadek("       iptables -[NX] chain                                     ");
+        kon.posliRadek("       iptables -E old-chain-name new-chain-name                ");
+        kon.posliRadek("       iptables -P chain target [options]                       ");
+        kon.posliRadek("       iptables -h (print this help information)                ");
+        kon.posliRadek("");
+        kon.posliRadek("Commands:");
+        kon.posliRadek("Either long or short options are allowed.");
+        kon.posliRadek("  --append  -A chain            Append to chain");
+        kon.posliRadek("  --delete  -D chain            Delete matching rule from chain");
+        kon.posliRadek("  --delete  -D chain rulenum                                   ");
+        kon.posliRadek("                                Delete rule rulenum (1 = first) from chain");
+        kon.posliRadek("  --insert  -I chain [rulenum]                                            ");
+        kon.posliRadek("                                Insert in chain as rulenum (default 1=first)");
+        kon.posliRadek("  --replace -R chain rulenum");
+        kon.posliRadek("                                Replace rule rulenum (1 = first) in chain");
+        kon.posliRadek("  --list    -L [chain [rulenum]]");
+        kon.posliRadek("                                List the rules in a chain or all chains");
+        kon.posliRadek("  --list-rules -S [chain [rulenum]]");
+        kon.posliRadek("                                Print the rules in a chain or all chains");
+        kon.posliRadek("  --flush   -F [chain]          Delete all rules in  chain or all chains");
+        kon.posliRadek("  --zero    -Z [chain]          Zero counters in chain or all chains");
+        kon.posliRadek("  --new     -N chain            Create a new user-defined chain");
+        kon.posliRadek("  --delete-chain");
+        kon.posliRadek("            -X [chain]          Delete a user-defined chain");
+        kon.posliRadek("  --policy  -P chain target");
+        kon.posliRadek("                                Change policy on chain to target");
+        kon.posliRadek("  --rename-chain");
+        kon.posliRadek("            -E old-chain new-chain");
+        kon.posliRadek("                                Change chain name, (moving any references)");
+        kon.posliRadek("Options:");
+        kon.posliRadek("  --proto       -p [!] proto    protocol: by number or name, eg. `tcp'");
+        kon.posliRadek("  --source      -s [!] address[/mask]");
+        kon.posliRadek("                                source specification");
+        kon.posliRadek("  --destination -d [!] address[/mask]");
+        kon.posliRadek("                                destination specification");
+        kon.posliRadek("  --in-interface -i [!] input name[+]");
+        kon.posliRadek("                                network interface name ([+] for wildcard)");
+        kon.posliRadek("  --jump        -j target");
+        kon.posliRadek("                                target for rule (may load target extension)");
+        kon.posliRadek("  --goto      -g chain");
+        kon.posliRadek("                              jump to chain with no return");
+        kon.posliRadek("  --match       -m match");
+        kon.posliRadek("                                extended match (may load extension)");
+        kon.posliRadek("  --numeric     -n              numeric output of addresses and ports");
+        kon.posliRadek("  --out-interface -o [!] output name[+]");
+        kon.posliRadek("                                network interface name ([+] for wildcard)");
+        kon.posliRadek("  --table       -t table        table to manipulate (default: `filter')");
+        kon.posliRadek("  --verbose     -v              verbose mode");
+        kon.posliRadek("  --line-numbers                print line numbers when listing");
+        kon.posliRadek("  --exact       -x              expand numbers (display exact values)");
+        kon.posliRadek("[!] --fragment  -f              match second or further fragments only");
+        kon.posliRadek("  --modprobe=<command>          try to insert modules using this command");
+        kon.posliRadek("  --set-counters PKTS BYTES     set the counter during insert/append");
+        kon.posliRadek("[!] --version   -V              print package version.");
+    }
+
 }

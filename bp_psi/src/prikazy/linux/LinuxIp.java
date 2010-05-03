@@ -57,6 +57,7 @@ public class LinuxIp extends AbstraktniPrikaz {
     public int cisloPrikazu=0;
     private String prikaz;
 
+    private List<String>podSlova; //slova, ktery se posilaj podprikazu
     private AbstraktniPrikaz pr;
 
 
@@ -83,6 +84,12 @@ public class LinuxIp extends AbstraktniPrikaz {
                 ukoncit=true;
             }else if(slovo.equals("-s")||slovo.equals("-stats")||slovo.equals("-statistics")){
                 minus_s=true;
+            }else if(slovo.equals("-4")){
+                family=fam_ipv4;
+            }else if(slovo.equals("-6")){
+                family=fam_ipv6;
+            }else if(slovo.equals("-0")){
+                family=fam_ethernet;
             }else if(slovo.equals("-f")||slovo.equals("-family")){
                 slovo=dalsiSlovo();
                 if(slovo.equals("inet")){
@@ -164,7 +171,6 @@ public class LinuxIp extends AbstraktniPrikaz {
 
     @Override
     protected void vykonejPrikaz() {
-        if(ladeni)kon.posliRadek(toString());
         if(minus_V){
             kon.posliRadek("ip utility, iproute2-ss060323");
             return;
@@ -173,15 +179,20 @@ public class LinuxIp extends AbstraktniPrikaz {
             vypisHelp();
             return;
         }
-//        if(cisloPrikazu==link){
-//            pr=new LinuxIpLink(pc, kon, slova, this);
-//        }
-//        if(cisloPrikazu==addr){
-//            pr=new LinuxIpAddr(pc, kon, slova, this);
-//        }
-//        if(cisloPrikazu==route){
-//            pr=new LinuxIpRoute(pc, kon, slova, this);
-//        }
+        podSlova=slova.subList(getUk()-1, slova.size());
+
+        if(ladeni)kon.posliRadek(toString());
+        
+        if(cisloPrikazu==1){
+            pr=new LinuxIpLink(pc, kon, podSlova, this);
+            // -> getUk-1, aby ty slova obsahovaly i nazev prikazu, napr link.
+        }
+        if(cisloPrikazu==2){
+            pr=new LinuxIpAddr(pc, kon, podSlova, this);
+        }
+        if(cisloPrikazu==3){
+            pr=new LinuxIpRoute(pc, kon, podSlova, this);
+        }
     }
 
     private void vypisHelp() {
@@ -206,6 +217,7 @@ public class LinuxIp extends AbstraktniPrikaz {
         vratit+="\r\n\tprepinace: ";
         if(minus_o)vratit+=" -o";if(minus_r)vratit+=" -r";if(minus_s)vratit+=" -s";
         if(minus_V)vratit+=" -V";if(minus_h)vratit+=" -h";
+        if(podSlova!=null)vratit+="\r\n\tpodslova: "+podSlova;
         vratit += "\r\n--------------------------";
         return vratit;
     }

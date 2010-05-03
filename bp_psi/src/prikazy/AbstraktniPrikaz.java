@@ -17,12 +17,13 @@ public abstract class AbstraktniPrikaz {
     protected AbstraktniPocitac pc;
     protected Konsole kon;
     protected List<String> slova;
-    private int uk=1; //ukazatel do seznamu slov, prvni slovo je nazev prikazu
+    private int uk; //ukazatel do seznamu slov
 
     public AbstraktniPrikaz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         this.pc = pc;
         this.kon = kon;
         this.slova = slova;
+        uk=1; //ukazatel do seznamu slov, prvni slovo je nazev prikazu, ukazuje se az za nej
     }
 
     
@@ -61,6 +62,10 @@ public abstract class AbstraktniPrikaz {
             vratit="";
         }
         return vratit;
+    }
+
+    protected int getUk(){
+        return uk;
     }
 
 //*****************************************************************************************************************
@@ -143,5 +148,26 @@ public abstract class AbstraktniPrikaz {
             vratit="0";
         }
         return vratit;
+    }
+
+    public static String rozlozNaLogaritmy2(int c){
+        String vratit="";
+        for (int i=0;i<31;i++){
+            if( ( c & (1<<i) ) != 0 ){
+                if(vratit.equals("")){
+                    vratit += (log2(1<<i));
+                }else{
+                    vratit += ", "+(log2(1<<i));
+                }
+            }
+        }
+        if(vratit.equals("")){
+            vratit="Zadny chybovy kod nebyl zadan.";
+        }
+        return vratit;
+    }
+
+    public static int log2(int num) {
+        return (int)(Math.log(num) / Math.log(2));
     }
 }

@@ -78,6 +78,11 @@ public abstract class AbstraktniPocitac {
         this.jmeno = jm;
     }
 
+    /**
+     * Vrati bud rozhrani se zadanym jmenem, nebo null, kdyz zadny rozhrani nenajde.
+     * @param jmeno
+     * @return null, kdyz nic nenajdes
+     */
     public SitoveRozhrani najdiRozhrani(String jmeno) {
         if (jmeno == null) {
             return null;

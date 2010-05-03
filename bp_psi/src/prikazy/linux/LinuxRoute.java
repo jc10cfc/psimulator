@@ -200,7 +200,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         if( slovo.equals("default") || slovo.equals("0.0.0.0") || slovo.equals("0.0.0.0/0") ){ //default
             nastavDefault();
         }else if(slovo.contains("/")){ // slovo obsahuje lomitko -> mohla by to bejt adresa s maskou
-            bezChyby=prectiIpSMaskou(slovo);
+            bezChyby=parsujIpSMaskou(slovo);
         }else{ // slovo neobsahuje lomitko -> mohla by to bejt samotna IP adresa
             if(IpAdresa.spravnaAdresaNebMaska(slovo, false)){ //samotna IP je spravna
                 adr=slovo;
@@ -409,7 +409,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
      * @param adrm
      * @return
      */
-    private boolean prectiIpSMaskou(String adrm){
+    private boolean parsujIpSMaskou(String adrm){
         nastavovanaMaska = true;
         int lomitko=adrm.indexOf('/');
         if ( lomitko == -1 ) {// string musi obsahovat lomitko
