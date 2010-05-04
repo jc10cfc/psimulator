@@ -17,7 +17,7 @@ public abstract class Abstraktni {
 
     public Abstraktni(List<String> slova) {
         this.slova = slova;
-        uk = 1;
+        uk = 1;//ukazatel do seznamu slov, prvni slovo je nazev prikazu, ukazuje se az za nej
     }
 
     /**
@@ -153,8 +153,12 @@ public abstract class Abstraktni {
         return vratit;
     }
 
-    public static int log2(int num) {
+    private static int log2(int num) {
         return (int) (Math.log(num) / Math.log(2));
+    }
+
+    public static int md(int c){
+        return (1<<c);
     }
 
     /**

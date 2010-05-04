@@ -178,6 +178,20 @@ public class RoutovaciTabulka {
         return pridejZaznam(z);
     }
 
+    /**
+     * Prida novy zaznam na vlastni rozhrani.
+     * Extra cisco metoda.
+     * @param adresat
+     * @param rozhr
+     * @param primo
+     * @return
+     * @author haldyr
+     */
+    public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr, boolean primo) {
+        Zaznam z=new Zaznam(adresat, rozhr, primo);
+        return pridejZaznam(z);
+    }
+
     public void smazVsechnyZaznamy() {
         radky=new LinkedList<Zaznam>();
     }
@@ -271,20 +285,21 @@ public class RoutovaciTabulka {
         return radky.get(posice);
     }
 
-
     /**
-     * Prida novy zaznam na vlastni rozhrani.
-     * Extra cisco metoda.
-     * @param adresat
-     * @param rozhr
-     * @param primo
-     * @return
-     * @author haldyr
+     * Kontroluje, jestli routovaci tabulka neobsahuje uz zaznam s totoznym adresatem (tzn.
+     * musi se rovnat adresa i maska), jestlize ani, vrati ho.
+     * Pouziva se v LinuxIpRoute.
+     * @return null, kdyz se zadnej zaznam nenajde
      */
-    public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr, boolean primo) {
-        Zaznam z=new Zaznam(adresat, rozhr, primo);
-        return pridejZaznam(z);
+    public Zaznam jeZaznamSAdresatem(IpAdresa adresat){
+        for(Zaznam z:radky){
+            if( z.adresat.equals(adresat) ){   // adresati se rovnaji
+                return z;
+            }
+        }
+        return null;
     }
+
 
 //****************************************************************************************************
 //privatni metody

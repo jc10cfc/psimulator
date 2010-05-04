@@ -167,7 +167,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             kon.prompt = pc.jmeno + "#";
         }
 
-        rozsekejLepe();
+        rozsekej();
 
         if (slova.size() < 1) {
             return; // jen mezera

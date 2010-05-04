@@ -414,6 +414,8 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
             }
         }
     }
+
+
     @Override
     public String toString(){
         String vratit = "--------------------------\r\n   Parametry prikazu ip address" +
@@ -428,10 +430,6 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
         if(rozhr!=null)vratit +=  "\r\n\tnastavene rozhr: "+rozhr.jmeno;
         vratit += "\r\n--------------------------";
         return vratit;
-    }
-
-    private static int md(int c){
-        return (1<<c);
     }
 
     private void vypisHelp() {

@@ -65,7 +65,7 @@ public class ParserPrikazuTest {
     }
 
     /*
-    Method method = ParserPrikazu.getDeclaredMethod(rozsekejLepe, argClasses);
+    Method method = ParserPrikazu.getDeclaredMethod(rozsekej, argClasses);
     method.setAccessible(true);
     return method.invoke(targetObject, argObjects);
      */

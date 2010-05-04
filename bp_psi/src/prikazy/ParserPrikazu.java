@@ -5,7 +5,6 @@
 package prikazy;
 
 import java.util.ArrayList;
-import java.util.List;
 import pocitac.*;
 
 /**
@@ -16,7 +15,6 @@ import pocitac.*;
 public abstract class ParserPrikazu extends Abstraktni {
 
     protected String radek;
-//    protected List<String> slova; //seznam jednotlivejch slov ze vstupniho stringu
     protected AbstraktniPocitac pc;
     protected Konsole kon;
 
@@ -42,39 +40,18 @@ public abstract class ParserPrikazu extends Abstraktni {
 
     /**
      * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
-     * @autor neiss
-     */
-    @Deprecated
-    protected void rozsekej() {
-        int i = 0;
-        int j = 0;
-        while (j < radek.length()) {
-            j = radek.indexOf(' ', i);
-            if (j == -1) {
-                j = radek.length();
-            }
-            if (i != j) {
-                slova.add(radek.substring(i, j)); //pri pridavani nepridavam vic mezer
-            }
-            i = j + 1;
-        }
-    }
-
-    /**
-     * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
+     * a ulozi je do seznamu slova, kterej dedi od Abstraktni.
      * @autor haldyr
      */
-    protected void rozsekejLepe() {
-
+    protected void rozsekej() {
+        slova=new ArrayList<String>();
         radek = radek.trim(); // rusim bile znaky na zacatku a na konci
-
         String[] bileZnaky = {" ", "\t"};
         for (int i = 0; i < bileZnaky.length; i++) { // odstraneni bylych znaku
             while (radek.contains(bileZnaky[i] + bileZnaky[i])) {
                 radek = radek.replace(bileZnaky[i] + bileZnaky[i], bileZnaky[i]);
             }
         }
-
         String[] pole = radek.split(" ");
         for (String s : pole) {
             slova.add(s);

@@ -24,7 +24,6 @@ public class LinuxRoute extends AbstraktniPrikaz{
     boolean ladiciVypisovani = false; //pro debug
 
     // pomocny promenny pro parser prikazu:
-    private int uk=1; //ukazatel do seznamu slov, prvni slovo je to route
     private String slovo; //drzi si slovo ke zpracovani
     private boolean poDevNepokracovat=false; //kdyz je rozhrani zadano jen eth0, a ne dev eth0, tak uz nemuze
                                               //prijit zadnej dalsi prikaz jako gw nebo netmask
