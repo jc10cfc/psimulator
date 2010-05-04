@@ -95,13 +95,4 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
     }
 
     public abstract void zpracujPaket(Paket p);
-
-    /**
-     * Zaokrouhluje na tri desetinna mista.
-     * @param d
-     * @return
-     */
-    public static double zaokrouhli(double d){
-        return ((double) Math.round(d * 1000)) / 1000;
-    }
 }

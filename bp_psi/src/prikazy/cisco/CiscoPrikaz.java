@@ -42,7 +42,6 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
      * @param s
      */
     protected void ladici(String s) {
-        System.out.println("ladim: "+debug);
         if (debug) {
             System.out.println(getClass().getName()+": " + s);
         }
@@ -69,6 +68,22 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Zjistuje, zda dany retezec zacina cislem.
+     * Nesmi byt static, jinak to hazi java.lang.IncompatibleClassChangeError: Expecting non-static method
+     * @param s
+     * @return
+     */
+    protected boolean zacinaCislem(String s) {
+        if (s.length() == 0) return false;
+
+        if (Character.isDigit(s.charAt(0))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -157,20 +172,4 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
         kon.posliServisne("\nThis command is not implemented in this app \n" +
                 "but it is implemented in real cisco. Use help/help_en for a hint.\n");
     }
-
-    /**
-     * Zjistuje, zda dany retezec zacina cislem.
-     * @param s
-     * @return
-     */
-    protected boolean zacinaCislem(String s) {
-        if (s.length() == 0) return false;
-
-        if (Character.isDigit(s.charAt(0))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }

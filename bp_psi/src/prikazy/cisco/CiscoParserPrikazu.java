@@ -542,22 +542,4 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
         invalidInputDetected();
     }
-
-    /**
-     * Tahle metoda postupne vraci slova, podle vnitrni promenny uk. Pocita s tim, ze prazdny
-     * retezec ji nemuze prijit.
-     * Zkopirovana z AbstraktnihoPrikazu
-     * TODO: dat pak do neceho, aby se to dedilo
-     * @return prazdny retezec, kdyz je na konci seznamu
-     */
-    private String dalsiSlovo() {
-        String vratit;
-        if (uk < slova.size()) {
-            vratit = slova.get(uk);
-            uk++;
-        } else {
-            vratit = "";
-        }
-        return vratit;
-    }
 }

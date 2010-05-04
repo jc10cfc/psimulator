@@ -3,8 +3,6 @@
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
 <konfigurak>
-<port>3567</port>
-
 <pocitac jmeno="linux1" typ="linux">
 	<rozhrani>
 		<jmeno>eth0</jmeno>
@@ -86,14 +84,9 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>192.168.1.0</adresat>
+			<adresat>192.168.1.64</adresat>
 			<maskaAdresata>255.255.255.192</maskaAdresata>
-			<rozhraniKam>eth0</rozhraniKam>
-		</zaznam>
-		<zaznam>
-			<adresat>192.168.1.192</adresat>
-			<maskaAdresata>255.255.255.192</maskaAdresata>
-			<rozhraniKam>eth13</rozhraniKam>
+			<rozhraniKam>eth11</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>192.168.1.128</adresat>
@@ -101,9 +94,14 @@
 			<rozhraniKam>eth12</rozhraniKam>
 		</zaznam>
 		<zaznam>
-			<adresat>192.168.1.64</adresat>
+			<adresat>192.168.1.192</adresat>
 			<maskaAdresata>255.255.255.192</maskaAdresata>
-			<rozhraniKam>eth11</rozhraniKam>
+			<rozhraniKam>eth13</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.1.0</adresat>
+			<maskaAdresata>255.255.255.192</maskaAdresata>
+			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>192.168.2.0</adresat>
@@ -342,4 +340,30 @@
 	</natovani>
 </pocitac>
 
+<kabelaz>
+	<kabel>
+		<prvni>linux1:eth0</prvni>
+		<druhy>linux2:eth0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>linux2:eth11</prvni>
+		<druhy>linux11:eth0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>linux2:eth12</prvni>
+		<druhy>linux12:eth0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>linux2:eth13</prvni>
+		<druhy>linux13:eth0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>linux2:eth1</prvni>
+		<druhy>linux3:eth0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>linux3:eth1</prvni>
+		<druhy>linux4:eth0</druhy>
+	</kabel>
+</kabelaz>
 </konfigurak>

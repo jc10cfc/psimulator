@@ -4,6 +4,7 @@
  */
 package prikazy;
 
+import java.util.ArrayList;
 import java.util.List;
 import pocitac.*;
 
@@ -12,10 +13,10 @@ import pocitac.*;
  * rozseka na jednotlivy slova. Pak se testuje,
  * @author neiss & haldyr
  */
-public abstract class ParserPrikazu {
+public abstract class ParserPrikazu extends Abstraktni {
 
     protected String radek;
-    protected List<String> slova; //seznam jednotlivejch slov ze vstupniho stringu
+//    protected List<String> slova; //seznam jednotlivejch slov ze vstupniho stringu
     protected AbstraktniPocitac pc;
     protected Konsole kon;
 
@@ -26,6 +27,7 @@ public abstract class ParserPrikazu {
      * @param kon
      */
     public ParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
+        super(new ArrayList<String>());
         this.pc = pc;
         this.kon = kon;
     }

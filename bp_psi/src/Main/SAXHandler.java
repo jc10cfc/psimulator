@@ -44,10 +44,13 @@ public class SAXHandler implements ContentHandler {
     String[] pool; // pJmeno, ip_start, ip_konec, prefix
     String[] poolAccess; // accessCislo, poolJmeno, overload
     String[] staticke; // in, out
+    String[] kablik; // prvni, druhy
     /**
-     * Radek obsahuje: PC1, rozhraniPC1, PC2, rozhraniPC2
+     * Datova struktura obsahujici pole stringu.
+     * Kazde takove pole obsahuje prave 2 stringy. Kazdy takovy je validni prave tehdy,
+     * kdyz je ve tvaru 'jmenoPocitace:jmenoRozhrani'
      */
-    public List<List> pripojeno;
+    List<String[]> kabelaz;
     List<PocitacBuilder> seznamPocitacBuilder;
     private int aktualniPC = -1;
     /**
@@ -70,13 +73,15 @@ public class SAXHandler implements ContentHandler {
 
     public SAXHandler(int port, boolean bezNastaveni) {
         hotovePocitace = new ArrayList<AbstraktniPocitac>();
-        rozhrani = new String[7];
+        rozhrani = new String[6];
         zaznam = new String[4];
         accessList = new String[3];
         pool = new String[4];
         poolAccess = new String[3];
-        pripojeno = new ArrayList<List>();
+//        pripojeno = new ArrayList<List>();
         staticke = new String[2];
+        kablik = new String[2];
+        kabelaz = new ArrayList<String[]>();
         seznamPocitacBuilder = new ArrayList<PocitacBuilder>();
         this.port = port;
         this.bezNastaveni = bezNastaveni;
@@ -123,7 +128,7 @@ public class SAXHandler implements ContentHandler {
      * @return
      */
     private boolean patriDoRozhrani(String localName) {
-        String[] pole = {"jmeno", "ip", "mac", "pripojenoK", "maska", "nahozene", "nat"};
+        String[] pole = {"jmeno", "ip", "mac", "maska", "nahozene", "nat"};
         return jeVPoli(pole, localName);
     }
 
@@ -255,12 +260,10 @@ public class SAXHandler implements ContentHandler {
             i = 2;
         } else if (s.equals("mac")) {
             i = 3;
-        } else if (s.equals("pripojenoK")) {
-            i = 4;
         } else if (s.equals("nahozene")) {
-            i = 5;
+            i = 4;
         } else if (s.equals("nat")) {
-            i = 6;
+            i = 5;
         }
         return i;
     }
@@ -390,6 +393,10 @@ public class SAXHandler implements ContentHandler {
             vymazPole(poolAccess);
         }
 
+        if (localName.equals("kabel")) {
+            vymazPole(kablik);
+        }
+
         if (vypis) {
             System.out.printf("%s<%s%s%s>\n", tabs, qName, namespaces, attsStr);
         }
@@ -416,6 +423,14 @@ public class SAXHandler implements ContentHandler {
 
         if (localName.equals("staticke")) {
             dejOdkazNaAktualniPC().staticke.add(vratKopiiPole(staticke));
+        }
+
+        if (localName.equals("kabel")) {
+            if (jePolePlne(kablik)) {
+                kabelaz.add(vratKopiiPole(kablik));
+            } else {
+                throw new ChybaKonfigurakuException("Neni uplny zaznam u kabelu: " + vypisPole(kablik));
+            }
         }
 
         if (localName.equals("pool")) {
@@ -494,6 +509,16 @@ public class SAXHandler implements ContentHandler {
         }
         if (jmenoElementu.equals("out")) {
             staticke[1] = s;
+            return;
+        }
+
+        if (jmenoElementu.equals("prvni")) {
+            kablik[0] = s;
+            return;
+        }
+
+        if (jmenoElementu.equals("druhy")) {
+            kablik[1] = s;
             return;
         }
 
@@ -588,7 +613,7 @@ public class SAXHandler implements ContentHandler {
             pcbuilder.nactiPooly(pocitac);
             pcbuilder.nactiAccessListy(pocitac);
             pcbuilder.nactiPoolAccess(pocitac);
-            pcbuilder.nactiRozhrani(pocitac, pripojeno);
+            pcbuilder.nactiRozhrani(pocitac);
             pcbuilder.nactiStatickyNat(pocitac);
 
             if (pocitac instanceof CiscoPocitac) {
@@ -607,49 +632,75 @@ public class SAXHandler implements ContentHandler {
             hotovePocitace.add(pocitac);
         }
 
-        // tady resim natazeni dratu (odkazu) mezi rozhranimi spojenych pocitacu
-        for (List l : pripojeno) {
-            String pc1 = (String)l.get(0);
-            String rozh1 = (String)l.get(1);
-            String pc2 = (String)l.get(2);
-            String rozh2 = (String)l.get(3);
-
-            SitoveRozhrani najiteRozhrani = najdiDaneRozhrani(pc1, rozh1);
-            if (najiteRozhrani == null) {
-                throw new ChybaKonfigurakuException(vypisChybuPriHledaniRozhrani(pc1, rozh1));
-            }
-
-            SitoveRozhrani najiteRozhrani2 = najdiDaneRozhrani(pc2, rozh2);
-            if (najiteRozhrani2 == null) {
-                throw new ChybaKonfigurakuException(vypisChybuPriHledaniRozhrani(pc2, rozh2));
-            }
-
-            najiteRozhrani.pripojenoK = najiteRozhrani2;
-        }
-
-        //TODO: doresit aby to bylo pripojeno oboustrane
-
-
+        nactiKabelaz(kabelaz);
     }
 
     /**
-     * Vypise na standartni chybovy vystup hlasku o zpracovani elementu propojenoK.
-     * Kdyz je obsah elementu ve spatnem formatu, tak to vypise hlasku a preskoci tento element.
-     * @param iface - pole stringu, ve kterem je ulozen obsah elemetu pripojenoK
+     * Vrati chybovou hlasku pro kabel ve spatnem tvaru.
+     * @param s
+     * @return
      */
-    public static void vypisChybuPriZpracovaniPripojenoKXML(String[] iface) {
-        System.err.println("Ignoruji volbu pripojenoK: '" + iface[dejIndexVRozhrani("pripojenoK")] + "'");
-        System.err.println("pripojenoK musi byt ve tvaru nazevPC:nazevRozhrani");
+    private String vypisChybuKabelu(String s) {
+        return "Element kabel musi byt ve tvaru 'nazevPC:nazevRozhrani', "
+                + "ale ne todlencto: '" + s + "'";
     }
 
     /**
      * Vypise na standartni chybovy vystup hlasku, ze nebyl nalezen zadny pocitac s danym rozhranim.
-     * @param o1, reference na jmeno pocitace
-     * @param o2, reference na jmeno rozhrani
+     * @param pc, jmeno pocitace
+     * @param rozh, jmeno rozhrani
      * @return chybova hlaska
      */
     private String vypisChybuPriHledaniRozhrani(String pc, String rozh) {
-        return "Nepodarilo se najit pocitac " + pc + " s rozhranim " + rozh;
+        return "Pocitac " + pc + " s rozhranim " + rozh + " nebyl nalezen.";
+    }
+
+    private boolean jeAsponJedenPrvekPrazdnej(String[] pole) {
+        for (int i = 0; i < pole.length; i++) {
+            if (pole[i].length() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Natahne kabely mezi jednotlivymi rozhranimi.
+     * Na jedno rozhrani muze byt pripojen maximalne 1 kabel.
+     * @param kabelaz
+     */
+    private void nactiKabelaz(List<String[]> kabelaz) {
+        for (String[] kabel : kabelaz) {
+            String[] prvni = kabel[0].split(":");
+            String[] druhy = kabel[1].split(":");
+
+            if (!kabel[0].contains(":") || prvni.length != 2 || jeAsponJedenPrvekPrazdnej(prvni)) {
+                throw new ChybaKonfigurakuException(vypisChybuKabelu(kabel[0]));
+            }
+            if (!kabel[1].contains(":") || druhy.length != 2 || jeAsponJedenPrvekPrazdnej(druhy)) {
+                throw new ChybaKonfigurakuException(vypisChybuKabelu(kabel[1]));
+            }
+
+            SitoveRozhrani iface1 = najdiDaneRozhrani(prvni[0], prvni[1]);
+            SitoveRozhrani iface2 = najdiDaneRozhrani(druhy[0], druhy[1]);
+
+            if (iface1 == null) {
+                throw new ChybaKonfigurakuException(vypisChybuPriHledaniRozhrani(prvni[0], prvni[1]));
+            }
+            if (iface2 == null) {
+                throw new ChybaKonfigurakuException(vypisChybuPriHledaniRozhrani(druhy[0], druhy[1]));
+            }
+
+            if (iface1.pripojenoK != null) {
+                throw new ChybaKonfigurakuException("U pocitace " + iface1.getPc().jmeno + ", rozhrani " + iface1.jmeno + " uz jeden kabel vede. Chyba!");
+            }
+            if (iface2.pripojenoK != null) {
+                throw new ChybaKonfigurakuException("U pocitace " + iface2.getPc().jmeno + ", rozhrani " + iface2.jmeno + " uz jeden kabel vede. Chyba!");
+            }
+
+            iface1.pripojenoK = iface2;
+            iface2.pripojenoK = iface1;
+        }
     }
 
     /**

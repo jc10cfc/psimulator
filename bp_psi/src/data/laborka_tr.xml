@@ -3,8 +3,6 @@
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
 <konfigurak>
-<port>3567</port>
-
 <pocitac jmeno="linux1" typ="linux">
 	<rozhrani>
 		<jmeno>eth1</jmeno>
@@ -58,6 +56,12 @@
 	<routy>
 	</routy>
 	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
 	</natovani>
 </pocitac>
 
@@ -87,4 +91,14 @@
 	</natovani>
 </pocitac>
 
+<kabelaz>
+	<kabel>
+		<prvni>linux1:eth1</prvni>
+		<druhy>cisco1:FastEthernet0/0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>cisco1:FastEthernet0/1</prvni>
+		<druhy>cisco2:FastEthernet0/0</druhy>
+	</kabel>
+</kabelaz>
 </konfigurak>

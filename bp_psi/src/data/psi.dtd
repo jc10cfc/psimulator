@@ -27,7 +27,15 @@
 
 <!ELEMENT jmeno ( #PCDATA ) >
 
-<!ELEMENT konfigurak ( pocitac+ ) >
+<!ELEMENT konfigurak ( pocitac+, kabelaz ) >
+
+<!ELEMENT kabelaz ( kabel+ ) >
+
+<!ELEMENT kabel ( prvni, druhy ) >
+
+<!ELEMENT prvni ( #PCDATA ) >
+
+<!ELEMENT druhy ( #PCDATA ) >
 
 <!ELEMENT mac ( #PCDATA ) >
 

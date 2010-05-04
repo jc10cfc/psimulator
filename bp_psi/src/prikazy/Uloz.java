@@ -9,6 +9,7 @@ import datoveStruktury.NATtabulka.NATzaznam;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
@@ -28,14 +29,26 @@ public class Uloz extends AbstraktniPrikaz {
     BufferedWriter out;
     String tabs = "";
     String soubor = konfigurak;
+    List<PCJmeno> pripojenoKnove;
 
     public Uloz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
         pocitace = (List<AbstraktniPocitac>) Main.Main.vsechno;
+        pripojenoKnove = new ArrayList();
         if (slova.size() >= 2) {
             soubor = slova.get(1);
         }
         vykonejPrikaz();
+    }
+
+    private class PCJmeno {
+
+        private PCJmeno(String pc_jmeno, String rozh_jmeno) {
+            this.pc_jmeno = pc_jmeno;
+            this.rozh_jmeno = rozh_jmeno;
+        }
+        String pc_jmeno;
+        String rozh_jmeno;
     }
 
     /**
@@ -107,11 +120,11 @@ public class Uloz extends AbstraktniPrikaz {
             zapis(vratElement("maska", rozhrani.vratPrvni().vypisMasku()));
         }
         zapis(vratElement("mac", rozhrani.macAdresa));
-        if (rozhrani.pripojenoK == null) {
-            zapis(vratElement("pripojenoK", ""));
-        } else {
-            zapis(vratElement("pripojenoK", rozhrani.pripojenoK.getPc().jmeno + ":" + rozhrani.pripojenoK.jmeno));
-        }
+//        if (rozhrani.pripojenoK == null) {
+//            zapis(vratElement("pripojenoK", ""));
+//        } else {
+//            zapis(vratElement("pripojenoK", rozhrani.pripojenoK.getPc().jmeno + ":" + rozhrani.pripojenoK.jmeno));
+//        }
         zapis(vratElement("nahozene", rozhrani.jeNahozene() ? "true" : "false"));
 
         if (rozhrani.getPc().natTabulka.vratInside().contains(rozhrani)) {
@@ -299,7 +312,7 @@ public class Uloz extends AbstraktniPrikaz {
             if (zaznam.jeStaticke()) {
                 zapis("<staticke>\n");
                 tabs += "\t";
-                
+
                 zapis(vratElement("in", zaznam.vratIn().vypisAdresu()));
                 zapis(vratElement("out", zaznam.vratOut().vypisAdresu()));
 
@@ -307,6 +320,46 @@ public class Uloz extends AbstraktniPrikaz {
                 zapis("</staticke>\n");
             }
         }
+    }
+
+    /**
+     * Ulozi propojeni pocitacu pomoci kabelu.
+     * @throws IOException
+     */
+    private void ulozPripojeni() throws IOException {
+
+        zapis("<kabelaz>\n");
+        tabs += "\t";
+
+        for (AbstraktniPocitac pocitac : pocitace) {
+            for (SitoveRozhrani iface : pocitac.rozhrani) {
+                if (uzTamJe(pocitac.jmeno, iface.jmeno) || iface.pripojenoK == null) {
+                    continue;
+                }
+
+                zapis("<kabel>\n");
+                tabs += "\t";
+                zapis(vratElement("prvni", pocitac.jmeno+":"+iface.jmeno));
+                zapis(vratElement("druhy", iface.pripojenoK.getPc().jmeno+":"+iface.pripojenoK.jmeno));
+
+                tabs = tabs.substring(1);
+                zapis("</kabel>\n");
+                pripojenoKnove.add(new PCJmeno(pocitac.jmeno, iface.jmeno));
+                pripojenoKnove.add(new PCJmeno(iface.pripojenoK.getPc().jmeno, iface.pripojenoK.jmeno));
+            }
+        }
+        
+        tabs = tabs.substring(1);
+        zapis("</kabelaz>\n");
+    }
+
+    private boolean uzTamJe(String pc, String jm) {
+        for (PCJmeno zaznam : pripojenoKnove) {
+            if (zaznam.pc_jmeno.equals(pc) && zaznam.rozh_jmeno.equals(jm)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -333,6 +386,9 @@ public class Uloz extends AbstraktniPrikaz {
             for (AbstraktniPocitac pocitac : pocitace) {
                 ulozPC(pocitac);
             }
+
+            ulozPripojeni();
+
 
             out.write("</konfigurak>\n");
             //Close the output stream

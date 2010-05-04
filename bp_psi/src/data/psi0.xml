@@ -3,8 +3,6 @@
 <!DOCTYPE konfigurak SYSTEM "psi.dtd">
 
 <konfigurak>
-<port>3567</port>
-
 <pocitac jmeno="linux1" typ="linux">
 	<rozhrani>
 		<jmeno>eth0</jmeno>
@@ -26,13 +24,11 @@
 		<zaznam>
 			<adresat>147.32.125.0</adresat>
 			<maskaAdresata>255.255.255.128</maskaAdresata>
-			<brana>null</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>192.168.1.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<brana>null</brana>
 			<rozhraniKam>eth1</rozhraniKam>
 		</zaznam>
 		<zaznam>
@@ -42,6 +38,15 @@
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 	</routy>
+	<ip_forward>0</ip_forward>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
 </pocitac>
 
 <pocitac jmeno="cisco1" typ="cisco">
@@ -71,12 +76,6 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>147.32.125.0</adresat>
-			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<brana>1.1.1.1</brana>
-		</zaznam>
-		
-		<zaznam>
 			<adresat>4.0.0.0</adresat>
 			<maskaAdresata>255.0.0.0</maskaAdresata>
 			<brana>1.1.1.1</brana>
@@ -91,7 +90,20 @@
 			<maskaAdresata>255.255.255.0</maskaAdresata>
 			<brana>4.4.4.4</brana>
 		</zaznam>
+		<zaznam>
+			<adresat>147.32.125.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<brana>1.1.1.1</brana>
+		</zaznam>
 	</routy>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
 </pocitac>
 
 <pocitac jmeno="cisco2" typ="cisco">
@@ -103,6 +115,30 @@
 		<pripojenoK>cisco1:FastEthernet0/2</pripojenoK>
 		<nahozene>true</nahozene>
 	</rozhrani>
+	<routy>
+	</routy>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
 </pocitac>
 
+<kabelaz>
+	<kabel>
+		<prvni>linux1:eth0</prvni>
+		<druhy>cisco1:FastEthernet0/1</druhy>
+	</kabel>
+	<kabel>
+		<prvni>linux1:eth1</prvni>
+		<druhy>cisco1:FastEthernet0/0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>cisco1:FastEthernet0/2</prvni>
+		<druhy>cisco2:FastEthernet0/0</druhy>
+	</kabel>
+</kabelaz>
 </konfigurak>

@@ -305,7 +305,7 @@ public class PocitacBuilder {
         }
     }
 
-    public void nactiRozhrani(AbstraktniPocitac pocitac, List<List> pripojeno) {
+    public void nactiRozhrani(AbstraktniPocitac pocitac) {
         for (String[] iface : rozhrani) { // prochazim a pridavam rozhrani k PC
 
             String jmenoRozh = iface[dejIndexVRozhrani("jmeno")];
@@ -321,7 +321,6 @@ public class PocitacBuilder {
             String adresa = iface[dejIndexVRozhrani("ip")];
             String nahozene = iface[dejIndexVRozhrani("nahozene")];
             String nat = iface[dejIndexVRozhrani("nat")];
-            String pripojenoK = iface[dejIndexVRozhrani("pripojenoK")];
 
             if (maska.equals("") && !adresa.equals("")) { // chybi maska, ale IP je, pak se maska dopocita
                 IpAdresa ip = new IpAdresa(adresa);
@@ -352,24 +351,6 @@ public class PocitacBuilder {
                 System.out.println("Neznama volba " + nat + " byla preskocena. "
                         + "Povolene jsou jen soukrome/verejna");
             }
-
-            if (pripojenoK.contains(":")) {
-                List prip = new ArrayList<String>();
-                prip.add(pocitac.jmeno);
-                prip.add(sr.jmeno);
-
-                String[] pole = pripojenoK.split(":");
-                if (pole.length == 2) {
-                    prip.add(pole[0]);
-                    prip.add(pole[1]);
-                    pripojeno.add(prip);
-                } else {
-                    vypisChybuPriZpracovaniPripojenoKXML(iface);
-                }
-            } else if (!pripojenoK.equals("")) {
-                vypisChybuPriZpracovaniPripojenoKXML(iface);
-            }
         }
     }
-
 }
