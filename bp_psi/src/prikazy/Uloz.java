@@ -120,11 +120,6 @@ public class Uloz extends AbstraktniPrikaz {
             zapis(vratElement("maska", rozhrani.vratPrvni().vypisMasku()));
         }
         zapis(vratElement("mac", rozhrani.macAdresa));
-//        if (rozhrani.pripojenoK == null) {
-//            zapis(vratElement("pripojenoK", ""));
-//        } else {
-//            zapis(vratElement("pripojenoK", rozhrani.pripojenoK.getPc().jmeno + ":" + rozhrani.pripojenoK.jmeno));
-//        }
         zapis(vratElement("nahozene", rozhrani.jeNahozene() ? "true" : "false"));
 
         if (rozhrani.getPc().natTabulka.vratInside().contains(rozhrani)) {
@@ -333,7 +328,7 @@ public class Uloz extends AbstraktniPrikaz {
 
         for (AbstraktniPocitac pocitac : pocitace) {
             for (SitoveRozhrani iface : pocitac.rozhrani) {
-                if (uzTamJe(pocitac.jmeno, iface.jmeno) || iface.pripojenoK == null) {
+                if (jeRozhraniPripojenoAUlozeno(pocitac.jmeno, iface.jmeno) || iface.pripojenoK == null) {
                     continue;
                 }
 
@@ -353,7 +348,13 @@ public class Uloz extends AbstraktniPrikaz {
         zapis("</kabelaz>\n");
     }
 
-    private boolean uzTamJe(String pc, String jm) {
+    /**
+     * Vrati true, pokud je uz takove rozhrani zapsane do konfiguraku nebo pokud k rozhrani nevede kabel.
+     * @param pc jmeno pocitace
+     * @param jm jmeno rozhrani
+     * @return
+     */
+    private boolean jeRozhraniPripojenoAUlozeno(String pc, String jm) {
         for (PCJmeno zaznam : pripojenoKnove) {
             if (zaznam.pc_jmeno.equals(pc) && zaznam.rozh_jmeno.equals(jm)) {
                 return true;
@@ -388,7 +389,6 @@ public class Uloz extends AbstraktniPrikaz {
             }
 
             ulozPripojeni();
-
 
             out.write("</konfigurak>\n");
             //Close the output stream

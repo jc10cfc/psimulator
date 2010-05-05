@@ -62,7 +62,7 @@ public class CiscoShow extends CiscoPrikaz {
                 s += "  show running-config             Current operating configuration\n";
             }
             s += "\n";
-            kon.posliPoRadcich(s, 150);
+            kon.posliPoRadcich(s, 50);
             return false;
         }
 

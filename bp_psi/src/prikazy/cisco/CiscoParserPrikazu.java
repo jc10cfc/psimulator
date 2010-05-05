@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import static datoveStruktury.CiscoStavy.*;
 import static Main.Main.*;
-import java.util.LinkedList;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
@@ -27,7 +26,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
     public CiscoParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
         super(pc, kon);
-        slova = new LinkedList<String>();
     }
     /**
      * Stav, ve kterem se aktualne nachazi cisco.
@@ -157,7 +155,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     public void zpracujRadek(String s) {
 
         radek = s;
-        slova.clear();
         nepokracovat = false;
         chybovyVypis = "";
         uk = 1;

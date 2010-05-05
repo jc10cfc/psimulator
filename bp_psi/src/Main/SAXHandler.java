@@ -78,7 +78,6 @@ public class SAXHandler implements ContentHandler {
         accessList = new String[3];
         pool = new String[4];
         poolAccess = new String[3];
-//        pripojeno = new ArrayList<List>();
         staticke = new String[2];
         kablik = new String[2];
         kabelaz = new ArrayList<String[]>();
@@ -577,7 +576,6 @@ public class SAXHandler implements ContentHandler {
      */
     @Override
     public void startDocument() throws SAXException {
-        // ...
     }
 
     /**
@@ -646,7 +644,7 @@ public class SAXHandler implements ContentHandler {
     }
 
     /**
-     * Vypise na standartni chybovy vystup hlasku, ze nebyl nalezen zadny pocitac s danym rozhranim.
+     * Vrati chybovou hlasku, ze nebyl nalezen zadny pocitac s danym rozhranim.
      * @param pc, jmeno pocitace
      * @param rozh, jmeno rozhrani
      * @return chybova hlaska
@@ -655,6 +653,11 @@ public class SAXHandler implements ContentHandler {
         return "Pocitac " + pc + " s rozhranim " + rozh + " nebyl nalezen.";
     }
 
+    /**
+     * Vrati true, pokud alespon 1 prvek pole je prazdnym retezcem.
+     * @param pole
+     * @return
+     */
     private boolean jeAsponJedenPrvekPrazdnej(String[] pole) {
         for (int i = 0; i < pole.length; i++) {
             if (pole[i].length() == 0) {

@@ -52,17 +52,4 @@ public class AbstraktniPrikazTest {
         assertEquals(AbstraktniPrikaz.rozlozNaMocniny2(100), "4 + 32 + 64");
         assertEquals(AbstraktniPrikaz.rozlozNaMocniny2(9), "1 + 8");
     }
-
-    @Test
-    public void testLog2(){
-        assertEquals(0, AbstraktniPrikaz.log2(1));
-        assertEquals(1, AbstraktniPrikaz.log2(2));
-        assertEquals(2, AbstraktniPrikaz.log2(4));
-        assertEquals(4, AbstraktniPrikaz.log2(16));
-        assertEquals(8, AbstraktniPrikaz.log2(256));
-        assertEquals(11, AbstraktniPrikaz.log2(2048));
-    }
-
-    
-
 }

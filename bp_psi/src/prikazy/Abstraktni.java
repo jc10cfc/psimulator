@@ -1,13 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package prikazy;
 
 import java.util.List;
 
 /**
- *
+ * Predek uplne vseho, dedi od nej AbstraktniPrikaz a ParserPrikazu (cili temer vsechny tridy).
  * @author haldyr
  */
 public abstract class Abstraktni {

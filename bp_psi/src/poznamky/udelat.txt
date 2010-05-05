@@ -48,7 +48,7 @@ rozbehani pod windows:
 3/ spustit Cygwin.bat
 
 rozbehani pod OS linux:
-nainstalovat JRE (aptitude java-java6-jre)
+nainstalovat JRE (aptitude sun-java6-jre)
     http://www.java.com/en/download/
 nainstalovat rlwrap (aptitude install rlwrap)
     http://utopia.knoware.nl/~hlub/rlwrap/
