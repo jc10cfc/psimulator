@@ -199,13 +199,13 @@ public class PocitacBuilder {
                     ovrld = false;
                     pocitac.natTabulka.lPoolAccess.pridejPoolAccess(cislo, jm, ovrld);
                 } else {
-                    System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAcc) + ", preskakuji.. ");
+                    System.err.println("prirazeni access-listu k poolu je spatne zadano: " + vypisPole(poolAcc) + ", preskakuji.. ");
                 }
             } catch (Exception e) {
                 if (debug) {
                     e.printStackTrace();
                 }
-                System.err.println("prirazeni je spatne zadano: " + vypisPole(poolAcc) + ", preskakuji.. ");
+                System.err.println("prirazeni access-listu k poolu je spatne zadano: " + vypisPole(poolAcc) + ", preskakuji.. ");
             }
         }
     }
@@ -349,7 +349,7 @@ public class PocitacBuilder {
                 //ok
             } else {
                 System.out.println("Neznama volba " + nat + " byla preskocena. "
-                        + "Povolene jsou jen soukrome/verejna");
+                        + "Povolene volby jsou jen soukrome/verejne");
             }
         }
     }

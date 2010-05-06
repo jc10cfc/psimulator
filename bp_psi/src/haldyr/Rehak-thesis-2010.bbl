@@ -1,4 +1,4 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -33,12 +33,6 @@ SLAVíK, P.
 web:cstug.
 \newblock {CSTUG} --- {\CS}{\TeX} {U}sers {G}roup --- hlavní stránka.
 \newblock \\ \verb|http://www.cstug.cz/|, stav z 2.\,3.\,2009.
-
-\bibitem[web:infobp()]{infobp}
-web:infobp.
-\newblock K336 {I}nfo --- pokyny pro psaní bakalářských prací.
-\newblock \\ \verb|https://info336.felk.cvut.cz/clanek.php?id=504|, stav ze
-  4.\,5.\,2009.
 
 \bibitem[web:infodp()]{infodp}
 web:infodp.

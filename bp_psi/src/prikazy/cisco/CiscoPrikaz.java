@@ -161,7 +161,7 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
     }
 
     /**
-     * Vypise hlasku do konzole, ze nase implementace nepodoporuje tento 
+     * Vypise hlasku do konzole, ze nase implementace nepodoporuje tento prikaz.
      */
     protected void unsupported() {
         kon.posliServisne("\nThis command is not implemented in this app \n" +

@@ -14,9 +14,8 @@ nacteni z konfiguraku bez dat (jen vytvorit PC+rozhrani)
 
 
 haldyr:
-clear ip nat translation
-clear ip route *
- - overit, zda kdyz zmenim IP na rozhrani, jestli se smazou vsechny routy na toto rozhrani!
+clear ip nat translation - netreba
+clear ip route * - stejnak nefunguje
 prikaz ?
 
 pozor:
@@ -34,33 +33,16 @@ pokud poustime terminal pro cisco timto prikazem, tak mame funknci i doplnovani
 rlwrap -pcyan -w-3 -I -b'(){}[],+=&^%0@;|\' -f /home/haldyr/NetBeansProjects/bp_psi/src/data/cisco_doplnovani.txt telnet localhost
 
 
-rozbehani pod windows:
-1/ nainstalovat JRE:
-    http://www.java.com/en/download/
-2/a/ stahnout+rozbalit cygwin
-2/b/ stahnout+nainstalovat cygwin
-    http://www.cygwin.com/setup.exe
-    nainstalovat balicek inetutils (telnet)
-    preinstalovat balicek libreadline na nejnovejsi
-    zkopirovat si do slozky cygwin/home/<uzivatel>/ vsechny soubory
-        (spustitelne jar, dtd soubor, konfiruraky v xml, skripty cisco.sh + linux.sh + start_server.sh,
-            doplnovani_cisco.txt a doplnovani_linux.txt)
-3/ spustit Cygwin.bat
-
-rozbehani pod OS linux:
-nainstalovat JRE (aptitude sun-java6-jre)
-    http://www.java.com/en/download/
-nainstalovat rlwrap (aptitude install rlwrap)
-    http://utopia.knoware.nl/~hlub/rlwrap/
-nainstalovat telnet (aptitude install telnet)
-
-
-spusteni:
-1/ vytvorit server ./start_server.sh <konfigurak> <port>
-    spusteni bez parametru vypise napovedu
-2/a/ pripojit klientem ./cisco.sh <port>
-2/b/ pripojit klientem ./linux.sh <port>
-
+zpracovani signalu INT (Ctrl+C)
+Signal.handle(new Signal("INT"), new SignalHandler() {
+            @Override
+            public void handle(Signal sig) {
+                System.out.println(
+                        "Aaarggh, a user is trying to interrupt me!!");
+                System.out.println(
+                        "(throw garlic at user, say `shoo, go away')");
+            }
+        });
 
 
 

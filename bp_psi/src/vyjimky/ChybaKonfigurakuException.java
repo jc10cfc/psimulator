@@ -6,20 +6,20 @@
 package vyjimky;
 
 /**
- * Tahleta vyjimka se hazi, kdyz nastane nejaka chyba pri cteni z XML konfiguraku.
+ * Tahleta vyjimka se hazi, kdyz nastane nejaka chyba pri cteni z XML souboru.
  * @author haldyr
  */
 public class ChybaKonfigurakuException extends RuntimeException {
 
     /**
-     * Creates a new instance of <code>SpatnaMaskaException</code> without detail message.
+     * Creates a new instance of <code>ChybaKonfigurakuException</code> without detail message.
      */
     public ChybaKonfigurakuException() {
     }
 
 
     /**
-     * Constructs an instance of <code>SpatnaMaskaException</code> with the specified detail message.
+     * Constructs an instance of <code>ChybaKonfigurakuException</code> with the specified detail message.
      * @param msg the detail message.
      */
     public ChybaKonfigurakuException(String msg) {

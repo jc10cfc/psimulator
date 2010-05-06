@@ -17,6 +17,8 @@ import prikazy.AbstraktniPrikaz.*;
 import prikazy.ParserPrikazu;
 import prikazy.linux.LinuxIfconfig;
 import prikazy.linux.LinuxRoute;
+import sun.misc.Signal;
+import sun.misc.SignalHandler;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -57,7 +59,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     boolean debug = true;
     AbstraktniPrikaz prikaz;
-    private int uk = 1; //ukazatel do seznamu slov, prvni slovo je nazev prikazu
 
     private void ladici(String s) {
         if (debug) {
@@ -157,7 +158,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         radek = s;
         nepokracovat = false;
         chybovyVypis = "";
-        uk = 1;
 
         if (debug && stav == USER) {
             stav = ROOT;
@@ -282,7 +282,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     }
                 }
                 break;
-            
+
             case CONFIG:
                 if (kontrola("exit", prvniSlovo) || prvniSlovo.equals("end")) {
                     stav = ROOT;
@@ -308,7 +308,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 break;
-            
+
             case IFACE:
                 if (kontrola("exit", prvniSlovo)) {
                     stav = CONFIG;
@@ -512,7 +512,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * no shutdown
      */
     private void no() {
-        String dalsi = dalsiSlovo();
+
+        String dalsi = slova.size() == 1 ? "" : slova.get(1);
         if (dalsi.isEmpty()) {
             incompleteCommand();
             return;
@@ -523,6 +524,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 return;
             }
             if (kontrola("ip", dalsi)) {
+                System.out.println("prikaz ip");
                 prikaz = new CiscoIp(pc, kon, slova, true, stav, aktualni);
                 return;
             }

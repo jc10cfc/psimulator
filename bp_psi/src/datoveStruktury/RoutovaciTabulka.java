@@ -207,9 +207,8 @@ public class RoutovaciTabulka {
      */
     public void pridejZaznamBezKontrol(IpAdresa adresat,IpAdresa brana,SitoveRozhrani rozhr){
         if(!adresat.jeCislemSite()){
-            throw new ChybaKonfigurakuException("Chyba v konfiguraku, adresat "+ adresat.vypisAdresuSMaskou() +
-                    " v routovaci tabulce neni cislem site. " +
-                    "mozna pak by to asi chtelo specialni vyjimku");
+            throw new ChybaKonfigurakuException("Chyba v konfiguracnim souboru, adresat "+ adresat.vypisAdresuSMaskou() +
+                    " v routovaci tabulce neni cislem site. ");
         }
         Zaznam z = new Zaznam(adresat,brana,rozhr);
         radky.add(najdiSpravnouPosici(z), z);

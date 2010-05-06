@@ -299,7 +299,7 @@ public abstract class AbstraktniPocitac {
             }
         }
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
-            vypisLadeni("metoda odesliNovejPaket: Nemohu odeslat paket, nenalezl jsem rozhrani, na ktery" +
+            vypisLadeni("metoda odesliNovejPaket: Nemohu odeslat paket, nenalezl jsem rozhrani, na ktere" +
                     " bych ho poslal. cil: "+cil.vypisAdresu()+
                     " typ: "+typ);
             return false;
@@ -313,7 +313,7 @@ public abstract class AbstraktniPocitac {
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
         if(paket.icmp_seq != -1 && //to signalisuje, ze se paket nema odeslat, ale jen se zkousi, jestli to pujde
                 paket.zdroj != null ) { //rozhrani, kterym to chci poslat ma prirazenou IP adresu
-            vypisLadeni("Posilam novej paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
+            vypisLadeni("Posilam novy paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
                     +sousedni.vypisAdresu()+" "+paket.toString());
             odesliEthernetove(paket, mojeRozhr, ciziRozhr, sousedni);
                     // -> sama se hlida, jestli ciziRozhrani neni null
@@ -335,10 +335,10 @@ public abstract class AbstraktniPocitac {
         if (paket.ttl == 0) {
             if(paket.typ==8){ //kdyz puvodni paket byl icmp request, posila se zpatky ttl exceed
                 posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
-                vypisLadeni("Dosel mi paket, kterymu vyprselo ttl. Zpatky jsem poslal ICMP Time Exceed. "
+                vypisLadeni("Dosel mi paket, kteremu vyprselo ttl. Zpatky jsem poslal ICMP Time Exceed. "
                         + "dosly paket: "+paket.toString());
             } else { // jinak to aspon vypisu, co se stalo
-                vypisLadeni("Dosel mi paket, kterymu vyprselo ttl. Neni to ICMP request, nic zpatky neposilam. "
+                vypisLadeni("Dosel mi paket, kteremu vyprselo ttl. Neni to ICMP request, nic zpatky neposilam. "
                         + paket.toString());
             }
         } else { //ttl v poradku, muzu pokracovat
@@ -405,7 +405,7 @@ public abstract class AbstraktniPocitac {
                 if(paket.prikaz.getPc()==this){ // prikaz v paketu odpovida
                     paket.prikaz.zpracujPaket(paket);
                 } else { //prikaz v paketu neodpovida
-                    vypisLadeni("Dosel mi paket, kterej sice je pro me, ale prikaz, kterej ho poslal, " +
+                    vypisLadeni("Dosel mi paket, ktery sice je pro me, ale prikaz, ktery ho poslal, " +
                             "nesouhlasi." +" Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
                             + paket.toString());
                 }

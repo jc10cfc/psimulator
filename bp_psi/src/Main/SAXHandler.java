@@ -436,7 +436,7 @@ public class SAXHandler implements ContentHandler {
             if (jePolePlne(pool)) {
                 dejOdkazNaAktualniPC().pool.add(vratKopiiPole(pool));
             } else {
-                System.err.println("Neni uplny zaznam, preskakuji: " + vypisPole(pool));
+                System.err.println("Neni uplny pool zaznam, preskakuji: " + vypisPole(pool));
             }
 
         }
@@ -445,7 +445,7 @@ public class SAXHandler implements ContentHandler {
             if (jePolePlne(poolAccess)) {
                 dejOdkazNaAktualniPC().poolAccess.add(vratKopiiPole(poolAccess));
             } else {
-                System.err.println("Neni uplny zaznam, preskakuji: " + vypisPole(poolAccess));
+                System.err.println("Neni uplny poolAccess zaznam, preskakuji: " + vypisPole(poolAccess));
             }
 
         }
@@ -454,7 +454,7 @@ public class SAXHandler implements ContentHandler {
             if (jePolePlne(accessList)) {
                 dejOdkazNaAktualniPC().accessList.add(vratKopiiPole(accessList));
             } else {
-                System.err.println("Neni uplny zaznam, preskakuji: " + vypisPole(accessList));
+                System.err.println("Neni uplny access-list zaznam, preskakuji: " + vypisPole(accessList));
             }
 
         }
@@ -527,8 +527,7 @@ public class SAXHandler implements ContentHandler {
             } else if (s.equals("false") || s.equals("0")) {
                 dejOdkazNaAktualniPC().ip_forward = false;
             } else {
-                System.err.println("ip_forward musi byt bud true/false nebo 1/0, ne todlencto: " + s);
-
+                System.err.println("ip_forward musi byt bud true/false nebo 1/0, ne toto: " + s);
             }
         }
     }
@@ -640,7 +639,7 @@ public class SAXHandler implements ContentHandler {
      */
     private String vypisChybuKabelu(String s) {
         return "Element kabel musi byt ve tvaru 'nazevPC:nazevRozhrani', "
-                + "ale ne todlencto: '" + s + "'";
+                + "ale ne toto: '" + s + "'";
     }
 
     /**
@@ -695,10 +694,10 @@ public class SAXHandler implements ContentHandler {
             }
 
             if (iface1.pripojenoK != null) {
-                throw new ChybaKonfigurakuException("U pocitace " + iface1.getPc().jmeno + ", rozhrani " + iface1.jmeno + " uz jeden kabel vede. Chyba!");
+                throw new ChybaKonfigurakuException("U pocitace " + iface1.getPc().jmeno + ", rozhrani " + iface1.jmeno + " uz jeden kabel je. Chyba!");
             }
             if (iface2.pripojenoK != null) {
-                throw new ChybaKonfigurakuException("U pocitace " + iface2.getPc().jmeno + ", rozhrani " + iface2.jmeno + " uz jeden kabel vede. Chyba!");
+                throw new ChybaKonfigurakuException("U pocitace " + iface2.getPc().jmeno + ", rozhrani " + iface2.jmeno + " uz jeden kabel je. Chyba!");
             }
 
             iface1.pripojenoK = iface2;

@@ -6,7 +6,7 @@
 package vyjimky;
 
 /**
- * Abstraktni predek vyjimek hazenejch predevsim v konstruktorech IpAdresy.
+ * Abstraktni predek vyjimek hazenych predevsim v konstruktorech IpAdresy.
  * Udelal jsem ji, kdyz potrebuju chytat vyjimku a je mi jedno, jestli je kvuli masce nebo kvuli adrese.
  * @author neiss
  */

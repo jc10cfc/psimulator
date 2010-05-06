@@ -10,7 +10,7 @@ import vyjimky.*;
  * Hele, clovece, premejslel jsem dneska, jak dodelat ty metody, ktery budou pocitat cislo site a tak
  * a nakonec jsem tu implementaci zmenil na jeden integer, cislo site a pocitace a podobny veci se
  * pak pocitaj lip.
- * @author neiss
+ * @author neiss + haldyr (kde je vyslovne poznamenano)
  */
 public class IpAdresa {
 
@@ -244,6 +244,7 @@ public class IpAdresa {
      * Vrati true, kdyz je stejna adresa i port, na masce nezalezi.
      * @param jina
      * @return
+     * @author haldyr
      */
     public boolean jeStejnaAdresaSPortem(IpAdresa jina) {
         if(jina==null) return false;
@@ -299,6 +300,7 @@ public class IpAdresa {
     /**
      * Vrati kopii IpAdresy se stejnou adresou, maskou a portem.
      * @return
+     * @author haldyr
      */
     public IpAdresa vratKopii() {
         IpAdresa vratCopy = new IpAdresa(this.vypisAdresu());
@@ -325,6 +327,7 @@ public class IpAdresa {
     /**
      * Spocita wildcard z masky a vrati ho jako retezec.
      * @return
+     * @author haldyr
      */
     public String vypisWildcard() {
         long broadcast = (long)(new IpAdresa("255.255.255.255").adresa);
@@ -414,6 +417,7 @@ public class IpAdresa {
      * @param wildcard
      * @return maska - retezec, ktery je maskou z wildcard <br />
      *         null - kdyz to nebyla validni maska (po preklopeni)
+     * @author haldyr
      */
     public static String vratMaskuZWildCard(IpAdresa wildcard) {
         long wc = (long)wildcard.adresa;

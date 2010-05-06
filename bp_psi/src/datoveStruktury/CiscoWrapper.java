@@ -102,6 +102,12 @@ public class CiscoWrapper {
             return s;
         }
 
+        /**
+         * CiscoZaznamy se rovnaji pokud adresat ma stejnou adresu i masku &&
+         * ( se takto rovnaji i brany ) || ( rozhrani se jmenuji stejne nehlede na velikost pismen )
+         * @param obj
+         * @return
+         */
         @Override
         public boolean equals(Object obj) {
             if (obj.getClass() != CiscoZaznam.class) {
@@ -230,7 +236,7 @@ public class CiscoWrapper {
      */
     private void pridejZaznam(CiscoZaznam zaznam) {
 
-        if (!zaznam.getAdresat().jeCislemSite()) { // vyjimka prevazne pro nacitani z konfiguraku
+        if (!zaznam.getAdresat().jeCislemSite()) { // vyjimka pro nacitani z konfiguraku, jinak to je osetreno v parserech
             throw new WrapperException("Adresa " + zaznam.getAdresat().vypisAdresu() + " neni cislem site!");
         }
 

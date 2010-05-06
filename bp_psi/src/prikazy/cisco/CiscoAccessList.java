@@ -15,7 +15,6 @@ import pocitac.Konsole;
  */
 public class CiscoAccessList extends CiscoPrikaz {
 
-    boolean no;
     int access;
     IpAdresa adr;
 

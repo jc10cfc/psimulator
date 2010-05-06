@@ -1,4 +1,6 @@
 #!/bin/bash
+# skript pro pripojeni klienta na cisco
+# author haldyr
 
 VERSION=`rlwrap -v | cut -d" " -f2 | sed 's/\./,/g'`
 COLOR=green
@@ -16,6 +18,8 @@ if [[ $VERSION -lt 0,29 ]]; then
     OPT=""
 fi
 
+OPT="$OPT -f $COMPLETION"
+
 echo pouzivam OPT=$OPT
 
-rlwrap $OPT -f $COMPLETION telnet localhost $@
+rlwrap $OPT telnet localhost $@

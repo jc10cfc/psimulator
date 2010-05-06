@@ -45,7 +45,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
     public boolean prijmiEthernetove(Paket p, SitoveRozhrani rozhr, IpAdresa ocekavana, IpAdresa sousedni) {
 
         if (routovaciTabulka.najdiSpravnejZaznam(sousedni) == null) {
-            ladici("nemuzu odpovedet na arp dotaz sousedovi, tak smula => neprijimam");
+            ladici("nemuzu odpovedet na arp dotaz sousedovi => neprijimam");
             return false; // kdyz nemuzu odpovedet na arp dotaz sousedovi, tak smula
         }
 
@@ -62,7 +62,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
         }
         
         // jinak zahazuju
-        ladici("muzu odpovedet sousedovi na arp dotaz, neni to pro me a ja nevim kam s tim, tak to radsi neprijmu");
+        ladici("mohu odpovedet sousedovi na arp dotaz, neni to pro me a ja nevim kam s tim, tak to radsi neprijmu");
         return false;
     }
 

@@ -255,14 +255,14 @@ public class NATtabulka {
     public Paket odnatuj(Paket paket) {
         IpAdresa prelozena = odnatujZdrojovouIpAdresu(paket.cil);
         if (debug) {
-            pc.vypis("XXXXXX puvodni paket:   " + paket);
+            pc.vypis("puvodni paket:   " + paket);
         }
         if (prelozena == null) {
             return paket;
         }
         paket.cil = prelozena;
         if (debug) {
-            pc.vypis("XXXXXX prelozeny paket: " + paket);
+            pc.vypis("prelozeny paket: " + paket);
         }
         smazStareDynamickeZaznamy();
         return paket;

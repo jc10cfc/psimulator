@@ -33,11 +33,11 @@ public class CiscoHelp extends CiscoPrikaz {
         String s ="";
 
         if (english == false) {
-            s += "Tento prikaz na realnem cisco stroji neni. \nZde je pouzit pouze pro napovedu, co je v tomto systemu " +
+            s += "Tento prikaz neni na realnem cisco stroji. \nZde je pouzit pouze pro napovedu, co je v tomto systemu " +
                 "implementovano. \nTato implementace ma nekolik prikazu navic oproti realnemu ciscu:\n" +
                 " help - pro vypis teto napovedy\n" +
                 " kill - pro opusteni konzole z jakehokoliv stavu cisca\n" +
-                " save/uloz - pro ulozeni aktualni konfigurace vsech pocitacu do XML konfiguraku, " +
+                " save/uloz - pro ulozeni aktualni konfigurace vsech pocitacu do XML souboru, " +
                 "bez parametru se to ulozi do " +
                 Main.Main.konfigurak+"\n\n" +
 

@@ -394,7 +394,7 @@ public class Uloz extends AbstraktniPrikaz {
             //Close the output stream
             out.close();
         } catch (Exception e) {//Catch exception if any
-            System.err.println("Chyba: " + e.getMessage());
+            System.err.println("Chyba, z nejakeho duvodu se nepodarilo zapsat do souboru. Vice: " + e.getMessage());
             e.printStackTrace();
         }
     }
