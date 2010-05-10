@@ -238,6 +238,10 @@ public class RoutovaciTabulka {
         return false;
     }
 
+    public boolean smazZaznam(Zaznam z){
+        return radky.remove(z);
+    }
+
     /**
      * Smaze vsechny zaznamy (U i UG) na zadanem rozhrani. Potreba pro mazani rout, kdyz se zmeni adresa nebo maska
      * na rozhrani.
@@ -290,7 +294,7 @@ public class RoutovaciTabulka {
      * Pouziva se v LinuxIpRoute.
      * @return null, kdyz se zadnej zaznam nenajde
      */
-    public Zaznam jeZaznamSAdresatem(IpAdresa adresat){
+    public Zaznam existujeZaznamSAdresatem(IpAdresa adresat){
         for(Zaznam z:radky){
             if( z.adresat.equals(adresat) ){   // adresati se rovnaji
                 return z;

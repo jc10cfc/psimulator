@@ -9,7 +9,6 @@
 		<ip>192.168.1.1</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:01:02:03:04:05</mac>
-		<pripojenoK>linux2:eth0</pripojenoK>
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<routy>
@@ -42,7 +41,6 @@
 		<ip>192.168.1.2</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:01:02:03:04:06</mac>
-		<pripojenoK>linux1:eth0</pripojenoK>
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<rozhrani>
@@ -50,19 +48,18 @@
 		<ip>192.168.2.1</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:01:02:d3:04:06</mac>
-		<pripojenoK>linux3:eth0</pripojenoK>
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>192.168.2.0</adresat>
-			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<rozhraniKam>eth1</rozhraniKam>
-		</zaznam>
-		<zaznam>
 			<adresat>192.168.1.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
 			<rozhraniKam>eth0</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.2.0</adresat>
+			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<rozhraniKam>eth1</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>0.0.0.0</adresat>
@@ -88,7 +85,6 @@
 		<ip>192.168.2.2</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:01:02:03:04:07</mac>
-		<pripojenoK>linux2:eth1</pripojenoK>
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<rozhrani>
@@ -96,19 +92,18 @@
 		<ip>10.0.0.1</ip>
 		<maska>255.0.0.0</maska>
 		<mac>00:01:02:03:0a:07</mac>
-		<pripojenoK></pripojenoK>
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>192.168.1.0</adresat>
+			<adresat>192.168.2.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<brana>192.168.2.1</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
-			<adresat>192.168.2.0</adresat>
+			<adresat>192.168.1.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<brana>192.168.2.1</brana>
 			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>

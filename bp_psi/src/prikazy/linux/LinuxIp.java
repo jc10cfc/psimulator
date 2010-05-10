@@ -1,6 +1,11 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Materiály:
+ * http://www.linpro.cz/zacatecnici/prikazovy-radek/nastaveni-site.html
+ * http://www.damika.cz/linux/navody/ip.php
+ * http://www.abclinuxu.cz/blog/escaped/2006/2/11/120814
+ * http://www.abclinuxu.cz/faq/site/nastaveni-pripojeni-k-siti-v-prikazove-radce
+ * http://www.linuxsoft.cz/article.php?id_article=302
+ * 
  */
 
 package prikazy.linux;

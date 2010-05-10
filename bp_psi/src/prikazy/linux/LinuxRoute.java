@@ -76,7 +76,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
      * 2 - brana neni dosazitelna U priznakem
      * 4 - zaznam ke smazani neexistuje
      */
-    int navratovyKodProvedeni=0; 
+    private int navratovyKodProvedeni=0;
 
     
     public LinuxRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
