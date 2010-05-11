@@ -63,7 +63,8 @@ public class SitoveRozhrani {
             s += " adr: " + adr.vypisAdresu()+"\n";
         }
         s += " stav: ";
-        s += nahozene ? "nahozene" : "zhozene"+ "\n";
+        s += nahozene ? "nahozene" : "zhozene";
+	s += "\n";
 
         if (pripojenoK != null) {
             s += " pripojenoK: "+pripojenoK.getPc().jmeno + ":" + pripojenoK.jmeno+"\n";
@@ -144,7 +145,9 @@ public class SitoveRozhrani {
             seznamAdres.remove(0);
         } 
         seznamAdres.add(0, adr);
-        
+        if (pc instanceof CiscoPocitac) {
+            ((CiscoPocitac)pc).getWrapper().update();
+        }
     }
 
     /**

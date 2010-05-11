@@ -150,7 +150,7 @@ public class CiscoWrapper {
 
         // pridam routy na nahozena rozhrani
         for (SitoveRozhrani iface : pc.rozhrani) {
-            if (iface.jeNahozene()) {
+            if (iface.jeNahozene() && iface.vratPrvni() != null) { // prvni IP je null, kdyz tam neni zadna nastavena
                 routovaciTabulka.pridejZaznam(iface.vratPrvni(), iface, true);
             }
         }

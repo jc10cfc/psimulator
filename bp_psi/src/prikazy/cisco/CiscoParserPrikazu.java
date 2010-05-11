@@ -17,8 +17,6 @@ import prikazy.AbstraktniPrikaz.*;
 import prikazy.ParserPrikazu;
 import prikazy.linux.LinuxIfconfig;
 import prikazy.linux.LinuxRoute;
-import sun.misc.Signal;
-import sun.misc.SignalHandler;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
@@ -288,6 +286,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     Date d = new Date();
+                    cekej(100);
                     kon.posliRadek(formator.format(d) + ": %SYS-5-CONFIG_I: Configured from console by console");
                     return;
                 }
@@ -470,6 +469,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             AbstraktniPrikaz.cekej(250);
             Date d = new Date();
             kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
+            cekej(100);
             kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
             ((CiscoPocitac) pc).getWrapper().update();
         }
@@ -490,6 +490,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 AbstraktniPrikaz.cekej(500);
                 Date d = new Date();
                 kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
+                cekej(100);
                 kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
             }
 

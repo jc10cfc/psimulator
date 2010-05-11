@@ -7,7 +7,6 @@ package prikazy.cisco;
 import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.CiscoPocitac;
 import pocitac.Konsole;
 import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
@@ -115,7 +114,7 @@ public class CiscoIpAddress extends CiscoPrikaz {
 
         if (no) {
             if (noBezAdresy) {
-                rozhrani.seznamAdres.set(0, null);
+                rozhrani.zmenPrvniAdresu(null);
                 return;
             }
 
@@ -128,12 +127,10 @@ public class CiscoIpAddress extends CiscoPrikaz {
                 return;
             }
 
-            rozhrani.seznamAdres.set(0, null);
+            rozhrani.zmenPrvniAdresu(null);
             return;
         }
         
         rozhrani.zmenPrvniAdresu(adr);
-
-        ((CiscoPocitac) pc).getWrapper().update();
     }
 }
