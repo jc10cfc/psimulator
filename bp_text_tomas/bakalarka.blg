@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: bakalarka.aux
+A level-1 auxiliary file: 01_uvod.aux
+The style file: csplainnat.bst
+Database file #1: reference.bib
+Warning--empty year in CSTUG
+Warning--empty year in infodp
+Warning--empty year in www
+Warning--empty year in ipe
+Warning--empty year in latexdocweb
+Warning--empty year in latexwiki
+`address' is a missing field, not a string, for entry kniha
+while executing---line 1484 of file csplainnat.bst
+You've used 11 entries,
+            2899 wiz_defined-function locations,
+            677 strings with 6358 characters,
+and the built_in function-call counts, 3511 in all, are:
+= -- 354
+> -- 95
+< -- 4
++ -- 39
+- -- 27
+* -- 224
+:= -- 480
+add.period$ -- 40
+call.type$ -- 11
+change.case$ -- 36
+chr.to.int$ -- 10
+cite$ -- 28
+duplicate$ -- 192
+empty$ -- 368
+format.name$ -- 41
+if$ -- 800
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 10
+newline$ -- 64
+num.names$ -- 25
+pop$ -- 123
+preamble$ -- 1
+purify$ -- 26
+quote$ -- 0
+skip$ -- 134
+stack$ -- 0
+substring$ -- 71
+swap$ -- 21
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 116
+warning$ -- 6
+while$ -- 20
+width$ -- 0
+write$ -- 141
+(There was 1 error message)
