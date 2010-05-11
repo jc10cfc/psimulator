@@ -5,12 +5,12 @@
 
 
 
-Jednou z laboratorních úloh předmětu Počítačové sítě (Y36PSI) na FELu je postavení sítě mezi několika linuxovými a ciscovými počítači. Studenti, kteří tento úkol vykonávají, nemají často s takovou činností žádnou osobní zkušenost. Z přednášek většinou vědí, jak by měli síť očíslovat, avšak jen několik málo uživatelů linuxu umí nastavit adresy a brány na počítači s linuxem a jen nepatrný počet studentů nastavoval síťové adresy na skutečném Cisco routeru. Studenti pak při laboratořích řeší různé banální problémy, kterým by se mohli vyhnout, kdyby měli možnost zkusit si nastavit podobou síť již před laboratorní úlohou. Kvůli kapacitě laboratoře však není možné, aby si všichni studenti zkoušeli úlohu předem. Proto by se jim mohl hodit simulátor, který by jednoduše spustili na svém počítači a na kterém by si mohli nastavování síťových parametrů na linuxu a ciscu zkusit. Právě návrhem a implementací takového simulátoru počítačů s O se zabývá tato bakalářská práce. 
+Jednou z laboratorních úloh předmětu Počítačové sítě (Y36PSI) na FELu je postavení sítě mezi několika linuxovými a ciscovými počítači. Studenti, kteří tento úkol vykonávají, nemají často s takovou činností žádnou osobní zkušenost. Z přednášek většinou vědí, jak by měli síť očíslovat, avšak jen několik málo uživatelů linuxu umí nastavit adresy a brány na počítači s linuxem a jen nepatrný počet studentů nastavoval síťové adresy na skutečném Cisco routeru. Studenti pak při laboratořích řeší různé banální problémy, kterým by se mohli vyhnout, kdyby měli možnost zkusit si nastavit podobou síť již před laboratorní úlohou. Kvůli kapacitě laboratoře však není možné, aby si všichni studenti zkoušeli úlohu předem. Proto by se jim mohl hodit simulátor, který by jednoduše spustili na svém počítači a na kterém by si mohli nastavování síťových parametrů na linuxu a ciscu zkusit. Právě návrhem a implementací takového síťového simulátoru počítačů s OS Linux se zabývá tato bakalářská práce. 
 
 
 \section{Cíle práce}
 
-Cílem práce je v programovacím jazyce Java SE navrhnout a implementovat aplikaci, která umožní vytvoření virtuální počítačové sítě, pro potřeby předmětu Y36PSI. Z pohledu uživatele bude aplikace vypadat stejně jako reálná síť. Uživatel spustí aplikaci v konsoli a pak se bude pomocí telnetu připojovat k jejím jednotlivým virtuálním počítačům, podobně jako protokolem ssh k počítačům s OS Linux. Aplikace bude podporovat příkazy potřebné ke konfiguraci síťových rozhraní (ifconfig, ip address), směrování (route, ip route) a překladu adres (iptables -t nat). Pro ověření správnosti konfigurace sítě budou implementovány příkazy ping a traceroute.
+Cílem práce je v programovacím jazyce Java SE navrhnout a implementovat aplikaci, která umožní vytvoření virtuální počítačové sítě, pro potřeby předmětu Y36PSI. Z pohledu uživatele by aplikace měla vypadat stejně jako reálná síť. Uživatel spustí aplikaci v konsoli a pak se bude pomocí telnetu připojovat k jejím jednotlivým virtuálním počítačům, podobně jako protokolem ssh k počítačům s OS Linux. Aplikace bude podporovat příkazy potřebné ke konfiguraci síťových rozhraní (ifconfig, ip address), směrování (route, ip route) a překladu adres (iptables -t nat). Pro ověření správnosti konfigurace sítě budou implementovány příkazy ping a traceroute.
 
 Nastavenou konfiguraci sítě bude možné uložit do souboru a zase ji ze souboru načíst. Uživatel si bude mít možnost vytvářet libovolné sítě s libovolným počtem počítačů typu linux nebo cisco tak, že infrastrukturu sítě napíše do konfiguračního souboru a pak ji z něho načte.
 
@@ -20,11 +20,12 @@ Nastavenou konfiguraci sítě bude možné uložit do souboru a zase ji ze soubo
 Protože kompletní síťový simulátor pro počítače s Cisco IOS i OS Linux by přesahoval rozsah jedné bakalářské práce, byla práce na aplikaci rozdělena na tři části:
 \begin{itemize}
  \item \textbf{Jádro aplikace}\\ 
-\indent Jedná se především o datové struktury virtuálního počítače, komunikaci s uživatelem po síti a načítání a ukladání souborů.
- \item \textbf{Linuxová část}
-V této části je potřeba napsat parsery linuxových příkazů, zjistit, jak se chovají počítače s linuxem v síťové komunikaci a toto chování implementovat
- \item \textbf{Ciscová část}
+Jedná se především o datové struktury virtuálního počítače, komunikaci s uživatelem po síti a načítání a ukladání souborů. Na této části jsem spolupracoval se Stanislavem Řehákem.
+ \item \textbf{Linuxová část}\\
+V této části je potřeba napsat parsery linuxových příkazů a  zjistit, jak se chovají počítače s linuxem v síťové komunikaci a toto chování implementovat.
+ \item \textbf{Ciscová část}\\
 Touto částí se tato práce nezabývá, zabývá se jí bakalářská práce Simulátor virtuální počítačové sítě Cisco Stanislava Řeháka.
 \end{itemize}
+
 
 

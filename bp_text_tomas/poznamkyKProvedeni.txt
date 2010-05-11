@@ -1,0 +1,5 @@
+Kapitoly:
+Úvod - kontext, cíle, rozdělení práce, struktura práce, 
+Rešerše - existující řešení
+Analysa a návrh - pozadavky (funkcni, nefunkcni atd...), funkčnost (rlwrap), struktura programu, datový struktury
+Implementace
