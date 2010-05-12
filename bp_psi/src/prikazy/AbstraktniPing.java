@@ -33,6 +33,10 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
      */
     protected int ztrata;
     /**
+     * Uspesnost v procentech.
+     */
+    protected int uspech;
+    /**
      * pocet vracenejch paketu o chybach (tzn. typy 3 a 11)
      */
     protected int errors;
@@ -91,6 +95,7 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
         }
         if (odeslane > 0) {
             ztrata = 100 - (int)( (float) prijate / (float) odeslane  * (float)100);
+            uspech = 100 - ztrata;
         }
     }
 

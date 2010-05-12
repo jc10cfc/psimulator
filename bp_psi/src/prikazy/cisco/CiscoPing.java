@@ -173,7 +173,6 @@ public class CiscoPing extends AbstraktniPing {
         }
 
         aktualizujStatistiky();
-        int uspech = 100 - ztrata;
         s = "\nSuccess rate is " + uspech + " percent (" + prijate + "/" + odeslane + ")";
         if (prijate > 0) {
             s += ", round-trip min/avg/max = " + Math.round(min) + "/" + Math.round(avg) + "/" + Math.round(max) + " ms";
