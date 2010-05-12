@@ -173,7 +173,8 @@ public class CiscoPing extends AbstraktniPing {
         }
 
         aktualizujStatistiky();
-        s = "\nSuccess rate is " + ztrata + " percent (" + prijate + "/" + odeslane + ")";
+        int uspech = 100 - ztrata;
+        s = "\nSuccess rate is " + uspech + " percent (" + prijate + "/" + odeslane + ")";
         if (prijate > 0) {
             s += ", round-trip min/avg/max = " + Math.round(min) + "/" + Math.round(avg) + "/" + Math.round(max) + " ms";
         }
@@ -186,6 +187,7 @@ public class CiscoPing extends AbstraktniPing {
             odezvy.add(p.cas);
             kon.posli("!");
         } else if (p.typ == 3) {
+            cekej(timeout);
             if (p.kod == 0) {
                 // cisco posila 'U' a '.', jak se mu chce
                 if (Math.round(Math.random()) % 2 == 0) {
