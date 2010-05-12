@@ -36,9 +36,16 @@ public class Konsole extends Thread {
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
     public boolean doplnovani = false;
 
-    private final Object zamek = new Object();
+    private final Object zamek;
 
-    public Konsole(Socket s,AbstraktniPocitac pc, int cislo){
+    /**
+     * Konstruktor
+     * @param s odkaz na socket, kterej to ma obsluhovat
+     * @param pc odkaz na pocitac
+     * @param cislo podarove cislo konsole
+     * @param zamek zamek, aby se metoda parser.zpracujRadek() nevykonavala v nekolika vlaknech vicekrat
+     */
+    public Konsole(Socket s,AbstraktniPocitac pc, int cislo, Object zamek){
         this.s = s;
         pocitac = pc;
         if (pc instanceof LinuxPocitac) {
@@ -49,6 +56,7 @@ public class Konsole extends Thread {
             prompt = pc.jmeno+">";
         } else throw new NeznamyTypPcException("Neznamy typ PC. Nelze pro nej vytvorit parser.");
         this.cislo=cislo;
+        this.zamek=zamek;
 
         this.start();
     }

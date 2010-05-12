@@ -24,6 +24,8 @@ public class Komunikace extends Thread {
     int cisloPortu;
     List<Konsole> seznamSpojeni = new ArrayList();
     AbstraktniPocitac pc;//odkaz na pocitac
+    private final Object zamekPocitace = new Object(); //zamek celyho pocitace, slouzi k tomu, aby se zmeny
+            // v nastaveni poctace (tedy vykonavani prikazu)
 
     public Komunikace(int cisloPortu, AbstraktniPocitac pc) {
         this.cisloPortu = cisloPortu;
@@ -55,7 +57,7 @@ public class Komunikace extends Thread {
                     //ale nemelo stat. Dalo by se to spravit, kdyby promenna ss byla deklarovana az v tyhle metode
                     //nebo kdyby byla final, to by se ale pak zase ten socket nedal vytvorit.
                     Socket s = ss.accept(); // wait for client call
-                    Konsole v = new Konsole(s, pc, seznamSpojeni.size()); // create another clerk
+                    Konsole v = new Konsole(s, pc, seznamSpojeni.size(), zamekPocitace); // create another clerk
                     seznamSpojeni.add(v);
                     pc.vypis("akceptoval jsem vlakno c. " + (seznamSpojeni.size() - 1) + " "
                             + s.getInetAddress() + ":" + s.getPort());
