@@ -1,14 +1,89 @@
 \chapter{Analýza a~návrh řešení}
-Analýza a~návrh implementace (včetně diskuse různých alternativ a~volby implementačního prostředí).
+% Analýza a~návrh implementace (včetně diskuse různých alternativ a~volby implementačního prostředí).
+% 
+% Tady bude všechno týkající se návrhu:
+% \begin{itemize}
+%  \item porty pro PC
+%  \item telnet - problemy s klientem ?
+%  \item vlakna pro klienty
+%  \item asi nejaky obrazky možná i naskenovaný čmárák
+%  \item zjišťování, jak funguje Cisco
+%  \item UML - tridni diagram
+%  \item UML - pruchod parserem
+%  \item ..
+% \end{itemize}
+Jádro aplikace bylo vytvářeno ve spolupráci s kolegou, tudíž následující řádky týkající se architektury systému se mohou v nějaké podobě objevit i v jeho práci. Práce se úmyslně nezabývá striktně mojí vlastní \uv{Cisco částí}, protože tento systém tvoří jeden celek, který je ovlivněn jeho podsystémy.
 
-Tady bude všechno týkající se návrhu:
-\begin{itemize}
- \item porty pro PC
- \item telnet - problemy s klientem ?
- \item vlakna pro klienty
- \item asi nejaky obrazky možná i naskenovaný čmárák
- \item zjišťování, jak funguje Cisco
- \item UML - tridni diagram
- \item UML - pruchod parserem
- \item ..
-\end{itemize}
+\section{Architektura}
+
+\subsection{Počátek prací}
+Když jsem dostal ústní zadání této práce, tak jsem hned začal přemýšlet, jak navrhnout celou aplikaci. Zadání ale nebylo specifikováno přesně se všemi potřebnými detaily, takže jsem měl \uv{volnou} ruku co se návrhu týče. Po konzultaci s kolegou vzniklo několik variant, na obrázku \ref{fig:navrh} je jedna z nich. Tato varianta počítala s tím, že počítač bude připojen do reálné sítě, ale byla zavržena po dohodě s vedoucím práce kvůli složitosti a náročnosti takového systému. 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=9cm]{figures/navrh}
+\caption{Počáteční návrh}
+\label{fig:navrh}
+\end{center}
+\end{figure}
+
+\subsection{Klient - server}
+Podstatnou část jádra systému tvoří architektura klient - server. Ta, jak jsem již naznačoval v kapitole \ref{vymezeni}, byla převzata ze semestrální práce, kde bylo za úkol mimo jiné implementovat více-vláknový server. Celé je to řešeno tak, že server má sám pro sebe vlastní vlákno ve kterém běží. Dále server při startu vytvoří pro všechny počítače nová vlákna, která poslouchají na portu o jedna větším než předchozí počítač (první počítač začíná na portu předaným jako parametr při startu serveru). Když se uživatel připojí na nějaký počítač, tak se vytvoří další vlákno pro obsluhu tohoto klienta. Výhodou tohoto řešení je, že je možné se připojit na kterýkoliv počítač kolikrát potřebujeme. Je to tedy přesně tak, jako bychom se připojovali na reálné Cisco či Linux např. přes protokol ssh\footnote{Secure Shell - zabezpečený komunikační protokol (v současné době náhrada telnetu)} či telnet.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=9cm]{figures/uml_sit2}
+\caption{Návrh komunikační části}
+\label{fig:sit}
+\end{center}
+\end{figure}
+
+Na obrázku \ref{fig:sit} je znázorněna komunikační část pomocí UML\footnote{Unified Modeling Language, UML je v softwarovém inženýrství grafický jazyk pro vizualizaci, specifikaci, navrhování a dokumentaci programových systémů.\cite{wiki:uml}} diagramu. Každý počítač má objekt \verb|Komunikace|, která čeká na připojení nového klienta. Když klient vyšle požadavek o nové spojení, tak se vytvoří \verb|Konsole|, se kterou si už klient \uv{povídá}.
+
+\newpage
+
+\subsection{Datové struktury jádra}
+
+Po architektuře klient - server bylo potřeba domyslet datové struktury virtuálních počítačů. Ze začátku jsem nastínil základní třídy a zbytek jsem dodělával jak bylo potřeba. 
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=10cm]{figures/uml_class}
+\caption{Zjednodušený diagram tříd}
+\label{fig:class}
+\end{center}
+\end{figure}
+
+\subsection{Telnet}
+V zadání je přímo zmíněno použití programu telnet pro připojení klientů k serveru. Telnet je ale také protokol, po kterém se domlouvá telnet klient a telnet server. Česká wikipedie píše o telnet protokolu: \uv{Protokol přenáší osmibitové znaky oběma směry (duplexní spojení) a je velmi jednoduchý.\cite{wiki:telnet}}. Podle protokolu se vše posílá po znaku a protistrana po znaku vše potvrzuje. Protokol telnet ale zas tak jednoduchý není. Podporuje několik režimů, při navazování spojení začne proces vyjednávání atd. To všechno implementovat by bylo na samostatnou (možná i diplomovou) práci. 
+
+Samotný telnet (ať protokol či program) ale neposkytuje doplňování příkazů nebo alespoň historii příkazů. Dalším problémem je, že při psaní příkazů přes telnet nefunguje editace aktuálního řádku, respektive lze mazat po znacích klávesou \verb|BackSpace|, ale nelze se pohybovat do stran šipkami doleva a doprava - při takovém pokusu to vypíše \verb|^[[D| či \verb|^[[C|. Tato \uv{vlastnost} se ale neprojevuje při připojování na vlastní telnet server. To je způsobeno tím, že v takovém případě se o editaci řádku a historii příkazů stará samotný BASH\footnote{Bourne again shell - nejpoužívanější unixový shell}. V případě této aplikace toho ale nelze využít, tak jsem se rozhodl, že tyto funkcionality budou na straně klienta, kde to bude zajišťovat \uv{někdo jiný}. 
+
+Pro Linux jsem našel program rlwrap (readline wrapper), který přidává všechny tyto užitečné funkce: editace řádky, historie příkazů, doplňování příkazů, obarvení promptu. Pro Windows jsem nic takového nenašel, takže je to vyřešeno tak, že se vše pouští pod programem Cygwin. Navíc toto řešení zvyšuje komfort práce pod Windows, jelikož program \verb|cmd| není úplně uživatelsky přívětivý.
+
+
+\section{Podobnost simulátoru se skutečným Ciscem}
+Při implementaci jsem se snažil vytvořit systém, který bude co nejvíce podobný skutečnému Ciscu. Musel jsem ale někde položit hranici mezi složitostí a věrností výsledné práce, protože tyto dvě metriky jsou vzájemném protikladu. Cisco IOS je natolik robustní a propracovaný systém, že je v mých silách pouze implementace úzké části systému, která je nutně potřeba pro splnění cíle. Byl jsem přinucen místy ustoupit a nechat vypsat hlášení, že to či ono není podporováno. V samotném parseru příkazů není toto téměř vůbec řešeno, protože by to znamenalo dopsání dohromady několika stovek pravidel pro všechny příkazy - např. příkaz \verb|ip| má 103 možností v konfiguračním stavu. Aby ale uživatel měl alespoň nějakou možnost se dopátrat, co je podporováno a co ne, tak jsem přidal příkaz \verb|help| (\verb|help_en| pro výpis v angličtině), který popisuje, co lze v jakém stavu Cisca použít.
+
+
+\section{Programovací jazyk a prostředí}
+Pro implementaci simulátoru jsem si vybral programovací jazyk Java hned z několika důvodů. Jazyk je to velmi robustní s bohatou sadou různých knihoven. Navíc programy vytvořené v tomto jazyce jsou zpravidla jednoduše přenositelné mezi různými operačními systémy, což je jeden z bodů nefunkčních požadavků. Jazyk Java disponuje propracovaným systémem výjimek, takže při nějaké neočekávané chybě se dozvíme víc, než v jazyce C++ s jeho \verb|Segmentation fault|. Neméně významným důvodem je i skutečnost, že s Javou mám zatím největší zkušenosti.
+
+Celou práci jsem implementoval v Netbeans IDE\footnote{Integrated Development Environment} verze 6.8.
+
+
+\section{Uživatelské rozhraní}
+Uživatelské rozhraní je v zásadě velmi jednoduché. Vše je ovládáno přes příkazovou řádku, tak jak jsme zvyklí. Spuštění serveru je ulehčeno pomocným skriptem \verb|start_server.sh|, který zároveň obsahuje nápovědu. Pro připojování klientů jsem připravil skripty, ve kterých je zohledněna verze programu rlwrap. V balíčku programu Cygwin je rlwrap starší verze, která neumožňuje obarvování promptu a přeposílání signálů (např. při zmáčknutí Ctrl+C nebo Ctrl+Z). Novější verze už tyto funkce mají, a tak skripty pro připojení na \verb|linux.sh| a \verb|cisco.sh| fungují nezávisle na verzi.
+
+
+\section{Skutečné Cisco}
+Jedním z největších \uv{oříšků} této práce bylo zjistit, jak se chová skutečné Cisco. Pravdou je, že Cisco Systems má na svých stránkách slušnou řadu návodů, nicméně není tak jednoduché v nich najít, co zrovna potřebujeme. A tak jsem hodně věcí zjišťoval z živého Cisca umístěného na Karlově náměstí přes protokol ssh. 
+
+
+
+
+
+
+
+

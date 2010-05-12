@@ -3,6 +3,7 @@ The top-level auxiliary file: Rehak-thesis-2010.aux
 A level-1 auxiliary file: 1_uvod.aux
 A level-1 auxiliary file: 2_specifikace.aux
 A level-1 auxiliary file: 3_navrh.aux
+A level-1 auxiliary file: 4_realizace.aux
 The style file: csplainnat.bst
 Database file #1: reference.bib
 Warning--empty year in CSTUG
@@ -13,45 +14,45 @@ Warning--empty year in latexdocweb
 Warning--empty year in latexwiki
 `address' is a missing field, not a string, for entry kniha
 while executing---line 1484 of file csplainnat.bst
-You've used 11 entries,
+You've used 13 entries,
             2899 wiz_defined-function locations,
-            679 strings with 6401 characters,
-and the built_in function-call counts, 3511 in all, are:
-= -- 354
-> -- 95
-< -- 4
-+ -- 39
-- -- 27
-* -- 224
-:= -- 480
-add.period$ -- 40
-call.type$ -- 11
-change.case$ -- 36
-chr.to.int$ -- 10
-cite$ -- 28
-duplicate$ -- 192
-empty$ -- 368
-format.name$ -- 41
-if$ -- 800
-int.to.chr$ -- 2
+            688 strings with 6550 characters,
+and the built_in function-call counts, 4127 in all, are:
+= -- 430
+> -- 117
+< -- 6
++ -- 48
+- -- 33
+* -- 268
+:= -- 590
+add.period$ -- 50
+call.type$ -- 13
+change.case$ -- 42
+chr.to.int$ -- 11
+cite$ -- 32
+duplicate$ -- 222
+empty$ -- 404
+format.name$ -- 51
+if$ -- 930
+int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 10
-newline$ -- 64
-num.names$ -- 25
-pop$ -- 123
+missing$ -- 16
+newline$ -- 74
+num.names$ -- 35
+pop$ -- 129
 preamble$ -- 1
-purify$ -- 26
+purify$ -- 30
 quote$ -- 0
-skip$ -- 134
+skip$ -- 153
 stack$ -- 0
-substring$ -- 71
-swap$ -- 21
+substring$ -- 75
+swap$ -- 25
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 116
+type$ -- 138
 warning$ -- 6
-while$ -- 20
+while$ -- 26
 width$ -- 0
-write$ -- 141
+write$ -- 167
 (There was 1 error message)

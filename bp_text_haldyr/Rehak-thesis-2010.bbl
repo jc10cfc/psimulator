@@ -1,4 +1,4 @@
-\begin{thebibliography}{11}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -22,6 +22,17 @@ HAINDL, M. -- KMENT, {\'{L}}. -- SLAVíK, P.
   [cit.~6.\,12.\,2009].
 \newblock Dostupn{\'{e}} z:
   \url{http://en.wikipedia.org/wiki/Object-relational_mapping}.
+
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{a}})]{wiki:telnet}
+{Přispěvatelé Wikipedie}.
+\newblock \emph{Telnet} [online]. 2010{\natexlab{a}}. [cit.~12.\,5.\,2010].
+\newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/Telnet}.
+
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{b}})]{wiki:uml}
+{Přispěvatelé Wikipedie}.
+\newblock \emph{Unified Modeling Language} [online]. 2010{\natexlab{b}}.
+  [cit.~12.\,5.\,2010].
+\newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/UML}.
 
 \bibitem[Slavík(1997)]{clanek}
 SLAVíK, P.
