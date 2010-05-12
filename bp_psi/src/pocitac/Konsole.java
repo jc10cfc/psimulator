@@ -14,7 +14,6 @@ import java.io.StringReader;
 import java.net.Socket;
 import prikazy.cisco.CiscoParserPrikazu;
 import prikazy.linux.LinuxParserPrikazu;
-import sun.nio.cs.ext.PCK;
 import vyjimky.ChybaSpojeniException;
 import vyjimky.NeznamyTypPcException;
 import static prikazy.AbstraktniPrikaz.*;
@@ -36,6 +35,8 @@ public class Konsole extends Thread {
     private BufferedReader in;
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
     public boolean doplnovani = false;
+
+    private final Object zamek = new Object();
 
     public Konsole(Socket s,AbstraktniPocitac pc, int cislo){
         this.s = s;
@@ -196,7 +197,9 @@ public class Konsole extends Thread {
                 pocitac.vypis("(klient c. " + cislo + " poslal): '" + radek + "'");
                 //pocitac.vypis("dylka predchoziho radku: "+radek.length());
                 //posliRadek(out,radek);
-                parser.zpracujRadek(radek);
+                synchronized(zamek) {
+                    parser.zpracujRadek(radek);
+                }
             }
 
         } catch (ChybaSpojeniException ex) {

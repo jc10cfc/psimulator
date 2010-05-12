@@ -56,7 +56,7 @@ public class Uloz extends AbstraktniPrikaz {
      * @param pocitac pocitac, ktery chceme zapsat
      * @throws IOException
      */
-    private void ulozPC(AbstraktniPocitac pocitac) throws IOException {
+    private synchronized void ulozPC(AbstraktniPocitac pocitac) throws IOException {
         out.write("<pocitac jmeno=\"" + pocitac.jmeno + "\" ");
 
         if (pocitac instanceof CiscoPocitac) {
@@ -368,12 +368,12 @@ public class Uloz extends AbstraktniPrikaz {
      * @param s text, ktery chceme zapsat.
      * @throws IOException
      */
-    private void zapis(String s) throws IOException {
+    private synchronized void zapis(String s) throws IOException {
         out.write(tabs + s);
     }
 
     @Override
-    public void vykonejPrikaz() {
+    public synchronized void vykonejPrikaz() {
 
         kon.posliRadek("Ukladam do " + soubor + "..");
 
