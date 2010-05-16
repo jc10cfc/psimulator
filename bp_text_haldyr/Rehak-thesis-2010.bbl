@@ -1,4 +1,4 @@
-\begin{thebibliography}{13}
+\begin{thebibliography}{15}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,10 +11,24 @@ HAINDL, M. -- KMENT, {\'{L}}. -- SLAVíK, P.
 \newblock In \emph{WSCG'2000 --- Short communication papers}, s. 22--27.
   University of West Bohemia, Pilsen, 2000.
 
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{a}})]{wiki:arp}
+{Přispěvatelé Wikipedie}.
+\newblock \emph{Address Resolution Protocol} [online]. 2010{\natexlab{a}}.
+  [cit.~14.\,5.\,2010].
+\newblock Dostupn{\'{e}} z:
+  \url{http://cs.wikipedia.org/wiki/Address_Resolution_Protocol}.
+
 \bibitem[{Přispěvatelé Wikipedie}(2009{\natexlab{a}})]{wiki:framework}
 {Přispěvatelé Wikipedie}.
 \newblock \emph{Framework} [online]. 2009{\natexlab{a}}. [cit.~10.\,9.\,2009].
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/Framework}.
+
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{b}})]{wiki:ios}
+{Přispěvatelé Wikipedie}.
+\newblock \emph{Cisco IOS} [online]. 2010{\natexlab{b}}. [cit.~16.\,5.\,2010].
+\newblock Dostupn{\'{e}} z:
+  \url{http://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Cisco-router-1%
+.svg/600px-Cisco-router-1.svg.png}.
 
 \bibitem[{Přispěvatelé Wikipedie}(2009{\natexlab{b}})]{wiki:orm}
 {Přispěvatelé Wikipedie}.
@@ -23,14 +37,14 @@ HAINDL, M. -- KMENT, {\'{L}}. -- SLAVíK, P.
 \newblock Dostupn{\'{e}} z:
   \url{http://en.wikipedia.org/wiki/Object-relational_mapping}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{a}})]{wiki:telnet}
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{c}})]{wiki:telnet}
 {Přispěvatelé Wikipedie}.
-\newblock \emph{Telnet} [online]. 2010{\natexlab{a}}. [cit.~12.\,5.\,2010].
+\newblock \emph{Telnet} [online]. 2010{\natexlab{c}}. [cit.~12.\,5.\,2010].
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/Telnet}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{b}})]{wiki:uml}
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{d}})]{wiki:uml}
 {Přispěvatelé Wikipedie}.
-\newblock \emph{Unified Modeling Language} [online]. 2010{\natexlab{b}}.
+\newblock \emph{Unified Modeling Language} [online]. 2010{\natexlab{d}}.
   [cit.~12.\,5.\,2010].
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/UML}.
 

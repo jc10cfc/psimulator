@@ -40,22 +40,10 @@ Cisco IOS je operační systém, který se nachází na drtivé většině směr
 Na obrázku \ref{fig:ios} jsou zobrazeny důležité stavy IOS a přechody mezi nimi. 
 
 \subsubsection{Uživatelský mód}
-Uživatelský mód (USER MODE) je výchozí (startovací) mód. Tento mód je značně limitovaný a dovoluje použití čistě read-only příkazů (tj. takových, které nezmění konfiguraci). Přesto má tento mód svoje opodstatnění, dovoluje např. výpis směrovací tabulky \verb|show ip route| či příkazy \verb|ping| nebo \verb|traceroute|. Do privilegovaného režimu se lze přepnout příkazem \verb|enable|.
+Uživatelský mód (USER MODE) je výchozí (startovací) mód. Tento mód je značně limitovaný a dovoluje použití čistě read-only příkazů (tj. takových, které nezmění konfiguraci). Přesto má tento mód svoje opodstatnění, dovoluje např. výpis směrovací tabulky \verb|show ip route| či příkazy \verb|ping| nebo \verb|traceroute|. OpusDo privilegovaného režimu se lze přepnout příkazem \verb|enable|.
 
 \subsubsection{Privilegovaný mód}
-Privilegovaný mód (PRIVILEGED MODE) nebo také \uv{administrátorský} mód je podobný linuxovému \verb|root| účtu. Tento mód je výchozím bodem pro vstup do ostatních módů. Pro návrat zpět do uživatelského režimu existuje \verb|disable|. Příkaz \verb|configure| způsobí přepnutí do dalšího konfiguračního módu. Tento stav umožnuje veškeré výpisy o aktuální konfiguraci systému:
-\begin{itemize}
- \item \verb|show running-config| - shrnutí aktuální konfigurace
- \item \verb|show ip route| - výpis směrovací tabulky
- \item \verb|show ip nat translations| - výpis dynamických záznamů v NAT tabulce
-\end{itemize}
-Příkazy \verb|ping| a \verb|traceroute| jsou v tomto stavu samozřejmé.
-
-\subsubsection{Konfigurační mód}
-Konfigurační mód (CONFIG MODE) je jeden z nejdůležitějších, protože umožňuje konfiguraci směrovacích záznamů (\verb|ip route ..|), přístupových seznamů pro potřeby překladu adres (\verb|ip nat inside source ..|), pooly IP adres (\verb|ip nat pool ..|) a výběr rozhraní (\verb|interface ..|) pro přechod do stavu konfigurace rozhraní.
-
-\subsubsection{Konfigurace rozhraní}
-V tomto módu lze nastavovat IP adresy na vybrané rozhraní a zapínat či vypínat rozhraní. Pro přechod z tohoto či konfiguračního módu do privilegovaného stačí napsat příkaz \verb|end| nebo prostě stisknout klávesy \verb|Ctrl+Z|.
+Privilegovaný mód (PRIVILEGED MODE) nebo také \uv{administrátorský} mód je podobný linuxovému \verb|root| účtu. 
 
 \subsection{Implementace Cisco IOS}
 Moje extra příkazy, ..

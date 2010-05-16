@@ -14,45 +14,45 @@ Warning--empty year in latexdocweb
 Warning--empty year in latexwiki
 `address' is a missing field, not a string, for entry kniha
 while executing---line 1484 of file csplainnat.bst
-You've used 13 entries,
+You've used 15 entries,
             2899 wiz_defined-function locations,
-            688 strings with 6550 characters,
-and the built_in function-call counts, 4127 in all, are:
-= -- 430
-> -- 117
-< -- 6
-+ -- 48
-- -- 33
-* -- 268
-:= -- 590
-add.period$ -- 50
-call.type$ -- 13
-change.case$ -- 42
+            696 strings with 6788 characters,
+and the built_in function-call counts, 4743 in all, are:
+= -- 506
+> -- 139
+< -- 8
++ -- 58
+- -- 39
+* -- 312
+:= -- 698
+add.period$ -- 60
+call.type$ -- 15
+change.case$ -- 48
 chr.to.int$ -- 11
-cite$ -- 32
-duplicate$ -- 222
-empty$ -- 404
-format.name$ -- 51
-if$ -- 930
-int.to.chr$ -- 3
+cite$ -- 36
+duplicate$ -- 252
+empty$ -- 440
+format.name$ -- 61
+if$ -- 1060
+int.to.chr$ -- 5
 int.to.str$ -- 1
-missing$ -- 16
-newline$ -- 74
-num.names$ -- 35
-pop$ -- 129
+missing$ -- 22
+newline$ -- 84
+num.names$ -- 45
+pop$ -- 135
 preamble$ -- 1
-purify$ -- 30
+purify$ -- 34
 quote$ -- 0
-skip$ -- 153
+skip$ -- 173
 stack$ -- 0
-substring$ -- 75
-swap$ -- 25
+substring$ -- 79
+swap$ -- 29
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 138
+type$ -- 160
 warning$ -- 6
-while$ -- 26
+while$ -- 32
 width$ -- 0
-write$ -- 167
+write$ -- 193
 (There was 1 error message)

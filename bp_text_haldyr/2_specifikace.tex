@@ -21,6 +21,8 @@ Nejdříve bylo potřeba zjistit přesné požadavky, tedy co všechno má být 
  \item Systém musí podporovat ukládání a načítání do/ze souboru.
  \item Pro ověření správnosti musí být implementován příkazy ping a traceroute.
  \item K jednotlivým počítačům aplikace se připojuje pomocí telnetu.
+ \item Pomocí telnet klientů musí být možné se připojit k jednomu počítači paralelně v několika terminálech najednou.
+
 \end{enumerate}
 
 \section{Nefunkční požadavky}
@@ -33,13 +35,11 @@ Nejdříve bylo potřeba zjistit přesné požadavky, tedy co všechno má být 
 
 \section{Vymezení práce} \label{vymezeni}
 % Tady bude napsáno, co kdo udělal, jak jsme to uvařili - RT a já na to Wrapper, routovani - metody PC, já NAT, nacitani
-Jak už jsem zmínil v první kapitole \ref{uvod}, práce byla rozdělena na dvě samostatné bakalářské práce. Rozdělení dle typu počítačů na Linux a Cisco se ukázalo jako správná volba, nicméně bylo potřeba dořešit několik věcí. Hned po započatí prací jsem zjistil, že v některých věcech budu muset více spolupracovat s kolegou, protože se týkaly obou našich implementací. Např. směrovací tabulka na Linuxu a Ciscu se chová téměř úplně stejně, dokonce se podle ní i stejně směruje. Celé to má ale malý háček: Cisco má totiž de facto tabulky dvě! První je tvořena příkazy, které zadal uživatel a druhá je vypočítávána z tabulky první. Já jsem tedy použil směrovací tabulku od kolegy, která byla primárně programována pro Linux, a tu jsem zaobalil do tzv. wrapperu, který ji ovládá a sám přidává funkcionalitu tabulky druhé. 
+Jak už jsem zmínil v kapitole \ref{uvod}, práce byla rozdělena na dvě samostatné bakalářské práce. Rozdělení dle typu počítačů na Linux a Cisco se ukázalo jako správná volba, nicméně bylo potřeba dořešit několik věcí. Hned po započatí prací jsem zjistil, že v některých věcech budu muset více spolupracovat s kolegou, protože se týkaly obou našich implementací. Např. směrovací tabulka na Linuxu a Ciscu se chová téměř úplně stejně, dokonce se podle ní i stejně směruje. Celé to má ale malý háček: Cisco má totiž de facto tabulky dvě! První je tvořena příkazy, které zadal uživatel a druhá je vypočítávána z tabulky první. Já jsem tedy použil směrovací tabulku od kolegy, která byla primárně programována pro Linux, a tu jsem zaobalil do tzv. wrapperu, který ji ovládá a sám přidává funkcionalitu tabulky druhé. 
 
-Směrování probíhá stejně na obou systémech, liší se však pravidla pro příjem paketů. Já jsem tedy pouze navázal na kolegovu implementaci tím, že jsem přidal metodu pro příjem paketů (bude detailněji vysvětleno v kapitole Realizace). Díky tomu, že Cisco má svůj překlad adres natolik robustní (díky svým rozsáhlým datovým strukturám), tak se nechalo s menšími úpravami (přidáním několika metod) použít pro linuxový příkaz \verb|iptables|. 
+Směrování probíhá stejně na obou systémech, liší se však pravidla pro příjem paketů. Já jsem tedy pouze navázal na kolegovu implementaci tím, že jsem přidal metodu pro příjem paketů (bude detailněji vysvětleno v kapitole Realizace \ref{prijmiEthernetove}). Díky tomu, že Cisco má svůj překlad adres natolik robustní (díky svým rozsáhlým datovým strukturám), tak se nechalo s menšími úpravami (přidáním několika metod) použít pro linuxový příkaz \verb|iptables|. 
 
 Mojí prací je také načítání a ukládání do souboru, startovací skripty pro server i klienty. Co jsem si ale nechal nakonec, jsou různé datové struktury pro jádro celého systému. Na těch jsem spolupracoval s kolegou nejvíce, protože musely odrážet situaci na obou systémech. Např. třída zaštiťující IP adresu je z půlky má a z půlky kolegy. Obvykle je u třídy napsáno, kdo je jejím autorem, zde je to přímo rozlišováno v jednotlivých metodách. Pak je v hlavičce třídy poznámka, že jsme se podíleli oba. Jinde je celá datová struktura kolegy a moje jsou pouze 2-3 metody. Dále síťová část je výsledkem společné práce\footnote{Dle tehdejších pravidel jsme mohli programovací úlohy implementovat a odevzdávat ve dvojicích.} z roku 2008, kdy jsme právě pro předmět Počítačové sítě programovali hru Karel.
-
-% TODO: pridat odkaz na realizaci prijmiEthernetove()
 
 \section{Existující implementace}
 Tady budou zpracovány existující implementace. Když to bude moc dlouhé, tak to dám do extra kapitoly.
