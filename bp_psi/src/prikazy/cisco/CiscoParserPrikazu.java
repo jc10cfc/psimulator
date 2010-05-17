@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import static datoveStruktury.CiscoStavy.*;
-import static Main.Main.*;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
@@ -49,13 +48,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      */
     boolean nepokracovat = false;
     /**
-     * Chyba, ktera se vypise pri '% Ambiguous command: '
-     */
-    String chybovyVypis = "";
-    /**
      * Specialni rezim. Dovoluje pouziti prikazu 'ip route' v ROOT rezimu + dalsi vypisy.
      */
-    boolean debug = true;
+    boolean debug = false;
     AbstraktniPrikaz prikaz;
 
     private void ladici(String s) {
@@ -116,7 +111,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     i = 1;
             }
         }
-
         if (command.equals("ip")) { // specialni chovani prikazu ip v ruznych stavech
             switch (stav) {
                 case CONFIG:
@@ -127,7 +121,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     i = 1;
             }
         }
-
         if (command.equals("route")) { // specialni chovani prikazu route v ruznych stavech
             switch (stav) {
                 case ROOT:
@@ -137,13 +130,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     i = 5;
             }
         }
-
+        
         if (cmd.length() >= i && command.startsWith(cmd)) { // lze doplnit na jeden jedinecny prikaz
             return true;
         }
 
         if (command.startsWith(cmd)) {
-            chybovyVypis = "% Ambiguous command:  \"" + radek + "\"\n";
             nepokracovat = true;
         }
 
@@ -155,7 +147,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
 
         radek = s;
         nepokracovat = false;
-        chybovyVypis = "";
 
         if (debug && stav == USER) {
             stav = ROOT;
@@ -190,7 +181,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("kill")) {
-            kon.posliRadek(jmenoProgramu + ": servisni ukonceni");
+            kon.posliServisne("servisni ukonceni");
             kon.ukonciSpojeni();
             return;
         }
@@ -345,9 +336,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (nepokracovat) {
-            kon.posli(chybovyVypis);
             nepokracovat = false;
-            chybovyVypis = "";
+            ambiguousCommand();
             return;
         }
 
@@ -379,7 +369,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             cis = 0;
         }
         if (kontrola("terminal", slova.get(cis)) || configure1) {
-            //if (slova.get(cis).equals("terminal") || configure1) {
             stav = CONFIG;
             kon.prompt = pc.jmeno + "(config)#";
             kon.posliRadek("Enter configuration commands, one per line.  End with 'exit'."); // zmena oproti ciscu: End with CNTL/Z.
@@ -396,8 +385,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
         ret += "^";
         kon.posliRadek(ret);
-        kon.posliRadek("% Invalid input detected at '^' marker.");
-        kon.posliRadek("");
+        kon.posliRadek("% Invalid input detected at '^' marker.\n");
     }
 
     /**
@@ -414,15 +402,12 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             case 1:
                 incompleteCommand();
                 return;
-
             case 2:
                 rozhrani = slova.get(1);
                 break;
-
             case 3:
                 rozhrani = slova.get(1) + slova.get(2);
                 break;
-
             default:
                 invalidInputDetected();
                 return;
@@ -460,17 +445,23 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     }
 
     /**
+     * Vypise hlasku do konzole "% Ambiguous command: ".
+     */
+    protected void ambiguousCommand() {
+        kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
+    }
+
+    /**
      * Shodi rozhrani a zaktualizuje routovaci tabulku.
      */
     private void shutdown() {
         if (aktualni.jeNahozene()) {
-            aktualni.nastavRozhrani(false);
-
             AbstraktniPrikaz.cekej(250);
             Date d = new Date();
             kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
             cekej(100);
             kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
+            aktualni.nastavRozhrani(false);
             ((CiscoPocitac) pc).getWrapper().update();
         }
     }
@@ -478,27 +469,18 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     /**
      * Tento prikaz zapne rozhrani, ktere je definovano v aktualnim nastovacim rezimu (napr.: interface fastEthernet0/0)
      * a aktualizuje routovaci tabulku.
+     *
+     * prislo 'no shutdown'
      */
     private void noshutdown() {
-        if (slova.size() != 2) {
-            incompleteCommand();
-            return;
-        }
-        if (kontrola("shutdown", slova.get(1))) {
-            //if (slova.get(1).equals("shutdown")) {
-            if (aktualni.jeNahozene() == false) { // kdyz nahazuju rozhrani
-                AbstraktniPrikaz.cekej(500);
-                Date d = new Date();
-                kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
-                cekej(100);
-                kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
-            }
-
+        if (aktualni.jeNahozene() == false) { // kdyz nahazuju rozhrani
+            AbstraktniPrikaz.cekej(500);
+            Date d = new Date();
+            kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
+            cekej(100);
+            kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
             aktualni.nastavRozhrani(true);
             ((CiscoPocitac) pc).getWrapper().update();
-        }
-        if (nepokracovat) {
-            kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
         }
     }
 
@@ -540,6 +522,11 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 return;
             }
         }
-        invalidInputDetected();
+
+        if (nepokracovat == false) {
+            invalidInputDetected();
+        } else {
+            ambiguousCommand();
+        }
     }
 }

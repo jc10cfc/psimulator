@@ -36,6 +36,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
         this.rozhrani = null;
 
         debug = false;
+        if (debug) pc.vypis("CiscoIpRoute");
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
             vykonejPrikaz();
@@ -46,23 +47,29 @@ public class CiscoIpRoute extends CiscoPrikaz {
     // ip route 0.0.0.0 0.0.0.0 192.168.2.254
     // ip route 192.168.2.0 255.255.255.192 fastEthernet 0/0
     // no ip route ...
+    /**
+     * Vim, ze mi prisel prikaz '(no) ip route'
+     * @return
+     */
     @Override
     protected boolean zpracujRadek() {
 
         if (no == true) {
             if (debug) pc.vypis("prikaz no, pridej="+no);
-            // tady osetrit, ze ve slova bude 'no ip route ..'
-            if (! kontrola("ip", dalsiSlovo(), 2)) {
+            dalsiSlovo();
+        }
+
+        dalsiSlovo(); // route
+        
+        try {
+            String adr = dalsiSlovo();
+            String maska = dalsiSlovo();
+
+            if (adr.isEmpty() || maska.isEmpty()) {
+                incompleteCommand();
                 return false;
             }
-        }
-
-        if (! kontrola("route", dalsiSlovo(), 2)) {
-            return false;
-        }
-
-        try {
-            adresat = new IpAdresa(dalsiSlovo(), dalsiSlovo());
+            adresat = new IpAdresa(adr, maska);
         } catch (Exception e) { // SpatnaMaskaException, SpatnaAdresaException
             invalidInputDetected();
             return false;

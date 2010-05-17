@@ -27,7 +27,7 @@ public class CiscoIpAddress extends CiscoPrikaz {
         this.rozhrani = rozhrani;
 
         debug = false;
-        ladici("konstruktor");
+        ladici("konstruktor CiscoIpAddress");
 
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
@@ -35,21 +35,23 @@ public class CiscoIpAddress extends CiscoPrikaz {
         }
     }
 
+    /**
+     * Vim, ze mi prislo '(no) ip address
+     * @return
+     */
     @Override
     protected boolean zpracujRadek() {
         //ip address 192.168.2.129 255.255.255.128
-        if (no) { // vim, ze ve slova je 'no ip'
+        if (no) { // vim, ze ve slova je 'no ip address'
             dalsiSlovo();
         }
 
-        if (!kontrola("address", dalsiSlovo(), 3)) {
-            return false;
-        }
+        dalsiSlovo(); // address
         ladici("po address");
 
         String ip = dalsiSlovo();
 
-        if (ip.length() == 0){
+        if (ip.isEmpty() && no){
             noBezAdresy = true;
             return true;
         }

@@ -5,7 +5,7 @@
 <konfigurak>
 <pocitac jmeno="linux1" typ="linux">
 	<rozhrani>
-		<jmeno>eth1</jmeno>
+		<jmeno>eth0</jmeno>
 		<ip>1.1.1.1</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:01:02:03:04:05</mac>
@@ -93,7 +93,7 @@
 
 <kabelaz>
 	<kabel>
-		<prvni>linux1:eth1</prvni>
+		<prvni>linux1:eth0</prvni>
 		<druhy>cisco1:FastEthernet0/0</druhy>
 	</kabel>
 	<kabel>

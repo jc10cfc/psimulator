@@ -93,6 +93,10 @@ public class CiscoShow extends CiscoPrikaz {
                 if (!kontrola("nat", dalsi, 2)) {
                     return false;
                 }
+                if (stavCisco == CiscoStavy.USER) {
+                    invalidInputDetected();
+                    return false;
+                }
                 if (!kontrola("translations", dalsiSlovo(), 1)) {
                     return false;
                 }

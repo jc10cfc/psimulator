@@ -5,7 +5,7 @@
 <konfigurak>
 <pocitac jmeno="linux1" typ="linux">
 	<rozhrani>
-		<jmeno>eth1</jmeno>
+		<jmeno>eth0</jmeno>
 		<ip>3.3.3.1</ip>
 		<maska>255.255.255.0</maska>
 		<mac>00:01:02:03:04:05</mac>
@@ -15,13 +15,13 @@
 		<zaznam>
 			<adresat>3.3.3.0</adresat>
 			<maskaAdresata>255.255.255.0</maskaAdresata>
-			<rozhraniKam>eth1</rozhraniKam>
+			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>0.0.0.0</adresat>
 			<maskaAdresata>0.0.0.0</maskaAdresata>
 			<brana>3.3.3.254</brana>
-			<rozhraniKam>eth1</rozhraniKam>
+			<rozhraniKam>eth0</rozhraniKam>
 		</zaznam>
 	</routy>
 	<ip_forward>0</ip_forward>
@@ -155,7 +155,7 @@
 
 <kabelaz>
 	<kabel>
-		<prvni>linux1:eth1</prvni>
+		<prvni>linux1:eth0</prvni>
 		<druhy>linux2:eth0</druhy>
 	</kabel>
 	<kabel>

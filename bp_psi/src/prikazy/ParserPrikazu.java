@@ -39,8 +39,8 @@ public abstract class ParserPrikazu extends Abstraktni {
     public abstract void zpracujRadek(String s);
 
     /**
-     * Tahlecta metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
-     * a ulozi je do seznamu slova, kterej dedi od Abstraktni.
+     * Tato metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
+     * a ulozi je do seznamu slova, ktery dedi od Abstraktni.
      * @autor haldyr
      */
     protected void rozsekej() {

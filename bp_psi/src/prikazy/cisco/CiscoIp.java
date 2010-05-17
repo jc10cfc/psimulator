@@ -56,6 +56,11 @@ public class CiscoIp extends CiscoPrikaz {
             dalsi = dalsiSlovo();
         }
 
+        if(dalsi.length() == 0) {
+            incompleteCommand();
+            return false;
+        }
+
         if (stav == CONFIG || (debug && stav == ROOT)) {
 
             if (kontrolaBezVypisu("route", dalsi, 5)) {
@@ -81,7 +86,7 @@ public class CiscoIp extends CiscoPrikaz {
             }
         }
 
-        if (dalsi.length() != 0) { // jestli to je prazdny, tak to uz vypise kontrolaBezVypisu
+        if (dalsi.length() != 0 && ambiguous == false) { // jestli to je prazdny, tak to uz vypise kontrolaBezVypisu
             invalidInputDetected();
         }
 

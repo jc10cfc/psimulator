@@ -20,6 +20,7 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
      */
     protected String radka = "";
     boolean debug = false;
+    protected boolean ambiguous = false;
 
     public CiscoPrikaz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
         super(pc, kon, slova);
@@ -128,6 +129,7 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
 
         if (command.startsWith(cmd)) {
             ambiguousCommand();
+            ambiguous = true;
         }
         return false;
     }
