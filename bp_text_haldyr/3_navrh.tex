@@ -1,4 +1,4 @@
-\chapter{Analýza a~návrh řešení}
+\chapter{Analýza a~návrh řešení}\label{kap:analyza}
 % Analýza a~návrh implementace (včetně diskuse různých alternativ a~volby implementačního prostředí).
 % 
 % Tady bude všechno týkající se návrhu:
@@ -105,7 +105,7 @@ Samotný telnet (ať protokol či program) ale neposkytuje doplňování příka
 Pro Linux jsem našel program rlwrap (readline wrapper), který přidává všechny tyto užitečné funkce: editace řádky, historie příkazů, doplňování příkazů, obarvení promptu. Pro Windows jsem nic takového nenašel, takže je to vyřešeno tak, že se vše pouští pod programem Cygwin. Navíc toto řešení zvyšuje komfort práce pod Windows, jelikož program \verb|cmd| není úplně uživatelsky přívětivý.
 
 
-\section{Podobnost simulátoru se skutečným Ciscem}
+\section{Podobnost simulátoru se skutečným Ciscem}\label{kap:podobnost}
 Při implementaci jsem se snažil vytvořit systém, který bude co nejvíce podobný skutečnému Ciscu. Musel jsem ale někde položit hranici mezi složitostí a věrností výsledné práce, protože tyto dvě metriky jsou vzájemném protikladu. Cisco IOS je natolik robustní a propracovaný systém, že je v mých silách pouze implementace úzké části systému, která je nutně potřeba pro splnění cíle. Byl jsem přinucen místy ustoupit a nechat vypsat hlášení, že to či ono není podporováno. V samotném parseru příkazů není toto téměř vůbec řešeno, protože by to znamenalo dopsání dohromady několika stovek pravidel pro všechny příkazy - např. příkaz \verb|ip| má 103 možností v konfiguračním stavu. Aby ale uživatel měl alespoň nějakou možnost se dopátrat, co je podporováno a co ne, tak jsem přidal příkaz \verb|help| (\verb|help_en| pro výpis v angličtině), který popisuje, co lze v jakém stavu Cisca použít.
 
 

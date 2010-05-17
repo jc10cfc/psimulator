@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  17 MAY 2010 00:04
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  17 MAY 2010 18:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -307,7 +307,44 @@ Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
 (./k336_thesis_macros.sty
 Two side layout redefined.
-(./hyphen.tex))
+(./hyphen.tex)) (/usr/share/texmf/tex/latex/lgrind/lgrind.sty
+Package: lgrind 2002/01/28 v3.67 LGrind environment and supporting stuff
+\lc@unt=\count91
+\ln@xt=\count92
+\LGnuminterval=\count93
+\LGindent=\skip43
+\LGsloppy=\skip44
+\procbox=\box26
+\ls@far=\box27
+\tb@x=\box28
+\TBw@d=\dimen106
+\@ts=\dimen107
+)
+(/usr/share/texmf-texlive/tex/latex/listings/listings.sty
+\lst@mode=\count94
+\lst@gtempboxa=\box29
+\lst@token=\toks17
+\lst@length=\count95
+\lst@currlwidth=\dimen108
+\lst@column=\count96
+\lst@pos=\count97
+\lst@lostspace=\dimen109
+\lst@width=\dimen110
+\lst@newlines=\count98
+\lst@lineno=\count99
+\lst@maxwidth=\dimen111
+
+(/usr/share/texmf-texlive/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count100
+\lst@skipnumbers=\count101
+\lst@framebox=\box30
+)
+(/usr/share/texmf-texlive/tex/latex/listings/listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
 Bakalarska prace
 (/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
@@ -330,9 +367,9 @@ O)
 (/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
 Package: xcolor-patch 2009/10/02 xcolor patch
 ))
-\@linkdim=\dimen106
-\Hy@linkcounter=\count91
-\Hy@pagecounter=\count92
+\@linkdim=\dimen112
+\Hy@linkcounter=\count102
+\Hy@pagecounter=\count103
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
@@ -409,10 +446,10 @@ Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 )))
-\Fld@menulength=\count93
-\Field@Width=\dimen107
-\Fld@charsize=\dimen108
-\Field@toks=\toks17
+\Fld@menulength=\count104
+\Field@Width=\dimen113
+\Fld@charsize=\dimen114
+\Field@toks=\toks18
 Package hyperref Info: Hyper figures OFF on input line 4377.
 Package hyperref Info: Link nesting OFF on input line 4382.
 Package hyperref Info: Hyper index ON on input line 4385.
@@ -424,55 +461,57 @@ Package hyperref Info: PDF/A mode OFF on input line 4407.
 (/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
 Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
 )
-\Hy@abspage=\count94
-\c@Item=\count95
-\c@Hfootnote=\count96
+\Hy@abspage=\count105
+\c@Item=\count106
+\c@Hfootnote=\count107
 )
 *hyperref using default driver hpdftex*
 (/usr/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
-\Fld@listcount=\count97
+\Fld@listcount=\count108
 )
 (/usr/share/texmf-texlive/tex/latex/natbib/natbib.sty
 Package: natbib 2009/07/16 8.31 (PWD, AO)
-\bibhang=\skip43
-\bibsep=\skip44
+\bibhang=\skip45
+\bibsep=\skip46
 LaTeX Info: Redefining \cite on input line 694.
-\c@NAT@ctr=\count98
+\c@NAT@ctr=\count109
 ) (./Rehak-thesis-2010.aux (./1_uvod.aux) (./2_specifikace.aux) (./3_navrh.aux)
  (./4_realizace.aux))
 \openout1 = `Rehak-thesis-2010.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
 
 (/usr/share/texmf/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count99
-\scratchdimen=\dimen109
-\scratchbox=\box26
-\nofMPsegments=\count100
-\nofMParguments=\count101
-\everyMPshowfont=\toks18
-\MPscratchCnt=\count102
-\MPscratchDim=\dimen110
-\MPnumerator=\count103
-\everyMPtoPDFconversion=\toks19
-) (/usr/share/texmf-texlive/tex/latex/graphics/color.sty
+\scratchcounter=\count110
+\scratchdimen=\dimen115
+\scratchbox=\box31
+\nofMPsegments=\count111
+\nofMParguments=\count112
+\everyMPshowfont=\toks19
+\MPscratchCnt=\count113
+\MPscratchDim=\dimen116
+\MPnumerator=\count114
+\everyMPtoPDFconversion=\toks20
+)
+\c@lstlisting=\count115
+ (/usr/share/texmf-texlive/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 
 (/etc/texmf/tex/latex/config/color.cfg
@@ -480,7 +519,7 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 130.
 )
-Package hyperref Info: Link coloring ON on input line 134.
+Package hyperref Info: Link coloring ON on input line 138.
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
@@ -488,16 +527,16 @@ Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count104
+\c@section@level=\count116
 )
-LaTeX Info: Redefining \ref on input line 134.
-LaTeX Info: Redefining \pageref on input line 134.
+LaTeX Info: Redefining \ref on input line 138.
+LaTeX Info: Redefining \pageref on input line 138.
 
 (./Rehak-thesis-2010.out) (./Rehak-thesis-2010.out)
 \@outlinefile=\write3
 \openout3 = `Rehak-thesis-2010.out'.
 
-\AtBeginShipoutBox=\box27
+\AtBeginShipoutBox=\box32
 
 ************************************************
 Zvoleny jazyk: cestina
@@ -510,13 +549,13 @@ Nazev prace: Simul\IeC {\'a}tor virtu\IeC {\'a}ln\IeC {\'\i } po\IeC {\v c}\IeC
  {\'\i }ta\IeC {\v c}ov\IeC {\'e} s\IeC {\'\i }t\IeC {\v e} Cisco
 Vedouci prace: Ing. Pavel Kubal\IeC {\'\i }k, Ph.D.
 ***************************************************
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 193.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 197.
 
 (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 193.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 197.
  [1
 
 
@@ -627,22 +666,16 @@ File: figures/ios.png Graphic file (type png)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-Overfull \hbox (2.80772pt too wide) in paragraph at lines 46--47
-[]\T1/cmr/m/n/10.95 Privilegovaný mód (PRIV-I-LEGED MODE) nebo také ^^Rad-min-i
-strá-torský^^P mód je podobný
- []
-
 [11
 
 
 
-] [12 <./figures/ios.png>]) [13] [14
-
-
-]
+] [12 <./figures/ios.png>] [13]) [14]
 Kapitola 5.
-[15] [16
+[15
+
+
+] [16
 
 ]
 Kapitola 6.
@@ -685,19 +718,19 @@ P\v {r}\'{\i }loha E.
 
 ]
 P\v {r}\'{\i }loha F.
-<figures/seznamcd.pdf, id=646, 793.96625pt x 539.01375pt>
+<figures/seznamcd.pdf, id=648, 793.96625pt x 539.01375pt>
 File: figures/seznamcd.pdf Graphic file (type pdf)
 
 <use figures/seznamcd.pdf> [37 <./figures/seznamcd.pdf>] [38]
 (./Rehak-thesis-2010.aux (./1_uvod.aux) (./2_specifikace.aux) (./3_navrh.aux)
 (./4_realizace.aux)) ) 
 Here is how much of TeX's memory you used:
- 6935 strings out of 495061
- 92153 string characters out of 1182621
- 166599 words of memory out of 3000000
- 9780 multiletter control sequences out of 15000+50000
+ 8369 strings out of 495061
+ 112006 string characters out of 1182621
+ 189246 words of memory out of 3000000
+ 11195 multiletter control sequences out of 15000+50000
  21222 words of font info for 46 fonts, out of 3000000 for 9000
- 34 hyphenation exceptions out of 8191
+ 36 hyphenation exceptions out of 8191
  38i,9n,38p,1334b,468s stack positions out of 5000i,500n,10000p,200000b,50000s
  </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ect
 t0900.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600p
@@ -717,9 +750,9 @@ n/ec/ecbx2488.600pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cm
 mi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
 sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texm
 f-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Rehak-thesis-2010.pdf (54 pages, 900664 bytes).
+Output written on Rehak-thesis-2010.pdf (54 pages, 905150 bytes).
 PDF statistics:
- 1539 PDF objects out of 1728 (max. 8388607)
- 172 named destinations out of 1000 (max. 500000)
+ 1542 PDF objects out of 1728 (max. 8388607)
+ 173 named destinations out of 1000 (max. 500000)
  460 words of extra memory for PDF output out of 10000 (max. 10000000)
 
