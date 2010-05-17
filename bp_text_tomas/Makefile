@@ -40,4 +40,4 @@ $(PROJECT).ps: *.tex
 	$(LATEX) $<
 
 clean:
-	rm -f *.log *.aux *.bbl *.blg *.lof *.lot *.dvi *.toc *.out *~ *.ps
+	rm -f *.log *.aux *.bbl *.blg *.lof *.lot *.dvi *.toc *.out *~ *.ps *.backup

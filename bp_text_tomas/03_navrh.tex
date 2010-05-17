@@ -1,7 +1,7 @@
 
 \chapter{Analysa a návrh aplikace}
 
-Tato kapitola se zabývá analysou a návrhem aplikace jako celku. Nejprve shrnuje a analysuje požadavky, pak určuje postup implementace a nakonec se zabývá architekturou aplikace. Analysou a návrhem jednotlivých částí aplikace, např. jednotlivých příkazů, datových struktur ap. se pro přehlednost nezabývám v této kapitole, ale až v kapitolách jejich realisace.
+V této kapitole se zabývá analysou a návrhem aplikace jako celku. Shrnuji a analysuji požadavky, diskutuji zvolený jazyk a uživatelské rozhraní, popisuji architekturu aplikace, spolupráci s kolegou, který dělal druhou část aplikace, a postup implementace.
 
 %-----------------------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ Jedním z funkčních požadavků mé aplikace je možnost připojit se k jednot
 
 \subsection{Podobnost simulátoru se skutečným linuxem}
 
-Aby byl simulátor využitelný pro výukové účely, musí být dostatečně podobbný skutečnému linuxu, aby uživatel mohl věřit, že to, co funguje v simulátoru, bude fungovat i na skutečném linuxu a naopak. K tomu je ale potřeba implementovat jen ty příkazy, kterými se nastavují síťové parametry, a jen v takovém rozsahu, jaký je pro tyto výukové účely potřeba. Nezabývám se tedy kompletním příkazem ifconfig nebo ip, ale jen tou jejich částí, kterou se nastavují parametry rozhraní, jako IP, maska a další. O statních parametrech pak vetšinou simulátor vypíše, že ve skutečnosti sice existují, ale simulátorem zatím nejsou podporované.
+Aby byl simulátor využitelný pro výukové účely, musí být dostatečně podobný skutečnému linuxu, aby uživatel mohl věřit, že to, co funguje v simulátoru, bude fungovat i na skutečném linuxu a naopak. K tomu je ale potřeba implementovat jen ty příkazy, kterými se nastavují síťové parametry, a jen v takovém rozsahu, jaký je pro tyto výukové účely potřeba. Implementoval jsem tedy příkazy ifconfig, route, ping a traceroute, z příkazu ip jsem implementoval jeho podpříkazy addr a route. Pro potřeby nastavení překladu adres jsem implementoval malou část příkazu iptables. Aby uživatel mohl nastavovat některé hodnoty souborů v adresáři /proc, implementoval jsem ve velmi omezené míře i příkazy cat a echo, ovšem jen pro tyto soubory. Pro ukončení spojení je implementován příkaz exit. Pro potřeby simulátoru ale nebylo potřeba implementovat kompletní příkazy ifconfig nebo ip, ale jen tu jejich část, kterou se nastavují parametry rozhraní, jako IP, maska a další. O ostatních parametrech pak vetšinou simulátor vypíše, že ve skutečnosti sice existují, ale simulátorem zatím nejsou podporované.
 
 %-----------------------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ Aplikaci jsem se rozhodl programovat v programovacím jazyku Java z několika d�
 
 \subsection{Uživatelské rozhraní}
 
-Jak plyne ze zadání, uživatel se bude k jednotlivým virtuálním počítačům přihlašovat pomocí programu telnet, nemusím tedy vytvářet žádného speciálního klienta. S aplikací samotnou nebude uživatel nijak pracovat, jenom ji spustí se správným konfiguračním souborem a případně číslem výchozího portu, dále již bude nastavovat pouze jednotlivé virtuální počítače pomocí telnetu. Pro takovou aplikaci je nejlepším uživatelským rozhraním příkazová řádka, vytváření grafického uživatelského rozhraní by nemělo smysl.
+Jak plyne ze zadání, uživatel se přihlašuje k jednotlivým virtuálním počítačům pomocí programu telnet, nemusím tedy vytvářet žádného speciálního klienta. S aplikací samotnou nebude uživatel nijak pracovat, jenom ji spustí se správným konfiguračním souborem a případně číslem výchozího portu, dále již bude nastavovat pouze jednotlivé virtuální počítače pomocí telnetu. Pro takovou aplikaci je nejlepším uživatelským rozhraním příkazová řádka, vytváření grafického uživatelského rozhraní by nemělo smysl.
 
 %-----------------------------------------------------------------------------------
 
@@ -70,45 +70,63 @@ V laboratořích předmětu Y36PSI studenti nastavují pouze PC nebo směrovače
 \paragraph{Virtuální počítač}
 %popis linuxovýho počítače:
 Jedinými síťovými prvky mojí aplikace jsou počítače s operačním systémem Linux, které fungují jako směrovače na síťové vrstvě ISO/OSI modelu. Síťovou komunikaci skutečného počítače zajišťuje modul v jádře operačního systému. Počítač má několik síťových rozhraní, které se skládají z fysické části, kterou je síťový adaptér, a z části softarové, kterou je jeho konfigurace. Ke každému síťovému adaptéru, tzn. ke každému rozhraní, může být připojen maximálně jeden síťový kabel. Virtuální počítač i síťové rozhraní mají svou vlastní třídu.\\ 
+\paragraph{Routovací a natovací tabulka}
 % routovací a natovací tabulka - popis
 Jádro operačního systému směruje pakety podle tzv. routovací tabulky, což je datová struktura, která obsahuje cílové adresy a akce, které se mají vykonat s paketem poslaným na danou cílovou adresu. Tuto datovou strukturu musí obsahovat i moje virtuální síť, proto jsem pro ni udělal vlastní třídu. Její analýzou a implementací se budu zabývat v implementační části.\\
 Aby virtuální počítače mohly překládat adresy přes ně procházejících paketů, potřebují, stejně jako skutečné počítače, další datovou strukturu, natovací tabulku. Touto datovou strukturou se ale tato práce nezabývá, vytvořil ji můj kolega Stanislav Řehák.\\
-% příkazy
+\paragraph{Příkazy}
 Uživatel musí mít možnost virtuální počítač nakonfigurovat, kvůli tomu přece aplikaci programuji. Ke konfiguraci mu mají sloužit standartní příkazy, které by použil při konfiguraci skutečného počítače. K virtuálnímu počítači se uživatel připojuje telnetem, o toto připojení se stará komunikační vrstva. Na vrstvě virtuální sítě ale probíha parsování a vykonávání těchto příkazů. O tom budu psát v další kapitole.
 \subsubsection{Infrastruktura sítě}
 Jak bylo napsáno dříve, jediným síťovým prvkem mojí aplikace je počítač s OS Linux. Ke každému rozhraní, může být připojen maximálně jeden síťový kabel, který, protože neuvažuji switche, je zapojen do jiného rozhraní nějakého počítače, nebo není zapojen nikam.  Infrastruktura sítě je proto jednoznačně určena dvojicemi síťových rozhraní, která jsou propojena síťovým kabelem. Tuto infrastrukturu sítě je v konfiguračním souboru dobré oddělit od ostatní konfigurace, aby ji mohl uživatel lehce přečíst a pochopit, popř. změnit. Síťové rozhraní je jednoznačně identifikováno jménem počítače a jménem rozhaní.
 \subsubsection{Posílání paketů}
-Virtuální síť musí umět posílat virtuální pakety, aby pomocí příkazů ping nebo traceroute uživatel zjistil, jestli virtuální síť správně nakonfiguroval. Po virtuální síti, representované objekty, se samozřejmě posílají virtuální pakety, representované objekty třídy Paket. Virtuálni paket ponese potřebné informace stejně jako skutečný paket, akorát těch informací pro potřeby mojí aplikace není tolik. Posílání paketů v mé virtuální síti není prakticky rozděleno do OSI-ISO vrstev, IP paket se nebude balit do rámců linkové vrstvy. Virtuální pakety si mezi sebou budou posílat, přijímat a přeposílat virtuální počítače pomocí speciálních metod k tomu určených. Je nutné,aby při stejné konfiguraci skutečné a virtuální počítačové sítě tato síť i stejně fungovala. To jest, aby ve virtuální počítačové síti do cíle došly právě ty pakety, které při stejné konfiguraci dojdou na síti skutečné. Více se anylýzou a implementací posílání paketů budu zabývat v samostatné kapitole.
+Virtuální síť musí umět posílat virtuální pakety, aby uživatel pomocí příkazů ping nebo traceroute zjistil, jestli virtuální síť správně nakonfiguroval. Po virtuální síti, representované objekty, se samozřejmě posílají virtuální pakety, representované objekty třídy Paket. Virtuálni paket ponese potřebné informace stejně jako skutečný paket, akorát těch informací pro potřeby mojí aplikace není tolik. Posílání paketů v mé virtuální síti není prakticky rozděleno do OSI-ISO vrstev, IP paket se nebude balit do rámců linkové vrstvy. Virtuální pakety si mezi sebou budou posílat, přijímat a přeposílat virtuální počítače pomocí speciálních metod k tomu určených. Je nutné,aby při stejné konfiguraci skutečné a virtuální počítačové sítě tato síť i stejně fungovala. To jest, aby ve virtuální počítačové síti do cíle došly právě ty pakety, které při stejné konfiguraci dojdou na síti skutečné. Více se anylýzou a implementací posílání paketů budu zabývat v samostatné kapitole.
 
 \subsection{Komunikační vrstva}
 Komunikační vrstva naší aplikace zajišťuje spojení aplikace s klientem. Z tohoto pohledu je aplikace klasickým síťovým serverem, který poslouchá na několika portech, přijímá spojení a zpracovává je. Uživatel po síti konfiguruje jednotlivé virtuální počítače, proto každý virtuální počítač musí poslouchat na jednom portu. O tuto komunikaci se nestará přímo virtuální počítač, má k tomu speciální třídu, i tak ale třída virtuálního počítače zasahuje do obou vrstev programu. Aby aplikace mohla poslouchat na více portech najednou, je nutné vytvořit více vláken, každý virtuální počítač tedy poběží v samostatném vláknu. Jak plyne z posledního funkčního požadavku, musí jeden virtuální počítač umět zpracovat i více spojení najednou, jako i na reálný linuxový počítač je možné se připojit k několika jeho terminálům pomocí protokolu ssh nebo telnet. Proto je nutné, aby vlákno, které poslouchá na portu, pro příchozí spojení vytvořilo jiné vlákno, které spojení obslouží, a samo dále poslouchalo na určeném portu. 
 
 %-----------------------------------------------------------------------------------
 
+\section{Spolupráce na aplikaci}
+
+Na aplikaci jsem spolupracoval se svým kolegou Stanislavem Řehákem, který implementuje její druhou část - simulátor Cisca. Spolupráce však přesahuje jen tuto oblast a zasahuje také do společného jádra aplikace.\\
+V této práci chci popisovat především moji část výsledného simulátoru, rád bych však upozornil, že když zde popisuji implementaci nějaké části programu, neznamená, že jsem ji celou implementoval sám. U každé třídy v kódu je napsáno, kdo je jejím autorem. Pokud jsme na třídě pracovali oba, je autorství uvedeno u jejích metod.\\
+% co kdo dělal - po částech...
+Architektura aplikace je založena na oboustranné dohodě.  Komunikační vrstvu jsme z velké části přejali z domácího úkolu na předmět Y36PSI, server Karel, který jsme programovali na podzim roku 2008. Pro potřeby naší aplikace jsme potom tuto vrstvu společně upravili. Jě těžké, připsat autorství této vrstvy jednomu nebo druhému z nás, ale vzhledem k tomu, že se jedná a sice nutnou, ale málo rozsáhlou část aplikace, to dle mého názoru není nutné. Síťové rozhraní je stejné pro oba počítače, jeho třídu jsme dělali společně. Oba typy počítačů mají mnoho společného, ale v něčem se liší. Proto jsme vytvořili třídu abstraktní počítač, jejíž autorem jsem já, a od ní jsme pak dědili každý svoji vlastní třídu pro virtuální počítač. Já jsem autorem všeho, co souvisí s posíláním paketů a routovací tabulky, kterou však kolega nemohl přímo využít. Natovací tabulku programoval kolega, stejně tak i veškeré ukládání do souboru a načítání z něj, a třídu Main. Důležitou třídu IpAdresa jsme programovali společně, autorství je uvedeno u jejích jednotlivých metod, stejně tak i abstraktní příkaz a abstraktní parser příkazů, kde jsou vyčleněny společné metody pro parsování a vykonávání příkazů.
+
+%-----------------------------------------------------------------------------------
+
 \section{Postup implementace}
 
-Na aplikaci musím spolupracovat se svým kolegou Stanislavem Řehákem, který implementuje její druhou část - simulátor Cisca. Spolupráce však přesahuje jen tuto oblast a zasahuje také do společného jádra aplikace
+Samotnou implementaci jsem zahájili komunikační vrstvou, následně jsme naprogramovali základní datové struktury, jako třídy pro virtuální počítač, síťové rozhraní, IP adresu ap. Pokračoval jsem implementací linuxových příkazů. Nejdříve jsem zpracoval příkaz ifconfig, abych mohl nastavovat virtuální síťová rozhraní. Po něm jsem zpracoval příkaz route a zároveň s ním také routovací tabulku. Po těchto dvou základních příkazech jsem pracoval na posílání paketů mezi počítači. Když jsem to měl hotové, implementoval jsem ostatní příkazy jako ping, traceroute, ip, iptables, echo a cat.\\
+V implementační části této práce se nepopisuji jednotlivé části programu ve stejném pořadí, jako jsem je implementoval.
 
 
 
-% -------------------------------
-% OSNOVA KAPITOLY
-% Požadavky - vyjmenovat
-% Analysa požadavků
-%   telnet a rlwrap
-%   podobnost se skutečností - co implementovat
-% Jazyk a uživatelské rozhraní
-%   - celkem jasný
-% Struktura aplikace (čas: minulej)
-%   - 2 složky: virtuální síť a komunikace s uživatelem
-%   virtuální síť:
-%     - je rozumné ji stavět stejně jako síť skutečnou - síťové prvky -> objekty
-%     síťové prvky- dělám jen 3. vrstvu - IP
-%       virtuální počítač - linux: skutečné + jejich virtualisace, routovací, natovací tabulka, příkazy
-%     infrastruktura: skutečná + virtualisace
-%     posílání paketů
-%   komunikace
-%     - byla převzata ze starýho projektu
-%     - vlákna
 
-
+-------------------------------
+OSNOVA KAPITOLY
+- o co tady jde
+Požadavky - vyjmenovat
+Analysa požadavků
+  telnet a rlwrap
+  podobnost se skutečností - co implementovat
+Jazyk a uživatelské rozhraní
+  - celkem jasný
+Struktura aplikace (čas: minulej)
+  - 2 složky: virtuální síť a komunikace s uživatelem
+  virtuální síť:
+    - je rozumné ji stavět stejně jako síť skutečnou - síťové prvky -> objekty
+    síťové prvky- dělám jen 3. vrstvu - IP
+      virtuální počítač - linux: skutečné + jejich virtualisace, routovací, natovací tabulka, příkazy
+    infrastruktura: skutečná + virtualisace
+    posílání paketů
+  komunikace
+    - byla převzata ze starýho projektu
+    - vlákna
+Spolupráce na aplikaci
+  - dělal jsem ji se Standou
+  - co popisuji
+  - vyjmenování částí a kdo na tom pracoval
+Postup implementace (čas minulej)
+  - jednoduše popsat, jak jsem postupoval v čase
+  - struktura práce neodpovídá původnímu postupu
