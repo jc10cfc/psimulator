@@ -1,5 +1,37 @@
 Kapitoly:
+
 Úvod - kontext, cíle, rozdělení práce, struktura práce, 
+
 Rešerše - existující řešení
+
 Analysa a návrh - pozadavky (funkcni, nefunkcni atd...), funkčnost (rlwrap), struktura programu, rozdělení, průběh implementace (osnova na konci kapitoly)
-Implementace
+
+Implementace virtuální sítě
+  - Zabejvám se tady analysou a implementací jednotlivejch částí systému krom příkazů
+  - struktura týhle kapitoly
+  IP adresa
+    - 2 možnosti využití (port, maska)
+    - vnitřní implementace
+    - důležité public metody, porovnávání, vypisování, statický metody
+  Virtuální počítač
+    - 2 funkce - komunikace a posílání paketů (nějak tak...)
+    - 2 třídy, abstraktní a linuxový; zákl. třída...
+    - komunikace, konsole, jak to funguje...
+    Komunikace
+    Síťové rozhraní
+  Routovací tabulka - osnova u samotný sekce
+  Posílání paketů
+    - popsat, jak se linux chová, kdy co přijme
+    - popsat v čem se liší cisco
+    - popsat vlastní implementaci
+
+Implementace jednotlivých příkazů
+  Parser příkazů
+  ifconfig
+  route
+  ip
+    IpAddr
+    IpRoute
+  iptables
+    
+  

@@ -91,7 +91,7 @@ Komunikační vrstva naší aplikace zajišťuje spojení aplikace s klientem. Z
 Na aplikaci jsem spolupracoval se svým kolegou Stanislavem Řehákem, který implementuje její druhou část - simulátor Cisca. Spolupráce však přesahuje jen tuto oblast a zasahuje také do společného jádra aplikace.\\
 V této práci chci popisovat především moji část výsledného simulátoru, rád bych však upozornil, že když zde popisuji implementaci nějaké části programu, neznamená, že jsem ji celou implementoval sám. U každé třídy v kódu je napsáno, kdo je jejím autorem. Pokud jsme na třídě pracovali oba, je autorství uvedeno u jejích metod.\\
 % co kdo dělal - po částech...
-Architektura aplikace je založena na oboustranné dohodě.  Komunikační vrstvu jsme z velké části přejali z domácího úkolu na předmět Y36PSI, server Karel, který jsme programovali na podzim roku 2008. Pro potřeby naší aplikace jsme potom tuto vrstvu společně upravili. Jě těžké, připsat autorství této vrstvy jednomu nebo druhému z nás, ale vzhledem k tomu, že se jedná a sice nutnou, ale málo rozsáhlou část aplikace, to dle mého názoru není nutné. Síťové rozhraní je stejné pro oba počítače, jeho třídu jsme dělali společně. Oba typy počítačů mají mnoho společného, ale v něčem se liší. Proto jsme vytvořili třídu abstraktní počítač, jejíž autorem jsem já, a od ní jsme pak dědili každý svoji vlastní třídu pro virtuální počítač. Já jsem autorem všeho, co souvisí s posíláním paketů a routovací tabulky, kterou však kolega nemohl přímo využít. Natovací tabulku programoval kolega, stejně tak i veškeré ukládání do souboru a načítání z něj, a třídu Main. Důležitou třídu IpAdresa jsme programovali společně, autorství je uvedeno u jejích jednotlivých metod, stejně tak i abstraktní příkaz a abstraktní parser příkazů, kde jsou vyčleněny společné metody pro parsování a vykonávání příkazů.
+Architektura aplikace je založena na oboustranné dohodě.  Komunikační vrstvu jsme z velké části přejali z domácího úkolu na předmět Y36PSI, server Karel, který jsme programovali na podzim roku 2008. Pro potřeby naší aplikace jsme potom tuto vrstvu společně upravili. Je těžké, připsat autorství této vrstvy jednomu nebo druhému z nás, ale vzhledem k tomu, že se jedná a sice nutnou, ale málo rozsáhlou část aplikace, to dle mého názoru není nutné. Síťové rozhraní je stejné pro oba počítače, jeho třídu jsme dělali společně. Oba typy počítačů mají mnoho společného, ale v něčem se liší. Proto jsme vytvořili třídu abstraktní počítač, jejíž autorem jsem já, a od ní jsme pak dědili každý svoji vlastní třídu pro virtuální počítač. Já jsem autorem všeho, co souvisí s posíláním paketů a routovací tabulky, kterou však kolega nemohl přímo využít. Natovací tabulku programoval kolega, stejně tak i veškeré ukládání do souboru a načítání z něj, a třídu Main. Důležitou třídu IpAdresa jsme programovali společně, autorství je uvedeno u jejích jednotlivých metod, stejně tak i abstraktní příkaz a abstraktní parser příkazů, kde jsou vyčleněny společné metody pro parsování a vykonávání příkazů.
 
 %-----------------------------------------------------------------------------------
 
@@ -104,29 +104,29 @@ V implementační části této práce se nepopisuji jednotlivé části program
 
 
 -------------------------------
-OSNOVA KAPITOLY
-- o co tady jde
-Požadavky - vyjmenovat
-Analysa požadavků
-  telnet a rlwrap
-  podobnost se skutečností - co implementovat
-Jazyk a uživatelské rozhraní
-  - celkem jasný
-Struktura aplikace (čas: minulej)
-  - 2 složky: virtuální síť a komunikace s uživatelem
-  virtuální síť:
-    - je rozumné ji stavět stejně jako síť skutečnou - síťové prvky -> objekty
-    síťové prvky- dělám jen 3. vrstvu - IP
-      virtuální počítač - linux: skutečné + jejich virtualisace, routovací, natovací tabulka, příkazy
-    infrastruktura: skutečná + virtualisace
-    posílání paketů
-  komunikace
-    - byla převzata ze starýho projektu
-    - vlákna
-Spolupráce na aplikaci
-  - dělal jsem ji se Standou
-  - co popisuji
-  - vyjmenování částí a kdo na tom pracoval
-Postup implementace (čas minulej)
-  - jednoduše popsat, jak jsem postupoval v čase
-  - struktura práce neodpovídá původnímu postupu
+% OSNOVA KAPITOLY
+% - o co tady jde
+% Požadavky - vyjmenovat
+% Analysa požadavků
+%   telnet a rlwrap
+%   podobnost se skutečností - co implementovat
+% Jazyk a uživatelské rozhraní
+%   - celkem jasný
+% Struktura aplikace (čas: minulej)
+%   - 2 složky: virtuální síť a komunikace s uživatelem
+%   virtuální síť:
+%     - je rozumné ji stavět stejně jako síť skutečnou - síťové prvky -> objekty
+%     síťové prvky- dělám jen 3. vrstvu - IP
+%       virtuální počítač - linux: skutečné + jejich virtualisace, routovací, natovací tabulka, příkazy
+%     infrastruktura: skutečná + virtualisace
+%     posílání paketů
+%   komunikace
+%     - byla převzata ze starýho projektu
+%     - vlákna
+% Spolupráce na aplikaci
+%   - dělal jsem ji se Standou
+%   - co popisuji
+%   - vyjmenování částí a kdo na tom pracoval
+% Postup implementace (čas minulej)
+%   - jednoduše popsat, jak jsem postupoval v čase
+%   - struktura práce neodpovídá původnímu postupu

@@ -1,0 +1,160 @@
+
+\chapter{Implementace virtuální sítě}
+
+V této kapitole se zabývám analysou a implementací jednotlivých částí aplikace. Rozebírám zde nejprve analýzu a implementaci třídy \verb|IpAdresa|, dále implementaci virtuálního počítače, analýzu a implementaci routovací tabulky a analýsu a implementaci posílání paketů. Nezabývám se zde analysou a implementací jednotlivých příkazů, vzhledem k rozsáhlosti tohoto tématu jsem ho vyčlenil do zvláštní kapitoly, která následuje za touto kapitolou.
+
+%----------------------------------
+
+\section{IP adresa}
+
+Třída \verb|IpAdresa| je sice jen jednou z mnoha tříd, vzhledem k jejímu významu ji ale v následujících odstavcích popíšu podrobněji.
+
+\subsection{Analýza}
+Protože simulátor se zabývá především simulací síťové vrstvy ISO/OSI modelu, je síťová adresa počítače, tzv. IP adresa velmi často používanou datovou strukturou, pro kterou se jistě vyplatí mít speciální třídu. Ta se v v aplikaci jmenuje \verb|IpAdresa| a patří do balíčku \verb|datoveStruktury|. Je používána jako parametr síťového rozhraní, jako prefix v routovací tabulce, jako zdrojová a cílová adresa v paketech. Při bližším pohledu je zřejmé, že kontext jejího použítí se v těchto případech částečně liší. Například pro posílání paketů je nutné, aby paket obsahoval zdrojovou a cílovou adresu i s portem. Port by samozřejmě nemusel být součástí adresy, ukázalo se to však jako jednoduší a pro posílání paketů přehlednější možnost. Pro IP adresu jako parametr rozhraní je naopak port zcela nesmyslný parametr, nutně ale potřebuje parametr pro síťovou masku, která je naproti tomu nesmyslná pro posílání paketů. Paket posílám na IP adresu, ne na adresu s maskou.
+
+\subsection{Vnitřní reprezentace}
+Přes tyto rozdíly jsem se rozhodl vytvořit pro IP adresu jednu třídu, která má parametry \verb|adresa|, \verb|maska| a \verb|port|, přičemž pro danou situaci nepotřebné parametry prostě ignoruji. Protože Java neobsahuje žádný 32-bitový bezeznaménkový datový typ, jsou parametry adresa a maska vnitřně reprezentovány 32-bitovým integerem, který ale obsahuje bity skutečné adresy, jeho číselná hodnota není důležitá. Operace s nimi se provádí především pomocí bitových operátorů. Parametr port je normální integer.
+
+\subsection{Veřejné metody}
+\verb|IpAdresa| má konstruktory, aby ji bylo možné vytvořit ze \verb|Stringu|, s maskou zadanou jako \verb|String|, \verb|Integer| nebo v jednou řetězci s adresou. Adresu je možné převést na String nebo porovnat s jinou adresou mnoha různými způsoby, například jen podle adresy, adresy s portem,  adresy s maskou nebo čísla sítě. \verb|IpAdresa| umí vrátit své číslo sítě nebo broadcast jako jinou \verb|IpAdresu|. O těchto metodách se zde nerozepisuji podrobně, v kódu jsou dobře okomentované.
+
+%----------------------------------
+
+\section{Virtuální počítač}
+
+Virtuální počítač je základním stavebním prvkem naší aplikace. Pracuje na obou jejích vrstvách. Na vrstvě komunikační přijímá a zpracovává příchozí spojení, na aplikační vrstvě, tj. na vrstvě virtuální sítě přijímá, posílá a přeposílá pakety. Posíláním paketů se zabývám až v posledním odstavci této kapitoly, zde proberu komunikační vrstvu počítače a jeho rozhraní.\\
+Protože linuxový a ciscový počítač, který dělal kolega, mají mnoho společného, vytvořil jsem abstraktní třídu \verb|AbstraktniPocitac|, který je předkem počítačů obou typů. Třída \verb|LinuxPocitac| má ale jen jednu metodu, která se týká posílání paketů, proto ji zatím ignoruji.\\
+Všechny virtuální počítače jsou vytvářeny v rámci inicialisace aplikace dle konfiguračního souboru na začátku jejícho běhu, za chodu aplikace není již možné další počítač přidat nebo nějaký odebrat. O komunikaci s uživateli se stará třída Komunikace. Počítač si drží seznam svých síťových rozhraní, svoji routovací tabulku a natovací tabulku. Má jediný konstruktor, kde je mu zadáno jméno (pro přehlednost) a port, na kterém má být dostupný pro uživatele.
+
+\subsection{Komunikace s počítačem}
+V konstruktoru abstraktního počítače je volán konstruktor jeho parametru třídy \verb|Komunikace|. Tato třída se stará o veškerou komunikaci s uživatelem. Je potomkem třídy Thread. Běží ve vlastním vlákně, které se startuje v jejím konstruktoru, a poslouchá na portu, který jí byl zadán. Pro každé nové příchozí spojení vytvoří instanci třídy konsole, která spojení obslouží, aby komunikce mohla dále poslouchat na portu a zpracovávat další spojení. Třída Konsole je také potomkem třídy Thread. Obsluhuje jedno telnetové připojení. Drží si instanci třídy ParserPrikazu z balíčku Prikazy (o něm v následující kapitole). Přijímá textová data od uživatele až po enter (sekvence \verb|\r\n|), tedy vlastně načítá data po řádcích. Každý řádek, který ji uživatel pošle, předá parseru na zpracování a pak sama pošle uživateli prompt. Parseru poskytuje metody pro posílání textových dat uživateli. Pro uživatele tak komunikace s touto Konsoli vypada stejně jako práce s příkazovou řádkou na skoutečném počítači.
+
+\subsection{Síťové rozhraní}
+Z hlediska infrastruktury sítě jsou základními prvky počítače jeho síťová rozhraní. Ty si počítač drží v seznamu. Jsou vytvořeny při parsovaní konfiguračního souboru a během běhu aplikace je nelze nijak měnit, přidávat nebo mazat. Třída \verb|SitoveRozhrani| má svoje jméno a fysickou (mac) adresu. Protože v naší aplikaci není implementován arp\footnote{Address Resolution Protocol se v počítačových sítích s IP protokolem používá k získání ethernetové MAC adresy sousedního stroje z jeho IP adresy. Používá se v situaci, kdy je třeba odeslat IP datagram na adresu ležící ve stejné podsíti jako odesilatel. Data se tedy mají poslat přímo adresátovi, u něhož však odesilatel zná pouze IP adresu. Pro odeslání prostřednictvím např. Ethernetu ale potřebuje znát cílovou ethernetovou adresu.\cite{wiki:arp}} protokol, mac adresa nemá jiný význam, než že se vypisuje příkazy jako např. ifconfig.\\
+Skutečné síťové rozhraní může mít více adres. Tato možnost však není v předmětu PSI využívána, proto jsem ji neimplementoval. Znamenalo by to totiž poměrně velké problémy v posílání paketů. Musel bych složitě zjišťovat, kdy se paket odešle s jakou síťovou adresou, pokud je jich na daném rozhraní více. Pro potřeby statického natování především na ciscovém routeru je ale nutné mít na rozhraní více adres.\footnote{Více o natování v bakalářské práci mého kolegy Stanislava Řeháka} Proto má třída \verb|SitoveRozhrani| seznam IP adres, ale jeho první adresa je privilegovaná. Každý paket, který je přes dané rozhraní posílán, má jako odchozí adresu adresu právě tohoto rozhraní. Tuto jedinou adresu lze nastavovat a vypisovat. Ostatní adresy jsou přidávány jen pro potřeby statického natování. Pokud rozhraní nemá nastavenou žádnou adresu, je první (privilegovaná) adresa \verb|null|.
+
+%----------------------------------
+
+\section{Routovací tabulka}
+
+% OSNOVA
+% - co to je, struktura týhle části
+% - použití pro cisco
+% Analysa
+% 	Struktura tabulky
+% 	Adresát - vysvětlit, jak to funguje
+% 	Příznaky
+% 	Přidávání záznamů a jejich řazení
+% 	Mazání záznamů
+% 	Použití při směrování
+% Implementace
+% 	Vnitřní reprezentace (struktura)
+% 	Přidávání, mazaní a řazení záznamů - jednotlivý metody, metoda pro parser konfiguráku
+% 	Použití při směrování - metody
+
+Počítače směrují pakety podle tzv. routovací, neboli směrovací, tabulky. \uv{Routovací tabulka je datový soubor uložený v RAM paměti, který je používán k uchovávání informací ohledně přímo připojených i vzdáleně připojených sítích. Její obsah napovídá routeru, kterým rozhraním je možno nejoptimálněji dosáhnout cílové sítě.}\cite{owebu:routovaci_tabulka}. V této části se zabývám nejprve analýzou routovací tabulky na skutečném linuxu a potom popisuji její implementaci v simulátoru.\\
+Třída \verb|RoutovaciTabulka| měla být původně stejně použitelná pro linux i pro cisco. Až po tom, co jsem jí implementoval, kolega zjistil, že pro potřeby Cisca není tato třída bez úprav použitelná. Proto implementoval třídu \verb|CiscoWrapper|, která obaluje třídu \verb|RoutovaciTabulka| a dodává jí funkce potřebné pro cisco. To však není obsahem mojí práce.
+
+\subsection{Analýza routovací tabulky na skutečném počítači}
+\subsubsection{Struktura tabulky}
+V řádcích routovací tabulky jsou záznamy pro jednotlivé sítě. Každý záznam má tyto parametry:
+\begin{itemize}
+\item adresát - IP adresa s maskou, pro kterou je tento záznam platný
+\item brána - IP adresa počítače, na který se má paket poslat. Tento sloupec nemusí být vždy vyplněn.
+\item příznaky - O těch více píšu v samostatné části.
+\item metrika - Jedno z kriterií priority.
+\item rozhraní - Rozhraní, přes které se paket posílá.
+\end{itemize}
+Parametr metrika není pro výukové účely potřeba, proto se jím již dále nezabývám.\\
+Pro lepší představu zde vkládám routovací tabulku tak, jak je vypsána příkazem \verb|route -n|:
+\begin{verbatim}
+Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní
+147.32.125.128  0.0.0.0         255.255.255.128 U     1      0        0 eth0
+169.254.0.0     0.0.0.0         255.255.0.0     U     1000   0        0 eth0
+0.0.0.0         147.32.125.129  0.0.0.0         UG    0      0        0 eth0
+\end{verbatim}
+\subsubsection{Adresát}
+V hořejším výpisu tabulky pomocí příkazu \verb|route| se adresáta týkají 2 sloupce, sloupec Adresát a sloupec Maska, ve kterém jsou vypsány masky k IP adresám uvedeným ve sloupci Adresát. Tyto IP adresy s maskami jsou vždy číslem sítě a reprezentují všechny adresy, které do této sítě patří. Tak například adresát 0.0.0.0/0 reprezentuje úplně všechny IP adresy, adresát 147.32.125.128/25 reprezentuje adresy v rozmezí 147.32.125.128 až 147.32.125.255, adresát 1.1.1.1/32 reprezentuje jedinou adresu 1.1.1.1 a adresát 192.168.1.0/24 reprezentuje všechny adresy, které začínají byty 192.168.1.x. Adresáta 147.32.125.128/24 nelze zadat, protože číslo této sítě je 147.32.125.0/24.
+\subsubsection{Příznaky}
+Záznam routovací tabulky má několik příznaků. Má vždy minimálně jeden příznak, může mít ale všechny 3 příznaky najednou. Zde je jejich popis:
+\begin{itemize}
+\item Příznak \verb|U| znamená, že záznam obsahuje rozhraní. Protože záznam bez vyplněného rozhraní není možné zadat, má tento příznak každý záznam.
+\item Záznam má příznak \verb|G|, jestliže je vyplněn sloupec brána.
+\item Příznak H znamená, že adresátem daného záznamu je jeden počítač, tzn. adresát má masku 255.255.255.255.
+\end{itemize}
+Příznak \verb|H| jen informuje, že adresát není sítí ale jediným počítačem, není tedy nijak důležitý. Podle příznaků existují 2 typy záznamů, záznamy s příznakem \verb|U| a záznamy s příznakem \verb|UG|. Tyto typy se liší jak při přidávání nových záznamů do routovací tabulky, tak při posílání paketu podle tohoto záznamu. Posílá-li počítač paket podle záznamu U, není z tohoto záznamu zřejmé, jakému sousednímu počítači (na linkové vrstvě) se má paket poslat. Počítač se tedy pokusí poslat paket přímo na cílovou IP adresu uvedenou v paketu. Posílá-li se paket podle záznamu UG, posílá se na adresu brány uvedenou v záznamu. Více se této problematice věnuji v kapitole o posílání paketů.
+\subsubsection{Přidávání záznamů a jejich řazení}
+Routovací tabulka nesmí obsahovat 2 stejné záznamy. Za stejné záznamy se považují záznamy, které mají stejného adresáta včetně masky, stejné rozhraní a stejnou bránu.\\
+Záznam typu \verb|U| lze přidat vždycky. Záznam typu \verb|UG| lze přidat jen pod podmínkou, že jeho brána je v okomžiku přidání dosažitelná záznamem typu \verb|U|. Tím je možné dosáhnout zajímaveho chování: Když do routovací tabulky přidám defaultní routu \footnote{Defaultní routa je záznam platný pro ccelý internet, jeho adresátem je 0.0.0.0/0} záznamu typu U, můžu pak přidat routu na jakoukoliv síť v internetu se záznamem UG. Když potom smažu původní defaultní routu, můžu posílat pakety pouze na tu síť s příznakem \verb|UG| a na počítač v mé síti paket neodešlu. Zde uvádím příklad:
+\begin{verbatim}
+root: /home/neiss# route add default eth0
+root: /home/neiss# route add -net 89.190.94.0/24 gw 89.190.94.1
+root: /home/neiss# route del default
+root: /home/neiss# route
+Směrovací tabulka v jádru pro IP
+Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní
+89.190.94.0     89.190.94.1     255.255.255.0   UG    0      0        0 eth0
+root: /home/neiss# ping -c1 89.190.94.58
+PING 89.190.94.58 (89.190.94.58) 56(84) bytes of data.
+64 bytes from 89.190.94.58: icmp_seq=1 ttl=53 time=14.1 ms
+
+--- 89.190.94.58 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 14.141/14.141/14.141/0.000 ms
+root: /home/neiss# ping -c1 147.32.125.129				# toto je adresa brány, přes kterou šel minulý paket
+connect: Network is unreachable
+\end{verbatim}
+Tento pokus funguje ale jen tehdy, pokud moje brána, v tomto případě 147.32.125.129 je cisco (viz část o posílání paketů).\\
+Záznamy se v tabulce řadí podle masky adresáta. Nahoře jsou záznamy s nejdelší maskou, tzn. záznamy nejkonkrétnější. Pokud vkládám více záznamů se stejnou maskou, chová se routovací tabulka naprosto nepředvídatelně, což je vidět na následujícím příkladě:
+\begin{verbatim}
+node-4:/home/dsn# route add -net 1.1.5.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.6.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.7.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.8.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.9.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.10.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.11.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.12.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.13.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.14.0/25 dev eth0
+node-4:/home/dsn# route add -net 1.1.15.0/25 dev eth0
+node-4:/home/dsn# route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+1.1.10.0        *               255.255.255.128 U     0      0        0 eth0
+1.1.11.0        *               255.255.255.128 U     0      0        0 eth0
+1.1.8.0         *               255.255.255.128 U     0      0        0 eth0
+1.1.9.0         *               255.255.255.128 U     0      0        0 eth0
+1.1.14.0        *               255.255.255.128 U     0      0        0 eth0
+1.1.6.0         *               255.255.255.128 U     0      0        0 eth0
+1.1.15.0        *               255.255.255.128 U     0      0        0 eth0
+1.1.7.0         *               255.255.255.128 U     0      0        0 eth0
+1.1.12.0        *               255.255.255.128 U     0      0        0 eth0
+1.1.13.0        *               255.255.255.128 U     0      0        0 eth0
+1.1.5.0         *               255.255.255.128 U     0      0        0 eth0
+\end{verbatim}
+Podle jakého algoritmu jsou nové záznamy zařazovány je mi opravdu záhadou.
+\subsubsection{Mazání záznamů}
+Smazat je možno jakýkoliv záznam tabulky. Pro mazání záznamů je potřeba zadat správně minimálně adresáta záznamu. Pokud pak existuje více záznamů se zadanými parametry, smaže se první z nich. Smazání jakéhokoliv záznamu nijak neovlivní ostatní záznamy.
+\subsubsection{Použití pro směrování}
+Ke směrování paketu se použije první záznam odpovídající cílové adrese. To znamená, že bude-li v routovací tabulce dané adrese odpovídat více záznamů, použije se ten nejvíce nahoře. Protože záznamy jsou řazeny podle délky síťové masky, je vrácený záznam ten nejkonkrétnější.
+
+\subsection{Implementace routovací tabulky v simulátoru}
+Routovací tabulka je imlementována třídou \verb|RoutovaciTabulka|, jejíž odkaz si drží \verb|AbstraktniPocitac| a podle ní směruje pakety.
+\subsubsection{Vnitřní reprezentace}
+Tabulka je vnitřně reprezentována seznamem objektů typu \verb|Zaznam|, který reprezentuje jeden záznam, tj. řádek tabulky. Záznam routovací tabulky má v simulátoru jen tyto parametry: adresát, brána a rozhraní, které fungují tak, jak bylo popsáno v odstavci o analyse. Parametry adresát a brána jsou typu \verb|IpAdresa|, parametr rozhraní je typu \verb|SitoveRozhrani|. Parametr záznamy není vůbec potřeba. Příznak \verb|U| musí mít záznam vždy, příznak \verb|H| má právě tehdy, když adresát má masku 255.255.255.255, a příznak \verb|U| má záznam právě tehdy, když má vyplněnou položku brána, proto ani ten není potřeba.
+\subsubsection{Přidávání, mazání a řazení záznamů}
+Záznamy jsou přidávány pomocí 2 metod se stejným názvem \verb|pridejZaznam| ale jinými parametry. Jedna přidává záznam typu \verb|U|, druhá, která má navíc paramatr brána, záznam typu \verb|UG|. U obou se kontroluje, jestli tabulka již stejný záznam neobsahuje, u té druhé se navíc kontroluje dosažitelnost brány, jak bylo popsáno v analýze.\\
+Záznamy se samozřejmě řadí podle masky jako v reálné tabulce, záznamy se stejnou maskou se ale vloží vždy nad původní záznam. Tak jsou novější záznamy vždy nahoře. Zmatečné řazení reálné tabulky jsem samozřejmě neimplementoval.\\
+Pro mazání má \verb|RoutovaciTabulka| metodu \verb|SmazZaznam|, funguje stejně jako na reálném počítači.\\
+Navíc obsahuje \verb|RoutovaciTabulka| ještě metodu \verb|pridejZaznamBezKontrol|, která je využívána při vytváření počítače z konfiguračního souboru, jinde se nepoužívá.
+\subsubsection{Použití při směrování}
+K samotnému směrování slouží metoda \verb|najdiSpravnejZaznam|, která vrací celý řádek routovací tabulky. Funguje stejně jako na reálném počítači.
+
+
+
+
+
+
+  
+  
