@@ -77,16 +77,45 @@ public class Uloz extends AbstraktniPrikaz {
 
         if (pocitac instanceof LinuxPocitac) {
             if (pocitac.ip_forward) {
-                zapis(vratElement("ip_forward", "1"));
+                zapisElement("ip_forward", "1");
             } else {
-                zapis(vratElement("ip_forward", "0"));
+                zapisElement("ip_forward", "0");
             }
         }
 
         ulozNATtabulku(pocitac);
+        
+        zapisUkoncovaci("pocitac\n");
+    }
 
+    /**
+     * Vytvori element a zapise ho do souboru.
+     * @param jmeno jmeno elementu
+     * @param obsah obsah elementu, kdyz je null, tak tam bude prazdnej ""
+     * @throws IOException
+     */
+    private void zapisElement(String jmeno, String obsah) throws IOException {
+        zapis(vratElement(jmeno, obsah));
+    }
+
+    /**
+     * Zapise start element, zvysi pocet tabelatoru.
+     * @param jmeno
+     * @throws IOException
+     */
+    private void zapisStartovaci(String jmeno) throws IOException {
+        zapis("<"+jmeno+">\n");
+        tabs += "\t";
+    }
+
+    /**
+     * Zapise konec element, snizi pocet tabelatoru.
+     * @param jmeno
+     * @throws IOException
+     */
+    private void zapisUkoncovaci(String jmeno) throws IOException {
         tabs = tabs.substring(1);
-        zapis("</pocitac>\n\n");
+        zapis("</"+jmeno+">\n");
     }
 
     /**
@@ -99,7 +128,6 @@ public class Uloz extends AbstraktniPrikaz {
         if (obsah == null) {
             obsah = "";
         }
-
         return "<" + jmeno + ">" + obsah + "</" + jmeno + ">\n";
     }
 
@@ -109,31 +137,29 @@ public class Uloz extends AbstraktniPrikaz {
      * @throws IOException
      */
     private void ulozRozhrani(SitoveRozhrani rozhrani) throws IOException {
-        zapis("<rozhrani>\n");
-        tabs += "\t";
-        zapis(vratElement("jmeno", rozhrani.jmeno));
+        zapisStartovaci("rozhrani");
+        
+        zapisElement("jmeno", rozhrani.jmeno);
         if (rozhrani.vratPrvni() == null) {
-            zapis(vratElement("ip", ""));
-            zapis(vratElement("maska", ""));
+            zapisElement("ip", "");
+            zapisElement("maska", "");
         } else {
-            zapis(vratElement("ip", rozhrani.vratPrvni().vypisAdresu()));
-            zapis(vratElement("maska", rozhrani.vratPrvni().vypisMasku()));
+            zapisElement("ip", rozhrani.vratPrvni().vypisAdresu());
+            zapisElement("maska", rozhrani.vratPrvni().vypisMasku());
         }
-        zapis(vratElement("mac", rozhrani.macAdresa));
-        zapis(vratElement("nahozene", rozhrani.jeNahozene() ? "true" : "false"));
+        zapisElement("mac", rozhrani.macAdresa);
+        zapisElement("nahozene", rozhrani.jeNahozene() ? "true" : "false");
 
         if (rozhrani.getPc().natTabulka.vratInside().contains(rozhrani)) {
-            zapis(vratElement("nat", "soukrome"));
+            zapisElement("nat", "soukrome");
         }
         if (rozhrani.getPc().natTabulka.vratVerejne() != null) {
             if (rozhrani.getPc().natTabulka.vratVerejne().jmeno.equals(rozhrani.jmeno)) {
-                zapis(vratElement("nat", "verejne"));
+                zapisElement("nat", "verejne");
             }
         }
 
-
-        tabs = tabs.substring(1);
-        zapis("</rozhrani>\n");
+        zapisUkoncovaci("rozhrani");
     }
 
     /**
@@ -147,28 +173,25 @@ public class Uloz extends AbstraktniPrikaz {
             return;
         }
 
-        zapis("<routy>\n");
-        tabs += "\t";
+        zapisStartovaci("routy");
 
         if (pc instanceof LinuxPocitac) {
 
             for (int i = 0; i < pc.routovaciTabulka.pocetZaznamu(); i++) {
 
-                zapis("<zaznam>\n");
-                tabs += "\t";
+                zapisStartovaci("zaznam");
 
-                zapis(vratElement("adresat", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisAdresu()));
-                zapis(vratElement("maskaAdresata", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisMasku()));
+                zapisElement("adresat", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisAdresu());
+                zapisElement("maskaAdresata", pc.routovaciTabulka.vratZaznam(i).getAdresat().vypisMasku());
 
                 if (pc.routovaciTabulka.vratZaznam(i).getBrana() != null) {
-                    zapis(vratElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisAdresu()));
+                    zapisElement("brana", pc.routovaciTabulka.vratZaznam(i).getBrana().vypisAdresu());
                 } else {
-//                    zapis(vratElement("brana", "null")); // nakonec to tam nechci
+//                    zapisElement("brana", "null")); // nakonec to tam nechci
                 }
-                zapis(vratElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno));
-
-                tabs = tabs.substring(1);
-                zapis("</zaznam>\n");
+                zapisElement("rozhraniKam", pc.routovaciTabulka.vratZaznam(i).getRozhrani().jmeno);
+                
+                zapisUkoncovaci("zaznam");
             }
         }
 
@@ -179,27 +202,24 @@ public class Uloz extends AbstraktniPrikaz {
             for (int i = 0; i < poc.getWrapper().size(); i++) {
                 CiscoZaznam zaznam = poc.getWrapper().vratZaznam(i);
 
-                zapis("<zaznam>\n");
-                tabs += "\t";
+                zapisStartovaci("zaznam");
 
-                zapis(vratElement("adresat", zaznam.getAdresat().vypisAdresu()));
-                zapis(vratElement("maskaAdresata", zaznam.getAdresat().vypisMasku()));
+                zapisElement("adresat", zaznam.getAdresat().vypisAdresu());
+                zapisElement("maskaAdresata", zaznam.getAdresat().vypisMasku());
 
                 if (zaznam.getBrana() != null) {
-                    zapis(vratElement("brana", zaznam.getBrana().vypisAdresu()));
+                    zapisElement("brana", zaznam.getBrana().vypisAdresu());
                 }
 
                 if (zaznam.getRozhrani() != null) {
-                    zapis(vratElement("rozhraniKam", zaznam.getRozhrani().jmeno));
+                    zapisElement("rozhraniKam", zaznam.getRozhrani().jmeno);
                 }
-
-                tabs = tabs.substring(1);
-                zapis("</zaznam>\n");
+                
+                zapisUkoncovaci("zaznam");
             }
         }
 
-        tabs = tabs.substring(1);
-        zapis("</routy>\n");
+        zapisUkoncovaci("routy");
     }
 
     /**
@@ -208,16 +228,14 @@ public class Uloz extends AbstraktniPrikaz {
      */
     private void ulozNATtabulku(AbstraktniPocitac pocitac) throws IOException {
 
-        zapis("<natovani>\n");
-        tabs += "\t";
+        zapisStartovaci("natovani");
 
         ulozNATPooly(pocitac);
         ulozNATPoolAccess(pocitac);
         ulozNATAccessList(pocitac);
         ulozNATStaticky(pocitac);
-
-        tabs = tabs.substring(1);
-        zapis("</natovani>\n");
+        
+        zapisUkoncovaci("natovani");
 
     }
 
@@ -227,22 +245,18 @@ public class Uloz extends AbstraktniPrikaz {
      * @throws IOException
      */
     private void ulozNATPooly(AbstraktniPocitac pocitac) throws IOException {
-        zapis("<pooly>\n");
-        tabs += "\t";
+        zapisStartovaci("pooly");
 
         for (Pool pool : pocitac.natTabulka.lPool.seznam) {
-            zapis("<pool>\n");
-            tabs += "\t";
-            zapis(vratElement("pJmeno", pool.jmeno));
-            zapis(vratElement("ip_start", pool.prvni().vypisAdresu()));
-            zapis(vratElement("ip_konec", pool.posledni().vypisAdresu()));
-            zapis(vratElement("prefix", "" + pool.prvni().pocetBituMasky()));
-            tabs = tabs.substring(1);
-            zapis("</pool>\n");
+            zapisStartovaci("pool");
+            zapisElement("pJmeno", pool.jmeno);
+            zapisElement("ip_start", pool.prvni().vypisAdresu());
+            zapisElement("ip_konec", pool.posledni().vypisAdresu());
+            zapisElement("prefix", "" + pool.prvni().pocetBituMasky());
+            zapisUkoncovaci("pool");
         }
-
-        tabs = tabs.substring(1);
-        zapis("</pooly>\n");
+        
+        zapisUkoncovaci("pooly");
     }
 
     /**
@@ -251,24 +265,19 @@ public class Uloz extends AbstraktniPrikaz {
      * @throws IOException
      */
     private void ulozNATPoolAccess(AbstraktniPocitac pocitac) throws IOException {
-        zapis("<prirazeniVice>\n");
-        tabs += "\t";
+        zapisStartovaci("prirazeniVice");
 
         for (PoolAccess pa : pocitac.natTabulka.lPoolAccess.seznam) {
-            zapis("<prirazeni>\n");
-            tabs += "\t";
+            zapisStartovaci("prirazeni");
 
-            zapis(vratElement("accessCislo", "" + pa.access));
-            zapis(vratElement("poolJmeno", "" + pa.pool));
-            zapis(vratElement("overload", pa.overload ? "true" : "false"));
-
-            tabs = tabs.substring(1);
-            zapis("</prirazeni>\n");
-
+            zapisElement("accessCislo", "" + pa.access);
+            zapisElement("poolJmeno", "" + pa.pool);
+            zapisElement("overload", pa.overload ? "true" : "false");
+           
+            zapisUkoncovaci("prirazeni");
         }
-
-        tabs = tabs.substring(1);
-        zapis("</prirazeniVice>\n");
+        
+        zapisUkoncovaci("prirazeniVice");
     }
 
     /**
@@ -277,23 +286,19 @@ public class Uloz extends AbstraktniPrikaz {
      * @throws IOException
      */
     private void ulozNATAccessList(AbstraktniPocitac pocitac) throws IOException {
-        zapis("<access-listy>\n");
-        tabs += "\t";
+        zapisStartovaci("access-listy");
 
         for (AccessList access : pocitac.natTabulka.lAccess.seznam) {
-            zapis("<access-list>\n");
-            tabs += "\t";
+            zapisStartovaci("access-list");
 
-            zapis(vratElement("cislo", "" + access.cislo));
-            zapis(vratElement("ipA", access.ip.vypisAdresu()));
-            zapis(vratElement("ipAWildcard", access.ip.vypisWildcard()));
-
-            tabs = tabs.substring(1);
-            zapis("</access-list>\n");
+            zapisElement("cislo", "" + access.cislo);
+            zapisElement("ipA", access.ip.vypisAdresu());
+            zapisElement("ipAWildcard", access.ip.vypisWildcard());
+            
+            zapisUkoncovaci("access-list");
         }
-
-        tabs = tabs.substring(1);
-        zapis("</access-listy>\n");
+        
+        zapisUkoncovaci("access-listy");
     }
 
     /**
@@ -305,14 +310,12 @@ public class Uloz extends AbstraktniPrikaz {
 
         for (NATzaznam zaznam : pocitac.natTabulka.vratTabulku()) {
             if (zaznam.jeStaticke()) {
-                zapis("<staticke>\n");
-                tabs += "\t";
+                zapisStartovaci("staticke");
 
-                zapis(vratElement("in", zaznam.vratIn().vypisAdresu()));
-                zapis(vratElement("out", zaznam.vratOut().vypisAdresu()));
-
-                tabs = tabs.substring(1);
-                zapis("</staticke>\n");
+                zapisElement("in", zaznam.vratIn().vypisAdresu());
+                zapisElement("out", zaznam.vratOut().vypisAdresu());
+                
+                zapisUkoncovaci("staticke");
             }
         }
     }
@@ -323,8 +326,7 @@ public class Uloz extends AbstraktniPrikaz {
      */
     private void ulozPripojeni() throws IOException {
 
-        zapis("<kabelaz>\n");
-        tabs += "\t";
+        zapisStartovaci("kabelaz");
 
         for (AbstraktniPocitac pocitac : pocitace) {
             for (SitoveRozhrani iface : pocitac.rozhrani) {
@@ -332,20 +334,18 @@ public class Uloz extends AbstraktniPrikaz {
                     continue;
                 }
 
-                zapis("<kabel>\n");
-                tabs += "\t";
-                zapis(vratElement("prvni", pocitac.jmeno+":"+iface.jmeno));
-                zapis(vratElement("druhy", iface.pripojenoK.getPc().jmeno+":"+iface.pripojenoK.jmeno));
+                zapisStartovaci("kabel");
 
-                tabs = tabs.substring(1);
-                zapis("</kabel>\n");
+                zapisElement("prvni", pocitac.jmeno+":"+iface.jmeno);
+                zapisElement("druhy", iface.pripojenoK.getPc().jmeno+":"+iface.pripojenoK.jmeno);
+                
+                zapisUkoncovaci("kabel");
                 pripojenoKnove.add(new PCJmeno(pocitac.jmeno, iface.jmeno));
                 pripojenoKnove.add(new PCJmeno(iface.pripojenoK.getPc().jmeno, iface.pripojenoK.jmeno));
             }
         }
         
-        tabs = tabs.substring(1);
-        zapis("</kabelaz>\n");
+        zapisUkoncovaci("kabelaz");
     }
 
     /**
@@ -394,7 +394,7 @@ public class Uloz extends AbstraktniPrikaz {
             //Close the output stream
             out.close();
         } catch (Exception e) {//Catch exception if any
-            System.err.println("Chyba, z nejakeho duvodu se nepodarilo zapsat do souboru. Vice: " + e.getMessage());
+            System.err.println("Chyba, z nejakeho duvodu se nepodarilo zapsat do souboru. info: " + e.getMessage());
             e.printStackTrace();
         }
     }

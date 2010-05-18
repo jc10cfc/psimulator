@@ -2,7 +2,9 @@ package Main;
 
 import datoveStruktury.IpAdresa;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -20,13 +22,14 @@ import vyjimky.ChybaKonfigurakuException;
  * pouzito http://www.ksi.mff.cuni.cz/~mlynkova/Y36XML/indexCV.html
  *
  * Nejdrive se vsechno uklada do datove struktury PocitacBuilder,
- * z nech se pat "stavi" uz vlastni pocitac.
+ * z nech se pak "stavi" uz vlastni pocitac.
  *
- * @author haldyr
  */
 /**
  * Náš vlastní content handler pro obsluhu SAX událostí.
  * Implementuje metody interface ContentHandler.
+ *
+ * @author haldyr
  */
 public class SAXHandler implements ContentHandler {
 
@@ -38,7 +41,7 @@ public class SAXHandler implements ContentHandler {
     String namespaces = "";
     String jmenoElementu = "";
     List<AbstraktniPocitac> hotovePocitace; // tady drzim seznam vytvorenych objektu tridy AbstraktPocitac
-    String[] rozhrani; // jmeno, ip, mac, maska, pripojenoK, nahozene, nat
+    String[] rozhrani; // jmeno, ip, mac, maska, nahozene, nat
     String[] zaznam; //adresat, maskaAdresata, brana, rozhrani
     String[] accessList; // cislo, ipA, ipAWildcard
     String[] pool; // pJmeno, ip_start, ip_konec, prefix
@@ -588,6 +591,8 @@ public class SAXHandler implements ContentHandler {
             System.out.println("Nacitam bez nastaveni.. (parametr -n)");
         }
 
+        zkontrolujJmenaPocitacu();
+
         for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
             if (bezNastaveni) {
                 vymazNastaveni(pcbuilder);
@@ -742,11 +747,57 @@ public class SAXHandler implements ContentHandler {
         pcbuilder.pool.clear();
         pcbuilder.poolAccess.clear();
         pcbuilder.routovaciTabulka.clear();
+        pcbuilder.ip_forward = false;
         for (String[] pole : pcbuilder.rozhrani) {
             pole[1] = ""; // ip
             pole[2] = ""; // maska
-            pole[5] = ""; // nahozenost
-            pole[6] = ""; // NAT
+            if (pcbuilder.typ.equals("cisco")) {
+                pole[4] = "false"; // nahozenost
+            } else {
+                pole[4] = ""; // nahozenost
+            }
+            pole[5] = ""; // NAT
+        }
+    }
+
+    /**
+     * Vyhodi vyjimku pri prazdnem jmene pocitace nebo kdyz ma vic pocitacu 1 jmeno
+     */
+    private void zkontrolujJmenaPocitacu() {
+        Set<String> seznam = new HashSet<String>();
+        boolean jednou = true;
+        
+        for (PocitacBuilder pcbuilder : seznamPocitacBuilder) {
+
+            if (pcbuilder.jmeno.isEmpty()) {
+                throw new ChybaKonfigurakuException("Jmeno pocitace nesmi byt prazdne!");
+            }
+
+            jednou = seznam.add(pcbuilder.jmeno.substring(0));
+            if (!jednou) {
+                throw new ChybaKonfigurakuException("Jmeno pocitace "+pcbuilder.jmeno+" nesmi byt u vice nez jednoho pocitace.");
+            }
+            zkontrolujJmenaRozhrani(pcbuilder);
+        }
+    }
+
+    /**
+     * Vyhodi vyjimku pri prazdnem jmene rozhrani a kdyz ma vic rozhrani na 1 PC stejne jmeno
+     * @param pcbuilder
+     */
+    private void zkontrolujJmenaRozhrani(PocitacBuilder pcbuilder) {
+        Set<String> seznam = new HashSet<String>();
+        boolean jednou = true;
+        for (String[] iface : pcbuilder.rozhrani) {
+            if (iface[0].isEmpty()) {
+                throw new ChybaKonfigurakuException("Rozhrani musi mit prirazene jmeno!");
+            }
+
+            jednou = seznam.add(iface[0].substring(0));
+            if (!jednou) {
+                throw new ChybaKonfigurakuException("Na jednom pocitaci nesmi byt vice rozhrani se stejnym jmenem: "
+                        +pcbuilder.jmeno +":"+iface[0]);
+            }
         }
     }
 }

@@ -266,7 +266,8 @@ public class PocitacBuilder {
 
             if (pocitac instanceof CiscoPocitac) {
                 if (!adresat.jeCislemSite()) {
-                    throw new ChybaKonfigurakuException("Adresa " + adresat.vypisAdresuSMaskou() + " neni cislem site!");
+                    System.err.println("Adresa " + adresat.vypisAdresuSMaskou() + " neni cislem site, preskakuji..");
+                    continue;
                 }
             }
 
@@ -309,9 +310,6 @@ public class PocitacBuilder {
         for (String[] iface : rozhrani) { // prochazim a pridavam rozhrani k PC
 
             String jmenoRozh = iface[dejIndexVRozhrani("jmeno")];
-            if (jmenoRozh.length() == 0) {
-                throw new ChybaKonfigurakuException("Rozhrani musi mit prirazene jmeno!");
-            }
 
             SitoveRozhrani sr = new SitoveRozhrani(jmenoRozh, pocitac, iface[dejIndexVRozhrani("mac")]);
 

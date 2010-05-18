@@ -10,7 +10,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- *
+ * Trida main zpracuje parametry a podle nich pozada SAXHandler o data z konfiguraku.
  * @author haldyr
  */
 public class Main {
@@ -69,8 +69,15 @@ public class Main {
         vsechno = new Main().nacti();
 
         if (vsechno == null) {
-            System.err.println("Nepodarilo se nic nacist z konfiguraku.\nUkoncuji..");
-            System.exit(131);
+            if (! konfigurak.endsWith(".xml")) {
+                System.out.println("\nZkousim pridat koncovku .xml:");
+                konfigurak = konfigurak + ".xml";
+                vsechno = new Main().nacti();
+            }
+            if (vsechno == null) {
+                System.err.println("Nepodarilo se nic nacist z konfiguracniho souboru.\nUkoncuji..");
+                System.exit(131);
+            }
         }
     }
 
@@ -102,16 +109,8 @@ public class Main {
                 }
             }
         } else {
-            //TODO: pak odkomentovat
-//            System.err.println("Parametrem urcete konfiguracni soubor.\nUkoncuji..");
-//            System.exit(3);
-        }
-
-        //TODO: pak smazat
-        if (param.size() == 0) {
-//            konfigurak = "psi.xml";
-//            konfigurak = "laborka.xml";
-            konfigurak = "laborka_tr.xml";
+            System.err.println("Parametrem urcete konfiguracni soubor.\nUkoncuji..");
+            System.exit(3);
         }
     }
 }
