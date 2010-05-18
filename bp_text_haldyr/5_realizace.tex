@@ -16,6 +16,16 @@
 %     \end{itemize}
 % \end{itemize}
 
+Předkem všech tříd systému na aplikační vrstvě je \verb|Abstraktni|, která zastřešuje převážně statické funkce např. \verb|zaokrouhli| (na tři desetinná místa), \verb|cekej| (metoda pro uspání vlákna, užitečná při výpisech Cisco IOS) a další. Od \verb|Abstraktni| dědí abstraktní \verb|ParserPrikazu|, který seskupuje všechny parsery příkazů (v současné době pro Linux a Cisco IOS). Společný předek Linux a Cisco příkazů je \verb|AbtraktniPrikaz|, z kterého dědí linuxové příkazy kolegy a hlavně \verb|CiscoPrikaz|, který ještě přidává speciálné metody jen pro Cisco příkazy. Viz obrázek \ref{uml:abstraktni}.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=9cm]{figures/uml_abtraktni.png}
+\caption{Třídní model předků}
+\label{uml:abstraktni}
+\end{center}
+\end{figure}
+
 Téméř všechny části systému obsahují tzv. debugovací mód, který vypisuje extra informace, co se právě děje nebo přidává další vlastnost vhodnou pro ladění.
 
 \section{Parser Cisco}
@@ -60,9 +70,9 @@ Privilegovaný mód (PRIVILEGED MODE) nebo také \uv{administrátorský} mód je
 Není důvod, proč by v tomto stavu nefungovaly příkazy \verb|ping| a \verb|traceroute|.
 
 \subsubsection{Konfigurační mód}
-Konfigurační mód (CONFIG MODE) je jeden z nejdůležitějších, protože umožňuje konfiguraci směrovacích záznamů (\verb|ip route ..|), přístupových seznamů pro potřeby překladu adres (\verb|ip nat inside source ..|), pooly IP adres (\verb|ip nat pool ..|) a výběr rozhraní pro přechod do stavu konfigurace rozhraní (\verb|interface ..|).
+Konfigurační mód (CONFIG MODE) je jeden z nejdůležitějších, protože umožňuje konfiguraci směrovacích záznamů (\verb|ip route|), přístupových seznamů pro potřeby překladu adres (\verb|access-list|), pooly IP adres (\verb|ip nat pool|) a výběr rozhraní pro přechod do stavu konfigurace rozhraní (\verb|interface|).
 
-\subsubsection{Konfigurace rozhraní}
+\subsubsection{Konfigurace rozhraní} \label{configif}
 V tomto módu lze nastavovat IP adresy na aktuálně vybrané rozhraní, nastavovat příznaky pro veřejné a soukromé rozhraní pro NAT (\verb|nat inside|, \verb|nat outside|) nebo také zapínat či vypínat rozhraní. Pro přechod ze všech konfiguračních módů do privilegovaného stačí napsat příkaz \verb|end| nebo jen stisknout klávesovou zkratku \verb|Ctrl+Z|.
 
 
@@ -94,20 +104,23 @@ Ladící mód zjednodušuje testování parseru a přidává tyto funkce:
  \item možnost testování routovací tabulky přes linuxový příkaz \verb|route|
  \item používání linuxového příkazu \verb|ifconfig|
 \end{itemize}
-Použití těchto věcí je vhodné spíše pro ladění programu do budoucna než pro běh v \uv{ostrém} provozu.
+Použití těchto věcí je vhodné spíše pro ladění programu do budoucna než pro běh v \uv{ostrém} provozu. Tento mód je ve výchozím stavu vypnut.
 
-Má implementace Cisco IOS má navíc pár příkazů, které jsou potřeba pro ovládání systému. Jak už jsem se zmiňoval v kapitole \ref{kap:podobnost} je zde navíc \verb|help| a \verb|help_en| pro výpis nápovědy. Příkaz \verb|kill| přijde vhod, když uživatel chce ihned vypnout aplikaci a nechce projít přes několik stavů příkazem \verb|exit|. Další servisní příkaz je \verb|save| nebo také \verb|uloz|, který zapíše aktuální konfiguraci všech počítačů do konfiguračního souboru. Dále lze využít velmi jednoduchý příkaz \verb|?| (otazník), který vypíše seznam dostupných příkazů v aktuálním stavu.
+\subsection{Odchylky v implementaci}
+Má implementace Cisco IOS má navíc pár příkazů, které jsou potřeba pro ovládání systému. Jak už jsem se zmiňoval v kapitole \ref{kap:podobnost} je zde navíc \verb|help| a \verb|help_en| pro výpis nápovědy. Příkaz \verb|kill| přijde vhod, když uživatel chce ihned vypnout aplikaci a nechce projít přes několik stavů příkazem \verb|exit|. Další servisní příkaz je \verb|save| nebo také \verb|uloz|, který zapíše aktuální konfiguraci všech počítačů do konfiguračního souboru, se kterým byl spuštěn nebo který byl předán jako parametr. Dále lze využít velmi jednoduchý příkaz \verb|?| (otazník), který vypíše seznam dostupných příkazů v aktuálním stavu.
+
+Na skutečném Ciscu funguje kombinace kláves \verb|Ctrl+Z| pro přechod do privilegovaného módu. Ale kvůli použití programu\verb|rlwrap| je systém limitován. Omezení spočívá v tom, že \verb|rlwrap| přepošle signál operačnímu systému a ten pozastaví tento proces. Proces lze obnovit příkazem fg (na OS Linux), bohužel klientský program \verb|telnet| neumí po pozastavení obnovit svoji funkčnost a přestává posílat vstup na standartní výstup. Je tedy už nepoužitelný a pro tyto přídady existuje příkaz \verb|kill|, který ukončí tento rozbitý proces a klient se může přípojit znova. Lépe je na tom zkratka \verb|Ctrl+C|, která pouze ukončuje (signál SIG\_INT) daný proces a tedy funguje bez problému. 
+
+Program \verb|rlwrap| je ale šířen jako balíček pod programem \verb|cygwin| v zastaralé verzi\footnote{stav z 18.5.2010}, která neumožňuje přeposílání signálů, takže při stisku \verb|Ctrl+C| i \verb|Ctrl+Z| přestane \verb|telnet| klient vypisovat na standartní výstup a nezbývá než použít \verb|kill|.
+
+
+
+
+
+
+
 
 % \lstinline{System.out.println("Tady je text")}
 
-\section{Načítání ze souboru}
-
-\section{Ukládání do souboru}
-
-\section{Směrování}\label{prijmiEthernetove}
-
-\section{Wrapper směrovací tabulky}
-
-\section{Překlad adres}
 
 

@@ -1,0 +1,96 @@
+\section{Načítání ze souboru}
+\subsection{Zpracování parametrů}
+Po spuštění startovacího skriptu \verb|start_server.sh| se nejdříve zpracují všechny parametry. Když je nalezen parametr \verb|-n|, tak se načítá z konfiguračního souboru pouze kostra sítě s počítačema a rozhraníma bez jejich nastavení. Pozice tohoto parametru není důležitá, systém nejprve detekuje přítomnost tohoto parametr a pak už ho vůbec neřeší. Další parametr je název konfiguračního souboru, ten může být zadán bez koncovky \verb|.xml|, nejdříve se zkusí načíst soubor bez koncovky a když takový soubor není, tak se načte soubor s koncovkou. Třetím parametrem je port, od kterého budou poslouchat jednotlivé počítače. Port je nepovinný, výchozí volba je port 4000. Když je daný port obsazený, tak se program ukončí z chybovou hláškou.
+
+%------------------------------------------------------------------------------
+
+\subsection{Konfigurační soubor}
+Nejdříve bylo nutno rozhodnout podobu výsledného konfiguračního souboru. Existuje několik možností, např.:
+\begin{itemize}
+ \item javovské \verb|Properties| ve stylu \uv{proměnná = hodnota}, moc se nehodí na velmi členité struktury
+\begin{verbatim}
+compile.on.save=false
+do.depend=false
+do.jar=true
+javac.debug=true
+\end{verbatim} 
+
+ \item podoba konfiguračních souborů KDE\footnote{K Desktop Environment je desktopové prostředí pro Linux a další unixové operační systémy.}, kde jednotlivé sekce jsou odděleny jménem v hranatých závorkách
+\begin{verbatim}
+[Xdmcp]
+Enable=false
+[Shutdown]
+# Default is "/sbin/halt"
+HaltCmd=/sbin/shutdown
+\end{verbatim} 
+
+ \item XML\footnote{Extensible Markup Language je rozšiřitelný značkovací jazyk} soubor, který umožňuje libovolnou strukturu
+\end{itemize}
+
+Já jsem si vybral technologii XML pro jeho robustnost a velmi dobrou čitelnost.
+
+Načítání z XML souboru lze udělat minimálně dvěma způsoby: Vzít cizí knihovnu, která tuto funkcionalitu zajišťuje, nebo vytvořit vlastní třídu. Obě možnosti mají své výhody i nevýhody. Cizí knihovna by mohla být téměř bez práce a pravděpodobně by podporovala i zpětné ukládání. Na druhou stranu by byla malá možnost ovlivnění výsledného výstupu a bylo by vše na té knihovně závislé. Navíc s novými verzemi by se mohla měnit i její funkčnost. Znamenalo by to také instalaci této knihovny na uživatelských počítačích. Z těchto důvodů jsem zvolil druhou variantu: vlastní implementace zpracování XML. 
+
+%------------------------------------------------------------------------------
+
+\subsection{Implementace SAX handleru}
+Zpracovat XML lze přes technologii DOM\footnote{Document Object Model} a SAX\footnote{Simple API for XML}. Já se rozhodl pro SAX z těchto důvodů:
+\begin{itemize}
+ \item jednorázové sekvenční čtení - vyšší rychlost
+ \item menší paměťová náročnost
+ \item oproti DOMu i několikrát rychlejší, což u velmi rozlehlé síťě by mohlo být znatelné
+\end{itemize}
+
+Můj \verb|SAXHandler| tvoří tři části: samotné načítání, datová struktura pro počítač a vytváření virtuálního počítače.
+
+\subsubsection{Načítání}
+\verb|ContentHandler| vyhazuje události při zpracování XML souboru. \verb|SAXHandler| musí tyto události odchytávat a pokud je to událost, která nás zajímá, tak se zpracuje tj. uloží do datové sktruktury. Musí být implementovány metody na zpracování začátku elementu, konce elementu, znaková data a konce dokumentu. Po načtení konce elementu se vytvoří virtuální síť počítačů. Pro správnou funkci \verb|SAXHandler| je důležité mít ve složce s konfiguračními soubory také soubor DTD\footnote{Document Type Definition}, který definuje strukturu XML dokumentu.
+
+\subsubsection{Datová struktura}
+Pro ukládání informací slouží datová struktura \verb|PocitacBuilder|, která si drží veškeré informace načtené z XML souboru o jednom počítači:
+\begin{itemize}
+ \item jméno a typ počítače
+ \item nastavení rozhraní - jméno, adresa, maska, stav
+ \item routovací tabulka - výčet záznamů
+ \item ip\_forward - pro potřeby Linuxu
+ \item překlad adres - pooly adres, access-listy, přiřazení access-listů k poolům, statické záznamy
+\end{itemize}
+
+Pak je tu ještě sekundární struktura pro uložení kabelů k jednotlivým počítačům.
+
+\subsubsection{Vytváření virtuálních počítačů}
+Po vyhození události konec souboru se začnou vyrábět virtuální počítače. Pokud byl použit parametr \verb|-n|, tak se nejdříve smažou nastavení, která nemají být načtena. Po té se postupně budou načítat (a kontrolovat) všechny uložené nastavení. V zásadě lze říci, že když systém narazí na neplatná data v konfiguračním souboru, tak vypíše chybovou hlášku na standardní chybový výstup. Pokud je to chyba zásadní, tak se vyhodí výjimka, vypíše hláška a celý server se ukončí, protože nemůže pokračovat v další činnosti. Slovem zásadní je myšleno např. chybějící jméno rozhraní (kabely v XML jsou napojeny přes jména rozhraní), natažená kabeláž a opakující se jména počítačů či rozhraní na jednom počítači. Kabely jsou natolik klíčovou věcí, že uživatele upozorní na chybu pádem programu s výpisem, co je špatně. 
+
+Takto vypadá příklad konfiguračního souboru:
+\begin{verbatim}
+<pocitac jmeno="cisco1" typ="cisco">
+  <rozhrani>
+    <jmeno>FastEthernet0/0</jmeno>
+    <ip>192.168.1.254</ip>
+    <maska>255.255.255.0</maska>
+    <mac>00:0b:0c:0d:0a:01</mac>
+    <nahozene>true</nahozene>
+    <nat>soukrome</nat>
+  </rozhrani>
+...
+\end{verbatim} 
+
+%------------------------------------------------------------------------------
+
+\section{Ukládání do souboru}
+Abstraktní \verb|ParserPrikazu| obsahuje metodu, do které jsou vloženy všechny společné příkazy. V současné době je tam pouze příkaz \verb|uloz| alias \verb|save|. Uživatel může použít jakoukoliv variantu dle libosti. Při zavolání tohoto příkazu bez parametru se bude ukládat do stejného souboru, ze kterého se při staru aplikace načítalo. Nebo může uživatel specifikovat jméno souboru (včetně cesty), do kterého se má aktuální konfigurace uložit. 
+
+Ukládání do souboru je realizováno čistě textově, tzn. vše se posílá přes \verb|BufferedWriter| bez použítí externích knihoven. Pro usnadnění práce jsem si napsal několik pomocných metod, kde např. pro uložení MAC adresy do XML stačí zavolat \\\verb|zapisElement("mac", rozhrani.macAdresa)|. Velmi užitečná metoda je také \verb|vratElement|, která postaví element s daným jménem a obsahem:
+\begin{verbatim}
+private String vratElement(String jmeno, String obsah) {
+  if (obsah == null) {
+    obsah = "";
+  }
+  return "<" + jmeno + ">" + obsah + "</" + jmeno + ">\n";
+}
+\end{verbatim} 
+
+
+Výhodou tohoto řešení je maximální kontrola nad výstupem příkazu a jednudochost implementace. Mezi nevýhody bych uvedl hlavně změnu v datových strukturách. Když by bylo potřeba připsat novou volbu, která by se měla ukládat do XML souboru, tak musíme přidat pravidla pro načítání z XML v \verb|SAXHandler| a navíc zde ukládání.
+
+

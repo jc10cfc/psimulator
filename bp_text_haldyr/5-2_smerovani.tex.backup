@@ -1,0 +1,10 @@
+\section{Směrování}\label{prijmiEthernetove}
+Směrování implementoval kolega, nicméně se Cisco nechová vždy stejně, tak bylo nutné vyčlenit rozhodování o příjmu paketů do koncových počítačů.
+
+
+
+
+\section{Wrapper směrovací tabulky}
+
+\section{Překlad adres}
+

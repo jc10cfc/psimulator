@@ -6,51 +6,58 @@
 \contentsline {section}{\numberline {2.1}Shrnut\IeC {\'\i } funk\IeC {\v c}n\IeC {\'\i }ch po\IeC {\v z}adavk\IeC {\r u}}{3}{section.2.1}
 \contentsline {section}{\numberline {2.2}Nefunk\IeC {\v c}n\IeC {\'\i } po\IeC {\v z}adavky}{4}{section.2.2}
 \contentsline {section}{\numberline {2.3}Vymezen\IeC {\'\i } pr\IeC {\'a}ce}{4}{section.2.3}
-\contentsline {section}{\numberline {2.4}Existuj\IeC {\'\i }c\IeC {\'\i } implementace}{4}{section.2.4}
-\contentsline {chapter}{\numberline {3}Anal\IeC {\'y}za a~n\IeC {\'a}vrh \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{5}{chapter.3}
-\contentsline {section}{\numberline {3.1}Architektura}{5}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Po\IeC {\v c}\IeC {\'a}tek prac\IeC {\'\i }}{5}{subsection.3.1.1}
-\contentsline {subsection}{\numberline {3.1.2}Klient - server}{5}{subsection.3.1.2}
-\contentsline {subsection}{\numberline {3.1.3}Vyhodnocov\IeC {\'a}n\IeC {\'\i } p\IeC {\v r}\IeC {\'\i }kaz\IeC {\r u}}{7}{subsection.3.1.3}
-\contentsline {subsection}{\numberline {3.1.4}Datov\IeC {\'e} struktury j\IeC {\'a}dra}{7}{subsection.3.1.4}
-\contentsline {subsubsection}{\numberline {3.1.4.1}Sm\IeC {\v e}rova\IeC {\v c} - CiscoPocitac}{7}{subsubsection.3.1.4.1}
-\contentsline {subsubsection}{\numberline {3.1.4.2}S\IeC {\'\i }\IeC {\v t}ov\IeC {\'e} rozhran\IeC {\'\i }}{8}{subsubsection.3.1.4.2}
-\contentsline {subsubsection}{\numberline {3.1.4.3}IP adresa}{8}{subsubsection.3.1.4.3}
-\contentsline {subsection}{\numberline {3.1.5}Telnet}{9}{subsection.3.1.5}
-\contentsline {section}{\numberline {3.2}Podobnost simul\IeC {\'a}toru se skute\IeC {\v c}n\IeC {\'y}m Ciscem}{9}{section.3.2}
-\contentsline {section}{\numberline {3.3}Programovac\IeC {\'\i } jazyk a prost\IeC {\v r}ed\IeC {\'\i }}{9}{section.3.3}
-\contentsline {section}{\numberline {3.4}U\IeC {\v z}ivatelsk\IeC {\'e} rozhran\IeC {\'\i }}{10}{section.3.4}
-\contentsline {section}{\numberline {3.5}Skute\IeC {\v c}n\IeC {\'e} Cisco}{10}{section.3.5}
-\contentsline {chapter}{\numberline {4}Realizace}{11}{chapter.4}
-\contentsline {section}{\numberline {4.1}Parser Cisco}{11}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Cisco IOS}{11}{subsection.4.1.1}
-\contentsline {subsubsection}{\numberline {4.1.1.1}U\IeC {\v z}ivatelsk\IeC {\'y} m\IeC {\'o}d}{12}{subsubsection.4.1.1.1}
-\contentsline {subsubsection}{\numberline {4.1.1.2}Privilegovan\IeC {\'y} m\IeC {\'o}d}{12}{subsubsection.4.1.1.2}
-\contentsline {subsubsection}{\numberline {4.1.1.3}Konfigura\IeC {\v c}n\IeC {\'\i } m\IeC {\'o}d}{13}{subsubsection.4.1.1.3}
-\contentsline {subsubsection}{\numberline {4.1.1.4}Konfigurace rozhran\IeC {\'\i }}{13}{subsubsection.4.1.1.4}
-\contentsline {subsection}{\numberline {4.1.2}Implementace Cisco IOS}{13}{subsection.4.1.2}
-\contentsline {paragraph}{}{14}{section*.6}
-\contentsline {section}{\numberline {4.2}Na\IeC {\v c}\IeC {\'\i }t\IeC {\'a}n\IeC {\'\i } ze souboru}{14}{section.4.2}
-\contentsline {section}{\numberline {4.3}Ukl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i } do souboru}{14}{section.4.3}
-\contentsline {section}{\numberline {4.4}Sm\IeC {\v e}rov\IeC {\'a}n\IeC {\'\i }}{14}{section.4.4}
-\contentsline {section}{\numberline {4.5}Wrapper sm\IeC {\v e}rovac\IeC {\'\i } tabulky}{14}{section.4.5}
-\contentsline {section}{\numberline {4.6}P\IeC {\v r}eklad adres}{14}{section.4.6}
-\contentsline {chapter}{\numberline {5}Testov\IeC {\'a}n\IeC {\'\i }}{15}{chapter.5}
-\contentsline {chapter}{\numberline {6}Z\IeC {\'a}v\IeC {\v e}r}{17}{chapter.6}
-\contentsline {section}{\numberline {6.1}Mo\IeC {\v z}nosti vylep\IeC {\v s}en\IeC {\'\i }}{17}{section.6.1}
-\contentsline {chapter}{\numberline {A}Testov\IeC {\'a}n\IeC {\'\i } zapln\IeC {\v e}n\IeC {\'\i } str\IeC {\'a}nky a~odsazen\IeC {\'\i } odstavc\IeC {\r u}}{21}{appendix.A}
-\contentsline {chapter}{\numberline {B}Pokyny a~n\IeC {\'a}vody k~form\IeC {\'a}tov\IeC {\'a}n\IeC {\'\i } textu pr\IeC {\'a}ce}{25}{appendix.B}
-\contentsline {section}{\numberline {B.1}Vkl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i } obr\IeC {\'a}zk\IeC {\r u}}{25}{section.B.1}
-\contentsline {section}{\numberline {B.2}Kreslen\IeC {\'\i } obr\IeC {\'a}zk\IeC {\r u}}{26}{section.B.2}
-\contentsline {section}{\numberline {B.3}Tabulky}{26}{section.B.3}
-\contentsline {section}{\numberline {B.4}Odkazy v~textu}{27}{section.B.4}
-\contentsline {subsection}{\numberline {B.4.1}Odkazy na literaturu}{27}{subsection.B.4.1}
-\contentsline {subsection}{\numberline {B.4.2}Odkazy na obr\IeC {\'a}zky, tabulky a~kapitoly}{29}{subsection.B.4.2}
-\contentsline {section}{\numberline {B.5}Rovnice, centrovan\IeC {\'a}, \IeC {\v c}\IeC {\'\i }slovan\IeC {\'a} matematika}{29}{section.B.5}
-\contentsline {section}{\numberline {B.6}K\IeC {\'o}dy programu}{30}{section.B.6}
-\contentsline {section}{\numberline {B.7}Dal\IeC {\v s}\IeC {\'\i } pozn\IeC {\'a}mky}{30}{section.B.7}
-\contentsline {subsection}{\numberline {B.7.1}\IeC {\v C}esk\IeC {\'e} uvozovky}{30}{subsection.B.7.1}
-\contentsline {chapter}{\numberline {C}Seznam pou\IeC {\v z}it\IeC {\'y}ch zkratek}{31}{appendix.C}
-\contentsline {chapter}{\numberline {D}UML diagramy}{33}{appendix.D}
-\contentsline {chapter}{\numberline {E}Instala\IeC {\v c}n\IeC {\'\i } a~u\IeC {\v z}ivatelsk\IeC {\'a} p\IeC {\v r}\IeC {\'\i }ru\IeC {\v c}ka}{35}{appendix.E}
-\contentsline {chapter}{\numberline {F}Obsah p\IeC {\v r}ilo\IeC {\v z}en\IeC {\'e}ho CD}{37}{appendix.F}
+\contentsline {chapter}{\numberline {3}Existuj\IeC {\'\i }c\IeC {\'\i } implementace}{5}{chapter.3}
+\contentsline {chapter}{\numberline {4}Anal\IeC {\'y}za a~n\IeC {\'a}vrh \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{7}{chapter.4}
+\contentsline {section}{\numberline {4.1}Architektura}{7}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Po\IeC {\v c}\IeC {\'a}tek prac\IeC {\'\i }}{7}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Klient - server}{7}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Vyhodnocov\IeC {\'a}n\IeC {\'\i } p\IeC {\v r}\IeC {\'\i }kaz\IeC {\r u}}{9}{subsection.4.1.3}
+\contentsline {subsection}{\numberline {4.1.4}Datov\IeC {\'e} struktury j\IeC {\'a}dra}{9}{subsection.4.1.4}
+\contentsline {subsubsection}{\numberline {4.1.4.1}Sm\IeC {\v e}rova\IeC {\v c} - CiscoPocitac}{9}{subsubsection.4.1.4.1}
+\contentsline {subsubsection}{\numberline {4.1.4.2}S\IeC {\'\i }\IeC {\v t}ov\IeC {\'e} rozhran\IeC {\'\i }}{10}{subsubsection.4.1.4.2}
+\contentsline {subsubsection}{\numberline {4.1.4.3}IP adresa}{10}{subsubsection.4.1.4.3}
+\contentsline {subsection}{\numberline {4.1.5}Telnet}{11}{subsection.4.1.5}
+\contentsline {section}{\numberline {4.2}Podobnost simul\IeC {\'a}toru se skute\IeC {\v c}n\IeC {\'y}m Ciscem}{11}{section.4.2}
+\contentsline {section}{\numberline {4.3}Programovac\IeC {\'\i } jazyk a prost\IeC {\v r}ed\IeC {\'\i }}{11}{section.4.3}
+\contentsline {section}{\numberline {4.4}U\IeC {\v z}ivatelsk\IeC {\'e} rozhran\IeC {\'\i }}{12}{section.4.4}
+\contentsline {section}{\numberline {4.5}Skute\IeC {\v c}n\IeC {\'e} Cisco}{12}{section.4.5}
+\contentsline {chapter}{\numberline {5}Realizace}{13}{chapter.5}
+\contentsline {section}{\numberline {5.1}Parser Cisco}{14}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Cisco IOS}{14}{subsection.5.1.1}
+\contentsline {subsubsection}{\numberline {5.1.1.1}U\IeC {\v z}ivatelsk\IeC {\'y} m\IeC {\'o}d}{14}{subsubsection.5.1.1.1}
+\contentsline {subsubsection}{\numberline {5.1.1.2}Privilegovan\IeC {\'y} m\IeC {\'o}d}{14}{subsubsection.5.1.1.2}
+\contentsline {subsubsection}{\numberline {5.1.1.3}Konfigura\IeC {\v c}n\IeC {\'\i } m\IeC {\'o}d}{15}{subsubsection.5.1.1.3}
+\contentsline {subsubsection}{\numberline {5.1.1.4}Konfigurace rozhran\IeC {\'\i }}{15}{subsubsection.5.1.1.4}
+\contentsline {subsection}{\numberline {5.1.2}Implementace Cisco IOS}{16}{subsection.5.1.2}
+\contentsline {paragraph}{}{16}{section*.6}
+\contentsline {subsection}{\numberline {5.1.3}Odchylky v implementaci}{17}{subsection.5.1.3}
+\contentsline {section}{\numberline {5.2}Na\IeC {\v c}\IeC {\'\i }t\IeC {\'a}n\IeC {\'\i } ze souboru}{18}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Zpracov\IeC {\'a}n\IeC {\'\i } parametr\IeC {\r u}}{18}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Konfigura\IeC {\v c}n\IeC {\'\i } soubor}{18}{subsection.5.2.2}
+\contentsline {subsection}{\numberline {5.2.3}Implementace SAX handleru}{19}{subsection.5.2.3}
+\contentsline {subsubsection}{\numberline {5.2.3.1}Na\IeC {\v c}\IeC {\'\i }t\IeC {\'a}n\IeC {\'\i }}{19}{subsubsection.5.2.3.1}
+\contentsline {subsubsection}{\numberline {5.2.3.2}Datov\IeC {\'a} struktura}{19}{subsubsection.5.2.3.2}
+\contentsline {subsubsection}{\numberline {5.2.3.3}Vytv\IeC {\'a}\IeC {\v r}en\IeC {\'\i } virtu\IeC {\'a}ln\IeC {\'\i }ch po\IeC {\v c}\IeC {\'\i }ta\IeC {\v c}\IeC {\r u}}{20}{subsubsection.5.2.3.3}
+\contentsline {section}{\numberline {5.3}Ukl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i } do souboru}{20}{section.5.3}
+\contentsline {section}{\numberline {5.4}Sm\IeC {\v e}rov\IeC {\'a}n\IeC {\'\i }}{22}{section.5.4}
+\contentsline {section}{\numberline {5.5}Wrapper sm\IeC {\v e}rovac\IeC {\'\i } tabulky}{22}{section.5.5}
+\contentsline {section}{\numberline {5.6}P\IeC {\v r}eklad adres}{22}{section.5.6}
+\contentsline {chapter}{\numberline {6}Testov\IeC {\'a}n\IeC {\'\i }}{23}{chapter.6}
+\contentsline {chapter}{\numberline {7}Z\IeC {\'a}v\IeC {\v e}r}{25}{chapter.7}
+\contentsline {section}{\numberline {7.1}Mo\IeC {\v z}nosti vylep\IeC {\v s}en\IeC {\'\i }}{25}{section.7.1}
+\contentsline {chapter}{\numberline {A}Testov\IeC {\'a}n\IeC {\'\i } zapln\IeC {\v e}n\IeC {\'\i } str\IeC {\'a}nky a~odsazen\IeC {\'\i } odstavc\IeC {\r u}}{29}{appendix.A}
+\contentsline {chapter}{\numberline {B}Pokyny a~n\IeC {\'a}vody k~form\IeC {\'a}tov\IeC {\'a}n\IeC {\'\i } textu pr\IeC {\'a}ce}{33}{appendix.B}
+\contentsline {section}{\numberline {B.1}Vkl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i } obr\IeC {\'a}zk\IeC {\r u}}{33}{section.B.1}
+\contentsline {section}{\numberline {B.2}Kreslen\IeC {\'\i } obr\IeC {\'a}zk\IeC {\r u}}{34}{section.B.2}
+\contentsline {section}{\numberline {B.3}Tabulky}{34}{section.B.3}
+\contentsline {section}{\numberline {B.4}Odkazy v~textu}{35}{section.B.4}
+\contentsline {subsection}{\numberline {B.4.1}Odkazy na literaturu}{35}{subsection.B.4.1}
+\contentsline {subsection}{\numberline {B.4.2}Odkazy na obr\IeC {\'a}zky, tabulky a~kapitoly}{37}{subsection.B.4.2}
+\contentsline {section}{\numberline {B.5}Rovnice, centrovan\IeC {\'a}, \IeC {\v c}\IeC {\'\i }slovan\IeC {\'a} matematika}{37}{section.B.5}
+\contentsline {section}{\numberline {B.6}K\IeC {\'o}dy programu}{38}{section.B.6}
+\contentsline {section}{\numberline {B.7}Dal\IeC {\v s}\IeC {\'\i } pozn\IeC {\'a}mky}{38}{section.B.7}
+\contentsline {subsection}{\numberline {B.7.1}\IeC {\v C}esk\IeC {\'e} uvozovky}{38}{subsection.B.7.1}
+\contentsline {chapter}{\numberline {C}Seznam pou\IeC {\v z}it\IeC {\'y}ch zkratek}{39}{appendix.C}
+\contentsline {chapter}{\numberline {D}UML diagramy}{41}{appendix.D}
+\contentsline {chapter}{\numberline {E}Instala\IeC {\v c}n\IeC {\'\i } a~u\IeC {\v z}ivatelsk\IeC {\'a} p\IeC {\v r}\IeC {\'\i }ru\IeC {\v c}ka}{43}{appendix.E}
+\contentsline {chapter}{\numberline {F}Obsah p\IeC {\v r}ilo\IeC {\v z}en\IeC {\'e}ho CD}{45}{appendix.F}

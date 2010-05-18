@@ -2,8 +2,10 @@ This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
 The top-level auxiliary file: Rehak-thesis-2010.aux
 A level-1 auxiliary file: 1_uvod.aux
 A level-1 auxiliary file: 2_specifikace.aux
-A level-1 auxiliary file: 3_navrh.aux
-A level-1 auxiliary file: 4_realizace.aux
+A level-1 auxiliary file: 3_reserse.aux
+A level-1 auxiliary file: 4_navrh.aux
+A level-1 auxiliary file: 5_realizace.aux
+A level-1 auxiliary file: 5-1_xml.aux
 The style file: csplainnat.bst
 Database file #1: reference.bib
 Warning--empty year in CSTUG
@@ -16,7 +18,7 @@ Warning--empty year in latexwiki
 while executing---line 1484 of file csplainnat.bst
 You've used 15 entries,
             2899 wiz_defined-function locations,
-            696 strings with 6788 characters,
+            698 strings with 6812 characters,
 and the built_in function-call counts, 4743 in all, are:
 = -- 506
 > -- 139
