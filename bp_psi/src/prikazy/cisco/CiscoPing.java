@@ -102,7 +102,6 @@ public class CiscoPing extends AbstraktniPing {
                 n = Integer.valueOf(volba);
             } catch (NumberFormatException e) {
                 kon.posliRadek("% Invalid input detected.");
-                kon.posliRadek("tadddd");
                 return false;
             }
             if (n < 36 || n > 18024) {
@@ -126,6 +125,7 @@ public class CiscoPing extends AbstraktniPing {
      */
     private boolean zpracujRadek() {
         if (slova.size() < 2) {
+            kon.posliServisne("podporovana syntaxe: <IP> (<size|timeout|repeat> <cislo>)* ");
             return false;
         }
         String ip = dalsiSlovo();

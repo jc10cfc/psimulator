@@ -20,6 +20,10 @@ public class CiscoPocitac extends AbstraktniPocitac {
         wrapper = new CiscoWrapper(this);
     }
 
+    /**
+     * Vrati CiscoWrapper = ovladac routovaci tabulky.
+     * @return
+     */
     public CiscoWrapper getWrapper() {
         return wrapper;
     }

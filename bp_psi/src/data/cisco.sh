@@ -18,8 +18,13 @@ if [[ $VERSION -lt 0,29 ]]; then
     OPT=""
 fi
 
+if [ -z "$1" ]; then
+    echo "Specify port!"
+    exit 1
+fi
+
 OPT="$OPT -b'(){}[],+=&^%0@;|\' -f $COMPLETION"
 
-echo pouzivam OPT=$OPT
+# echo pouzivam OPT=$OPT
 
 rlwrap $OPT telnet localhost $@

@@ -1,5 +1,5 @@
 #!/bin/bash
-# skript pro pripojeni klienta na cisco
+# skript pro pripojeni klienta na linux
 # author haldyr
 
 VERSION=`rlwrap -v | cut -d" " -f2 | sed 's/\./,/g'`
@@ -18,8 +18,13 @@ if [[ $VERSION -lt 0,29 ]]; then
     OPT=""
 fi
 
+if [ -z "$1" ]; then
+    echo "Specify port!"
+    exit 1
+fi
+
 OPT="$OPT -f $COMPLETION"
 
-echo pouzivam OPT=$OPT
+# echo pouzivam OPT=$OPT
 
 rlwrap $OPT telnet localhost $@

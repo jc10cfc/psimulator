@@ -46,6 +46,7 @@ public class Komunikace extends Thread {
             ss = new ServerSocket(cisloPortu);
         } catch (IOException e) {
             pc.vypis("Nemuzu poslouchat na portu " + cisloPortu + ".");
+            pc.vypis("Port "+cisloPortu+" je pravdepodobne obsazen jinym programem, zkuste server spustit s jinym portem.");
             System.exit(1);
         }
         pc.vypis("Posloucham na portu " + cisloPortu);

@@ -93,7 +93,7 @@ exit_interface je jméno lokálního výstupního interfacu (třeba s0),
 přes který vede cesta k cílové síti.
 
 // Výchozí brána pro nepřímo připojené sítě.
-ip route 0.0.0.0 0.0.0.0 <odchozí rozhraní>
+ip route 0.0.0.0 0.0.0.0 <next_hop | exit_interface>
 
 // Zobrazí směrovací tabulku.
 show ip route
@@ -238,49 +238,13 @@ S       172.18.1.0 is directly connected, FastEthernet0/0
      192.168.2.0/30 is subnetted, 1 subnets
 C       192.168.2.8 is directly connected, FastEthernet0/1
 
-
-
-
 //-------------------------------------------------------------------------
-
-ip classless
-ip route 3.3.3.0 255.255.255.0 2.2.2.2
-ip route 8.0.0.0 255.0.0.0 9.9.9.254
-ip route 13.0.0.0 255.0.0.0 6.6.6.6
-ip route 18.18.18.0 255.255.255.0 51.51.51.9
-ip route 51.51.51.0 255.255.255.0 21.21.21.244
-ip route 172.18.1.0 255.255.255.252 FastEthernet0/0
-ip route 192.168.9.0 255.255.255.0 2.2.2.2
-
-Router#s ip route
-Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP
-       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
-       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-       E1 - OSPF external type 1, E2 - OSPF external type 2
-       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
-       ia - IS-IS inter area, * - candidate default, U - per-user static route
-       o - ODR, P - periodic downloaded static route
-
-Gateway of last resort is not set
-
-     51.0.0.0/24 is subnetted, 1 subnets
-S       51.51.51.0 [1/0] via 21.21.21.244
-     18.0.0.0/24 is subnetted, 1 subnets
-S       18.18.18.0 [1/0] via 51.51.51.9
-     21.0.0.0/24 is subnetted, 1 subnets
-C       21.21.21.0 is directly connected, FastEthernet0/0
-     172.18.0.0/30 is subnetted, 1 subnets
-S       172.18.1.0 is directly connected, FastEthernet0/0
-     192.168.2.0/30 is subnetted, 1 subnets
-C       192.168.2.8 is directly connected, FastEthernet0/1
-
 
 A 	0 	0–127    	255.0.0.0 	7 	24 	126 	16 777 214
 B 	10 	128-191 	255.255.0.0 	14 	16 	16384 	65534
 C 	110 	192-223 	255.255.255.0 	21 	8 	2 097 152 	254
 D 	1110 	224-239 	multicast
 E 	1111 	240-255 	vyhrazeno jako rezerva
-
 
 //-------------------------------------------------------------------------
 

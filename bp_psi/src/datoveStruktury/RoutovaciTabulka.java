@@ -88,7 +88,7 @@ public class RoutovaciTabulka {
 
 
     private List<Zaznam>radky; //jednotlive radky routovaci tabulky
-    private boolean ladiciVypisovani=true;
+    private boolean ladiciVypisovani=false;
 
     /**
      * V konstruktoru se hazi odkaz na pocitac, aby byl prostup k jeho rozhranim.

@@ -167,6 +167,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 return;
             } else {
                 kon.posliRadek("?Must be \"terminal\"");
+                kon.posliServisne("podporovan je pouze terminal");
+                configure1 = false;
+                kon.vypisPrompt = true;
                 return;
             }
         }
@@ -330,8 +333,10 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (debug) {
             if (slova.get(0).equals("ifconfig")) { // pak smazat
                 prikaz = new LinuxIfconfig(pc, kon, slova);
+                return;
             } else if (slova.get(0).equals("route")) {
                 prikaz = new LinuxRoute(pc, kon, slova);
+                return;
             }
         }
 

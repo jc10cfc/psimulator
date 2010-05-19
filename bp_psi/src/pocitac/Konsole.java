@@ -35,6 +35,7 @@ public class Konsole extends Thread {
     private BufferedReader in;
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
     public boolean doplnovani = false;
+    private boolean vypisy = false;
 
     private final Object zamek;
 
@@ -121,7 +122,9 @@ public class Konsole extends Thread {
     public void posliRadek(String ret) throws ChybaSpojeniException{
         try {
             out.write((ret + "\r\n").getBytes());
-            pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
+            if (vypisy) {
+                pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
+            }
         } catch (IOException ex) {
             //ex.printStackTrace();
             throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posliRadek, nastala chyba.");
@@ -138,7 +141,9 @@ public class Konsole extends Thread {
     public void posli(String ret) throws ChybaSpojeniException{
         try {
             out.write((ret).getBytes());
-            pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
+            if (vypisy) {
+                pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
+            }
         } catch (IOException ex) {
             //ex.printStackTrace();
             throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posli, nastala chyba.");
@@ -202,7 +207,9 @@ public class Konsole extends Thread {
                     vypisPrompt();
                 }
                 radek = ctiRadek(in);
-                pocitac.vypis("(klient c. " + cislo + " poslal): '" + radek + "'");
+                if (vypisy) {
+                    pocitac.vypis("(klient c. " + cislo + " poslal): '" + radek + "'");
+                }
                 //pocitac.vypis("dylka predchoziho radku: "+radek.length());
                 //posliRadek(out,radek);
                 synchronized(zamek) {

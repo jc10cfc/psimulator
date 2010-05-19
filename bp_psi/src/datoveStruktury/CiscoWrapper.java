@@ -31,6 +31,7 @@ public class CiscoWrapper {
      * Kdyz to projede 50 rout, tak se hledani zastavi s tim, ze smula..
      */
     int citac = 0;
+    private boolean debug = false;
 
     public CiscoWrapper(AbstraktniPocitac pc) {
         radky = new ArrayList<CiscoZaznam>();
@@ -43,7 +44,7 @@ public class CiscoWrapper {
      * Adresat neni null, ale bud rozhrani nebo brana je vzdy null.
      */
     public class CiscoZaznam {
-        
+
         private IpAdresa adresat; // s maskou
         private IpAdresa brana;
         private SitoveRozhrani rozhrani;
@@ -185,7 +186,7 @@ public class CiscoWrapper {
         SitoveRozhrani iface = null;
 
         citac++;
-        if (citac >= 50) {
+        if (citac >= 51) {
             return null; // ochrana proti smyckam
         }
         for (int i = radky.size() - 1; i >= 0; i--) { // prochazim opacne (tedy vybiram s nevyssim poctem jednicek)
@@ -254,14 +255,14 @@ public class CiscoWrapper {
      * Malinko prasacka metoda pro pridani zaznamu do RT pouze pro vypis!
      * @param zaznam
      */
-    private void pridejRTZaznam(RoutovaciTabulka.Zaznam zaznam) {
+    private void pridejRTZaznamJenProVypis(RoutovaciTabulka.Zaznam zaznam) {
         CiscoZaznam ciscozaznam = new CiscoZaznam(zaznam.getAdresat(), zaznam.getBrana(), zaznam.getRozhrani());
         if (zaznam.jePrimoPripojene()) {
             ciscozaznam.setConnected();
         }
         radky.add(dejIndexPozice(ciscozaznam, false), ciscozaznam);
     }
-    
+
     /**
      * Smaze zaznam z wrapperu + aktualizuje RT. Rozhrani maze podle jmena!
      * Muze byt zadana bud adresa nebo adresa+brana nebo adresa+rozhrani.
@@ -411,13 +412,25 @@ public class CiscoWrapper {
     public String vypisRT() {
         String s = "";
 
-        s += "Codes: C - connected, S - static\n\n";
+        if (debug) {
+            s += "Codes: C - connected, S - static\n\n";
+        } else {
+            s += "Codes: C - connected, S - static, R - RIP, M - mobile, B - BGP\n"
+                    + "       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area\n"
+                    + "       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n"
+                    + "       E1 - OSPF external type 1, E2 - OSPF external type 2\n"
+                    + "       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n"
+                    + "       ia - IS-IS inter area, * - candidate default, U - per-user static route\n"
+                    + "       o - ODR, P - periodic downloaded static route\n\n";
+        }
+
+        CiscoWrapper wrapper = ((CiscoPocitac) pc).getWrapper();
         boolean defaultGW = false;
         String brana = null;
-        for (int i = 0; i < ((CiscoPocitac) pc).getWrapper().size(); i++) {
-            if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).adresat.equals(new IpAdresa("0.0.0.0", 0))) {
-                if (((CiscoPocitac) pc).getWrapper().vratZaznam(i).brana != null) {
-                    brana = ((CiscoPocitac) pc).getWrapper().vratZaznam(i).brana.vypisAdresu();
+        for (int i = 0; i < wrapper.size(); i++) {
+            if (wrapper.vratZaznam(i).adresat.equals(new IpAdresa("0.0.0.0", 0))) {
+                if (wrapper.vratZaznam(i).brana != null) {
+                    brana = wrapper.vratZaznam(i).brana.vypisAdresu();
                 }
                 defaultGW = true;
             }
@@ -436,12 +449,12 @@ public class CiscoWrapper {
         }
 
         // vytvarim novy wrapperu kvuli zabudovanemu razeni
-        CiscoWrapper wrapper = new CiscoWrapper(pc);
+        CiscoWrapper wrapper_pro_razeni = new CiscoWrapper(pc);
         for (int i = 0; i < routovaciTabulka.pocetZaznamu(); i++) {
-            wrapper.pridejRTZaznam(routovaciTabulka.vratZaznam(i));
+            wrapper_pro_razeni.pridejRTZaznamJenProVypis(routovaciTabulka.vratZaznam(i));
         }
 
-        for (CiscoZaznam czaznam : wrapper.radky) {
+        for (CiscoZaznam czaznam : wrapper_pro_razeni.radky) {
             s += vypisZaznamDoRT(czaznam);
         }
 

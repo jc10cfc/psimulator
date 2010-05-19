@@ -84,11 +84,14 @@ public class CiscoIpAddress extends CiscoPrikaz {
                 }
             }
             kon.posliRadek("Bad mask 0x" + s.toUpperCase() + " for address " + ip);
+            return false;
         } catch (SpatnaAdresaException e) {
             invalidInputDetected();
+            return false;
         } catch (Exception e) {
-            e.printStackTrace(); //TODO: e.printStackTrace(); pak zrusit?
+            if (debug) e.printStackTrace();
             invalidInputDetected();
+            return false;
         }
 
         if (adr.dej32BitAdresu() == 0) {

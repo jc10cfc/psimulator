@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DTD tady musi byt!!! -->
+<!DOCTYPE konfigurak SYSTEM "psi.dtd">
+
+<konfigurak>
+<pocitac jmeno="linux1" typ="linux">
+	<rozhrani>
+		<jmeno>eth0</jmeno>
+		<ip></ip>
+		<maska></maska>
+		<mac>00:01:02:03:04:05</mac>
+		<nahozene>true</nahozene>
+	</rozhrani>
+	<ip_forward>0</ip_forward>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
+</pocitac
+>
+<pocitac jmeno="linux2" typ="linux">
+	<rozhrani>
+		<jmeno>eth0</jmeno>
+		<ip></ip>
+		<maska></maska>
+		<mac>00:01:02:03:04:05</mac>
+		<nahozene>true</nahozene>
+	</rozhrani>
+	<rozhrani>
+		<jmeno>eth1</jmeno>
+		<ip></ip>
+		<maska></maska>
+		<mac>00:01:02:03:04:05</mac>
+		<nahozene>true</nahozene>
+	</rozhrani>
+	<ip_forward>0</ip_forward>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
+</pocitac
+>
+<pocitac jmeno="cisco1" typ="cisco">
+	<rozhrani>
+		<jmeno>FastEthernet0/0</jmeno>
+		<ip></ip>
+		<maska></maska>
+		<mac>00:0b:0c:0d:0a:01</mac>
+		<nahozene>false</nahozene>
+	</rozhrani>
+	<rozhrani>
+		<jmeno>FastEthernet0/1</jmeno>
+		<ip></ip>
+		<maska></maska>
+		<mac>03:08:b7:30:24:e1</mac>
+		<nahozene>false</nahozene>
+	</rozhrani>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
+</pocitac
+>
+<pocitac jmeno="cisco2" typ="cisco">
+	<rozhrani>
+		<jmeno>FastEthernet0/0</jmeno>
+		<ip></ip>
+		<maska></maska>
+		<mac>00:0b:0c:0d:0a:01</mac>
+		<nahozene>false</nahozene>
+	</rozhrani>
+        <rozhrani>
+		<jmeno>FastEthernet0/1</jmeno>
+		<ip></ip>
+		<maska></maska>
+		<mac>00:0b:0c:0d:0a:10</mac>
+		<nahozene>false</nahozene>
+	</rozhrani>
+	<natovani>
+		<pooly>
+		</pooly>
+		<prirazeniVice>
+		</prirazeniVice>
+		<access-listy>
+		</access-listy>
+	</natovani>
+</pocitac
+>
+<kabelaz>
+	<kabel>
+		<prvni>linux1:eth0</prvni>
+		<druhy>linux2:eth0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>linux2:eth1</prvni>
+		<druhy>cisco1:FastEthernet0/0</druhy>
+	</kabel>
+	<kabel>
+		<prvni>cisco1:FastEthernet0/1</prvni>
+		<druhy>cisco2:FastEthernet0/0</druhy>
+	</kabel>
+</kabelaz>
+</konfigurak>

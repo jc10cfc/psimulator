@@ -40,6 +40,11 @@ public class CiscoAccessList extends CiscoPrikaz {
             }
         }
 
+        if (dalsiSlovoAleNezvetsujCitac().isEmpty()) {
+            incompleteCommand();
+            return false;
+        }
+
         try {
             access = Integer.parseInt(dalsiSlovo());
         } catch (NumberFormatException e) {

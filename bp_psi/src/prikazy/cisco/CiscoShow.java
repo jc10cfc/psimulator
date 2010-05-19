@@ -26,7 +26,7 @@ public class CiscoShow extends CiscoPrikaz {
         super(pc, kon, slova);
         this.stavCisco = stavCisco;
 
-        debug = true;
+        debug = false;
         boolean pokracovat = zpracujRadek();
         if (pokracovat) {
             vykonejPrikaz();
