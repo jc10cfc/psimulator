@@ -50,6 +50,26 @@
  % umoznuje pouzit prikaz \bfig namisto \begin{figure}\begin{center} atd.
 
 
+%-----------------------------------------------------------------------------------------------------------------------------
+% Tady jsou moje vlastní úpravy: 
+
+% 2 verse správnýho nadpisu paragraphu, vůbec nevím, jak to funguje
+% stazeno z: http://www.latex-community.org/forum/viewtopic.php?f=5&t=1383&start=0&st=0&sk=t&sd=a
+% \makeatletter
+% \renewcommand\paragraph{%
+%    \@startsection{paragraph}{5}{0mm} % díky pětce se to nečísluje, ty milimetry jsou odsazaní do strany
+%       {-\baselineskip}%
+%       {.1\baselineskip} %tohle značí nadpis na samostatný řádce
+%       {\normalfont\normalsize\bfseries}}
+% \makeatother
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {-1ex\@plus -1ex \@minus -.1ex}%
+  {1ex \@plus .1ex}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
+%-----------------------------------------------------------------------------------------------------------------------------
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Zvolte jednu z moznosti 
 % Choose one of the following options
