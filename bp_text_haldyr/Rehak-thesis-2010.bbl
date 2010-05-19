@@ -1,4 +1,4 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{16}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -23,9 +23,14 @@ HAINDL, M. -- KMENT, {\'{L}}. -- SLAVíK, P.
 \newblock \emph{Framework} [online]. 2009{\natexlab{a}}. [cit.~10.\,9.\,2009].
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/Framework}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{b}})]{wiki:ios}
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{b}})]{wiki:icmp}
 {Přispěvatelé Wikipedie}.
-\newblock \emph{Cisco IOS} [online]. 2010{\natexlab{b}}. [cit.~16.\,5.\,2010].
+\newblock \emph{ICMP} [online]. 2010{\natexlab{b}}. [cit.~19.\,5.\,2010].
+\newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/ICMP}.
+
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{c}})]{wiki:ios}
+{Přispěvatelé Wikipedie}.
+\newblock \emph{Cisco IOS} [online]. 2010{\natexlab{c}}. [cit.~16.\,5.\,2010].
 \newblock Dostupn{\'{e}} z:
   \url{http://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Cisco-router-1%
 .svg/600px-Cisco-router-1.svg.png}.
@@ -37,14 +42,14 @@ HAINDL, M. -- KMENT, {\'{L}}. -- SLAVíK, P.
 \newblock Dostupn{\'{e}} z:
   \url{http://en.wikipedia.org/wiki/Object-relational_mapping}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{c}})]{wiki:telnet}
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{d}})]{wiki:telnet}
 {Přispěvatelé Wikipedie}.
-\newblock \emph{Telnet} [online]. 2010{\natexlab{c}}. [cit.~12.\,5.\,2010].
+\newblock \emph{Telnet} [online]. 2010{\natexlab{d}}. [cit.~12.\,5.\,2010].
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/Telnet}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{d}})]{wiki:uml}
+\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{e}})]{wiki:uml}
 {Přispěvatelé Wikipedie}.
-\newblock \emph{Unified Modeling Language} [online]. 2010{\natexlab{d}}.
+\newblock \emph{Unified Modeling Language} [online]. 2010{\natexlab{e}}.
   [cit.~12.\,5.\,2010].
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/UML}.
 

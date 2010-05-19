@@ -1,8 +1,87 @@
-\section{Směrování}\label{prijmiEthernetove}
-Směrování implementoval kolega, nicméně se Cisco nechová vždy stejně, tak bylo nutné vyčlenit rozhodování o příjmu paketů do koncových počítačů.
+\section{Směrování} \label{prijmiEthernetove}
+Směrování implementoval kolega, nicméně se Cisco nechová vždy stejně, a tak bylo nutné vyčlenit rozhodování o příjmu paketů do koncových počítačů a implementovat je každý zvlášť. Nejsložitější bylo zjistit, jak se Cisco přesně chová a proč to tak je.
+
+Při testování standardních případů je vše jasné, ale když jsem zkusil síť nakonfigurovat trochu neobvykle, tak to tak jasné nebylo.
+
+%------------------------------------------------------------------------------
+
+\subsection{Debuging}
+Na stránkách firmy Cisco Systems jsem objevil několik návodů týkajících se vypisování zpracování paketů na jednotlivých strojích. Bez těchto návodů lze jen težko hádat, které pakety se posílají kam. Velmi užitečné jsou tyto příkazy:
+
+\begin{itemize}
+ \item \verb|debug ip packet detail| - detailní výpis zpracování IP paketů 
+ \item \verb|debug ip icmp| - zpracování ICMP\footnote{Internet Control Message Protocol je jeden z nejdůležitějších protokolů ze sady protokolů internetu. Používají ho operační systémy počítačů v síti pro odesílání chybových zpráv, například pro oznámení, že požadovaná služba není dostupná nebo že potřebný počítač nebo router není dosažitelný. \cite{wiki:icmp}} paketů
+ \item \verb|debug arp| - výpis ARP protokolu o zjišťování MAC adres sousedních počítačů
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
+\subsection{Síť č.1}
+\subsubsection{Popis problému}
+Vezměme si následující síť \ref{fig:sit_2pc} složenou pouze ze dvou počítačů cisco a linux. Tyto počítače mají nastavené IP adresy z jiných sítí, linux má nastavenou defaultní routu na rozhraní \verb|eth0| a cisco má samonastavující se routu na síť, která je přiřazena na rozhraní \verb|F0/0|\footnote{Na obrázcích sítí se vyskytují zkratky F0/0 a F0/1, které značí FastEhernet0/0 resp. FastEhernet0/1}. Samonastavující znamená, že cisco přidává záznamy do routovací tabulky podle informací z jeho rozhraní. Tuto funkcionalitu lze vypnout, na školních ciscách je ale defaultně zapnutá. Cisco nenahazuje tuto routu v případě, že na druhém konci kabelu buď nikdo není nebo je shozené (vypnuté) rozhraní.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=13cm]{figures/sit_2pc.png}
+\caption{Síť linux - cisco}
+\label{fig:sit_2pc}
+\end{center}
+\end{figure}
+
+Při připojení na linux a spuštění příkazu \verb|ping 10.10.10.10| se stane, že u prvních pár paketů (při mém testování to bylo 9) vyprší timeout a pak už linux sám sobě vypisuje \verb|Destination Host Unreachable|. Dlouho jsem se snažil přijít na to, proč to tak je. Težko jsem zjišťoval, co se děje, protože jsem neměl žádné zkušenosti se sledováním paketů přes cisco směrovače. 
+
+\subsubsection{Řešení} 
+Nejdříve vysvětlím proč prvních několik paketů prošlo až na cisco a na další \verb|icmp_req| odpověděl linux sám sobě. Je to způsobeno tím, že při prvních paketech ještě cisco nevědělo co s těmi pakety bude, a tak je přijalo, aby mohlo vyhodnotit co dál. Cisco ale hned přišlo na to, že nemá žádnou routu na \verb|1.1.1.1|, takže neví, co s takovými pakety dělat, tak se radši rozhodlo, že je ani nepřijme. Obvykle cisco nepřijímá pakety ihned, ale školní cisca měly starší verzi software a celkově byly zpomalený, takže to bylo způsobeno asi tím.
+
+Linux nejprve pošle ARP request, aby zjistil MAC adresu cisca. Cisco přijme ARP a snaží se odpovědět na dotaz. Problém je, že nemá záznam v routovací tabulce na adresu \verb|1.1.1.1|, takže ani neodpoví na ARP request, tak je \uv{hezky} je nastavené cisco.
+
+%------------------------------------------------------------------------------
+
+\subsection{Síť č.2}
+Na další síti \ref{fig:sit_3pc} jsou počítače linux1, cisco1 a cisco2 zapojené do jedné \uv{nudle}. Konfigurace rozhraní a směrovacích tabulek je obsažena v obrázku. 
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=15cm]{figures/sit_3pc.png}
+\caption{Síť linux1 - cisco1 - cisco2}
+\label{fig:sit_3pc}
+\end{center}
+\end{figure}
+
+První experiment je \verb|ping| z linux1 na cisco2:
+\begin{verbatim}
+linux1:/home/dsn# ping -c2 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+From 2.2.2.254 icmp_seq=1 Destination Host Unreachable
+From 2.2.2.254 icmp_seq=2 Destination Host Unreachable
+\end{verbatim}
+Vše dopadlo dle očekávání tedy paket proplul až na vzdálené cisco2, které nemělo pravidlo pro manipulaci paketů s cílem \verb|8.8.8.8|, a tak poslalo zpátky odesílateli \\ \verb|Destination Host Unreachable|.
+
+Pokud zkusíme odeslat \verb|ping| na \verb|1.1.1.2|, což je adresa v síti mezi linux1 a cisco1, ale není to adresa ani jednoho z nás, tak dopadne takto:
+\begin{verbatim}
+linux1:/home/dsn# ping -c2 1.1.1.2
+PING 1.1.1.2 (1.1.1.2) 56(84) bytes of data.
+From 1.1.1.1 icmp_seq=1 Destination Host Unreachable
+From 1.1.1.1 icmp_seq=2 Destination Host Unreachable
+\end{verbatim} 
+Linux ví (díky ARP protokolu), že vedle něj 
+
+
+\subsection{ARP protokol}
+
+\subsection{Pravidla o příjmu paketů}
+
+% % % Osnova
+% sit1
+% sit2
+% ARP pravidla
+% skutecna pravidla o prijmu
 
 
 
+
+
+\newpage
 
 \section{Wrapper směrovací tabulky}
 
