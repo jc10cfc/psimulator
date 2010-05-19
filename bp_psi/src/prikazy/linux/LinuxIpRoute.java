@@ -1,6 +1,7 @@
 /*
  * DODELAT:
- *      Parsovani slovicka default.
+ *      Parsovani slovicka default. HOTOVO
+ *      src ve vypisovani
  */
 package prikazy.linux;
 

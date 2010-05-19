@@ -1,6 +1,7 @@
 /*
  * Dodelat:
- * Vypisovani helpu.
+ * Vypisovani helpu. HOTOVO
+ * Vypisovani jen některejch adres podle přepínačů (-4 ap)
  */
 package prikazy.linux;
 

@@ -140,6 +140,7 @@ public abstract class AbstraktniPocitac {
     }
 
     /**
+     * Linkova vrstva.
      * Zkousi ethernetove poslat paket vedlejsimu pocitaci, ten ho bud prijme, nebo ho neprijme
      * a pak musim zpatky poslat host unreachable.
      * @param p paket, kterej posilam
@@ -183,6 +184,7 @@ public abstract class AbstraktniPocitac {
     }
 
     /**
+     * Linkova vrstva.
      * Ethernetove prijima nebo odmita me poslany pakety.
      * @param p
      * @param rozhr rozhrani pocitace, kterej ma paket prijmout, tzn. tohodle pocitace
@@ -196,6 +198,7 @@ public abstract class AbstraktniPocitac {
 
 
     /**
+     * Transportni vrstva
      * Slouzi k odeslani odpovedi - odesila icmp reply nebo host unreachable. V odpovednim paketu
      * se pouzije jako zdrojova adresa cilova adresa puvodniho paketu.
      * @param puvodni puvodni paket, na kterej se odpovida
@@ -216,24 +219,7 @@ public abstract class AbstraktniPocitac {
     /**
      * Slouzi k poslání novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
      * Sama nic neposila, pouziva metodu odesliNovejPaket, s tim, ze nespecifikuje specialni zdroj.
-     * @param cil
-     * @param typ
-     * @param kod
-     * @param cas
-     * @param icmp_seq
-     * @param prikaz
-     * @return false - ping se nepodarilo odeslat <br />
-     *          true - ping byl odeslan
-     */
-    @Deprecated // udelal jsem specifictejsi metody
-    public boolean posliNovejPaket(IpAdresa cil,int typ,int kod,double cas,int icmp_seq,
-            int ttl, AbstraktniPing prikaz) {
-        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
-    }
-
-    /**
-     * Slouzi k poslání novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
-     * Sama nic neposila, pouziva metodu odesliNovejPaket, s tim, ze nespecifikuje specialni zdroj.
+     * Transportni vrstva.
      * @param cil
      * @param icmp_seq kdyz je -1, nic se neodesle, jenom zkusebni
      * @param ttl
@@ -248,12 +234,18 @@ public abstract class AbstraktniPocitac {
         return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
+    /**
+     * Transportni vrstva
+     */
     public boolean posliNetUnreachable(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
         int typ=3; //paket nedosel
         int kod=0; //net unreachable
         return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
+    /**
+     * Transportni vrstva
+     */
     public boolean posliTimeExceeded(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
         int typ=11; //paket nedosel
         int kod=0; //net unreachable
@@ -261,8 +253,9 @@ public abstract class AbstraktniPocitac {
     }
 
     /**
+     * Sitova vrstva.
      * Slouzi k odeslani novyho paketu z tohodle pocitace, ne k preposilani. Touto metodou se
-     * odesílaj všechny nový pakety z thodle počítače. Metoda najde spravny rozhrani,
+     * odesílaj všechny nový pakety z tohodle počítače. Metoda najde spravny rozhrani,
      * kterym se ma paket  poslat, v pripade, ze spec_zdroj je null se paket odesle s adresou
      * tohoto rozhrani, jinak se odesle s adresou spec_zdroj. K odesilani pouziva metodu odesliEthernetove().
      * @param spec_zdroj IP adresa zdroje, kdyz ji chci natvrdo zadat
@@ -322,6 +315,7 @@ public abstract class AbstraktniPocitac {
     }
 
     /**
+     * Sitova vrstva
      * Slouzi k preposilani paketu. Neni-li paket kam dorucit, posle se zpatky zprava, ze nelze dorucit.
      * @param paket
      * @param vstupniRozhrani rozhrani, kterym paket prisel (dulezity pro natovani)
@@ -374,6 +368,7 @@ public abstract class AbstraktniPocitac {
     }
 
     /**
+     * Sitova vrstva, zpracovani paketu je na transportni vrstve
      * Prijima ping. Je-li urcen pro mne, udela patricnou akci (odesle odpoved nebo vypise vypis). Neni-li
      * urcen pro me, posle paket dal.
      * @param paket
@@ -383,10 +378,9 @@ public abstract class AbstraktniPocitac {
         vypisLadeni("Prijal jsem paket "+paket.toString());
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
 
-        // nejdriv se musi odnatovat:
+        // zjistuje, je-li paket pro me, kvuli odnatovani
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil); // -> pro jistotu si pred odnatovanim kontroluju,
-        //jestli paket ma moji cilovou adresu:
-        if (rozhr!=null && natTabulka.mamOdnatovat(vstupniRozhrani)) {
+        if (rozhr!=null && natTabulka.mamOdnatovat(vstupniRozhrani)) { // zkusi se odnatovat
             vypisLadeni("Odnatovani: puvodni paket:   " + paket);
             paket = natTabulka.odnatuj(paket);
             vypisLadeni("Odnatovani: prelozeny paket: " + paket);
@@ -399,6 +393,7 @@ public abstract class AbstraktniPocitac {
         rozhr = najdiMeziRozhranima(paket.cil); //znovu hledam, jestli je na mejch rozhranich takova IP
                     // -> odnatovanim se to totiz mohlo zmenit
         if (rozhr != null) { // takovou IP mam && port je pro me => paket je u me v cili
+            //zpracovani paketu:
             if(paket.typ==8){ //icmp request
                 posliNovejPaketOdpoved(paket,null, 0, 0); //zpatky se posila icmp reply
             }else { //paket je urcen pro me ke zpracovani
@@ -406,7 +401,7 @@ public abstract class AbstraktniPocitac {
                     paket.prikaz.zpracujPaket(paket);
                 } else { //prikaz v paketu neodpovida
                     vypisLadeni("Dosel mi paket, ktery sice je pro me, ale prikaz, ktery ho poslal, " +
-                            "nesouhlasi." +" Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
+                            "nesouhlasi. Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
                             + paket.toString());
                 }
             }

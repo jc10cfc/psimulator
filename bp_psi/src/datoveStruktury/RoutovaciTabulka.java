@@ -371,6 +371,7 @@ public class RoutovaciTabulka {
      * @param vstupni
      * @return cislo radku odpovidajici zadane IP nebo -1, kdyz zadnej radek neodpovida
      */
+    @Deprecated
     private int najdiOdpovidajiciRadek(IpAdresa vstupni){
         for (int i=0;i<radky.size();i++){
             if ( vstupni.jeVRozsahu(radky.get(i).adresat) && radky.get(i).brana ==null ){
