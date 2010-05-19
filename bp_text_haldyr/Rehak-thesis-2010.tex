@@ -104,6 +104,28 @@
 \newcommand\Supervisor{Ing. Pavel Kubalík, Ph.D.}
 
 
+
+
+% =============================================
+% moje vychytavky
+
+% 2 verze správnýho nadpisu paragraphu, vůbec nevím, jak to funguje
+% \makeatletter
+% \renewcommand\paragraph{%
+%    \@startsection{paragraph}{5}{0mm} % díky pětce se to nečísluje, ty milimetry jsou odsazaní do strany
+%       {-\baselineskip}%
+%       {.1\baselineskip} %tohle značí nadpis na samostatný řádce
+%       {\normalfont\normalsize\bfseries}}
+% \makeatother
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+ {-1ex\@plus -1ex \@minus -.1ex}%
+ {1ex \@plus .1ex}%
+ {\normalfont\normalsize\bfseries}}
+\makeatother
+
+
+
 % Pouzijete-li pdflatex, tak je prijemne, kdyz bude mit vase prace
 % funkcni odkazy i v pdf formatu
 \usepackage[
@@ -282,7 +304,8 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 \include{5-2_smerovani}
 \include{5-3_wrapper}
 \include{5-4_nat}
-% \include{5-1_xml}
+\include{6_testovani}
+
 
 % atd...
 
@@ -292,13 +315,7 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 % konkrétní povahy zpracovávaného tématu. Níže uvedená struktura práce odpovídá \textit{práci implementační}, viz
 % \cite{infodp} respektive \cite{infobp}. 
 
-%*****************************************************************************
-\chapter{Testování}
 
-\begin{itemize}
- \item Způsob, průběh a~výsledky testování.
- \item Srovnání s~existujícími řešeními, pokud jsou známy.
-\end{itemize} 
 
 
 %*****************************************************************************

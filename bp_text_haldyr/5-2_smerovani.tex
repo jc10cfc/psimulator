@@ -57,7 +57,7 @@ Na další síti \ref{fig:sit_3pc} jsou počítače linux1, cisco1 a cisco2 zapo
 
 \subsubsection{Experimenty} 
 
-\textbf{I. experiment}\\
+\paragraph{I. experiment}
 První experiment je \verb|ping| z linux1 na cisco2:
 \begin{verbatim}
 linux1:/home/dsn# ping -c2 8.8.8.8
@@ -68,7 +68,7 @@ From 2.2.2.254 icmp_seq=2 Destination Host Unreachable
 Vše dopadlo dle očekávání tedy paket proplul až na vzdálené cisco2, které nemělo pravidlo pro manipulaci paketů s cílem \verb|8.8.8.8|, a tak poslalo zpátky odesílateli \\ \verb|Destination Host Unreachable|.
 \newline
 
-\textbf{II. experiment}\\
+\paragraph{II. experiment}
 Pokud zkusíme odeslat \verb|ping| na \verb|1.1.1.2|, což je adresa v síti mezi linux1 a cisco1, ale není to adresa ani jednoho z nás, tak dopadne takto:
 \begin{verbatim}
 linux1:/home/dsn# ping -c2 1.1.1.2
@@ -79,7 +79,7 @@ From 1.1.1.1 icmp_seq=2 Destination Host Unreachable
 Linux ví (díky ARP protokolu), že vedle něj není počítač s IP adresou \verb|1.1.1.2|, a tak se to ani nesnaží odeslat. Je to zapříčiněno také tím, že routa \verb|1.1.1.0/24| je na rozhraní a ne na gateway.
 \newline
 
-\textbf{III. experiment}\\
+\paragraph{III. experiment}
 Cisco má trochu odlišné chování:
 \begin{verbatim}
 cisco1#ping 1.1.1.2

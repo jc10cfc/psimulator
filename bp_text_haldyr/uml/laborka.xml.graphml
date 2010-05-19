@@ -18,7 +18,7 @@
           <y:Geometry height="58.54969024658203" width="49.98619079589844" x="445.0069046020508" y="354.725154876709"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="eight_pos" modelPosition="e" textColor="#000000" visible="true" width="40.779296875" x="53.98619079589844" y="20.293399810791016">linux2</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.2900390625" modelName="eight_pos" modelPosition="e" textColor="#000000" visible="true" width="46.9091796875" x="53.98619079589844" y="19.129825592041016">linux2</y:NodeLabel>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="1"/>
           </y:SVGModel>
@@ -31,7 +31,7 @@
           <y:Geometry height="36.54969024658203" width="49.98619079589844" x="68.00690460205078" y="266.45030975341797"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="eight_pos" modelPosition="w" textColor="#000000" visible="true" width="40.837890625" x="-44.837890625" y="9.293399810791016">cisco1</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.2900390625" modelName="eight_pos" modelPosition="w" textColor="#000000" visible="true" width="46.9775390625" x="-50.9775390625" y="8.129825592041016">cisco1</y:NodeLabel>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="2"/>
           </y:SVGModel>
@@ -44,7 +44,7 @@
           <y:Geometry height="58.54969024658203" width="49.98619079589844" x="68.00690460205078" y="463.725154876709"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="eight_pos" modelPosition="s" textColor="#000000" visible="true" width="40.779296875" x="4.603446960449219" y="62.54969024658203">linux1</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.2900390625" modelName="eight_pos" modelPosition="w" textColor="#000000" visible="true" width="46.9091796875" x="-50.9091796875" y="19.129825592041016">linux1</y:NodeLabel>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="1"/>
           </y:SVGModel>
@@ -57,7 +57,7 @@
           <y:Geometry height="36.54969024658203" width="49.98619079589844" x="445.0069046020508" y="185.72515487670898"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="eight_pos" modelPosition="e" textColor="#000000" visible="true" width="40.837890625" x="53.98619079589844" y="9.293399810791016">cisco2</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="14" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="20.2900390625" modelName="eight_pos" modelPosition="e" textColor="#000000" visible="true" width="46.9775390625" x="53.98619079589844" y="8.129825592041016">cisco2</y:NodeLabel>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="2"/>
           </y:SVGModel>
@@ -76,8 +76,10 @@
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="29.5" x="173.75" y="-43.69384765625">síť 1</y:EdgeLabel>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.208984375" x="-32.208984375" y="-25.412324905395508">eth0</y:EdgeLabel>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.208984375" x="379.0" y="-41.51247978210449">eth0</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.92578125" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.5625" x="-99.5625" y="-32.39377021789551">192.168.1.1/24
+eth0</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.92578125" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.5625" x="379.0" y="-48.49392509460449">eth0
+192.168.1.2/24</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -94,8 +96,10 @@
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="29.5" x="-203.25" y="-41.7275390625">síť 2</y:EdgeLabel>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="stail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="30.208984375" x="2.0" y="-24.446016311645508">eth1</y:EdgeLabel>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.791015625" x="-476.791015625" y="-41.6396484375">FastEthernet0/0</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.92578125" modelName="six_pos" modelPosition="stail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.5625" x="2.0" y="-31.427461624145508">192.168.2.1/26
+eth1</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.92578125" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.791015625" x="-476.791015625" y="-48.1650390625">FastEthernet0/0
+192.168.2.2/26</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -109,9 +113,12 @@
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.791015625" x="-99.791015625" y="-28.083839416503906">FastEthernet0/1</y:EdgeLabel>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.791015625" x="379.0" y="-42.72778129577637">FastEthernet0/0</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.92578125" modelName="six_pos" modelPosition="shead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.791015625" x="-99.791015625" y="-36.74649429321289">10.0.0.1/30
+FastEthernet0/1</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="31.92578125" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="97.791015625" x="379.0" y="-49.70922660827637">FastEthernet0/0
+10.0.0.2/30</y:EdgeLabel>
           <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="29.5" x="173.75" y="-52.409149169921875">síť 3</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="186.5" y="-30.446258544921875"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

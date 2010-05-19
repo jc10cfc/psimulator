@@ -30,7 +30,7 @@ C      110     192-223  255.255.255.0   2 097 152   254
 D      1110    224-239  multicast
 E      1111    240-255  vyhrazeno jako rezerva
 \end{verbatim}
-Upravený výpis s Wikipedie \cite{wiki:ip} a z webu organizace IANA\cite{iana}.
+Upravený výpis s Wikipedie \cite{wiki:ip}.
 
 \paragraph{}
 Když se přidává záznam s nedosažitelnou bránou, tak IOS nevypíše žádnou chybovou hlášku (narozdíl od linux, který vypíše \verb|SIOCADDRT: No such process|). Záznam se uloží do wrapperu a je přidán do routovací tabulky ve chvíli, kdy bude dosažitelný. 
@@ -116,23 +116,24 @@ Při implementaci wrapperu jsem se několikrát odchýlil od skutečného cisca:
 
 \begin{enumerate}
  \item Prodlevu v aktualizaci routovací tabulky jsem neimplementoval, protože studenti na ní nemohou téměř narazit. A když si náhodou student všimne, že obsah tabulky nesedí, tak příkaz pro výpis zpravidla spustí znova a vše bude už v pořádku. Navíc jiná cisca mohou být mnohem rychlejší než ty školní a když takovou vlastnost nemá ani oficiální simulátor, tak asi nemá smysl to implementovat zde.
-
- \item Stanovil jsem limit 100 statických pravidel na bránu propojených do jednoho dlouhého řetězu. Nepřepokládám, že by bylo něco takového potřeba, 100 záznamů by ale mělo být víc než dost. Příklad velmi krátkého řetězu:
-\begin{verbatim}
-ip route 4.4.4.0 255.255.255.0 6.6.6.6
-ip route 6.6.6.0 255.255.255.0 8.8.8.8
-ip route 8.8.8.0 255.255.255.0 9.9.9.9
-..
-\end{verbatim} 
-
-%  \item Jednotlivé routy při výpisu routovací tabulky bývají sdruženy do nadsítí. Mnohdy se takto ale vůbec nesdružuje, 
-% \begin{verbatim}
-%      147.132.2.0/24 is variably subnetted, 2 subnets, 2 masks
-% C       147.132.2.64/26 is directly connected, FastEthernet0/0
-% C       147.132.2.128/25 is directly connected, FastEthernet0/1
-% S*   0.0.0.0/0 [1/0] via 147.132.2.254
-% \end{verbatim} 
-
+ \item Musel jsem stanovit limit pro počet statických pravidel na bránu 
 \end{enumerate}
+
+
+
+prodleva
+50 limit
+vypis RT
+
+
+
+%%% Osnova %%%
+% % Popis cisco RT - 2 struktury
+% % popis RT - 2 typy zaznamu U a UG
+% % popis vyberu zaznamu z RT
+% update
+% opozdeny vypocet nove RT
+
+
 
 
