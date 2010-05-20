@@ -18,6 +18,7 @@ public class Main {
     public static String jmenoProgramu = "psi simulator";
     static int port = 4000;
     static boolean bezNastaveni = false;
+    public static boolean chyba_spusteni = false;
     /**
      * Object vsechno je refence na seznam vsech pocitacu, ktere se nacetly z konfiguraku.
      */

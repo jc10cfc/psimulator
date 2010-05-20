@@ -4,6 +4,7 @@
  */
 package pocitac;
 
+import Main.Main;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -42,13 +43,20 @@ public class Komunikace extends Thread {
 
     @Override
     public void run() {
+        if (Main.chyba_spusteni) {
+            System.exit(1);
+        }
+
         try { //pokus o vytvareni socketu
             ss = new ServerSocket(cisloPortu);
         } catch (IOException e) {
+            Main.chyba_spusteni = true;
             pc.vypis("Nemuzu poslouchat na portu " + cisloPortu + ".");
-            pc.vypis("Port "+cisloPortu+" je pravdepodobne obsazen jinym programem, zkuste server spustit s jinym portem.");
+            pc.vypis("Port "+cisloPortu+" je pravdepodobne obsazen jinym programem, pocitac "+pc.jmeno+" nemohl byt nastartovan. " +
+                    "Zkuste server spustit s jinym portem.");
             System.exit(1);
         }
+        
         pc.vypis("Posloucham na portu " + cisloPortu);
 
         try {

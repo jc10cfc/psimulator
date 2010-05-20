@@ -186,7 +186,7 @@ public class CiscoWrapper {
         SitoveRozhrani iface = null;
 
         citac++;
-        if (citac >= 51) {
+        if (citac >= 101) {
             return null; // ochrana proti smyckam
         }
         for (int i = radky.size() - 1; i >= 0; i--) { // prochazim opacne (tedy vybiram s nevyssim poctem jednicek)
