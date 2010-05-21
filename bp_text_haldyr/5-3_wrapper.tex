@@ -35,7 +35,7 @@ Upravený výpis s Wikipedie \cite{wiki:ip} a z webu organizace IANA\cite{iana}.
 \paragraph{}
 Když se přidává záznam s nedosažitelnou bránou, tak IOS nevypíše žádnou chybovou hlášku (narozdíl od linux, který vypíše \verb|SIOCADDRT: No such process|). Záznam se uloží do wrapperu a je přidán do routovací tabulky ve chvíli, kdy bude dosažitelný. 
 
-Při jakékoliv změně IP adresy na rozhraní či změně statických záznamů se smaže celá routovací tabulka a spustí se aktualizační funkce \verb|update|. Ta nejdříve přidá routy na rozhraní (dle nastavených adres vsech rozhraních\footnote{V kapitole \ref{prijmiEthernetove} jsem takovému chování říkal \uv{samo-nastavující routy.}}) a pak začne postupně propočítávat jednotlivé záznamy z wrapperu. Záznam na rozhraní je přidán automaticky pokud výstupní rozhraní není shozené. Záznam na bránu se hledá přes rekurzivní metodu \verb|najdiRozhraniProBranu|.
+Při jakékoliv změně IP adresy na rozhraní či změně statických záznamů se smaže celá routovací tabulka a spustí se aktualizační funkce \verb|update|. Ta nejdříve přidá záznamy na rozhraní (dle nastavených adres vsech rozhraních\footnote{V kapitole \ref{prijmiEthernetove} jsem takovému chování říkal \uv{samo-nastavující záznamy.}}) a pak začne postupně propočítávat jednotlivé záznamy z wrapperu. Záznam na rozhraní je přidán automaticky pokud výstupní rozhraní není shozené. Záznam na bránu se hledá přes rekurzivní metodu \\\verb|najdiRozhraniProBranu|.
 
 V mé implementaci je zabudována ochrana proti smyčkám u záznamů na bránu, která limituje délku takového řetězu na 100 záznamů na bránu.
 
@@ -75,7 +75,7 @@ C       192.168.2.8 is directly connected, FastEthernet0/1
 S*   0.0.0.0/0 is directly connected, FastEthernet0/0
 \end{verbatim} 
 
-Potom jsem smazal defaultní routu \verb|0.0.0.0 0.0.0.0 FastEthernet0/0| a znovu jsem pořídíl výpis:
+Potom jsem smazal defaultní záznam \verb|0.0.0.0 0.0.0.0 FastEthernet0/0| a znovu jsem pořídíl výpis:
 \begin{verbatim}
      51.0.0.0/24 is subnetted, 1 subnets
 S       51.51.51.0 [1/0] via 21.21.21.244
@@ -93,7 +93,7 @@ S    13.0.0.0/8 [1/0] via 6.6.6.6
      192.168.2.0/30 is subnetted, 1 subnets
 C       192.168.2.8 is directly connected, FastEthernet0/1
 \end{verbatim} 
-Jak je vidět, tak se defaultní routa opravdu smazala (záznam \verb|S*| opravdu chybí). Po opětovném spuštění příkazu \verb|show ip route| po cca 20 vteřinách vypadá výpis následovně:
+Jak je vidět, tak se defaultní záznam opravdu smazala (záznam \verb|S*| opravdu chybí). Po opětovném spuštění příkazu \verb|show ip route| po cca 20 vteřinách vypadá výpis následovně:
 \begin{verbatim}
      51.0.0.0/24 is subnetted, 1 subnets
 S       51.51.51.0 [1/0] via 21.21.21.244
@@ -125,7 +125,7 @@ ip route 8.8.8.0 255.255.255.0 9.9.9.9
 ..
 \end{verbatim} 
 
-%  \item Jednotlivé routy při výpisu routovací tabulky bývají sdruženy do nadsítí. Mnohdy se takto ale vůbec nesdružuje, 
+%  \item Jednotlivé záznamy při výpisu routovací tabulky bývají sdruženy do nadsítí. Mnohdy se takto ale vůbec nesdružuje, 
 % \begin{verbatim}
 %      147.132.2.0/24 is variably subnetted, 2 subnets, 2 masks
 % C       147.132.2.64/26 is directly connected, FastEthernet0/0

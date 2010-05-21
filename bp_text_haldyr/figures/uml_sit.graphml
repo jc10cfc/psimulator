@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <!--Created by yFiles for Java 2.7-->
+  <key for="graphml" id="d0" yfiles.type="resources"/>
+  <key attr.name="url" attr.type="string" for="node" id="d1"/>
+  <key attr.name="description" attr.type="string" for="node" id="d2"/>
+  <key for="node" id="d3" yfiles.type="nodegraphics"/>
+  <key attr.name="Description" attr.type="string" for="graph" id="d4">
+    <default/>
+  </key>
+  <key attr.name="url" attr.type="string" for="edge" id="d5"/>
+  <key attr.name="description" attr.type="string" for="edge" id="d6"/>
+  <key for="edge" id="d7" yfiles.type="edgegraphics"/>
+  <graph edgedefault="directed" id="G">
+    <node id="n0">
+      <data key="d1"/>
+      <data key="d2"><![CDATA[UMLClass]]></data>
+      <data key="d3">
+        <y:UMLClassNode>
+          <y:Geometry height="86.0" width="163.0" x="133.5" y="-24.0"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="46.19287109375" x="58.403564453125" y="3.0">Server</y:NodeLabel>
+          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel>List &lt;Pocitac&gt; seznamPC</y:AttributeLabel>
+            <y:MethodLabel/>
+          </y:UML>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    <node id="n1">
+      <data key="d1"/>
+      <data key="d2"><![CDATA[UMLClass]]></data>
+      <data key="d3">
+        <y:UMLClassNode>
+          <y:Geometry height="147.0" width="156.0" x="-52.5" y="25.0"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="121.86962890625" x="17.065185546875" y="25.962890625">AbstraktniPocitac</y:NodeLabel>
+          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="abstract" use3DEffect="false">
+            <y:AttributeLabel>String jmeno
+Komunikace komunikace</y:AttributeLabel>
+            <y:MethodLabel/>
+          </y:UML>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    <node id="n2">
+      <data key="d1"/>
+      <data key="d2"><![CDATA[UMLClass]]></data>
+      <data key="d3">
+        <y:UMLClassNode>
+          <y:Geometry height="147.0" width="139.0" x="277.5" y="92.0"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="57.56787109375" x="40.716064453125" y="3.0">Konsole</y:NodeLabel>
+          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel>AbstraktniPocitac pc
+Socket s
+ParserPrikazu parser</y:AttributeLabel>
+            <y:MethodLabel>ctiRadek()
+posli()
+vypisPrompt()
+ukonciSpojeni()</y:MethodLabel>
+          </y:UML>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    <node id="n3">
+      <data key="d1"/>
+      <data key="d2"><![CDATA[UMLClass]]></data>
+      <data key="d3">
+        <y:UMLClassNode>
+          <y:Geometry height="147.0" width="114.0" x="133.5" y="135.0"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="85.8466796875" x="14.07666015625" y="3.0">Komunikace</y:NodeLabel>
+          <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="false">
+            <y:AttributeLabel>ServerSocket ss
+int cisloPortu</y:AttributeLabel>
+            <y:MethodLabel>run()
+getPort()</y:MethodLabel>
+          </y:UML>
+        </y:UMLClassNode>
+      </data>
+    </node>
+    <edge id="e0" source="n1" target="n3">
+      <data key="d7">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e1" source="n3" target="n2">
+      <data key="d7">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="10.1402587890625" y="-0.7861413925219836">*</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e2" source="n0" target="n1">
+      <data key="d5"/>
+      <data key="d6"><![CDATA[UMLhas]]></data>
+      <data key="d7">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="diamond"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-17.00482177734375" y="9.133948977830222"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="-19.89642333984375" y="10.347048314076929">*</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+  </graph>
+  <data key="d0">
+    <y:Resources/>
+  </data>
+</graphml>

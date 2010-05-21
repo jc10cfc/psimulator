@@ -117,6 +117,8 @@
 %       {.1\baselineskip} %tohle značí nadpis na samostatný řádce
 %       {\normalfont\normalsize\bfseries}}
 % \makeatother
+
+
 \makeatletter
 \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
  {-1ex\@plus -1ex \@minus -.1ex}%
@@ -125,6 +127,13 @@
 \makeatother
 
 
+\makeatletter
+\renewcommand\subparagraph{%
+   \@startsection{subparagraph}{5}{5mm} % díky pětce se to nečísluje, ty milimetry jsou odsazaní do strany
+      {-\baselineskip}%
+      {.1\baselineskip} %tohle značí nadpis na samostatný řádce
+      {\normalfont\normalsize\bfseries}}
+\makeatother
 
 % Pouzijete-li pdflatex, tak je prijemne, kdyz bude mit vase prace
 % funkcni odkazy i v pdf formatu
@@ -299,7 +308,7 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 \include{2_specifikace}
 \include{3_reserse}
 \include{4_navrh}
-\include{5_realizace}
+\include{5-0_realizace}
 \include{5-1_xml}
 \include{5-2_smerovani}
 \include{5-3_wrapper}

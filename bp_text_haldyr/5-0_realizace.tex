@@ -16,7 +16,7 @@
 %     \end{itemize}
 % \end{itemize}
 
-Téméř všechny části systému obsahují tzv. debugovací mód, který vypisuje extra informace, co se právě děje nebo přidává další vlastnost vhodnou pro ladění.
+Téměř všechny části systému obsahují tzv. debugovací mód, který vypisuje extra informace, co se právě děje nebo přidává další vlastnost vhodnou pro ladění.
 
 \section{Komunikační vrstva}
 Server má sám pro sebe vlastní vlákno ve kterém běží. Dále server vytvoří při startu pro všechny počítače nová vlákna, která poslouchají na portu o jedna větším než předchozí počítač (první počítač začíná na portu předaným jako parametr při startu serveru). Tyto vlákna se chovají zase jako servery. Když se uživatel připojí na libovolný počítač, tak se vytvoří další vlákno pro obsluhu tohoto klienta. Výhodou tohoto řešení je, že je možné se připojit na kterýkoliv počítač kolikrát potřebujeme. Je to tedy přesně tak, jako bychom se připojovali na reálné Cisco či Linux např. přes protokol ssh\footnote{Secure Shell - zabezpečený komunikační protokol (v současné době náhrada telnetu)} či telnet.
@@ -34,7 +34,7 @@ Na obrázku \ref{uml:sit} je znázorněna komunikační část pomocí UML\footn
 %------------------------------------------------------------------------------
 
 \section{Aplikační vrstva}
-Předkem všech tříd systému na aplikační vrstvě je \verb|Abstraktni|, která zastřešuje převážně statické funkce např. \verb|zaokrouhli| (na tři desetinná místa), \verb|cekej| (metoda pro uspání vlákna, užitečná při výpisech Cisco IOS) a další. Od \verb|Abstraktni| dědí abstraktní \verb|ParserPrikazu|, který seskupuje všechny parsery příkazů (v současné době pro Linux a Cisco IOS). Společný předek Linux a Cisco příkazů je \verb|AbtraktniPrikaz|, z kterého dědí linuxové příkazy kolegy a hlavně \verb|CiscoPrikaz|, který ještě přidává speciálné metody jen pro Cisco příkazy. Viz obrázek \ref{uml:abstraktni}.
+Předkem všech tříd systému na aplikační vrstvě je \verb|Abstraktni|, která zastřešuje převážně statické funkce např. \verb|zaokrouhli| (na tři desetinná místa), \verb|cekej| (metoda pro uspání vlákna, užitečná při výpisech Cisco IOS) a další. Od \verb|Abstraktni| dědí abstraktní \verb|ParserPrikazu|, který seskupuje všechny parsery příkazů (v současné době pro Linux a Cisco IOS). Společný předek Linux a Cisco příkazů je \verb|AbtraktniPrikaz|, z kterého dědí linuxové příkazy kolegy a hlavně \verb|CiscoPrikaz|, který ještě přidává speciální metody jen pro Cisco příkazy. Viz obrázek \ref{uml:abstraktni}.
 
 \begin{figure}[h]
 \begin{center}
@@ -62,7 +62,7 @@ Datové struktury pro počítačovou síť byly vytvářeny ve spolupráci s kol
 \subsubsection{Síťové rozhraní}
 Datová struktura pro síťové rozhraní je ve své podstatě jednoduchá. Obsahuje jméno, seznam IP adres přiřazených k tomuto rozhraní, MAC\footnote{MAC - Media Access Control, je fyzická adresa, kterou používá 2. (spojová) vrstva ISO/OSI modelu} adresu a stav.
 
-Systémem je oficiálně podporována pouze jedna IP adresa per rozhraní, více adres si ale vyžádal překlad adres. MAC adresa je v tomto systému spíše pro větší přiblížení skutečnému rozhraní, protože ARP\footnote{\uv{Address Resolution Protocol se v počítačových sítích s IP protokolem používá k získání ethernetové MAC adresy sousedního stroje z jeho IP adresy. Používá se v situaci, kdy je třeba odeslat IP datagram na adresu ležící ve stejné podsíti jako odesilatel. Data se tedy mají poslat přímo adresátovi, u něhož však odesilatel zná pouze IP adresu. Pro odeslání prostřednictvím např. Ethernetu ale potřebuje znát cílovou ethernetovou adresu.}\cite{wiki:arp}} protokol v této aplikaci přímo implementován. Systém obsahuje pouze několik pravidel, které byly nutné pro rozhodování zda přijmout či nepřijmout příchozí paket. Dále rozhraní obsahuje indikátor stavu, ve kterém se nachází - zapnuté/vypnuté. Rozhraní cisca jsou ve výchozím stavu vypnutá.
+Systémem je oficiálně podporována pouze jedna IP adresa per rozhraní, více adres si ale vyžádal překlad adres. MAC adresa je v tomto systému spíše pro větší přiblížení skutečnému rozhraní, protože ARP\footnote{\uv{\textit{Address Resolution Protocol se v počítačových sítích s IP protokolem používá k získání ethernetové MAC adresy sousedního stroje z jeho IP adresy. Používá se v situaci, kdy je třeba odeslat IP datagram na adresu ležící ve stejné podsíti jako odesilatel. Data se tedy mají poslat přímo adresátovi, u něhož však odesilatel zná pouze IP adresu. Pro odeslání prostřednictvím např. Ethernetu ale potřebuje znát cílovou ethernetovou adresu.}}\cite{wiki:arp}} protokol v této aplikaci přímo implementován. Systém obsahuje pouze několik pravidel, které byly nutné pro rozhodování zda přijmout či nepřijmout příchozí paket. Dále rozhraní obsahuje indikátor stavu, ve kterém se nachází - zapnuté/vypnuté. Rozhraní cisca jsou ve výchozím stavu vypnutá.
 
 \newpage
 
@@ -106,7 +106,7 @@ Na obrázku \ref{fig:ios} jsou zobrazeny důležité stavy IOS a přechody mezi 
 Uživatelský mód (USER MODE) je výchozí (startovací) mód. Tento mód je značně limitovaný a dovoluje použití čistě read-only příkazů (tj. takových, které nezmění konfiguraci). Přesto má tento mód svoje opodstatnění, dovoluje např. výpis směrovací tabulky \verb|show ip route| či příkazy \verb|ping| nebo \verb|traceroute|. Do privilegovaného režimu se lze přepnout příkazem \verb|enable|.
 
 \subsubsection{Privilegovaný mód}
-Privilegovaný mód (PRIVILEGED MODE) nebo také \uv{administrátorský} mód je podobný linuxovému \verb|root| účtu. Tento mód je výchozím bodem pro vstup do ostatních módů. Pro návrat zpět do uživatelského režimu existuje příkaz \verb|disable|. Příkaz \verb|configure| způsobí přepnutí do dalšího konfiguračního módu. Tento stav umožnuje vypsat veškeré informace o aktuální konfiguraci systému, např.:
+Privilegovaný mód (PRIVILEGED MODE) nebo také \uv{administrátorský} mód je podobný linuxovému \verb|root| účtu. Tento mód je výchozím bodem pro vstup do ostatních módů. Pro návrat zpět do uživatelského režimu existuje příkaz \verb|disable|. Příkaz \verb|configure| způsobí přepnutí do dalšího konfiguračního módu. Tento stav umožňuje vypsat veškeré informace o aktuální konfiguraci systému, např.:
 \begin{itemize}
  \item \verb|show running-config| - shrnutí aktuální konfigurace
  \item \verb|show ip route| - výpis směrovací tabulky
@@ -123,9 +123,9 @@ V tomto módu lze nastavovat IP adresy na aktuálně vybrané rozhraní, nastavo
 %------------------------------------------------------------------------------
 
 \subsection{Implementace Cisco IOS}
-Cisco IOS obsahuje desítky příkazů z nichž každý může mít až stovky variací. Proto jsem implementoval pouze úzkou část příkazů, která je potřebná pro splnění zadání této práce. Nejdůležitější funkcí parseru je rozpoznávání zkrácených příkazů. Na skutečném Ciscu se opravdu procházejí všechny možnosti, které mohou v daném stavu nastat, a podle nich probíhá vyhodnocování. V mé implementaci ale mám pouze část příkazů, takže jsem to musel vyřešit jiným způsobem. Pro každé slovo (část příkazu) si \verb|CiscoParserPrikazu| drží počet písmen, který je potřeba k jednoznačnému určení příkazu. Tato čísla jsem \uv{naměřil} na školních ciscách v březnu 2010. Zajímavé je, že už o 2 měsíce později jsem objevil drobné změny. Čísla se mohou měnit s různými verzemi Cisco IOS. To bych ale neviděl jako zásádní problém. Většina studentů (alespoň dle mé zkušenosti) stejně píše celé příkazy a zkrácené verze nepoužívá.
+Cisco IOS obsahuje desítky příkazů z nichž každý může mít až stovky variací. Proto jsem implementoval pouze úzkou část příkazů, která je potřebná pro splnění zadání této práce. Nejdůležitější funkcí parseru je rozpoznávání zkrácených příkazů. Na skutečném Ciscu se opravdu procházejí všechny možnosti, které mohou v daném stavu nastat, a podle nich probíhá vyhodnocování. V mé implementaci ale mám pouze část příkazů, takže jsem to musel vyřešit jiným způsobem. Pro každé slovo (část příkazu) si \verb|CiscoParserPrikazu| drží počet písmen, který je potřeba k jednoznačnému určení příkazu. Tato čísla jsem \uv{naměřil} na školních ciscách v březnu 2010. Zajímavé je, že už o 2 měsíce později jsem objevil drobné změny. Čísla se mohou měnit s různými verzemi Cisco IOS. To bych ale neviděl jako zásadní problém. Většina studentů (alespoň dle mé zkušenosti) stejně píše celé příkazy a zkrácené verze nepoužívá.
 
-Vyhodnocování příkazů zajišťuje metoda \verb|kontrola(command, cmd)|. Parametr \verb|command| je celý příkaz, na který by se to mohlo eventuelně doplnit, a \verb|cmd| je příkaz poslaný od uživatele. Nejdříve se zjistí počet znaků, který je potřeba pro jednoznačné doplnění na příkaz \verb|command|. Po té se zkontroluje požadovaný počet znaků a také jestli zkrácený příkaz odpovídá doplněnému. A jak to vypadá v kódu:
+Vyhodnocování příkazů zajišťuje metoda \verb|kontrola(command, cmd)|. Parametr \verb|command| je celý příkaz, na který by se to mohlo eventuálně doplnit, a \verb|cmd| je příkaz poslaný od uživatele. Nejdříve se zjistí počet znaků, který je potřeba pro jednoznačné doplnění na příkaz \verb|command|. Po té se zkontroluje požadovaný počet znaků a také jestli zkrácený příkaz odpovídá doplněnému. A jak to vypadá v kódu:
 
 \begin{verbatim}
 if (cmd.length() >= i && command.startsWith(cmd)) {

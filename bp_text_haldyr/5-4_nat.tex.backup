@@ -39,6 +39,8 @@ Celá situace je znázorněna na obrázku \ref{fig:nat1}. U paketů od \verb|poc
 
 \newpage
 
+% TODO: nekam prsknout
+Statický překlad adres má nejvyšší prioritu.
 
 \subsubsection{Dynamický NAT a overloading}
 Dynamický překlad adres je velmi podobný statickému s tím rozdílem, že se pravidla generují dynamicky. Je pouze přiřazen pool IP adres\footnote{pool je doslova zásoba či rezerva}, ze kterého se přiřazují adresy (s portem) při překladu. Navíc lze omezit adresy sítí, které se mají překládat (příkaz \verb|access-list|).
@@ -145,6 +147,7 @@ Vše je lépe znázorněno na vývojovém diagramu \ref{fig:nat_decision}.
 
 
 \subparagraph{Směr dovnitř - reverzní překlad}
+% TODO: pokracovat v odnatovani
 
 Reverzní překlad je mnohem jednodušší záležitost. Příchozí paket čekají tyto pravidla:
 \begin{enumerate}
@@ -156,8 +159,8 @@ Reverzní překlad je mnohem jednodušší záležitost. Příchozí paket čeka
 \end{enumerate}
 
 
-\subsubsection*{}
-Z obou směrů překladu vyplývá, že statická pravidla mají přednost před dynamickými záznamy. Při testování NATu na školních ciscách jsem zjistil, že cisca zapomínají všechny dynamické záznamy starší cca 10 vteřin. Tato vlastnost byla dodatečně implementována.
+\subsubsection{Implementace}
+Z obou směrů překladu vyplývá, že staticá pravidla mají přednost před dynamickými záznamy. Školní cisca zapomínají zhruba po 10 vteřinách všechny dynamické
 
 
 
@@ -166,6 +169,14 @@ Z obou směrů překladu vyplývá, že statická pravidla mají přednost před
 % juk do tabulky - staticke, pak dyn.
 % pak smerovani
 % odeslani do vnitrni site
+
+
+
+po X vterinach dyn. zaznamy mizi
+
+postup natovani
+  statický nad dynamickým
+
 
 
 
