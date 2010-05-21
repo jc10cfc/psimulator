@@ -17,14 +17,14 @@
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="124.0" width="145.0" x="280.5" y="40.0"/>
+          <y:Geometry height="124.0" width="178.0" x="280.5" y="40.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="121.86962890625" x="11.565185546875" y="25.962890625">AbstraktniPocitac</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="t" textColor="#000000" visible="true" width="121.86962890625" x="28.065185546875" y="25.962890625">AbstraktniPocitac</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="abstract" use3DEffect="true">
-            <y:AttributeLabel>&lt;List&gt;SitoveRozhrani
-RoutovaciTabulka
-NATtabulka</y:AttributeLabel>
+            <y:AttributeLabel>List &lt;SitoveRozhrani&gt; ifaces
+RoutovaciTabulka r_tab
+NATtabulka nat_tab</y:AttributeLabel>
             <y:MethodLabel>...</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
@@ -35,10 +35,10 @@ NATtabulka</y:AttributeLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="102.0" width="91.0" x="189.5" y="194.0"/>
+          <y:Geometry height="102.0" width="122.0" x="107.5" y="194.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="87.79541015625" x="1.602294921875" y="3.0">LinuxPocitac</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="87.79541015625" x="17.102294921875" y="3.0">LinuxPocitac</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel/>
             <y:MethodLabel>prijmiEthernetove()</y:MethodLabel>
@@ -51,10 +51,10 @@ NATtabulka</y:AttributeLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="102.0" width="91.0" x="310.5" y="194.0"/>
+          <y:Geometry height="102.0" width="121.0" x="259.5" y="194.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="87.31298828125" x="1.843505859375" y="3.0">CiscoPocitac</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="87.31298828125" x="16.843505859375" y="3.0">CiscoPocitac</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
             <y:AttributeLabel>CiscoWrapper</y:AttributeLabel>
             <y:MethodLabel>prijmiEthernetove()</y:MethodLabel>
@@ -67,14 +67,14 @@ NATtabulka</y:AttributeLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="102.0" width="103.0" x="431.5" y="230.0"/>
+          <y:Geometry height="102.0" width="164.0" x="410.5" y="230.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="104.36279296875" x="-0.681396484375" y="3.0">SitoveRozhrani</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="104.36279296875" x="29.818603515625" y="3.0">SitoveRozhrani</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>&lt;List&gt;IpAdresa
-Jmeno
-MacAdresa</y:AttributeLabel>
+            <y:AttributeLabel>List &lt;IpAdresa&gt; seznamIP
+String jmeno
+String macAdresa</y:AttributeLabel>
             <y:MethodLabel>...</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
@@ -85,21 +85,20 @@ MacAdresa</y:AttributeLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="102.0" width="91.0" x="570.5" y="194.0"/>
+          <y:Geometry height="102.0" width="91.0" x="538.5" y="76.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="63.6298828125" x="13.68505859375" y="3.0">IpAdresa</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>adresa
-maska
-port	</y:AttributeLabel>
+            <y:AttributeLabel>int adresa
+int maska
+int port	</y:AttributeLabel>
             <y:MethodLabel>...</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
     </node>
     <edge id="e0" source="n1" target="n0">
-      <data key="d6"/>
       <data key="d7">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -110,7 +109,6 @@ port	</y:AttributeLabel>
       </data>
     </edge>
     <edge id="e1" source="n2" target="n0">
-      <data key="d6"/>
       <data key="d7">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -121,25 +119,23 @@ port	</y:AttributeLabel>
       </data>
     </edge>
     <edge id="e2" source="n0" target="n3">
-      <data key="d6"/>
       <data key="d7">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="30.52984380455655" y="22.074355844350976">*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="thead" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="28.305295123734254" y="21.22936813230436">*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
     <edge id="e3" source="n3" target="n4">
-      <data key="d6"/>
       <data key="d7">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="16.060791015625" y="-2.347281778665433">*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="14.679333971692358" y="-22.70620143869533">*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

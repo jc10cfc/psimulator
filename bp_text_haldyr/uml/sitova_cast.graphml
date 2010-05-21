@@ -17,12 +17,12 @@
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="147.0" width="114.0" x="133.5" y="11.0"/>
+          <y:Geometry height="86.0" width="163.0" x="133.5" y="-24.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="46.19287109375" x="33.903564453125" y="3.0">Server</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="46.19287109375" x="58.403564453125" y="3.0">Server</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>&lt;List&gt; Pocitac</y:AttributeLabel>
+            <y:AttributeLabel>List &lt;Pocitac&gt; seznamPC</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -33,14 +33,13 @@
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="147.0" width="133.0" x="-29.5" y="49.0"/>
+          <y:Geometry height="147.0" width="156.0" x="-52.5" y="25.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="121.86962890625" x="5.565185546875" y="25.962890625">AbstraktniPocitac</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="121.86962890625" x="17.065185546875" y="25.962890625">AbstraktniPocitac</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="abstract" use3DEffect="true">
-            <y:AttributeLabel>jmeno
-&lt;List&gt;SitoveRozhrani
-Komunikace</y:AttributeLabel>
+            <y:AttributeLabel>String jmeno
+Komunikace komunikace</y:AttributeLabel>
             <y:MethodLabel/>
           </y:UML>
         </y:UMLClassNode>
@@ -51,18 +50,18 @@ Komunikace</y:AttributeLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="147.0" width="114.0" x="282.5" y="188.0"/>
+          <y:Geometry height="147.0" width="139.0" x="277.5" y="92.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="57.56787109375" x="28.216064453125" y="3.0">Konsole</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="57.56787109375" x="40.716064453125" y="3.0">Konsole</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>AbstraktniPocitac
-Socket
-ParserPrikazu</y:AttributeLabel>
-            <y:MethodLabel>ctiRadek
-posli
-vypisPrompt
-ukonciSpojeni</y:MethodLabel>
+            <y:AttributeLabel>AbstraktniPocitac pc
+Socket s
+ParserPrikazu parser</y:AttributeLabel>
+            <y:MethodLabel>ctiRadek()
+posli()
+vypisPrompt()
+ukonciSpojeni()</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
       </data>
@@ -72,13 +71,13 @@ ukonciSpojeni</y:MethodLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="147.0" width="114.0" x="133.5" y="188.0"/>
+          <y:Geometry height="147.0" width="114.0" x="133.5" y="135.0"/>
           <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="85.8466796875" x="14.07666015625" y="3.0">Komunikace</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>ServerSocket
-cisloPortu</y:AttributeLabel>
+            <y:AttributeLabel>ServerSocket ss
+int cisloPortu</y:AttributeLabel>
             <y:MethodLabel>run()
 getPort()</y:MethodLabel>
           </y:UML>
@@ -86,7 +85,6 @@ getPort()</y:MethodLabel>
       </data>
     </node>
     <edge id="e0" source="n1" target="n3">
-      <data key="d6"/>
       <data key="d7">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -97,13 +95,12 @@ getPort()</y:MethodLabel>
       </data>
     </edge>
     <edge id="e1" source="n3" target="n2">
-      <data key="d6"/>
       <data key="d7">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="15.089111328125" y="2.0">*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="ttail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="10.1402587890625" y="-0.7861413925219836">*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -116,8 +113,8 @@ getPort()</y:MethodLabel>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="diamond"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-16.9996337890625" y="6.208378397292336"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="-19.8912353515625" y="6.924214614719048">*</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="-17.00482177734375" y="9.133948977830222"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.962890625" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="9.783203125" x="-19.89642333984375" y="10.347048314076929">*</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

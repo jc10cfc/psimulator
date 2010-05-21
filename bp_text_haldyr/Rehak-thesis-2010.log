@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  20 MAY 2010 00:57
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  21 MAY 2010 12:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -526,7 +526,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2
 
 ]
-<figures/LogoCVUT.pdf, id=372, 93.34875pt x 70.2625pt>
+<figures/LogoCVUT.pdf, id=384, 93.34875pt x 70.2625pt>
 File: figures/LogoCVUT.pdf Graphic file (type pdf)
 
 <use figures/LogoCVUT.pdf> [3 <./figures/LogoCVUT.pdf>] [4
@@ -610,38 +610,41 @@ Kapitola 3.
 
 ]
 Kapitola 4.
-<figures/navrh.jpg, id=626, 1638.12pt x 1228.59pt>
+<figures/navrh.jpg, id=636, 1638.12pt x 1228.59pt>
 File: figures/navrh.jpg Graphic file (type jpg)
  <use figures/navrh.jpg>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<figures/uml_sit2.png, id=629, 458.71375pt x 355.3275pt>
-File: figures/uml_sit2.png Graphic file (type png)
-
-<use figures/uml_sit2.png> [7] [8 <./figures/navrh.jpg> <./figures/uml_sit2.png
- (PNG copy)>] <figures/uml_class.png, id=649, 504.88625pt x 323.2075pt>
-File: figures/uml_class.png Graphic file (type png)
-
-<use figures/uml_class.png> [9 <./figures/uml_class.png (PNG copy)>] [10]
-[11] <figures/uziv_rozhrani.png, id=675, 304.13625pt x 142.28156pt>
+[7 <./figures/navrh.jpg>] [8] [9]
+<figures/uziv_rozhrani.png, id=663, 304.13625pt x 142.28156pt>
 File: figures/uziv_rozhrani.png Graphic file (type png)
 
-<use figures/uziv_rozhrani.png>) [12 <./figures/uziv_rozhrani.png (PNG copy)>]
+<use figures/uziv_rozhrani.png>) [10 <./figures/uziv_rozhrani.png (PNG copy)>]
 \openout2 = `5_realizace.aux'.
 
 
 (./5_realizace.tex
 Kapitola 5.
-<figures/uml_abtraktni.png, id=682, 458.71375pt x 416.55624pt>
+<figures/uml_sit.png, id=670, 501.875pt x 337.26pt>
+File: figures/uml_sit.png Graphic file (type png)
+ <use figures/uml_sit.png>
+[11
+
+
+
+ <./figures/uml_sit.png (PNG copy)>]
+<figures/uml_abtraktni.png, id=680, 487.8225pt x 416.55624pt>
 File: figures/uml_abtraktni.png Graphic file (type png)
 
-<use figures/uml_abtraktni.png> [13
+<use figures/uml_abtraktni.png> [12 <./figures/uml_abtraktni.png (PNG copy)>]
+Overfull \hbox (7.3043pt too wide) in paragraph at lines 51--52
+[]\T1/cmr/m/n/10.95 Datové struk-tury pro po£í-ta£ovou sí´ byly vytvá°eny ve sp
+olupráci s kole-gou. []\T1/cmtt/m/n/10.95 CiscoPocitac
+ []
 
+<figures/uml_class.png, id=689, 555.07375pt x 323.2075pt>
+File: figures/uml_class.png Graphic file (type png)
 
-
- <./figures/uml_abtraktni.png (PNG copy)>]
-<figures/ios.png, id=690, 1625.272pt x 1149.093pt>
+<use figures/uml_class.png> [13 <./figures/uml_class.png (PNG copy)>]
+<figures/ios.png, id=702, 1625.272pt x 1149.093pt>
 File: figures/ios.png Graphic file (type png)
  <use figures/ios.png>
 
@@ -653,24 +656,25 @@ LaTeX Warning: `h' float specifier changed to `ht'.
  (./5-1_xml.tex [18
 
 
-] [19]) [20]
+] [19] [20])
+[21]
 \openout2 = `5-2_smerovani.aux'.
 
-
-(./5-2_smerovani.tex <figures/sit_2pc.png, id=744, 522.95375pt x 126.4725pt>
+ (./5-2_smerovani.tex
+<figures/sit_2pc.png, id=759, 522.95375pt x 126.4725pt>
 File: figures/sit_2pc.png Graphic file (type png)
 
 <use figures/sit_2pc.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[21
+[22
 
 
-] <figures/sit_3pc.png, id=753, 709.65125pt x 154.5775pt>
+] <figures/sit_3pc.png, id=768, 709.65125pt x 154.5775pt>
 File: figures/sit_3pc.png Graphic file (type png)
 
-<use figures/sit_3pc.png> [22 <./figures/sit_2pc.png (PNG copy)> <./figures/sit
+<use figures/sit_3pc.png> [23 <./figures/sit_2pc.png (PNG copy)> <./figures/sit
 _3pc.png (PNG copy)>]
 Underfull \hbox (badness 10000) in paragraph at lines 68--70
 
@@ -681,7 +685,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 79--81
 
  []
 
-[23]) [24]
+[24]) [25]
 \openout2 = `5-3_wrapper.aux'.
 
  (./5-3_wrapper.tex
@@ -690,44 +694,32 @@ Overfull \hbox (3.04239pt too wide) in paragraph at lines 9--10
 z nich je tvo°en t¥mito poloºkami:
  []
 
-[25
+[26
 
 
-] [26] [27]) [28]
+] [27] [28]) [29]
 \openout2 = `5-4_nat.aux'.
 
- (./5-4_nat.tex) [29
+ (./5-4_nat.tex) [30
 
 
 ]
 \openout2 = `6_testovani.aux'.
 
- (./6_testovani.tex [30
-
-
-
-]
+ (./6_testovani.tex
 Kapitola 6.
-[31]) [32]
+[31
+
+
+
+]) [32]
 Kapitola 7.
 (./Rehak-thesis-2010.bbl [33
 
 
 ] [34
 
-]
-Underfull \hbox (badness 3590) in paragraph at lines 32--37
-[]\T1/cmr/m/n/10.95 P°isp¥vatelé Wikipedie.  \T1/cmr/m/it/10.95 Cisco IOS \T1/c
-mr/m/n/10.95 [on-line]. 2010. [cit. 16.5.2010].  Dos-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 32--37
-\T1/cmr/m/n/10.95 tupné z: <[][]$\T1/cmtt/m/n/10.95 http : / / upload . wikimed
-ia . org / wikipedia / commons / thumb / 0 / 04 /
- []
-
-[35]) [36]
+] [35]) [36]
 P\v {r}\'{\i }loha A.
 [37
 
@@ -752,7 +744,7 @@ P\v {r}\'{\i }loha E.
 
 ]
 P\v {r}\'{\i }loha F.
-<figures/seznamcd.pdf, id=963, 793.96625pt x 539.01375pt>
+<figures/seznamcd.pdf, id=972, 793.96625pt x 539.01375pt>
 File: figures/seznamcd.pdf Graphic file (type pdf)
 
 <use figures/seznamcd.pdf> [53 <./figures/seznamcd.pdf>] [54]
@@ -760,47 +752,35 @@ File: figures/seznamcd.pdf Graphic file (type pdf)
 (./4_navrh.aux) (./5_realizace.aux) (./5-1_xml.aux) (./5-2_smerovani.aux)
 (./5-3_wrapper.aux) (./5-4_nat.aux) (./6_testovani.aux)) ) 
 Here is how much of TeX's memory you used:
- 7136 strings out of 495061
- 95176 string characters out of 1182621
- 172056 words of memory out of 3000000
- 9850 multiletter control sequences out of 15000+50000
+ 7142 strings out of 495061
+ 95223 string characters out of 1182621
+ 173213 words of memory out of 3000000
+ 9856 multiletter control sequences out of 15000+50000
  21222 words of font info for 46 fonts, out of 3000000 for 9000
- 38 hyphenation exceptions out of 8191
- 38i,9n,38p,1334b,468s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning (dest)
-: name{subsubsection.5.6.3.3} has been referenced but does not exist, replaced 
-by a fixed one
-
-pdfTeX warning (dest): name{subsubsection.5.6.3.2} has been referenced but does
- not exist, replaced by a fixed one
-
-pdfTeX warning (dest): name{subsubsection.5.6.3.1} has been referenced but does
- not exist, replaced by a fixed one
-
-pdfTeX warning (dest): name{subsection.5.6.3} has been referenced but does not 
-exist, replaced by a fixed one
-
- </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk> </home/ha
-ldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk> </home/haldyr/.texm
-f-var/fonts/pk/ljfour/jknappen/ec/ecti1095.600pk> </home/haldyr/.texmf-var/font
-s/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfou
-r/jknappen/ec/ectt1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen
-/ec/ecrm0900.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm08
-00.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecsl1095.600pk> 
-</home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home/hal
-dyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0600.600pk> </home/haldyr/.texmf
--var/fonts/pk/ljfour/jknappen/ec/ecbx2074.600pk> </home/haldyr/.texmf-var/fonts
-/pk/ljfour/jknappen/ec/ecti1440.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour
-/jknappen/ec/ecbx1440.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/
-ec/ecrm1200.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm109
-5.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488.600pk></
-usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/t
-exmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive
-/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/
-public/amsfonts/cm/cmsy10.pfb>
-Output written on Rehak-thesis-2010.pdf (72 pages, 1033898 bytes).
+ 39 hyphenation exceptions out of 8191
+ 38i,9n,38p,1263b,468s stack positions out of 5000i,500n,10000p,200000b,50000s
+ </home/haldyr/.texmf
+-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk> </home/haldyr/.texmf-var/fonts
+/pk/ljfour/jknappen/ec/ectt1000.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour
+/jknappen/ec/ecti1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/
+ec/ecbx1200.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt109
+5.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0900.600pk> <
+/home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0800.600pk> </home/hald
+yr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecsl1095.600pk> </home/haldyr/.texmf-
+var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home/haldyr/.texmf-var/fonts/
+pk/ljfour/jknappen/ec/ecrm0600.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/
+jknappen/ec/ecbx2074.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/e
+c/ecti1440.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440
+.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </
+home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </home/haldy
+r/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488.600pk></usr/share/texmf-texli
+ve/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/a
+msfonts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cm
+sy10.pfb>
+Output written on Rehak-thesis-2010.pdf (72 pages, 1044785 bytes).
 PDF statistics:
- 1921 PDF objects out of 2073 (max. 8388607)
- 254 named destinations out of 1000 (max. 500000)
- 763 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1943 PDF objects out of 2073 (max. 8388607)
+ 253 named destinations out of 1000 (max. 500000)
+ 787 words of extra memory for PDF output out of 10000 (max. 10000000)
 

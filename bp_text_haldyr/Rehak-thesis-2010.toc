@@ -9,61 +9,67 @@
 \contentsline {chapter}{\numberline {3}Existuj\IeC {\'\i }c\IeC {\'\i } implementace}{5}{chapter.3}
 \contentsline {chapter}{\numberline {4}Anal\IeC {\'y}za a~n\IeC {\'a}vrh \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{7}{chapter.4}
 \contentsline {section}{\numberline {4.1}Architektura}{7}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Po\IeC {\v c}\IeC {\'a}tek prac\IeC {\'\i }}{7}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}Klient - server}{7}{subsection.4.1.2}
-\contentsline {subsection}{\numberline {4.1.3}Vyhodnocov\IeC {\'a}n\IeC {\'\i } p\IeC {\v r}\IeC {\'\i }kaz\IeC {\r u}}{9}{subsection.4.1.3}
-\contentsline {subsection}{\numberline {4.1.4}Datov\IeC {\'e} struktury j\IeC {\'a}dra}{9}{subsection.4.1.4}
-\contentsline {subsubsection}{\numberline {4.1.4.1}Sm\IeC {\v e}rova\IeC {\v c} - CiscoPocitac}{9}{subsubsection.4.1.4.1}
-\contentsline {subsubsection}{\numberline {4.1.4.2}S\IeC {\'\i }\IeC {\v t}ov\IeC {\'e} rozhran\IeC {\'\i }}{10}{subsubsection.4.1.4.2}
-\contentsline {subsubsection}{\numberline {4.1.4.3}IP adresa}{10}{subsubsection.4.1.4.3}
-\contentsline {subsection}{\numberline {4.1.5}Telnet}{11}{subsection.4.1.5}
-\contentsline {section}{\numberline {4.2}Podobnost simul\IeC {\'a}toru se skute\IeC {\v c}n\IeC {\'y}m Ciscem}{11}{section.4.2}
-\contentsline {section}{\numberline {4.3}Programovac\IeC {\'\i } jazyk a prost\IeC {\v r}ed\IeC {\'\i }}{11}{section.4.3}
-\contentsline {section}{\numberline {4.4}U\IeC {\v z}ivatelsk\IeC {\'e} rozhran\IeC {\'\i }}{12}{section.4.4}
-\contentsline {section}{\numberline {4.5}Skute\IeC {\v c}n\IeC {\'e} Cisco}{12}{section.4.5}
-\contentsline {chapter}{\numberline {5}Realizace}{13}{chapter.5}
-\contentsline {section}{\numberline {5.1}Parser Cisco}{14}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Cisco IOS}{14}{subsection.5.1.1}
-\contentsline {subsubsection}{\numberline {5.1.1.1}U\IeC {\v z}ivatelsk\IeC {\'y} m\IeC {\'o}d}{14}{subsubsection.5.1.1.1}
-\contentsline {subsubsection}{\numberline {5.1.1.2}Privilegovan\IeC {\'y} m\IeC {\'o}d}{14}{subsubsection.5.1.1.2}
-\contentsline {subsubsection}{\numberline {5.1.1.3}Konfigura\IeC {\v c}n\IeC {\'\i } m\IeC {\'o}d}{15}{subsubsection.5.1.1.3}
-\contentsline {subsubsection}{\numberline {5.1.1.4}Konfigurace rozhran\IeC {\'\i }}{15}{subsubsection.5.1.1.4}
-\contentsline {subsection}{\numberline {5.1.2}Implementace Cisco IOS}{16}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {4.1.1}Naivn\IeC {\'\i } n\IeC {\'a}vrh}{7}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Klient - server}{8}{subsection.4.1.2}
+\contentsline {subsubsection}{\numberline {4.1.2.1}Komunika\IeC {\v c}n\IeC {\'\i } vrstva}{8}{subsubsection.4.1.2.1}
+\contentsline {subsubsection}{\numberline {4.1.2.2}Aplika\IeC {\v c}n\IeC {\'\i } vrstva}{8}{subsubsection.4.1.2.2}
+\contentsline {subsection}{\numberline {4.1.3}Telnet}{8}{subsection.4.1.3}
+\contentsline {subsection}{\numberline {4.1.4}Konfigura\IeC {\v c}n\IeC {\'\i } soubor}{9}{subsection.4.1.4}
+\contentsline {subsection}{\numberline {4.1.5}Sm\IeC {\v e}rova\IeC {\v c}}{9}{subsection.4.1.5}
+\contentsline {section}{\numberline {4.2}Podobnost simul\IeC {\'a}toru se skute\IeC {\v c}n\IeC {\'y}m Ciscem}{9}{section.4.2}
+\contentsline {section}{\numberline {4.3}P\IeC {\v r}edpokl\IeC {\'a}dan\IeC {\'y} rozsah}{9}{section.4.3}
+\contentsline {section}{\numberline {4.4}Programovac\IeC {\'\i } jazyk a prost\IeC {\v r}ed\IeC {\'\i }}{10}{section.4.4}
+\contentsline {section}{\numberline {4.5}Pam\IeC {\v e}\IeC {\v t}ov\IeC {\'a} n\IeC {\'a}ro\IeC {\v c}nost}{10}{section.4.5}
+\contentsline {section}{\numberline {4.6}U\IeC {\v z}ivatelsk\IeC {\'e} rozhran\IeC {\'\i }}{10}{section.4.6}
+\contentsline {chapter}{\numberline {5}Realizace}{11}{chapter.5}
+\contentsline {section}{\numberline {5.1}Komunika\IeC {\v c}n\IeC {\'\i } vrstva}{11}{section.5.1}
+\contentsline {section}{\numberline {5.2}Aplika\IeC {\v c}n\IeC {\'\i } vrstva}{12}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Vyhodnocov\IeC {\'a}n\IeC {\'\i } p\IeC {\v r}\IeC {\'\i }kaz\IeC {\r u}}{12}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Datov\IeC {\'e} struktury j\IeC {\'a}dra}{13}{subsection.5.2.2}
+\contentsline {subsubsection}{\numberline {5.2.2.1}S\IeC {\'\i }\IeC {\v t}ov\IeC {\'e} rozhran\IeC {\'\i }}{13}{subsubsection.5.2.2.1}
+\contentsline {subsubsection}{\numberline {5.2.2.2}IP adresa}{14}{subsubsection.5.2.2.2}
+\contentsline {section}{\numberline {5.3}Parser Cisco}{14}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Cisco IOS}{14}{subsection.5.3.1}
+\contentsline {subsubsection}{\numberline {5.3.1.1}U\IeC {\v z}ivatelsk\IeC {\'y} m\IeC {\'o}d}{14}{subsubsection.5.3.1.1}
+\contentsline {subsubsection}{\numberline {5.3.1.2}Privilegovan\IeC {\'y} m\IeC {\'o}d}{15}{subsubsection.5.3.1.2}
+\contentsline {subsubsection}{\numberline {5.3.1.3}Konfigura\IeC {\v c}n\IeC {\'\i } m\IeC {\'o}d}{15}{subsubsection.5.3.1.3}
+\contentsline {subsubsection}{\numberline {5.3.1.4}Konfigurace rozhran\IeC {\'\i }}{16}{subsubsection.5.3.1.4}
+\contentsline {subsection}{\numberline {5.3.2}Implementace Cisco IOS}{16}{subsection.5.3.2}
 \contentsline {paragraph}{}{16}{section*.6}
-\contentsline {subsection}{\numberline {5.1.3}Odchylky v implementaci}{17}{subsection.5.1.3}
-\contentsline {section}{\numberline {5.2}Na\IeC {\v c}\IeC {\'\i }t\IeC {\'a}n\IeC {\'\i } ze souboru}{18}{section.5.2}
-\contentsline {subsection}{\numberline {5.2.1}Zpracov\IeC {\'a}n\IeC {\'\i } parametr\IeC {\r u}}{18}{subsection.5.2.1}
-\contentsline {subsection}{\numberline {5.2.2}Konfigura\IeC {\v c}n\IeC {\'\i } soubor}{18}{subsection.5.2.2}
-\contentsline {subsection}{\numberline {5.2.3}Implementace SAX handleru}{19}{subsection.5.2.3}
-\contentsline {subsubsection}{\numberline {5.2.3.1}Na\IeC {\v c}\IeC {\'\i }t\IeC {\'a}n\IeC {\'\i }}{19}{subsubsection.5.2.3.1}
-\contentsline {subsubsection}{\numberline {5.2.3.2}Datov\IeC {\'a} struktura}{19}{subsubsection.5.2.3.2}
-\contentsline {subsubsection}{\numberline {5.2.3.3}Vytv\IeC {\'a}\IeC {\v r}en\IeC {\'\i } virtu\IeC {\'a}ln\IeC {\'\i }ch po\IeC {\v c}\IeC {\'\i }ta\IeC {\v c}\IeC {\r u}}{20}{subsubsection.5.2.3.3}
-\contentsline {section}{\numberline {5.3}Ukl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i } do souboru}{20}{section.5.3}
-\contentsline {section}{\numberline {5.4}Sm\IeC {\v e}rov\IeC {\'a}n\IeC {\'\i }}{21}{section.5.4}
-\contentsline {subsection}{\numberline {5.4.1}Debuging}{21}{subsection.5.4.1}
-\contentsline {subsection}{\numberline {5.4.2}S\IeC {\'\i }\IeC {\v t} \IeC {\v c}.1}{21}{subsection.5.4.2}
-\contentsline {subsubsection}{\numberline {5.4.2.1}Popis probl\IeC {\'e}mu}{21}{subsubsection.5.4.2.1}
-\contentsline {subsubsection}{\numberline {5.4.2.2}\IeC {\v R}e\IeC {\v s}en\IeC {\'\i }}{22}{subsubsection.5.4.2.2}
-\contentsline {subsection}{\numberline {5.4.3}S\IeC {\'\i }\IeC {\v t} \IeC {\v c}.2}{22}{subsection.5.4.3}
-\contentsline {subsubsection}{\numberline {5.4.3.1}Popis s\IeC {\'\i }t\IeC {\v e}}{22}{subsubsection.5.4.3.1}
-\contentsline {subsubsection}{\numberline {5.4.3.2}Experimenty}{23}{subsubsection.5.4.3.2}
-\contentsline {paragraph}{I. experiment}{23}{section*.7}
-\contentsline {paragraph}{II. experiment}{23}{section*.8}
-\contentsline {paragraph}{III. experiment}{23}{section*.9}
-\contentsline {subsection}{\numberline {5.4.4}ARP protokol}{24}{subsection.5.4.4}
-\contentsline {subsection}{\numberline {5.4.5}Pravidla o p\IeC {\v r}\IeC {\'\i }jmu paket\IeC {\r u}}{24}{subsection.5.4.5}
-\contentsline {section}{\numberline {5.5}Wrapper sm\IeC {\v e}rovac\IeC {\'\i } tabulky}{25}{section.5.5}
-\contentsline {subsection}{\numberline {5.5.1}Sm\IeC {\v e}rovac\IeC {\'\i } tabulka}{25}{subsection.5.5.1}
-\contentsline {subsubsection}{\numberline {5.5.1.1}V\IeC {\'y}b\IeC {\v e}r z\IeC {\'a}znam\IeC {\r u}}{25}{subsubsection.5.5.1.1}
-\contentsline {subsection}{\numberline {5.5.2}Wrapper}{25}{subsection.5.5.2}
-\contentsline {subsubsection}{\numberline {5.5.2.1}Statick\IeC {\'e} z\IeC {\'a}znamy}{25}{subsubsection.5.5.2.1}
-\contentsline {paragraph}{}{26}{section*.10}
-\contentsline {subsection}{\numberline {5.5.3}Vlastnosti}{26}{subsection.5.5.3}
-\contentsline {subsection}{\numberline {5.5.4}Odchylky}{28}{subsection.5.5.4}
-\contentsline {section}{\numberline {5.6}P\IeC {\v r}eklad adres}{29}{section.5.6}
-\contentsline {subsection}{\numberline {5.6.1}Cisco a NAT}{29}{subsection.5.6.1}
-\contentsline {subsection}{\numberline {5.6.2}Implementace NATu}{29}{subsection.5.6.2}
-\contentsline {subsubsection}{\numberline {5.6.2.1}Datov\IeC {\'e} struktury}{29}{subsubsection.5.6.2.1}
+\contentsline {subsection}{\numberline {5.3.3}Odchylky v implementaci}{17}{subsection.5.3.3}
+\contentsline {section}{\numberline {5.4}Na\IeC {\v c}\IeC {\'\i }t\IeC {\'a}n\IeC {\'\i } ze souboru}{18}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Zpracov\IeC {\'a}n\IeC {\'\i } parametr\IeC {\r u}}{18}{subsection.5.4.1}
+\contentsline {subsection}{\numberline {5.4.2}Konfigura\IeC {\v c}n\IeC {\'\i } soubor}{18}{subsection.5.4.2}
+\contentsline {subsection}{\numberline {5.4.3}Implementace SAX handleru}{19}{subsection.5.4.3}
+\contentsline {subsubsection}{\numberline {5.4.3.1}Na\IeC {\v c}\IeC {\'\i }t\IeC {\'a}n\IeC {\'\i }}{20}{subsubsection.5.4.3.1}
+\contentsline {subsubsection}{\numberline {5.4.3.2}Datov\IeC {\'a} struktura}{20}{subsubsection.5.4.3.2}
+\contentsline {subsubsection}{\numberline {5.4.3.3}Vytv\IeC {\'a}\IeC {\v r}en\IeC {\'\i } virtu\IeC {\'a}ln\IeC {\'\i }ch po\IeC {\v c}\IeC {\'\i }ta\IeC {\v c}\IeC {\r u}}{20}{subsubsection.5.4.3.3}
+\contentsline {section}{\numberline {5.5}Ukl\IeC {\'a}d\IeC {\'a}n\IeC {\'\i } do souboru}{21}{section.5.5}
+\contentsline {section}{\numberline {5.6}Sm\IeC {\v e}rov\IeC {\'a}n\IeC {\'\i }}{22}{section.5.6}
+\contentsline {subsection}{\numberline {5.6.1}Debuging}{22}{subsection.5.6.1}
+\contentsline {subsection}{\numberline {5.6.2}S\IeC {\'\i }\IeC {\v t} \IeC {\v c}.1}{22}{subsection.5.6.2}
+\contentsline {subsubsection}{\numberline {5.6.2.1}Popis probl\IeC {\'e}mu}{22}{subsubsection.5.6.2.1}
+\contentsline {subsubsection}{\numberline {5.6.2.2}\IeC {\v R}e\IeC {\v s}en\IeC {\'\i }}{23}{subsubsection.5.6.2.2}
+\contentsline {subsection}{\numberline {5.6.3}S\IeC {\'\i }\IeC {\v t} \IeC {\v c}.2}{23}{subsection.5.6.3}
+\contentsline {subsubsection}{\numberline {5.6.3.1}Popis s\IeC {\'\i }t\IeC {\v e}}{23}{subsubsection.5.6.3.1}
+\contentsline {subsubsection}{\numberline {5.6.3.2}Experimenty}{24}{subsubsection.5.6.3.2}
+\contentsline {paragraph}{I. experiment}{24}{section*.7}
+\contentsline {paragraph}{II. experiment}{24}{section*.8}
+\contentsline {paragraph}{III. experiment}{24}{section*.9}
+\contentsline {subsection}{\numberline {5.6.4}ARP protokol}{25}{subsection.5.6.4}
+\contentsline {subsection}{\numberline {5.6.5}Pravidla o p\IeC {\v r}\IeC {\'\i }jmu paket\IeC {\r u}}{25}{subsection.5.6.5}
+\contentsline {section}{\numberline {5.7}Wrapper sm\IeC {\v e}rovac\IeC {\'\i } tabulky}{26}{section.5.7}
+\contentsline {subsection}{\numberline {5.7.1}Sm\IeC {\v e}rovac\IeC {\'\i } tabulka}{26}{subsection.5.7.1}
+\contentsline {subsubsection}{\numberline {5.7.1.1}V\IeC {\'y}b\IeC {\v e}r z\IeC {\'a}znam\IeC {\r u}}{26}{subsubsection.5.7.1.1}
+\contentsline {subsection}{\numberline {5.7.2}Wrapper}{26}{subsection.5.7.2}
+\contentsline {subsubsection}{\numberline {5.7.2.1}Statick\IeC {\'e} z\IeC {\'a}znamy}{26}{subsubsection.5.7.2.1}
+\contentsline {paragraph}{}{27}{section*.10}
+\contentsline {subsection}{\numberline {5.7.3}Vlastnosti}{27}{subsection.5.7.3}
+\contentsline {subsection}{\numberline {5.7.4}Odchylky}{29}{subsection.5.7.4}
+\contentsline {section}{\numberline {5.8}P\IeC {\v r}eklad adres}{30}{section.5.8}
+\contentsline {subsection}{\numberline {5.8.1}Cisco a NAT}{30}{subsection.5.8.1}
+\contentsline {subsection}{\numberline {5.8.2}Implementace NATu}{30}{subsection.5.8.2}
+\contentsline {subsubsection}{\numberline {5.8.2.1}Datov\IeC {\'e} struktury}{30}{subsubsection.5.8.2.1}
 \contentsline {chapter}{\numberline {6}Testov\IeC {\'a}n\IeC {\'\i }}{31}{chapter.6}
 \contentsline {section}{\numberline {6.1}U\IeC {\v z}ivatelsk\IeC {\'e} testov\IeC {\'a}n\IeC {\'\i }}{31}{section.6.1}
 \contentsline {subsection}{\numberline {6.1.1}Zad\IeC {\'a}n\IeC {\'\i }}{31}{subsection.6.1.1}

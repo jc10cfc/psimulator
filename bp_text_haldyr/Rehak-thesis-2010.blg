@@ -22,7 +22,7 @@ Warning--empty year in latexwiki
 while executing---line 1484 of file csplainnat.bst
 You've used 18 entries,
             2899 wiz_defined-function locations,
-            714 strings with 7146 characters,
+            714 strings with 7096 characters,
 and the built_in function-call counts, 5665 in all, are:
 = -- 620
 > -- 172

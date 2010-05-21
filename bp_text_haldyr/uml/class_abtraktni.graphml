@@ -17,12 +17,12 @@
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="115.0" width="91.0" x="282.5" y="10.999999999999986"/>
-          <y:Fill color="#99CCFF" transparent="false"/>
+          <y:Geometry height="115.0" width="118.0" x="282.5" y="10.999999999999986"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="74.61767578125" x="8.191162109375" y="25.962890625">Abstraktni</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="74.61767578125" x="21.691162109375" y="25.962890625">Abstraktni</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="abstract" use3DEffect="true">
-            <y:AttributeLabel>slova</y:AttributeLabel>
+            <y:AttributeLabel>List&lt;String&gt; slova</y:AttributeLabel>
             <y:MethodLabel>cekej()
 zarovnej()</y:MethodLabel>
           </y:UML>
@@ -34,13 +34,13 @@ zarovnej()</y:MethodLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="141.0" width="124.0" x="124.5" y="99.5"/>
-          <y:Fill color="#99CCFF" transparent="false"/>
+          <y:Geometry height="141.0" width="135.5" x="113.0" y="99.5"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="116.27734375" x="3.861328125" y="25.962890625">AbstraktniPrikaz</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="116.27734375" x="9.611328125" y="25.962890625">AbstraktniPrikaz</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="abstract" use3DEffect="true">
-            <y:AttributeLabel>AbstraktniPocitac
-Konsole</y:AttributeLabel>
+            <y:AttributeLabel>AbstraktniPocitac pc
+Konsole kon</y:AttributeLabel>
             <y:MethodLabel>vykonejPrikaz()</y:MethodLabel>
           </y:UML>
         </y:UMLClassNode>
@@ -51,14 +51,14 @@ Konsole</y:AttributeLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="142.0" width="124.0" x="407.5" y="99.0"/>
-          <y:Fill color="#99CCFF" transparent="false"/>
+          <y:Geometry height="142.0" width="132.0" x="430.5" y="99.0"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="96.599609375" x="13.7001953125" y="25.962890625">ParserPrikazu</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="96.599609375" x="17.7001953125" y="25.962890625">ParserPrikazu</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="abstract" use3DEffect="true">
-            <y:AttributeLabel>AbstraktniPocitac
-Konsole
-radek</y:AttributeLabel>
+            <y:AttributeLabel>AbstraktniPocitac pc
+Konsole kon
+String radek</y:AttributeLabel>
             <y:MethodLabel>zpracujRadek()
 spolecnePrikazy()</y:MethodLabel>
           </y:UML>
@@ -70,13 +70,13 @@ spolecnePrikazy()</y:MethodLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="142.0" width="147.0" x="113.0" y="253.0"/>
-          <y:Fill color="#99CCFF" transparent="false"/>
+          <y:Geometry height="142.0" width="147.0" x="107.25" y="253.0"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="81.720703125" x="32.6396484375" y="3.0">CiscoPrikaz</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>no
-ambiguous</y:AttributeLabel>
+            <y:AttributeLabel>boolean no
+boolean ambiguous</y:AttributeLabel>
             <y:MethodLabel>ambiguousCommand()
 invalidInputDetected()
 incompleteCommand()
@@ -90,12 +90,12 @@ unsupported()</y:MethodLabel>
       <data key="d2"><![CDATA[UMLClass]]></data>
       <data key="d3">
         <y:UMLClassNode>
-          <y:Geometry height="141.0" width="140.0" x="399.5" y="254.0"/>
-          <y:Fill color="#99CCFF" transparent="false"/>
+          <y:Geometry height="141.0" width="140.0" x="422.5" y="254.0"/>
+          <y:Fill color="#DBE9E7" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.158203125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="132.66064453125" x="3.669677734375" y="3.0">CiscoParserPrikazu</y:NodeLabel>
           <y:UML clipContent="true" constraint="" omitDetails="false" stereotype="" use3DEffect="true">
-            <y:AttributeLabel>CiscoStav</y:AttributeLabel>
+            <y:AttributeLabel>CiscoStav stav</y:AttributeLabel>
             <y:MethodLabel>kontrola()
 zpracujRadek()
 ..</y:MethodLabel>
