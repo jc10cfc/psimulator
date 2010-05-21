@@ -1,0 +1,108 @@
+
+\chapter{Analysa aplikace}
+
+V této kapitole se zabývám analysou a návrhem aplikace jako celku. Shrnuji a analysuji požadavky, diskutuji zvolený jazyk a uživatelské rozhraní, navrhuji architekturu aplikace a odhaduji její náročnost. Analysa jednotlivých částí simulátoru je popisována společně s těmito částmi.
+
+
+%-----------------------------------------------------------------------------------
+
+\section{Požadavky na aplikaci}
+
+Nejprve shrnu všechny požadavky na mojí aplikaci.
+
+\subsection{Funkční požadavky}
+\begin{enumerate}
+ \item Vytvoření počítačové sítě založené na počítačích OS Linux.
+ \item Aplikace umožňuje konfiguraci rozhraní pomocí příkazů ifconfig a ip addr.
+ \item Aplikace obsahuje funkční směrování a umožňuje jeho nastavování pomocí příkazů route a ip route.
+ \item Aplikace implementuje překlad adres
+ \item Aplikace podporuje ukládání a načítání do/ze souboru.
+ \item Pro ověření správnosti jsou implementovány příkazy ping a traceroute.
+ \item K jednotlivým počítačům aplikace je možné se připojit pomocí telnetu.
+ \item Pomocí telnetu bude možno se připojit zároveň k více virtuálním počítačům.
+ \item Pomocí telnetu bude možno připojit se k jednomu počítači vícekrát najednou.
+\end{enumerate}
+
+\subsection{Nefunkční požadavky}
+\begin{enumerate}
+ \item Aplikace bude multiplatformní - alespoň pro operační systémy Windows a Linux
+ \item Aplikace musí být spustitelná na běžném\footnote{Slovem \uv{běžné} se myslí v podstatě jakýkoliv počítač, na kterém je možné nainstalovat prostředí Javy - Java Runtime Environment} studentském počítači.
+ \item Aplikace by měla být co nejvěrnější kopií reálného počítače s Linuxem.
+\end{enumerate}
+
+
+
+%-----------------------------------------------------------------------------------
+
+\section{Analysa požadavků}
+
+
+\subsection{Připojení pomocí telnetu}
+
+Jedním z funkčních požadavků mé aplikace je možnost připojit se k jednotlivým virtuálním počítačům pomocí protokolu telnet. Tento požadavek vypadá jednoduše, pokud pod pojmem Telnet chápeme jednoduchý protokol na přenos textových dat. Takový protokol ovšem neumožňuje doplňování příkazů a jejich historii, což je pro práci s počítačem, byť virtuálním, obrovské omezení. Oproti tomu, implementovat telnet protokol, jako NVT\footnote{NVT – Network Virtual Terminal, česky: Síťový virtuální terminál; poskytuje standardní rozhraní příkazové řádky}, kde se posílá a potvrzuje každý napsaný znak, by překračovalo rozsah této bakalářské práce. Můj kolega nalezl program rlwrap, který poskytuje historii příkazů a jejich doplňování na straně klienta. Funguje v linuxu, na windowsu jen pod cygwinem. Toto druhé řešení bude o dost jednodušší a rozhodli jsme se ho realisovat, i když pro uživatele bude nevýhodou spouštění přes cygwin. I tak ovšem základní požadavek, že s aplikací bude možno komunikovat pomocí telnetu, zůstane zachován, uživatel ovšem přijde o komfort, který mu nabízí možnost doplňování, editace a historie příkazů. 
+
+
+\subsection{Podobnost simulátoru se skutečným linuxem}
+
+Aby byl simulátor využitelný pro výukové účely, musí být dostatečně podobný skutečnému linuxu, aby uživatel mohl věřit, že to, co funguje v simulátoru, bude fungovat i na skutečném linuxu a naopak. K tomu bude stačit implementovat jen ty příkazy, kterými se nastavují síťové parametry, a jen v takovém rozsahu, jaký je pro tyto výukové účely potřeba. Budu tedy implementovat příkazy \verb|ifconfig\verb|, \verb|route|, \verb|ping| a \verb|traceroute|, z příkazu \verb|ip| stačí implementovat jeho podpříkazy \verb|addr| a \verb|route|. Pro potřeby nastavení překladu adres je potřeba implementovat malou část příkazu \verb|iptables|. Aby uživatel mohl nastavovat některé hodnoty souborů v adresáři \verb|/proc|, implementuji ve velmi omezené míře i příkazy \verb|cat| a \verb|echo|, ovšem jen pro tyto soubory. Pro ukončení spojení bude implementován příkaz \verb|exit|. Pro potřeby simulátoru ale není potřeba implementovat kompletní příkazy \verb|ifconfig| nebo \verb|ip|, ale jen tu jejich část, kterou se nastavují parametry rozhraní, jako IP, maska a další. O ostatních parametrech pak vetšinou simulátor vypíše, že ve skutečnosti sice existují, ale simulátorem zatím nejsou podporované.
+
+
+\subsection{Počet simulovaných počítačů}
+
+Na laboratořích Y36PSI studenti konfigurují 4 počítače, náš simulátor by měl zvládnout simulovat síť o 10 počítačích. Více ani není potřeba, pro výukové účely studenti pravděpodobně nebudout konfigurovat více počítačů.
+
+
+
+%-----------------------------------------------------------------------------------
+
+\section{Programovací jazyk a uživatelské rozhraní}
+
+\subsection{Programovací jazyk}
+Aplikaci jsme se rozhodli programovat v programovacím jazyku Java z několika důvodů. Java je programovací jazyk, který nabízí velký programátorský komfort, stabilitu a zároveň možnost vytvořené aplikace používat pod různými operačními systémy, což je další z nefunkčních požadavků. Tento jazyk navíc disponuje hotovými knihovnami pro práci se sítí v balíčku java.net. Dalším důvodem je také to, že s programováním aplikací v Javě mám zatím asi největší zkušenosti.
+
+\subsection{Uživatelské rozhraní}
+
+Jak plyne ze zadání, uživatel se přihlašuje k jednotlivým virtuálním počítačům pomocí programu telnet, nemusím tedy vytvářet žádného speciálního klienta. S aplikací samotnou nebude uživatel nijak pracovat, jenom ji spustí se správným konfiguračním souborem a případně číslem výchozího portu, dále již bude nastavovat pouze jednotlivé virtuální počítače pomocí telnetu. Pro takovou aplikaci je nejlepším uživatelským rozhraním příkazová řádka, vytváření grafického uživatelského rozhraní by nemělo smysl.
+
+
+
+%-----------------------------------------------------------------------------------
+
+\section{Struktura aplikace}
+
+Aplikace se bude skládat ze dvou vrstev. Komunikační vrstva by měla zajišťovat síťovou komunikaci s klientem, tedy odesílání a přijímání textových dat. Z velké části bude převzata z jiné práce, kterou jsme kdysi dělali jako domácí úkol na předmět Y36PSI. Aplikační vrstva bude tvořena samotnou virtuální sítí. Tyto vrstvy však od sebe nebudou striktně odděleny. Nejprve si rozebereme druhou vrstvu.
+
+
+\subsection{Virtuální síť}
+
+Virtuální počítačová síť, kterou bude aplikace simulovat, má poskytovat především tyto funkcionality:
+\begin{itemize}
+ \item Možnost konfigurace jednotlivých síťových prvků.
+ \item Posílání paketů mezi síťovými prvky.
+\end{itemize}
+Skutečná počítačová síť se skládá ze síťových prvků různých druhů. Stejně tak i virtuální síť se bude skládat ze síťových prvků, které budou interně reprezentovány objekty.
+
+\subsubsection{Síťové prvky}
+
+V laboratořích předmětu Y36PSI studenti nastavují pouze PC nebo směrovače na 3. (síťové) vrstvě ISO/OSI modelu\footnote{3. vrstva ISO modelu, tzv. síťová vrstva, zajišťuje spojení mezi jakýmikoliv 2 uzly sítě.}. Síťové prvky pracující na 2. vrstvě ISO/OSI modelu\footnote{2. vrstva ISO/OSI modelu, tzv. spojová nebo linková vrstva, zajišťuje spojení mezi dvěma sousedními systémy.}, switche a bridge se v laboratořích vůbec neuvažují. Proto i ve své práci uvažuji jediný druh síťových prvků - počítače s OS Linux.
+
+\subsubsection{Posílání paketů}
+Virtuální síť musí umět posílat virtuální pakety, aby uživatel pomocí příkazů \verb|ping| nebo \verb|traceroute| zjistil, jestli virtuální síť správně nakonfiguroval. Posílání paktů bude vnitřně realisováno vzájemným voláním metod virtuálních počítačů, které si mezi sebou budou předávat objekty typu paket. Tyto metody zřejmě bude vhodné rozdělit tak, aby odpovídaly jednotlivým vrstvám ISO/OSI modelu.
+
+
+\subsection{Komunikační vrstva}
+Komunikační vrstva simulátoru bude zajišťovat spojení aplikace s klientem. Z tohoto pohledu bude simulátor klasickým síťovým serverem, který poslouchá na několika portech, přijímá spojení a zpracovává je. Uživatel bude po síti konfigurovat jednotlivé virtuální počítače, proto každý virtuální počítač musí poslouchat na jednom portu. Pro obsluhu této komunikace bude vytvořeno několik tříd. Aby mohl simulátor poslouchat na více portech najednou, bude nutné vytvořit více vláken, každý virtuální počítač tedy poběží v samostatném vláknu. Jak plyne z posledního funkčního požadavku, musí jeden virtuální počítač umět zpracovat i více spojení najednou, jako i na reálný linuxový počítač je možné se připojit k několika jeho terminálům pomocí protokolu ssh nebo telnet. Proto bude nutné, aby vlákno, které poslouchá na portu, pro příchozí spojení vytvořilo jiné vlákno, které spojení obslouží, a samo dále poslouchalo na určeném portu. 
+
+
+
+%-----------------------------------------------------------------------------------
+
+\section{Odhad náročnosti aplikace}
+
+Aplikace nebude mít žádné uživatelské rozhraní, nebude přistupovat do žádné database a její datové struktury budou pravděpodobně poměrně jednoduché. Proto pro virtuální síť o deseti počítačích by simulátor neměl mít žádné zvláštní paměťové nebo procesorové nároky.
+
+
+
+%-----------------------------------------------------------------------------------
+
+\section{Odhad složitosti práce a jejího průběhu}

@@ -1,3 +1,85 @@
+Nová, úpředělaná struktura:
+Kapitoly:
+
+Úvod
+	- motivace
+	Cíle
+	Můj podíl na projektu
+	Struktura tohodle celýho textu
+
+Rešerše - existující řešení
+
+Analysa
+	_ tady maj bejt jen věci, který se skutečně řešej při návrhu softwaru
+	_ čas budoucí nebo podmínkovej způsob!
+	- zabejvám se návrhem aplikace jako celku
+	Požadavky - funkční a nefunkční
+	Analysa požadavků
+		Telnet
+		Podobnost se skutečností - co implementovat
+		Počet simulovaných počítačů
+	Programovací jazyk
+	Uživatelské rozhraní
+	Návrh struktury
+		- 2 vrstvy
+		Virtuální síť
+			- je rozumné ji stavět stejně jako síť skutečnou - síťové prvky -> objekty
+			Síťové prvky
+			Posílání paketů
+		Komunikace
+	Předpokládaná procesorová a paměťová náročnost
+	Předpokládaná složitost			DODĚLAT!!!!!!!!!!!!!!!!
+		Počet řádků kódu
+		Předpokládaný čas
+
+Popis architektury aplikace
+	_ sem zkopíruju z původního návrhu to, co se do analysy nevešlo
+	- 2 složky: virtuální síť a komunikace s uživatelem
+	virtuální síť:
+		síťové prvky - dělám jen 3. vrstvu - IP
+			virtuální počítač - linux: skutečné + jejich virtualisace, routovací, natovací tabulka, příkazy
+		infrastruktura: skutečná + virtualisace
+		posílání paketů
+	komunikace
+		- byla převzata ze starýho projektu
+		- vlákna
+
+Implementace virtuální sítě
+  - Zabejvám se tady analysou a implementací jednotlivejch částí systému krom příkazů
+  - struktura týhle kapitoly
+  IP adresa
+    - 2 možnosti využití (port, maska)
+    - vnitřní implementace
+    - důležité public metody, porovnávání, vypisování, statický metody
+  Virtuální počítač
+    - 2 funkce - komunikace a posílání paketů (nějak tak...)
+    - 2 třídy, abstraktní a linuxový; zákl. třída...
+    - komunikace, konsole, jak to funguje...
+    Komunikace
+    Síťové rozhraní
+  Routovací tabulka - osnova u samotný sekce
+  Posílání paketů
+    - popsat, jak se linux chová, kdy co přijme
+    - popsat v čem se liší cisco
+    - popsat vlastní implementaci
+
+Implementace jednotlivých příkazů
+  Parser příkazů
+  ifconfig
+  route
+  ip
+    IpAddr
+    IpRoute
+  iptables
+
+
+
+
+
+
+
+
+Stara struktura (před konzultací):
 Kapitoly:
 
 Úvod - kontext, cíle, rozdělení práce, struktura práce, 

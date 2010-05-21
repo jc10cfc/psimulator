@@ -55,7 +55,7 @@ Jak plyne ze zadání, uživatel se přihlašuje k jednotlivým virtuálním po�
 %-----------------------------------------------------------------------------------
 
 \section{Struktura aplikace}
-
+	% * uz zkopirovano
 Aplikace se skládá ze dvou vrstev. Komunikační vrstva zajišťuje síťovou komunikaci s klientem, tedy odesílání a přijímání textových dat. Z velké části byla převzata z jiné práce, kterou jsme kdysi dělali jako domácí úkol na předmět Y36PSI. Aplikační vrstva je tvořena samotnou virtuální sítí. Avšak tyto vrstvy od sebe nejsou striktně odděleny. Nejprve si rozebereme druhou vrstvu.
 
 \subsection{Virtuální síť}
@@ -65,20 +65,20 @@ Virtuální počítačová síť poskytuje mojí aplikaci především tyto funk
  \item Posílání paketů mezi síťovými prvky.
 \end{itemize}
 Skutečná počítačová síť se skládá ze síťových prvků různých druhů. Stejně tak i virtuální síť se bude skládat ze síťových prvků, které jsou interně reprezentovány objekty.
-\subsubsection{Síťové prvky}
+\subsubsection{Síťové prvky} % * uz zkopirovano
 V laboratořích předmětu Y36PSI studenti nastavují pouze PC nebo směrovače na 3. (síťové) vrstvě ISO/OSI modelu\footnote{3. vrstva ISO modelu, tzv. síťová vrstva, zajišťuje spojení mezi jakýmikoliv 2 uzly sítě.}. Síťové prvky pracující na 2. vrstvě ISO/OSI modelu\footnote{2. vrstva ISO/OSI modelu, tzv. spojová nebo linková vrstva, zajišťuje spojení mezi dvěma sousedními systémy.}, switche a bridge se v laboratořích vůbec neuvažují. Proto i ve své práci uvažuji jediný druh síťových prvků - počítače s OS Linux.
-\paragraph{Virtuální počítač}
+\paragraph{Virtuální počítač}		% * nezkopirovano
 %popis linuxovýho počítače:
 Jedinými síťovými prvky mojí aplikace jsou počítače s operačním systémem Linux, které fungují jako směrovače na síťové vrstvě ISO/OSI modelu. Síťovou komunikaci skutečného počítače zajišťuje modul v jádře operačního systému. Počítač má několik síťových rozhraní, které se skládají z fysické části, kterou je síťový adaptér, a z části softarové, kterou je jeho konfigurace. Ke každému síťovému adaptéru, tzn. ke každému rozhraní, může být připojen maximálně jeden síťový kabel. Virtuální počítač i síťové rozhraní mají svou vlastní třídu.\\ 
-\paragraph{Routovací a natovací tabulka}
+\paragraph{Routovací a natovací tabulka}		% * nezkopirovano
 % routovací a natovací tabulka - popis
 Jádro operačního systému směruje pakety podle tzv. routovací tabulky, což je datová struktura, která obsahuje cílové adresy a akce, které se mají vykonat s paketem poslaným na danou cílovou adresu. Tuto datovou strukturu musí obsahovat i moje virtuální síť, proto jsem pro ni udělal vlastní třídu. Její analýzou a implementací se budu zabývat v implementační části.\\
 Aby virtuální počítače mohly překládat adresy přes ně procházejících paketů, potřebují, stejně jako skutečné počítače, další datovou strukturu, natovací tabulku. Touto datovou strukturou se ale tato práce nezabývá, vytvořil ji můj kolega Stanislav Řehák.\\
-\paragraph{Příkazy}
+\paragraph{Příkazy}		% * nezkopirovano
 Uživatel musí mít možnost virtuální počítač nakonfigurovat, kvůli tomu přece aplikaci programuji. Ke konfiguraci mu mají sloužit standartní příkazy, které by použil při konfiguraci skutečného počítače. K virtuálnímu počítači se uživatel připojuje telnetem, o toto připojení se stará komunikační vrstva. Na vrstvě virtuální sítě ale probíha parsování a vykonávání těchto příkazů. O tom budu psát v další kapitole.
-\subsubsection{Infrastruktura sítě}
+\subsubsection{Infrastruktura sítě}		% * nezkopirovano
 Jak bylo napsáno dříve, jediným síťovým prvkem mojí aplikace je počítač s OS Linux. Ke každému rozhraní, může být připojen maximálně jeden síťový kabel, který, protože neuvažuji switche, je zapojen do jiného rozhraní nějakého počítače, nebo není zapojen nikam.  Infrastruktura sítě je proto jednoznačně určena dvojicemi síťových rozhraní, která jsou propojena síťovým kabelem. Tuto infrastrukturu sítě je v konfiguračním souboru dobré oddělit od ostatní konfigurace, aby ji mohl uživatel lehce přečíst a pochopit, popř. změnit. Síťové rozhraní je jednoznačně identifikováno jménem počítače a jménem rozhaní.
-\subsubsection{Posílání paketů}
+\subsubsection{Posílání paketů}		% * zkopirovanej jen malej kousek
 Virtuální síť musí umět posílat virtuální pakety, aby uživatel pomocí příkazů ping nebo traceroute zjistil, jestli virtuální síť správně nakonfiguroval. Po virtuální síti, representované objekty, se samozřejmě posílají virtuální pakety, representované objekty třídy Paket. Virtuálni paket ponese potřebné informace stejně jako skutečný paket, akorát těch informací pro potřeby mojí aplikace není tolik. Posílání paketů v mé virtuální síti není prakticky rozděleno do OSI-ISO vrstev, IP paket se nebude balit do rámců linkové vrstvy. Virtuální pakety si mezi sebou budou posílat, přijímat a přeposílat virtuální počítače pomocí speciálních metod k tomu určených. Je nutné,aby při stejné konfiguraci skutečné a virtuální počítačové sítě tato síť i stejně fungovala. To jest, aby ve virtuální počítačové síti do cíle došly právě ty pakety, které při stejné konfiguraci dojdou na síti skutečné. Více se anylýzou a implementací posílání paketů budu zabývat v samostatné kapitole.
 
 \subsection{Komunikační vrstva}
