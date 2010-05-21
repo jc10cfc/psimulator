@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Tohleto by měla bejt třída pro jedno síťové rozhraní.
+ * Třída pro jedno síťové rozhraní.
  * @author neiss & haldyr
  *
  * DŮLEŽITÁ POZNÁMKA:
@@ -99,6 +99,7 @@ public class SitoveRozhrani {
     /**
      * Vrati ip adresu na pozici 0 nebo null, pokud tam zadna IP neni.
      * @return
+     * @author haldyr
      */
     public IpAdresa vratPrvni() {
         if (seznamAdres.size() == 0) return null;
@@ -110,6 +111,7 @@ public class SitoveRozhrani {
      * Hleda pomoci jeStejnaAdresa().
      * @param hledana
      * @return
+     * @author haldyr
      */
     public boolean obsahujeStejnouAdresu(IpAdresa hledana) {
         for (IpAdresa ip : seznamAdres) {
@@ -125,6 +127,7 @@ public class SitoveRozhrani {
      * Hleda pomoci equals().
      * @param hledana
      * @return
+     * @author neiss
      */
     public boolean obsahujeStejnouAdresuEq(IpAdresa hledana) {
         for (IpAdresa ip : seznamAdres) {
@@ -139,6 +142,7 @@ public class SitoveRozhrani {
      * Zmeni tu privilegovanou prvni adresu. Starou nejdriv smaze a pak tam da novou.
      * Ma smysl, kdyz je ta prvni adresa null.
      * @param adr
+     * @author haldyr
      */
     public void zmenPrvniAdresu(IpAdresa adr) {
         if (seznamAdres.size() > 0) {
@@ -152,6 +156,7 @@ public class SitoveRozhrani {
 
     /**
      * Prvni adresu si schovam, vsechny IP smazu a prvni zase pridam.
+     * @author haldyr
      */
     public void smazVsechnyIpKromPrvni() {
         IpAdresa prvni = null;

@@ -108,6 +108,10 @@ public class Main {
                     System.err.println(param.get(1) + " neni platne cislo portu.\nUkoncuji..");
                     System.exit(2);
                 }
+                if (port < 0) {
+                    chyba_spusteni = true;
+                    System.err.println(param.get(1) + " neni platne cislo portu.\nUkoncuji..");
+                }
             }
         } else {
             System.err.println("Parametrem urcete konfiguracni soubor.\nUkoncuji..");

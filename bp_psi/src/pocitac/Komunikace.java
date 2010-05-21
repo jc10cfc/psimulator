@@ -52,8 +52,15 @@ public class Komunikace extends Thread {
         } catch (IOException e) {
             Main.chyba_spusteni = true;
             pc.vypis("Nemuzu poslouchat na portu " + cisloPortu + ".");
-            pc.vypis("Port "+cisloPortu+" je pravdepodobne obsazen jinym programem, pocitac "+pc.jmeno+" nemohl byt nastartovan. " +
-                    "Zkuste server spustit s jinym portem.");
+            if (cisloPortu < 1024) {
+                pc.vypis("Spoustet programy poslouchajici na portu "+cisloPortu+" muze pouze root. " +
+                        "Zkuste server spustit s portem > 1023.");
+            } else {
+                pc.vypis("Port "+cisloPortu+" je pravdepodobne obsazen jinym programem, " +
+                        "pocitac "+pc.jmeno+" nemohl byt nastartovan. " +
+                        "Zkuste server spustit s jinym portem.\n" +
+                        "Ukoncuji..");
+            }
             System.exit(1);
         }
         

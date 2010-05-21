@@ -301,7 +301,7 @@ public class NATtabulka {
      *         1 - ne, nemam pool - vrat zpatky Destination Host Unreachable <br />
      *         2 - ne, dosli IP adresy z poolu - vrat zpatky Destination Host Unreachable
      *         3 - ne, vstupni neni soukrome nebo vystupni neni verejne <br />
-     *         4 - ne, zdrojova Ip neni v seznamAccess-listech, tak nechat normalne projit bez natovani <br />
+     *         4 - ne, zdrojova Ip neni v seznamu access-listu, tak nechat normalne projit bez natovani <br />
      *         5 - ne, neni nastaveno outside rozhrani
      */
     public int mamNatovat(IpAdresa zdroj, SitoveRozhrani vstupni, SitoveRozhrani vystupni) {
