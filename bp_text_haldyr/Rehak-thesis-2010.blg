@@ -12,53 +12,44 @@ A level-1 auxiliary file: 5-4_nat.aux
 A level-1 auxiliary file: 6_testovani.aux
 The style file: csplainnat.bst
 Database file #1: reference.bib
-Warning--empty year in CSTUG
-Warning--empty year in infodp
-Warning--empty year in www
-Warning--empty year in ipe
-Warning--empty year in latexdocweb
-Warning--empty year in latexwiki
-`address' is a missing field, not a string, for entry kniha
-while executing---line 1484 of file csplainnat.bst
-You've used 18 entries,
+You've used 7 entries,
             2899 wiz_defined-function locations,
-            714 strings with 7098 characters,
-and the built_in function-call counts, 5665 in all, are:
-= -- 620
-> -- 172
-< -- 11
-+ -- 72
-- -- 48
-* -- 376
-:= -- 861
-add.period$ -- 75
-call.type$ -- 18
-change.case$ -- 57
-chr.to.int$ -- 12
-cite$ -- 42
-duplicate$ -- 297
-empty$ -- 494
-format.name$ -- 76
-if$ -- 1255
-int.to.chr$ -- 7
+            659 strings with 5772 characters,
+and the built_in function-call counts, 2187 in all, are:
+= -- 266
+> -- 77
+< -- 7
++ -- 33
+- -- 21
+* -- 154
+:= -- 391
+add.period$ -- 35
+call.type$ -- 7
+change.case$ -- 21
+chr.to.int$ -- 2
+cite$ -- 14
+duplicate$ -- 105
+empty$ -- 127
+format.name$ -- 35
+if$ -- 456
+int.to.chr$ -- 6
 int.to.str$ -- 1
-missing$ -- 31
-newline$ -- 99
-num.names$ -- 60
-pop$ -- 144
+missing$ -- 21
+newline$ -- 43
+num.names$ -- 35
+pop$ -- 21
 preamble$ -- 1
-purify$ -- 40
+purify$ -- 14
 quote$ -- 0
-skip$ -- 204
+skip$ -- 71
 stack$ -- 0
-substring$ -- 85
-swap$ -- 34
-text.length$ -- 1
+substring$ -- 14
+swap$ -- 13
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 193
-warning$ -- 6
-while$ -- 41
+type$ -- 77
+warning$ -- 0
+while$ -- 21
 width$ -- 0
-write$ -- 232
-(There was 1 error message)
+write$ -- 98

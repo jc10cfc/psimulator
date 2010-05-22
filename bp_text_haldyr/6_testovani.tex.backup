@@ -82,7 +82,7 @@ Po nakonfigurování dynamického NAT zkoušel uživatel dostupnost jednotlivýc
 %\\\textbf{()}
 
 \subsection{Shrnutí}
-Z počtu chyb lze jasně vyvodit, že uživatelské testování určitě smysl má. Většinu objevených chyb tvoří různé chyby či odchylky v parserech.
+Z počtu chyb lze jasně vyvodit, že uživatelské testování určitě smysl má. 
 
 
 
