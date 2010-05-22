@@ -22,11 +22,19 @@ public class CiscoIp extends CiscoPrikaz {
     CiscoStavy stav;
     SitoveRozhrani rozhrani; // kvuli prikazu 'ip nat inside/outside'
 
+    /**
+     * Konstruktor pro prikaz 'ip nat inside/outside'.
+     * @param pc
+     * @param kon
+     * @param slova
+     * @param no
+     * @param stav
+     * @param rozhrani
+     */
     public CiscoIp(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no, CiscoStavy stav, SitoveRozhrani rozhrani) {
         super(pc, kon, slova, no);
         this.stav = stav;
         this.rozhrani = rozhrani;
-
         dal();
     }
 
@@ -41,7 +49,7 @@ public class CiscoIp extends CiscoPrikaz {
      * Metoda zastresujici par veci.
      */
     private void dal() {
-        debug = true;
+        debug = false;
 
         boolean zpracuj = zpracujRadek();
 //        ladici(zpracuj ? "ok-vytvoren dalsi prikaz" : "chyba: asi invalid input");

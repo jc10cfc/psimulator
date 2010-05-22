@@ -166,10 +166,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 configure();
                 return;
             } else {
-                kon.posliRadek("?Must be \"terminal\"");
-                kon.posliServisne("podporovan je pouze terminal");
-                configure1 = false;
-                kon.vypisPrompt = true;
+                configureVypisChybu();
                 return;
             }
         }
@@ -373,6 +370,13 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (configure1) {
             cis = 0;
         }
+        if (!slova.get(cis).isEmpty() && ("memory".startsWith(slova.get(cis))
+                || "network".startsWith(slova.get(cis))
+                || slova.get(cis).equals("?"))) {
+            configureVypisChybu();
+            return;
+        }
+
         if (kontrola("terminal", slova.get(cis)) || configure1) {
             stav = CONFIG;
             kon.prompt = pc.jmeno + "(config)#";
@@ -512,7 +516,6 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 return;
             }
             if (kontrola("ip", dalsi)) {
-                System.out.println("prikaz ip");
                 prikaz = new CiscoIp(pc, kon, slova, true, stav, aktualni);
                 return;
             }
@@ -533,5 +536,15 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         } else {
             ambiguousCommand();
         }
+    }
+
+    /**
+     * Vypise chybu pri 'configure' a nastavi vypisovani promptu+zrusi configure1 flag
+     */
+    private void configureVypisChybu() {
+        kon.posliRadek("?Must be \"terminal\"");
+                kon.posliServisne("podporovan je pouze terminal");
+                configure1 = false;
+                kon.vypisPrompt = true;
     }
 }

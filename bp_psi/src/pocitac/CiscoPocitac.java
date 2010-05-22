@@ -42,7 +42,9 @@ public class CiscoPocitac extends AbstraktniPocitac {
      * @return true, kdyz byl paket prijmut, jinak false
      *
      * Kdyz nejde odpovedet sousedovi na ARP request (nemam na nej routu), tak paket neprijmu. <br />
-     * Kdyz mohu odpovedet na ARP && (paket je pro me || vim kam ho poslat dal), tak prijmu. <br />
+     * Kdyz mohu odpovedet na ARP && (paket je pro me[1] || vim kam ho poslat dal), tak prijmu. <br />
+     * [1] mam IP na rozh.vratPrvni() || ( mam IP na rozh-NAT && muzu ho na neco prelozit )
+     *
      * V ostatnich pripadech neprijimam.
      */
     @Override
@@ -54,9 +56,26 @@ public class CiscoPocitac extends AbstraktniPocitac {
         }
 
         if (rozhr.obsahujeStejnouAdresu(ocekavana)) { //adresa souhlasi == je to pro me
-            ladici("paket je pro me => prijimam");
-            prijmiPaket(p, rozhr);
-            return true;
+            if (rozhr.vratPrvni() != null && rozhr.vratPrvni().jeStejnaAdresa(ocekavana)) {
+                ladici("paket je pro me => prijimam");
+                prijmiPaket(p, rozhr);
+                return true;
+            }
+
+            if (natTabulka.mamZaznamOutProIp(p.cil)) {
+
+                if (rozhr.vratPrvni() != null && p.zdroj.jeStejnaAdresa(rozhr.vratPrvni())) {
+                    ladici("ZZZZZZZZZZZZzzzzzzz => neprijimam");
+                    return false;
+                }
+
+                ladici("paket muzu odnatovat => prijimam");
+                prijmiPaket(p, rozhr);
+                return true;
+            }
+
+            ladici("nemam zaznam v NAT tabulce => neprijimam");
+            return false;
         }
 
         if (najdiMeziRozhranima(p.cil) != null) { // kdyz vim, kam to poslat dal

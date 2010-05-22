@@ -391,6 +391,25 @@ public abstract class AbstraktniPocitac {
         }
 
         rozhr = najdiMeziRozhranima(paket.cil); //znovu hledam, jestli je na mejch rozhranich takova IP
+
+
+        /* TODO: zkontrolovat dohromady; predelal jsem to kvuli ciscu
+         * 
+         * Puvodne to bylo tak, ze kdyz byla cil. adres paketu na rozhrani jako neprivilegovana,
+         * tak se to prijalo, i kdyz si s tim NAT nevedel rady.
+         *
+         * Takze pak pocitac prijimal pakety, ktery mel na rozhrani jen kvuli NATu,
+         * ale ne, aby z tech IP odpovidal "to jsem ja" - pocitac odpovida na ping, jedine kdyz vlastni privilegovanou IP
+         */
+        rozhr = null;
+        for (SitoveRozhrani iface : rozhrani) {
+            if (iface.vratPrvni() != null && iface.vratPrvni().jeStejnaAdresa(paket.cil)) {
+                rozhr = iface;
+                break;
+            }
+        }
+
+
                     // -> odnatovanim se to totiz mohlo zmenit
         if (rozhr != null) { // takovou IP mam && port je pro me => paket je u me v cili
             //zpracovani paketu:

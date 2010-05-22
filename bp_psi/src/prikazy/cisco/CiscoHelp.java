@@ -67,7 +67,6 @@ public class CiscoHelp extends CiscoPrikaz {
                 "  show ip nat translations\n"+
                 "  show ip route\n" +
                 "  show running-config\n" +
-                "  access-list\n" +
                 "  traceroute\n" +
                 "  ping\n" +
                 "  exit\n" +
@@ -76,7 +75,8 @@ public class CiscoHelp extends CiscoPrikaz {
                 "  (no) ip route\n" +
                 "  (no) ip nat pool\n" +
                 "  (no) ip nat inside source list\n" +
-                "  (no) ip nat inside source list static\n" +
+                "  (no) ip nat inside source static\n" +
+                "  access-list\n" +
                 "  interface\n" +
                 "  end\n" +
                 "  exit\n" +

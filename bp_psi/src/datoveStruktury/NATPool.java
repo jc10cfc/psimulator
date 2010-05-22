@@ -207,6 +207,13 @@ public class NATPool {
                 natTabulka.verejne.seznamAdres.add(adr);
             }
         }
+
+        // jeste staticky
+        for (NATtabulka.NATzaznam z : natTabulka.tabulka) {
+            if (z.staticke) {
+                natTabulka.verejne.seznamAdres.add(z.out);
+            }
+        }
     }
 
     /**

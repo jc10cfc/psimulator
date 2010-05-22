@@ -147,6 +147,20 @@ public class NATtabulka {
     }
 
     /**
+     * Vrati true, pokud muze odnatovat adr pomoci statickeho nebo dynamickeho pravidla.
+     * Jinak false.
+     * @param adr
+     * @return
+     */
+    public boolean mamZaznamOutProIp(IpAdresa adr) {
+        IpAdresa ip = odnatujZdrojovouIpAdresu(adr);
+        if (ip == null) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Reprezentuje jeden radek v NAT tabulce.
      */
     public class NATzaznam {

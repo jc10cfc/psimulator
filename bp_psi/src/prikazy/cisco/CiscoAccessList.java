@@ -39,7 +39,7 @@ public class CiscoAccessList extends CiscoPrikaz {
                 return false;
             }
         }
-
+        
         if (dalsiSlovoAleNezvetsujCitac().isEmpty()) {
             incompleteCommand();
             return false;
@@ -62,7 +62,15 @@ public class CiscoAccessList extends CiscoPrikaz {
 
         IpAdresa wildcard;
         try {
+            if (dalsiSlovoAleNezvetsujCitac().isEmpty()) {
+                incompleteCommand();
+                return false;
+            }
             adr = new IpAdresa(dalsiSlovo());
+            if (dalsiSlovoAleNezvetsujCitac().isEmpty()) {
+                incompleteCommand();
+                return false;
+            }
             wildcard = new IpAdresa(dalsiSlovo());
         } catch (Exception e) {
             invalidInputDetected();

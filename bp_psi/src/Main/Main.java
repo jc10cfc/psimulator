@@ -71,12 +71,13 @@ public class Main {
 
         if (vsechno == null) {
             if (! konfigurak.endsWith(".xml")) {
-                System.out.println("\nZkousim pridat koncovku .xml:");
+                System.err.println("\nNepodarilo se nic nacist z konfiguracniho souboru "+konfigurak+".");
+                System.out.println("Zkousim pridat koncovku .xml:\n");
                 konfigurak = konfigurak + ".xml";
                 vsechno = new Main().nacti();
             }
             if (vsechno == null) {
-                System.err.println("Nepodarilo se nic nacist z konfiguracniho souboru.\nUkoncuji..");
+                System.err.println("Nepodarilo se nic nacist z konfiguracniho souboru "+konfigurak+".\nUkoncuji..");
                 System.exit(131);
             }
         }

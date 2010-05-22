@@ -19,7 +19,7 @@ if [[ $VERSION -lt 0,29 ]]; then
 fi
 
 if [ -z "$1" ]; then
-    echo "Specify port!"
+    echo "Specify a port!"
     exit 1
 fi
 
