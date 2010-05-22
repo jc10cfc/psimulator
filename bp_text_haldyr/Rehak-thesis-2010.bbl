@@ -1,48 +1,81 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{a}})]{wiki:arp}
-{Přispěvatelé Wikipedie}.
-\newblock \emph{Address Resolution Protocol} [online]. 2010{\natexlab{a}}.
-  [cit.~14.\,5.\,2010].
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{a}})]{cisco:druhy}
+{Cisco Systems, Inc.}
+\newblock Configuring Network Address Translation: Getting Started,
+  2010{\natexlab{a}}.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
+a0080094e77.shtml}.
+
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{b}})]{cisco:nat}
+{Cisco Systems, Inc.}
+\newblock How NAT Works, 2010{\natexlab{b}}.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
+a0080094831.shtml}.
+
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{c}})]{cisco:postup}
+{Cisco Systems, Inc.}
+\newblock NAT Order of Operation, 2010{\natexlab{c}}.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
+a0080133ddd.shtml}.
+
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{d}})]{cisco:snat_dnat}
+{Cisco Systems, Inc.}
+\newblock Configuring Static and Dynamic NAT Simultaneously,
+  2010{\natexlab{d}}.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
+a0080093f31.shtml}.
+
+\bibitem[Michek(2008)]{reserse:omnet}
+MICHEK, J.
+\newblock Diplomová práce.
+\newblock In \emph{Emulátor počítačové sítě}, s. 1--78. České vysoké
+  učení technické v Praze, 2008.
+
+\bibitem[{Přispěvatel{\'e} Wikipedie}(2010{\natexlab{a}})]{wiki:arp}
+{Přispěvatel{\'e} Wikipedie}.
+\newblock Address Resolution Protocol, 2010{\natexlab{a}}.
 \newblock Dostupn{\'{e}} z:
   \url{http://cs.wikipedia.org/wiki/Address_Resolution_Protocol}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{b}})]{wiki:icmp}
-{Přispěvatelé Wikipedie}.
-\newblock \emph{ICMP} [online]. 2010{\natexlab{b}}. [cit.~19.\,5.\,2010].
+\bibitem[{Přispěvatel{\'e} Wikipedie}(2010{\natexlab{b}})]{wiki:icmp}
+{Přispěvatel{\'e} Wikipedie}.
+\newblock ICMP, 2010{\natexlab{b}}.
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/ICMP}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{c}})]{wiki:ios}
-{Přispěvatelé Wikipedie}.
-\newblock \emph{Cisco IOS} [online]. 2010{\natexlab{c}}. [cit.~16.\,5.\,2010].
+\bibitem[{Přispěvatel{\'e} Wikipedie}(2010{\natexlab{c}})]{wiki:ios}
+{Přispěvatel{\'e} Wikipedie}.
+\newblock Cisco IOS, 2010{\natexlab{c}}.
 \newblock Dostupn{\'{e}} z:
   \url{http://cs.wikipedia.org/wiki/Soubor:Cisco-router-1.svg}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{d}})]{wiki:ip}
-{Přispěvatelé Wikipedie}.
-\newblock \emph{IP adresa} [online]. 2010{\natexlab{d}}. [cit.~18.\,5.\,2010].
+\bibitem[{Přispěvatel{\'e} Wikipedie}(2010{\natexlab{d}})]{wiki:ip}
+{Přispěvatel{\'e} Wikipedie}.
+\newblock IP adresa, 2010{\natexlab{d}}.
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/IP_adresa}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{e}})]{wiki:telnet}
-{Přispěvatelé Wikipedie}.
-\newblock \emph{Telnet} [online]. 2010{\natexlab{e}}. [cit.~12.\,5.\,2010].
+\bibitem[{Přispěvatel{\'e} Wikipedie}(2010{\natexlab{e}})]{wiki:telnet}
+{Přispěvatel{\'e} Wikipedie}.
+\newblock Telnet, 2010{\natexlab{e}}.
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/Telnet}.
 
-\bibitem[{Přispěvatelé Wikipedie}(2010{\natexlab{f}})]{wiki:uml}
-{Přispěvatelé Wikipedie}.
-\newblock \emph{Unified Modeling Language} [online]. 2010{\natexlab{f}}.
-  [cit.~12.\,5.\,2010].
+\bibitem[{Přispěvatel{\'e} Wikipedie}(2010{\natexlab{f}})]{wiki:uml}
+{Přispěvatel{\'e} Wikipedie}.
+\newblock Unified Modeling Language, 2010{\natexlab{f}}.
 \newblock Dostupn{\'{e}} z: \url{http://cs.wikipedia.org/wiki/UML}.
 
 \bibitem[{The Internet Assigned Numbers Authority}(2010)]{iana}
 {The Internet Assigned Numbers Authority}.
-\newblock \emph{IANA IPv4 Address Space Registry} [online]. 2010.
-  [cit.~19.\,5.\,2010].
+\newblock IANA IPv4 Address Space Registry, 2010.
 \newblock Dostupn{\'{e}} z:
   \url{http://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.x%
 ml}.

@@ -6,7 +6,13 @@
 \contentsline {section}{\numberline {2.1}Shrnut\IeC {\'\i } funk\IeC {\v c}n\IeC {\'\i }ch po\IeC {\v z}adavk\IeC {\r u}}{3}{section.2.1}
 \contentsline {section}{\numberline {2.2}Nefunk\IeC {\v c}n\IeC {\'\i } po\IeC {\v z}adavky}{4}{section.2.2}
 \contentsline {section}{\numberline {2.3}Vymezen\IeC {\'\i } pr\IeC {\'a}ce}{4}{section.2.3}
-\contentsline {chapter}{\numberline {3}Existuj\IeC {\'\i }c\IeC {\'\i } implementace}{5}{chapter.3}
+\contentsline {chapter}{\numberline {3}Existuj\IeC {\'\i }c\IeC {\'\i } \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{5}{chapter.3}
+\contentsline {section}{\numberline {3.1}Cisco Packet Tracer}{5}{section.3.1}
+\contentsline {section}{\numberline {3.2}OMNeT++ simul\IeC {\'a}tor}{5}{section.3.2}
+\contentsline {section}{\numberline {3.3}AdventNet Simulation Toolkit}{5}{section.3.3}
+\contentsline {section}{\numberline {3.4}Boson NetSim Network Simulator }{5}{section.3.4}
+\contentsline {section}{\numberline {3.5}Dynamips Cisco 7200 Simulator}{6}{section.3.5}
+\contentsline {section}{\numberline {3.6}Virtu\IeC {\'a}ln\IeC {\'\i } laborato\IeC {\v r} po\IeC {\v c}\IeC {\'\i }ta\IeC {\v c}ov\IeC {\'y}ch s\IeC {\'\i }t\IeC {\'\i } VirtLab}{6}{section.3.6}
 \contentsline {chapter}{\numberline {4}Anal\IeC {\'y}za a~n\IeC {\'a}vrh \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{7}{chapter.4}
 \contentsline {section}{\numberline {4.1}Architektura}{7}{section.4.1}
 \contentsline {subsection}{\numberline {4.1.1}Naivn\IeC {\'\i } n\IeC {\'a}vrh}{7}{subsection.4.1.1}
@@ -75,7 +81,7 @@
 \contentsline {subsubsection}{\numberline {5.8.2.1}N\IeC {\'a}vrh}{32}{subsubsection.5.8.2.1}
 \contentsline {subsubsection}{\numberline {5.8.2.2}Implementace}{32}{subsubsection.5.8.2.2}
 \contentsline {paragraph}{Postup p\IeC {\v r}ekladu adres}{32}{section*.12}
-\contentsline {subparagraph}{Sm\IeC {\v e}r ven}{32}{section*.13}
+\contentsline {subparagraph}{Sm\IeC {\v e}r ven}{33}{section*.13}
 \contentsline {subparagraph}{Sm\IeC {\v e}r dovnit\IeC {\v r} - reverzn\IeC {\'\i } p\IeC {\v r}eklad}{33}{section*.14}
 \contentsline {chapter}{\numberline {6}Testov\IeC {\'a}n\IeC {\'\i }}{37}{chapter.6}
 \contentsline {section}{\numberline {6.1}U\IeC {\v z}ivatelsk\IeC {\'e} testov\IeC {\'a}n\IeC {\'\i }}{37}{section.6.1}
@@ -91,9 +97,9 @@
 \contentsline {section}{\numberline {6.2}Z\IeC {\'a}t\IeC {\v e}\IeC {\v z}ov\IeC {\'e} testy}{40}{section.6.2}
 \contentsline {subsection}{\numberline {6.2.1}N\IeC {\'a}vrh}{40}{subsection.6.2.1}
 \contentsline {subsection}{\numberline {6.2.2}V\IeC {\'y}sledky}{40}{subsection.6.2.2}
-\contentsline {chapter}{\numberline {7}Z\IeC {\'a}v\IeC {\v e}r}{41}{chapter.7}
-\contentsline {section}{\numberline {7.1}Mo\IeC {\v z}nosti vylep\IeC {\v s}en\IeC {\'\i }}{41}{section.7.1}
-\contentsline {chapter}{\numberline {A}Seznam pou\IeC {\v z}it\IeC {\'y}ch zkratek}{45}{appendix.A}
-\contentsline {chapter}{\numberline {B}UML diagramy}{47}{appendix.B}
-\contentsline {chapter}{\numberline {C}Instala\IeC {\v c}n\IeC {\'\i } a~u\IeC {\v z}ivatelsk\IeC {\'a} p\IeC {\v r}\IeC {\'\i }ru\IeC {\v c}ka}{49}{appendix.C}
-\contentsline {chapter}{\numberline {D}Obsah p\IeC {\v r}ilo\IeC {\v z}en\IeC {\'e}ho CD}{51}{appendix.D}
+\contentsline {chapter}{\numberline {7}Mo\IeC {\v z}n\IeC {\'a} vylep\IeC {\v s}en\IeC {\'\i }}{41}{chapter.7}
+\contentsline {chapter}{\numberline {8}Z\IeC {\'a}v\IeC {\v e}r}{43}{chapter.8}
+\contentsline {chapter}{\numberline {A}Seznam pou\IeC {\v z}it\IeC {\'y}ch zkratek}{47}{appendix.A}
+\contentsline {chapter}{\numberline {B}UML diagramy}{49}{appendix.B}
+\contentsline {chapter}{\numberline {C}Instala\IeC {\v c}n\IeC {\'\i } a~u\IeC {\v z}ivatelsk\IeC {\'a} p\IeC {\v r}\IeC {\'\i }ru\IeC {\v c}ka}{51}{appendix.C}
+\contentsline {chapter}{\numberline {D}Obsah p\IeC {\v r}ilo\IeC {\v z}en\IeC {\'e}ho CD}{53}{appendix.D}

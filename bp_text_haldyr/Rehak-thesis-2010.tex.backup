@@ -315,7 +315,6 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 \include{5-3_wrapper}
 \include{5-4_nat}
 \include{6_testovani}
-\include{7_vylepseni}
 
 
 % atd...
@@ -326,12 +325,26 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 % konkrétní povahy zpracovávaného tématu. Níže uvedená struktura práce odpovídá \textit{práci implementační}, viz
 % \cite{infodp} respektive \cite{infobp}. 
 
+
+
+
 %*****************************************************************************
-
 \chapter{Závěr}
+\section{Možnosti vylepšení}
 
-Zhodnocení splnění cílů DP/BP a~vlastního přínosu práce (při formulaci je třeba vzít v~potaz zadání práce).
-Hlavně pozitivní zhodnocení projektu.
+\begin{itemize}
+\item Zhodnocení splnění cílů DP/BP a~vlastního přínosu práce (při formulaci je třeba vzít v~potaz zadání práce).
+\item Diskuse dalšího možného pokračování práce.
+\begin{itemize}
+\item graficke klikatko pro tvorbu XML konfiguraku
+\item tcpdump
+\item switche
+\item napojeni na realnou sit
+\item zpracovani signalu Ctrl+C, Ctrl+Z (-> vlastni klient, kouzlo telnetu je pak pryc)
+\end{itemize} 
+
+
+\end{itemize} 
 
 %*****************************************************************************
 % Seznam literatury je v samostatnem souboru reference.bib. Ten

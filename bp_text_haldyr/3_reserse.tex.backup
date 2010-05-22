@@ -5,10 +5,13 @@ Existujících implementací je na síťovém trhu celá řada, nicméně ne ka�
 Asi nejznámnějším simulátorem Cisca je Packet Tracer od stejnojmenné firmy. Program slouží k simulaci síťového provozu počítačových sítí založených na hardware od Cisco Systems. Packet Tracer umožnuje vizualizaci provozu sítě, konfiguraci síťových prvků v grafickém i textovém módu. Program obsahuje velmi málo odchylek od skutečného cisco směrovače. Packet Tracer je dostupný zdarma pro všechny členy Cisco Networking Academy. To je zároveň velkou nevýhodou, protože licence neumožňuje jiné použití a je tedy Paket Tracer ve škole nepoužitelný.
 
 \section{OMNeT++ simulátor}
-Simulační systém OMNeT++ je velmi propracovaný nástroj pro simulaci prakticky čehokoliv. OMNeT++ je postaven na modulární architektuře, takže při správných knihovnách (modulech) může simulovat počítačovou síť. Systém dokáže simulovat i Cisco IOS. Představu jednoduchého programu pro studenty ale tento program nesplňuje.
+Simulační systém OMNeT++ je velmi propracovaný nástroj pro simulaci prakticky čehokoliv. OMNeT++ je postaven na modulární architektuře, takže při správných knihovnách (modulech) může simulovat Cisco IOS či linux.
 
-Více se tímto simulátorem zabýval Bc. Jan Michek v rámci své diplomové práce Emulátor počítačové sítě \cite{reserse:omnet}.
+Více na v 
 
+Tímto simulátor se více zabýval Bc. Jan Michek v rámci své diplomové práce Emulátor počítačové sítě \cite{reserse:omnet}.
+
+%   https://dip.felk.cvut.cz/browse/details.php?f=F3&d=K13136&y=2008&a=michej1&t=dipl
 
 \section{AdventNet Simulation Toolkit}
   http://www.icewalkers.com/Linux/Software/525200/AdventNet-Simulation-Toolkit.html

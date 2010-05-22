@@ -46,7 +46,7 @@ Dle nového návrhu bude celá aplikace rozdělena na dvě vrstvy:
 \subsubsection{Komunikační vrstva}
 Komunikační vrstva bude složena z architektury klient - server. Tato vrstva bude převzata ze semestrální práce pro předmět \verb|Y36PSI|, kde bylo za úkol mimo jiné implementovat více-vláknový server. V této převzaté implementaci je server, na kterého se připojují klienti. Pro každého klienta se vytvoří nové vlákno, takže není problém obsluhovat více klientů zároveň. 
 
-Cílem aplikace je vytvořit simulátor počítačové sítě, ta bude muset být zastoupena zřejmě objekty zastupující jednotlivé počítače. A každý počítač se bude muset chovat jako server, aby se na něj mohlo připojit více klientů najednou. Tím bude splněn jeden z funkčních požadavků.
+Cílem aplikace je vytvořit simulátor počítačové sítě, ta bude muset být zastoupena zřejmě objekty zastupující jednotlivé počítače. A každý počítač se bude muset chovat jako server, aby se na něj mohlo připojit více klientů najednou. Tak bude splněn jeden z funkčních požadavků.
 
 Pro připojení klientů bude použit program \verb|telnet|. Více o návrhu v kapitole \ref{telnet}. 
 
@@ -87,7 +87,7 @@ V samotném parseru příkazů pro Cisco IOS nebude toto téměř vůbec řešen
 %------------------------------------------------------------------------------
 
 \section{Předpokládaný rozsah}
-Celý projekt by měl být v rozsahu zhruba 10000 řádků kódu. Nejrozsáhlejší třídy budou datové struktury pro všechny objekty, které budou v počítačové síti nutné pro splnění cílů.
+Celý projekt by měl být v rozsahu zhruba 10000 řádků kódu. Nejrozsáhlejší třídy budou pravděpodobně datové struktury pro všechny objekty, které budou emulovat skutečné počítače s rozhraními, routovací a NAT tabulku a mnoho dalších.
 
 %------------------------------------------------------------------------------
 
