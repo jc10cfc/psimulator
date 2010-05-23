@@ -1,9 +1,20 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{18}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Boson Holdings, LLC.}(2010)]{reserse:boson}
+{Boson Holdings, LLC.}
+\newblock Cisco Network Simulator \& Router Simulator, 2010.
+\newblock Dostupn{\'{e}} z: \url{http://www.boson.com/AboutNetSim.html}.
+
+\bibitem[{Christophe Fillot}(2010)]{reserse:dynamips}
+{Christophe Fillot}.
+\newblock Cisco 7200 Simulator, 2010.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.ipflow.utc.fr/index.php/Cisco_7200_Simulator}.
 
 \bibitem[{Cisco Systems, Inc.}(2010{\natexlab{a}})]{cisco:druhy}
 {Cisco Systems, Inc.}
@@ -27,19 +38,38 @@ a0080094831.shtml}.
   \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
 a0080133ddd.shtml}.
 
-\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{d}})]{cisco:snat_dnat}
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{d}})]{cisco:pt}
+{Cisco Systems, Inc.}
+\newblock Cisco Packet Tracer, 2010{\natexlab{d}}.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.ciscopros.info/web/learning/netacad/course_catalog/PacketTra%
+cer.html}.
+
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{e}})]{cisco:snat_dnat}
 {Cisco Systems, Inc.}
 \newblock Configuring Static and Dynamic NAT Simultaneously,
-  2010{\natexlab{d}}.
+  2010{\natexlab{e}}.
 \newblock Dostupn{\'{e}} z:
   \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
 a0080093f31.shtml}.
 
-\bibitem[Michek(2008)]{reserse:omnet}
+\bibitem[{Katedra informatiky FEI VŠB-TUO}(2010)]{reserse:virtlab}
+{Katedra informatiky FEI VŠB-TUO}.
+\newblock Virtuální laboratoř počítačových sítí, 2010.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.cs.vsb.cz/vl-wiki/index.php/Virtuální_laboratoř_počíta�%
+�ových_sítí}.
+
+\bibitem[Michek(2008)]{reserse:omnet_dp}
 MICHEK, J.
 \newblock Diplomová práce.
 \newblock In \emph{Emulátor počítačové sítě}, s. 1--78. České vysoké
   učení technické v Praze, 2008.
+
+\bibitem[{OMNeT++ Community}(2010)]{reserse:omnet_hp}
+{OMNeT++ Community}.
+\newblock OMNeT++ Community Site, 2010.
+\newblock Dostupn{\'{e}} z: \url{http://www.omnetpp.org/}.
 
 \bibitem[{Přispěvatel{\'e} Wikipedie}(2010{\natexlab{a}})]{wiki:arp}
 {Přispěvatel{\'e} Wikipedie}.
@@ -79,5 +109,10 @@ MICHEK, J.
 \newblock Dostupn{\'{e}} z:
   \url{http://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.x%
 ml}.
+
+\bibitem[{ZOHO Corp.}(2010)]{reserse:adventnet}
+{ZOHO Corp.}
+\newblock Simulation Toolkit 7.0, 2010.
+\newblock Dostupn{\'{e}} z: \url{http://www.webnms.com/simulator/index.html}.
 
 \end{thebibliography}

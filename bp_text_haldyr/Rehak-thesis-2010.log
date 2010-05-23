@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  22 MAY 2010 23:51
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  23 MAY 2010 11:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -597,12 +597,6 @@ File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 
  (./3_reserse.tex
 Kapitola 3.
-
-Overfull \hbox (3.90935pt too wide) in paragraph at lines 14--15
-[]\T1/cmr/m/n/10.95 http://www.icewalkers.com/Linux/Software/525200/AdventNet-S
-imulation-Toolkit.html 
- []
-
 [5
 
 
@@ -612,7 +606,7 @@ imulation-Toolkit.html
 
  (./4_navrh.tex
 Kapitola 4.
-<figures/navrh.jpg, id=654, 1638.12pt x 1228.59pt>
+<figures/navrh.jpg, id=672, 1638.12pt x 1228.59pt>
 File: figures/navrh.jpg Graphic file (type jpg)
  <use figures/navrh.jpg>
 [7
@@ -620,7 +614,7 @@ File: figures/navrh.jpg Graphic file (type jpg)
 
 
  <./figures/navrh.jpg>] [8] [9]
-<figures/uziv_rozhrani.png, id=681, 304.13625pt x 142.28156pt>
+<figures/uziv_rozhrani.png, id=699, 304.13625pt x 142.28156pt>
 File: figures/uziv_rozhrani.png Graphic file (type png)
 
 <use figures/uziv_rozhrani.png>) [10 <./figures/uziv_rozhrani.png (PNG copy)>]
@@ -629,7 +623,7 @@ File: figures/uziv_rozhrani.png Graphic file (type png)
 
 (./5-0_realizace.tex
 Kapitola 5.
-<figures/uml_sit.png, id=688, 501.875pt x 337.26pt>
+<figures/uml_sit.png, id=706, 501.875pt x 337.26pt>
 File: figures/uml_sit.png Graphic file (type png)
  <use figures/uml_sit.png>
 [11
@@ -637,7 +631,7 @@ File: figures/uml_sit.png Graphic file (type png)
 
 
  <./figures/uml_sit.png (PNG copy)>]
-<figures/uml_abtraktni.png, id=698, 487.8225pt x 416.55624pt>
+<figures/uml_abtraktni.png, id=716, 487.8225pt x 416.55624pt>
 File: figures/uml_abtraktni.png Graphic file (type png)
 
 <use figures/uml_abtraktni.png> [12 <./figures/uml_abtraktni.png (PNG copy)>]
@@ -646,11 +640,11 @@ Overfull \hbox (7.3043pt too wide) in paragraph at lines 51--52
 olupráci s kole-gou. []\T1/cmtt/m/n/10.95 CiscoPocitac
  []
 
-<figures/uml_class.png, id=707, 555.07375pt x 323.2075pt>
+<figures/uml_class.png, id=725, 555.07375pt x 323.2075pt>
 File: figures/uml_class.png Graphic file (type png)
 
 <use figures/uml_class.png> [13 <./figures/uml_class.png (PNG copy)>]
-<figures/ios.png, id=721, 1625.272pt x 1149.093pt>
+<figures/ios.png, id=739, 1625.272pt x 1149.093pt>
 File: figures/ios.png Graphic file (type png)
  <use figures/ios.png>
 
@@ -667,7 +661,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout2 = `5-2_smerovani.aux'.
 
  (./5-2_smerovani.tex
-<figures/sit_2pc.png, id=778, 522.95375pt x 126.4725pt>
+<figures/sit_2pc.png, id=796, 522.95375pt x 126.4725pt>
 File: figures/sit_2pc.png Graphic file (type png)
 
 <use figures/sit_2pc.png>
@@ -677,7 +671,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [22
 
 
-] <figures/sit_3pc.png, id=787, 709.65125pt x 154.5775pt>
+] <figures/sit_3pc.png, id=805, 709.65125pt x 154.5775pt>
 File: figures/sit_3pc.png Graphic file (type png)
 
 <use figures/sit_3pc.png> [23 <./figures/sit_2pc.png (PNG copy)> <./figures/sit
@@ -707,7 +701,7 @@ z nich je tvo°en t¥mito poloºkami:
 \openout2 = `5-4_nat.aux'.
 
  (./5-4_nat.tex
-<figures/nat1.png, id=844, 547.04375pt x 231.86626pt>
+<figures/nat1.png, id=862, 547.04375pt x 231.86626pt>
 File: figures/nat1.png Graphic file (type png)
  <use figures/nat1.png>
 
@@ -723,15 +717,15 @@ mají p°ek-lá-dat (p°íkaz []\T1/cmtt/m/n/10.95 access-list\T1/cmr/m/n/10.95 ).
  []
 
 [31 <./figures/nat1.png (PNG copy)>]
-<figures/nat_navrh1.png, id=861, 400.49625pt x 257.96375pt>
+<figures/nat_navrh1.png, id=879, 400.49625pt x 257.96375pt>
 File: figures/nat_navrh1.png Graphic file (type png)
 
 <use figures/nat_navrh1.png>
-<figures/nat_navrh2.png, id=863, 498.86375pt x 529.98pt>
+<figures/nat_navrh2.png, id=881, 498.86375pt x 529.98pt>
 File: figures/nat_navrh2.png Graphic file (type png)
 
 <use figures/nat_navrh2.png> [32 <./figures/nat_navrh1.png (PNG copy)>]
-<figures/nat_decision.png, id=876, 657.45625pt x 493.845pt>
+<figures/nat_decision.png, id=894, 657.45625pt x 493.845pt>
 File: figures/nat_decision.png Graphic file (type png)
 
 <use figures/nat_decision.png>
@@ -745,7 +739,7 @@ ion.png (PNG copy)>]
 
  (./6_testovani.tex
 Kapitola 6.
-<figures/testovani.png, id=908, 670.505pt x 383.4325pt>
+<figures/testovani.png, id=926, 670.505pt x 383.4325pt>
 File: figures/testovani.png Graphic file (type png)
 
 <use figures/testovani.png>
@@ -785,34 +779,40 @@ Kapitola 8.
 (./Rehak-thesis-2010.bbl [43] [44
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 9--15
+Underfull \hbox (badness 10000) in paragraph at lines 20--26
 \T1/cmr/m/n/10.95 Dos-tupné z: <[][]$\T1/cmtt/m/n/10.95 http : / / www . cisco 
 . com / en / US / tech / tk648 / tk361 / technologies _
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 24--29
+Underfull \hbox (badness 10000) in paragraph at lines 35--40
 \T1/cmtt/m/n/10.95 cisco . com / en / US / tech / tk648 / tk361 / technologies 
 _ tech _ note09186a0080133ddd .
  []
 
 
-Underfull \hbox (badness 3158) in paragraph at lines 31--37
+Underfull \hbox (badness 3158) in paragraph at lines 49--55
 \T1/cmr/m/n/10.95 tupné z: <[][]$\T1/cmtt/m/n/10.95 http : / / www . cisco . co
 m / en / US / tech / tk648 / tk361 / technologies _ tech _
  []
 
 
-Underfull \hbox (badness 1655) in paragraph at lines 77--82
+Underfull \hbox (badness 2020) in paragraph at lines 57--62
+\T1/cmr/m/n/10.95 Dos-tupné z: <[][]$\T1/cmtt/m/n/10.95 http : / / www . cs . v
+sb . cz / vl-[]wiki / index . php / Virtuální _ laborato° _
+ []
+
+[45]
+Underfull \hbox (badness 1655) in paragraph at lines 107--112
 []\T1/cmr/m/n/10.95 The In-ter-net As-signed Num-bers Au-thor-ity.  IANA IPv4 A
 d-dress Space Reg-
  []
 
-) [45] [46
-
-]
+) [46]
 P\v {r}\'{\i }loha A.
-[47] [48
+[47
+
+] [48
 
 ]
 P\v {r}\'{\i }loha B.
@@ -824,7 +824,7 @@ P\v {r}\'{\i }loha C.
 
 ]
 P\v {r}\'{\i }loha D.
-<figures/seznamcd.pdf, id=1007, 793.96625pt x 539.01375pt>
+<figures/seznamcd.pdf, id=1036, 793.96625pt x 539.01375pt>
 File: figures/seznamcd.pdf Graphic file (type pdf)
 
 <use figures/seznamcd.pdf> [53 <./figures/seznamcd.pdf>] [54]
@@ -832,13 +832,13 @@ File: figures/seznamcd.pdf Graphic file (type pdf)
 (./4_navrh.aux) (./5-0_realizace.aux) (./5-1_xml.aux) (./5-2_smerovani.aux)
 (./5-3_wrapper.aux) (./5-4_nat.aux) (./6_testovani.aux) (./7_vylepseni.aux)) ) 
 Here is how much of TeX's memory you used:
- 7163 strings out of 495061
- 95935 string characters out of 1182621
- 173492 words of memory out of 3000000
- 9853 multiletter control sequences out of 15000+50000
+ 7190 strings out of 495061
+ 96497 string characters out of 1182621
+ 173733 words of memory out of 3000000
+ 9871 multiletter control sequences out of 15000+50000
  20519 words of font info for 44 fonts, out of 3000000 for 9000
  39 hyphenation exceptions out of 8191
- 38i,8n,38p,1263b,430s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,8n,38p,1263b,442s stack positions out of 5000i,500n,10000p,200000b,50000s
  
 </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti0900.600pk> </home/hal
 dyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1095.600pk> </home/haldyr/.texmf
@@ -854,9 +854,9 @@ pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/
 jknappen/ec/ecrm1200.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/e
 c/ecrm1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488
 .600pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Rehak-thesis-2010.pdf (72 pages, 1117883 bytes).
+Output written on Rehak-thesis-2010.pdf (72 pages, 1129848 bytes).
 PDF statistics:
- 1891 PDF objects out of 2073 (max. 8388607)
- 267 named destinations out of 1000 (max. 500000)
+ 1929 PDF objects out of 2073 (max. 8388607)
+ 276 named destinations out of 1000 (max. 500000)
  828 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -9,8 +9,8 @@
 \contentsline {chapter}{\numberline {3}Existuj\IeC {\'\i }c\IeC {\'\i } \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{5}{chapter.3}
 \contentsline {section}{\numberline {3.1}Cisco Packet Tracer}{5}{section.3.1}
 \contentsline {section}{\numberline {3.2}OMNeT++ simul\IeC {\'a}tor}{5}{section.3.2}
-\contentsline {section}{\numberline {3.3}AdventNet Simulation Toolkit}{5}{section.3.3}
-\contentsline {section}{\numberline {3.4}Boson NetSim Network Simulator }{5}{section.3.4}
+\contentsline {section}{\numberline {3.3}Simulation Toolkit 7.0}{5}{section.3.3}
+\contentsline {section}{\numberline {3.4}Boson NetSim Network Simulator}{6}{section.3.4}
 \contentsline {section}{\numberline {3.5}Dynamips Cisco 7200 Simulator}{6}{section.3.5}
 \contentsline {section}{\numberline {3.6}Virtu\IeC {\'a}ln\IeC {\'\i } laborato\IeC {\v r} po\IeC {\v c}\IeC {\'\i }ta\IeC {\v c}ov\IeC {\'y}ch s\IeC {\'\i }t\IeC {\'\i } VirtLab}{6}{section.3.6}
 \contentsline {chapter}{\numberline {4}Anal\IeC {\'y}za a~n\IeC {\'a}vrh \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{7}{chapter.4}

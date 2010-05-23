@@ -35,45 +35,57 @@ Warning--entry type for "cisco:postup" isn't style-file defined
 --line 264 of file reference.bib
 Warning--entry type for "cisco:snat_dnat" isn't style-file defined
 --line 272 of file reference.bib
-You've used 12 entries,
+Warning--entry type for "cisco:pt" isn't style-file defined
+--line 280 of file reference.bib
+Warning--entry type for "reserse:omnet_hp" isn't style-file defined
+--line 288 of file reference.bib
+Warning--entry type for "reserse:adventnet" isn't style-file defined
+--line 296 of file reference.bib
+Warning--entry type for "reserse:boson" isn't style-file defined
+--line 304 of file reference.bib
+Warning--entry type for "reserse:dynamips" isn't style-file defined
+--line 312 of file reference.bib
+Warning--entry type for "reserse:virtlab" isn't style-file defined
+--line 320 of file reference.bib
+You've used 18 entries,
             2899 wiz_defined-function locations,
-            680 strings with 6472 characters,
-and the built_in function-call counts, 3822 in all, are:
-= -- 332
-> -- 132
-< -- 13
-+ -- 56
-- -- 36
-* -- 200
-:= -- 598
-add.period$ -- 37
-call.type$ -- 12
-change.case$ -- 36
-chr.to.int$ -- 4
-cite$ -- 24
-duplicate$ -- 205
-empty$ -- 401
-format.name$ -- 60
-if$ -- 823
-int.to.chr$ -- 9
+            704 strings with 7172 characters,
+and the built_in function-call counts, 5630 in all, are:
+= -- 488
+> -- 198
+< -- 19
++ -- 81
+- -- 54
+* -- 286
+:= -- 885
+add.period$ -- 55
+call.type$ -- 18
+change.case$ -- 54
+chr.to.int$ -- 9
+cite$ -- 36
+duplicate$ -- 301
+empty$ -- 593
+format.name$ -- 90
+if$ -- 1213
+int.to.chr$ -- 10
 int.to.str$ -- 1
 missing$ -- 1
-newline$ -- 68
-num.names$ -- 60
-pop$ -- 143
+newline$ -- 98
+num.names$ -- 90
+pop$ -- 215
 preamble$ -- 1
-purify$ -- 24
+purify$ -- 36
 quote$ -- 0
-skip$ -- 150
+skip$ -- 227
 stack$ -- 0
-substring$ -- 43
-swap$ -- 28
+substring$ -- 55
+swap$ -- 35
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 132
+type$ -- 198
 warning$ -- 0
-while$ -- 39
+while$ -- 57
 width$ -- 0
-write$ -- 153
-(There were 11 warnings)
+write$ -- 225
+(There were 17 warnings)
