@@ -79,7 +79,7 @@ Na skutečné počítačové síti jsou síťové prvky několika druhů (switch
 
 %------------------------------------------------------------------------------
 
-\section{Podobnost simulátoru se skutečným Ciscem}\label{kap:podobnost}
+\section{Podobnost simulátoru se skutečným směrovačem}\label{kap:podobnost}
 Jedním z cílů projektu je vytvořit systém, který bude co nejvíce podobný skutečnému Ciscu. Bude ale potřeba položit někde hranici mezi složitostí a věrností výsledné práce, protože tyto dvě metriky jsou vzájemném protikladu. Cisco IOS je natolik robustní a propracovaný systém, že je v mých silách pouze implementace úzké části systému, která je nutně potřeba pro splnění cíle. Pravděpodobně budu nucen místy ustoupit a nechat vypsat hlášení, že to či ono není v mé implementaci podporováno. 
 
 V samotném parseru příkazů pro Cisco IOS nebude toto téměř vůbec řešeno, protože by to znamenalo implementaci několika stovek pravidel pro všechny příkazy - např. příkaz \verb|ip| má 103 možností v konfiguračním stavu. Aby ale uživatel měl alespoň nějakou možnost se dopátrat, co je podporováno a co ne, tak bude přidán příkaz \verb|help| (\verb|help_en| pro výpis v angličtině), který bude popisovat, co lze v jakém stavu Cisca použít.

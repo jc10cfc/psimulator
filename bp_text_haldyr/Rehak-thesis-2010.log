@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  23 MAY 2010 11:41
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  23 MAY 2010 15:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -752,8 +752,8 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 ] [38 <./figures/testovani.png (PNG copy)>]
 Overfull \hbox (42.73077pt too wide) in paragraph at lines 59--61
-[]\T1/cmr/m/n/10.95 Uºivatel na²el bug[][][][][] p°i p°e-chodu z priv-i-le-go-v
--aného do kon-fig-u-ra£ního stavu. P°i []\T1/cmtt/m/n/10.95 configure memory
+[]\T1/cmr/m/n/10.95 Uºivatel na²el bug[][][][][] p°i p°e-chodu z pri-vi-le-go-v
+a-ného do kon-fig-u-ra£ního stavu. P°i []\T1/cmtt/m/n/10.95 configure memory
  []
 
 
@@ -824,7 +824,7 @@ P\v {r}\'{\i }loha C.
 
 ]
 P\v {r}\'{\i }loha D.
-<figures/seznamcd.pdf, id=1036, 793.96625pt x 539.01375pt>
+<figures/seznamcd.pdf, id=1041, 793.96625pt x 539.01375pt>
 File: figures/seznamcd.pdf Graphic file (type pdf)
 
 <use figures/seznamcd.pdf> [53 <./figures/seznamcd.pdf>] [54]
@@ -832,12 +832,12 @@ File: figures/seznamcd.pdf Graphic file (type pdf)
 (./4_navrh.aux) (./5-0_realizace.aux) (./5-1_xml.aux) (./5-2_smerovani.aux)
 (./5-3_wrapper.aux) (./5-4_nat.aux) (./6_testovani.aux) (./7_vylepseni.aux)) ) 
 Here is how much of TeX's memory you used:
- 7190 strings out of 495061
- 96497 string characters out of 1182621
- 173733 words of memory out of 3000000
+ 7197 strings out of 495061
+ 96559 string characters out of 1182621
+ 173749 words of memory out of 3000000
  9871 multiletter control sequences out of 15000+50000
  20519 words of font info for 44 fonts, out of 3000000 for 9000
- 39 hyphenation exceptions out of 8191
+ 41 hyphenation exceptions out of 8191
  38i,8n,38p,1263b,442s stack positions out of 5000i,500n,10000p,200000b,50000s
  
 </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti0900.600pk> </home/hal
@@ -854,9 +854,9 @@ pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/
 jknappen/ec/ecrm1200.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/e
 c/ecrm1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488
 .600pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Rehak-thesis-2010.pdf (72 pages, 1129848 bytes).
+Output written on Rehak-thesis-2010.pdf (72 pages, 1131184 bytes).
 PDF statistics:
- 1929 PDF objects out of 2073 (max. 8388607)
- 276 named destinations out of 1000 (max. 500000)
+ 1935 PDF objects out of 2073 (max. 8388607)
+ 281 named destinations out of 1000 (max. 500000)
  828 words of extra memory for PDF output out of 10000 (max. 10000000)
 
