@@ -8,6 +8,10 @@
  * Dodělat:
  *      Snad už jenom parsujPrikaz() opravit.
  *      Ještě by chtělo ověřit divný masky typu: 1.1.1.1/32, 1.1.1.1/64 atp...
+ *      Na parametry add a del se nevypisuje hlášení, že nejsou podporovaný.
+ * Odchylky:
+ *      ifconfig eth0 2.2.2.2 3.3.3.3 fdsfsdfds 4.4.4.4 ve skutečnosti nastaví 3.3.3.3, u mě 4.4.4.4
+ *              - opraveno 23.5.2010
  */
 package prikazy.linux;
 
@@ -173,8 +177,10 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
             } else if(IpAdresa.jeZakazanaIpAdresa(seznamIP.get(i))){ //adresa je spravna, ale zakazana
                 
                 navratovyKod |= 256; //neplatna IP
-            } else {
-                pouzitIp=i;
+            } else { //spravna adresa
+                if((navratovyKod&16) == 0){ //po spatnz adrese se dalsi uz neberou
+                    pouzitIp=i;
+                }
             }
 
         }

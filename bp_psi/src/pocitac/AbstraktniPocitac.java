@@ -198,61 +198,6 @@ public abstract class AbstraktniPocitac {
 
 
     /**
-     * Transportni vrstva
-     * Slouzi k odeslani odpovedi - odesila icmp reply nebo host unreachable. V odpovednim paketu
-     * se pouzije jako zdrojova adresa cilova adresa puvodniho paketu.
-     * @param puvodni puvodni paket, na kterej se odpovida
-     * @param spec_zdroj kdyz chci specifikovat, s jakym zdrojem se ma paket poslat
-     * @param typ typ paketu
-     * @param kod kod paketu
-     */
-    private void posliNovejPaketOdpoved(Paket puvodni,IpAdresa spec_zdroj, int typ, int kod){
-        if(spec_zdroj!=null){
-            odesliNovejPaket(spec_zdroj, puvodni.zdroj, typ,
-                    kod,puvodni.cas,puvodni.icmp_seq,default_ttl,puvodni.prikaz);
-        }else{
-            odesliNovejPaket(puvodni.cil, puvodni.zdroj, typ,
-                    kod,puvodni.cas,puvodni.icmp_seq,default_ttl,puvodni.prikaz);
-        }
-    }
-
-    /**
-     * Slouzi k poslání novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
-     * Sama nic neposila, pouziva metodu odesliNovejPaket, s tim, ze nespecifikuje specialni zdroj.
-     * Transportni vrstva.
-     * @param cil
-     * @param icmp_seq kdyz je -1, nic se neodesle, jenom zkusebni
-     * @param ttl
-     * @param prikaz
-     * @return true - naslo se vhodny rozhrani, ping byl odeslan <br />
-     *         false - ping se nepodarilo odeslat, nenaslo se vhodny rozhrani 
-     */
-    public boolean posliIcmpRequest(IpAdresa cil, int icmp_seq, int ttl, AbstraktniPing prikaz){
-        int typ=8; //icmp request
-        int kod=0;
-        double cas = 0;
-        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
-    }
-
-    /**
-     * Transportni vrstva
-     */
-    public boolean posliNetUnreachable(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
-        int typ=3; //paket nedosel
-        int kod=0; //net unreachable
-        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
-    }
-
-    /**
-     * Transportni vrstva
-     */
-    public boolean posliTimeExceeded(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
-        int typ=11; //paket nedosel
-        int kod=0; //net unreachable
-        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
-    }
-
-    /**
      * Sitova vrstva.
      * Slouzi k odeslani novyho paketu z tohodle pocitace, ne k preposilani. Touto metodou se
      * odesílaj všechny nový pakety z tohodle počítače. Metoda najde spravny rozhrani,
@@ -438,6 +383,64 @@ public abstract class AbstraktniPocitac {
         }
     }
 
+
+    
+    /**
+     * Transportni vrstva
+     * Slouzi k odeslani odpovedi - odesila icmp reply nebo host unreachable. V odpovednim paketu
+     * se pouzije jako zdrojova adresa cilova adresa puvodniho paketu.
+     * @param puvodni puvodni paket, na kterej se odpovida
+     * @param spec_zdroj kdyz chci specifikovat, s jakym zdrojem se ma paket poslat
+     * @param typ typ paketu
+     * @param kod kod paketu
+     */
+    private void posliNovejPaketOdpoved(Paket puvodni,IpAdresa spec_zdroj, int typ, int kod){
+        if(spec_zdroj!=null){
+            odesliNovejPaket(spec_zdroj, puvodni.zdroj, typ,
+                    kod,puvodni.cas,puvodni.icmp_seq,default_ttl,puvodni.prikaz);
+        }else{
+            odesliNovejPaket(puvodni.cil, puvodni.zdroj, typ,
+                    kod,puvodni.cas,puvodni.icmp_seq,default_ttl,puvodni.prikaz);
+        }
+    }
+
+    /**
+     * Slouzi k poslání novyho pingu z tohodle pocitace, musi vytvorit paket a doplnit do nej adresu zdroje.
+     * Sama nic neposila, pouziva metodu odesliNovejPaket, s tim, ze nespecifikuje specialni zdroj.
+     * Transportni vrstva.
+     * @param cil
+     * @param icmp_seq kdyz je -1, nic se neodesle, jenom zkusebni
+     * @param ttl
+     * @param prikaz
+     * @return true - naslo se vhodny rozhrani, ping byl odeslan <br />
+     *         false - ping se nepodarilo odeslat, nenaslo se vhodny rozhrani
+     */
+    public boolean posliIcmpRequest(IpAdresa cil, int icmp_seq, int ttl, AbstraktniPing prikaz){
+        int typ=8; //icmp request
+        int kod=0;
+        double cas = 0;
+        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
+    }
+
+    /**
+     * Transportni vrstva
+     */
+    public boolean posliNetUnreachable(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
+        int typ=3; //paket nedosel
+        int kod=0; //net unreachable
+        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
+    }
+
+    /**
+     * Transportni vrstva
+     */
+    public boolean posliTimeExceeded(IpAdresa cil, double cas, int icmp_seq, int ttl, AbstraktniPing prikaz){
+        int typ=11; //paket nedosel
+        int kod=0; //net unreachable
+        return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
+    }
+
+    
     /**
      * Pres tuhle metodu se budou vypisovat zpravy o pruchodu paketu.
      * @param zprava

@@ -5,7 +5,6 @@
 package prikazy.linux;
 
 import prikazy.*;
-import java.util.LinkedList;
 import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
