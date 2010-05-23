@@ -32,8 +32,8 @@ Analysa
 		Počet řádků kódu
 		Předpokládaný čas
 
-Popis architektury aplikace
-	_ sem zkopíruju z původního návrhu to, co se do analysy nevešlo
+Popis architektury aplikace - tohle tady nakonec nebude
+	-- sem zkopíruju z původního návrhu to, co se do analysy nevešlo
 	- 2 složky: virtuální síť a komunikace s uživatelem
 	virtuální síť:
 		síťové prvky - dělám jen 3. vrstvu - IP
@@ -45,25 +45,34 @@ Popis architektury aplikace
 		- vlákna
 
 Implementace virtuální sítě
-  - Zabejvám se tady analysou a implementací jednotlivejch částí systému krom příkazů
-  - struktura týhle kapitoly
-  IP adresa
-    - 2 možnosti využití (port, maska)
-    - vnitřní implementace
-    - důležité public metody, porovnávání, vypisování, statický metody
-  Virtuální počítač
-    - 2 funkce - komunikace a posílání paketů (nějak tak...)
-    - 2 třídy, abstraktní a linuxový; zákl. třída...
-    - komunikace, konsole, jak to funguje...
-    Komunikace
-    Síťové rozhraní
-  Routovací tabulka - osnova u samotný sekce
-  Posílání paketů
-    - popsat, jak se linux chová, kdy co přijme
-    - popsat v čem se liší cisco
-    - popsat vlastní implementaci
+	- Zabejvám se tady analysou a implementací jednotlivejch částí systému krom příkazů
+	- struktura týhle kapitoly DODĚLAT
+	Popis architektury aplikace
+		- 2 vrstvy, komunikační a aplikační
+		Komunikační vrstva
+			- přejatá, běží ve vláknech, třídy Komunikace a Konsole
+		Virtuální síť
+			- skládá se z počítačů, ty se konfigurujou a posílaj se mezi nima pakety
+		Rozdělení kódu do balíčků 		-- ??? ještě nevím, mám-li to zařadit
+		Vlákna		-- ??? ještě nevím, mám-li to zařadit
+	IP adresa
+		- 2 možnosti využití (port, maska)
+		- vnitřní implementace
+		- důležité public metody, porovnávání, vypisování, statický metody
+	Virtuální počítač
+		- 2 funkce - komunikace a posílání paketů (nějak tak...)
+		- 2 třídy, abstraktní a linuxový; zákl. třída...
+		- komunikace, konsole, jak to funguje...
+		Komunikace
+		Síťové rozhraní
+	Infrastruktura sítě
+	Routovací tabulka -- osnova u samotný sekce
+	Posílání paketů -- osnova u samotný sekce
+		- popsat, jak se linux chová, kdy co přijme
+		- popsat v čem se liší cisco
+		- popsat vlastní implementaci
 
-Implementace jednotlivých příkazů
+Implementace příkazů
   Parser příkazů
   ifconfig
   route
@@ -78,7 +87,7 @@ Implementace jednotlivých příkazů
 
 
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Stara struktura (před konzultací):
 Kapitoly:
 
@@ -89,23 +98,23 @@ Rešerše - existující řešení
 Analysa a návrh - pozadavky (funkcni, nefunkcni atd...), funkčnost (rlwrap), struktura programu, rozdělení, průběh implementace (osnova na konci kapitoly)
 
 Implementace virtuální sítě
-  - Zabejvám se tady analysou a implementací jednotlivejch částí systému krom příkazů
-  - struktura týhle kapitoly
-  IP adresa
-    - 2 možnosti využití (port, maska)
-    - vnitřní implementace
-    - důležité public metody, porovnávání, vypisování, statický metody
-  Virtuální počítač
-    - 2 funkce - komunikace a posílání paketů (nějak tak...)
-    - 2 třídy, abstraktní a linuxový; zákl. třída...
-    - komunikace, konsole, jak to funguje...
-    Komunikace
-    Síťové rozhraní
-  Routovací tabulka - osnova u samotný sekce
-  Posílání paketů
-    - popsat, jak se linux chová, kdy co přijme
-    - popsat v čem se liší cisco
-    - popsat vlastní implementaci
+	- Zabejvám se tady analysou a implementací jednotlivejch částí systému krom příkazů
+	- struktura týhle kapitoly
+	IP adresa
+		- 2 možnosti využití (port, maska)
+		- vnitřní implementace
+		- důležité public metody, porovnávání, vypisování, statický metody
+	Virtuální počítač
+		- 2 funkce - komunikace a posílání paketů (nějak tak...)
+		- 2 třídy, abstraktní a linuxový; zákl. třída...
+		- komunikace, konsole, jak to funguje...
+		Komunikace
+		Síťové rozhraní
+	Routovací tabulka - osnova u samotný sekce
+	Posílání paketů
+		- popsat, jak se linux chová, kdy co přijme
+		- popsat v čem se liší cisco
+		- popsat vlastní implementaci
 
 Implementace jednotlivých příkazů
   Parser příkazů

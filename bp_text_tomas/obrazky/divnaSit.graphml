@@ -19,7 +19,7 @@
           <y:Geometry height="95.54969024658203" width="81.98619079589844" x="54.00690460205078" y="81.72515487670898"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.93975830078125" modelName="eight_pos" modelPosition="s" textColor="#000000" visible="true" width="40.779296875" x="20.60344696044922" y="99.54969024658203">linux1</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.93975830078125" modelName="eight_pos" modelPosition="s" textColor="#000000" visible="true" width="47.587890625" x="17.19915008544922" y="99.54969024658203">node-1</y:NodeLabel>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="1"/>
           </y:SVGModel>
@@ -45,7 +45,7 @@
           <y:Geometry height="95.54969024658203" width="81.98619079589844" x="489.01380920410156" y="81.72515487670898"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.93975830078125" modelName="eight_pos" modelPosition="s" textColor="#000000" visible="true" width="40.779296875" x="20.60344696044922" y="99.54969024658203">linux2</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.93975830078125" modelName="eight_pos" modelPosition="s" textColor="#000000" visible="true" width="47.587890625" x="17.19915008544922" y="99.54969024658203">node-2</y:NodeLabel>
           <y:SVGModel svgBoundsPolicy="0">
             <y:SVGContent refid="1"/>
           </y:SVGModel>
