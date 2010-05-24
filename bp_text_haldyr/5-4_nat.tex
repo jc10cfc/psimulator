@@ -1,23 +1,23 @@
 \section{Překlad adres}
 % Tady bude popsán překlad adres. Co to je, k cemu slouzi ..
 
-Překlad síťových adres neboli NAT (Network address translation) je způsob úpravy paketů síťového provozu, kde se přepisuje zdrojová a/nebo cílová adresa a někdy také i port. Obvykle se také přepočítává kontrolní součet, který by po úpravě adres či port neodpovídal a byl by takový paket na prvním routeru zahozen.
+Překlad síťových adres neboli NAT (Network address translation) je způsob úpravy paketů síťového provozu, kde se přepisuje zdrojová a/nebo cílová adresa a někdy také i port. Obvykle se také přepočítává kontrolní součet, který by po úpravě adres nebo portu neodpovídal a byl by takový paket na prvním routeru zahozen.
 
 NAT se používá především pro připojení počítačů na lokální síti do internetu, kde jsou takové počítače skryty zpravidla za jednu IP adresu. Navíc technologie překladu adres nepatrně zvyšuje bezpečnost počítačů (připojených za NATem), protože útočník nezná opravdou IP adresu \uv{zanatovaného} počítače. Nelze však NAT používat místo zabezpečení.
 
 %------------------------------------------------------------------------------
 
 \subsection{Cisco a NAT}
-Cisco podporuje několik druhů překladu síťových adres:\cite{cisco:druhy}
+Cisco podporuje několik druhů překladu \cite{cisco:druhy} síťových adres:
 
 \begin{itemize}
 \item statický NAT
 \item dynamický NAT
 \item overloading
-\item jakákoliv kombinace statického a dynamického NATu a overloading.
+\item jakákoliv kombinace statického a dynamického NATu s overloading.
 \end{itemize}
 
-Překlad adres lze u~cisca nastavit opravdu detailně, pro tuto práci je však důležitá pouze úzká podmnožina NATu. Detailní popis funkce NATu lze nalézt na webových stránkách společnosti Cisco Systems\cite{cisco:nat}.
+Překlad adres lze u~cisca nastavit opravdu detailně, pro tuto práci je však důležitá pouze úzká podmnožina NATu. Detailní popis fungování překladu adres lze nalézt na webových stránkách společnosti Cisco Systems \cite{cisco:nat}.
 Soukromý počítač je počítač umístěný v~lokální síti. Je tedy schován za nějakou IP adresu routeru, který provádí překlad. Naopak veřejný počítač je takový počítač, který není schován za NATem (alespoň z~pohledu soukromého počítače\footnote{Ale i takovýto počítač může být schován za jiným nadřazeným routerem za NAT.}).
 
 \subsubsection{Statický NAT}
@@ -25,7 +25,7 @@ Statický překlad adres umožňuje stanovit pravidla, která říkají, na jako
 \begin{verbatim}
 ip nat inside source static 10.10.10.2 147.16.68.5
 \end{verbatim} 
-Tímto příkazem se bude překládat paket s~adresou \verb|10.10.10.2| na adresu \verb|147.16.68.5| (za předpokladu, že paket přišel z~rozhraní, které je nastavené jako soukromé, a paket míří do veřejné sítě - přes veřejné rozhraní). Statický NAT funguje i obráceným směrem. Jiné pakety (tj. od jiných počítačů) se překládat nebudou. 
+Tímto příkazem se bude překládat paket s~adresou \verb|10.10.10.2| na adresu \verb|147.16.68.5| (za předpokladu, že paket přišel z~rozhraní, které je nastavené jako soukromé, a paket míří do veřejné sítě - přes veřejné rozhraní). Statický NAT funguje i obráceným směrem. Je tedy možné zviditelnit počítač za NATem přes statické pravidlo. Pakety od jiných počítačů se překládat nebudou. 
 
 Celá situace je znázorněna na obrázku \ref{fig:nat1}. U~paketů od \verb|pocitac1| se bude přepisovat zdrojová IP adresa na \verb|147.16.68.5|. Zatímco pakety od \verb|pocitac2| zůstanou nezměněny.
 
@@ -41,11 +41,11 @@ Celá situace je znázorněna na obrázku \ref{fig:nat1}. U~paketů od \verb|poc
 
 
 \subsubsection{Dynamický NAT a overloading}
-Dynamický překlad adres je velmi podobný statickému s~tím rozdílem, že se pravidla generují dynamicky. Je pouze přiřazen pool IP adres\footnote{pool je doslova zásoba či rezerva}, ze kterého se přiřazují adresy (s~portem) při překladu. Navíc lze omezit adresy sítí, které se mají překládat (příkaz \verb|access-list|).
+Dynamický překlad adres je velmi podobný statickému s~tím rozdílem, že se pravidla generují dynamicky. Je pouze přiřazen pool\footnote{pool je doslova zásoba či rezerva} IP adres, ze kterého se přiřazují adresy (s~portem) při překladu. Navíc lze omezit adresy sítí, které se mají překládat (příkaz \verb|access-list|).
 
 Overloading je spíše podmnožina dynamického NATu, kde je povoleno přiřazovat jednu IP adresu více počítačům. Pakety od různých počítačů jsou pak odlišeny jiným portem.
 
-Dynamický překlad probíhá tak, že se nejdříve zkontrolují access-listy, zda se má vůbec překládat. Když IP adresa spadá do access-listu, tak se vezme volná IP adresa (při metodě overloading může být vybrána jedna adresa vícekrát) z~poolu, který je k~access-listu přiřazen. Touto vybranou IP adresou počítač přepíše zdrojovou adresu příchozího paketu a vytvoří dynamický záznam do NAT tabulky. Zpětná překlad je jednodušší. Počítač vybere dynamický záznam, přepíše cílovou adresu a předá paket směrovacím pravidlům.
+Dynamický překlad probíhá tak, že se nejdříve zkontrolují access-listy, zda se má vůbec překládat. Když IP adresa spadá do access-listu, tak se vezme volná IP adresa (při metodě overloading může být vybrána jedna adresa vícekrát) z~poolu, který je k~access-listu přiřazen. Touto vybranou IP adresou počítač přepíše zdrojovou adresu příchozího paketu a vytvoří dynamický záznam do NAT tabulky. Zpětný překlad je podstatně jednodušší. Počítač vybere dynamický záznam, přepíše cílovou adresu a předá paket směrovacím pravidlům.
 
 \paragraph{IOS příkazy}
 Přidat pool adres lze příkazem:
@@ -65,7 +65,7 @@ IP - adresa sítě povolených IP adres
 WILDCARD - maska ve tvaru wildcard (maska = broadcast - wildcard)
 \end{verbatim}
 
-Pro přiřazení poolu k~access-listu se provadí pomocí příkazu:
+Přiřazení poolu k~access-listu se provadí příkazem:
 \begin{verbatim}
 ip nat inside source list <ACCESS-LIST> pool <POOL> overload?
 ACCESS-LIST - identifikátor access-listu
@@ -123,7 +123,7 @@ Když přijde paket do počítače, tak se nejdříve provede reverzní překlad
     \end{enumerate}
 \end{itemize}
 
-Vše je lépe znázorněno na vývojovém diagramu \ref{fig:nat_decision}.
+Vše je lépe znázorněno vývojovým diagramem \ref{fig:nat_decision}.
 
 \begin{figure}[b]
 \begin{center}
@@ -150,7 +150,7 @@ Vše je lépe znázorněno na vývojovém diagramu \ref{fig:nat_decision}.
 
 Reverzní překlad je mnohem jednodušší záležitost. Příchozí paket čekají tyto pravidla:
 \begin{enumerate}
-  \item Nejdříve se zkontroluje, zda paket přišel přes veřejné rozhraní. Když je vstupní rozhraní jiné než neřejné, tak se reverzní překlad neprovede.
+  \item Nejdříve se zkontroluje, zda paket přišel přes veřejné rozhraní. Když je vstupní rozhraní jiné než veřejné, tak se reverzní překlad neprovede.
 
   \item Pak se prohledají statická pravidla, zda nějaké odpovídá (včetně portu) cílové adrese paketu. Pokud odpovídá, tak se provede reverzní překlad.
 

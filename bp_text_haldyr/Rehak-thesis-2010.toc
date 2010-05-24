@@ -62,44 +62,44 @@
 \contentsline {paragraph}{I. experiment}{26}{section*.8}
 \contentsline {paragraph}{II. experiment}{26}{section*.9}
 \contentsline {paragraph}{III. experiment}{27}{section*.10}
-\contentsline {subsection}{\numberline {5.6.4}ARP protokol}{28}{subsection.5.6.4}
-\contentsline {subsection}{\numberline {5.6.5}Pravidla o~p\IeC {\v r}\IeC {\'\i }jmu paket\IeC {\r u}}{28}{subsection.5.6.5}
-\contentsline {section}{\numberline {5.7}Wrapper sm\IeC {\v e}rovac\IeC {\'\i } tabulky}{29}{section.5.7}
-\contentsline {subsection}{\numberline {5.7.1}Sm\IeC {\v e}rovac\IeC {\'\i } tabulka}{29}{subsection.5.7.1}
-\contentsline {subsubsection}{\numberline {5.7.1.1}V\IeC {\'y}b\IeC {\v e}r z\IeC {\'a}znam\IeC {\r u}}{29}{subsubsection.5.7.1.1}
-\contentsline {subsection}{\numberline {5.7.2}Wrapper}{29}{subsection.5.7.2}
-\contentsline {subsubsection}{\numberline {5.7.2.1}Statick\IeC {\'e} z\IeC {\'a}znamy}{29}{subsubsection.5.7.2.1}
-\contentsline {paragraph}{}{30}{section*.11}
-\contentsline {subsection}{\numberline {5.7.3}Vlastnosti}{30}{subsection.5.7.3}
-\contentsline {subsection}{\numberline {5.7.4}Odchylky}{32}{subsection.5.7.4}
-\contentsline {section}{\numberline {5.8}P\IeC {\v r}eklad adres}{33}{section.5.8}
-\contentsline {subsection}{\numberline {5.8.1}Cisco a NAT}{33}{subsection.5.8.1}
-\contentsline {subsubsection}{\numberline {5.8.1.1}Statick\IeC {\'y} NAT}{33}{subsubsection.5.8.1.1}
-\contentsline {subsubsection}{\numberline {5.8.1.2}Dynamick\IeC {\'y} NAT a overloading}{34}{subsubsection.5.8.1.2}
-\contentsline {paragraph}{IOS p\IeC {\v r}\IeC {\'\i }kazy}{34}{section*.12}
-\contentsline {subsection}{\numberline {5.8.2}N\IeC {\'a}vrh a implementace NATu}{35}{subsection.5.8.2}
-\contentsline {subsubsection}{\numberline {5.8.2.1}N\IeC {\'a}vrh}{35}{subsubsection.5.8.2.1}
-\contentsline {subsubsection}{\numberline {5.8.2.2}Implementace}{35}{subsubsection.5.8.2.2}
-\contentsline {paragraph}{Postup p\IeC {\v r}ekladu adres}{35}{section*.13}
-\contentsline {subparagraph}{Sm\IeC {\v e}r ven}{36}{section*.14}
-\contentsline {subparagraph}{Sm\IeC {\v e}r dovnit\IeC {\v r} - reverzn\IeC {\'\i } p\IeC {\v r}eklad}{36}{section*.15}
-\contentsline {chapter}{\numberline {6}Testov\IeC {\'a}n\IeC {\'\i }}{41}{chapter.6}
-\contentsline {section}{\numberline {6.1}U\IeC {\v z}ivatelsk\IeC {\'e} testov\IeC {\'a}n\IeC {\'\i }}{41}{section.6.1}
-\contentsline {subsection}{\numberline {6.1.1}Zad\IeC {\'a}n\IeC {\'\i }}{41}{subsection.6.1.1}
-\contentsline {subsection}{\numberline {6.1.2}Pr\IeC {\r u}b\IeC {\v e}h testov\IeC {\'a}n\IeC {\'\i }}{41}{subsection.6.1.2}
-\contentsline {subsubsection}{\numberline {6.1.2.1}\IeC {\'U}kol \IeC {\v c}.1 spu\IeC {\v s}t\IeC {\v e}n\IeC {\'\i } serveru}{42}{subsubsection.6.1.2.1}
-\contentsline {subsubsection}{\numberline {6.1.2.2}\IeC {\'U}kol \IeC {\v c}.2 pr\IeC {\r u}chod stavy IOS}{42}{subsubsection.6.1.2.2}
-\contentsline {subsubsection}{\numberline {6.1.2.3}\IeC {\'U}kol \IeC {\v c}.3 nastaven\IeC {\'\i } rozhran\IeC {\'\i }}{43}{subsubsection.6.1.2.3}
-\contentsline {subsubsection}{\numberline {6.1.2.4}\IeC {\'U}kol \IeC {\v c}.4 sm\IeC {\v e}rov\IeC {\'a}n\IeC {\'\i }}{43}{subsubsection.6.1.2.4}
-\contentsline {subsubsection}{\numberline {6.1.2.5}\IeC {\'U}kol \IeC {\v c}.5 statick\IeC {\'y} NAT}{43}{subsubsection.6.1.2.5}
-\contentsline {subsubsection}{\numberline {6.1.2.6}\IeC {\'U}kol \IeC {\v c}.6 dynamick\IeC {\'y} NAT}{43}{subsubsection.6.1.2.6}
-\contentsline {subsection}{\numberline {6.1.3}Shrnut\IeC {\'\i }}{44}{subsection.6.1.3}
-\contentsline {section}{\numberline {6.2}Z\IeC {\'a}t\IeC {\v e}\IeC {\v z}ov\IeC {\'e} testy}{44}{section.6.2}
-\contentsline {subsection}{\numberline {6.2.1}N\IeC {\'a}vrh}{44}{subsection.6.2.1}
-\contentsline {subsection}{\numberline {6.2.2}V\IeC {\'y}sledky}{44}{subsection.6.2.2}
-\contentsline {chapter}{\numberline {7}Mo\IeC {\v z}n\IeC {\'a} vylep\IeC {\v s}en\IeC {\'\i }}{45}{chapter.7}
-\contentsline {chapter}{\numberline {8}Z\IeC {\'a}v\IeC {\v e}r}{47}{chapter.8}
-\contentsline {chapter}{\numberline {A}Seznam pou\IeC {\v z}it\IeC {\'y}ch zkratek}{51}{appendix.A}
-\contentsline {chapter}{\numberline {B}UML diagramy}{53}{appendix.B}
-\contentsline {chapter}{\numberline {C}Instala\IeC {\v c}n\IeC {\'\i } a~u\IeC {\v z}ivatelsk\IeC {\'a} p\IeC {\v r}\IeC {\'\i }ru\IeC {\v c}ka}{55}{appendix.C}
-\contentsline {chapter}{\numberline {D}Obsah p\IeC {\v r}ilo\IeC {\v z}en\IeC {\'e}ho CD}{57}{appendix.D}
+\contentsline {subsection}{\numberline {5.6.4}ARP protokol}{27}{subsection.5.6.4}
+\contentsline {subsection}{\numberline {5.6.5}Pravidla o~p\IeC {\v r}\IeC {\'\i }jmu paket\IeC {\r u}}{27}{subsection.5.6.5}
+\contentsline {section}{\numberline {5.7}Wrapper sm\IeC {\v e}rovac\IeC {\'\i } tabulky}{28}{section.5.7}
+\contentsline {subsection}{\numberline {5.7.1}Sm\IeC {\v e}rovac\IeC {\'\i } tabulka}{28}{subsection.5.7.1}
+\contentsline {subsubsection}{\numberline {5.7.1.1}V\IeC {\'y}b\IeC {\v e}r z\IeC {\'a}znam\IeC {\r u}}{28}{subsubsection.5.7.1.1}
+\contentsline {subsection}{\numberline {5.7.2}Wrapper}{28}{subsection.5.7.2}
+\contentsline {subsubsection}{\numberline {5.7.2.1}Statick\IeC {\'e} z\IeC {\'a}znamy}{28}{subsubsection.5.7.2.1}
+\contentsline {paragraph}{}{29}{section*.11}
+\contentsline {subsection}{\numberline {5.7.3}Vlastnosti}{29}{subsection.5.7.3}
+\contentsline {subsection}{\numberline {5.7.4}Odchylky}{31}{subsection.5.7.4}
+\contentsline {section}{\numberline {5.8}P\IeC {\v r}eklad adres}{32}{section.5.8}
+\contentsline {subsection}{\numberline {5.8.1}Cisco a NAT}{32}{subsection.5.8.1}
+\contentsline {subsubsection}{\numberline {5.8.1.1}Statick\IeC {\'y} NAT}{32}{subsubsection.5.8.1.1}
+\contentsline {subsubsection}{\numberline {5.8.1.2}Dynamick\IeC {\'y} NAT a overloading}{33}{subsubsection.5.8.1.2}
+\contentsline {paragraph}{IOS p\IeC {\v r}\IeC {\'\i }kazy}{33}{section*.12}
+\contentsline {subsection}{\numberline {5.8.2}N\IeC {\'a}vrh a implementace NATu}{34}{subsection.5.8.2}
+\contentsline {subsubsection}{\numberline {5.8.2.1}N\IeC {\'a}vrh}{34}{subsubsection.5.8.2.1}
+\contentsline {subsubsection}{\numberline {5.8.2.2}Implementace}{34}{subsubsection.5.8.2.2}
+\contentsline {paragraph}{Postup p\IeC {\v r}ekladu adres}{34}{section*.13}
+\contentsline {subparagraph}{Sm\IeC {\v e}r ven}{35}{section*.14}
+\contentsline {subparagraph}{Sm\IeC {\v e}r dovnit\IeC {\v r} - reverzn\IeC {\'\i } p\IeC {\v r}eklad}{35}{section*.15}
+\contentsline {chapter}{\numberline {6}Testov\IeC {\'a}n\IeC {\'\i }}{39}{chapter.6}
+\contentsline {section}{\numberline {6.1}U\IeC {\v z}ivatelsk\IeC {\'e} testov\IeC {\'a}n\IeC {\'\i }}{39}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Zad\IeC {\'a}n\IeC {\'\i }}{39}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Pr\IeC {\r u}b\IeC {\v e}h testov\IeC {\'a}n\IeC {\'\i }}{39}{subsection.6.1.2}
+\contentsline {subsubsection}{\numberline {6.1.2.1}\IeC {\'U}kol \IeC {\v c}.1 spu\IeC {\v s}t\IeC {\v e}n\IeC {\'\i } serveru}{40}{subsubsection.6.1.2.1}
+\contentsline {subsubsection}{\numberline {6.1.2.2}\IeC {\'U}kol \IeC {\v c}.2 pr\IeC {\r u}chod stavy IOS}{40}{subsubsection.6.1.2.2}
+\contentsline {subsubsection}{\numberline {6.1.2.3}\IeC {\'U}kol \IeC {\v c}.3 nastaven\IeC {\'\i } rozhran\IeC {\'\i }}{41}{subsubsection.6.1.2.3}
+\contentsline {subsubsection}{\numberline {6.1.2.4}\IeC {\'U}kol \IeC {\v c}.4 sm\IeC {\v e}rov\IeC {\'a}n\IeC {\'\i }}{41}{subsubsection.6.1.2.4}
+\contentsline {subsubsection}{\numberline {6.1.2.5}\IeC {\'U}kol \IeC {\v c}.5 statick\IeC {\'y} NAT}{41}{subsubsection.6.1.2.5}
+\contentsline {subsubsection}{\numberline {6.1.2.6}\IeC {\'U}kol \IeC {\v c}.6 dynamick\IeC {\'y} NAT}{41}{subsubsection.6.1.2.6}
+\contentsline {subsection}{\numberline {6.1.3}Shrnut\IeC {\'\i }}{42}{subsection.6.1.3}
+\contentsline {section}{\numberline {6.2}Z\IeC {\'a}t\IeC {\v e}\IeC {\v z}ov\IeC {\'e} testy}{42}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}N\IeC {\'a}vrh}{42}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}V\IeC {\'y}sledky}{42}{subsection.6.2.2}
+\contentsline {chapter}{\numberline {7}Mo\IeC {\v z}n\IeC {\'a} vylep\IeC {\v s}en\IeC {\'\i }}{43}{chapter.7}
+\contentsline {chapter}{\numberline {8}Z\IeC {\'a}v\IeC {\v e}r}{45}{chapter.8}
+\contentsline {chapter}{\numberline {A}Seznam pou\IeC {\v z}it\IeC {\'y}ch zkratek}{49}{appendix.A}
+\contentsline {chapter}{\numberline {B}UML diagramy}{51}{appendix.B}
+\contentsline {chapter}{\numberline {C}Instala\IeC {\v c}n\IeC {\'\i } a~u\IeC {\v z}ivatelsk\IeC {\'a} p\IeC {\v r}\IeC {\'\i }ru\IeC {\v c}ka}{53}{appendix.C}
+\contentsline {chapter}{\numberline {D}Obsah p\IeC {\v r}ilo\IeC {\v z}en\IeC {\'e}ho CD}{55}{appendix.D}

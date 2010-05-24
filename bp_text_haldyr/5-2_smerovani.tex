@@ -106,16 +106,16 @@ Cisco se zeptalo ethernetově (přes ARP) linuxu, ten odpověděl, že takovou a
 
 %------------------------------------------------------------------------------
 
-\newpage
+% \newpage
 
 \subsection{ARP protokol} \label{arp}
-\uv{Address Resolution Protocol (ARP) se v~počítačových sítích s~IP protokolem používá k~získání ethernetové MAC adresy sousedního stroje z~jeho IP adresy. Používá se v~situaci, kdy je třeba odeslat IP datagram na adresu ležící ve stejné podsíti jako odesilatel. Data se tedy mají poslat přímo adresátovi, u~něhož však odesilatel zná pouze IP adresu. Pro odeslání prostřednictvím např. Ethernetu ale potřebuje znát cílovou ethernetovou adresu.}\cite{wiki:arp}
+\textit{\uv{Address Resolution Protocol (ARP) se v~počítačových sítích s~IP protokolem používá k~získání ethernetové MAC adresy sousedního stroje z~jeho IP adresy. Používá se v~situaci, kdy je třeba odeslat IP datagram na adresu ležící ve stejné podsíti jako odesílatel. Data se tedy mají poslat přímo adresátovi, u~něhož však odesilatel zná pouze IP adresu. Pro odeslání prostřednictvím např. Ethernetu ale potřebuje znát cílovou ethernetovou adresu.}} \cite{wiki:arp}
 
 Z~různých experimentů jsem sestavil tato ARP pravidla, podle kterých cisco vyhodnocuje ARP requesty:
 \begin{enumerate}
- \item zdrojová IP adresa není ve stejné síti viz obrázek \ref{fig:sit_2pc}, tak se diskartuje ARP request - lze obejít v~konfiguraci (jako např. na školních smerovačích)
+ \item zdrojová IP adresa není ve stejné síti viz obrázek \ref{fig:sit_2pc}, tak se diskartuje ARP request - lze obejít v~konfiguraci (jako např. na školních směrovačích)
  \item cílová IP adresa nesedí s~žádnou s~žádnou mojí IP adresou, tak se diskartuje ARP reply
- \item IP zdroje (tazatele) je dostupná před pravidla v~routovací tabulce, tak se vygeneruje ARP reply a pošle se tazateli
+ \item IP zdroje (tazatele) je dostupná přes pravidla v~routovací tabulce, tak se vygeneruje ARP reply a pošle se tazateli
 \end{enumerate}
 
 %------------------------------------------------------------------------------

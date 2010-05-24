@@ -1,14 +1,14 @@
 \section{Wrapper směrovací tabulky}
-Routovací tabulka, kterou implementoval kolega, je \uv{šitá} pro linux. Abych ji mohl použít, musel jsem vytvořit \verb|CiscoWrapper|, který bude v~podstatě linuxovou tabulku ovládat. Hlavní důvodem pro vytvoření nějakého wrapperu je skutečnost, že cisco svoji routovací tabulku vypočítává z~nahozených rozhraní a ze statických pravidel vložených uživatelem. Má tedy zvlášť datovou strukturu pro statická pravidla a pro samotnou routovací tabulku.
+Routovací tabulka, kterou implementoval kolega, je \uv{šitá} pro linux. Abych ji mohl použít, musel jsem vytvořit \verb|CiscoWrapper|, který bude linuxovou tabulku ovládat. Hlavní důvodem pro vytvoření nějakého wrapperu je skutečnost, že cisco svoji routovací tabulku vypočítává z~nahozených rozhraní a ze statických pravidel vložených uživatelem. Má tedy zvlášť datovou strukturu pro statická pravidla a pro samotnou routovací tabulku.
 
 Mohl jsem si implementovat kompletně vlastní routovací tabulku, ale nějaké podobě wrapperu bych se stejně nevyhnul. Byla by to tedy zbytečná práce, která by navíc znamenala určité zdvojení kódu.
 
 %------------------------------------------------------------------------------
 
 \subsection{Směrovací tabulka}
-Linuxová routovací tabulka je složena ze záznamů, každý z~nich je tvořen těmito položkami: adresát, brána a rozhraní. Existují dva typy záznamů:
+Linuxová routovací tabulka je složena ze záznamů, kde každý z~nich je tvořen těmito položkami: adresát, brána a rozhraní. Existují (pro tuto práci důležité) dva typy záznamů:
 \begin{itemize}
- \item záznam na bránu - příznak UG, při přidávání UG záznamu platí, že nově přidávaná brána musí být dosažitelná příznakem U~(nějakým záznamem na rozhraní)
+ \item záznam na bránu - příznak UG, při přidávání UG záznamu platí, že nově přidávaná brána musí být dosažitelná příznakem U~(= nějakým záznamem na rozhraní)
  \item záznam na rozhraní - příznak U, převážně záznamy od nahozených rozhraní
 \end{itemize}
 
@@ -30,7 +30,7 @@ C      110     192-223  255.255.255.0   2 097 152   254
 D      1110    224-239  multicast
 E      1111    240-255  vyhrazeno jako rezerva
 \end{verbatim}
-Upravený výpis s~Wikipedie \cite{wiki:ip} a z~webu organizace IANA\cite{iana}.
+Upravený výpis s~Wikipedie \cite{wiki:ip} a ověřený z~webu organizace IANA \cite{iana}.
 
 \paragraph{}
 Když se přidává záznam s~nedosažitelnou bránou, tak IOS nevypíše žádnou chybovou hlášku (narozdíl od linux, který vypíše \verb|SIOCADDRT: No such process|). Záznam se uloží do wrapperu a je přidán do routovací tabulky ve chvíli, kdy bude dosažitelný. 
@@ -42,7 +42,7 @@ V~mé implementaci je zabudována ochrana proti smyčkám u~záznamů na bránu,
 Statická pravidla lze vypsat v~privilegovaném módu příkazem \verb|show running-config| a generovaná pravidla (tedy obsah routovací tabulky) přes příkaz \verb|show ip route|.
 
 \subsection{Vlastnosti}
-Při testování školního cisca jsem narazil na zajímavé vlastnosti Cisco IOSu. Přidával jsem postupně různá statická pravidla a nechal si vypisovat stav routovací tabulky.
+Při testování školního cisca jsem narazil na zajímavé vlastnosti Cisco IOS. Přidával jsem postupně různá statická pravidla a nechal si vypisovat stav routovací tabulky.
 Nejdříve jsem vložil tyto záznamy v~konfiguračním módu:
 \begin{verbatim}
 ip route 0.0.0.0 0.0.0.0 FastEthernet0/0
@@ -93,7 +93,7 @@ S~13.0.0.0/8 [1/0] via 6.6.6.6
      192.168.2.0/30 is subnetted, 1 subnets
 C       192.168.2.8 is directly connected, FastEthernet0/1
 \end{verbatim} 
-Jak je vidět, tak se defaultní záznam opravdu smazala (záznam \verb|S*| opravdu chybí). Po opětovném spuštění příkazu \verb|show ip route| po cca 20 vteřinách vypadá výpis následovně:
+Jak je vidět, tak se defaultní záznam opravdu smazal (záznam \verb|S*| opravdu chybí). Po opětovném spuštění příkazu \verb|show ip route| po cca 20 vteřinách vypadá výpis následovně:
 \begin{verbatim}
      51.0.0.0/24 is subnetted, 1 subnets
 S~51.51.51.0 [1/0] via 21.21.21.244
@@ -109,15 +109,15 @@ C       192.168.2.8 is directly connected, FastEthernet0/1
 
 Obsah routovací tabulky se dramaticky změnil. Dlouho jsem si lámal hlavu čím to je způsobeno. Ptal jsem se spolužáků co mají CCNA\footnote{Cisco Certified Network Associate} certifikáty a nikdo mi neuměl vysvětil, jak je možné, že se obsah routovací tabulky může měnit v~čase bez nějaké třetí osoby. Dokonce jsem u~známého pouštěl \verb|Cisco Packet Tracer| a zkoušel jsem stejné příkazy, ale nebyl jsem schopen to přes tento simulátor zreprodukovat.
 
-Nakonec jsem přišel na to, že školní cisco je natolik pomalé, že není schopno propočítat routovací tabulku v~reálném čase, a tak aktualizuje tabulku s~několika vteřinovými prodlevami. Prodleva se pohybovala v~závislosti na počtu záznamů v~rozmezí 5-40 vteřin, zkoušel jsem ale přidat maximálně asi 15 záznamů, protože pak už je výpis routovací tabulky začíná být nepříjemně nepřehledný. Při vyšším počtu záznamů by se prodleva zřejmě navyšovala. 
+Nakonec jsem přišel na to, že školní cisco je natolik pomalé, že není schopno propočítat routovací tabulku v~reálném čase, a tak aktualizuje tabulku s~několika vteřinovými prodlevami. Prodleva se pohybovala v~závislosti na počtu záznamů v~rozmezí 5-40 vteřin, zkoušel jsem ale přidat maximálně asi 15 záznamů, protože pak už je výpis routovací tabulky začíná být nepříjemně nepřehledný. Při vyšším počtu záznamů by se prodleva zřejmě zvyšovala. 
 
 \subsection{Odchylky}
 Při implementaci wrapperu jsem se několikrát odchýlil od skutečného cisca:
 
 \begin{enumerate}
- \item Prodlevu v~aktualizaci routovací tabulky jsem neimplementoval, protože studenti na ní nemohou téměř narazit. A~když si náhodou student všimne, že obsah tabulky nesedí, tak příkaz pro výpis zpravidla spustí znova a vše bude už v~pořádku. Navíc jiná cisca mohou být mnohem rychlejší než ty školní a když takovou vlastnost nemá ani oficiální simulátor, tak asi nemá smysl to implementovat zde.
+ \item Prodlevu v~aktualizaci routovací tabulky jsem neimplementoval, protože studenti na ni nemohou téměř narazit. A~když si náhodou student všimne, že obsah tabulky nesedí, tak příkaz pro výpis zpravidla spustí znova a vše bude už v~pořádku. Navíc jiná cisca mohou být mnohem rychlejší než ty školní a když takovou vlastnost nemá ani oficiální simulátor, tak asi nemá smysl to implementovat zde.
 
- \item Stanovil jsem limit 100 statických pravidel na bránu propojených do jednoho dlouhého řetězu. Nepřepokládám, že by bylo něco takového potřeba, 100 záznamů by ale mělo být víc než dost. Příklad velmi krátkého řetězu:
+ \item Stanovil jsem limit 100 statických pravidel na bránu propojených do jednoho dlouhého řetězu. Nepřepokládám, že by bylo něco takového potřeba, 100 záznamů by ale mělo být víc než dost. Příklad velmi krátkého řetězu o třech záznamech:
 \begin{verbatim}
 ip route 4.4.4.0 255.255.255.0 6.6.6.6
 ip route 6.6.6.0 255.255.255.0 8.8.8.8
