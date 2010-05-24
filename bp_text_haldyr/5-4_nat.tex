@@ -17,17 +17,17 @@ Cisco podporuje několik druhů překladu síťových adres:\cite{cisco:druhy}
 \item jakákoliv kombinace statického a dynamického NATu a overloading.
 \end{itemize}
 
-Překlad adres lze u cisca nastavit opravdu detailně, pro tuto práci je však důležitá pouze úzká podmnožina NATu. Detailní popis funkce NATu lze nalézt na webových stránkách společnosti Cisco Systems\cite{cisco:nat}.
-Soukromý počítač je počítač umístěný v lokální síti. Je tedy schován za nějakou IP adresu routeru, který provádí překlad. Naopak veřejný počítač je takový počítač, který není schován za NATem (alespoň z pohledu soukromého počítače\footnote{Ale i takovýto počítač může být schován za jiným nadřazeným routerem za NAT.}).
+Překlad adres lze u~cisca nastavit opravdu detailně, pro tuto práci je však důležitá pouze úzká podmnožina NATu. Detailní popis funkce NATu lze nalézt na webových stránkách společnosti Cisco Systems\cite{cisco:nat}.
+Soukromý počítač je počítač umístěný v~lokální síti. Je tedy schován za nějakou IP adresu routeru, který provádí překlad. Naopak veřejný počítač je takový počítač, který není schován za NATem (alespoň z~pohledu soukromého počítače\footnote{Ale i takovýto počítač může být schován za jiným nadřazeným routerem za NAT.}).
 
 \subsubsection{Statický NAT}
-Statický překlad adres umožňuje stanovit pravidla, která říkají, na jakou adresu má být přeložen počítač s danou IP adresou. Např.:
+Statický překlad adres umožňuje stanovit pravidla, která říkají, na jakou adresu má být přeložen počítač s~danou IP adresou. Např.:
 \begin{verbatim}
 ip nat inside source static 10.10.10.2 147.16.68.5
 \end{verbatim} 
-Tímto příkazem se bude překládat paket s adresou \verb|10.10.10.2| na adresu \verb|147.16.68.5| (za předpokladu, že paket přišel z rozhraní, které je nastavené jako soukromé, a paket míří do veřejné sítě - přes veřejné rozhraní). Statický NAT funguje i obráceným směrem. Jiné pakety (tj. od jiných počítačů) se překládat nebudou. 
+Tímto příkazem se bude překládat paket s~adresou \verb|10.10.10.2| na adresu \verb|147.16.68.5| (za předpokladu, že paket přišel z~rozhraní, které je nastavené jako soukromé, a paket míří do veřejné sítě - přes veřejné rozhraní). Statický NAT funguje i obráceným směrem. Jiné pakety (tj. od jiných počítačů) se překládat nebudou. 
 
-Celá situace je znázorněna na obrázku \ref{fig:nat1}. U paketů od \verb|pocitac1| se bude přepisovat zdrojová IP adresa na \verb|147.16.68.5|. Zatímco pakety od \verb|pocitac2| zůstanou nezměněny.
+Celá situace je znázorněna na obrázku \ref{fig:nat1}. U~paketů od \verb|pocitac1| se bude přepisovat zdrojová IP adresa na \verb|147.16.68.5|. Zatímco pakety od \verb|pocitac2| zůstanou nezměněny.
 
 \begin{figure}[h]
 \begin{center}
@@ -41,11 +41,11 @@ Celá situace je znázorněna na obrázku \ref{fig:nat1}. U paketů od \verb|poc
 
 
 \subsubsection{Dynamický NAT a overloading}
-Dynamický překlad adres je velmi podobný statickému s tím rozdílem, že se pravidla generují dynamicky. Je pouze přiřazen pool IP adres\footnote{pool je doslova zásoba či rezerva}, ze kterého se přiřazují adresy (s portem) při překladu. Navíc lze omezit adresy sítí, které se mají překládat (příkaz \verb|access-list|).
+Dynamický překlad adres je velmi podobný statickému s~tím rozdílem, že se pravidla generují dynamicky. Je pouze přiřazen pool IP adres\footnote{pool je doslova zásoba či rezerva}, ze kterého se přiřazují adresy (s~portem) při překladu. Navíc lze omezit adresy sítí, které se mají překládat (příkaz \verb|access-list|).
 
 Overloading je spíše podmnožina dynamického NATu, kde je povoleno přiřazovat jednu IP adresu více počítačům. Pakety od různých počítačů jsou pak odlišeny jiným portem.
 
-Dynamický překlad probíhá tak, že se nejdříve zkontrolují access-listy, zda se má vůbec překládat. Když IP adresa spadá do access-listu, tak se vezme volná IP adresa (při metodě overloading může být vybrána jedna adresa vícekrát) z poolu, který je k access-listu přiřazen. Touto vybranou IP adresou počítač přepíše zdrojovou adresu příchozího paketu a vytvoří dynamický záznam do NAT tabulky. Zpětná překlad je jednodušší. Počítač vybere dynamický záznam, přepíše cílovou adresu a předá paket směrovacím pravidlům.
+Dynamický překlad probíhá tak, že se nejdříve zkontrolují access-listy, zda se má vůbec překládat. Když IP adresa spadá do access-listu, tak se vezme volná IP adresa (při metodě overloading může být vybrána jedna adresa vícekrát) z~poolu, který je k~access-listu přiřazen. Touto vybranou IP adresou počítač přepíše zdrojovou adresu příchozího paketu a vytvoří dynamický záznam do NAT tabulky. Zpětná překlad je jednodušší. Počítač vybere dynamický záznam, přepíše cílovou adresu a předá paket směrovacím pravidlům.
 
 \paragraph{IOS příkazy}
 Přidat pool adres lze příkazem:
@@ -54,7 +54,7 @@ ip nat pool <POOL_JMENO> <IP_START> <IP_KONEC> prefix <PREFIX>
 POOL_JMENO - název poolu IP adres
 IP_START - adresa, od které se budou adresy generovat
 IP_KONEC - adresa, do které se budou adresy generovat
-PREFIX - maska poolu v počtu jedničkových bitů
+PREFIX - maska poolu v~počtu jedničkových bitů
 \end{verbatim} 
 
 Přístupový list pro omezení překladu adres se přidá přes příkaz:
@@ -65,7 +65,7 @@ IP - adresa sítě povolených IP adres
 WILDCARD - maska ve tvaru wildcard (maska = broadcast - wildcard)
 \end{verbatim}
 
-Pro přiřazení poolu k access-listu se provadí pomocí příkazu:
+Pro přiřazení poolu k~access-listu se provadí pomocí příkazu:
 \begin{verbatim}
 ip nat inside source list <ACCESS-LIST> pool <POOL> overload?
 ACCESS-LIST - identifikátor access-listu
@@ -89,7 +89,7 @@ Každý počítač bude mít vlastní NAT tabulku. Ta bude složená ze seznamu 
 \end{figure}
 
 \subsubsection{Implementace}
-Při implementaci NAT tabulky vyplula na povrch chyba v návrhu. Návrh počítal s tím, že může být pouze jeden pool a jeden access-list. Skutečné cisco si ale pamatuje bez problému i stovky těchto příkazů. Z tohoto důvodu jsem musel původní návrh přizpůsobit. Přidal jsem několik dalších datových struktur, které mi v pozdější fázi velmi usnadnili manipulaci s NAT tabulkou. Na obrázku \ref{fig:nat_navrh2} je znázorněn nový návrh.
+Při implementaci NAT tabulky vyplula na povrch chyba v~návrhu. Návrh počítal s~tím, že může být pouze jeden pool a jeden access-list. Skutečné cisco si ale pamatuje bez problému i stovky těchto příkazů. Z~tohoto důvodu jsem musel původní návrh přizpůsobit. Přidal jsem několik dalších datových struktur, které mi v~pozdější fázi velmi usnadnili manipulaci s~NAT tabulkou. Na obrázku \ref{fig:nat_navrh2} je znázorněn nový návrh.
 
 \begin{figure}[b]
 \begin{center}
@@ -103,7 +103,7 @@ Při implementaci NAT tabulky vyplula na povrch chyba v návrhu. Návrh počíta
 Podrobný postup překladu adres na skutečném ciscu lze nalézt na webových stránkách firmy Cisco \cite{cisco:postup}.
 
 \subparagraph{Směr ven}
-Když přijde paket do počítače, tak se nejdříve provede reverzní překlad\footnote{Reverzní překlad by v češtině nejlépe vystihoval výraz \uv{\textit{odnatování}}.}. Po té počítač dle routovací tabulky rozhodne, na které rozhraní paket odešle. Pak přichází na řadu samotný akt překladu adres. Chování NATu je řízeno několika pravidly:
+Když přijde paket do počítače, tak se nejdříve provede reverzní překlad\footnote{Reverzní překlad by v~češtině nejlépe vystihoval výraz \uv{\textit{odnatování}}.}. Po té počítač dle routovací tabulky rozhodne, na které rozhraní paket odešle. Pak přichází na řadu samotný akt překladu adres. Chování NATu je řízeno několika pravidly:
 
 \begin{itemize}
 \item Když příchozí rozhraní\footnote{Rozhraní, pomocí kterého byl paket do počítače přijat.} není označeno jako soukromé\footnote{V Cisco IOSu pomocí příkazu \uv{ip nat inside}.} nebo odchozí rozhraní není označeno jako veřejné\footnote{Veřejné rozhraní je označeno příkazem \uv{ip nat outside}.}, tak se paket přepošle dál bez překladu adres.
@@ -114,12 +114,12 @@ Když přijde paket do počítače, tak se nejdříve provede reverzní překlad
 
 \item Když zdrojová adresa paketu spadá do access-listu, ke kterému není přiřazen žádný pool, tak se pošle zpět odesílateli \verb|Destination Host Unreacheble|.
 
-\item Když v IP poolu, který je přiřazen k odpovídajícímu access-listu, dojdou volné IP adresy, tak se pošle zpět odesílateli \verb|Destination Host Unreacheble|.
+\item Když v~IP poolu, který je přiřazen k~odpovídajícímu access-listu, dojdou volné IP adresy, tak se pošle zpět odesílateli \verb|Destination Host Unreacheble|.
 
-\item V ostatních případech se provede překlad adres:
+\item V~ostatních případech se provede překlad adres:
     \begin{enumerate}
-    \item Zkusí se nalézt odpovídající dynamické pravidlo. V případě nenalezení viz následující bod.
-    \item Vygeneruje se nová IP adresa z poolu a vloží se takto vytvořený záznam do NAT tabulky.
+    \item Zkusí se nalézt odpovídající dynamické pravidlo. V~případě nenalezení viz následující bod.
+    \item Vygeneruje se nová IP adresa z~poolu a vloží se takto vytvořený záznam do NAT tabulky.
     \end{enumerate}
 \end{itemize}
 
@@ -159,7 +159,7 @@ Reverzní překlad je mnohem jednodušší záležitost. Příchozí paket čeka
 
 
 \subsubsection*{}
-Z obou směrů překladu vyplývá, že statická pravidla mají přednost před dynamickými záznamy. Při testování NATu na školních ciscách jsem zjistil, že cisca zapomínají všechny dynamické záznamy starší cca 10 vteřin. Tato vlastnost byla dodatečně implementována i do této aplikace. Více informací o konfiguraci statického a dynamického NATu zároveň je na stránkách Cisco Systems \cite{cisco:snat_dnat}.
+Z~obou směrů překladu vyplývá, že statická pravidla mají přednost před dynamickými záznamy. Při testování NATu na školních ciscách jsem zjistil, že cisca zapomínají všechny dynamické záznamy starší cca 10 vteřin. Tato vlastnost byla dodatečně implementována i do této aplikace. Více informací o~konfiguraci statického a dynamického NATu zároveň je na stránkách Cisco Systems \cite{cisco:snat_dnat}.
 
 
 

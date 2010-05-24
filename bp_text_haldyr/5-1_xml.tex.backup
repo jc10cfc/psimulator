@@ -111,7 +111,7 @@ private String vratElement(String jmeno, String obsah) {
 \end{verbatim} 
 
 
-Výhodou tohoto řešení je maximální kontrola nad výstupem příkazu \verb|save| a jednudochost této implementace. Mezi nevýhody bych uvedl hlavně změnu v~datových strukturách. Když by bylo potřeba připsat novou volbu, která by se měla ukládat do XML souboru, tak je nutné přidat pravidla pro načítání z~XML v~\verb|SAXHandler| a navíc zde pro ukládání.
+Výhodou tohoto řešení je maximální kontrola nad výstupem příkazu a jednudochost implementace. Mezi nevýhody bych uvedl hlavně změnu v~datových strukturách. Když by bylo potřeba připsat novou volbu, která by se měla ukládat do XML souboru, tak je nutné přidat pravidla pro načítání z~XML v~\verb|SAXHandler| a navíc zde pro ukládání.
 
 
 

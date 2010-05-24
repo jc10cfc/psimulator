@@ -60,7 +60,7 @@ Samotný telnet (ať protokol či program) ale neposkytuje doplňování příka
 
 Posun kurzoru se ale neprojevuje při připojování na vlastní telnet server. To je způsobeno tím, že v~takovém případě se o~editaci řádku a historii příkazů stará samotný server - v~mém případě telnet server a BASH\footnote{Bourne again shell - nejpoužívanější unixový shell}. V~této aplikaci toho ale nelze využít, takže musí být tyto funkcionality na straně klienta, který je bude zajišťovat. 
 
-Pro linux jsem našel program rlwrap (readline wrapper), který přidává všechny tyto užitečné funkce: editace řádky, historie příkazů, doplňování příkazů, obarvení promptu. Pro Windows jsem nic takového nenašel, takže uživatelé OS Windows budou muset tuto aplikaci spouštět přes program Cygwin. Výhodou tohoto řešení je lepší uživatelský komfort linuxové příkazové řádky než nativní Windows konzole \verb|cmd|.
+Pro linux jsem našel program rlwrap (readline wrapper), který přidává všechny tyto užitečné funkce: editace řádky, historie příkazů, doplňování příkazů, obarvení promptu. Pro Windows jsem nic takového nenašel, takže uživatelé OS Windows budou muset tuto aplikaci spouštět přes program Cygwin. Výhodou tohoto řešení je lepší uživatelský komfort v~příkazové řádce Windows, jelikož program \verb|cmd| je velmi omezen.
 
 %------------------------------------------------------------------------------
 
@@ -75,14 +75,14 @@ Na skutečné počítačové síti jsou síťové prvky několika druhů (router
 %------------------------------------------------------------------------------
 
 \section{Podobnost simulátoru se skutečným směrovačem}\label{kap:podobnost}
-Jedním z~cílů projektu je vytvořit systém, který bude co nejvíce podobný skutečnému směrovači cisco. Bude ale potřeba položit někde hranici mezi složitostí a věrností výsledné práce, protože tyto dvě metriky jsou vzájemném protikladu. Cisco IOS je natolik robustní a propracovaný systém, že je v~mých silách implementace pouze úzké části systému, která je nutně potřeba pro splnění cíle. Pravděpodobně budu nucen místy ustoupit a nechat vypsat hlášení, že to či ono není v~mé implementaci podporováno. 
+Jedním z~cílů projektu je vytvořit systém, který bude co nejvíce podobný skutečnému Ciscu. Bude ale potřeba položit někde hranici mezi složitostí a věrností výsledné práce, protože tyto dvě metriky jsou vzájemném protikladu. Cisco IOS je natolik robustní a propracovaný systém, že je v~mých silách pouze implementace úzké části systému, která je nutně potřeba pro splnění cíle. Pravděpodobně budu nucen místy ustoupit a nechat vypsat hlášení, že to či ono není v~mé implementaci podporováno. 
 
-V~samotném parseru příkazů pro Cisco IOS nebude takovéto hlášení téměř vůbec řešeno, protože by to znamenalo implementaci několika stovek pravidel pro všechny příkazy - např. příkaz \verb|ip| má 103 možností v~konfiguračním stavu. Aby ale uživatel měl alespoň nějakou možnost se dopátrat, co je či není podporováno, tak bude přidán příkaz \verb|help| (\verb|help_en| pro výpis v~angličtině), který bude popisovat, jaký příkaz lze v~kterém stavu Cisca použít.
+V~samotném parseru příkazů pro Cisco IOS nebude toto téměř vůbec řešeno, protože by to znamenalo implementaci několika stovek pravidel pro všechny příkazy - např. příkaz \verb|ip| má 103 možností v~konfiguračním stavu. Aby ale uživatel měl alespoň nějakou možnost se dopátrat, co je podporováno a co ne, tak bude přidán příkaz \verb|help| (\verb|help_en| pro výpis v~angličtině), který bude popisovat, co lze v~jakém stavu Cisca použít.
 
 %------------------------------------------------------------------------------
 
 \section{Předpokládaný rozsah}
-Celý projekt by měl být v~rozsahu zhruba 10000 řádků kódu. Nejrozsáhlejší třídy budou pravděpodobně datové struktury pro všechny objekty, které budou emulovat skutečné počítače s~rozhraními, routovací a NAT tabulku atd.
+Celý projekt by měl být v~rozsahu zhruba 10000 řádků kódu. Nejrozsáhlejší třídy budou pravděpodobně datové struktury pro všechny objekty, které budou emulovat skutečné počítače s~rozhraními, routovací a NAT tabulku a mnoho dalších.
 
 %------------------------------------------------------------------------------
 
@@ -94,23 +94,29 @@ Celá práce bude implementována v~Netbeans IDE\footnote{Integrated Development
 %------------------------------------------------------------------------------
 
 \section{Paměťová náročnost}
-Paměťová náročnost bude pravděpodobně vyšší než při použití jazyka C++, jelikož javovský garbage collector není úplně ideálním řešením pro uvolňování paměti. Nicméně se neočekává použití tohoto simulátoru pro více než pár desítek virtuálních počítačů, takže spotřeba paměti by neměla překročit požadavky pro běžné aplikace v~Javě. Zaplnění paměti touto aplikací by mohlo být kolem odhadem 10-30MB (+ načtené prostředí JRE).
+Paměťová náročnost bude pravděpodobně vyšší než při použití jazyka C++, jelikož javovský garbage collector není úplně ideální řešení pro uvolňování paměti. Nicméně se neočekává použití tohoto simulátoru pro více než pár desítek virtuálních počítačů, takže spotřeba paměti by neměla překročit požadavky pro běžné aplikace v~Javě. Zaplnění paměti touto aplikací by mohlo být kolem 10-30MB (+ načtené prostředí JRE).
 
 %------------------------------------------------------------------------------
 
 \section{Uživatelské rozhraní}
-Uživatelské rozhraní by mělo být v~zásadě velmi jednoduché. Vše bude ovládáno přes příkazovou řádku, tak jako na skutečném ciscu. Spuštění serveru bude ulehčeno pomocným skriptem \verb|start_server.sh|, který bude zároveň obsahovat nápovědu. Pro připojování klientů budou rovněž připraveny skripty. 
+Uživatelské rozhraní by mělo být v~zásadě velmi jednoduché. Vše bude ovládáno přes příkazovou řádku, tak jako na skutečném ciscu. Spuštění serveru bude ulehčeno pomocným skriptem \verb|start_server.sh|, který zároveň bude obsahovat nápovědu. Pro připojování klientů budou připraveny rovněž skripty. 
 
 Na obrázku \ref{fig:uziv_rozh} je příklad, jak by mohlo uživatelské rozhraní vypadat pod operačním systémem Linux.
 
+% V balíčku programu Cygwin je rlwrap starší verze, která neumožňuje obarvování promptu a přeposílání signálů (např. při zmáčknutí Ctrl+C nebo Ctrl+Z). Novější verze už tyto funkce mají. Skripty pro připojení na \verb|linux.sh| a \verb|cisco.sh| fungují nezávisle na verzi.
+
 \begin{figure}[h]
 \begin{center}
-\includegraphics[height=3cm]{figures/uziv_rozhrani}
-\caption{Textové rozhraní pro konfiguraci cisca}
+\includegraphics[height=2.5cm]{figures/uziv_rozhrani}
+\caption{Uživatelské rozhraní pro konfiguraci cisca}
 \label{fig:uziv_rozh}
 \end{center}
 \end{figure}
 
+%------------------------------------------------------------------------------
+
+% \section{Skutečné Cisco}
+% Jedním z největších \uv{oříšků} této práce bylo zjistit, jak se chová skutečné Cisco. Pravdou je, že Cisco Systems má na svých stránkách slušnou řadu návodů, nicméně není tak jednoduché v nich najít, co zrovna potřebujeme. A tak jsem hodně věcí zjišťoval z živého Cisca umístěného na Karlově náměstí přes protokol ssh. 
 
 
 

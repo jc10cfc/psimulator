@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  24 MAY 2010 12:24
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  24 MAY 2010 17:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -597,7 +597,7 @@ File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 
  (./3_reserse.tex
 Kapitola 3.
-<figures/r_cpt.jpg, id=647, 616.3025pt x 498.86375pt>
+<figures/r_cpt.jpg, id=649, 616.3025pt x 498.86375pt>
 File: figures/r_cpt.jpg Graphic file (type jpg)
  <use figures/r_cpt.jpg>
 Underfull \vbox (badness 1082) has occurred while \output is active []
@@ -606,37 +606,33 @@ Underfull \vbox (badness 1082) has occurred while \output is active []
 
 
 
- <./figures/r_cpt.jpg>] <figures/r_omnet.png, id=655, 964.60374pt x 681.54625pt
+ <./figures/r_cpt.jpg>] <figures/r_omnet.png, id=657, 964.60374pt x 681.54625pt
 >
 File: figures/r_omnet.png Graphic file (type png)
 
 <use figures/r_omnet.png>
-<figures/r_boson.jpg, id=658, 552.0625pt x 341.275pt>
+<figures/r_boson.jpg, id=665, 552.0625pt x 341.275pt>
 File: figures/r_boson.jpg Graphic file (type jpg)
 
-<use figures/r_boson.jpg>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[6 <./figures/r_omnet.png (PNG copy)>]
-<figures/r_dynamips.png, id=669, 1359.0775pt x 846.16125pt>
+<use figures/r_boson.jpg> [6 <./figures/r_omnet.png (PNG copy)>]
+<figures/r_dynamips.png, id=681, 1359.0775pt x 846.16125pt>
 File: figures/r_dynamips.png Graphic file (type png)
 
-<use figures/r_dynamips.png>) [7 <./figures/r_boson.jpg> <./figures/r_dynamips.
-png (PNG copy)>]
+<use figures/r_dynamips.png> [7 <./figures/r_boson.jpg> <./figures/r_dynamips.p
+ng (PNG copy)>]) [8]
 \openout2 = `4_navrh.aux'.
 
- (./4_navrh.tex [8
-
-
-
-]
+ (./4_navrh.tex
 Kapitola 4.
-<figures/navrh.jpg, id=688, 1638.12pt x 1228.59pt>
+<figures/navrh.jpg, id=702, 1638.12pt x 1228.59pt>
 File: figures/navrh.jpg Graphic file (type jpg)
  <use figures/navrh.jpg>
-[9 <./figures/navrh.jpg>] [10] [11]
-<figures/uziv_rozhrani.png, id=714, 304.13625pt x 142.28156pt>
+[9
+
+
+
+ <./figures/navrh.jpg>] [10] [11]
+<figures/uziv_rozhrani.png, id=728, 304.13625pt x 142.28156pt>
 File: figures/uziv_rozhrani.png Graphic file (type png)
 
 <use figures/uziv_rozhrani.png>) [12 <./figures/uziv_rozhrani.png (PNG copy)>]
@@ -645,7 +641,7 @@ File: figures/uziv_rozhrani.png Graphic file (type png)
 
 (./5-0_realizace.tex
 Kapitola 5.
-<figures/uml_sit.png, id=721, 501.875pt x 337.26pt>
+<figures/uml_sit.png, id=735, 501.875pt x 337.26pt>
 File: figures/uml_sit.png Graphic file (type png)
  <use figures/uml_sit.png>
 [13
@@ -653,20 +649,20 @@ File: figures/uml_sit.png Graphic file (type png)
 
 
  <./figures/uml_sit.png (PNG copy)>]
-<figures/uml_abtraktni.png, id=732, 487.8225pt x 416.55624pt>
+<figures/uml_abtraktni.png, id=746, 487.8225pt x 416.55624pt>
 File: figures/uml_abtraktni.png Graphic file (type png)
 
 <use figures/uml_abtraktni.png> [14 <./figures/uml_abtraktni.png (PNG copy)>]
-Overfull \hbox (7.3043pt too wide) in paragraph at lines 51--52
+Overfull \hbox (7.3043pt too wide) in paragraph at lines 37--38
 []\T1/cmr/m/n/10.95 Datové struk-tury pro po£í-ta£ovou sí´ byly vytvá°eny ve sp
 olupráci s kole-gou. []\T1/cmtt/m/n/10.95 CiscoPocitac
  []
 
-<figures/uml_class.png, id=741, 555.07375pt x 323.2075pt>
+<figures/uml_class.png, id=755, 555.07375pt x 323.2075pt>
 File: figures/uml_class.png Graphic file (type png)
 
 <use figures/uml_class.png> [15 <./figures/uml_class.png (PNG copy)>]
-<figures/ios.png, id=754, 1625.272pt x 1149.093pt>
+<figures/ios.png, id=768, 1625.272pt x 1149.093pt>
 File: figures/ios.png Graphic file (type png)
  <use figures/ios.png>
 
@@ -683,7 +679,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout2 = `5-2_smerovani.aux'.
 
  (./5-2_smerovani.tex
-<figures/sit_2pc.png, id=811, 522.95375pt x 126.4725pt>
+<figures/sit_2pc.png, id=827, 522.95375pt x 126.4725pt>
 File: figures/sit_2pc.png Graphic file (type png)
 
 <use figures/sit_2pc.png>
@@ -693,11 +689,15 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [24
 
 
-] <figures/sit_3pc.png, id=820, 709.65125pt x 154.5775pt>
+] <figures/sit_3pc.png, id=837, 709.65125pt x 154.5775pt>
 File: figures/sit_3pc.png Graphic file (type png)
 
-<use figures/sit_3pc.png> [25 <./figures/sit_2pc.png (PNG copy)> <./figures/sit
-_3pc.png (PNG copy)>] [26]) [27]
+<use figures/sit_3pc.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[25 <./figures/sit_2pc.png (PNG copy)>] [26 <./figures/sit_3pc.png (PNG copy)>]
+[27]) [28]
 \openout2 = `5-3_wrapper.aux'.
 
  (./5-3_wrapper.tex
@@ -706,38 +706,38 @@ Overfull \hbox (3.04239pt too wide) in paragraph at lines 9--10
 z nich je tvo°en t¥mito poloºkami:
  []
 
-[28
+[29
 
 
-] [29] [30]) [31]
+] [30] [31]) [32]
 \openout2 = `5-4_nat.aux'.
 
  (./5-4_nat.tex
-<figures/nat1.png, id=880, 547.04375pt x 231.86626pt>
+<figures/nat1.png, id=902, 547.04375pt x 231.86626pt>
 File: figures/nat1.png Graphic file (type png)
  <use figures/nat1.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[32
+[33
 
 
 ]
-Overfull \hbox (13.48135pt too wide) in paragraph at lines 44--45
-\T1/cmr/m/n/10.95 portem) p°i p°ekladu. Navíc lze omezit adresy sítí, které se 
-mají p°ek-lá-dat (p°íkaz []\T1/cmtt/m/n/10.95 access-list\T1/cmr/m/n/10.95 ). 
+Overfull \hbox (7.16943pt too wide) in paragraph at lines 44--45
+\T1/cmr/m/n/10.95 generují dy-nam-icky. Je pouze p°i°azen pool IP adres[][][][]
+[], ze kterého se p°i°azují adresy (s portem)
  []
 
-[33 <./figures/nat1.png (PNG copy)>]
-<figures/nat_navrh1.png, id=896, 400.49625pt x 257.96375pt>
+[34 <./figures/nat1.png (PNG copy)>]
+<figures/nat_navrh1.png, id=918, 400.49625pt x 257.96375pt>
 File: figures/nat_navrh1.png Graphic file (type png)
 
 <use figures/nat_navrh1.png>
-<figures/nat_navrh2.png, id=898, 498.86375pt x 529.98pt>
+<figures/nat_navrh2.png, id=920, 498.86375pt x 529.98pt>
 File: figures/nat_navrh2.png Graphic file (type png)
 
-<use figures/nat_navrh2.png> [34 <./figures/nat_navrh1.png (PNG copy)>]
-<figures/nat_decision.png, id=911, 657.45625pt x 493.845pt>
+<use figures/nat_navrh2.png> [35 <./figures/nat_navrh1.png (PNG copy)>]
+<figures/nat_decision.png, id=933, 657.45625pt x 493.845pt>
 File: figures/nat_decision.png Graphic file (type png)
 
 <use figures/nat_decision.png>
@@ -745,24 +745,24 @@ Overfull \hbox (19.72894pt too wide) in paragraph at lines 130--131
  [] 
  []
 
-) [35] [36] [37 <./figures/nat_navrh2.png (PNG copy)>] [38 <./figures/nat_decis
+) [36] [37] [38 <./figures/nat_navrh2.png (PNG copy)>] [39 <./figures/nat_decis
 ion.png (PNG copy)>]
 \openout2 = `6_testovani.aux'.
 
- (./6_testovani.tex
+ (./6_testovani.tex [40
+
+
+
+]
 Kapitola 6.
-<figures/testovani.png, id=944, 670.505pt x 383.4325pt>
+<figures/testovani.png, id=970, 670.505pt x 383.4325pt>
 File: figures/testovani.png Graphic file (type png)
 
 <use figures/testovani.png>
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[39
-
-
-
-] [40 <./figures/testovani.png (PNG copy)>]
+[41] [42 <./figures/testovani.png (PNG copy)>]
 Overfull \hbox (42.73077pt too wide) in paragraph at lines 59--61
 []\T1/cmr/m/n/10.95 Uºivatel na²el bug[][][][][] p°i p°e-chodu z pri-vi-le-go-v
 a-ného do kon-fig-u-ra£ního stavu. P°i []\T1/cmtt/m/n/10.95 configure memory
@@ -774,21 +774,21 @@ Overfull \hbox (2.23224pt too wide) in paragraph at lines 67--69
 tr· ned¥lá v·bec nic (ºádná chy-bová hlá²ka ani správna funkcionalita). 
  []
 
-[41]) [42]
+[43]) [44]
 \openout2 = `7_vylepseni.aux'.
 
  (./7_vylepseni.tex
 Kapitola 7.
-) [43
+) [45
 
 
 
-] [44
+] [46
 
 
 ]
 Kapitola 8.
-(./Rehak-thesis-2010.bbl [45] [46
+(./Rehak-thesis-2010.bbl [47] [48
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 20--26
@@ -814,43 +814,43 @@ Underfull \hbox (badness 2020) in paragraph at lines 64--69
 sb . cz / vl-[]wiki / index . php / Virtuální _ laborato° _
  []
 
-[47]
+[49]
 Underfull \hbox (badness 1655) in paragraph at lines 114--119
 []\T1/cmr/m/n/10.95 The In-ter-net As-signed Num-bers Au-thor-ity.  IANA IPv4 A
 d-dress Space Reg-
  []
 
-) [48]
+) [50]
 P\v {r}\'{\i }loha A.
-[49
+[51
 
-] [50
+] [52
 
 ]
 P\v {r}\'{\i }loha B.
-[51] [52
-
-]
-P\v {r}\'{\i }loha C.
 [53] [54
 
 ]
+P\v {r}\'{\i }loha C.
+[55] [56
+
+]
 P\v {r}\'{\i }loha D.
-<figures/seznamcd.pdf, id=1062, 793.96625pt x 539.01375pt>
+<figures/seznamcd.pdf, id=1089, 793.96625pt x 539.01375pt>
 File: figures/seznamcd.pdf Graphic file (type pdf)
 
-<use figures/seznamcd.pdf> [55 <./figures/seznamcd.pdf>] [56]
+<use figures/seznamcd.pdf> [57 <./figures/seznamcd.pdf>] [58]
 (./Rehak-thesis-2010.aux (./1_uvod.aux) (./2_specifikace.aux) (./3_reserse.aux)
 (./4_navrh.aux) (./5-0_realizace.aux) (./5-1_xml.aux) (./5-2_smerovani.aux)
 (./5-3_wrapper.aux) (./5-4_nat.aux) (./6_testovani.aux) (./7_vylepseni.aux)) ) 
 Here is how much of TeX's memory you used:
- 7232 strings out of 495061
- 97195 string characters out of 1182621
- 174003 words of memory out of 3000000
+ 7246 strings out of 495061
+ 97347 string characters out of 1182621
+ 174013 words of memory out of 3000000
  9893 multiletter control sequences out of 15000+50000
  20519 words of font info for 44 fonts, out of 3000000 for 9000
- 43 hyphenation exceptions out of 8191
- 38i,8n,38p,1263b,442s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 46 hyphenation exceptions out of 8191
+ 38i,8n,38p,1276b,442s stack positions out of 5000i,500n,10000p,200000b,50000s
  
 </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti0900.600pk> </home/hal
 dyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1095.600pk> </home/haldyr/.texmf
@@ -866,9 +866,9 @@ pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/
 jknappen/ec/ecrm1200.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/e
 c/ecrm1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488
 .600pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Rehak-thesis-2010.pdf (74 pages, 2052239 bytes).
+Output written on Rehak-thesis-2010.pdf (76 pages, 2057858 bytes).
 PDF statistics:
- 1965 PDF objects out of 2073 (max. 8388607)
- 288 named destinations out of 1000 (max. 500000)
+ 1995 PDF objects out of 2073 (max. 8388607)
+ 299 named destinations out of 1000 (max. 500000)
  840 words of extra memory for PDF output out of 10000 (max. 10000000)
 
