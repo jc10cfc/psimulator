@@ -1,4 +1,186 @@
 
 \chapter{Implementace příkazů}
 
-V této kapitole popisuji analýzu a implmentaci linuxových příkazů, které jsou v simulátoru implementovány. 
+V této kapitole popisuji analýzu a realizaci linuxových příkazů, které jsou v simulátoru implementovány. Příkazy jsou nejrozsáhlejší částí mojí práce na simulátoru a nutno dodat, že také tou nejméně zábavnou. U každého příkazu jsem nejprve musel složitě zjišťovat, jak funguje a jak se chová v případě zadání nestandartních parametrů. Parsování příkazů bylo prací pořád stejnou a nezábavnou. 
+
+% tady bude chtit dopsat strukturu tyhle kapitoly
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Popis zpracování příkazové řádky}
+
+Příkazovou řádku virtuálního počítače obsluhuje třída \verb|Konsole| (více v \ref{impl_komunikacni_vrstva}). Ta načítá textová data posílaná uživatelem až do sekvence \verb|\r\n|, kdy načítání zastaví a načtený řádek předá svému parseru. Každá \verb|Konsole| má svůj vlastní parser příkazů, který zpracovává jen jí poslané řádky a na ně odpovídá. \verb|Konsole| zavolá jeho metodu \verb|zpracujRadek|, která řádek \uv{rozseká} na jedotlivá slova a pak podle prvního slova, které by mělo být názvem příkazu, spustí odpovídající příkaz. Příkazům \verb|Konsole| poskytuje metody \verb|posliRadek| a \verb|posli|, pomocí kterých příkazy vypisují svůj výstup uživateli do konzole.
+
+Architektura tříd pro zpracování příkazové řádky je celkem složitá, jak je vidět na obrázku \ref{obr_prikazy}. Všechny třídy mají jednoho předka, kterého jsme z nedostatku fantasie pojmenovali \verb|Abstraktni|. Každý příkaz má svoji vlastní třídu, kterou \verb|ParserPrikazu| vytvoří pro každé použití příkazu novou, jde tedy o použití návrhového vzoru singleton. V následujících odstavcích popisuji funkce jednotlivých tříd.
+
+% třídy pro zpracování příkazů
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=14cm]{obrazky/prikazy}
+\caption{Třídy pro zpracování příkazové řádky}
+\label{obr_prikazy}
+\end{center}
+\end{figure}
+
+
+\subsection{Třída Abstraktni}
+
+Tato třída je abstraktním předkem všech ostatních tříd sloužících ke zpracování příkazů. Obsahuje pro parsování velmi důležitou metodu \verb|dalsiSlovo| a seznam slov jednoho řádku. Tato metoda postupně vrací jednotlivá slova ze seznamu. Je využívána skoro všemi potomky třídy \verb|Abstraktni| k parsování řádky. Dále jsou v této třídě různé statické metody využívané jednotlivými příkazy, například metoda \verb|zarovnej| na zarovnání slova v řetězci, metoda \verb|cekej|, která čeká zadaný počet milisekund a další.
+
+
+\subsection{Třída ParserPrikazu}
+
+Instanci jednoho z potomků této třídy, tedy \verb|LinuxParsePrikazu| nebo \verb|CiscoParsePrikazu|, si vytváří při své inicialisaci třída \verb|Konsole|, které slouží ke zpracování příkazové řádky. Jeho hlavní metodou je abstraktní \verb|zpracujRadek|, která je implementována v jeho potomcích a zpracovává jeden řádek, který uživatel do konzole napsal. K tomu používá metodu \verb|rozsekej|, jejímž autorem je můj kolega, která řádek zadaný jako \verb|String| \uv{rozseká} na jednotlivá slova a to tak, že jako oddělovače bere bílé znaky, tj. mezery a tabulátory. Rozsekaná slova pak uloží do seznamu řetězců \verb|slova|, který zdědila od svého předka třídy \verb|Abstraktni|. Třída \verb|LinuxParsePrikazu| podle prvního slova, které by mělo být názvempříkazu, vyvolá konstruktor třídy odpovídajícího příkazu. Nejdříve kontroluje, jestli příkaz není společným příkazem pro linuxový i ciscový počítač (příkaz \verb|uloz| nebo \verb|save|) a poté se snaží najít odpovídající linuxový příkaz. Jestliže uživatelem zadaný příkaz neexistuje nebo není implementován, vypíše \verb|LinuxParsePrikazu| uživateli řetězec \verb|bash: command not found| a zpracování řádku ukončí.
+
+
+\subsection{Třída AbstraktniPrikaz}
+
+Toto třída je potomkem třídy \verb|Abstraktni| a předkem tříd všech příkazů. Nemá žádnou důležitou metodu, ale parametry \verb|abstraktniPocitac pc| a \verb|konsole kon|, což jsou odkazy na počítač, na kterém příkaz probíhá a na konsoli, která ho vyvolala.
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Společné znaky příkazů}
+
+Příkazy, které jsem implementoval mají mnoho společného. Všechny jsou potomkem třídy \verb|AbstraktniPrikaz|, který je potomkem třídy \verb|Abstraktni|. Text, který byl uživatelem zadán, mají uložen v seznamu řetězců \verb|slova|. V konstruktoru příkazu je postupně voláno několik privátních metod. Metodou \verb|zparsujPrikaz| se nejprve parsuje vstup, většinou pomocí metody \verb|dalsiSlovo| zděděné ze třídy \verb|Abstraktni|. Při parsování se nastavují různé parametry příkazu, které uživatel zadal. Metoda \verb|zkontrolujPrikaz| kontroluje, jestli jsou nastaveny správné parametry a jestli byli zadány všechny. Potom metoda \verb|vykonejPrikaz| příkaz vykoná, to znamená, že změní konfiguraci počítače například u příkazu \verb|ifconfig|, nebo že provede nějakou jinou akci, například u příkazu \verb|ping| pošle několik paketů. Během těchto tří metod jsou ukládány případné chyby zadaného příkazu. Úplně nakonec příkaz vypíše případné chybové hlášení. Tento postup byl zvolen proto, že sladit správné pořadí vypisovaných chybových hlášení s postupem kontroly jednotlivých parametrů by bylo velmi náročné a nepřehledné. Příkazy svůj výstup posílají pomocí metod \verb|posli| a \verb|posliRade| třídy \verb|Konsole|.
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Příkaz ifconfig}
+
+
+\subsection{Teoretický úvod}
+
+\verb|ifconfig| (zkratka \textbf{i}nter\textbf{f}ace \textbf{config}urator) je utilita unixových systémů, která slouží ke konfiguraci, kontrole  a vypsání informací o parametrech síťových rozhraní z příkazové řádky.\cite{wiki:ifconfig}. Pomocí této utility lze například vypsat parametry síťových rozhraní, nastavit IP nebo mac adresy, nastavit masky nebo \uv{nahodit} nebo \uv{schodit} rozhrani. Kromě toho, že \verb|ifconfig| nastavuje rozhraní, přidává nebo maže i záznamy v routovací tabulce, je-li to potřeba.
+
+
+\subsection{Rozsah implementace v simulátoru}
+
+V simulátoru musí \verb|ifconfig| umět nastavovat a mazat adresy IP a nastavovat masky. Samozřejmě také musí vypsovat nastavené parametry rozhraní. Změna mac adresy naproti tomu v našem simulátoru není vůbec potřeba. Parser příkazu \verb|ifconfig| je ale implementován i pro parametry \verb|add|, \verb|del|, \verb|up| a \verb|down|.
+
+Zde uvádím příklady užití ifconfigu, které simulátor podporuje:
+\begin{verbatim}
+ifconfig eth0												vypíše parametry rozhraní eth0
+ifconfig eth0 192.168.1.1								nastaví adresu na rozhraní eth0 
+ifconfig eth0 10.0.0.1/8								nastaví adresu s maskou na rozhraní eth0
+ifconfig eth0 10.0.0.2 netmask 255.255.0.0		nastaví adresu s maskou na rozhraní eth0
+\end{verbatim}
+
+
+\subsection{Analýza ifconfigu na skutečném počítači}\label{ifconfig_analysa}
+
+Oproti jiným příkazům má \verb|ifconfig| pro simulaci jednu obrovskou nevýhodu: chybný parametr nezpůsobí ukončení příkazu, ale příkaz se dále provádí. Některé parametry je možné zadat vícekrát. Zjišťovat, jak se \verb|ifconfig| chová, proto bylo mnohem náročnější, než u ostatních příkazů. Zde popisuji výsledky této práce.
+
+IP adresu je možné příkazu zadat vícekrát, všechno, co nelze zparsovat jinak se považuje za IP adresu. Je-li zadáno více adres, použije se adresa, které předchází první špatně adrese. Například:
+\begin{verbatim}
+ifconfig eth0 1.1.1.1 2.2.2.2 3.3.3.3			nastaví se poslední adresa, tj. 3.3.3.3
+
+ifconfig eth0 1.1.1.1 blablabla 3.3.3.3		nastaví se adresa před první špatnou adresou, tj. 1.1.1.1
+blablabla: unknown host
+ifconfig: `--help' vypíše návod k použití.
+\end{verbatim}
+Adresu je možné zadat i s délkou prefixu za lomítkem. Je-li zadáno více adres a u jedné z nich je zadána délka prefixu, nastaví se taková maska, i když se tato adresa nepoužije. Například
+\begin{verbatim}ifconfig eth0 1.1.1.1/1 2.2.2.2/2 3.3.3.3\end{verbatim}
+nastaví adresu 3.3.3.3 s maskou 192.0.0.0, použije se tedy délka prefixu zadaná u druhé adresy. Adresa na rozhraní se maže nastavením adresy na 0.0.0.0.
+
+Maska se nastavuje buď zadáním délky prefixu, jak je popsáno výše, nebo parametrem netmask. Zadá-li uživatel masku oběma způsoby, má přednost délka prefixu před parametrem netmask. Například
+\begin{verbatim}ifconfig eth0 2.2.2.2/2 netmask 255.255.0.0\end{verbatim}
+nastaví masku 192.0.0.0. Při změně IP adresy se automaticky mění i maska a to tak, že se maska dopočítá podle třídy IP adresy. Je-li tedy nejprve zadána maska parametrem netmask a teprve potom IP adresa, parametr netmask nemá žádnou účinnost. Například
+\begin{verbatim}ifconfig eth0 netmask 255.255.255.0 1.1.1.1\end{verbatim}
+nastaví adresu 1.1.1.1 s maskou 255.0.0.0.0, protože adresa 1.1.1.1 je třídy \verb|A|.
+
+Příkaz \verb|ifconfig| promítá změny i do routovací tabulky. Změní-li se adresa na rozhraní, všecny záznamy na toto rozhraní se z tabulky vymažou. Při nastavení IP adresy se do routovací tabulky přidá záznam typu \verb|U| pro síť, ze které je tato adresa. Například při nastavení adresy
+\begin{verbatim}ifconfig eth0 192.168.1.1/24\end{verbatim}
+se do routovací tabulky přidá tento záznam:
+\begin{verbatim}
+Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní
+192.168.1.0     0.0.0.0         255.255.255.0   U     0      0        0 eth0
+\end{verbatim}
+
+Při zadání chybného vstupu se vykoná jen správná část příkazu a o těch špatných se vypíší chybová hlášení. Ty jsou vypisována v tomto pořadí:
+\begin{enumerate}
+\item špatný přepínač - příkaz se neprovádí
+\item špatná adresa - žádná další chybová hlášení se nevypisují
+\item špatné rozhraní
+\item zakázaná adresa
+\item špatné adresy parametrů \verb|add| nebo \verb|del|
+\item chyba v gramatice
+\end{enumerate}
+
+Ostatními parametry se v tomto odstavci nezabývám, protože v simulátoru nejsou podporovány.
+
+
+\subsection{Implementace v simulátoru}
+
+V konstruktoru třídy \verb|LinuxIfconfig| jsou popoředě volány tyto metody: \verb|parsujPrikaz|, \verb|zkontrolujPrikaz|, \verb|vypisChybovyHlaseni| a \verb|vykonejPrikaz|. Parsování se v tomto příkaze neprovádí s využitím metody \verb|dalsiSlovo|, což by bylo dobré ještě upravit. Na rozdíl od skutečného ifconfigu se parsuje celý řádek, skutečný ifconfig parsování zastaví, když dojde ke špatnému přepínači nebo ke špatné adrese. Při parsování se parametry ukládají jako řetězce a ty jsou kontrolovány metodou \verb|zkontrolujPrikaz|. V tomto příkazu jsou chybová hlášení vypisována před již před samotným provedením příkazu a to v pořadí uvedeném v předchozím odstavci. Příkaz \verb|ifconfig| se metodou \verb|vykonejPrikaz| nakonec provede tak, aby to co nejvíce odpovídalo pravidlům uvedným v \ref{ifconfig_analysa}. Parametry \verb|add| a \verb|del| jsou v parsetu a kontrole implementovány, ale metoda \verb|vykonejPrikaz| je zatím ignoruje.
+
+
+\subsection{Možnosti dalšího vylepšení}
+
+Tento příkaz jsem implementoval jako první, kdy jsem s implementací příkazů ještě neměl zkušenosti, proto by se dal ještě v některých věcech vylepšit. Bylo by dobré přepsat metodu \verb|parsujPrikaz| tak, aby využívala metodu \verb|dalsiSlovo|, čímž by se zjednodušila, a dále ji předělat tak, aby se po špatné adrese již dále nic neparsovalo. Bylo by též dobré implementovat i parametry \verb|up| a \verb|down| s jejichž podporou se v analýze nepočítalo.
+
+
+\subsection{Známé odchylky}
+
+Zde uvádím známé odchylky implementace v simulátoru od skutečného příkazu na reálném počítači.\\
+\verb|ifconfig eth0 netmask 255.0.0.0 2.2.2.2/2| ve skutečnosti spadne kvůli prefixu za adresou, v simulátoru to ale projde.\\
+\verb|ifconfig eth0 blabla netmask 255.255.255.0| ve skutečnosti žádnou masku nenastaví, protože přestane parsovat už u blabla.\\
+\verb|ifconfig eth0 netmask 255.255.255.0 10.0.0.1| by měl nastavit masku na 255.0.0.0, v simulátoru se nastaví 255.255.255.0
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Příkaz route}
+
+Příkaz route je utilita, která umožňuje administrátorovi vypisovat a měnit záznamy v routovací tabulce. Uvedu zde pár praktických příkladů:
+\begin{verbatim}
+route											vypíše routovací tabulku
+Směrovací tabulka v jádru pro IP
+Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní
+192.168.1.0     0.0.0.0         255.255.255.0   U     0      0        0 eth0
+0.0.0.0         192.168.1.2     0.0.0.0         UG    0      0        0 eth0
+
+route add -net 10.0.0.0/8 gw 192.168.1.3			Přidá záznam typu UG pro síť 10.0.0.0/8 na bránu 192.168.1.3
+route del -net 10.0.0.0/8								Odebere minule přidaný záznam
+\end{verbatim}
+
+
+\subsection{Analýza příkazu route na skutečném počítači}
+
+Oproti příkazu \verb|ifconfig| má příkaz route jasně definovanou gramatiku a při jakékoliv chybě v příkazu se příkaz neprovádí, proto byla implementace tohoto příkazu podstatně jednoduší. Příkaz má 2 hlavní akce, \verb|add| na přidávání záznamů a \verb|del| na jejich mazání. Nápověda uvádí ještě akci \verb|flush|, která ale není běžně podporována. Obě známé akce mají stejnou gramatiku. Parametr \verb|-net| přidá nebo odebere záznam pro síť, parametr \verb|-host| pro jednu adresu, tzn. záznam s maskou 255.255.255.255. Parametr \verb|gw| slouží k nastavení brány přidávanému nebo odebíranému záznamu, parametr \verb|dev| k nastavení rozhraní a parametr \verb|netmask| k nastavení masky přidávanému nebo odebíranému záznamu. Maska může být stejně jako v příkazu \verb|ifconfig| zadána parametrem \verb|netmask| nebo pomocí délky prefixu za lomítkem, např. \verb|10.0.0.0/16|. Při použití parametru \verb|-net| musí být vždy maska nějakým způsobem zadána. Adresát, tzn. parametr \verb|-net| nebo \verb|-host| musí být vždy prvním parametrem akce, na pořadí dalších parametrů již nezáleží. Parametry \verb|-host| a \verb|dev| není nutno psát. Žádný parametr nemůže být zadán vícektrát. Akce \verb|add| vyžaduje aspoň jeden z parametrů \verb|gw| nebo \verb|dev|. Narazí-li se při provádění přikazu na chybu, je vypsáno chybové hlášení a příkaz se ukončí, aniž by se vykonala jeho správná část.
+
+
+\subsection{Implementace v simulátoru}
+
+Implementoval jsem parametry \verb|-host|, \verb|-net|, \verb|netmask|, \verb|dev| a \verb|gw|. Parser tohoto příkazu je psán za pomocí metody \verb|dalsiSlovo| celkem přehledně, každý parametr se parsuje vlastní metodou. Parser též kontroluje správnost příkazu, vypisuje chybová hlášení a nastavuje parametry. Metoda \verb|vykonejPrikaz| upravuje nebo vypisuje routovací tabulku příslušného počítače.
+
+
+\subsection{Odchylky}
+
+Akce \verb|flush| sice není na normální počítači implementována, avšak v simulátoru jsem ji implementoval s tím, že simulátor vypíše varovné hlášení:
+\begin{verbatim}
+linux1:~# route flush
+psi simulator: Flush normalne neni podporovano, ale routa se v simulatoru smaze.
+Spravny prikaz je: "ip route flush all"
+\end{verbatim}
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Příkaz ping}
+
+Tento příkaz posílá ICMP pakety typu \verb|request| (žádost o odpověď) a přijímá pakety typu \verb|ICMP reply|. Uživateli umožňuje prověřit funkčnost spojení mezi dvěma počítači v síti.
+
+
+\subsection{Analýza skutečného pingu}
+
+Příkazu musí uživatel zada cílovou adresu, na kterou se chce \uv{dopingnout}. Dále je možné použít několik přepínačů. Přepínačem \verb|-c| si uživael určí, kolik paketů chce poslat, není-li tento parametr zadán, posílaji se pakety pořád, dokud uživatel příkaz nezastací \verb|Ctrl+C|. Parametrem \verb|-s| je možne specifikovat velikost posílaného paketu, parametrem \verb|-i| se specifikuje interval mezi odesláním dvou paketů. Parametrem \verb|-t| je možné zadat \verb|ttl| odchozích paketů.
+
+

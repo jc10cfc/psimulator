@@ -73,13 +73,20 @@ Implementace virtuální sítě
 		- popsat vlastní implementaci
 
 Implementace příkazů
-  Parser příkazů
-  ifconfig
-  route
-  ip
-    IpAddr
-    IpRoute
-  iptables
+	- tady popisuju, struktura - DODĚLAT!!!
+	Popis zpracování příkazové řádky
+		- konsole - každá vlastní parser
+		- třídy na parsování
+		Abstraktni
+		ParserPrikazu
+		AbstraktniPrikaz
+	Parser příkazů
+	ifconfig
+	route
+	ip
+		IpAddr
+		IpRoute
+	iptables
 
 
 
