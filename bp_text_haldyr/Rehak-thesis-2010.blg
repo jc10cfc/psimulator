@@ -14,78 +14,80 @@ A level-1 auxiliary file: 7_vylepseni.aux
 The style file: csplainnat.bst
 Database file #1: reference.bib
 Warning--entry type for "iana" isn't style-file defined
---line 176 of file reference.bib
+--line 1 of file reference.bib
 Warning--entry type for "wiki:icmp" isn't style-file defined
---line 184 of file reference.bib
+--line 9 of file reference.bib
 Warning--entry type for "wiki:uml" isn't style-file defined
---line 192 of file reference.bib
+--line 17 of file reference.bib
 Warning--entry type for "wiki:ip" isn't style-file defined
---line 200 of file reference.bib
+--line 25 of file reference.bib
 Warning--entry type for "wiki:telnet" isn't style-file defined
---line 208 of file reference.bib
+--line 33 of file reference.bib
 Warning--entry type for "wiki:arp" isn't style-file defined
---line 216 of file reference.bib
+--line 41 of file reference.bib
 Warning--entry type for "wiki:ios" isn't style-file defined
---line 240 of file reference.bib
+--line 65 of file reference.bib
 Warning--entry type for "cisco:nat" isn't style-file defined
---line 248 of file reference.bib
+--line 73 of file reference.bib
 Warning--entry type for "cisco:druhy" isn't style-file defined
---line 256 of file reference.bib
+--line 81 of file reference.bib
 Warning--entry type for "cisco:postup" isn't style-file defined
---line 264 of file reference.bib
+--line 89 of file reference.bib
 Warning--entry type for "cisco:snat_dnat" isn't style-file defined
---line 272 of file reference.bib
+--line 97 of file reference.bib
+Warning--entry type for "cisco:icmp_codes" isn't style-file defined
+--line 105 of file reference.bib
 Warning--entry type for "cisco:pt" isn't style-file defined
---line 280 of file reference.bib
+--line 113 of file reference.bib
 Warning--entry type for "reserse:omnet_hp" isn't style-file defined
---line 288 of file reference.bib
+--line 121 of file reference.bib
 Warning--entry type for "reserse:adventnet" isn't style-file defined
---line 296 of file reference.bib
+--line 129 of file reference.bib
 Warning--entry type for "reserse:boson" isn't style-file defined
---line 304 of file reference.bib
+--line 137 of file reference.bib
 Warning--entry type for "reserse:dynamips" isn't style-file defined
---line 312 of file reference.bib
+--line 145 of file reference.bib
 Warning--entry type for "reserse:virtlab" isn't style-file defined
---line 320 of file reference.bib
-You've used 18 entries,
+--line 153 of file reference.bib
+You've used 19 entries,
             2899 wiz_defined-function locations,
-            704 strings with 7172 characters,
-and the built_in function-call counts, 5630 in all, are:
-= -- 488
-> -- 198
-< -- 19
-+ -- 81
-- -- 54
-* -- 286
-:= -- 885
-add.period$ -- 55
-call.type$ -- 18
-change.case$ -- 54
+            707 strings with 7329 characters,
+and the built_in function-call counts, 5933 in all, are:
+= -- 514
+> -- 209
+< -- 20
++ -- 86
+- -- 57
+* -- 302
+:= -- 932
+add.period$ -- 58
+call.type$ -- 19
+change.case$ -- 57
 chr.to.int$ -- 9
-cite$ -- 36
-duplicate$ -- 301
-empty$ -- 593
-format.name$ -- 90
-if$ -- 1213
-int.to.chr$ -- 10
+cite$ -- 38
+duplicate$ -- 317
+empty$ -- 625
+format.name$ -- 95
+if$ -- 1278
+int.to.chr$ -- 11
 int.to.str$ -- 1
 missing$ -- 1
-newline$ -- 98
-num.names$ -- 90
-pop$ -- 215
+newline$ -- 103
+num.names$ -- 95
+pop$ -- 227
 preamble$ -- 1
-purify$ -- 36
+purify$ -- 38
 quote$ -- 0
-skip$ -- 227
+skip$ -- 239
 stack$ -- 0
-substring$ -- 55
-swap$ -- 35
+substring$ -- 57
+swap$ -- 37
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 198
+type$ -- 209
 warning$ -- 0
-while$ -- 57
+while$ -- 60
 width$ -- 0
-write$ -- 225
-(There were 17 warnings)
+write$ -- 237
+(There were 18 warnings)

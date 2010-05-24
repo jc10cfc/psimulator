@@ -343,9 +343,7 @@ Tato práce se zabývá návrhem a implementací simulátoru virtuální počít
 % Zhodnocení splnění cílů DP/BP a~vlastního přínosu práce (při formulaci je třeba vzít v~potaz zadání práce).
 % Hlavně pozitivní zhodnocení projektu.
 
-V této práci se podařilo navrhnout a implementovat simulátor virtuální počítačové sítě cisco. Ve spojení s kolegovu částí je tento program schopen úspěšně odsimulovat virtuální síť složenou ze směrovačů cisco a z počítačů založených na jádru linux. V takové síti je možné otestovat znalosti studentů týkajících se konfiguraci rozhraní, statického směrovaní, dynamického a statického překladu adres. Z výsledků uživatelského testování vyplývá, že provedení takovýchto testů smysl má.
-
-Nepřipravenost studentů na laboratorních cvičení z předmětu Y36PSI Počítačové sítě je v současné době problém. Obyčejní studenti zpravidla nemají přístup ke směrovačům od Cisco Systems, a tak by nasazení této aplikace jako studijní pomůcku mohlo vést ke zvýšení připravenosti těchto studentů\footnote{Za předpokladu, že studenti budou mít motivaci k získání bodů ze cvičení.} na laboratorních cvičeních. 
+V této práci se podařilo navrhnout a implementovat simulátor virtuální počítačové sítě cisco. Ve spojení s kolegovu částí je tento program schopen úspěšně odsimulovat virtuální síť složenou ze směrovačů cisco a z počítačů založených na linuxu. V takové síti je možné otestovat znalosti studentů týkající se statického směrovaní
 
 % Psani zaveru cini potize, jak jsem zjistil, i ucastnikum
 % mezinarodnich konferenci. Jadro zaveru sdeluje, zda cile prace bylo
@@ -406,6 +404,7 @@ Nepřipravenost studentů na laboratorních cvičení z předmětu Y36PSI Počí
 % 3.5.2009 JZ polemizuje: BibTeX neobvinujte, napiste a poskytnete nam styl (.bst) splnujici citacni normu CSN/ISO.
 
 %*****************************************************************************
+%*****************************************************************************
 \appendix
 
 % \chapter{Testování zaplnění stránky a~odsazení odstavců}
@@ -413,6 +412,16 @@ Nepřipravenost studentů na laboratorních cvičení z předmětu Y36PSI Počí
 % Slouží pouze jako příklad formátování textu.}
 % 
 % \section*{}
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
 % Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
 % latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
 % ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
@@ -430,6 +439,110 @@ Nepřipravenost studentů na laboratorních cvičení z předmětu Y36PSI Počí
 % latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
 % ti, kteří se nikdy latinsky neučili?
 % 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
+% 
+% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
+% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
+% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
+% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
+% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
+% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
 % 
 % %*****************************************************************************
 % 

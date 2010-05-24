@@ -3,7 +3,7 @@ Směrování implementoval kolega, nicméně Cisco se nechová vždy stejně, a 
 
 Při různých experimentech jsem zjistil, že když linuxu přijde paket, na který nemá záznam ve směrovací tabulce, tak pošle zpátky patek \verb|Destination Network Unreachable|, zatímco školní cisca posílají \verb|Destination Host Unreachable|.
 
-Při testování standardních případů je vše jasné, ale když jsem zkusil síť nakonfigurovat trochu neobvykle, tak to tak jasné nebylo. Experimenty jsou prováděny pomocí příkazu \verb|ping|, který implementoval kolega. Má práce je pouze obsluha přijatých paketů (pro výpisy cisco příkazu \verb|ping|) a výpočet statistik odeslaných a přijatých paketů.
+Při testování standardních případů je vše jasné, ale když jsem zkusil síť nakonfigurovat trochu neobvykle, tak to tak jasné nebylo. Experimenty jsou prováděny pomocí příkazu \verb|ping|, který implementoval kolega. 
 
 %------------------------------------------------------------------------------
 

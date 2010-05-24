@@ -1,4 +1,4 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{19}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -24,31 +24,38 @@
   \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
 a0080094e77.shtml}.
 
-\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{b}})]{cisco:nat}
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{b}})]{cisco:icmp_codes}
 {Cisco Systems, Inc.}
-\newblock How NAT Works, 2010{\natexlab{b}}.
+\newblock Understanding the Ping and Traceroute Commands, 2010{\natexlab{b}}.
+\newblock Dostupn{\'{e}} z:
+  \url{http://www.cisco.com/en/US/products/sw/iosswrel/ps1831/products_tech_no%
+te09186a00800a6057.shtml}.
+
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{c}})]{cisco:nat}
+{Cisco Systems, Inc.}
+\newblock How NAT Works, 2010{\natexlab{c}}.
 \newblock Dostupn{\'{e}} z:
   \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
 a0080094831.shtml}.
 
-\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{c}})]{cisco:postup}
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{d}})]{cisco:postup}
 {Cisco Systems, Inc.}
-\newblock NAT Order of Operation, 2010{\natexlab{c}}.
+\newblock NAT Order of Operation, 2010{\natexlab{d}}.
 \newblock Dostupn{\'{e}} z:
   \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
 a0080133ddd.shtml}.
 
-\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{d}})]{cisco:pt}
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{e}})]{cisco:pt}
 {Cisco Systems, Inc.}
-\newblock Cisco Packet Tracer, 2010{\natexlab{d}}.
+\newblock Cisco Packet Tracer, 2010{\natexlab{e}}.
 \newblock Dostupn{\'{e}} z:
   \url{http://www.ciscopros.info/web/learning/netacad/course_catalog/PacketTra%
 cer.html}.
 
-\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{e}})]{cisco:snat_dnat}
+\bibitem[{Cisco Systems, Inc.}(2010{\natexlab{f}})]{cisco:snat_dnat}
 {Cisco Systems, Inc.}
 \newblock Configuring Static and Dynamic NAT Simultaneously,
-  2010{\natexlab{e}}.
+  2010{\natexlab{f}}.
 \newblock Dostupn{\'{e}} z:
   \url{http://www.cisco.com/en/US/tech/tk648/tk361/technologies_tech_note09186%
 a0080093f31.shtml}.

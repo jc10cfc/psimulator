@@ -24,7 +24,7 @@
 \section{Architektura}
 
 \subsection{Naivní návrh}
-Po zadání projektu jsem vytvořil počáteční návrh aplikace a po konzultaci s kolegou (on si udělal také svůj návrh) vznikl tzv. naivní návrh (viz obrázek \ref{fig:navrh}). Tato prvotní varianta počítala s připojením do skutečné sítě, ale byla zavržena zejména kvůli složitosti takového systému a časové náročnosti implementace. Navíc napojení na reálnou síť nepatří mezi požadavky.
+Po zadání projektu jsem vytvořil počáteční návrh aplikace a po konzultaci s kolegou (každý si udělal svůj návrh) vznikl tzv. naivní návrh (viz obrázek \ref{fig:navrh}). Tato prvotní varianta počítala s připojením do skutečné sítě, ale byla zavržena zejména kvůli složitosti takového systému a časové náročnosti implementace. Navíc napojení na reálnou síť nepatří mezi požadavky.
 
 \begin{figure}[h]
 \begin{center}
@@ -75,7 +75,7 @@ Při startu serveru by se měla načíst konfigurace ze souboru a měla by být 
 %------------------------------------------------------------------------------
 
 \subsection{Směrovač}
-Na skutečné počítačové síti jsou síťové prvky několika druhů (switche, bridge, repeatery, směrovače, ..), ale na laboratorních cvičeních předmětu Y36PSI se  nastavují pouze směrovače ze 3. vrstvy\footnote{Tato \uv{síťová vrstva} se stará o směrování v síti a síťové adresování. Dále poskytuje spojení mezi vzdálenými sítěmi, které spolu přímo nesousedí.} síťového ISO/OSI modelu. Proto tato práce bude implementovat pouze jeden typ síťového prvku - směrovač (router). 
+Na skutečné počítačové síti jsou síťové prvky několika druhů (router, switch, bridge, repeater, ..), ale na laboratorních cvičeních předmětu Y36PSI se  nastavují pouze směrovače ze 3. vrstvy\footnote{Tato \uv{síťová vrstva} se stará o směrování v síti a síťové adresování. Dále poskytuje spojení mezi vzdálenými sítěmi, které spolu přímo nesousedí.} síťového ISO/OSI modelu. Proto tato práce bude implementovat pouze jeden typ síťového prvku - směrovač (router). 
 
 %------------------------------------------------------------------------------
 

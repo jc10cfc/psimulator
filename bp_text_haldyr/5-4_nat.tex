@@ -100,13 +100,13 @@ Při implementaci NAT tabulky vyplula na povrch chyba v návrhu. Návrh počíta
 \end{figure}
 
 \paragraph{Postup překladu adres}
-Podrobný postup překladu adres na skutečném ciscu je zde \cite{cisco:postup}.
+Podrobný postup překladu adres na skutečném ciscu lze nalézt na webových stránkách firmy Cisco \cite{cisco:postup}.
 
 \subparagraph{Směr ven}
 Když přijde paket do počítače, tak se nejdříve provede reverzní překlad\footnote{Reverzní překlad by v češtině nejlépe vystihoval výraz \uv{\textit{odnatování}}.}. Po té počítač dle routovací tabulky rozhodne, na které rozhraní paket odešle. Pak přichází na řadu samotný akt překladu adres. Chování NATu je řízeno několika pravidly:
 
 \begin{itemize}
-\item Když příchozí rozhraní\footnote{Rozhraní, pomocí kterého byl paket do počítače přijat.} není označeno jako soukromé\footnote{V Cisco IOSu pomocí příkazu \uv{ip nat inside}.} nebo odchozí rozhraní není označeno jako veřejné\footnote{Veřejné rozhraní je označeno \uv{ip nat outside}.}, tak se paket přepošle dál bez překladu adres.
+\item Když příchozí rozhraní\footnote{Rozhraní, pomocí kterého byl paket do počítače přijat.} není označeno jako soukromé\footnote{V Cisco IOSu pomocí příkazu \uv{ip nat inside}.} nebo odchozí rozhraní není označeno jako veřejné\footnote{Veřejné rozhraní je označeno příkazem \uv{ip nat outside}.}, tak se paket přepošle dál bez překladu adres.
 
 \item Pokud lze nalézt statické pravidlo, které by odpovídalo zdrojové adrese, tak se přeloží zdrojová adresa dle tohoto pravida.
 
@@ -159,7 +159,7 @@ Reverzní překlad je mnohem jednodušší záležitost. Příchozí paket čeka
 
 
 \subsubsection*{}
-Z obou směrů překladu vyplývá, že statická pravidla mají přednost před dynamickými záznamy. Při testování NATu na školních ciscách jsem zjistil, že cisca zapomínají všechny dynamické záznamy starší cca 10 vteřin. Tato vlastnost byla dodatečně implementována i do této aplikace. Více informací o konfiguraci statického a dynamického NATu zároveň je na stránkách Cisco Systems\cite{cisco:snat_dnat}
+Z obou směrů překladu vyplývá, že statická pravidla mají přednost před dynamickými záznamy. Při testování NATu na školních ciscách jsem zjistil, že cisca zapomínají všechny dynamické záznamy starší cca 10 vteřin. Tato vlastnost byla dodatečně implementována i do této aplikace. Více informací o konfiguraci statického a dynamického NATu zároveň je na stránkách Cisco Systems \cite{cisco:snat_dnat}.
 
 
 

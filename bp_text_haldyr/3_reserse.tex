@@ -4,11 +4,26 @@ Existujících implementací je na síťovém trhu celá řada, nicméně ne ka�
 \section{Cisco Packet Tracer}
 Asi nejznámějším simulátorem Cisca je Packet Tracer \cite{cisco:pt} od stejnojmenné firmy. Program slouží k simulaci síťového provozu počítačových sítí založených na hardware od Cisco Systems. Packet Tracer umožňuje vizualizaci provozu sítě, konfiguraci síťových prvků v grafickém i textovém módu. Program obsahuje velmi málo odchylek od skutečného cisco směrovače. Packet Tracer je dostupný pro platformy Windows i Linux zdarma pro všechny členy Cisco Networking Academy. To je zároveň velkou nevýhodou, protože licence neumožňuje jiné použití a je tedy Paket Tracer ve škole nepoužitelný.
 
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=7cm]{figures/r_cpt}
+\caption{Cisco Packet Tracer}
+\label{fig:r_cpt}
+\end{center}
+\end{figure}
 
 \section{OMNeT++ simulátor} 
 Simulační systém OMNeT++ \cite{reserse:omnet_hp} je velmi propracovaný opensource nástroj pro simulaci prakticky čehokoliv. OMNeT++ je postaven na modulární architektuře, takže při správných knihovnách (modulech) může simulovat počítačovou síť. Systém dokáže simulovat Cisco IOS i počítač postavený na linuxu. Aplikace je komplikovaná a představu jednoduchého programu pro výuku studentů spíše nesplňuje.
 
 Více se tímto simulátorem zabýval Bc. Jan Michek v rámci své diplomové práce Emulátor počítačové sítě \cite{reserse:omnet_dp}.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=7cm]{figures/r_omnet}
+\caption{OMNeT++ simulátor}
+\label{fig:r_omnet}
+\end{center}
+\end{figure}
 
 
 \section{Simulation Toolkit 7.0} 
@@ -18,9 +33,26 @@ Simulation Toolkit 7.0 \cite{reserse:adventnet} je grafický simulátor pro test
 \section{Boson NetSim Network Simulator} 
 Boson NetSim Network Simulator \cite{reserse:boson} je aplikace pro simulaci síťového hardware a software a je designován jako výuková pomůcka pro začínající administrátory Cisco IOS. Systém dokáže simulovat více než 40 různých síťových prvků od firmy Cisco Systems. Simulátor obsahuje grafický i textový konfigurační režim sítí. Program je dostupný pro Windows, Linux i Solaris. Podobně jako Simulation Toolkit i tento software je nabízen ve zkušební verzi na 30 dní. Plná časově neomezená verze stojí od \$99 do \$349.
 
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=6cm]{figures/r_boson}
+\caption{Boson NetSim Network Simulator}
+\label{fig:r_boson}
+\end{center}
+\end{figure}
+
+\newpage
 
 \section{Dynamips Cisco 7200 Simulator}
 Dynamips Cisco 7200 Simulator \cite{reserse:dynamips} je program napsaný Christophe Fillot za účelem emulace Cisco směrovačů. Dynamips funguje na platformách Linux, Mac OS X, Windows a emuluje hardware Cisco směrovačů tak, že se načte obraz originálního Cisco IOS do emulátoru. Program tedy umožňuje využívat veškeré funkce Cisco IOS. Program je licencován pod GNU GPL\footnote{licence pro svobodný software}, ale bohužel obraz IOSu není volně k dispozici. Tudíž lze program legálně používat jen jako zákazník firmy Cisco - to ale škola není, takže tento program také není vhodný pro výuku.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=6cm]{figures/r_dynamips}
+\caption{Dynamips Cisco 7200 Simulator}
+\label{fig:r_dynamips}
+\end{center}
+\end{figure}
 
 
 \section{Virtuální laboratoř počítačových sítí VirtLab}
