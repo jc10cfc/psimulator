@@ -1,0 +1,769 @@
+%% History:
+% Pavel Tvrdik (26.12.2004)
+%  + initial version for PhD Report
+%
+% Daniel Sykora (27.01.2005)
+%
+% Michal Valenta (3.12.2008)
+% rada zmen ve formatovani (diky M. Duškovi, J. Holubovi a J. Žïárkovi)
+% sjednoceni zdrojoveho kodu pro anglickou, ceskou, bakalarskou a diplomovou praci
+
+% One-page layout: (proof-)reading on display
+%%%% \documentclass[11pt,oneside,a4paper]{book}
+% Two-page layout: final printing
+\documentclass[11pt,twoside,a4paper]{book}   
+%=-=-=-=-=-=-=-=-=-=-=-=--=%
+% The user of this template may find useful to have an alternative to these 
+% officially suggested packages:
+\usepackage[czech, english]{babel}
+\usepackage[T1]{fontenc} % pouzije EC fonty 
+% pripadne pisete-li cesky, pak lze zkusit take:
+% \usepackage[OT1]{fontenc} 
+\usepackage[utf8]{inputenc}
+%=-=-=-=-=-=-=-=-=-=-=-=--=%
+% In case of problems with PDF fonts, one may try to uncomment this line:
+%\usepackage{lmodern}
+%=-=-=-=-=-=-=-=-=-=-=-=--=%
+%=-=-=-=-=-=-=-=-=-=-=-=--=%
+% Depending on your particular TeX distribution and version of conversion tools 
+% (dvips/dvipdf/ps2pdf), some (advanced | desperate) users may prefer to use 
+% different settings.
+% Please uncomment the following style and use your CSLaTeX (cslatex/pdfcslatex) 
+% to process your work. Note however, this file is in UTF-8 and a conversion to 
+% your native encoding may be required. Some settings below depend on babel 
+% macros and should also be modified. See \selectlanguage \iflanguage.
+%\usepackage{czech}  %%%%%\usepackage[T1]{czech} %%%%[IL2] [T1] [OT1]
+%=-=-=-=-=-=-=-=-=-=-=-=--=%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Styles required in your work follow %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage{indentfirst} %1. odstavec jako v cestine.
+
+\usepackage{k336_thesis_macros} % specialni makra pro formatovani DP a BP
+ % muzete si vytvorit i sva vlastni v souboru k336_thesis_macros.sty
+ % najdete  radu jednoduchych definic, ktere zde ani nejsou pouzity
+ % napriklad: 
+ % \newcommand{\bfig}{\begin{figure}\begin{center}}
+ % \newcommand{\efig}{\end{center}\end{figure}}
+ % umoznuje pouzit prikaz \bfig namisto \begin{figure}\begin{center} atd.
+
+% \usepackage{lgrind}
+% \usepackage{listings}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Zvolte jednu z moznosti 
+% Choose one of the following options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand\TypeOfWork{Diplomová práce} \typeout{Diplomova prace}
+% \newcommand\TypeOfWork{Master's Thesis}   \typeout{Master's Thesis} 
+\newcommand\TypeOfWork{Bakaláøská práce}  \typeout{Bakalarska prace}
+% \newcommand\TypeOfWork{Bachelor's Project}  \typeout{Bachelor's Project}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Zvolte jednu z moznosti 
+% Choose one of the following options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% nabidky jsou z: http://www.fel.cvut.cz/cz/education/bk/prehled.html
+
+%\newcommand\StudProgram{Elektrotechnika a informatika, dobíhající, Bakaláøský}
+% \newcommand\StudProgram{Elektrotechnika a informatika, dobíhající, Magisterský}
+% \newcommand\StudProgram{Elektrotechnika a informatika, strukturovaný, Bakaláøský}
+%  \newcommand\StudProgram{Elektrotechnika a informatika, strukturovaný, Navazující magisterský}
+\newcommand\StudProgram{Softwarové technologie a~management, Bakaláøský}
+% English study:
+% \newcommand\StudProgram{Electrical Engineering and Information Technology}  % bachelor programe
+% \newcommand\StudProgram{Electrical Engineering and Information Technology}  %master program
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Zvolte jednu z moznosti 
+% Choose one of the following options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% nabidky jsou z: http://www.fel.cvut.cz/cz/education/bk/prehled.html
+
+%\newcommand\StudBranch{Výpoèetní technika}   % pro program EaI bak. (dobihajici i strukt.)
+% \newcommand\StudBranch{Výpoèetní technika}   % pro prgoram EaI mag. (dobihajici i strukt.)
+\newcommand\StudBranch{Softwarové inženýrství}            %pro STM
+%\newcommand\StudBranch{Web a multimedia}                  % pro STM
+%\newcommand\StudBranch{Computer Engineering}              % bachelor programe
+%\newcommand\StudBranch{Computer Science and Engineering}  % master programe
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Vyplnte nazev prace, autora a vedouciho
+% Set up Work Title, Author and Supervisor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\WorkTitle{Simulátor virtuální poèítaèové sítì Cisco}
+\newcommand\FirstandFamilyName{Stanislav Øehák}
+\newcommand\Supervisor{Ing. Pavel Kubalík, Ph.D.}
+
+
+
+
+% =============================================
+% moje vychytavky
+
+% 2 verze správnýho nadpisu paragraphu, vùbec nevím, jak to funguje
+% \makeatletter
+% \renewcommand\paragraph{%
+%    \@startsection{paragraph}{5}{0mm} % díky pìtce se to neèísluje, ty milimetry jsou odsazaní do strany
+%       {-\baselineskip}%
+%       {.1\baselineskip} %tohle znaèí nadpis na samostatný øádce
+%       {\normalfont\normalsize\bfseries}}
+% \makeatother
+
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+ {-1ex\@plus -1ex \@minus -.1ex}%
+ {1ex \@plus .1ex}%
+ {\normalfont\normalsize\bfseries}}
+\makeatother
+
+
+\makeatletter
+\renewcommand\subparagraph{%
+   \@startsection{subparagraph}{5}{5mm} % díky pìtce se to neèísluje, ty milimetry jsou odsazaní do strany
+      {-\baselineskip}%
+      {.1\baselineskip} %tohle znaèí nadpis na samostatný øádce
+      {\normalfont\normalsize\bfseries}}
+\makeatother
+
+% Pouzijete-li pdflatex, tak je prijemne, kdyz bude mit vase prace
+% funkcni odkazy i v pdf formatu
+\usepackage[
+pdftitle={\WorkTitle},
+pdfauthor={\FirstandFamilyName},
+bookmarks=true,
+colorlinks=true,
+breaklinks=true,
+urlcolor=red,
+citecolor=blue,
+linkcolor=blue,
+unicode=true,
+]
+{hyperref}
+
+
+
+% Extension posted by Petr Dlouhy in order for better sources reference (\cite{} command) especially in Czech.
+% April 2010
+% See comment over \thebibliography command for details.
+
+\usepackage[square, numbers]{natbib}             % sazba pouzite literatury
+%\usepackage{url}
+%\DeclareUrlCommand\url{\def\UrlLeft{<}\def\UrlRight{>}\urlstyle{tt}}  %rm/sf/tt
+%\renewcommand{\emph}[1]{\textsl{#1}}    % melo by byt kurziva nebo sklonene,
+\let\oldUrl\url
+\renewcommand\url[1]{<\texttt{\oldUrl{#1}}>}
+
+
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Zvolte jednu z moznosti 
+% Choose one of the following options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\selectlanguage{czech}
+%\selectlanguage{english} 
+
+% prikaz \typeout vypise vyse uvedena nastaveni v prikazovem okne
+% pro pohodlne ladeni prace
+% \typeout
+
+\iflanguage{czech}{
+	 \typeout{************************************************}
+	 \typeout{Zvoleny jazyk: cestina}
+	 \typeout{Typ prace: \TypeOfWork}
+	 \typeout{Studijni program: \StudProgram}
+	 \typeout{Obor: \StudBranch}
+	 \typeout{Jmeno: \FirstandFamilyName}
+	 \typeout{Nazev prace: \WorkTitle}
+	 \typeout{Vedouci prace: \Supervisor}
+	 \typeout{***************************************************}
+	 \newcommand\Department{Katedra poèítaèù}
+	 \newcommand\Faculty{Fakulta elektrotechnická}
+	 \newcommand\University{Èeské vysoké uèení technické v~Praze}
+	 \newcommand\labelSupervisor{Vedoucí práce}
+	 \newcommand\labelStudProgram{Studijní program}
+	 \newcommand\labelStudBranch{Obor}
+}{
+	 \typeout{************************************************}
+	 \typeout{Language: english}
+	 \typeout{Type of Work: \TypeOfWork}
+	 \typeout{Study Program: \StudProgram}
+	 \typeout{Study Branch: \StudBranch}
+	 \typeout{Author: \FirstandFamilyName}
+	 \typeout{Title: \WorkTitle}
+	 \typeout{Supervisor: \Supervisor}
+	 \typeout{***************************************************}
+	 \newcommand\Department{Department of Computer Science and Engineering}
+	 \newcommand\Faculty{Faculty of Electrical Engineering}
+	 \newcommand\University{Czech Technical University in Prague}
+	 \newcommand\labelSupervisor{Supervisor}
+	 \newcommand\labelStudProgram{Study Programme} 
+	 \newcommand\labelStudBranch{Field of Study}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%    Poznamky ke kompletaci prace
+% Nasledujici pasaz uzavrenou v {} ve sve praci samozrejme 
+% zakomentujte nebo odstrante. 
+% Ve vysledne svazane praci bude nahrazena skutecnym 
+% oficialnim zadanim vasi prace.
+{
+\pagenumbering{roman} \cleardoublepage \thispagestyle{empty}
+\chapter*{Na tomto místì bude oficiální zadání vaší práce}
+\begin{itemize}
+\item Toto zadání je podepsané dìkanem a~vedoucím katedry,
+\item musíte si ho vyzvednout na studiijním oddìlení Katedry poèítaèù na Karlovì námìstí,
+\item v~jedné odevzdané práci bude originál tohoto zadání (originál zùstává po obhajobì na katedøe),
+\item ve druhé bude na stejném místì neovìøená kopie tohoto dokumentu (tato se vám vrátí po obhajobì).
+\end{itemize}
+\newpage
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%    Titulni stranka / Title page 
+
+\coverpagestarts
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%    Podekovani / Acknowledgements 
+
+\acknowledgements
+\noindent
+% Zde mùžete napsat své podìkování, pokud chcete a~máte komu dìkovat.
+% Budu dìkovat vedoucím za vedení, rodinì za zázemí a testerovi.
+
+Nejprve bych chtìl podìkovat své rodinì, že vytvoøila zázemí, které mi bylo oporou. Dále bych chtìl podìkovat vedoucímu práce Ing. Pavlovi Kubalíkovi, Ph.D. za užiteèné rady a~pøipomínky pøi tvorbì bakaláøské práce. Mé podìkování také patøí Petrovi, který byl tak hodný a~smìlý, že provedl uživatelské testování.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%   Prohlaseni / Declaration 
+
+\declaration{V~Èerveném Kostelci dne 24.\,5.\,2010}
+% \declaration{In Koøenovice nad Beèvárkou on May 15, 2008}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%    Abstract 
+ 
+\abstractpage
+
+This bachelor thesis inquires into desing and implementation of virtual network simulator composed of cisco-based routers for subject Y36PSI Poèítaèové sítì. Simulator allows configuration of routers via Cisco IOS command line. Simulator implements commands for configuring interfaces, static routing, dynamic and static network address translation. This system also offers verification of current configuration via ping and traceroute commands. Entire network settings are loaded from a configuration file and there is also possibility to save current configuration to a given file. User testing is integral part of a thesis.
+
+
+% Translation of Czech abstract into English.
+
+% Prace v cestine musi krome abstraktu v anglictine obsahovat i
+% abstrakt v cestine.
+\vglue60mm
+
+\noindent{\Huge \textbf{Abstrakt}}
+\vskip 2.75\baselineskip
+
+\noindent
+% Abstrakt práce by mìl velmi struènì vystihovat její podstatu. Tedy èím se práce zabývá a~co je jejím výsledkem/pøínosem.
+% \noindent
+% Oèekávají se cca 1 -- 2 odstavce, maximálnì pùl stránky.
+
+
+Tato práce se zabývá návrhem a implementací simulátoru virtuální poèítaèové sítì založené na smìrovaèích od firmy Cisco Systems pro pøedmìt Y36PSI Poèítaèové sítì. Simulátor umožòuje konfiguraci cisco smìrovaèe pøes textové rozhraní Cisco IOS. Simulátor implementuje pøíkazy pro konfiguraci rozhraní, statické smìrování, dynamický a statický pøeklad adres. Pro ovìøení správnosti konfigurace jsou implementovány pøíkazy ping a traceroute. Celá konfigurace virtuální poèítaèové sítì se naèítá ze souboru a je možné ji následnì zase uložit zpìt. Souèástí práce je také uživatelské testování celé aplikace.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Obsah / Table of Contents 
+
+\tableofcontents
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Seznam obrazku / List of Figures 
+
+\listoffigures
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Seznam tabulek / List of Tables
+
+\listoftables
+
+
+%**************************************************************
+
+\mainbodystarts
+% horizontalní mezera mezi dvema odstavci
+%\parskip=5pt
+%11.12.2008 parskip + tolerance
+\normalfont
+\parskip=0.2\baselineskip plus 0.2\baselineskip minus 0.1\baselineskip
+
+% Odsazeni prvniho radku odstavce resi class book (neaplikuje se na prvni 
+% odstavce kapitol, sekci, podsekci atd.) Viz usepackage{indentfirst}.
+% Chcete-li selektivne zamezit odsazeni 1. radku nektereho odstavce,
+% pouzijte prikaz \noindent.
+
+%**************************************************************
+
+% Pro snadnejsi praci s vetsimi texty je rozumne tyto rozdelit
+% do samostatnych souboru nejlepe dle kapitol a tyto potom vkladat
+% pomoci prikazu \include{jmeno_souboru.tex} nebo \include{jmeno_souboru}.
+
+\include{1_uvod}
+\include{2_specifikace}
+\include{3_reserse}
+\include{4_navrh}
+\include{5-0_realizace}
+\include{5-1_xml}
+\include{5-2_smerovani}
+\include{5-3_wrapper}
+\include{5-4_nat}
+\include{6_testovani}
+\include{7_vylepseni}
+
+
+% atd...
+
+%*****************************************************************************
+
+% Výsledná struktura vaší práce a~názvy a~rozsahy jednotlivých kapitol se samozøejmì budou lišit podle typu práce a~podle
+% konkrétní povahy zpracovávaného tématu. Níže uvedená struktura práce odpovídá \textit{práci implementaèní}, viz
+% \cite{infodp} respektive \cite{infobp}. 
+
+%*****************************************************************************
+
+\chapter{Závìr}
+
+% Zhodnocení splnìní cílù DP/BP a~vlastního pøínosu práce (pøi formulaci je tøeba vzít v~potaz zadání práce).
+% Hlavnì pozitivní zhodnocení projektu.
+
+V~této práci se podaøilo navrhnout a implementovat simulátor virtuální poèítaèové sítì cisco. Ve spojení s~kolegovu èástí je tento program schopen úspìšnì odsimulovat virtuální sí složenou ze smìrovaèù cisco a z~poèítaèù založených na jádru linux. V~takové síti je možné otestovat znalosti studentù týkajících se konfigurace rozhraní, statického smìrování, dynamického a statického pøekladu adres. Z~výsledkù uživatelského testování vyplývá, že provedení takovýchto testù smysl má.
+
+Nepøipravenost studentù na laboratorních cvièení z~pøedmìtu Y36PSI Poèítaèové sítì je v~souèasné dobì problém. Obyèejní studenti zpravidla nemají pøístup ke smìrovaèùm od Cisco Systems, a tak by nasazení této aplikace jako studijní pomùcky mohlo vést ke zvýšení pøipravenosti tìchto studentù\footnote{Za pøedpokladu, že studenti budou mít motivaci k~získání bodù ze cvièení.} na laboratorní cvièení. 
+
+% Psani zaveru cini potize, jak jsem zjistil, i ucastnikum
+% mezinarodnich konferenci. Jadro zaveru sdeluje, zda cile prace bylo
+% dosazeno, resp. do jake miry. Pote je mozno uvest obecna "ponauceni",
+% ktera z prace vyplynula. Treba:
+% 
+%    Problem dopravy vody na vyvysene misto byl resen uzitim pumpy
+%    (cerpadla), pohaneneho ohnovym strojem, nebot bezne pohonne sily
+%    (vitr, zvirata, studenti) nebyly k dispozici. Pozorovanim bylo
+%    zjisteno, ze stroj vskutku vodu pumpuje. Namerena spotreba paliva
+%    (dve otepi drivi na ctyri kbeliky vody) je na urovni soudobych
+%    mechanismu.
+% 
+%    Z prubehu prace vyplyva, ze stavba parnich kotlu by se nemela
+%    sverovat vesnickym kovarum, nebot takto vyrobene kotle praskaji,
+%    vybuchuji a pusobi jiny podobny hluk.
+% 
+% Z tohoto zaveru je videt
+% - jak to dopadlo
+% - princip reseni
+% - duvody reseni
+% - vysledky kvalitativniho testovani
+% - vysledky kvantitativniho testovani
+% - vedlejsi produkty prace.
+
+
+
+
+
+
+%*****************************************************************************
+% Seznam literatury je v samostatnem souboru reference.bib. Ten
+% upravte dle vlastnich potreb, potom zpracujte (a do textu
+% zapracujte) pomoci prikazu bibtex a nasledne pdflatex (nebo
+% latex). Druhy z nich alespon 2x, aby se poresily odkazy.
+
+% originally following specification for bibliography formating was used
+%\bibliographystyle{abbrv}
+
+% Here is an improvment by Petr Dlouhy (April 2010).
+% It is mainly for supervisors who expect Czech fomrating rules for references
+% Additional feature is live url addresses to sources from your pdf file
+% It requires the file csplainnat.bst (included in this sample zipfile).
+
+\bibliographystyle{csplainnat}
+
+%bibliographystyle{plain}
+%\bibliographystyle{psc}
+{
+%JZ: 11.12.2008 Kdo chce mit v techto ukazkovych odkazech take odkaz na CSTeX:
+\def\CS{$\cal C\kern-0.1667em\lower.5ex\hbox{$\cal S$}\kern-0.075em $}
+\bibliography{reference}
+}
+
+% M. Dušek radi:
+%\bibliographystyle{alpha}
+% kdy citace ma tvar [AutorRok] (napriklad [Cook97]). Sice to asi neni  podle ceske normy (BTW BibTeX stejne neodpovida ceske norme), ale je to nejprehlednejsi.
+% 3.5.2009 JZ polemizuje: BibTeX neobvinujte, napiste a poskytnete nam styl (.bst) splnujici citacni normu CSN/ISO.
+
+%*****************************************************************************
+\appendix
+
+% \chapter{Testování zaplnìní stránky a~odsazení odstavcù}
+% \textbf{\large Tato pøíloha nebude souèástí vaší práce. 
+% Slouží pouze jako pøíklad formátování textu.}
+% 
+% \section*{}
+% Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá, ale co mají dìlat ti, kteøí se nikdy
+% latinsky neuèili? Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá, ale co mají dìlat
+% ti, kteøí se nikdy latinsky neuèili? Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá,
+% ale co mají dìlat ti, kteøí se nikdy latinsky neuèili?
+% 
+% Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá, ale co mají dìlat ti, kteøí se nikdy
+% latinsky neuèili? Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá, ale co mají dìlat
+% ti, kteøí se nikdy latinsky neuèili? Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá,
+% ale co mají dìlat ti, kteøí se nikdy latinsky neuèili? Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle
+% testování používá, ale co mají dìlat ti, kteøí se nikdy latinsky neuèili? Urèitì existuje nìjaká pìkná latinská vìta,
+% která se k~tomuhle testování používá, ale co mají dìlat ti, kteøí se nikdy latinsky neuèili? Urèitì existuje nìjaká
+% pìkná latinská vìta, která se k~tomuhle testování používá, ale co mají dìlat ti, kteøí se nikdy latinsky neuèili?
+% 
+% Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá, ale co mají dìlat ti, kteøí se nikdy
+% latinsky neuèili? Urèitì existuje nìjaká pìkná latinská vìta, která se k~tomuhle testování používá, ale co mají dìlat
+% ti, kteøí se nikdy latinsky neuèili?
+% 
+% 
+% %*****************************************************************************
+% 
+% \chapter{Pokyny a~návody k~formátování textu práce}
+% \textbf{\large Tato pøíloha samozøejmì nebude souèástí vaší práce. Slouží pouze jako pøíklad formátování textu.}
+% 
+% Používat se dají všechny pøíkazy systému \LaTeX. Existuje velké množství volnì pøístupné dokumentace, tutoriálù,
+% pøíruèek a~dalších materiálù v~elektronické podobì. Výchozím bodem, kromì Googlu, mùže být stránka CSTUG (Czech Tech
+% Users Group) \cite{CSTUG}. Tam najdete odkazy na další materiály.  Vetšinou dostaèující a~pøehlednì organizovanou
+% elektronikou dokumentaci najdete napøíklad na \cite{latexdocweb} nebo \cite{latexwiki}.
+% 
+% Existují i~rùzné nadstavby nad systémy \TeX{} a~\LaTeX, které výraznì usnadní psaní textu zejména zaèáteèníkùm. Velmi
+% rozšíøený v~Linuxovém prostøedí je systém Kile.
+% 
+% 
+% \section{Vkládání obrázkù}
+% Obrázky se umísují do plovoucího prostøedí \verb|figure|. Každý obrázek by mìl obsahovat \textbf{název}
+% (\verb|\caption|) a~\textbf{návìští} (\verb|\label|). Použití pøíkazu pro vložení obrázku \\\verb|\includegraphics| je
+% podmínìno aktivací (naètením) balíku graphicx pøíkazem\\ \verb|\usepackage{graphicx}|.
+% 
+% Budete-li zdrojový text zpracovávat pomocí programu \verb|pdflatex|, oèekávají se obrázky s~pøíponou
+% \verb|*.pdf|\footnote{pdflatex umí také formáty PNG a~JPG.}, použijete-li k~formátování \verb|latex|, oèekávají se
+% obrázky s~pøíponou \verb|*.eps|.\footnote{Vzájemnou konverzi mezi snad všemi typy obrazku vèetnì zmìn vekostí a~dalších
+% vymožeností vám mùže zajistit balík ImageMagic  (http://www.imagemagick.org/script/index.php). Je dostupný pod Linuxem,
+% Mac OS i~MS Windows. Dùležité jsou zejména pøíkazy convert a~identify.}
+% 
+% 
+% \begin{figure}[ht]
+% \begin{center}
+% \includegraphics[width=5cm]{figures/LogoCVUT}
+% \caption{Popiska obrázku}
+% \label{fig:logo}
+% \end{center}
+% \end{figure}
+% 
+% Pøíklad vložení obrázku:
+% \begin{verbatim}
+% \begin{figure}[h]
+% \begin{center}
+% \includegraphics[width=5cm]{figures/LogoCVUT}
+% \caption{Popiska obrazku}
+% \label{fig:logo}
+% \end{center}
+% \end{figure}
+% \end{verbatim}
+% 
+% \section{Kreslení obrázkù}
+% Zøejmì každý z~vás má nìjaký oblíbený nástroj pro tvorbu obrázkù. Jde jen o~to, abyste dokázali obrázek uložit
+% v~požadovaném formátu nebo jej do nìj konvertovat (viz pøedchozí kapitola). Je zøejmì vhodné kreslit obrázky vektorovì.
+% Celkem oblíbený, na ovládání celkem jednoduchý a~pøitom dostateènì mocný je napøíklad program Inkscape.
+% 
+% Zde stojí za to upozornit na kreslící programe Ipe \cite{ipe}, který dokáže do obrázku vkládat komentáøe pøímo
+% v~latexovském formátu (vzroce, stejné fonty atd.). Podobné vìci umí na Linuxové platformì nástroj Xfig. 
+% 
+% Za pozornost ještì stojí schopnost editoru Ipe importovat obrázek (jpg nebo bitmap) a~krelit do nìj latexovské popisky
+% a~komentáøe. Výsledek pak umí exportovat pøímo do pdf.
+% 
+% 
+% \section{Tabulky}
+% Existuje více zpùsobù, jak sázet tabulky. Napøíklad je možno použít prostøedí \verb|table|, které je velmi podobné
+% prostøedí \verb|figure|. 
+% 
+% \begin{table}
+% \begin{center}
+% \begin{tabular}{|c|l|l|}
+% \hline
+% \textbf{DTD} & \textbf{construction} & \textbf{elimination} \\
+% \hline
+% $\mid$ & \verb+in1|A|B a:sum A B+ & \verb+case([_:A]a)([_:B]a)ab:A+\\
+% &\verb+in1|A|B b:sum A B+ & \verb+case([_:A]b)([_:B]b)ba:B+\\
+% \hline
+% $+$&\verb+do_reg:A -> reg A+&\verb+undo_reg:reg A -> A+\\
+% \hline
+% $*,?$& the same like $\mid$ and $+$ & the same like $\mid$ and $+$\\
+% & with \verb+emtpy_el:empty+ & with \verb+emtpy_el:empty+\\
+% \hline
+% R(a,b) & \verb+make_R:A->B->R+ & \verb+a: R -> A+\\
+%  & & \verb+b: R -> B+\\
+% \hline
+% \end{tabular}
+% \end{center}
+% \caption{Ukázka tabulky}
+% \label{tab:tab1}
+% \end{table}
+% 
+% Zdrojový text tabulky \ref{tab:tab1} vypadá takto:
+% \begin{verbatim}
+% \begin{table}
+% \begin{center}
+% \begin{tabular}{|c|l|l|}
+% \hline
+% \textbf{DTD} & \textbf{construction} & \textbf{elimination} \\
+% \hline
+% $\mid$ & \verb+in1|A|B a:sum A B+ & \verb+case([_:A]a)([_:B]a)ab:A+\\
+% &\verb+in1|A|B b:sum A B+ & \verb+case([_:A]b)([_:B]b)ba:B+\\
+% \hline
+% $+$&\verb+do_reg:A -> reg A+&\verb+undo_reg:reg A -> A+\\
+% \hline
+% $*,?$& the same like $\mid$ and $+$ & the same like $\mid$ and $+$\\
+% & with \verb+emtpy_el:empty+ & with \verb+emtpy_el:empty+\\
+% \hline
+% R(a,b) & \verb+make_R:A->B->R+ & \verb+a: R -> A+\\
+%  & & \verb+b: R -> B+\\
+% \hline
+% \end{tabular}
+% \end{center}
+% \caption{Ukázka tabulky}
+% \label{tab:tab1}
+% \end{table}
+% \begin{table}
+% \end{verbatim}
+% 
+% \section{Odkazy v~textu}
+% \subsection{Odkazy na literaturu}
+% Jsou realizovány pøíkazem \verb|\cite{odkaz}|. 
+% 
+% Seznam literatury je dobré zapsat do samostatného souboru a~ten pak zpracovat programem bibtex (viz soubor
+% \verb|reference.bib|). Zdrojový soubor pro \verb|bibtex| vypadá napøíklad takto:
+% \begin{verbatim}
+% @Article{Chen01,
+%   author  = "Yong-Sheng Chen and Yi-Ping Hung and Chiou-Shann Fuh",
+%   title   = "Fast Block Matching Algorithm Based on 
+%              the Winner-Update Strategy",
+%   journal = "IEEE Transactions On Image Processing",
+%   pages   = "1212--1222",
+%   volume  =  10,
+%   number  =   8,
+%   year    = 2001,
+% }
+% 
+% @Misc{latexdocweb,
+%   author  = "",
+%   title   = "{\LaTeX} --- online manuál",
+%   note    = "\verb|http://www.cstug.cz/latex/lm/frames.html|",
+%   year    = "",
+% }
+% ...
+% \end{verbatim}
+% 
+% %11.12.2008, 3.5.2009
+% \textbf{Pozor:} Sazba názvù odkazù je dána Bib\TeX{} stylem\\ (\verb|\bibliographystyle{abbrv}|). 
+% %Budete-li používat èeské prostøedí (\verb|\usepackage[czech]{babel}|), 
+% Bib\TeX{} tedy obvykle vysází velké pouze poèáteèní písmeno z~názvu zdroje, 
+% ostatní písmena zùstanou malá bez ohledu na to, jak je napíšete. 
+% Pøesnìji øeèeno, styl mùže zvolit pro každý typ publikace jiné konverze. 
+% Pro èasopisecké èlánky tøeba výše uvedené, jiné pro monografie (u~nich èasto bývá 
+% naopak velikost písmen zachována).
+% 
+% Pokud chcete Bib\TeX u napovìdìt, která písmena nechat bez konverzí 
+% (viz \texttt{title = "\{$\backslash$LaTeX\} -{}-{}- online manuál"} 
+% v~pøedchozím pøíkladu), je nutné pøíslušné písmeno (zde celé makro) uzavøít 
+% do složených závorek. Pro pøehlednost je proto vhodné celé parametry 
+% uzavírat do uvozovek (\texttt{author = "\dots"}), nikoliv do složených závorek.
+% 
+% Odkazy na literaturu ve zdrojovém textu se pak zapisují:
+% \begin{verbatim}
+% Podívejte se na \cite{Chen01}, 
+% další detaily najdete na \cite{latexdocweb}
+% \end{verbatim}
+% 
+% Vazbu mezi soubory \verb|*.tex| a~\verb|*.bib| zajistíte pøíkazem 
+% \verb|\bibliography{}| v~souboru \verb|*.tex|.  V~našem pøípadì tedy zdrojový 
+% dokument \verb|thesis.tex| obsahuje pøíkaz\\
+% \verb|\bibliography{reference}|.
+% 
+% Zpracování zdrojového textu s~odkazy se provede postupným voláním programù\\
+% \verb|pdflatex <soubor>| (pøípadnì \verb|latex <soubor>|), \verb|bibtex <soubor>| 
+% a~opìt\\ \verb|pdflatex <soubor>|.\footnote{První volání \texttt{pdflatex} 
+% vytvoøí soubor s~koncovkou \texttt{*.aux}, který je vstupem pro program 
+% \texttt{bibtex}, pak je potøeba znovu zavolat program \texttt{pdflatex} 
+% (\texttt{latex}), který tentokrát zpracuje soubory s~pøíponami \texttt{.aux}
+% a~\texttt{.tex}. 
+% Informaci o~pøípadných nevyøešených odkazech (cross-reference) vidíte pøímo pøi 
+% zpracovávání zdrojového souboru pøíkazem \texttt{pdflatex}. Program \texttt{pdflatex} 
+% (\texttt{latex}) lze volat vícekrát, pokud stále vidíte nevyøešené závislosti.}
+% 
+% 
+% Níže uvedený pøíklad je pøevzat z~døíve existujících pokynù studentùm, kteøí 
+% dìlají svou diplomovou nebo bakaláøskou práci v~Grafické skupinì.\footnote{Nìkolikrát 
+% jsem byl upozornìn, že web s~tìmito pokyny byl zrušen, proto jej zde pøímo necituji. 
+% Nicménì pøíklad sám o~sobì dokumentuje obecnì pøijímaný konsensus ohlednì citací 
+% v~bakaláøských a~diplomových pracích na KP.} Zde se praví:
+% \begin{small}
+% \begin{verbatim}
+% ...
+% j) Seznam literatury a dalších použitých pramenù, odkazy na WWW stránky, ...
+%  Pozor na to, že na veškeré uvedené prameny se musíte v textu práce 
+%  odkazovat -- [1]. 
+% Pramen, na který neodkazujete, vypadá, že jste ho vlastnì nepotøebovali 
+% a je uveden jen do poètu. Pøíklad citace knihy [1], èlánku v èasopise [2], 
+% stati ve sborníku [3] a html odkazu [4]: 
+% [1] J. Žára, B. Beneš;, and P. Felkel. 
+%      Moderní poèítaèová grafika. Computer Press s.r.o, Brno, 1 edition, 1998. 
+%      (in Czech). 
+% [2] P. Slavík. Grammars and Rewriting Systems as Models for Graphical User 
+%      Interfaces. Cognitive Systems, 4(4--3):381--399, 1997. 
+% [3] M. Haindl, Š. Kment, and P. Slavík. Virtual Information Systems. 
+%      In WSCG'2000 -- Short communication papers, pages 22--27, Pilsen, 2000. 
+%      University of West Bohemia. 
+% [4] Knihovna grafické skupiny katedry poèítaèù: 
+%      http://www.cgg.cvut.cz/Bib/library/ 
+% \end{verbatim}
+% \end{small}
+% \ldots{} abychom výše citované odkazy skuteènì našli v~(automaticky generovaném) seznamu literatury tohoto textu, musíme
+% je nyní alespoò jednou citovat: Kniha \cite{kniha}, èlánek v~èasopisu \cite{clanek}, pøíspìvek na konferenci
+% \cite{sbornik}, www odkaz \cite{www}.
+% 
+% Ještì pøidáme další ukázku citací online zdrojù podle èeské normy. Odkaz na wiki o~frameworcich \cite{wiki:framework}
+% a~ORM \cite{wiki:orm}. Použití viz soubor \verb|reference.bib|. V~seznamu literatury by nyní mìly být živé odkazy na
+% zdroje. V~\verb|reference.bib| je zcela nový typ publikace. Detaily dohledal a~dodal Petr Dlouhý v~dubnu 2010.
+% Podrobnosti najdete ve zdrojovém souboru tohoto textu v~komentáøi u~pøíkazu \verb|\thebibliography|.
+% 
+% \subsection{Odkazy na obrázky, tabulky a~kapitoly}
+% \begin{itemize}
+% \item Oznaèení místa v~textu, na které chcete pozdìji ètenáøe práce odkázat, se provede pøíkazem \verb|\label{navesti}|.
+% Lze použít v~prostøedích \verb|figure| a~\verb|table|, ale též za názvem kapitoly nebo podkapitoly.
+% \item Na návìští se odkážeme pøíkazem \verb|\ref{navesti}| nebo \verb|\pageref{navesti}|.
+% \end{itemize}
+% 
+% \section{Rovnice, centrovaná, èíslovaná matematika}
+% Jednoduchý matematický výraz zapsaný pøímo do textu se vysází pomocí prostøedí \verb|math|, resp. zkrácený zápis pomocí
+% uzavøení textu rovnice mezi znaky \verb|$|.
+% 
+% Kód \verb|$ S = \pi * r^2 $| bude vysázen takto: $ S = \pi * r^2 $.
+% 
+% Pokud chcete neèíslované rovnice, ale umístìné centrovanì na samostatné øádky, pak lze použít prostøedí
+% \verb|displaymath|, resp. zkrácený zápis pomocí uzavøení textu rovnice mezi znaky \verb|$$|. Zdrojový kód: 
+% \begin{verb}
+% |$$ S = \pi * r^2 $$|
+% \end{verb}
+% bude pak vysázen takto:
+% $$ S = \pi * r^2 $$
+% 
+% Chcete-li mít rovnice èíslované, je tøeba použít prostøedí \verb|eqation|. Kód:
+% \begin{verbatim}
+% \begin{equation}
+%   S = \pi * r^2
+% \end{equation}
+% 
+% \begin{equation}
+%   V = \pi * r^3
+% \end{equation}
+% \end{verbatim}
+% je potom vysázen takto:
+% \begin{equation}
+%   S = \pi * r^2
+% \end{equation}
+% 
+% \begin{equation}
+%   V = \pi * r^3
+% \end{equation}
+% 
+% \section{Kódy programu}
+% Chceme-li vysázet napøíklad èást zdrojového kódu programu (bez formátování), hodí se prostøedí \verb|verbatim|: 
+% \begin{verbatim}
+%          (* nickname2 *)
+% Lego> Refine in1
+%              (do_reg (nickname1 h));
+% Refine by  in1 (do_reg (nickname1 h))
+%    ?4 : pcdata
+%    ?5 : pcdata
+%           (* surname2 *)
+% Lego> Refine surname1 h;
+% Refine by  surname1 h
+%    ?5 : pcdata
+%           (* email2 *)
+% Lego> Refine undo_reg (email1 h);
+% Refine by  undo_reg (email1 h)
+% *** QED ***
+% \end{verbatim}
+% 
+% \section{Další poznámky}
+% \subsection{Èeské uvozovky}
+% V~souboru \verb|k336_thesis_macros.tex| je pøíkaz \verb|\uv{}| pro sázení èeských uvozovek. \uv{Text uzavøený do èeských
+% uvozovek.}
+
+% JZ: 3.5.2009 \chapter z book zajistí automaticky
+%\subsection{Zaèátky kapitol na liché stránky}
+%Ve výsledném textu je dobré, když každá kapitola zaèíná na liché stránce. Tedy použijte:
+%\begin{verbatim}
+%  \cleardoublepage\include{1_uvod}
+%  \cleardoublepage\include{2_teorie}
+%   atd.\ldots{}
+%\end{verbatim}
+
+%*****************************************************************************
+\chapter{Seznam použitých zkratek}
+
+\begin{description}
+\item[CLI] Command Line Interface
+\item[DOM] Document Object Model
+\item[DTD] Document Type Definition
+\item[ICMP] Internet Control Message Protocol
+\item[IOS] Internetwork Operating System
+\item[NAT] Network Address Translation
+\item[OS] Operating System
+\item[Y36PSI] pøedmìt Poèítaèové sítì
+\item[XML] Extensible Markup Language
+\item [SAX] Simple API for XML
+\end{description}
+% \vdots
+
+%*****************************************************************************
+\chapter{UML diagramy}
+\textbf{\large Tato pøíloha není povinná a~zøejmì se neobjeví v~každé práci. Máte-li ale vìtší množství podobných
+diagramù popisujících systém, není nutné všechny umísovat do hlavního textu, zvláštì pokud by to snižovalo jeho
+èitelnost.}
+
+%*****************************************************************************
+\chapter{Instalaèní a~uživatelská pøíruèka}
+\textbf{\large Tato pøíloha velmi žádoucí zejména u~softwarových implementaèních prací.}
+
+%*****************************************************************************
+\chapter{Obsah pøiloženého CD}
+\textbf{\large Tato pøíloha je povinná pro každou práci. Každá práce musí totiž obsahovat pøiložené CD. Viz dále.}
+
+Mùže vypadat napøíklad takto. Váš seznam samozøejmì bude odpovídat typu vaší práce. %(viz \cite{infodp}):
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=14cm]{figures/seznamcd}
+\caption{Seznam pøiloženého CD --- pøíklad}
+\label{fig:seznamcd}
+\end{center}
+\end{figure}
+
+Na GNU/Linuxu si strukturu pøiloženého CD mùžete snadno vyrobit pøíkazem:\\ 
+\verb|$ tree . >tree.txt|\\
+Ve vzniklém souboru pak staèí pouze doplnit komentáøe.
+
+Z~\textbf{README.TXT} (pøípadne index.html apod.)  musí být rovnìž zøejmé, jak programy instalovat, spouštìt a~jaké
+požadavky mají tyto programy na hardware.
+
+Adresáø \textbf{text}  musí obsahovat soubor s~vlastním textem práce v~PDF nebo PS formátu, který bude pozdìji použit
+pro prezentaci diplomové práce na WWW.
+
+\end{document}

@@ -94,9 +94,6 @@
 \contentsline {subsubsection}{\numberline {6.1.2.5}\IeC {\'U}kol \IeC {\v c}.5 statick\IeC {\'y} NAT}{41}{subsubsection.6.1.2.5}
 \contentsline {subsubsection}{\numberline {6.1.2.6}\IeC {\'U}kol \IeC {\v c}.6 dynamick\IeC {\'y} NAT}{41}{subsubsection.6.1.2.6}
 \contentsline {subsection}{\numberline {6.1.3}Shrnut\IeC {\'\i }}{42}{subsection.6.1.3}
-\contentsline {section}{\numberline {6.2}Z\IeC {\'a}t\IeC {\v e}\IeC {\v z}ov\IeC {\'e} testy}{42}{section.6.2}
-\contentsline {subsection}{\numberline {6.2.1}N\IeC {\'a}vrh}{42}{subsection.6.2.1}
-\contentsline {subsection}{\numberline {6.2.2}V\IeC {\'y}sledky}{42}{subsection.6.2.2}
 \contentsline {chapter}{\numberline {7}Mo\IeC {\v z}n\IeC {\'a} vylep\IeC {\v s}en\IeC {\'\i }}{43}{chapter.7}
 \contentsline {chapter}{\numberline {8}Z\IeC {\'a}v\IeC {\v e}r}{45}{chapter.8}
 \contentsline {chapter}{\numberline {A}Seznam pou\IeC {\v z}it\IeC {\'y}ch zkratek}{49}{appendix.A}

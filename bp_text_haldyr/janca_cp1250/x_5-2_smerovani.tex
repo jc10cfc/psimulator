@@ -1,0 +1,133 @@
+\section{Smìrování} \label{prijmiEthernetove}
+Smìrování implementoval kolega, nicménì Cisco se nechová vdy stejnì, a tak bylo nutné vyèlenit rozhodování o~pøíjmu paketù do koncovıch poèítaèù a implementovat je kadı zvláš. Nejsloitìjší bylo zjistit, jak se cisco pøesnì chová a proè. Všechny vyzkoumané informace byly platné v~období bøezen - duben 2010. Nìkdo pøedìlával školní cisca po tom, co jsem provádìl experimenty, take je moné, e nìkteré vìci se mohou chovat jinak (nové verze IOS èi jen jiná konfigurace). 
+
+Pøi rùznıch experimentech jsem zjistil, e kdy linuxu pøijde paket, na kterı nemá záznam ve smìrovací tabulce, tak pošle zpátky patek \verb|Destination Network Unreachable|, zatímco školní cisca posílají \verb|Destination Host Unreachable|.
+
+Pøi testování standardních pøípadù je vše jasné, ale kdy jsem zkusil nakonfigurovat sí trochu neobvykle, tak to tak jasné nebylo. Experimenty byly ovìøovány pomocí pøíkazu \verb|ping|, kterı implementoval kolega\footnote{viz kapitola vymezení spolupráce \ref{vymezeni}}. 
+
+%------------------------------------------------------------------------------
+
+\subsection{Debuging}
+Na stránkách firmy Cisco Systems jsem objevil nìkolik návodù tıkajících se vypisování zpracování paketù na jednotlivıch strojích. Bez tìchto návodù lze jen tìko hádat, které pakety se posílají kam. Velmi uiteèné jsou pøíkazy, které poskytují detailní vıpis aktuálnì zpracovávanıch paketù:
+
+\begin{itemize}
+ \item \verb|debug ip packet detail| - IP pakety 
+ \item \verb|debug ip icmp| - ICMP\footnote{Internet Control Message Protocol je jeden z~nejdùleitìjších protokolù ze sady protokolù internetu. Pouívají ho operaèní systémy poèítaèù v~síti pro odesílání chybovıch zpráv, napøíklad pro oznámení, e poadovaná sluba není dostupná nebo e potøebnı poèítaè nebo router není dosaitelnı. \cite{wiki:icmp}} pakety
+ \item \verb|debug arp| - ARP pakety
+\end{itemize}
+
+%------------------------------------------------------------------------------
+
+\subsection{Sí è.1}
+\subsubsection{Popis problému}
+Sí na obrázku \ref{fig:sit_2pc} je sloená pouze ze dvou poèítaèù cisco a linux. Tyto poèítaèe mají nastavené IP adresy z~jinıch sítí, linux má nastavenı defaultní záznam na rozhraní \verb|eth0| a cisco má samo-nastavující se záznam na sí, která je pøipojena na rozhraní \verb|F0/0|\footnote{Na obrázcích sítí se vyskytují zkratky F0/0 a F0/1, které znaèí FastEhernet0/0 resp. FastEhernet0/1}. Samo-nastavující znamená, e cisco pøidává záznamy do routovací tabulky podle IP adresy z~jeho rozhraní. Tuto funkcionalitu lze vypnout, na školních ciscách je ale defaultnì zapnutá. Cisco nepøidává tento záznam v~pøípadì, e na druhém konci kabelu buï nikdo není nebo je rozhraní shozené (vypnuté).
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=13cm]{figures/sit_2pc.png}
+\caption{Sí linux - cisco}
+\label{fig:sit_2pc}
+\end{center}
+\end{figure}
+
+Pøi pøipojení na linux a spuštìní pøíkazu \verb|ping 10.10.10.10| se stane, e u~prvních pár paketù (pøi mém testování to bylo 9) vyprší timeout a pak u linux sám sobì vypisuje \verb|Destination Host Unreachable|. Dlouho jsem se snail pøijít na to, proè to tak je. Tìko jsem zjišoval, co se dìje, protoe jsem nemìl ádné zkušenosti se sledováním paketù pøes cisco smìrovaèe. 
+
+\subsubsection{Øešení} 
+Nejdøíve vysvìtlím proè prvních nìkolik paketù prošlo a na cisco a na další \verb|icmp_req| odpovìdìl linux sám sobì. Je to zpùsobeno tím, e pøi prvních paketech ještì cisco nevìdìlo co s~tìmi pakety bude, a tak je pøijalo, aby mohlo vyhodnotit co dál. Cisco ale hned pøišlo na to, e nemá ádnı záznam na \verb|1.1.1.1|, take neví, co s~takovımi pakety dìlat, tak se radši rozhodlo, e je ani nepøijme. Obvykle cisco nepøijímá pakety hned od zaèátku, kdy nemá záznam pro takovı paket, ale školní cisca mají starší verzi software a celkovì reagují trochu pomaleji, ne je zvykem, take to moho bıt zpùsobeno tím.
+
+\paragraph{Prùchod ARP ádostí}
+Linux nejprve pošle ARP request, aby zjistil MAC adresu cisca. Cisco pøijme ARP request a snaí se odpovìdìt (poslat ARP reply). Problém je, e nemá záznam v~routovací tabulce na adresu \verb|1.1.1.1|, take ani neodpoví na ARP request, tak \uv{hezky} je nastavené cisco.
+
+Po pøidání záznamu \verb|ip route 1.1.1.0 255.255.255.0 F0/0| do routovací tabulky na smìrovaèi \verb|cisco| sí funguje bez jakıchkoliv problémù. Do této chvíle jsem netušil, e je nìco takového moné. A~ono staèí správnì nastavit smìrovací záznamy na obou poèítaèích.
+
+%------------------------------------------------------------------------------
+
+\subsection{Sí è.2}
+\subsubsection{Popis sítì}
+Na další síti \ref{fig:sit_3pc} jsou poèítaèe linux1, cisco1 a cisco2 zapojené v~jednom øetìzu. Konfigurace rozhraní a smìrovacích tabulek je vepsána v~obrázku. Linux1 má teoreticky v~dosahu (pøes defaultní záznam) cisco2, to mu ale nemùe odpovìdìt, protoe pro linux1 nemá záznam. Cisco1 pøeposílá pakety z~cílovou adresu \verb|8.8.8.0/24| na bránu - cisco2.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=15cm]{figures/sit_3pc.png}
+\caption{Sí linux1 - cisco1 - cisco2}
+\label{fig:sit_3pc}
+\end{center}
+\end{figure}
+
+%------------------------------------------------------------------------------
+
+\newpage
+
+\subsubsection{Experimenty} 
+
+\paragraph{I. experiment}
+První experiment je \verb|ping| z~linux1 smìrem na cisco2:
+\begin{verbatim}
+linux1:/home/dsn# ping -c2 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+
+--- 8.8.8.8 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1006ms
+\end{verbatim}
+
+Vše dopadlo dle oèekávání tedy paket proplul a na vzdálené cisco2, které nemìlo pravidlo pro manipulaci paketù s~cílem \verb|8.8.8.8|, a tak chtìlo poslat zpátky odesílateli \\\verb|Destination Host Unreachable|. Problém je, e cisco2 nemá záznam ve smìrovací tabulce pro zdrojovou adresu \verb|1.1.1.1| (linux1), take vyprší timeout, protoe nelze doruèit odpovìdìt o~nedoruèení.
+
+Po pøidání záznamu pro obsluhu sítì \verb|1.1.1.0/24| na bránu \verb|2.2.2.1| na smìrovaèi cisco2, tak vše u funguje dle oèekávání:
+\begin{verbatim}
+linux1:/home/dsn# ping -c2 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+From 2.2.2.254 icmp_seq=1 Destination Host Unreachable
+From 2.2.2.254 icmp_seq=2 Destination Host Unreachable
+\end{verbatim} 
+
+
+\paragraph{II. experiment}
+Pokud zkusíme odeslat \verb|ping| na \verb|1.1.1.2|, co je adresa v~síti mezi linux1 a cisco1, ale není to adresa ani jednoho z~nás, tak dopadne takto:
+\begin{verbatim}
+linux1:/home/dsn# ping -c2 1.1.1.2
+PING 1.1.1.2 (1.1.1.2) 56(84) bytes of data.
+From 1.1.1.1 icmp_seq=1 Destination Host Unreachable
+From 1.1.1.1 icmp_seq=2 Destination Host Unreachable
+\end{verbatim} 
+Linux ví (díky ARP protokolu), e vedle nìj není poèítaè s~IP adresou \verb|1.1.1.2|, a tak se to ani nesnaí odeslat a odpovídá sám sobì, e je host nedostupnı. 
+
+
+\paragraph{III. experiment}
+Cisco má trochu odlišné chování:
+\begin{verbatim}
+cisco1#ping 1.1.1.2
+
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 1.1.1.2, timeout is 2 seconds:
+.....
+Success rate is 0 percent (0/5)
+\end{verbatim}
+Cisco se zeptalo ethernetovì (pøes ARP) linuxu, ten odpovìdìl, e takovou adresu nemá a cisco vypsalo '.', co znamená, e vypršel timeout (dle \cite{cisco:icmp_codes}). Zatímco linux poslal \verb|DHU|\footnote{Destination Host Unreachable}.
+
+%------------------------------------------------------------------------------
+
+% \newpage
+
+\subsection{ARP protokol} \label{arp}
+\textit{\uv{Address Resolution Protocol (ARP) se v~poèítaèovıch sítích s~IP protokolem pouívá k~získání ethernetové MAC adresy sousedního stroje z~jeho IP adresy. Pouívá se v~situaci, kdy je tøeba odeslat IP datagram na adresu leící ve stejné podsíti jako odesílatel. Data se tedy mají poslat pøímo adresátovi, u~nìho však odesilatel zná pouze IP adresu. Pro odeslání prostøednictvím napø. Ethernetu ale potøebuje znát cílovou ethernetovou adresu.}} \cite{wiki:arp}
+
+Z~rùznıch experimentù jsem sestavil tato ARP pravidla, podle kterıch cisco vyhodnocuje ARP requesty:
+\begin{enumerate}
+ \item zdrojová IP adresa není ve stejné síti viz obrázek \ref{fig:sit_2pc}, tak se diskartuje ARP request - lze obejít v~konfiguraci (jako napø. na školních smìrovaèích)
+ \item cílová IP adresa nesedí s~ádnou s~ádnou mojí IP adresou, tak se diskartuje ARP reply
+ \item IP zdroje (tazatele) je dostupná pøes pravidla v~routovací tabulce, tak se vygeneruje ARP reply a pošle se tazateli
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\subsection{Pravidla o~pøíjmu paketù} 
+Z~pøedchozí sekce \ref{arp} jsem odvodil nìkolik pravidel pro pøíjem paketù u~cisco smìrovaèe. Tato pravidla tvoøí de facto tìlo metody \verb|prijmiEthernetove| u~\verb|CiscoPocitac|.
+
+\begin{itemize}
+ \item kdy mohu odpovìdìt na ARP request a zároveò je paket pro mì nebo vím kam ho poslat dál, tak se paket pøijme
+ \item kdy nelze odpovìdìt na ARP request = nemám na nìj záznam ve smìrovací tabulce, tak se paket nepøijme
+ \item ve všech ostatních pøípadech se paket nepøijme
+\end{itemize}
+
+
+

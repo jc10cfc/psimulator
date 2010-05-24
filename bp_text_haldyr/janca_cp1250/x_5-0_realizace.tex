@@ -1,0 +1,150 @@
+\chapter{Realizace} \label{realizace}
+% Popis implementace/realizace se zamìøením na nestandardní èásti øešení.
+% A tady budu øešit jednotlivé Cisco pøíkazy - jak jsem na to pøicházel, postupné problémy, moje implementace a odchylky.
+
+Témìø všechny èásti systému obsahují tzv. debugovací mód, kterı vypisuje extra informace, co se právì dìje nebo alepsoò pøidává další vlastnost vhodnou pro ladìní.
+
+\section{Komunikaèní vrstva}
+Server má sám pro sebe vlastní vlákno ve kterém bìí. Dále server vytvoøí pøi startu pro všechny poèítaèe nová vlákna, která poslouchají na portu o~jedna vìtším ne pøedchozí poèítaè (první poèítaè zaèíná na portu pøedanım jako parametr pøi startu serveru). Tyto vlákna se chovají zase jako servery. Kdy se uivatel pøipojí na libovolnı poèítaè, tak se vytvoøí další vlákno pro obsluhu tohoto klienta. Vıhodou tohoto øešení je, e je moné se pøipojit na kterıkoliv poèítaè kolikrát potøebujeme. Je to tedy pøesnì tak, jako bychom se pøipojovali na reálné Cisco èi linux napø. pøes protokol ssh\footnote{Secure Shell - zabezpeèenı komunikaèní protokol (v~souèasné dobì náhrada telnetu)} èi telnet.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=9cm]{figures/uml_sit}
+\caption{UML návrh komunikaèní èásti}
+\label{uml:sit}
+\end{center}
+\end{figure}
+
+Na obrázku \ref{uml:sit} je znázornìna komunikaèní èást pomocí UML\footnote{Unified Modeling Language, UML je v~softwarovém inenırství grafickı jazyk pro vizualizaci, specifikaci, navrhování a dokumentaci programovıch systémù.\cite{wiki:uml}} diagramu. Kadı poèítaè má objekt \verb|Komunikace|, ta èeká na pøipojení nového klienta. Kdy klient vyšle poadavek o~nové spojení, tak se vytvoøí \verb|Konsole|, která tohoto klienta bude obsluhovat. Pøi odpojení klienta \verb|Konsole| zaniká, protoe její pøítomnost u není potøeba. \verb|Komunikace| se tedy chová jako server, kterı vytváøí klienty - \verb|Konsole|.
+
+%------------------------------------------------------------------------------
+
+\section{Aplikaèní vrstva}
+Pøedkem všech tøíd systému na aplikaèní vrstvì je \verb|Abstraktni|, která zastøešuje pøevánì statické funkce napø. \verb|zaokrouhli| (na tøi desetinná místa), \verb|cekej| (metoda pro uspání vlákna, uiteèná pøi vıpisech Cisco IOS) a další. Od \verb|Abstraktni| dìdí abstraktní \verb|ParserPrikazu|, kterı seskupuje všechny parsery pøíkazù (v~souèasné dobì pro linux a Cisco IOS). Spoleènı pøedek linux a cisco pøíkazù je \verb|AbtraktniPrikaz|, z~kterého dìdí linuxové pøíkazy kolegy a hlavnì \verb|CiscoPrikaz|, kterı ještì pøidává uiteèné metody speciálnì pro cisco pøíkazy. Viz obrázek \ref{uml:abstraktni}.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=9cm]{figures/uml_abtraktni.png}
+\caption{Tøídní model pøedkù}
+\label{uml:abstraktni}
+\end{center}
+\end{figure}
+
+\subsection{Vyhodnocování pøíkazù}
+Kdy uivatel zadá pøíkaz a ukonèí ho znakem nového øádku (klávesa Enter, znak \verb|\n|), tak se ve tøídì \verb|Konzole| zavolá metoda \verb|zpracujRadek()|. Tuto metodu vlastní abstraktní \verb|ParserPrikazu|, kterı je v~mém pøípade implementován jako \verb|CiscoParserPrikazu|\footnote{LinuxParser pøíkazù má na starosti kolega. Pro jiné typy poèítaèù je nutno implementovat parser vlastní.}. Ten se stará o~zpracování poslané øádky a podle toho volá rùzné Cisco pøíkazy, které tvoøí IOS, nebo jiné servisní (obsluné) pøíkazy.
+
+\subsection{Datové struktury jádra}
+Datové struktury pro poèítaèovou sí byly vytváøeny ve spolupráci s~kolegou. \verb|CiscoPocitac| je má práce, tøídy \verb|IpAdresa| a \verb|SitoveRozhrani| obsahují metody ode mne i od kolegy. Vlastnictví je blíe popsáno u~jednotlivıch metod.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=10cm]{figures/uml_class}
+\caption{Zjednodušenı diagram tøíd}
+\label{uml:class}
+\end{center}
+\end{figure}
+
+
+\subsubsection{Síové rozhraní}
+Datová struktura pro síové rozhraní je ve své podstatì jednoduchá. Obsahuje jméno, seznam IP adres pøiøazenıch k~tomuto rozhraní, MAC\footnote{MAC - Media Access Control, je fyzická adresa, kterou pouívá 2. (spojová) vrstva ISO/OSI modelu} adresu a stav.
+
+Systémem je oficiálnì podporována pouze jedna IP adresa per rozhraní, více adres si ale vyádal pøeklad adres. MAC adresa je v~tomto systému spíše pro vìtší pøiblíení skuteènému rozhraní, protoe ARP\footnote{\uv{\textit{Address Resolution Protocol se v~poèítaèovıch sítích s~IP protokolem pouívá k~získání ethernetové MAC adresy sousedního stroje z~jeho IP adresy. Pouívá se v~situaci, kdy je tøeba odeslat IP datagram na adresu leící ve stejné podsíti jako odesilatel. Data se tedy mají poslat pøímo adresátovi, u~nìho však odesilatel zná pouze IP adresu. Pro odeslání prostøednictvím napø. Ethernetu ale potøebuje znát cílovou ethernetovou adresu.}}\cite{wiki:arp}} protokol v~této aplikaci pøímo implementován. Systém obsahuje pouze nìkolik pravidel, které byly nutné pro rozhodování zda pøijmout èi nepøijmout pøíchozí paket. Dále rozhraní obsahuje indikátor stavu, ve kterém se nachází - zapnuté/vypnuté. Rozhraní cisca jsou ve vıchozím stavu vypnutá.
+
+\newpage
+
+\subsubsection{IP adresa}
+\verb|IpAdresa| je mnohem sloitìjší tøída ne rozhraní i kdy obsahuje pouze tøi èísla reprezentující adresu, masku a port. Sloitost je dána tím, e tato tøída obsahuje pøes 40 obslunıch metod, které pokrıvají veškerou práci, kterou je potøeba vykonávat (vıpoèet èísla sítì a broadcastu, kontrolní metody pro ovìøování správnosti IP adresy, ..).
+
+%------------------------------------------------------------------------------
+
+\section{Parser Cisco}
+
+\subsection{Cisco IOS}
+Cisco IOS je operaèní systém, kterı se nachází na drtivé vìtšinì smìrovaèù firmy Cisco Systems. IOS obsahuje pouze ovládání pøes pøíkazovı øádek (CLI\footnote{Command Line Interface}). IOS obsahuje tzv. zkracování pøíkazù, které zefektivòuje práci s~celım systémem. Celé to funguje tak, e kdy uivatelùv pøíkaz lze doplnit na jeden jedineènı pøíkaz (samotné doplnìní pøes klávesu \verb|TAB|), tak to takovı pøíkaz hned zavolá. Napøíklad pøíkaz \verb|sh run| lze jednoznaènì doplnit na \verb|show running-config|, ale kratší \verb|sh ru| u ne:
+\begin{verbatim}
+Router#sh ru?
+rudpv1  running-config
+\end{verbatim} 
+
+IOS tvoøí nìkolik stavù, napø.:
+\begin{itemize}
+ \item uivatelskı mód
+ \item privilegovanı mód
+ \item konfiguraèní mód - zde se nastavují volby, které ovlivní celı systém
+ \item konfigurace rozhraní - konfigurace jednoho urèitého rozhraní
+\end{itemize}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=13cm]{figures/ios.png}
+\caption{Pøehled základních módù Cisco IOS \cite{wiki:ios}}
+\label{fig:ios}
+\end{center}
+\end{figure}
+
+Na obrázku \ref{fig:ios} jsou zobrazeny dùleité stavy IOS a pøechody mezi nimi. 
+
+%------------------------------------------------------------------------------
+
+\subsubsection{Uivatelskı mód}
+Uivatelskı mód (USER MODE) je vıchozí (startovací) mód. Tento mód je znaènì limitovanı a dovoluje pouití èistì read-only pøíkazù (tj. takovıch, které nezmìní konfiguraci). Pøesto má tento mód svoje opodstatnìní, dovoluje napø. vypsat smìrovací tabulku (\verb|show ip route|) èi pouít pøíkazy \verb|ping| nebo \verb|traceroute|. Do privilegovaného reimu se lze pøepnout pøíkazem \verb|enable|.
+
+\subsubsection{Privilegovanı mód}
+Privilegovanı mód (PRIVILEGED MODE) nebo také \uv{administrátorskı} mód je podobnı linuxovému \verb|root| úètu. Tento mód je vıchozím bodem pro vstup do ostatních módù. Pro návrat zpìt do uivatelského reimu existuje pøíkaz \verb|disable|. Pøíkaz \verb|configure| zpùsobí pøepnutí do dalšího konfiguraèního módu. Privilegovanı mód umoòuje vypsat veškeré informace o~aktuální konfiguraci systému, napø.:
+\begin{itemize}
+ \item \verb|show running-config| - shrnutí aktuální konfigurace
+ \item \verb|show ip route| - vıpis smìrovací tabulky
+ \item \verb|show ip nat translations| - vıpis dynamickıch záznamù v~NAT tabulce
+\end{itemize}
+Není dùvod, proè by v~tomto stavu nefungovaly pøíkazy \verb|ping| a \verb|traceroute|.
+
+\subsubsection{Konfiguraèní mód}
+Konfiguraèní mód (CONFIG MODE) je jeden z~nejdùleitìjších, protoe umoòuje konfiguraci smìrovacích záznamù (\verb|ip route|), pøístupovıch seznamù pro potøeby pøekladu adres (\verb|access-list|), pooly IP adres (\verb|ip nat pool|) a vıbìr rozhraní pro pøechod do stavu konfigurace rozhraní (\verb|interface|).
+
+\subsubsection{Konfigurace rozhraní} \label{configif}
+V~tomto módu lze nastavovat IP adresy na aktuálnì vybrané rozhraní, nastavovat pøíznaky pro veøejné a soukromé rozhraní pro NAT (\verb|nat inside|, \verb|nat outside|) nebo také zapínat èi vypínat rozhraní. Pro pøechod ze všech konfiguraèních módù do privilegovaného staèí napsat pøíkaz \verb|end| nebo jen stisknout klávesovou zkratku \verb|Ctrl+Z|.
+
+%------------------------------------------------------------------------------
+
+\subsection{Implementace Cisco IOS}
+Cisco IOS obsahuje desítky pøíkazù z~nich kadı mùe mít a stovky variací. Proto jsem implementoval pouze úzkou èást pøíkazù, která je potøebná pro splnìní zadání této práce. Nejdùleitìjší funkcí parseru je rozpoznávání zkrácenıch pøíkazù. Na skuteèném Ciscu se opravdu procházejí všechny monosti, které mohou v~daném stavu nastat, a podle nich probíhá vyhodnocování. V~mé implementaci ale mám pouze èást pøíkazù, take jsem to musel vyøešit jinım zpùsobem. Pro kadé slovo (èást pøíkazu) si \verb|CiscoParserPrikazu| drí poèet písmen, kterı je potøeba k~jednoznaènému urèení pøíkazu. Tato èísla jsem \uv{namìøil} na školních ciscách v~bøeznu 2010. Zajímavé je, e u o~2 mìsíce pozdìji jsem objevil drobné zmìny. Èísla se mohou mìnit s~rùznımi verzemi Cisco IOS. To bych ale nevidìl jako zásadní problém. Vìtšina studentù (alespoò dle mé zkušenosti) stejnì píše celé pøíkazy a zkrácené verze nepouívá, protoe je zpravidla nezná.
+
+Vyhodnocování pøíkazù zajišuje metoda \verb|kontrola(command, cmd)|. Parametr \verb|command| je celı pøíkaz, na kterı by se to mohlo eventuálnì doplnit, a \verb|cmd| je pøíkaz poslanı od uivatele. Nejdøíve se zjistí poèet znakù, kterı je potøeba pro jednoznaèné doplnìní na pøíkaz \verb|command|. Po té se zkontroluje poadovanı poèet znakù a také jestli zkrácenı pøíkaz odpovídá doplnìnému. A~takto to vypadá v~kódu:
+
+\begin{verbatim}
+if (cmd.length() >= i && command.startsWith(cmd)) {
+    // i..poadovanı poèet znakù 
+    // lze doplnit na jeden jedineènı pøíkaz
+    return true;
+}
+if (command.startsWith(cmd)) {
+    // vypsat amiguous command
+    nepokracovat = true;
+}
+\end{verbatim}
+
+Jednotlivé pøíkazy Cisco IOS jsou implementovány v~samostatnıch tøídách. Tøída \\\verb|CiscoParserPrikazu| zajišuje pøechody mezi stavy (módy) a navíc se stará o \uv{nahazování} rozhraní. Pøepnutí stavu rozhraní je natolik triviální, e se by se nevyplatilo mít pro to zvláštní tøídu. 
+
+\paragraph{}
+Ladící mód zjednodušuje testování parseru a pøidává tyto funkce:
+\begin{itemize}
+ \item klávesa \verb|Enter| funguje jako pøechod z~uivatelského do privilegovaného módu
+ \item pouití pøíkazù z~jinıch módù v~privilegovaném módu - navíc napø. \verb| ip route|, \\\verb|ip nat pool inside|, \verb|access-list|, ..
+ \item extra vıpis dynamickıch záznamù v~natovací tabulce
+ \item vıpis \verb|show running-config| je pro pøehlednost zkrácen
+ \item monost testování routovací tabulky pøes linuxovı pøíkaz \verb|route|
+ \item pouívání linuxového pøíkazu \verb|ifconfig|
+\end{itemize}
+Pouití tìchto funkcí je vhodné spíše pro ladìní programu do budoucna ne pro bìh v~\uv{ostrém} provozu. Tento mód je ve vıchozím stavu vypnut.
+
+%------------------------------------------------------------------------------
+
+\subsection{Odchylky v~implementaci}
+Má implementace Cisco IOS má navíc pár pøíkazù, které jsou potøeba pro ovládání systému. Jak u jsem se zmiòoval v~kapitole \ref{kap:podobnost} je zde navíc \verb|help| a \verb|help_en| pro vıpis nápovìdy. Pøíkaz \verb|kill| pøijde vhod, kdy uivatel chce ihned vypnout aplikaci a nechce projít pøes nìkolik stavù pøíkazem \verb|exit|. Další servisní pøíkaz je \verb|save| nebo také \verb|uloz|, kterı zapíše aktuální konfiguraci všech poèítaèù do konfiguraèního souboru, se kterım byl spuštìn nebo kterı byl pøedán jako parametr. Dále lze vyuít velmi jednoduchı pøíkaz \verb|?| (otazník), kterı vypíše seznam dostupnıch pøíkazù v~aktuálním stavu.
+
+Na skuteèném Ciscu funguje kombinace kláves \verb|Ctrl+Z| pro pøechod do privilegovaného módu. Ale kvùli pouití programu \verb|rlwrap| je systém limitován. Omezení spoèívá v~tom, e \verb|rlwrap| pøepošle signál operaènímu systému a ten pozastaví tento proces. Proces lze obnovit pøíkazem fg (na OS Linux), bohuel klientskı program \verb|telnet| neumí po pozastavení obnovit svoji funkènost a pøestává posílat vstup na standartní vıstup. Je tedy u nepouitelnı a pro tyto pøídady existuje pøíkaz \verb|kill|, kterı ukonèí tento rozbitı proces, aby se klient mohl pøipojit znova. Lépe je na tom klávesová zkratka \verb|Ctrl+C|, která pouze ukonèuje (signál SIG\_INT) danı proces a tedy funguje bez problému. 
+
+Program \verb|rlwrap| je ale šíøen jako balíèek pod programem \verb|cygwin| v~zastaralé verzi\footnote{stav z~18.5.2010}, která neumoòuje pøeposílání signálù, take pøi stisku \verb|Ctrl+C| i \verb|Ctrl+Z| pøestane \verb|telnet| klient vypisovat na standartní vıstup a nezbıvá ne pouít \verb|kill|. Toto platí pouze na OS Windows, pro linux jsou dostupné nejnovìjší balíèky v repozitáøích kadé distribuce.
+
+
+
