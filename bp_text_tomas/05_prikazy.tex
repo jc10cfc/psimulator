@@ -3,7 +3,7 @@
 
 V této kapitole popisuji analýzu a realizaci linuxových příkazů, které jsou v simulátoru implementovány. Příkazy jsou nejrozsáhlejší částí mojí práce na simulátoru a nutno dodat, že také tou nejméně zábavnou. U každého příkazu jsem nejprve musel složitě zjišťovat, jak funguje a jak se chová v případě zadání nestandartních parametrů. Parsování příkazů bylo prací pořád stejnou a nezábavnou. 
 
-% tady bude chtit dopsat strukturu tyhle kapitoly
+V této kapitole nejprve popisuji zpracování příkazové řádky, pak obecné principy pro zpracování všech příkazů a nakonec popisuji analýzu a implementaci konkrétních příkazů.
 
 
 
@@ -181,6 +181,147 @@ Tento příkaz posílá ICMP pakety typu \verb|request| (žádost o odpověď) a
 
 \subsection{Analýza skutečného pingu}
 
-Příkazu musí uživatel zada cílovou adresu, na kterou se chce \uv{dopingnout}. Dále je možné použít několik přepínačů. Přepínačem \verb|-c| si uživael určí, kolik paketů chce poslat, není-li tento parametr zadán, posílaji se pakety pořád, dokud uživatel příkaz nezastací \verb|Ctrl+C|. Parametrem \verb|-s| je možne specifikovat velikost posílaného paketu, parametrem \verb|-i| se specifikuje interval mezi odesláním dvou paketů. Parametrem \verb|-t| je možné zadat \verb|ttl| odchozích paketů.
+Příkazu musí uživatel zada cílovou adresu, na kterou se chce \uv{dopingnout}. Dále je možné použít několik přepínačů. Přepínačem \verb|-c| si uživael určí, kolik paketů chce poslat, není-li tento parametr zadán, posílaji se pakety pořád, dokud uživatel příkaz nezastací \verb|Ctrl+C|. Parametrem \verb|-s| je možne specifikovat velikost posílaného paketu, parametrem \verb|-i| se specifikuje interval mezi odesláním dvou paketů. Parametrem \verb|-t| je možné zadat \verb|ttl| odchozích paketů. Parametr \verb|-b| umožňuje posílat \verb|icmp request| na broadcastovou adresu a parametr \verb|-q| potlačuje výstup příkazu. Parametr \verb|-b| není v simulátoru podporován. Například příkaz:
+\begin{verbatim}
+ping -c10 -i 0.1 -s1000 -t 23  192.168.2.2
+\end{verbatim}
+pošle 10 paketů v intervalu 0,1 sekundy o velikosti 1000 bytů s ttl 23 na adresu 192.168.2.2. Na pořadí parametrů nezáleží, jejich hodnoty můžou být uvedeny bez mezery i s ní. U tohoto příkazu lze zadat přepínače i po IP adrese.
+
+
+\subsection{Implementace v simulátoru}
+
+Virtuální pakety, které si předávají virtuální počítače našeho simulátoru, si nesou i odkaz na příkaz, který je vyvolal. To proto, aby když počítači dorazí \verb|icmp reply| počítač věděl, který příkaz je původcem tohoto paketu. Proto všechny příkazy, které v našem simulátoru posílají pakety jsou potomkem abstraktní třídy \verb|AbstraktniPing| jejíž abstraktní metodu \verb|zpracujPaket| volá přímo metoda počítače, který paket přijala. Tato třída má také metodu \verb|aktualizujStatistiky|, která spočítá konečné statistiky příkazu.
+
+Parser tohoto příkazu je podobný jako v ostatních příkazech, pomocí metody \verb|dalsiSlovo| se parsují jednotlivé parametry. Příkaz nemá zvláštní metodu pro kontrolu pro výpis chybových hlášení. Metoda \verb|vykonejPrikaz| posílá pomocí metody \verb|posliIcmpRequest| třídy \verb|AbstraktniPocitac| jednotlivé pakety a pak je metodou \verb|zpracujPaket| zpracovává.
+
+Čas odezvy vypisovaný tímto příkazem není skutečný, ale každý počítač procházejícímu paketu do parametru čas přičte náhodně vygenerovanou hodnotu a to tak, aby hodnoty byly přibližně stejné, jako jsou v laboratořích předmětu PSI.
+
+
+\subsection{Odchylky v implementaci}
+
+Protože program telnet, přes který se budou uživatelé simulátoru přihlašovat k počítačům neumí přeposílat \verb|Ctrl+C|, musím v našem simulátoru mít nastavený výchozí počet odesílaných paketů na 4, aby uživatel tento příkaz mohl nějak zastavit. Toto je velký rozdíl oproti skutečnému pingu na linuxu, ale neměl jsem jinou možnost.
+
+Parametr \verb|-i|, kterým se nastavuje interval mezi odesláním dvou paketů, se musí v simulátoru zadat tak, aby mezi \verb|-i| a hodnoutou byla mezera. Není tedy možné napsat \verb|-i0.5|.
+
+V simulátoru musí být oproti skutečnosti přepínače napsané před adresou. Ve skutečnosti to není nutné. Tento nedostatek ještě opravím.
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Příkaz traceroute}
+
+Program traceroute slouží k analýze počítačové sítě. Vypisuje uzly (resp. směrovače) na cestě datagramů od zdroje až k zadanému cíli. Uzly jsou zjišťovány pomocí snížení hodnoty TTL v hlavičce datagramů.\cite{wiki:traceroute}.
+
+
+\subsection{Popis činnosti}
+
+Příkaz posílá pakety ICMP request na cílovou adresu, kterým postupně zvyšuje \verb|ttl|, dokud nedojte od cílového počítače paket ICMP reply. Počítače, které paket nemohou dále poslat, protože mu \verb|ttl| vypršelo, posílají zdrojovému počítači zprávu ICMP time exceeded. Podle těchto zpráv příkaz zjistí, kterými uzly procházejí pakety k cílové adrese.
+
+Příklad výpisu příkazu:
+\begin{verbatim}
+neiss: ~/smazat$ traceroute -n 89.190.94.58
+traceroute to 89.190.94.58 (89.190.94.58), 30 hops max, 60 byte packets
+ 1  192.168.1.20  0.833 ms  1.257 ms  1.691 ms
+ 2  10.4.71.1  66.723 ms  67.245 ms  69.029 ms
+ 3  89.190.94.2  69.648 ms  70.088 ms  70.422 ms
+ 4  89.190.94.58  70.893 ms  71.261 ms  74.190 ms
+\end{verbatim}
+
+
+\subsection{Implementace}
+
+Třída příkazu \verb|traceroute| dědí ze třídy \verb|AbstraktniPing|, aby odkaz na ní mohl být posílán spolu s paketem. Příkaz nemá prakticky žádný parser, jediná povolená syntaxe tohoto příkazu je \verb|traceroute <adresa>|. Pokud uživatel zadá neodpovídající vstup, vypíše se mu hlášení, jaká je jediná povolená syntaxe. Příkaz funguje na stejném principu jako příkaz skutečný, jak je popsáno v předchozím odstavci.
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Příkaz exit}
+
+Příkaz \verb|exit| je jedinou korektní možností ukončení relace. Zavolá metodu \verb|ukonciSpojeni| třídy \verb|Konsole|, čímž ukončí běh její metody \verb|run| a tak se spojení ukončí.
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Příkaz ip}
+
+Příkaz \verb|ip| je plnohodnotnou náhradou za příkazy \verb|ifconfig|, \verb|route|, \verb|arp|. Umožňuje však i pokrocilejší správu síťových nastavení\cite{prikaz_ip}. Já jsem z tohoto příkazu ve svém simulátoru implementoval jeho dva základní podpříkazy \verb|addr| pro nastavení parametrů rozhraní a \verb|route| pro manipulaci se směrovací tabulkou. 
+
+
+\subsection{Implementace}
+
+Příkaz \verb|ip| je implementován třídou \verb|LinuxIp|. Jeho podpříkazy \verb|addr| a \verb|route| ale byly implementovány samostatně, to znamená, že jsem pro každý podpříkaz vytvořil vlastní třídu. Třída \verb|LinuxIp| parsuje přepínače a jméno podpříkazu. Je-li napsaný podpříkaz podporován, spustí odpovídající třídu, která pak funguje stejně jako samostatný příkaz. Není-li podporován, vypíše o tom hlášení. 
+
+Parsování příkazu \verb|ip| má jednu zvláštnost. Není totiž nutné, aby uživatel psal všechny terminály, ale místo některých lze napsat třeba jen první písmeno, které terminál jednoznačně určuje. Tak například místo řádku
+\begin{verbatim}
+ip addr add 1.1.1.1 dev eth0
+\end{verbatim}
+lze jednoduše napsat
+\begin{verbatim}
+ip a a 1.1.1.1 dev eth0
+\end{verbatim}
+Tuto možnost podporuji i v simulátoru.
+
+
+\subsection{Podpříkaz addr}
+
+\subsubsection{Analýza podpříkazu}
+
+Tento příkaz slouží především k přidávání a mazání adres na rozhraní. Má 4 akce: \verb|add| na přidání adres, \verb|del| na odebrání adresy, \verb|flush| na smazání všech adres na rozraní a \verb|show| na vypsání nastavených adres. Akce show je výchozí, není ji tedy nutno psát. Existující adresu na rozhraní není možno tímto příkazem změnit, je nutné starou IP odstranit a novou přidat. 
+
+\subsubsection{Implementace}
+
+Tento příkaz je prováděn klasicky metodami \verb|parsujPrikaz|, \verb|zkontrolujPrikaz|, \verb|vykonejPrikaz| a \verb|vypisChybovyHlaseni|. Parser má pro každý parametr vlastní parsovací metodu. Kontrolovací metoda kontroluje zadané parametry podle akce, protože u každé akce mohou být jiné parametry.
+
+\subsubsection{Známé odchylky}
+
+V simulátoru není možné nastavit více adres a jednom rozhraní, když se o to uživatel snaží, vypíše mu simulátor varovné hlášení:
+\begin{verbatim}
+linux2:~# ip a a 1.1.1.1/22 dev eth0
+psi simulator: Simulator nepodporuje vice adres na jednom rozhrani. Na rozhrani eth0 je jiz adresa 1.1.11.1/23. Odstrante ji prikazem flush nebo del.
+\end{verbatim}
+
+Akcím \verb|flush| a \verb|show| je možné zadat selektrory na vybrání mazaných nebo zobrazovaných adres. Ty nejsou v příkazu podporovány.
+
+Na počítačích v laboratoři PSI projde příkaz
+\begin{verbatim}
+ip a a 600.0.0.1
+\end{verbatim}
+tuto možnost však v simulátoru nepodporuji.
+
+
+\subsection{Podpříkaz route}
+
+\subsubsection{Analýza}
+
+Příkaz \verb|ip route| je alternativou k příkazu \verb|route|, funguje prakticky stejně, ale má jinou, o něco jednoduší gramatiku. Na rozdíl od příkazu \verb|route| neumožňuje přidat do routovací tabulky záznam na adresáta, který již v tabulce je. Má 5 akcí: \verb|add| a \verb|del| na přidávání a mazání záznamů, \verb|show| a \verb|flush| na vypsání a mazání všech záznamů a akci get, které se zadá cílová IP adresa a příkaz vypíše záznam ze směrovací tabulky, podle kterého by se směrovalo k této adrese. Všechny akce mají prakticky stejnou gramatiku, jen u akce \verb|get| není povoleno zadat parametr \verb|via|, což je obdoba parametru \verb|gw| z příkazu \verb|route|.
+
+\subsubsection{Implementace v simulátoru a její odchylky od skutečnosti}
+
+Způsob vykonávání tohoto příkazu je stejný jako u podpříkazu \verb|addr|. Část metody \verb|vykonejPrikaz| jsem mohl přejmout z příkazu \verb|route|. V simulátoru nejsou podporovány selektory u akcí \verb|show| a \verb|flush|, u akce \verb|get| není podporován parametr \verb|dev|, o čemž se případně vypíše varovné hlášení.
+
+
+
+%------------------------------------------------------------------------------------------------------
+
+\section{Příkaz iptables}
+
+Příkaz \verb|iptables| je utilita, která umožňuje nastavovat paketový filtr jádro operačního systému Linux. V simulátoru implementuji jen malou část rozsáhlého příkazu, která slouží k nastavování překladu adres.
+
+Simulátor na linuxovém počítači podporuje jen tzv. statický NAT, který překládá všechny pakety odcházející přes rozhraní na jednu veřejnou IP adresu. V této práci se překladem adres nezabývám, tuto problematiku řešil především můj kolega, více informací je v jeho bakalářské práci. 
+
+
+\subsection{Implementace}
+
+Příkaz je implementován k tomu, aby pomocí něj bylo možné nastavit statický překlad adres, vypsat jeho nastavení a vymazat ho, což se provádí například těmito příkazy:
+\begin{verbatim}
+iptables -t nat -I POSTORUTING -o eth2 -j MASQUERADE		nastavení
+iptables -t nat -L													vypsání
+iptables -t nat -D POSTROUTING 1									smazání
+
+\end{verbatim}
+Parser je však implementován mnohem robustněji a umožňuje v budoucnosti přidat další možnosti nastavení. Oproti reálnému počítači není v našem simulátoru dovoleno nastavovat více pravidel pro překlad adres.
 
 

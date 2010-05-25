@@ -28,7 +28,7 @@ Analysa
 			Posílání paketů
 		Komunikace
 	Předpokládaná procesorová a paměťová náročnost
-	Předpokládaná složitost			DODĚLAT!!!!!!!!!!!!!!!!
+	Předpokládaná složitost			
 		Počet řádků kódu
 		Předpokládaný čas
 
@@ -46,7 +46,7 @@ Popis architektury aplikace - tohle tady nakonec nebude
 
 Implementace virtuální sítě
 	- Zabejvám se tady analysou a implementací jednotlivejch částí systému krom příkazů
-	- struktura týhle kapitoly DODĚLAT
+	- struktura týhle kapitoly
 	Popis architektury aplikace
 		- 2 vrstvy, komunikační a aplikační
 		Komunikační vrstva
@@ -73,7 +73,7 @@ Implementace virtuální sítě
 		- popsat vlastní implementaci
 
 Implementace příkazů
-	- tady popisuju, struktura - DODĚLAT!!!
+	- tady popisuju, struktura
 	Popis zpracování příkazové řádky
 		- konsole - každá vlastní parser
 		- třídy na parsování
