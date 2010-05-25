@@ -73,6 +73,8 @@ public abstract class ParserPrikazu extends Abstraktni {
         if (debug) {
             if (slova.get(0).equals("nat")) {
                 kon.posliPoRadcich(pc.natTabulka.vypisZaznamyDynamicky(), 10);
+                kon.posliRadek("______________________________________________");
+                kon.posliPoRadcich(pc.natTabulka.vypisZaznamyCisco(), 10);
                 return true;
             }
         }

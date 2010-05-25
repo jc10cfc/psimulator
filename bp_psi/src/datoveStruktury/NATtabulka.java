@@ -3,8 +3,6 @@
  * staticky NAT - jen rucne pridana pravidla
  * Co delat, kdyz uz jsou dynamicke zaznamy v tabulce a uzivatel zrusi pooly a accesslisty, mam odnatovat?
  *              - zaznamy se po 10s smazou a pak uz to nepujde, tak asi netreba resit
- *
- * Doresit:
  * natovani z internetu - kontrola kdy natovat (neni nastaven pool atd..)
  * doresit metody pro linux
  *

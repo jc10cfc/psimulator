@@ -326,9 +326,20 @@ public abstract class AbstraktniPocitac {
         // zjistuje, je-li paket pro me, kvuli odnatovani
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil); // -> pro jistotu si pred odnatovanim kontroluju,
         if (rozhr!=null && natTabulka.mamOdnatovat(vstupniRozhrani)) { // zkusi se odnatovat
-            vypisLadeni("Odnatovani: puvodni paket:   " + paket);
+
+            /*
+             * TODO: Zatim jen takovy hack; pak nekdy doresit.
+             */
+            String prvni = "Odnatovani: puvodni paket:   " + paket;
+            IpAdresa puvodni = paket.cil.vratKopii();
+//            vypisLadeni("Odnatovani: puvodni paket:   " + paket);
             paket = natTabulka.odnatuj(paket);
-            vypisLadeni("Odnatovani: prelozeny paket: " + paket);
+
+            if (! puvodni.jeStejnaAdresaSPortem(paket.cil)) {
+                vypisLadeni(prvni);
+                vypisLadeni("Odnatovani: prelozeny paket: " + paket);
+            }
+            
         } else {
             if (ladeni) {
                 vypis("Odnatovani: Neodnatovava se paket:   " + paket);
