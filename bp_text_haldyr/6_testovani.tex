@@ -5,16 +5,16 @@
 %  \item Srovnání s~existujícími řešeními, pokud jsou známy.
 % \end{itemize} 
 
-Testování jsem chtěl původně provést ve dvou úrovních. Uživatelské testování odhalí chyby funkčnosti, zatímco zátěžové testy jsou schopny zjistit pro jak velkou síť je tato aplikace ještě použitelná. Z časových důvodů jsem však musel zátěžové testování vypustit.
+Testování jsem chtěl původně provést ve dvou úrovních. Uživatelské testování odhalí chyby funkčnosti, zatímco zátěžové testy jsou schopny zjistit pro jak velkou síť je tato aplikace ještě použitelná. Z~časových důvodů jsem však musel zátěžové testování vypustit.
 
 \section{Uživatelské testování}
-Uživatelské testování bylo prováděno za přítomnosti kolegy z~projektového týmu a uživatele - testera, který byl ochoten věnovat dvě hodiny svého času testování. Popis testování linuxové části byl zde vypuštěn.
+Uživatelské testování bylo prováděno za přítomnosti kolegy z~projektového týmu a uživatele - testera, který strávil dvě hodiny testováním. Popis testování linuxové části není pro tuto práci relevantní, a proto tu není zmíněn.
 
 \subsection{Zadání}
 Uživatel měl za úkol otestovat aplikaci v~několika krocích:
 \begin{enumerate}
- \item spuštění serveru a připojení klientů pomocí skriptů, uživatel měl k~dispozici textový soubor \verb|readme.txt| s~informacemi o~spuštění
- \item kontrola průchodů všech módů Cisco IOS + testování nestandartních vstupů
+ \item spuštění serveru a připojení klientů pomocí skriptů; uživatel měl k~dispozici textový soubor \verb|readme.txt| s~informacemi o~spuštění
+ \item kontrola průchodů všech módů Cisco IOS + testování nestandardních vstupů
  \item konfigurace rozhraní
  \item konfigurace statického překladu adres na počítači \verb|cisco1| pro \verb|linux1|
  \item konfigurace dynamického překladu adres na počítači \verb|cisco1| pro \verb|linux2|
@@ -52,21 +52,21 @@ Klientský skript pro připojení k~serveru nevypsal chybovou hlášku, když ne
 Server vypisuje různé důležité (průchod paketu - směrování, překlad adres) informace. Server ale také vypisuje všechny přijaté a odeslané příkazy, které činí výpis velmi nepřehledným.
 \\\textbf{(nedůležité výpisy odstraněny)}
 
-Uživatel zaznamenal, že při procházení historií příkazů (pomocí šipek nahoru a dolu) se nabízejí příkazy i z~jiných terminálů - linux i cisco najednou. Navíc si pamatuje příkazy i po znovu spuštění klienta.
+Uživatel zaznamenal, že při procházení historií příkazů (pomocí šipek nahoru a dolů) se nabízejí příkazy i z~jiných terminálů - linux i cisco najednou. Navíc si pamatuje příkazy i po znovuspuštění klienta.
 \\\textbf{(daň za použití programu třetí strany)}
 
-Pomocný příkaz \verb|help| reps. \verb|help_en| není nikde v~\verb|readme.txt| zveřejněn, takže uživatel neznal podporované příkazy.
+Pomocný příkaz \verb|help| resp. \verb|help_en| není nikde v~\verb|readme.txt| zveřejněn, takže uživatel nemohl znát podporované příkazy.
 \\\textbf{(informace o~příkazu help přidána do readme.txt)}
 
 Uživatel našel bug\footnote{chyba v~programu} při přechodu z~privilegovaného do konfiguračního stavu. Při \\\verb|configure memory| se přeplo cisco do \verb|configure terminal|.
 \\\textbf{(chyba opravena)}
 
 \subsubsection{Úkol č.3 nastavení rozhraní}
-Při konfiguraci síťových rozhraních se přišlo na jednu závažnou chybu. Při nastavování IP adresy zadal uživatel neplatnou masku a program vyhodil výjimku.
+Při konfiguraci síťových rozhraní se přišlo na jednu závažnou chybu. Při nastavování IP adresy zadal uživatel neplatnou masku a program vyhodil výjimku.
 \\\textbf{(zpracování chybných adres bylo při testování hotové, ale v~implementaci chyběl příkaz return pro vyskočení z~metody při odchycení výjimky; opraveno)}
 
 \subsubsection{Úkol č.4 směrování}
-Konfigurace smětovacích záznamů odhalila jednu chybu či spíše \uv{nedodělek}. Spuštěný příkaz \verb|ping| bez parametrů nedělá vůbec nic (žádná chybová hláška ani správna funkcionalita).
+Konfigurace směrovacích záznamů odhalila jednu chybu, či spíše nedodělávku. Spuštěný příkaz \verb|ping| bez parametrů nedělá vůbec nic (žádná chybová hláška ani správna funkcionalita).
 \\\textbf{(ping bez parametrů vypíše vysvětlující informaci)}
 
 \subsubsection{Úkol č.5 statický NAT}
@@ -86,15 +86,6 @@ Po nakonfigurování dynamického překladu adres zkoušel uživatel dostupnost 
 \subsection{Shrnutí}
 Z~počtu chyb lze jasně vyvodit, že uživatelské testování určitě smysl má. Většinu objevených chyb tvoří různé chyby či odchylky v~parserech.
 
-
-
-
-
-% \section{Zátěžové testy}\label{zatezove_testy}
-
-% \subsection{Návrh}
-
-% \subsection{Výsledky}
 
 
 

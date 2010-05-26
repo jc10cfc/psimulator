@@ -14,7 +14,8 @@ a bylo by
 
 \paragraph{Průchod ARP žádostí}
 hezky
-
+OK
 
 
 Cisco -> cisco
+OK

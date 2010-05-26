@@ -1,13 +1,13 @@
 \section{Načítání ze souboru} \label{xml_soubor}
 \subsection{Zpracování parametrů}
-Po spuštění startovacího skriptu \verb|start_server.sh| se nejdříve zpracují všechny parametry. Když je nalezen parametr \verb|-n|, tak se načítá z~konfiguračního souboru pouze kostra sítě s~počítačema a rozhraníma bez jejich nastavení. Pozice tohoto parametru není důležitá, systém nejprve detekuje přítomnost tohoto parametru a pak už ho ignoruje. Další parametr je název konfiguračního souboru, ten může být zadán bez koncovky \verb|.xml|, nejdříve se zkusí načíst soubor bez koncovky a když takový soubor není, tak se načte soubor s~koncovkou. Třetím parametrem je port, od kterého budou poslouchat jednotlivé počítače. Port je nepovinný, ve výchozím stavu je to port 4000. Když je daný port obsazený, tak se program ukončí z~chybovou hláškou.
+Po spuštění startovacího skriptu \verb|start_server.sh| se nejdříve zpracují všechny parametry. Když je nalezen parametr \verb|-n|, tak se načítá z~konfiguračního souboru pouze kostra sítě s~počítači a rozhraními bez jejich nastavení. Pozice tohoto parametru není důležitá, systém nejprve detekuje přítomnost tohoto parametru a následně ho ignoruje. Další parametr je název konfiguračního souboru, jenž může být zadán bez koncovky \verb|.xml|, nejdříve program zkusí načíst soubor bez koncovky, a když takový soubor není, načte se soubor s~koncovkou. Třetím parametrem je port, od kterého budou poslouchat jednotlivé počítače. Port je nepovinný, ve výchozím stavu je to port 4000. Když je daný port obsazený, tak se program ukončí s~chybovou hláškou.
 
 %------------------------------------------------------------------------------
 
 \subsection{Konfigurační soubor}
 Nejdříve bylo nutno rozhodnout podobu výsledného konfiguračního souboru. Existuje několik možností, např.:
 \begin{itemize}
- \item javovské \verb|Properties| ve stylu \uv{proměnná = hodnota}, moc se nehodí na velmi členité struktury
+ \item javovské \verb|Properties| ve stylu \uv{proměnná = hodnota} - příliš se nehodí na velmi členité struktury
 \begin{verbatim}
 compile.on.save=false
 do.depend=false
@@ -27,9 +27,9 @@ HaltCmd=/sbin/shutdown
  \item XML\footnote{Extensible Markup Language je rozšiřitelný značkovací jazyk} soubor, který umožňuje libovolnou strukturu
 \end{itemize}
 
-Já jsem si vybral technologii XML pro jeho robustnost a velmi dobrou čitelnost.
+Já jsem si vybral technologii XML pro jeho všestrannost a velmi dobrou čitelnost.
 
-Načítání z~XML souboru lze udělat minimálně dvěma způsoby: Vzít cizí knihovnu, která tuto funkcionalitu zajišťuje, nebo vytvořit vlastní třídu. Obě možnosti mají své výhody i nevýhody. Cizí knihovna by mohla být téměř bez práce a pravděpodobně by podporovala i zpětné ukládání. Na druhou stranu by byla malá možnost ovlivnění výsledného výstupu a bylo by vše na té knihovně závislé. Navíc s~novými verzemi by se mohla měnit i její funkčnost. Znamenalo by to také instalaci této knihovny na uživatelských počítačích. Z~těchto důvodů jsem zvolil druhou variantu: vlastní implementace zpracování XML. 
+Načítání z~XML souboru lze provést minimálně dvěma způsoby: vzít cizí knihovnu, která tuto funkcionalitu zajišťuje nebo vytvořit vlastní třídu. Obě možnosti mají své výhody i nevýhody. Cizí knihovna by mohla být téměř bez práce a pravděpodobně by podporovala i zpětné ukládání. Na druhou stranu by byla malá možnost ovlivnění výsledného výstupu a bylo by na ní vše závislé. Navíc s~novými verzemi by se mohla měnit i funkčnost knihovny. Znamenalo by to také instalaci této knihovny na uživatelských počítačích. Z~těchto důvodů jsem zvolil druhou variantu: vlastní implementace zpracování XML. 
 
 %------------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ Zpracovat XML lze přes technologii DOM\footnote{Document Object Model} a SAX\fo
 Můj \verb|SAXHandler| tvoří tři části: samotné načítání, datová struktura pro počítač a vytváření virtuálního počítače.
 
 \subsubsection{Načítání}
-\verb|ContentHandler| \uv{vyhazuje} události při zpracování XML souboru. \verb|SAXHandler| musí tyto události odchytávat a pokud je to událost, která nás zajímá, tak se zpracuje tj. uloží do datové sktruktury. \verb|SAXHandler| musí implementovat metody na zpracování začátku elementu, konce elementu, znaková data a konce dokumentu. Po načtení konce elementu se vytvoří virtuální síť počítačů. Pro správnou funkci \verb|SAXHandler| je důležité mít ve složce s~konfiguračními soubory také soubor DTD\footnote{Document Type Definition}, který definuje strukturu XML dokumentu.
+\verb|ContentHandler| \uv{vyhazuje} události při zpracování XML souboru. \verb|SAXHandler| musí tyto události odchytávat, a pokud je to událost, která nás zajímá, tak se zpracuje, tj. uloží do datové sktruktury. \verb|SAXHandler| musí implementovat metody na zpracování začátku a konce elementu, znakových dat a konce dokumentu. Po načtení konce elementu se vytvoří virtuální síť počítačů. Pro správnou funkci \verb|SAXHandler| je důležité mít ve složce s~konfiguračními soubory také soubor DTD\footnote{Document Type Definition}, který definuje strukturu XML dokumentu.
 
 \subsubsection{Datová struktura}
 Pro ukládání informací slouží datová struktura \verb|PocitacBuilder|, která si drží veškeré informace načtené z~XML souboru o~jednom počítači:
@@ -59,7 +59,7 @@ Pro ukládání informací slouží datová struktura \verb|PocitacBuilder|, kte
 Pak je tu ještě sekundární struktura pro uložení kabelů k~jednotlivým počítačům.
 
 \subsubsection{Vytváření virtuálních počítačů}
-Po vyhození události konec souboru se začnou vyrábět virtuální počítače. Pokud byl použit parametr \verb|-n|, tak se nejdříve smažou nastavení, která nemají být načtena. Po té se postupně budou načítat (a kontrolovat) všechna uložená nastavení. V~zásadě lze říci, že když systém narazí na neplatná data v~konfiguračním souboru, tak vypíše chybovou hlášku na standardní chybový výstup. Pokud je to chyba zásadní, tak se vyhodí výjimka, vypíše hláška a celý server se ukončí, protože nemůže pokračovat v~další činnosti. Slovem zásadní je myšleno např. chybějící jméno rozhraní (kabely v~XML jsou napojeny přes jména rozhraní), natažené kabely a opakující se jména počítačů či rozhraní na jednom počítači. Kabely jsou natolik klíčovou věcí, že uživatele upozorní na chybu pádem programu s~výpisem, co je špatně. 
+Po vyhození události \uv{konec souboru} se začnou vyrábět virtuální počítače. Pokud byl použit parametr \verb|-n|, nejdříve se smažou nastavení, jež nemají být načtena. Poté se postupně budou načítat (a kontrolovat) všechna uložená nastavení. V~zásadě lze říci, že když systém narazí na neplatná data v~konfiguračním souboru, vypíše chybovou hlášku na standardní chybový výstup. Pokud je to chyba zásadní, tak se vyhodí výjimka, vypíše hláška a celý server se ukončí, protože nemůže pokračovat v~další činnosti. Slovem zásadní je myšleno např. chybějící jméno rozhraní (kabely v~XML jsou napojeny přes jména rozhraní), chybějící natažené kabely a opakující se jména počítačů či rozhraní na jednom počítači. Kabely jsou věcí natolik klíčovou, že program uživatele upozorní na chybu svým pádem s~výpisem, co je špatně. 
 
 Takto vypadá příklad konfiguračního souboru:
 \begin{verbatim}
@@ -74,7 +74,7 @@ Takto vypadá příklad konfiguračního souboru:
   </rozhrani>
 \end{verbatim} 
 
-Nastavení propojení mezi počítači (respektive jejich rozhraními) je dáno v~konfiguračním souboru. Původně každé rozhraní obsahovalo informaci, ke kterému rozhraní kterého počítače je připojeno. To se ale ukázalo jako zbytečně matoucí, protože informace o~kabelu tam byla obsažena dvakrát. V~dnešní verzi programu je to zjednodušené tak, že samotné rozhraní nenese žádnou informaci o~kabelu. Kabely jsou v~konfiguračním souboru zvlášť. Tento příklad ukazuje propojení třech počítačů:
+Nastavení propojení mezi počítači (respektive jejich rozhraními) je dáno v~konfiguračním souboru. Původně každé rozhraní obsahovalo informaci, ke kterému rozhraní jakého počítače je připojeno. To se ale ukázalo jako zbytečně matoucí, protože informace o~kabelu tam byla obsažena dvakrát. V~dnešní verzi programu je to zjednodušené tak, že samotné rozhraní nenese žádnou informaci o~kabelu. Kabely jsou v~konfiguračním souboru zvlášť. Tento příklad ukazuje propojení třech počítačů:
 
 \begin{verbatim}
 <kabelaz>
@@ -111,7 +111,7 @@ private String vratElement(String jmeno, String obsah) {
 \end{verbatim} 
 
 
-Výhodou tohoto řešení je maximální kontrola nad výstupem příkazu \verb|save| a jednudochost této implementace. Mezi nevýhody bych uvedl hlavně změnu v~datových strukturách. Když by bylo potřeba připsat novou volbu, která by se měla ukládat do XML souboru, tak je nutné přidat pravidla pro načítání z~XML v~\verb|SAXHandler| a navíc zde pro ukládání.
+Výhodou tohoto řešení je maximální kontrola nad výstupem příkazu \verb|save| a jednudochost této implementace. Mezi nevýhody bych uvedl hlavně změnu v~datových strukturách. Když by bylo potřeba připsat novou volbu, jež se měla ukládat do XML souboru, tak je nutné přidat pravidla pro načítání z~XML v~\verb|SAXHandler| a navíc zde pro ukládání.
 
 
 
