@@ -41,7 +41,7 @@ Celá situace je znázorněna na obrázku \ref{fig:nat1}. U~paketů od \verb|poc
 
 
 \subsubsection{Dynamický NAT a overloading}
-Dynamický překlad adres je velmi podobný statickému s~tím rozdílem, že se pravidla generují dynamicky. Je pouze vytvořen pool\footnote{pool je doslova zásoba či rezerva} IP adres, ze kterého se přiřazují adresy (s~portem) při překladu. Navíc lze omezit adresy sítí, které se mají překládat (příkaz \verb|access-list|).
+Dynamický překlad adres je velmi podobný statickému s~tím rozdílem, že se pravidla generují dynamicky. Je pouze vytvořen pool\footnote{pool je doslova zásoba či rezerva} IP adres, ze kterého se přiřazují adresy (s~portem) při překladu. Navíc lze omezit adresy sítí, které se mají překládat (příkaz \\\verb|access-list|).
 
 Overloading je spíše podmnožina dynamického NATu, kde je povoleno přiřazovat jednu IP adresu více počítačům. Pakety od různých počítačů jsou pak odlišeny jiným portem.
 

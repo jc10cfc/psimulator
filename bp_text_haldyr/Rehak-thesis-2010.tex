@@ -20,6 +20,7 @@
 % pripadne pisete-li cesky, pak lze zkusit take:
 % \usepackage[OT1]{fontenc} 
 \usepackage[utf8]{inputenc}
+
 %=-=-=-=-=-=-=-=-=-=-=-=--=%
 % In case of problems with PDF fonts, one may try to uncomment this line:
 %\usepackage{lmodern}
@@ -719,24 +720,38 @@ Nepřipravenost studentů na laboratorních cvičení z~předmětu Y36PSI Počí
 \chapter{Seznam použitých zkratek}
 
 \begin{description}
+\item[BASH] Bourne again shell
+\item[CCNA] Cisco Certified Network Associate
 \item[CLI] Command Line Interface
+\item[CNA] Cisco Networking Academy
+\item[DHU] Destination Host Unreachable
 \item[DOM] Document Object Model
 \item[DTD] Document Type Definition
+\item[FTP] File Transfer Protocol
 \item[ICMP] Internet Control Message Protocol
+\item[IDE] Integrated Development Environment
 \item[IOS] Internetwork Operating System
+\item[KDE] K Desktop Environment 
+\item[MAC] Media Access Control
 \item[NAT] Network Address Translation
 \item[OS] Operating System
-\item[Y36PSI] předmět Počítačové sítě
+\item[SAX] Simple API for XML
+\item[SSH] Secure Shell
+\item[TFTP] Trivial File Transfer Protocol
+\item[TL1] Transaction Language 1
+\item[UML] Unified Modeling Language
 \item[XML] Extensible Markup Language
-\item [SAX] Simple API for XML
+\item[Y36PSI] předmět Počítačové sítě
+
 \end{description}
 % \vdots
 
+
 %*****************************************************************************
-\chapter{UML diagramy}
-\textbf{\large Tato příloha není povinná a~zřejmě se neobjeví v~každé práci. Máte-li ale větší množství podobných
-diagramů popisujících systém, není nutné všechny umísťovat do hlavního textu, zvláště pokud by to snižovalo jeho
-čitelnost.}
+% \chapter{UML diagramy}
+% \textbf{\large Tato příloha není povinná a~zřejmě se neobjeví v~každé práci. Máte-li ale větší množství podobných
+% diagramů popisujících systém, není nutné všechny umísťovat do hlavního textu, zvláště pokud by to snižovalo jeho
+% čitelnost.}
 
 %*****************************************************************************
 \chapter{Instalační a~uživatelská příručka}
@@ -748,12 +763,12 @@ diagramů popisujících systém, není nutné všechny umísťovat do hlavního
 Požadavky:
 \begin{enumerate}
  \item Java Runtime Environment\\
-      http://www.java.com/en/download/
+      \url{http://www.java.com/en/download/} 
 
  \item
        \begin{itemize}
         \item Cygwin\\
-    http://www.cygwin.com/setup.exe
+    \url{http://www.cygwin.com/setup.exe}
   \item telnet\\
     nainstalovat baliček inetutils pod cygwinem
   \item zkontrolovat, zda je nainstalován nejnovejší balíček libreadline
@@ -773,10 +788,10 @@ Požadavky:
 
 \noindent
 Krok 2 lze vynechat stažením předpřipraveného archivu s~Cygwinem se správnými balíčky.\\
-<<tady dat odkaz>>
+\url{http://moon.felk.cvut.cz/~rehaksta/data/psimulator_win.zip}
 
 \noindent
-Nebo rozbalením souboru bin/psimulator\_win.zip z~přiloženého CD.
+Nebo rozbalením souboru \verb|bin/psimulator_win.zip| z~přiloženého CD.
 
 
 \subsection{OS Linux}
@@ -790,10 +805,11 @@ Požadavky:
 \begin{enumerate}
 \item Java Runtime Environment\\
       \verb|aptitude sun-java6-jre|\\
-      http://www.java.com/en/download/
+      \url{http://www.java.com/en/download/}
 \item rlwrap - nejlépe ve verzi 0.32+\\
     \verb|aptitude install rlwrap|\\
-    http://utopia.knoware.nl/\~hlub/rlwrap/
+    \url{http://utopia.knoware.nl/\~hlub/rlwrap/}\\
+    \url{http://snapshot.debian.org/binary/rlwrap/}
 \item telnet\\
     \verb|aptitude install telnet|
 \end{enumerate}
@@ -838,26 +854,47 @@ Pro připojení na linux počítač:
 
 %*****************************************************************************
 \chapter{Obsah přiloženého CD}
-\textbf{\large Tato příloha je povinná pro každou práci. Každá práce musí totiž obsahovat přiložené CD. Viz dále.}
+% \textbf{\large Tato příloha je povinná pro každou práci. Každá práce musí totiž obsahovat přiložené CD. Viz dále.}
 
-Může vypadat například takto. Váš seznam samozřejmě bude odpovídat typu vaší práce. %(viz \cite{infodp}):
+Přiložené CD obsahuje tyto soubory a adresáře:
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=14cm]{figures/seznamcd}
-\caption{Seznam přiloženého CD --- příklad}
-\label{fig:seznamcd}
-\end{center}
-\end{figure}
+\begin{verbatim}
+index.html              rozcestník
+text/                   adresář s textem práce
+text/latex/             zdrojové kódy textu práce
+text/install.txt        instalační příručka
+text/readme.txt         uživatelská příručka
+bin/                    adresář se spustitelnými soubory + konfiguračními 
+                        soubory
+bin/psimulator.zip      zabalený archiv se spustitelnými soubory pro linux
+                        (PSImulator bez programů rlwrap a telnet)
+bin/psimulator_win.zip  zabalený archiv se spustitelnými soubory pro windows
+                        (PSImulator + Cygwin)
+html/abstrakt.html      abstrakt v češtině
+html/abstrakt_en.html   abstrakt v angličtině
+html/javadoc            dokumentace javadoc
+src/                    zdrojové kódy
+src/netbeans.zip        zabalené zdrojové kódy jako projekt do NetBeans
+\end{verbatim} 
 
-Na GNU/Linuxu si strukturu přiloženého CD můžete snadno vyrobit příkazem:\\ 
-\verb|$ tree . >tree.txt|\\
-Ve vzniklém souboru pak stačí pouze doplnit komentáře.
 
-Z~\textbf{README.TXT} (případne index.html apod.)  musí být rovněž zřejmé, jak programy instalovat, spouštět a~jaké
-požadavky mají tyto programy na hardware.
-
-Adresář \textbf{text}  musí obsahovat soubor s~vlastním textem práce v~PDF nebo PS formátu, který bude později použit
-pro prezentaci diplomové práce na WWW.
+% 
+% \begin{figure}[h]
+% \begin{center}
+% \includegraphics[width=14cm]{figures/seznamcd}
+% \caption{Seznam přiloženého CD --- příklad}
+% \label{fig:seznamcd}
+% \end{center}
+% \end{figure}
+% 
+% Na GNU/Linuxu si strukturu přiloženého CD můžete snadno vyrobit příkazem:\\ 
+% \verb|$ tree . >tree.txt|\\
+% Ve vzniklém souboru pak stačí pouze doplnit komentáře.
+% 
+% Z~\textbf{README.TXT} (případne index.html apod.)  musí být rovněž zřejmé, jak programy instalovat, spouštět a~jaké
+% požadavky mají tyto programy na hardware.
+% 
+% Adresář \textbf{text}  musí obsahovat soubor s~vlastním textem práce v~PDF nebo PS formátu, který bude později použit
+% pro prezentaci diplomové práce na WWW.
 
 \end{document}

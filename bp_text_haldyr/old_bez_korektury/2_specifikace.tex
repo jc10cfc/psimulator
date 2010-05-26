@@ -1,0 +1,49 @@
+\chapter{Popis problému, specifikace cíle}
+
+% \begin{itemize}
+% \item Popis řešeného problému, vymezení cílů DP/BP a~požadavků na implementovaný systém.
+% \item Popis struktury DP/BP ve vztahu k~vytyčeným cílům.
+% \item Rešeršní zpracování existujících implementací, pokud jsou známy.
+% \end{itemize}
+
+Virtuální síť musí podporovat několik k~sobě připojených počítačů (Linux nebo Cisco, viz vymezení spolupráce, kapitola \ref{vymezeni}). Limit připojených počítačů není v~zadání určen, nicméně se počítá s~tím, že systém bez problému zvládne pár desítek počítačů, ačkoliv v~praxi jich většinou nebude potřeba více než deset. Systém musí umožit konfiguraci rozhraní potřebných pro propojení sítě včetně příkazů pro aktivaci a deaktivaci rozhraní. Dále aplikace musí umožnit správu směrovací tabulky pomocí příkazů Cisco IOS. V~předmětu Y36PSI se také požaduje po studentech, aby rozuměli překladu adres neboli tzv. \uv{natování} - NAT\footnote{Network Address Translation}. Cisco podporuje hned několik druhů překladu adres. Pro tuto aplikaci je potřeba implementovat tři způsoby, které se zkoušely na cvičeních: statický překlad, dynamický překlad a dynamický překlad s~metodou overloading. Dále systém musí být schopen načíst a posléze zase uložit celou konfiguraci do souboru. Funkčnost celého řešení musí být ověřitelná příkazy ping a traceroute.
+
+% Navrhněte a~implementujte aplikaci, která umožní vytvoření virtuální počítačové sítě, pro potřeby předmětu Y36PSI. Na
+% systém se bude možno připojit s~pomocí telnetu. Z~pohledu uživatele se bude systém tvářit jako reálná síť. Zaměřte se
+% především na konfiguraci systému Cisco. Systém bude podporovat příkazy potřebné ke konfiguraci síťových rozhraní,
+% směrování a~překladu adres. Pro ověření správnosti konfigurace implementujte příkaz ping a~traceroute.
+\section{Shrnutí funkčních požadavků}
+\begin{enumerate}
+ \item Systém musí umožnit vytvoření počítačové sítě založené na směrovačích firmy Cisco Systems.
+ \item Systém musí umožnit konfiguraci rozhraní.
+ \item Systém musí obsahovat funkční směrování.
+ \item Systém musí implementovat překlad adres.
+ \item Systém musí podporovat ukládání a načítání do/ze souboru.
+ \item Pro ověření správnosti musí být implementovány příkazy ping a traceroute.
+ \item K~jednotlivým počítačům aplikace musí být umožněno připojení pomocí telnetu.
+ \item Pomocí telnet klientů musí být možné několikanásobné paralelní připojení k~jednomu počítači najednou.
+
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\section{Nefunkční požadavky}
+\begin{enumerate}
+ \item Aplikace musí být multiplatformní - alespoň pro OS\footnote{Operating System, česky operační systém} Windows a Linux
+ \item Aplikace musí být spustitelná na běžném\footnote{Slovem \uv{běžné} se myslí v~podstatě jakýkoliv počítač, na kterém je možné nainstalovat prostředí Javy - Java Runtime Environment.} studentském počítači.
+ \item Systém by měl být co nejvěrnější kopií reálného Cisca v~mezích zadání.
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+
+\section{Vymezení spolupráce} \label{vymezeni}
+% Tady bude napsáno, co kdo udělal, jak jsme to uvařili - RT a já na to Wrapper, routovani - metody PC, já NAT, nacitani
+Jak jsem naznačil v~kapitole \ref{uvod}, práce je rozdělena na dvě samostatné bakalářské práce. Rozdělení dle typu počítačů na Linux a Cisco se ukázalo jako správná volba, nicméně bylo potřeba dořešit několik věcí. Hned po započatí prací jsem zjistil, že v~některých věcech budu muset více spolupracovat s~kolegou, protože se týkaly obou našich implementací. Např. směrovací tabulka na Linuxu a Ciscu se chová téměř úplně stejně, dokonce se podle ní i stejně směruje. Celé to má ale malý háček: Cisco má totiž tabulky dvě! První je tvořena příkazy, které zadal uživatel a druhá je vypočítávána z~tabulky první. Já jsem tedy použil směrovací tabulku od kolegy, která byla primárně programována pro linux, a tu jsem zaobalil do tzv. wrapperu, který ji ovládá a sám přidává funkcionalitu tabulky druhé. 
+
+Směrování probíhá stejně na obou systémech, liší se však pravidla pro příjem paketů. Já jsem tedy pouze navázal na kolegovu implementaci tím, že jsem přidal metodu pro příjem paketů (bude detailněji vysvětleno v~kapitole Směrování \ref{prijmiEthernetove}). Abstraktní základ příkazů \verb|ping| a \verb|traceroute| byl převzat od kolegy, stejně tak výpočet statistik o doručení paketu. Jelikož má Cisco překlad adres natolik robustní (rozsáhlé datové struktury), tak ho bylo možné použít s~menšími úpravami\footnote{Stačilo přidat několik obslužných metod.} pro linuxový příkaz \verb|iptables|. 
+
+Mojí prací je také načítání a ukládání do souboru, startovací skripty pro server i klienty a uživatelská příručka. Na datových strukturách pro jádro celého systému jsem musel spolupracovat s~kolegou, protože struktury musejí odrážet situaci na obou systémech. Např. třída zaštiťující IP adresu je z~půlky má a z~půlky kolegy. U~takové třídy je vlastnictví popsáno na úrovni jednotlivých metod. U~ostatních tříd je autorství uvedeno v~hlavičce. Dále komunikační část je výsledkem společné práce\footnote{Dle tehdejších pravidel jsme mohli programovací úlohy implementovat a odevzdávat ve dvojicích.} z~roku 2008, kdy jsme právě pro předmět Počítačové sítě programovali hru Karel.
+
+
+
+

@@ -20,6 +20,7 @@
 % pripadne pisete-li cesky, pak lze zkusit take:
 % \usepackage[OT1]{fontenc} 
 \usepackage[utf8]{inputenc}
+
 %=-=-=-=-=-=-=-=-=-=-=-=--=%
 % In case of problems with PDF fonts, one may try to uncomment this line:
 %\usepackage{lmodern}
@@ -244,7 +245,7 @@ unicode=true,
 % Zde můžete napsat své poděkování, pokud chcete a~máte komu děkovat.
 % Budu děkovat vedoucím za vedení, rodině za zázemí a testerovi.
 
-Nejprve bych chtěl poděkovat své rodině, že vytvořila zázemí, které mi bylo oporou. Dále bych chtěl poděkovat vedoucímu práce Ing. Pavlovi Kubalíkovi, Ph.D. za užitečné rady a~připomínky při tvorbě bakalářské práce. Mé poděkování také patří Petrovi, který byl tak hodný a~smělý, že provedl uživatelské testování.
+Nejprve bych chtěl poděkovat své rodině, že vytvořila zázemí, které mi bylo oporou. Dále bych chtěl poděkovat vedoucímu práce Ing. Pavlovi Kubalíkovi, Ph.D. za užitečné rady a~připomínky při tvorbě bakalářské práce. Mé poděkování také patří Davidovi, který byl tak smělý, že provedl uživatelské testování, a Janě, která byla ochotna provést korekturu práce.
 
 
 
@@ -292,7 +293,7 @@ Tato práce se zabývá návrhem a implementací simulátoru virtuální počít
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Seznam tabulek / List of Tables
 
-\listoftables
+% \listoftables
 
 
 %**************************************************************
@@ -343,7 +344,9 @@ Tato práce se zabývá návrhem a implementací simulátoru virtuální počít
 % Zhodnocení splnění cílů DP/BP a~vlastního přínosu práce (při formulaci je třeba vzít v~potaz zadání práce).
 % Hlavně pozitivní zhodnocení projektu.
 
-V této práci se podařilo navrhnout a implementovat simulátor virtuální počítačové sítě cisco. Ve spojení s kolegovu částí je tento program schopen úspěšně odsimulovat virtuální síť složenou ze směrovačů cisco a z počítačů založených na linuxu. V takové síti je možné otestovat znalosti studentů týkající se statického směrovaní
+V~této práci se podařilo navrhnout a implementovat simulátor virtuální počítačové sítě cisco. Ve spojení s~kolegovu částí je tento program schopen úspěšně odsimulovat virtuální síť složenou ze směrovačů cisco a z~počítačů založených na jádru linux. V~takové síti je možné otestovat znalosti studentů týkajících se konfigurace rozhraní, statického směrování, dynamického a statického překladu adres. Z~výsledků uživatelského testování vyplývá, že provedení takovýchto testů smysl má.
+
+Nepřipravenost studentů na laboratorních cvičení z~předmětu Y36PSI Počítačové sítě je v~současné době problém. Obyčejní studenti zpravidla nemají přístup ke směrovačům od Cisco Systems, a tak by nasazení této aplikace jako studijní pomůcky mohlo vést ke zvýšení připravenosti těchto studentů\footnote{Za předpokladu, že studenti budou mít motivaci k~získání bodů ze cvičení.} na laboratorní cvičení. 
 
 % Psani zaveru cini potize, jak jsem zjistil, i ucastnikum
 % mezinarodnich konferenci. Jadro zaveru sdeluje, zda cile prace bylo
@@ -404,7 +407,6 @@ V této práci se podařilo navrhnout a implementovat simulátor virtuální po�
 % 3.5.2009 JZ polemizuje: BibTeX neobvinujte, napiste a poskytnete nam styl (.bst) splnujici citacni normu CSN/ISO.
 
 %*****************************************************************************
-%*****************************************************************************
 \appendix
 
 % \chapter{Testování zaplnění stránky a~odsazení odstavců}
@@ -412,16 +414,6 @@ V této práci se podařilo navrhnout a implementovat simulátor virtuální po�
 % Slouží pouze jako příklad formátování textu.}
 % 
 % \section*{}
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
 % Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
 % latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
 % ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
@@ -439,110 +431,6 @@ V této práci se podařilo navrhnout a implementovat simulátor virtuální po�
 % latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
 % ti, kteří se nikdy latinsky neučili?
 % 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
-% 
-% Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy
-% latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá, ale co mají dělat
-% ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle testování používá,
-% ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta, která se k~tomuhle
-% testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili? Určitě existuje nějaká pěkná latinská věta,
-% která se k~tomuhle testování používá, ale co mají dělat ti, kteří se nikdy latinsky neučili?
 % 
 % %*****************************************************************************
 % 
@@ -832,51 +720,180 @@ V této práci se podařilo navrhnout a implementovat simulátor virtuální po�
 \chapter{Seznam použitých zkratek}
 
 \begin{description}
+\item[BASH] Bourne again shell
+\item[CCNA] Cisco Certified Network Associate
 \item[CLI] Command Line Interface
+\item[CNA] Cisco Networking Academy
+\item[DHU] Destination Host Unreachable
 \item[DOM] Document Object Model
 \item[DTD] Document Type Definition
+\item[FTP] File Transfer Protocol
 \item[ICMP] Internet Control Message Protocol
+\item[IDE] Integrated Development Environment
 \item[IOS] Internetwork Operating System
+\item[KDE] K Desktop Environment 
+\item[MAC] Media Access Control
 \item[NAT] Network Address Translation
 \item[OS] Operating System
-\item[Y36PSI] předmět Počítačové sítě
+\item[SAX] Simple API for XML
+\item[SSH] Secure Shell
+\item[TFTP] Trivial File Transfer Protocol
+\item[TL1] Transaction Language 1
+\item[UML] Unified Modeling Language
 \item[XML] Extensible Markup Language
-\item [SAX] Simple API for XML
+\item[Y36PSI] předmět Počítačové sítě
+
 \end{description}
 % \vdots
 
+
 %*****************************************************************************
-\chapter{UML diagramy}
-\textbf{\large Tato příloha není povinná a~zřejmě se neobjeví v~každé práci. Máte-li ale větší množství podobných
-diagramů popisujících systém, není nutné všechny umísťovat do hlavního textu, zvláště pokud by to snižovalo jeho
-čitelnost.}
+% \chapter{UML diagramy}
+% \textbf{\large Tato příloha není povinná a~zřejmě se neobjeví v~každé práci. Máte-li ale větší množství podobných
+% diagramů popisujících systém, není nutné všechny umísťovat do hlavního textu, zvláště pokud by to snižovalo jeho
+% čitelnost.}
 
 %*****************************************************************************
 \chapter{Instalační a~uživatelská příručka}
-\textbf{\large Tato příloha velmi žádoucí zejména u~softwarových implementačních prací.}
+% \textbf{\large Tato příloha velmi žádoucí zejména u~softwarových implementačních prací.}
+
+\section{Instalační příručka}
+
+\subsection{OS Windows}
+Požadavky:
+\begin{enumerate}
+ \item Java Runtime Environment\\
+      \url{http://www.java.com/en/download/} 
+
+ \item
+       \begin{itemize}
+        \item Cygwin\\
+    \url{http://www.cygwin.com/setup.exe}
+  \item telnet\\
+    nainstalovat baliček inetutils pod cygwinem
+  \item zkontrolovat, zda je nainstalován nejnovejší balíček libreadline
+       \end{itemize}
+
+
+\end{enumerate}
+
+
+% 1) Java Runtime Environment
+%     http://www.java.com/en/download/
+% 2) a) Cygwin
+%     http://www.cygwin.com/setup.exe
+%    b) telnet
+%     nainstalovat baliček inetutils pod cygwinem
+%    c) zkontrolovat, zda je nainstalován nejnovejší balíček libreadline
+
+\noindent
+Krok 2 lze vynechat stažením předpřipraveného archivu s~Cygwinem se správnými balíčky.\\
+\url{http://moon.felk.cvut.cz/~rehaksta/data/psimulator_win.zip}
+
+\noindent
+Nebo rozbalením souboru bin/psimulator\_win.zip z~přiloženého CD.
+
+
+\subsection{OS Linux}
+Záleží na distribuci, ale obecně lze říci, že tyto programy budou v~repozitářích.
+Pro Debian-based distribuci lze nainstalovat jedním příkazem:
+\begin{verbatim}
+aptitude install sun-java6-jre rlwrap telnet
+\end{verbatim} 
+
+Požadavky:
+\begin{enumerate}
+\item Java Runtime Environment\\
+      \verb|aptitude sun-java6-jre|\\
+      \url{http://www.java.com/en/download/}
+\item rlwrap - nejlépe ve verzi 0.32+\\
+    \verb|aptitude install rlwrap|\\
+    \url{http://utopia.knoware.nl/\~hlub/rlwrap/}
+\item telnet\\
+    \verb|aptitude install telnet|
+\end{enumerate}
+
+
+
+
+
+\section{Uživatelská příručka} 
+
+\subsection{Spuštění serveru} 
+
+Celý server se nastartuje příkazem:
+\begin{verbatim}
+./start_server <config> <port> 
+\end{verbatim} 
+
+Kde <config> je XML soubor s~nastavením sítě (počítače, rozhraní, ..).
+Parametr <port> říká, na jakém portu se začnou vytvářet jednotlivé počítače z~XML souboru.
+Parametr <port> je volitelný, defaultně je nastaven na 4000.
+Volitelný parametr \verb|-n| umožní načtení pouze kostry sítě a počítačů s~rozhraními.
+Ve složce se skriptem musí být soubor s~definicí DTD, která popisuje strukturu XML souboru.
+
+Po spuštění serveru se vypíše seznam počítačů a k~nim přiřazených portů.
+Dále se bude na standartní výstup vypisou různé servisní informace.
+
+\subsection{Připojení klientů} 
+Pro připojení na cisco počítač:
+\begin{verbatim}
+./cisco.sh <port> 
+\end{verbatim} 
+
+Na ciscu je implementován příkaz help (help\_en), který vypisuje seznam podporovaných příkazů.
+
+Pro připojení na linux počítač:
+\begin{verbatim}
+./linux.sh <port>
+\end{verbatim} 
+
+
+
 
 %*****************************************************************************
 \chapter{Obsah přiloženého CD}
-\textbf{\large Tato příloha je povinná pro každou práci. Každá práce musí totiž obsahovat přiložené CD. Viz dále.}
+% \textbf{\large Tato příloha je povinná pro každou práci. Každá práce musí totiž obsahovat přiložené CD. Viz dále.}
 
-Může vypadat například takto. Váš seznam samozřejmě bude odpovídat typu vaší práce. %(viz \cite{infodp}):
+Přiložené CD obsahuje tyto soubory a adresáře:
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=14cm]{figures/seznamcd}
-\caption{Seznam přiloženého CD --- příklad}
-\label{fig:seznamcd}
-\end{center}
-\end{figure}
+\begin{verbatim}
+index.html              rozcestník
+text/                   adresář s textem práce
+text/latex/             zdrojové kódy textu práce
+text/install.txt        instalační příručka
+text/readme.txt         uživatelská příručka
+bin/                    adresář se spustitelnými soubory + konfiguračními 
+                        soubory
+bin/psimulator.zip      zabalený archiv se spustitelnými soubory pro linux
+                        (PSImulator bez programů rlwrap a telnet)
+bin/psimulator_win.zip  zabalený archiv se spustitelnými soubory pro windows
+                        (PSImulator + Cygwin)
+html/abstrakt.html      abstrakt v češtině
+html/abstrakt_en.html   abstrakt v angličtině
+html/javadoc            dokumentace javadoc
+src/                    zdrojové kódy
+src/netbeans.zip        zabalené zdrojové kódy jako projekt do NetBeans
+\end{verbatim} 
 
-Na GNU/Linuxu si strukturu přiloženého CD můžete snadno vyrobit příkazem:\\ 
-\verb|$ tree . >tree.txt|\\
-Ve vzniklém souboru pak stačí pouze doplnit komentáře.
 
-Z~\textbf{README.TXT} (případne index.html apod.)  musí být rovněž zřejmé, jak programy instalovat, spouštět a~jaké
-požadavky mají tyto programy na hardware.
-
-Adresář \textbf{text}  musí obsahovat soubor s~vlastním textem práce v~PDF nebo PS formátu, který bude později použit
-pro prezentaci diplomové práce na WWW.
+% 
+% \begin{figure}[h]
+% \begin{center}
+% \includegraphics[width=14cm]{figures/seznamcd}
+% \caption{Seznam přiloženého CD --- příklad}
+% \label{fig:seznamcd}
+% \end{center}
+% \end{figure}
+% 
+% Na GNU/Linuxu si strukturu přiloženého CD můžete snadno vyrobit příkazem:\\ 
+% \verb|$ tree . >tree.txt|\\
+% Ve vzniklém souboru pak stačí pouze doplnit komentáře.
+% 
+% Z~\textbf{README.TXT} (případne index.html apod.)  musí být rovněž zřejmé, jak programy instalovat, spouštět a~jaké
+% požadavky mají tyto programy na hardware.
+% 
+% Adresář \textbf{text}  musí obsahovat soubor s~vlastním textem práce v~PDF nebo PS formátu, který bude později použit
+% pro prezentaci diplomové práce na WWW.
 
 \end{document}
