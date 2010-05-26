@@ -1,0 +1,33 @@
+\chapter{Moná vylepšení}
+% Diskuse dalšího moného pokraèování práce.
+
+V~tomto projektu je moné pokraèovat mnohımi vylepšeními, zde jsou uvedeny nìkteré z~nich:
+
+\begin{enumerate}
+\item Prvním by mohlo bıt grafické rozhraní pro tvorbu konfiguraèního souboru (struktury poèítaèové sítì), kde by bylo moné pøidávat poèítaèe a propojení mezi nimi.                                                                                                                                                                     
+
+\item Pro lepší ladìní problémù pøi konfiguraci sítì by se jistì hodil i tcpdump. Tento program funguje jako analyzátor monitorující síovı provoz na daném rozhraní.
+
+\item Aplikace podporuje pouze jeden síovı prvek - smìrovaè, a tak by bylo moné program rozšíøit o~další prvky napø. switch (pøepínaè) nebo bridge. Pøidání tìchto prvkù by znamenalo plnohodnotnou implementaci 2. linkové vrstvy ISO/OSI modelu.
+
+\item Dalším vylepšením by mohla bıt monost propojit virtuální sí se skuteènou. 
+
+\item Aplikace de facto nezpracovává signály (Ctrl+C a Ctrl+Z), pouze je pøeposílá operaènímu systému (tuto funkci zajišuje rlwrap). Pokud bychom se chtìli vracet do privilegovaného módu pomocí Ctrl+Z, tak by bylo nutné implementovat vlastního klienta.
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+% stare jen v bodech:
+% \begin{itemize}
+% \item grafické \uv{klikátko} pro tvorbu konfiguraèního souboru (struktury poèítaèové sítì)
+% \item tcpdump - analyzátor monitorující síovı provoz na daném rozhraní
+% \item podpora pøepínaèe (switch) - implementace 2. linkové vrstvy síového ISO/OSI modelu
+% \item propojení s reálnou sítí - zabalování a rozbalování paketù do IP protokolu
+% \item zpracovaní signalù Ctrl+C, Ctrl+Z - implementace vlastního klienta
+% \end{itemize} 

@@ -16,5 +16,5 @@ Pro připojení na cisco počítač:
 
 Na ciscu je implementován příkaz help (help_en), který vypisuje seznam podporovaných příkazů.
 
-Pro připojení na cisco počítač:
+Pro připojení na linux počítač:
 ./linux.sh <port>

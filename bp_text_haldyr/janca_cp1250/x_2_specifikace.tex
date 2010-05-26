@@ -1,48 +1,48 @@
-\chapter{Popis problÃ©mu, specifikace cÃ­le}
+\chapter{Popis problému, specifikace cíle}
 
 % \begin{itemize}
-% \item Popis Å™eÅ¡enÃ©ho problÃ©mu, vymezenÃ­ cÃ­lÅ¯ DP/BP a~poÅ¾adavkÅ¯ na implementovanÃ½ systÃ©m.
-% \item Popis struktury DP/BP ve vztahu k~vytyÄenÃ½m cÃ­lÅ¯m.
-% \item ReÅ¡erÅ¡nÃ­ zpracovÃ¡nÃ­ existujÃ­cÃ­ch implementacÃ­, pokud jsou znÃ¡my.
+% \item Popis øešeného problému, vymezení cílù DP/BP a~poadavkù na implementovanı systém.
+% \item Popis struktury DP/BP ve vztahu k~vytyèenım cílùm.
+% \item Rešeršní zpracování existujících implementací, pokud jsou známy.
 % \end{itemize}
 
-VirtuÃ¡lnÃ­ sÃ­Å¥ musÃ­ podporovat nÄ›kolik k~sobÄ› pÅ™ipojenÃ½ch poÄÃ­taÄÅ¯ (Linux nebo Cisco, viz vymezenÃ­ spoluprÃ¡ce, kapitola \ref{vymezeni}). Limit pÅ™ipojenÃ½ch poÄÃ­taÄÅ¯ nenÃ­ v~zadÃ¡nÃ­ urÄen, nicmÃ©nÄ› se poÄÃ­tÃ¡ s~tÃ­m, Å¾e systÃ©m bez problÃ©mu zvlÃ¡dne pÃ¡r desÃ­tek poÄÃ­taÄÅ¯ (viz ZÃ¡tÄ›Å¾ovÃ© testy \ref{zatezove_testy}), aÄkoliv v~praxi jich vÄ›tÅ¡inou nebude potÅ™eba vÃ­ce neÅ¾ deset. SystÃ©m musÃ­ umoÅ¾it konfiguraci rozhranÃ­ potÅ™ebnÃ½ch pro propojenÃ­ sÃ­tÄ› vÄetnÄ› pÅ™Ã­kazÅ¯ pro aktivaci a deaktivaci rozhranÃ­. DÃ¡le aplikace musÃ­ umoÅ¾nit sprÃ¡vu smÄ›rovacÃ­ tabulky pomocÃ­ pÅ™Ã­kazÅ¯ Cisco IOS. V~pÅ™edmÄ›tu Y36PSI se takÃ© poÅ¾aduje po studentech, aby rozumÄ›li pÅ™ekladu adres neboli tzv. \uv{natovÃ¡nÃ­} - NAT\footnote{Network Address Translation}. Cisco podporuje hned nÄ›kolik druhÅ¯ pÅ™ekladu adres. Pro tuto aplikaci je potÅ™eba implementovat tÅ™i zpÅ¯soby, kterÃ© se zkouÅ¡ely na cviÄenÃ­ch: statickÃ½ pÅ™eklad, dynamickÃ½ pÅ™eklad a dynamickÃ½ pÅ™eklad s~metodou overloading. DÃ¡le systÃ©m musÃ­ bÃ½t schopen naÄÃ­st a poslÃ©ze zase uloÅ¾it celou konfiguraci do souboru. FunkÄnost celÃ©ho Å™eÅ¡enÃ­ musÃ­ bÃ½t ovÄ›Å™itelnÃ¡ pÅ™Ã­kazy ping a traceroute.
+Virtuální sí musí podporovat nìkolik k~sobì pøipojenıch poèítaèù (Linux nebo Cisco, viz vymezení spolupráce, kapitola \ref{vymezeni}). Limit pøipojenıch poèítaèù není v~zadání urèen, nicménì se poèítá s~tím, e systém bez problému zvládne pár desítek poèítaèù (viz Zátìové testy \ref{zatezove_testy}), aèkoliv v~praxi jich vìtšinou nebude potøeba více ne deset. Systém musí umoit konfiguraci rozhraní potøebnıch pro propojení sítì vèetnì pøíkazù pro aktivaci a deaktivaci rozhraní. Dále aplikace musí umonit správu smìrovací tabulky pomocí pøíkazù Cisco IOS. V~pøedmìtu Y36PSI se také poaduje po studentech, aby rozumìli pøekladu adres neboli tzv. \uv{natování} - NAT\footnote{Network Address Translation}. Cisco podporuje hned nìkolik druhù pøekladu adres. Pro tuto aplikaci je potøeba implementovat tøi zpùsoby, které se zkoušely na cvièeních: statickı pøeklad, dynamickı pøeklad a dynamickı pøeklad s~metodou overloading. Dále systém musí bıt schopen naèíst a posléze zase uloit celou konfiguraci do souboru. Funkènost celého øešení musí bıt ovìøitelná pøíkazy ping a traceroute.
 
-% NavrhnÄ›te a~implementujte aplikaci, kterÃ¡ umoÅ¾nÃ­ vytvoÅ™enÃ­ virtuÃ¡lnÃ­ poÄÃ­taÄovÃ© sÃ­tÄ›, pro potÅ™eby pÅ™edmÄ›tu Y36PSI. Na
-% systÃ©m se bude moÅ¾no pÅ™ipojit s~pomocÃ­ telnetu. Z~pohledu uÅ¾ivatele se bude systÃ©m tvÃ¡Å™it jako reÃ¡lnÃ¡ sÃ­Å¥. ZamÄ›Å™te se
-% pÅ™edevÅ¡Ã­m na konfiguraci systÃ©mu Cisco. SystÃ©m bude podporovat pÅ™Ã­kazy potÅ™ebnÃ© ke konfiguraci sÃ­Å¥ovÃ½ch rozhranÃ­,
-% smÄ›rovÃ¡nÃ­ a~pÅ™ekladu adres. Pro ovÄ›Å™enÃ­ sprÃ¡vnosti konfigurace implementujte pÅ™Ã­kaz ping a~traceroute.
-\section{ShrnutÃ­ funkÄnÃ­ch poÅ¾adavkÅ¯}
+% Navrhnìte a~implementujte aplikaci, která umoní vytvoøení virtuální poèítaèové sítì, pro potøeby pøedmìtu Y36PSI. Na
+% systém se bude mono pøipojit s~pomocí telnetu. Z~pohledu uivatele se bude systém tváøit jako reálná sí. Zamìøte se
+% pøedevším na konfiguraci systému Cisco. Systém bude podporovat pøíkazy potøebné ke konfiguraci síovıch rozhraní,
+% smìrování a~pøekladu adres. Pro ovìøení správnosti konfigurace implementujte pøíkaz ping a~traceroute.
+\section{Shrnutí funkèních poadavkù}
 \begin{enumerate}
- \item SystÃ©m musÃ­ umoÅ¾nit vytvoÅ™enÃ­ poÄÃ­taÄovÃ© sÃ­tÄ› zaloÅ¾enÃ© na smÄ›rovaÄÃ­ch firmy Cisco Systems.
- \item SystÃ©m musÃ­ umoÅ¾nit konfiguraci rozhranÃ­.
- \item SystÃ©m musÃ­ obsahovat funkÄnÃ­ smÄ›rovÃ¡nÃ­.
- \item SystÃ©m musÃ­ implementovat pÅ™eklad adres.
- \item SystÃ©m musÃ­ podporovat uklÃ¡dÃ¡nÃ­ a naÄÃ­tÃ¡nÃ­ do/ze souboru.
- \item Pro ovÄ›Å™enÃ­ sprÃ¡vnosti musÃ­ bÃ½t implementovÃ¡ny pÅ™Ã­kazy ping a traceroute.
- \item K~jednotlivÃ½m poÄÃ­taÄÅ¯m aplikace musÃ­ bÃ½t umoÅ¾nÄ›no pÅ™ipojenÃ­ pomocÃ­ telnetu.
- \item PomocÃ­ telnet klientÅ¯ musÃ­ bÃ½t moÅ¾nÃ© nÄ›kolikanÃ¡sobnÃ© paralelnÃ­ pÅ™ipojenÃ­ k~jednomu poÄÃ­taÄi najednou.
+ \item Systém musí umonit vytvoøení poèítaèové sítì zaloené na smìrovaèích firmy Cisco Systems.
+ \item Systém musí umonit konfiguraci rozhraní.
+ \item Systém musí obsahovat funkèní smìrování.
+ \item Systém musí implementovat pøeklad adres.
+ \item Systém musí podporovat ukládání a naèítání do/ze souboru.
+ \item Pro ovìøení správnosti musí bıt implementovány pøíkazy ping a traceroute.
+ \item K~jednotlivım poèítaèùm aplikace musí bıt umonìno pøipojení pomocí telnetu.
+ \item Pomocí telnet klientù musí bıt moné nìkolikanásobné paralelní pøipojení k~jednomu poèítaèi najednou.
 
 \end{enumerate}
 
 %------------------------------------------------------------------------------
 
-\section{NefunkÄnÃ­ poÅ¾adavky}
+\section{Nefunkèní poadavky}
 \begin{enumerate}
- \item Aplikace musÃ­ bÃ½t multiplatformnÃ­ - alespoÅˆ pro OS\footnote{Operating System, Äesky operaÄnÃ­ systÃ©m} Windows a Linux
- \item Aplikace musÃ­ bÃ½t spustitelnÃ¡ na bÄ›Å¾nÃ©m\footnote{Slovem \uv{bÄ›Å¾nÃ©} se myslÃ­ v~podstatÄ› jakÃ½koliv poÄÃ­taÄ, na kterÃ©m je moÅ¾nÃ© nainstalovat prostÅ™edÃ­ Javy - Java Runtime Environment.} studentskÃ©m poÄÃ­taÄi.
- \item SystÃ©m by mÄ›l bÃ½t co nejvÄ›rnÄ›jÅ¡Ã­ kopiÃ­ reÃ¡lnÃ©ho Cisca v~mezÃ­ch zadÃ¡nÃ­.
+ \item Aplikace musí bıt multiplatformní - alespoò pro OS\footnote{Operating System, èesky operaèní systém} Windows a Linux
+ \item Aplikace musí bıt spustitelná na bìném\footnote{Slovem \uv{bìné} se myslí v~podstatì jakıkoliv poèítaè, na kterém je moné nainstalovat prostøedí Javy - Java Runtime Environment.} studentském poèítaèi.
+ \item Systém by mìl bıt co nejvìrnìjší kopií reálného Cisca v~mezích zadání.
 \end{enumerate}
 
 %------------------------------------------------------------------------------
 
-\section{VymezenÃ­ spoluprÃ¡ce} \label{vymezeni}
-% Tady bude napsÃ¡no, co kdo udÄ›lal, jak jsme to uvaÅ™ili - RT a jÃ¡ na to Wrapper, routovani - metody PC, jÃ¡ NAT, nacitani
-Jak jsem naznaÄil v~kapitole \ref{uvod}, prÃ¡ce je rozdÄ›lena na dvÄ› samostatnÃ© bakalÃ¡Å™skÃ© prÃ¡ce. RozdÄ›lenÃ­ dle typu poÄÃ­taÄÅ¯ na Linux a Cisco se ukÃ¡zalo jako sprÃ¡vnÃ¡ volba, nicmÃ©nÄ› bylo potÅ™eba doÅ™eÅ¡it nÄ›kolik vÄ›cÃ­. Hned po zapoÄatÃ­ pracÃ­ jsem zjistil, Å¾e v~nÄ›kterÃ½ch vÄ›cech budu muset vÃ­ce spolupracovat s~kolegou, protoÅ¾e se tÃ½kaly obou naÅ¡ich implementacÃ­. NapÅ™. smÄ›rovacÃ­ tabulka na Linuxu a Ciscu se chovÃ¡ tÃ©mÄ›Å™ ÃºplnÄ› stejnÄ›, dokonce se podle nÃ­ i stejnÄ› smÄ›ruje. CelÃ© to mÃ¡ ale malÃ½ hÃ¡Äek: Cisco mÃ¡ totiÅ¾ tabulky dvÄ›! PrvnÃ­ je tvoÅ™ena pÅ™Ã­kazy, kterÃ© zadal uÅ¾ivatel a druhÃ¡ je vypoÄÃ­tÃ¡vÃ¡na z~tabulky prvnÃ­. JÃ¡ jsem tedy pouÅ¾il smÄ›rovacÃ­ tabulku od kolegy, kterÃ¡ byla primÃ¡rnÄ› programovÃ¡na pro linux, a tu jsem zaobalil do tzv. wrapperu, kterÃ½ ji ovlÃ¡dÃ¡ a sÃ¡m pÅ™idÃ¡vÃ¡ funkcionalitu tabulky druhÃ©. 
+\section{Vymezení spolupráce} \label{vymezeni}
+% Tady bude napsáno, co kdo udìlal, jak jsme to uvaøili - RT a já na to Wrapper, routovani - metody PC, já NAT, nacitani
+Jak jsem naznaèil v~kapitole \ref{uvod}, práce je rozdìlena na dvì samostatné bakaláøské práce. Rozdìlení dle typu poèítaèù na Linux a Cisco se ukázalo jako správná volba, nicménì bylo potøeba doøešit nìkolik vìcí. Hned po zapoèatí prací jsem zjistil, e v~nìkterıch vìcech budu muset více spolupracovat s~kolegou, protoe se tıkaly obou našich implementací. Napø. smìrovací tabulka na Linuxu a Ciscu se chová témìø úplnì stejnì, dokonce se podle ní i stejnì smìruje. Celé to má ale malı háèek: Cisco má toti tabulky dvì! První je tvoøena pøíkazy, které zadal uivatel a druhá je vypoèítávána z~tabulky první. Já jsem tedy pouil smìrovací tabulku od kolegy, která byla primárnì programována pro linux, a tu jsem zaobalil do tzv. wrapperu, kterı ji ovládá a sám pøidává funkcionalitu tabulky druhé. 
 
-SmÄ›rovÃ¡nÃ­ probÃ­hÃ¡ stejnÄ› na obou systÃ©mech, liÅ¡Ã­ se vÅ¡ak pravidla pro pÅ™Ã­jem paketÅ¯. JÃ¡ jsem tedy pouze navÃ¡zal na kolegovu implementaci tÃ­m, Å¾e jsem pÅ™idal metodu pro pÅ™Ã­jem paketÅ¯ (bude detailnÄ›ji vysvÄ›tleno v~kapitole SmÄ›rovÃ¡nÃ­ \ref{prijmiEthernetove}). AbstraktnÃ­ zÃ¡klad pÅ™Ã­kazÅ¯ \verb|ping| a \verb|traceroute| byl pÅ™evzat od kolegy, stejnÄ› tak vÃ½poÄet statistik o doruÄenÃ­ paketu. JelikoÅ¾ mÃ¡ Cisco pÅ™eklad adres natolik robustnÃ­ (rozsÃ¡hlÃ© datovÃ© struktury), tak ho bylo moÅ¾nÃ© pouÅ¾Ã­t s~menÅ¡Ã­mi Ãºpravami\footnote{StaÄilo pÅ™idat nÄ›kolik obsluÅ¾nÃ½ch metod.} pro linuxovÃ½ pÅ™Ã­kaz \verb|iptables|. 
+Smìrování probíhá stejnì na obou systémech, liší se však pravidla pro pøíjem paketù. Já jsem tedy pouze navázal na kolegovu implementaci tím, e jsem pøidal metodu pro pøíjem paketù (bude detailnìji vysvìtleno v~kapitole Smìrování \ref{prijmiEthernetove}). Abstraktní základ pøíkazù \verb|ping| a \verb|traceroute| byl pøevzat od kolegy, stejnì tak vıpoèet statistik o doruèení paketu. Jeliko má Cisco pøeklad adres natolik robustní (rozsáhlé datové struktury), tak ho bylo moné pouít s~menšími úpravami\footnote{Staèilo pøidat nìkolik obslunıch metod.} pro linuxovı pøíkaz \verb|iptables|. 
 
-MojÃ­ pracÃ­ je takÃ© naÄÃ­tÃ¡nÃ­ a uklÃ¡dÃ¡nÃ­ do souboru, startovacÃ­ skripty pro server i klienty a uÅ¾ivatelskÃ¡ pÅ™Ã­ruÄka. Na datovÃ½ch strukturÃ¡ch pro jÃ¡dro celÃ©ho systÃ©mu jsem musel spolupracovat s~kolegou, protoÅ¾e struktury musejÃ­ odrÃ¡Å¾et situaci na obou systÃ©mech. NapÅ™. tÅ™Ã­da zaÅ¡tiÅ¥ujÃ­cÃ­ IP adresu je z~pÅ¯lky mÃ¡ a z~pÅ¯lky kolegy. U~takovÃ© tÅ™Ã­dy je vlastnictvÃ­ popsÃ¡no na Ãºrovni jednotlivÃ½ch metod. U~ostatnÃ­ch tÅ™Ã­d je autorstvÃ­ uvedeno v~hlaviÄce. DÃ¡le komunikaÄnÃ­ ÄÃ¡st je vÃ½sledkem spoleÄnÃ© prÃ¡ce\footnote{Dle tehdejÅ¡Ã­ch pravidel jsme mohli programovacÃ­ Ãºlohy implementovat a odevzdÃ¡vat ve dvojicÃ­ch.} z~roku 2008, kdy jsme prÃ¡vÄ› pro pÅ™edmÄ›t PoÄÃ­taÄovÃ© sÃ­tÄ› programovali hru Karel.
+Mojí prací je také naèítání a ukládání do souboru, startovací skripty pro server i klienty a uivatelská pøíruèka. Na datovıch strukturách pro jádro celého systému jsem musel spolupracovat s~kolegou, protoe struktury musejí odráet situaci na obou systémech. Napø. tøída zaštiující IP adresu je z~pùlky má a z~pùlky kolegy. U~takové tøídy je vlastnictví popsáno na úrovni jednotlivıch metod. U~ostatních tøíd je autorství uvedeno v~hlavièce. Dále komunikaèní èást je vısledkem spoleèné práce\footnote{Dle tehdejších pravidel jsme mohli programovací úlohy implementovat a odevzdávat ve dvojicích.} z~roku 2008, kdy jsme právì pro pøedmìt Poèítaèové sítì programovali hru Karel.
 
 
 
