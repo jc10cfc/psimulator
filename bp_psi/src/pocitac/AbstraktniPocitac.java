@@ -171,14 +171,14 @@ public abstract class AbstraktniPocitac {
             if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ //adresa souhlasi
                 //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                vypisLadeni("metoda odesliEthernetove: Nemohl jsem odeslat paket, poslal jsem Host Unreachable. "
+                vypisLadeni("odesliEthernetove", "Nemohl jsem odeslat paket, poslal jsem Host Unreachable. "
                         +p.toString());
                 posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
             }
         }else{
             //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
             //a zpatky se nic neposila
-            vypisLadeni("metoda odesliEthernetove: K rozhrani "+mojeRozhr.jmeno+" neni nikdo pripojen. " +
+            vypisLadeni("odesliEthernetove", "K rozhrani "+mojeRozhr.jmeno+" neni nikdo pripojen. " +
                     "Paket tedy nemohu poslat. "+p.toString());
         }
     }
@@ -237,7 +237,7 @@ public abstract class AbstraktniPocitac {
             }
         }
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
-            vypisLadeni("metoda odesliNovejPaket: Nemohu odeslat paket, nenalezl jsem rozhrani, na ktere" +
+            vypisLadeni("odesliNovejPaket", "Nemohu odeslat paket, nenalezl jsem rozhrani, na ktere" +
                     " bych ho poslal. cil: "+cil.vypisAdresu()+
                     " typ: "+typ);
             return false;
@@ -388,7 +388,7 @@ public abstract class AbstraktniPocitac {
                 preposliPaket(paket, vstupniRozhrani);
             }else{
                 // Jestli se nepletu, tak paket proste zahodi. Chce to ale jeste overit.
-                vypisLadeni("metoda prijmiPaket: Nemohu preposlat paket, nemam nastaveno ip_forward "
+                vypisLadeni("prijmiPaket", "Nemohu preposlat paket, nemam nastaveno ip_forward "
                         +paket.toString());
             }
         }
@@ -459,6 +459,16 @@ public abstract class AbstraktniPocitac {
     private void vypisLadeni(String zprava){
         if( ladeniPaketu ) {
             this.vypis("Pruchod paketu: "+zprava);
+        }
+    }
+
+    /**
+     * Pres tuhle metodu se budou vypisovat zpravy o pruchodu paketu.
+     * @param zprava
+     */
+    private void vypisLadeni(String metoda, String zprava){
+        if( ladeniPaketu && ladeni ) {
+            this.vypis("Pruchod paketu: "+"metoda "+metoda+": "+zprava);
         }
     }
 
