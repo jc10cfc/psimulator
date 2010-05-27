@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  26 MAY 2010 12:55
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2010.5.14)  26 MAY 2010 13:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -512,35 +512,25 @@ Nazev prace: Simul\IeC {\'a}tor virtu\IeC {\'a}ln\IeC {\'\i } po\IeC {\v c}\IeC
  {\'\i }ta\IeC {\v c}ov\IeC {\'e} s\IeC {\'\i }t\IeC {\v e} Cisco
 Vedouci prace: Ing. Pavel Kubal\IeC {\'\i }k, Ph.D.
 ***************************************************
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 229.
-
-(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 229.
- [1
-
-
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2
-
-]
-<figures/LogoCVUT.pdf, id=396, 93.34875pt x 70.2625pt>
+<figures/LogoCVUT.pdf, id=383, 93.34875pt x 70.2625pt>
 File: figures/LogoCVUT.pdf Graphic file (type pdf)
 
-<use figures/LogoCVUT.pdf> [3 <./figures/LogoCVUT.pdf>] [4
+<use figures/LogoCVUT.pdf> [3
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./figures/LogoCVUT.pdf>] [
+4
 
 ] [5] [6
 
-] [7]
-[8
+] [7] [8
 
 ] [9
 
 ] [10
 
-] (./Rehak-thesis-2010.toc
+]
+(./Rehak-thesis-2010.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 5.
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -553,12 +543,12 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
  [13] [14
 
-]
-(./Rehak-thesis-2010.lof)
+] (./Rehak-thesis-2010.lof)
 \tf@lof=\write5
 \openout5 = `Rehak-thesis-2010.lof'.
 
- [15] [16
+
+[15] [16
 
 ]
 \openout2 = `1_uvod.aux'.
@@ -590,7 +580,7 @@ File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 
  (./3_reserse.tex
 Kapitola 3.
-<figures/r_cpt.jpg, id=649, 616.3025pt x 498.86375pt>
+<figures/r_cpt.jpg, id=638, 616.3025pt x 498.86375pt>
 File: figures/r_cpt.jpg Graphic file (type jpg)
  <use figures/r_cpt.jpg>
 Underfull \vbox (badness 1082) has occurred while \output is active []
@@ -599,16 +589,16 @@ Underfull \vbox (badness 1082) has occurred while \output is active []
 
 
 
- <./figures/r_cpt.jpg>] <figures/r_omnet.png, id=657, 964.60374pt x 681.54625pt
+ <./figures/r_cpt.jpg>] <figures/r_omnet.png, id=647, 964.60374pt x 681.54625pt
 >
 File: figures/r_omnet.png Graphic file (type png)
 
 <use figures/r_omnet.png>
-<figures/r_boson.jpg, id=665, 552.0625pt x 341.275pt>
+<figures/r_boson.jpg, id=655, 552.0625pt x 341.275pt>
 File: figures/r_boson.jpg Graphic file (type jpg)
 
 <use figures/r_boson.jpg> [6 <./figures/r_omnet.png (PNG copy)>]
-<figures/r_dynamips.png, id=681, 1359.0775pt x 846.16125pt>
+<figures/r_dynamips.png, id=671, 1359.0775pt x 846.16125pt>
 File: figures/r_dynamips.png Graphic file (type png)
 
 <use figures/r_dynamips.png> [7 <./figures/r_boson.jpg> <./figures/r_dynamips.p
@@ -617,15 +607,22 @@ ng (PNG copy)>]) [8]
 
  (./4_navrh.tex
 Kapitola 4.
-<figures/navrh.jpg, id=701, 1638.12pt x 1228.59pt>
+<figures/navrh.jpg, id=691, 1638.12pt x 1228.59pt>
 File: figures/navrh.jpg Graphic file (type jpg)
  <use figures/navrh.jpg>
 [9
 
 
 
- <./figures/navrh.jpg>] [10] [11]
-<figures/uziv_rozhrani.png, id=728, 304.13625pt x 142.28156pt>
+ <./figures/navrh.jpg>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 37.
+ (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
+
+[10] [11] <figures/uziv_rozhrani.png, id=719, 304.13625pt x 142.28156pt>
 File: figures/uziv_rozhrani.png Graphic file (type png)
 
 <use figures/uziv_rozhrani.png>) [12 <./figures/uziv_rozhrani.png (PNG copy)>]
@@ -634,7 +631,7 @@ File: figures/uziv_rozhrani.png Graphic file (type png)
 
 (./5-0_realizace.tex
 Kapitola 5.
-<figures/uml_sit.png, id=735, 501.875pt x 337.26pt>
+<figures/uml_sit.png, id=726, 501.875pt x 337.26pt>
 File: figures/uml_sit.png Graphic file (type png)
  <use figures/uml_sit.png>
 [13
@@ -642,15 +639,15 @@ File: figures/uml_sit.png Graphic file (type png)
 
 
  <./figures/uml_sit.png (PNG copy)>]
-<figures/uml_abtraktni.png, id=745, 487.8225pt x 416.55624pt>
+<figures/uml_abtraktni.png, id=736, 487.8225pt x 416.55624pt>
 File: figures/uml_abtraktni.png Graphic file (type png)
 
 <use figures/uml_abtraktni.png> [14 <./figures/uml_abtraktni.png (PNG copy)>]
-<figures/uml_class.png, id=754, 555.07375pt x 323.2075pt>
+<figures/uml_class.png, id=745, 555.07375pt x 323.2075pt>
 File: figures/uml_class.png Graphic file (type png)
 
 <use figures/uml_class.png> [15 <./figures/uml_class.png (PNG copy)>]
-<figures/ios.png, id=768, 1625.272pt x 1149.093pt>
+<figures/ios.png, id=758, 1625.272pt x 1149.093pt>
 File: figures/ios.png Graphic file (type png)
  <use figures/ios.png>
 
@@ -667,7 +664,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout2 = `5-2_smerovani.aux'.
 
  (./5-2_smerovani.tex
-<figures/sit_2pc.png, id=827, 522.95375pt x 126.4725pt>
+<figures/sit_2pc.png, id=818, 522.95375pt x 126.4725pt>
 File: figures/sit_2pc.png Graphic file (type png)
 
 <use figures/sit_2pc.png>
@@ -677,7 +674,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [24
 
 
-] <figures/sit_3pc.png, id=837, 709.65125pt x 154.5775pt>
+] <figures/sit_3pc.png, id=828, 709.65125pt x 154.5775pt>
 File: figures/sit_3pc.png Graphic file (type png)
 
 <use figures/sit_3pc.png>
@@ -695,7 +692,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 \openout2 = `5-4_nat.aux'.
 
  (./5-4_nat.tex
-<figures/nat1.png, id=897, 547.04375pt x 231.86626pt>
+<figures/nat1.png, id=888, 547.04375pt x 231.86626pt>
 File: figures/nat1.png Graphic file (type png)
  <use figures/nat1.png>
 
@@ -705,15 +702,15 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 ] [33 <./figures/nat1.png (PNG copy)>]
-<figures/nat_navrh1.png, id=914, 400.49625pt x 257.96375pt>
+<figures/nat_navrh1.png, id=904, 400.49625pt x 257.96375pt>
 File: figures/nat_navrh1.png Graphic file (type png)
 
 <use figures/nat_navrh1.png>
-<figures/nat_navrh2.png, id=916, 498.86375pt x 529.98pt>
+<figures/nat_navrh2.png, id=906, 498.86375pt x 529.98pt>
 File: figures/nat_navrh2.png Graphic file (type png)
 
 <use figures/nat_navrh2.png> [34 <./figures/nat_navrh1.png (PNG copy)>]
-<figures/nat_decision.png, id=929, 657.45625pt x 493.845pt>
+<figures/nat_decision.png, id=919, 657.45625pt x 493.845pt>
 File: figures/nat_decision.png Graphic file (type png)
 
 <use figures/nat_decision.png>
@@ -727,7 +724,7 @@ ion.png (PNG copy)>]
 
  (./6_testovani.tex
 Kapitola 6.
-<figures/testovani.png, id=961, 670.505pt x 383.4325pt>
+<figures/testovani.png, id=952, 670.505pt x 383.4325pt>
 File: figures/testovani.png Graphic file (type png)
 
 <use figures/testovani.png>
@@ -807,8 +804,8 @@ P\v {r}\'{\i }loha C.
 (./5-2_smerovani.aux) (./5-3_wrapper.aux) (./5-4_nat.aux) (./6_testovani.aux)
 (./7_vylepseni.aux)) ) 
 Here is how much of TeX's memory you used:
- 7242 strings out of 495061
- 97243 string characters out of 1182621
+ 7239 strings out of 495061
+ 97219 string characters out of 1182621
  173910 words of memory out of 3000000
  9889 multiletter control sequences out of 15000+50000
  20519 words of font info for 44 fonts, out of 3000000 for 9000
@@ -821,17 +818,17 @@ haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1095.600pk> </home/haldyr/.te
 xmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0900.600pk> </home/haldyr/.texmf-var/fo
 nts/pk/ljfour/jknappen/ec/ecrm0800.600pk> </home/haldyr/.texmf-var/fonts/pk/ljf
 our/jknappen/ec/ecsl1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknapp
-en/ec/ecbx1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm
-0600.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2074.600pk
-> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1440.600pk> </home/h
-aldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/haldyr/.tex
-mf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/haldyr/.texmf-var/fon
-ts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfo
-ur/jknappen/ec/ecbx2488.600pk></usr/share/texmf-texlive/fonts/type1/public/amsf
+en/ec/ecbx1095.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx
+2488.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0600.600pk
+> </home/haldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2074.600pk> </home/h
+aldyr/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </home/haldyr/.tex
+mf-var/fonts/pk/ljfour/jknappen/ec/ecti1440.600pk> </home/haldyr/.texmf-var/fon
+ts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/haldyr/.texmf-var/fonts/pk/ljfo
+ur/jknappen/ec/ecrm1200.600pk></usr/share/texmf-texlive/fonts/type1/public/amsf
 onts/cm/cmsy10.pfb>
-Output written on Rehak-thesis-2010.pdf (69 pages, 1969525 bytes).
+Output written on Rehak-thesis-2010.pdf (67 pages, 1967254 bytes).
 PDF statistics:
- 1984 PDF objects out of 2073 (max. 8388607)
- 298 named destinations out of 1000 (max. 500000)
+ 1974 PDF objects out of 2073 (max. 8388607)
+ 295 named destinations out of 1000 (max. 500000)
  851 words of extra memory for PDF output out of 10000 (max. 10000000)
 

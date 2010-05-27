@@ -1,3 +1,12 @@
+OS Windows
+Spustit Cygwin - soubor Cygwin.bat
+V nově spuštěné konzoli spustit server a klienty dle návodu níže.
+
+
+
+
+
+
 Spuštění serveru
 Celý server se nastartuje příkazem:
 ./start_server <config> <port>

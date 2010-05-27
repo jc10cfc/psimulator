@@ -27,6 +27,7 @@ Požadavky:
 2) rlwrap - nejlépe ve verzi 0.32+
     aptitude install rlwrap
     http://utopia.knoware.nl/~hlub/rlwrap/
+    http://snapshot.debian.org/binary/rlwrap/
 
 3) telnet
     aptitude install telnet
