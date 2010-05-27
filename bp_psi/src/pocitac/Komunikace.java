@@ -75,8 +75,8 @@ public class Komunikace extends Thread {
                     Socket s = ss.accept(); // wait for client call
                     Konsole v = new Konsole(s, pc, seznamSpojeni.size(), zamekPocitace); // create another clerk
                     seznamSpojeni.add(v);
-                    pc.vypis("akceptoval jsem vlakno c. " + (seznamSpojeni.size() - 1) + " "
-                            + s.getInetAddress() + ":" + s.getPort());
+                    pc.vypis("Ke konsoli c. " + (seznamSpojeni.size() - 1) + " se prihlasil klient: "
+                            + s.getInetAddress().getHostAddress() + ":" + s.getPort());
                 }
             }
         } catch (Exception ex) {

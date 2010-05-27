@@ -2,7 +2,8 @@
  * Gegründet am Montag 15.3.2010.
  * 
  * Jeste dodelat:
- *      i -host by mel umet zpracovat adresu, kdyz mu prijde s maskou - zatím řešený testem na lomítko
+ *      I -host by mel umet zpracovat adresu, kdyz mu prijde s maskou - zatím řešený testem na lomítko
+ *      Parsovani prepinacu - ty prepinace muzou bejt i pohromade route -nve
  */
 
 package prikazy.linux;
@@ -32,6 +33,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     boolean minus_n=false;
     boolean minus_v=false;
     boolean minus_e=false;
+    boolean minus_h=false;
     private String adr; //adresat
     private String maska;
     private int pocetBituMasky;
@@ -92,6 +94,10 @@ public class LinuxRoute extends AbstraktniPrikaz{
         if (ladiciVypisovani) {
             kon.posliRadek(this.toString());
         }
+        if(minus_h){
+            vypisDelsiNapovedu();
+            return; //POZOR, tady se utika
+        }
         if (navratovyKod == 0) { //bez chyby
             if (akce == 0) { //nic nedelat, jenom vypsat
                 vypisTabulku();
@@ -122,17 +128,20 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
     /**
      * Precte prikaz a nastavi mu parametry. Rovnou kontroluje, spravnost parametru.
+     * Odchylka: Nezparsuje route -ven
      */
     private void parsujPrikaz() {
         // prepinace:
         slovo = dalsiSlovo();
-        while( slovo.length()>0 && slovo.charAt(0)=='-'){
+        while( slovo.length()>1 && slovo.charAt(0)=='-'){
             if( slovo.equals("-n") || slovo.equals("--numeric") ){
                 minus_n=true;
             }else if( slovo.equals("-v") || slovo.equals("--verbose") ){
                 minus_v=true;
             }else if( slovo.equals("-e") || slovo.equals("--extend") ){
                 minus_e=true;
+            }else if( slovo.equals("-h") || slovo.equals("--help") ){
+                minus_h=true;
             }else{
                 kon.posliRadek("route: invalid option -- "+slovo); //neznamej prepinac
                 vypisDelsiNapovedu();
@@ -141,18 +150,24 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }
             slovo=dalsiSlovo();
         }
-        //akce:
-        if ( slovo.equals("add") ){
-            slovo=dalsiSlovo();
-            nastavAdd();
-        }
-        if ( slovo.equals("del") ){
-            slovo=dalsiSlovo();
-            nastavDel();
-        }
-        if ( slovo.equals("flush") ){
-            slovo=dalsiSlovo();
-            nastavFlush();
+        // dalsi parsovani:
+        if(minus_h){
+            return; //to se pak uz nic neparsuje.
+        }else{
+            if (slovo.equals("add")) {
+                slovo = dalsiSlovo();
+                nastavAdd();
+            }else if (slovo.equals("del")) {
+                slovo = dalsiSlovo();
+                nastavDel();
+            }else
+            if (slovo.equals("flush")) {
+                slovo = dalsiSlovo();
+                nastavFlush();
+            }else if ( ! slovo.equals("")) { //nejakej nesmysl
+                vypisDelsiNapovedu();
+                navratovyKod |=128;
+            }
         }
     }
 
@@ -186,8 +201,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
     }
 
     private void nastavFlush() {
-        kon.posliRadek(Main.jmenoProgramu+": Flush normalne neni podporovano, ale routa se v simulatoru " +
-                "smaze.");
+        kon.posliRadek(Main.jmenoProgramu+": Flush normalne neni podporovano, ale v simulatoru se zaznam " +
+                "smazal.");
         kon.posliRadek("Spravny prikaz je: \"ip route flush all\"");
         akce=4;
     }
@@ -249,7 +264,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         }else if( ! IpAdresa.spravnaAdresaNebMaska(slovo,false)){ //adresa je spatna
             if(slovo.contains("/")){ //kdyz je zadana IP adresa s maskou (zatim na to kaslu a kontroluju jen 
                                      //lomitko vypise se jina hlaska, nez normalne.
-                kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
+                kon.posliRadek("route: netmask doesn't make sense with host route");
                 vypisDelsiNapovedu();
                 navratovyKod |= 256;
             }else{
@@ -270,8 +285,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
                 slovo=dalsiSlovo();
                 nastavDev();
             }else if(slovo.equals("netmask")){ //on to pozna a hodi chybu
-                kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
-                navratovyKod |= 128; //nejakej dalsi nesmysl
+                nastavNetmask();
             }else if(slovo.equals("") && akce ==2){ //prazdnej retezec u akce del
                 //konec prikazu
             }else{ //cokoliv ostatniho, i nic, se povazuje za rozhrani
@@ -358,7 +372,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     private void nastavNetmask(){
         if(minusHost){ // kontrola, jestli to vubec muzu nastavovat
             navratovyKod |= 256;
-            kon.posliRadek("route: síťová maska nedává smysl, když cílem je cesty počítač");
+            kon.posliRadek("route: netmask doesn't make sense with host route");
             vypisDelsiNapovedu();
             return; //nic se nema nastavovat
         }
@@ -369,7 +383,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         }
         nastavovanaMaska=true;
         if ( ! IpAdresa.spravnaAdresaNebMaska(slovo, true)){
-            kon.posliRadek("route: síťová maska "+slovo+"je nesprávná");
+            kon.posliRadek("route: bogus netmask "+slovo+"");
             navratovyKod |= 1024;
         }else{ //spravna brana
             maska=slovo;
@@ -412,7 +426,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         nastavovanaMaska = true;
         int lomitko=adrm.indexOf('/');
         if ( lomitko == -1 ) {// string musi obsahovat lomitko
-            throw new RuntimeException("Tohle by nikdy nemelo nastat.");
+            throw new RuntimeException("Tohle by nikdy nemelo nastat. Kontaktujte prosim tvurce softwaru.");
         }else{
             if ( lomitko < adrm.length()-1 ) { // lomitko nesmi byt poslednim znakem retezce
                 String adresa=adrm.substring(0,lomitko);
@@ -454,7 +468,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     private void nastavAdresu(){
         if (!nastavovanaMaska){
             throw new RuntimeException("K tomuhle by nikdy nemelo dojit. Tahleta metoda se vola, az kdyz" +
-                    "je adresa i maska nastavena.");
+                    "je adresa i maska nastavena. Kontaktujte prosim tvurce softwaru.");
         }
         if(navratovyKod == 0){ //doted musi bejt vsechno v poradku
             if(maska != null){//maska byla zadana parametrem netmask
@@ -464,7 +478,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }
             if( ! ipAdresa.jeCislemSite() ) { //adresa neni cislem site, to je chyba
                 navratovyKod |= 2048; //adresat neni cislem site
-                kon.posliRadek("route: síťová maska nevyhovuje adrese cesty");
+                kon.posliRadek("route: netmask doesn't match route address");
+                //kon.posliRadek("route: síťová maska nevyhovuje adrese cesty");
                 vypisDelsiNapovedu();
             }
         }
@@ -473,8 +488,10 @@ public class LinuxRoute extends AbstraktniPrikaz{
     private void vypisTabulku() {
 
         String v; //string na vraceni
-        kon.posliRadek("Směrovací tabulka v jádru pro IP");
-        kon.posliRadek("Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní");
+        //kon.posliRadek("Směrovací tabulka v jádru pro IP");
+        kon.posliRadek("Kernel IP routing table");
+        //kon.posliRadek("Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní");
+        kon.posliRadek("Destination     Gateway         Genmask         Flags Metric Ref    Use Iface");
         int pocet = pc.routovaciTabulka.pocetZaznamu();
         for (int i = 0; i < pocet; i++) {
             v="";
@@ -546,32 +563,30 @@ public class LinuxRoute extends AbstraktniPrikaz{
      * Tyto metody byly udělány nahrazením v Kate. Znak pro začátek řádku je ^ a pro konec řádku $.
      */
     private void vypisKratkouNapovedu() {
-        kon.posliRadek("Použití: inet_route [-vF] del {-host|-net} Cíl[/prefix] [gw Gw] [metrika M] [[dev] If]");
-        kon.posliRadek("       inet_route [-vF] add {-host|-net} Cíl[/prefix] [gw Gw] [metrika M]");
+        kon.posliRadek("Usage: inet_route [-vF] del {-host|-net} Target[/prefix] [gw Gw] [metric M] [[dev] If]");
+        kon.posliRadek("       inet_route [-vF] add {-host|-net} Target[/prefix] [gw Gw] [metric M]");
         kon.posliRadek("                              [netmask N] [mss Mss] [window W] [irtt I]");
         kon.posliRadek("                              [mod] [dyn] [reinstate] [[dev] If]");
-        kon.posliRadek("       inet_route [-vF] add {-host|-net} Cíl/[prefix] [metrika M] reject");
-        kon.posliRadek("       inet_route [-FC] flush      NENÍ podporováno");
+        kon.posliRadek("       inet_route [-vF] add {-host|-net} Target[/prefix] [metric M] reject");
+        kon.posliRadek("       inet_route [-FC] flush      NOT supported");
     }
 
     private void vypisDelsiNapovedu() {
-        kon.posliRadek("Použití: route [-nNvee] [-FC] [<AF>]         Zobrazí směrovací tabulky v jádru");
-        kon.posliRadek("       route [-v] [-FC] {add|del|flush} ...  Změní směrovací tabulku pro AF.");
+        //napoveda z pocitacu ve skole:
+        kon.posliRadek("Usage: route [-nNvee] [-FC] [<AF>]           List kernel routing tables");
+        kon.posliRadek("       route [-v] [-FC] {add|del|flush} ...  Modify routing table for AF.");
         kon.posliRadek("");
-        kon.posliRadek("       route {-h|--help [<AF>]               Nápověda pro použití s AF.");
-        kon.posliRadek("       route {-V|--version}                  Vypíše označení verze a autora");
-        kon.posliRadek("                                             programu.");
+        kon.posliRadek("       route {-h|--help} [<AF>]              Detailed usage syntax for specified AF.");
+        kon.posliRadek("       route {-V|--version}                  Display version/author and exit.");
         kon.posliRadek("");
-        kon.posliRadek("        -v, --verbose            bude vypisovat podrobné zprávy");
-        kon.posliRadek("                                 o činnosti");
-        kon.posliRadek("        -n, --numeric nepřekládat číselné adresy na jména");
-        kon.posliRadek("        -e, --extend             vypíše podrobnější informace");
-        kon.posliRadek("        -F, --fib                zobrazí Forwarding Infomation Base");
-        kon.posliRadek("                                  (implicitní)");
-        kon.posliRadek("        -C, --cache              místo FIB zobrazí směrovací cache");
+        kon.posliRadek("        -v, --verbose            be verbose");
+        kon.posliRadek("        -n, --numeric            don't resolve names");
+        kon.posliRadek("        -e, --extend             display other/more information");
+        kon.posliRadek("        -F, --fib                display Forwarding Information Base (default)");
+        kon.posliRadek("        -C, --cache              display routing cache instead of FIB");
         kon.posliRadek("");
         kon.posliRadek("  <AF>=Use '-A <af>' or '--<af>'; default: inet");
-        kon.posliRadek("  Seznam možných tříd adres (podporujících směrování):");
+        kon.posliRadek("  List of possible address families (which support routing):");
         kon.posliRadek("    inet (DARPA Internet) inet6 (IPv6) ax25 (AMPR AX.25)");
         kon.posliRadek("    netrom (AMPR NET/ROM) ipx (Novell IPX) ddp (Appletalk DDP)");
         kon.posliRadek("    x25 (CCITT X.25)");

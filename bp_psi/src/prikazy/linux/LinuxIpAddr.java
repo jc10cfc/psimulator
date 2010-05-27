@@ -25,7 +25,7 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
         vypisChybovyHlaseni();
     }
 
-    boolean ladeni=true;
+    boolean ladeni=false;
 
     private LinuxIp puv;//odkaz na LinuxIp, kterej ho zavolal
 
@@ -211,7 +211,7 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
     }
 
     private void vypisChybovyHlaseni() {
-        kon.posliRadek(toString());
+        if(ladeni)kon.posliRadek(toString());
 
         /*
          * Poradi vypisovani:

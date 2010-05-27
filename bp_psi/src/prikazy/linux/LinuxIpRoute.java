@@ -33,7 +33,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
     }
     
     private LinuxIp puv;
-    private boolean ladeni=true;
+    private boolean ladeni=false;
 
     //promenny parseru:
     private String slovo;
@@ -148,8 +148,8 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
             return;
         }
         if ((navrKod & md(18)) != 0) { // u get zadanej nepodporovanej parametr dev
-            kon.posliServisne("Parametr dev u akce get je normalne mozny, neni ale simulatorem" +
-                    "podporovany, protoze v pripade zadani nespravneho rozhrani vraci tezko zjistitelne" +
+            kon.posliServisne("Parametr dev u akce get je normalne mozny, neni ale simulatorem " +
+                    "podporovany, protoze v pripade zadani nespravneho rozhrani vraci tezko zjistitelne " +
                     "nesmysly. Zadejte tedy prosim prikaz get bez tohoto parametru.");
             //tady nedavam return
         }

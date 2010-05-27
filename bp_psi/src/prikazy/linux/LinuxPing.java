@@ -117,20 +117,24 @@ public class LinuxPing extends AbstraktniPing{
     @Override
     public void zpracujPaket(Paket p) {
         if (p.typ == 0) {
-            kon.posliRadek((size+8)+" bytes from " + p.zdroj.vypisAdresu() + ": icmp_seq=" +p.icmp_seq +
+            if(!minus_q)
+                kon.posliRadek((size+8)+" bytes from " + p.zdroj.vypisAdresu() + ": icmp_seq=" +p.icmp_seq +
                     " ttl=" + p.ttl + " time=" + ((double) Math.round(p.cas * 1000)) / 1000 + " ms");
             odezvy.add(p.cas);
         } else if (p.typ == 3) {
             if (p.kod == 0) {
-                kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
+                if(!minus_q)
+                    kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
                         p.icmp_seq + " Destination Net Unreachable");
             } else if (p.kod == 1) {
-                kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
+                if(!minus_q)
+                    kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
                         p.icmp_seq + " Destination Host Unreachable");
             }
             errors++;
         } else if (p.typ == 11) {
-            kon.posliRadek("From " + p.zdroj.vypisAdresu() + " icmp_seq=" + p.icmp_seq 
+            if(!minus_q)
+                kon.posliRadek("From " + p.zdroj.vypisAdresu() + " icmp_seq=" + p.icmp_seq
                     + " Time to live exceeded");
             errors++;
         }

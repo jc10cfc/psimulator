@@ -31,7 +31,8 @@ public class LinuxCat extends AbstraktniPrikaz{
     private void parsujPrikaz() {
         String slovo=dalsiSlovo();
         while(! slovo.equals("")){
-            if(slovo.equals("/proc/sys/net/ipv4/ip_forward") || slovo.equals("ip_forward")){//zavedl jsem si alias
+            if(slovo.equals("/proc/sys/net/ipv4/ip_forward") ||
+                    slovo.equals("/proc/sys/net/ipv4/ip_forward")){//zavedl jsem si alias
                 soubory |= 1;
             } else {
                 kon.posliRadek("cat: "+slovo+": No such file or directory");

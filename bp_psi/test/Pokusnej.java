@@ -88,4 +88,10 @@ public class Pokusnej {
     public void pokusStartsWith(){
         assertTrue("ahoj".startsWith(""));
     }
+
+    @Test
+    public void testRandom(){
+        int a=(int)(Math.random()*100);
+        System.out.println(a);
+    }
 }

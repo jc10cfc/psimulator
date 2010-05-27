@@ -1,7 +1,8 @@
 /*
- * DODELAT akutne:
+ * ODCHYLKY:
+ *      iptables -t nat -D POSTROUTING -o eth1 -j MASQUERADE by melo smazat pravidlo
+ * DODELAT:
  *      nastavovani druheho typu natu
- * DODELAT mozna nekdy, rozhodne ne akutne:
  *      Seradit chybovy hlaseni podle priorit a pripadne zaridit, aby se nevypisovaly vsechny.
  *      Udelat seznam zadanejch pravidel, chtelo by nejakej wrapper, zatim nejde mit vic pravidel nez jedno.
  *
@@ -45,7 +46,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
      * 16384 - pro danou moznost chybi nejakej prepinac<br />
      * 32768 - neznamy jmeno retezu<br />
      * 65536 - moc velky cislo k deletovani<br />
-     * 131072 - <br />
+     * 131072 - zatim nepodporovanej retez PREROUTING<br />
      */
     int navrKod = 0;
     // ostatni promenny parseru:
@@ -363,6 +364,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
                 }
             }
             if (retez.equals("PREROUTING")){
+                navrKod |= 131072; //nepodporovanej retez
                 if( ! zadanoMinus_d  ){
                     chybejiciPrepinace.add("-d");
                     navrKod |= 16384;
@@ -412,7 +414,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
 
         if ((navrKod & 2) != 0) { //nezadano jmeno tabulky
             kon.posliRadek(Main.jmenoProgramu + ": Normalne by se pouzila tabulka filter, " +
-                    "ta ale v tomto programu neni. Podporujeme zatim jen tabulku nat.");
+                    "ta ale v tomto simulatoru neni. Podporujeme zatim jen tabulku nat.");
         }
         if ((navrKod & 4) != 0) { //prepinac nedokoncen
             kon.posliRadek("iptables v1.4.1.1: Unknown arg `" + nedokoncenejPrepinac + "'");
@@ -449,7 +451,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
         }
 
         if ((navrKod & 256) != 0) { //vic retezu
-            kon.posliRadek("Parametry -A, -I, -D nemuzete zadavat vicektrat.");
+            kon.posliServisne("Parametry -A, -I, -D nemuzete zadavat vicektrat.");
             // -> normalne to pise: "iptables v1.4.1.1: Can't use -A with -I"  - to se mi nechtelo pamatovat
             kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
         }
@@ -477,11 +479,15 @@ public class LinuxIptables extends AbstraktniPrikaz {
         }
 
         if ((navrKod & 8192) != 0) { //zadany vystupni rozhrani neexistuje kontroluje se jen na POSTROUTING)
-            kon.posliRadek(Main.jmenoProgramu+": Zadany rozhrani "+vystupniRozhr+" neexistuje.");
+            kon.posliRadek(Main.jmenoProgramu+": Zadane rozhrani "+vystupniRozhr+" neexistuje.");
         }
         if ((navrKod & 16384) != 0) { //zadany vystupni rozhrani neexistuje kontroluje se jen na POSTROUTING)
             kon.posliRadek(Main.jmenoProgramu+": Pro danou moznost chybeji tyto prepinace: "
                     +vypisSeznam(chybejiciPrepinace));
+        }
+
+        if ((navrKod & 131072) != 0) { //nepodporovanej retez PREROUTING
+            kon.posliServisne("Retez PREROUTING neni zatim simulatorem podporovan.");
         }
 
 
@@ -500,10 +506,20 @@ public class LinuxIptables extends AbstraktniPrikaz {
             vypis();
         }
         if(provest==1 || provest==2){ //-A nebo -I
-            pc.natTabulka.nastavLinuxMaskaradu(vystupni);
+            if(! pc.natTabulka.jeNastavenaLinuxovaMaskarada()){
+                pc.natTabulka.nastavLinuxMaskaradu(vystupni);
+            } else {
+                kon.posliServisne("Simulator neumoznuje pridat vic nez jedno pravidlo do tabulky. " +
+                        "Nejprve smazte existujici pravidlo.");
+            }
         }
         if(provest==3){ //mazani
-            pc.natTabulka.zrusLinuxMaskaradu();
+            if(pc.natTabulka.jeNastavenaLinuxovaMaskarada()){
+                pc.natTabulka.zrusLinuxMaskaradu();
+            } else {
+                kon.posliRadek("iptables: Index of deletion too big");
+            }
+            
         }
     }
 

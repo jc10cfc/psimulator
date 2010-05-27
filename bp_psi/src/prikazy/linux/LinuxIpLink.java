@@ -26,7 +26,7 @@ public class LinuxIpLink extends AbstraktniPrikaz{
 
     @Override
     protected void vykonejPrikaz() {
-
+        kon.posliServisne("Prikaz link neni v simulatoru zatim podporovan.");
     }
 
 }

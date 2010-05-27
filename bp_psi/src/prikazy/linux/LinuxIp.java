@@ -9,11 +9,9 @@
  */
 
 package prikazy.linux;
-import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.*;
 import prikazy.*;
-import vyjimky.SpatnaMaskaException;
 //import static prikazy.linux.LinuxIp.Terminal.*; //tohle tady musi bejt, takhle divne
 
 /**
@@ -27,7 +25,7 @@ public class LinuxIp extends AbstraktniPrikaz {
         vykonejPrikaz();
     }
 
-    private boolean ladeni=true;
+    private boolean ladeni=false;
 
     private final int necoSpatne=1; //neco je spatne, vypise se help
     private final int spatnaFamily=2;

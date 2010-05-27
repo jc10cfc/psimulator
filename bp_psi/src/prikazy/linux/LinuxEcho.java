@@ -52,7 +52,7 @@ public class LinuxEcho extends AbstraktniPrikaz{
             return;
         }
         String soubor=dalsiSlovo();
-        if(soubor.equals("/proc/sys/net/ipv4/ip_forward") || soubor.equals("ip_forward")){
+        if(soubor.equals("/proc/sys/net/ipv4/ip_forward") || soubor.equals("/proc/sys/net/ipv4/ip_forward")){
             //v poradku
         }else{
             kon.posliRadek(Main.jmenoProgramu+": echo: neznamy soubor");

@@ -54,8 +54,6 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new LinuxExit(pc, kon, slova);
         } else if (slova.get(0).equals("ifconfig")) {
             pr = new LinuxIfconfig(pc, kon, slova);
-//        } else if (slova.get(0).equals("stifconfig")) {
-//            pr = new LinuxIfconfigStarej(pc, kon, slova);
         } else if (slova.get(0).equals("route")) {
             pr = new LinuxRoute(pc, kon, slova);
         } else if (slova.get(0).equals("ping")) {
@@ -70,6 +68,10 @@ public class LinuxParserPrikazu extends ParserPrikazu {
             pr = new LinuxIp(pc, kon, slova);
         } else if (slova.get(0).equals("traceroute")) {
             pr = new LinuxTraceroute(pc, kon, slova);
+        } else if (slova.get(0).equals("man")) {
+            pr = new LinuxMan(pc, kon, slova);
+        } else if (slova.get(0).equals("help")) {
+            pr = new LinuxHelp(pc, kon, slova);
         } else {
             kon.posliRadek("bash: " + slova.get(0) + ": command not found");
         }

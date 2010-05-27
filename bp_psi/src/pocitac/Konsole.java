@@ -5,6 +5,8 @@
 
 package pocitac;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import prikazy.ParserPrikazu;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,22 +76,19 @@ public class Konsole extends Thread {
         char z;
         int citac = 0;
 
-        for(;;){
-            try {
-                
+        for(;;){              
                 citac++;
                 if (citac > 200) { // pocitam, ze zadny prikaz nebude delsi, mozna muzem i snizit
-                    throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek, " +
+                    throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek: " +
                             "klient poslal moc znaku.");
                 }
-
+            try {
                 z = (char) in.read();
-                ret+=z;
-                                
-            } catch (Exception ex) {
-//                ex.printStackTrace();
-                throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek, nastala chyba.");
+            } catch (IOException ex) {
+                throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek: " +
+                            "klient zrejme poslal necitelny znak.");
             }
+                ret+=z;
             if(ret.length()>=2){ //tzn. uz je to dost dlouhy na to, aby tam mohlo bejt \r\n
                 if ( ret.charAt(ret.length()-2)=='\r' && ret.charAt(ret.length()-1)=='\n'){ //kdyz uz jsou ukoncovaci znaky
                     ret=ret.substring(0, ret.length()-2);
@@ -146,7 +145,7 @@ public class Konsole extends Thread {
             }
         } catch (IOException ex) {
             //ex.printStackTrace();
-            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posli, nastala chyba.");
+            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posli: nastala chyba.");
         }
     }
 
@@ -165,7 +164,7 @@ public class Konsole extends Thread {
                 posliRadek(lajna);
             }
         } catch (IOException e) { //tohleto chyta vyjimku z BufferedReadru, ne z posliRadek
-            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posliPoRadcich, nastala chyba.");
+            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posliPoRadcich: nastala chyba.");
         }
     }
 
@@ -192,7 +191,7 @@ public class Konsole extends Thread {
         String radek;
 
         try {
-            pocitac.vypis("vlakno c. " + cislo + " startuje");
+            pocitac.vypis("Konsole c. " + cislo + " startuje.");
             try {
                 in = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 out = s.getOutputStream();
@@ -218,15 +217,19 @@ public class Konsole extends Thread {
             }
 
         } catch (ChybaSpojeniException ex) {
-            ex.printStackTrace();
+            if(ladiciVypisovani){
+                ex.printStackTrace();
+            }
             pocitac.vypis("Nastala chyba v komunikaci: "+ex.getMessage());
         } finally {
-            pocitac.vypis("Ukoncuji vlakno a socket c. " + cislo);
+            pocitac.vypis("Konsole c. " + cislo + " konci.");
             try { //ten socket sice urcite existuje, ale java to jinak nedovoli
                 s.close();
             } catch (IOException ex) {
-                pocitac.vypis("Konsole cislo " + cislo + ", metoda run: Spojeni se nepodarilo " +
-                        "korektne uzavrit.");
+                if (ladiciVypisovani) {
+                    pocitac.vypis("Konsole cislo " + cislo + ", metoda run: Spojeni se nepodarilo " +
+                            "korektne ukoncit.");
+                }
             }
         }
 
@@ -236,7 +239,9 @@ public class Konsole extends Thread {
      * Ukonci spojeni.
      */
     public void ukonciSpojeni() {
-        pocitac.vypis("Zavolala se metoda ukonci.");
+        if(ladiciVypisovani){
+            pocitac.vypis("Zavolala se metoda ukonci.");
+        }
         ukoncit=true;
     }
 
