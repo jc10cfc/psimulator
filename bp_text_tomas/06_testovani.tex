@@ -40,7 +40,7 @@ Tester měl za úkol zkonfigurovat síť z obrázku \ref{obr_testovani}. Během 
 
 \subsubsection{Výpisy}
 
-Hlášení o~běhu simulátoru, která jsou vypisována na standartní výstup, se testerovi zdála velmi nepřehledná. Výpisy o~tom, co server posílá jednotlivým klientům a co klienti posílají serveru, jsou pro uživatele nadbytečné a proto byly zrušeny. Ponechány byly jen výpisy o~přihlášení klienta a o~průchodu paketu, které byly testerovi užitečné pro diagnostiku sítě.
+Hlášení o~běhu simulátoru, která jsou vypisována na standardní výstup, se testerovi zdála velmi nepřehledná. Výpisy o~tom, co server posílá jednotlivým klientům a co klienti posílají serveru, jsou pro uživatele nadbytečné a proto byly zrušeny. Ponechány byly jen výpisy o~přihlášení klienta a o~průchodu paketu, které byly testerovi užitečné pro diagnostiku sítě.
 
 \subsubsection{Příkaz ifconfig}
 
@@ -54,11 +54,11 @@ Tester zkusil zadat \verb|man route|, přičemž simulátor vypsal, že příkaz
 
 \subsubsection{Příkaz ping}
 
-Uživatel zadal příkaz \verb|ping 192.168.1.1 -c5|. Zjistil, že parametr \verb|-c| je ignorován, protože parser parsuje jen parametry před adresou. Parser jsem z důvodu velké časové tísně zatím nestihl opravit. Chyby je zmíněna přímo u popisu tohoto příkazu a bude opravena.
+Uživatel zadal příkaz \verb|ping 192.168.1.1 -c5|. Zjistil, že parametr \verb|-c| je ignorován, protože parser parsuje jen parametry před adresou. Parser jsem z důvodu veliké časové tísně zatím nestihl opravit. Chyba je zmíněna přímo u popisu tohoto příkazu a bude opravena.
 
 \subsubsection{Soubor ipforward}
 
-Z důvodů snažšího testování jsem měl na soubor \verb|/proc/sys/net/ipv4/ip_forward| nastaven alias \verb|ip_forward|, který jsem zapomněl odstranit. Alias již byl odstraněn.
+Z důvodů snazšího testování jsem měl na soubor \verb|/proc/sys/net/ipv4/ip_forward| nastaven alias \verb|ip_forward|, který jsem zapomněl odstranit. Alias již byl odstraněn.
 
 \subsubsection{Příkaz route}
 
@@ -70,6 +70,6 @@ Tester zkoušel příkaz \verb|route --help|, který nefunguje. Do parseru jsem 
 
 \section{Závěr}
 
-V aplikaci bylo nalezeno několik, spíše drobnějších chyb především v parsování příkazů. Některé chyby již byly opraveny, některé teprve opravím a jistě existují chyby, zvláště v parserech, které nebyly ještě nalezeny. Ty budu muset opravit, až na ně uživatelé, budou-li kdy nějací, přijdou.
+V aplikaci bylo nalezeno několik, spíše drobnějších chyb především v parsování příkazů. Některé chyby již byly opraveny, některé teprve opravím a jistě existují chyby, zvláště v parserech, které ještě nebyly nalezeny. Ty budu muset opravit, až na ně uživatelé, budou-li kdy nějací, přijdou.
 
 V simulátoru nebyly nalezeny žádné vážnější chyby v jeho datových strukturách a ve virtuální síti. Nebyly nalezeny ani žádné chyby, které by způsobovaly pád naší aplikace.

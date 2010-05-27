@@ -1,6 +1,6 @@
 \chapter{Možná další vylepšení}
 
-Simulátor by se dal v mnohých ohledech ještě vylepšit. Některé vylepšení by přinesla větší uživatelský komfort, jiná by simulátor učinila věrnější skutečné síti. Zde uvádím několik námětů k vylepšení:
+Simulátor by se dal v mnohých ohledech ještě vylepšit. Některá vylepšení by přinesla větší uživatelský komfort, jiná by simulátor učinila věrnější skutečné síti. Zde uvádím několik námětů k vylepšení:
 
 % \begin{enumerate}
 % \item Prvním by mohlo být grafické rozhraní pro tvorbu konfiguračního souboru (struktury počítačové sítě), kde by bylo možné přidávat počítače a propojení mezi nimi.                                                                                                                                                                     
@@ -15,7 +15,7 @@ Simulátor by se dal v mnohých ohledech ještě vylepšit. Některé vylepšen�
 % \end{enumerate}
 
 \begin{itemize}
-\item Dle mého názoru je největším nedostatkem naší aplikace komunikace simulátoru s klientem. Především by bylo dobré najít nebo naprogramovat vlastního, třeba i grafického, klienta, pomocí kterého by se uuživatelé k simulátoru připojovali. Zvláště pod OS Windows ke připojování pomocí emulátoru cygwin velmi nepohodlné. Další obrovskou nevýhodou stávající komunikace je nemožnost posílat signály jako \verb|Ctrl+C| nebo \verb|Ctrl+Z|.
+\item Dle mého názoru je největším nedostatkem naší aplikace komunikace simulátoru s klientem. Především by bylo dobré najít nebo naprogramovat vlastního, třeba i grafického, klienta, pomocí kterého by se uživatelé k simulátoru připojovali. Zvláště pod OS Windows je  k připojování k aplikaci pomocí emulátoru cygwin velmi nepohodlné. Další obrovskou nevýhodou stávající komunikace je nemožnost posílat signály jako \verb|Ctrl+C| nebo \verb|Ctrl+Z|.
 \item Uživateli by velmi pomohlo, kdyby si topologii sítě mohl vytvořit v nějakém, nejlépe grafickém programu. Také zobrazování topologie již vytvořené sítě by bylo velmi užitečným vylepšením.
 \item Simulátor nepodporuje žádné síťové prvky kromě směrovačů na síťové vrstvě ISO/OSI modelu, pořádně není implementována ani linková vrstva tohoto modelu. Na síťovém rozhraní může být zatím jen jedna IP adresa. Pro potřeby předmětu PSI nejsou tyto funkcionality důležité, ale pro jiné účely by takovéto vylepšení bylo asi nutné. V tomto ohledu jsem ale realista a myslím si, že toto vylepšení nebude asi nikdy potřeba.
 \item Některé linuxové příkazy nejsou zcela věrné příkazům na skutečném linuxu. Bylo by dobré opravit například parser u příkazů \verb|ifconfig|, \verb|ping| nebo \verb|traceroute|.

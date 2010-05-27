@@ -224,7 +224,7 @@ unicode=true,
 
 \acknowledgements
 \noindent
-Zde můžete napsat své poděkování, pokud chcete a máte komu děkovat.
+Chtěl bych poděkovat panu Ing. Pavlu Kubalíkovi Ph.D. za dobrý námět k bakalářké práci a za pomoc při její realizaci. Dále bych chtěl poděkovat své rodině a své slečně za podporu a zázemí při psaní této práce i během celého studia.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%   Prohlaseni / Declaration 
@@ -236,7 +236,17 @@ Zde můžete napsat své poděkování, pokud chcete a máte komu děkovat.
  
 \abstractpage
 
-Translation of Czech abstract into English.
+% Standuv abstrakt:
+% This bachelor thesis inquires into desing and implementation of virtual network simulator composed of cisco-based routers for subject Y36PSI Počítačové sítě. Simulator allows configuration of routers via Cisco IOS command line. Simulator implements commands for configuring interfaces, static routing, dynamic and static network address translation. This system also offers verification of current configuration via ping and traceroute commands. Entire network settings are loaded from a configuration file and there is also possibility to save current configuration to a given file. User testing is integral part of a thesis.
+
+% muj abstrakt moji angličtinou:
+% This bachelor thesis inquires into design, implementation and testing of simulator of computer network based on computers with Linux OS. Simulator is made for use in subject Y36PSI, Computer networks, on FEE CTU in Prague. The application allows to build virtual computer network consist of computers with OS Linux, to configure the network with common commands used in linux command line, to save configurated network to a given file and also load the configuration from this file.
+
+% muj abstrakt Standovou angličtinou:
+This bachelor thesis inquires into design, implementation and testing of computer network simulator based on computers with
+Linux OS. Simulator is intended to be used in subject Y36PSI, Computer networks, on FEE CTU in Prague. The application allows
+building virtual computer network consisted of computers with OS Linux, configuring the network with common linux commands, saving
+current configuration to a given file and loading back.
 
 % Prace v cestine musi krome abstraktu v anglictine obsahovat i
 % abstrakt v cestine.
@@ -246,10 +256,8 @@ Translation of Czech abstract into English.
 \vskip 2.75\baselineskip
 
 \noindent
-Abstrakt práce by měl velmi stručně vystihovat její podstatu. Tedy čím se práce zabývá a co je jejím výsledkem/přínosem.
+Tato bakalářská práce se zabývá analýzou, implementací a testováním jednoduchého simulátoru počítačové sítě založené po počítačích s OS Linux. Simulátor má sloužit především pro výukové účely předmětu Y36PSI, Počítačové sítě, na Fakultě elektrotechnické ČVUT v Praze. Aplikace umožňuje postavit virtuální počítačovou síť z počítačů s OS Linux, konfigurovat tuto síť běžnými příkazy používanými na linuxu v příkazové řádce, ukládat nakonfigurovanou síť do souboru a znovu ji z něho načítat.
 
-\noindent
-Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Obsah / Table of Contents 
 
@@ -260,11 +268,9 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 
 \listoffigures
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  Seznam tabulek / List of Tables
 
-\listoftables
-
+% \listoftables žádnou tabulku nemám, tak jsem to zrušil
 
 %**************************************************************
 
@@ -291,6 +297,8 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 \include{04_implementace_site}
 \include{05_prikazy}
 \include{06_testovani}
+\include{07_vylepseni}
+\include{08_zaver}
 
 
 
@@ -331,36 +339,64 @@ Očekávají se cca 1 -- 2 odstavce, maximálně půl stránky.
 \chapter{Seznam použitých zkratek}
 
 \begin{description}
-\item[2D] Two-Dimensional
-\item[ABN] Abstract Boolean Networks
-\item[ASIC] Application-Specific Integrated Circuit
+\item[ARP] Address Resolution Protocol
+\item[ICMP] Internet Control Message Protocol
+\item[IOS] Internetwork Operating System
+\item[IP] Internet Protocol
+\item[Java SE] Java Standart Edition
+\item[JRE] Java Runtime Enviroment
+\item[MAC] Media Access Control
+\item[NAT] Network Address Translation
+\item[NVT] Network Virtual Terminal
+\item[OS] Operační Systém
+\item[Y36PSI, PSI] Předmět Počítačové sítě na FEL
 \end{description}
-\vdots
 
 %*****************************************************************************
-\chapter{Instalační a uživatelská příručka}
-\textbf{\large Tato příloha velmi žádoucí zejména u softwarových implementačních prací.}
+% \chapter{Instalační a uživatelská příručka}
+% \textbf{\large Tato příloha velmi žádoucí zejména u softwarových implementačních prací.}
+\include{10_instalacni_prirucka}
 
 %*****************************************************************************
 \chapter{Obsah přiloženého CD}
-\textbf{\large Tato příloha je povinná pro každou práci. Každá práce musí totiž obsahovat přiložené CD. Viz dále.}
+%\textbf{\large Tato příloha je povinná pro každou práci. Každá práce musí totiž obsahovat přiložené CD. Viz dále.}
 
-Může vypadat například takto. Váš seznam samozřejmě bude odpovídat typu vaší práce. (viz \cite{infodp}):
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=14cm]{figures/seznamcd}
-\caption{Seznam přiloženého CD --- příklad}
-\label{fig:seznamcd}
-\end{center}
-\end{figure}
+Přiložené CD obsahuje tyto soubory a adresáře:
 
-Na GNU/Linuxu si strukturu přiloženého CD můžete snadno vyrobit příkazem:\\ 
-\verb|$ tree . >tree.txt|\\
-Ve vzniklém souboru pak stačí pouze doplnit komentáře.
+\begin{verbatim}
+readme.txt              informace o souborech na CD
+text/                   adresář s textem práce
+text/install.txt        instalační příručka
+text/readme.txt         uživatelská příručka
+bin/                    adresář se spustitelnými a konfiguračními soubory
+bin/psimulator_lin.zip  zabalený archiv se spustitelnými soubory pro linux
+                        (PSImulator bez programů rlwrap a telnet)
+bin/psimulator_win.zip  zabalený archiv se spustitelnými soubory pro windows
+                        (PSImulator + Cygwin)
+javadoc/                dokumentace javadoc
+source/                 zdrojové kódy
+source/netbeans.zip     zabalené zdrojové kódy jako projekt do NetBeans
+source/config           konfigurační soubory použité pro testování
+\end{verbatim} 
 
-Z \textbf{README.TXT} (případne index.html apod.)  musí být rovněž zřejmé, jak programy instalovat, spouštět a jaké požadavky mají tyto programy na hardware.
 
-Adresář \textbf{text}  musí obsahovat soubor s vlastním textem práce v PDF nebo PS formátu, který bude později použit pro prezentaci diplomové práce na WWW.
+% Může vypadat například takto. Váš seznam samozřejmě bude odpovídat typu vaší práce. (viz \cite{infodp}):
+% 
+% \begin{figure}[h]
+% \begin{center}
+% \includegraphics[width=14cm]{figures/seznamcd}
+% \caption{Seznam přiloženého CD --- příklad}
+% \label{fig:seznamcd}
+% \end{center}
+% \end{figure}
+% 
+% Na GNU/Linuxu si strukturu přiloženého CD můžete snadno vyrobit příkazem:\\ 
+% \verb|$ tree . >tree.txt|\\
+% Ve vzniklém souboru pak stačí pouze doplnit komentáře.
+% 
+% Z \textbf{README.TXT} (případne index.html apod.)  musí být rovněž zřejmé, jak programy instalovat, spouštět a jaké požadavky mají tyto programy na hardware.
+% 
+% Adresář \textbf{text}  musí obsahovat soubor s vlastním textem práce v PDF nebo PS formátu, který bude později použit pro prezentaci diplomové práce na WWW.
 
 \end{document}
