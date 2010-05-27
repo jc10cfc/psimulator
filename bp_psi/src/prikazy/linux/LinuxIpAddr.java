@@ -2,6 +2,7 @@
  * Dodelat:
  * Vypisovani helpu. HOTOVO
  * Vypisovani jen některejch adres podle přepínačů (-4 ap)
+ * Vypisovani jen nahozenejch rozhrani.
  */
 package prikazy.linux;
 

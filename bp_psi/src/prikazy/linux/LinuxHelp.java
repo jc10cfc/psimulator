@@ -29,11 +29,12 @@ public class LinuxHelp extends AbstraktniPrikaz{
         kon.posliRadek("help          vypsani teto napovedy");
         kon.posliRadek("");
         kon.posliRadek("Z linuxovych prikazu jsou podporovany tyto:");
-        kon.posliRadek("ifconfig      parametry adresa, netmask");
+        kon.posliRadek("ifconfig      parametry adresa, netmask, up, down");
         kon.posliRadek("route         akce add, del; parametry -net, -host, dev, gw, netmask");
         kon.posliRadek("iptables      jen pro pridani pravidla k natovani");
         kon.posliRadek("              napr: iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE");
         kon.posliRadek("ping          prepinace -c, -i, -s, -t");
+        kon.posliRadek("              prednastaven na 4 pakety");
         kon.posliRadek("traceroute    jen napr. traceroute 1.1.1.1");
         kon.posliRadek("exit");
         kon.posliRadek("ip            podprikazy addr a route");

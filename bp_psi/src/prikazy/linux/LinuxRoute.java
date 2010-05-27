@@ -496,25 +496,27 @@ public class LinuxRoute extends AbstraktniPrikaz{
         for (int i = 0; i < pocet; i++) {
             v="";
             RoutovaciTabulka.Zaznam z = pc.routovaciTabulka.vratZaznam(i);
-            v += zarovnej(z.getAdresat().vypisAdresu(), 16);
-            if (z.getBrana() == null) {
-                if(z.getAdresat().vypisMasku().equals("255.255.255.255")){
-                    v += zarovnej("0.0.0.0",16) + zarovnej(z.getAdresat().vypisMasku(),16) + "UH    ";
-                }else{
-                    v += zarovnej("0.0.0.0",16) + zarovnej(z.getAdresat().vypisMasku(),16) + "U     ";
-                }
-            } else {
-                if(z.getAdresat().vypisMasku().equals("255.255.255.255")){
-                    v += zarovnej(z.getBrana().vypisAdresu(),16) + zarovnej(z.getAdresat().vypisMasku(),16)
-                            + "UGH   ";
-                }else{
-                    v += zarovnej(z.getBrana().vypisAdresu(),16) + zarovnej(z.getAdresat().vypisMasku(),16) 
-                            + "UG    ";
-                }
+            if (z.getRozhrani().jeNahozene()) {
+                v += zarovnej(z.getAdresat().vypisAdresu(), 16);
+                if (z.getBrana() == null) {
+                    if (z.getAdresat().vypisMasku().equals("255.255.255.255")) {
+                        v += zarovnej("0.0.0.0", 16) + zarovnej(z.getAdresat().vypisMasku(), 16) + "UH    ";
+                    } else {
+                        v += zarovnej("0.0.0.0", 16) + zarovnej(z.getAdresat().vypisMasku(), 16) + "U     ";
+                    }
+                } else {
+                    if (z.getAdresat().vypisMasku().equals("255.255.255.255")) {
+                        v += zarovnej(z.getBrana().vypisAdresu(), 16) + zarovnej(z.getAdresat().vypisMasku(), 16)
+                                + "UGH   ";
+                    } else {
+                        v += zarovnej(z.getBrana().vypisAdresu(), 16) + zarovnej(z.getAdresat().vypisMasku(), 16)
+                                + "UG    ";
+                    }
 
+                }
+                v += "0      0        0 " + z.getRozhrani().jmeno;
+                kon.posliRadek(v);
             }
-            v += "0      0        0 " + z.getRozhrani().jmeno;
-            kon.posliRadek(v);
         }  
     }
 

@@ -259,22 +259,24 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
             for(int i=0; i<pc.routovaciTabulka.pocetZaznamu();i++){ //vypisuje abulku po radcich
                 v="";
                 RoutovaciTabulka.Zaznam z = pc.routovaciTabulka.vratZaznam(i);
-                //radek se zobrazi jen za nejakejch podminek:
-                if( (adresat==null || adresat.equals(z.getAdresat())) //adresat nezadan, nebo souhlasi
-                        && (rozhr==null || rozhr==z.getRozhrani()) //rozhrani nezadano, nebo souhlasi
-                        && (brana==null || brana.jeStejnaAdresa(z.getBrana())) ) //brana nezadana, nebo dobra
-                {
-                    v +=z.getAdresat().vypisAdresuSMaskou();
-                    if(brana==null && z.getBrana()!=null){
-                        // -> brana se vypise, jen kdyz nebyla zadana jako filtr a je zadana
-                        v+=" via "+z.getBrana().vypisAdresu();
+                if (z.getRozhrani().jeNahozene()) {
+                    //radek se zobrazi jen za nejakejch podminek:
+                    if ((adresat == null || adresat.equals(z.getAdresat())) //adresat nezadan, nebo souhlasi
+                            && (rozhr == null || rozhr == z.getRozhrani()) //rozhrani nezadano, nebo souhlasi
+                            && (brana == null || brana.jeStejnaAdresa(z.getBrana()))) //brana nezadana, nebo dobra
+                    {
+                        v += z.getAdresat().vypisAdresuSMaskou();
+                        if (brana == null && z.getBrana() != null) {
+                            // -> brana se vypise, jen kdyz nebyla zadana jako filtr a je zadana
+                            v += " via " + z.getBrana().vypisAdresu();
+                        }
+                        if (rozhr == null) { //rozhrani se vypise, jen kdyz nebylo zadano jako filtr
+                            v += " dev " + z.getRozhrani().jmeno;
+                        }
                     }
-                    if(rozhr==null){ //rozhrani se vypise, jen kdyz nebylo zadano jako filtr
-                        v+=" dev "+z.getRozhrani().jmeno;
+                    if (!v.equals("")) {
+                        kon.posliRadek(v);
                     }
-                }
-                if(!v.equals("")){
-                    kon.posliRadek(v);
                 }
             }
         }

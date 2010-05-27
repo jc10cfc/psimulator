@@ -51,7 +51,7 @@ public class IpAdresa {
      * je spatny oboje, ma SpatnaAdresaException prednost. <br />
      * @param adrm
      * @param defMaska Nabyva hodnot v intervalu <-1,32>. Nastavuje se tehdy, kdyz zadany string masku
-     * za lomitkem neobsahuje. -1 zanmena, ze se ma maska dopocitat podle tridy.
+     * za lomitkem neobsahuje. -1 znamena, ze se ma maska dopocitat podle tridy.
      * @param moduloMaska
      * @throws SpatnaMaskaException
      * @throws SpatnaAdresaException
