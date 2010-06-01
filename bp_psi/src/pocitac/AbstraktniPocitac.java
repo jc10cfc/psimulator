@@ -40,6 +40,11 @@ public abstract class AbstraktniPocitac {
      * Pro cisco defaultne true, pro linux false.
      */
     public boolean ip_forward = true; //defaultne nastaveno, linux si to v konstruktoru prepise
+    /**
+     * Zamknuty pocitac, nelze se na nej pripojit (tedy ho menit), 
+     * jeho konfigurace se nacita vzdy (i s prepinacem -n).
+     */
+    public boolean zamknute = false;
 
     @Deprecated
     public AbstraktniPocitac(String jmeno) {

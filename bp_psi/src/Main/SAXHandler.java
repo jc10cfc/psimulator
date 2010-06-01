@@ -61,6 +61,10 @@ public class SAXHandler implements ContentHandler {
      */
     public int port;
     /**
+     * Port, od ktereho se bude pridelovat zamknutym pocitacum smerem dolu.
+     */
+    private int port_zamknute = 35536;
+    /**
      * True, pokud program byl spusten s parametrem -n.
      * Pak se postavijen konstra site s rozhranimi bez nastaveni.
      */
@@ -367,6 +371,16 @@ public class SAXHandler implements ContentHandler {
                 if (atts.getQName(i).equals("typ")) {
                     dejOdkazNaAktualniPC().typ = atts.getValue(i);
                 }
+                if (atts.getQName(i).equals("zamknute")) {
+                    String volba = atts.getValue(i);
+                    if (volba.equals("true") || volba.equals("1")) {
+                        dejOdkazNaAktualniPC().zamknute = true;
+                    } else if (volba.equals("false") || volba.equals("0")) {
+                        // ok
+                    } else {
+                        System.err.println("U atributu zamknute je povoleno pouze true/1");
+                    }
+                }
             }
             vymazVsechnyNATPole();
         }
@@ -599,14 +613,24 @@ public class SAXHandler implements ContentHandler {
             }
 
             AbstraktniPocitac pocitac;
+
+            int novy_port;
+            if (pcbuilder.zamknute) {
+                novy_port = port_zamknute--;
+            } else {
+                novy_port = port++;
+            }
+
             if (pcbuilder.typ.equals("cisco")) {
-                pocitac = new CiscoPocitac(pcbuilder.jmeno, port++);
+                pocitac = new CiscoPocitac(pcbuilder.jmeno, novy_port);
             } else if (pcbuilder.typ.equals("linux")) {
-                pocitac = new LinuxPocitac(pcbuilder.jmeno, port++);
+                pocitac = new LinuxPocitac(pcbuilder.jmeno, novy_port);
                 pocitac.ip_forward = pcbuilder.ip_forward;
             } else {
                 throw new ChybaKonfigurakuException("Pocitac nema nastaven typ - linux | cisco.");
             }
+
+            pocitac.zamknute = pcbuilder.zamknute;
 
             if (vypis2) {
                 System.out.println(pcbuilder);
@@ -743,6 +767,10 @@ public class SAXHandler implements ContentHandler {
      * @param pcbuilder
      */
     private void vymazNastaveni(PocitacBuilder pcbuilder) {
+        if (pcbuilder.zamknute) {
+            return;
+        }
+
         pcbuilder.accessList.clear();
         pcbuilder.pool.clear();
         pcbuilder.poolAccess.clear();

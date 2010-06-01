@@ -168,7 +168,7 @@
 		</access-listy>
 	</natovani>
 </pocitac>
-<pocitac jmeno="fw" typ="linux">
+<pocitac jmeno="fw" typ="linux" zamknute="true">
 	<rozhrani>
 		<jmeno>eth0</jmeno>
 		<ip>172.16.1.2</ip>

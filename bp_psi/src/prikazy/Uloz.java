@@ -60,12 +60,18 @@ public class Uloz extends AbstraktniPrikaz {
         out.write("<pocitac jmeno=\"" + pocitac.jmeno + "\" ");
 
         if (pocitac instanceof CiscoPocitac) {
-            out.write("typ=\"cisco\">\n");
+            out.write("typ=\"cisco\"");
         } else if (pocitac instanceof LinuxPocitac) {
-            out.write("typ=\"linux\">\n");
+            out.write("typ=\"linux\"");
         } else {
             throw new NeznamyTypPcException();
         }
+
+        if (pocitac.zamknute) {
+            out.write(" zamknute=\"true\"");
+        }
+        out.write(">\n");
+
 
         tabs += "\t";
 

@@ -10,6 +10,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Trida pro sitovou komunikaci s uzivatelem.
@@ -26,7 +28,7 @@ public class Komunikace extends Thread {
     List<Konsole> seznamSpojeni = new ArrayList();
     AbstraktniPocitac pc;//odkaz na pocitac
     private final Object zamekPocitace = new Object(); //zamek celyho pocitace, slouzi k tomu, aby se zmeny
-            // v nastaveni poctace (tedy vykonavani prikazu)
+    // v nastaveni poctace (tedy vykonavani prikazu)
 
     public Komunikace(int cisloPortu, AbstraktniPocitac pc) {
         this.cisloPortu = cisloPortu;
@@ -53,18 +55,33 @@ public class Komunikace extends Thread {
             Main.chyba_spusteni = true;
             pc.vypis("Nemuzu poslouchat na portu " + cisloPortu + ".");
             if (cisloPortu < 1024) {
-                pc.vypis("Spoustet programy poslouchajici na portu "+cisloPortu+" muze pouze root. " +
-                        "Zkuste server spustit s portem > 1023.");
+                pc.vypis("Spoustet programy poslouchajici na portu " + cisloPortu + " muze pouze root. "
+                        + "Zkuste server spustit s portem > 1023.");
             } else {
-                pc.vypis("Port "+cisloPortu+" je pravdepodobne obsazen jinym programem, " +
-                        "pocitac "+pc.jmeno+" nemohl byt nastartovan. " +
-                        "Zkuste server spustit s jinym portem.\n" +
-                        "Ukoncuji..");
+                pc.vypis("Port " + cisloPortu + " je pravdepodobne obsazen jinym programem, "
+                        + "pocitac " + pc.jmeno + " nemohl byt nastartovan. "
+                        + "Zkuste server spustit s jinym portem.\n"
+                        + "Ukoncuji..");
             }
             System.exit(1);
         }
-        
-        pc.vypis("Posloucham na portu " + cisloPortu);
+
+        try { // timeout je tady kvuli spravnym vypisum; nemazat!!!
+            sleep(100);
+        } catch (InterruptedException ex) {
+            // ok
+        }
+        if (pc.zamknute) {
+            pc.vypis("zamknute");
+            try {
+                ss.close();
+            } catch (IOException ex) {
+                pc.vypis("Nepodarilo se ukoncit socket.");
+            }
+            return;
+        } else {
+            pc.vypis("Posloucham na portu " + cisloPortu);
+        }
 
         try {
             while (true) { // endless loop

@@ -7,7 +7,6 @@ import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
 import pocitac.LinuxPocitac;
 import pocitac.SitoveRozhrani;
-import vyjimky.ChybaKonfigurakuException;
 import static Main.SAXHandler.*;
 
 /**
@@ -27,6 +26,7 @@ public class PocitacBuilder {
     List<String[]> staticke;
     boolean bezNastaveni;
     boolean debug = false;
+    boolean zamknute = false;
     
     public PocitacBuilder(boolean bezNastaveni) {
         rozhrani = new ArrayList<String[]>();
