@@ -7,7 +7,7 @@ import prikazy.AbstraktniPrikaz;
 
 /**
  *
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public abstract class CiscoPrikaz extends AbstraktniPrikaz {
 

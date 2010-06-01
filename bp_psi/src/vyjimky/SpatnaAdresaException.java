@@ -8,7 +8,7 @@ package vyjimky;
 /**
  * Hazi se v konstruktoru IpAdresy, kdyz je zadanej spatnej String.
  * Potomek SpatneVytvorenaAdresaException
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class SpatnaAdresaException extends SpatneVytvorenaAdresaException {
 

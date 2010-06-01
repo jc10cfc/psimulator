@@ -21,7 +21,7 @@ import vyjimky.SpatnaAdresaException;
 /**
  * Trida pro zpracovani prikazu ip route / no ip route.<br />
  * Bud rozhrani nebo brana je vzdy null (po radnem zpracovani).
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoIpRoute extends CiscoPrikaz {
     

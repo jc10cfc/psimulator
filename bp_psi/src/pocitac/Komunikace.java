@@ -17,7 +17,7 @@ import java.util.List;
  * Posloucha na zadaným portu a vytváří vlákna pro jednotlivý Konsole (připojení)
  * Nakonec jsem sem tu tridu pro tu sitovou komunikaci stejne hodil. Bude to prehlednejsi i vzhledem k tem vlaknum
  * a tak.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class Komunikace extends Thread {
 

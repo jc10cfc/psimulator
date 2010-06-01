@@ -11,7 +11,7 @@ import pocitac.*;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxExit extends AbstraktniPrikaz{
 

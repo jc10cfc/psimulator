@@ -10,7 +10,7 @@ import pocitac.*;
 /**
  * Metoda zpracujRadek(String s) prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej()
  * rozseka na jednotlivy slova. Pak se testuje,
- * @author neiss & haldyr
+ * @author Tomáš Pitřinec & Stanislav Řehák
  */
 public abstract class ParserPrikazu extends Abstraktni {
 
@@ -41,7 +41,7 @@ public abstract class ParserPrikazu extends Abstraktni {
     /**
      * Tato metoda rozseka vstupni string na jednotlivy slova (jako jejich oddelovac se bere mezera)
      * a ulozi je do seznamu slova, ktery dedi od Abstraktni.
-     * @autor haldyr
+     * @autor Stanislav Řehák
      */
     protected void rozsekej() {
         slova=new ArrayList<String>();
@@ -61,7 +61,7 @@ public abstract class ParserPrikazu extends Abstraktni {
     /**
      * V teto metode je se kontroluje, zda neprisel nejaky spolecny prikaz, jako napr. save ci v budoucnu jeste jine.
      * @return vrati true, kdyz konkretni parser uz nema pokracovat dal v parsovani (tj. jednalo se o spolecny prikaz)
-     * @autor haldyr
+     * @autor Stanislav Řehák
      */
     protected boolean spolecnePrikazy(boolean debug) {
         AbstraktniPrikaz prikaz;

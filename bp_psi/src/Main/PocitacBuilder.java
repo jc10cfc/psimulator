@@ -12,7 +12,7 @@ import static Main.SAXHandler.*;
 
 /**
  * Pomocna trida pro ukladani pocitacu pri nacitani z konfiguraku.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class PocitacBuilder {
 

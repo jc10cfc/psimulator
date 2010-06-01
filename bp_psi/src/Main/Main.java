@@ -11,7 +11,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Trida main zpracuje parametry a podle nich pozada SAXHandler o data z konfiguraku.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class Main {
 

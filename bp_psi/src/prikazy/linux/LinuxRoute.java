@@ -19,7 +19,7 @@ import pocitac.SitoveRozhrani;
 
 /**
  * Linuxovy prokaz route.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxRoute extends AbstraktniPrikaz{
     boolean ladiciVypisovani = false; //pro debug

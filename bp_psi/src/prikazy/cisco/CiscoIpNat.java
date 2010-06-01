@@ -16,7 +16,7 @@ import static prikazy.cisco.CiscoIpNat.Stav.*;
  * ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24 <br />
  * ip nat inside source list 7 pool ovrld overload
  * ip nat inside source static 10.10.10.2 171.16.68.5
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoIpNat extends CiscoPrikaz {
     

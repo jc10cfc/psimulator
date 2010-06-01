@@ -13,7 +13,7 @@ import vyjimky.SpatnaAdresaException;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxPing extends AbstraktniPing{
 

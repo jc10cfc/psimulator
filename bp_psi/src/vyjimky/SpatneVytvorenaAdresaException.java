@@ -8,7 +8,7 @@ package vyjimky;
 /**
  * Abstraktni predek vyjimek hazenych predevsim v konstruktorech IpAdresy.
  * Udelal jsem ji, kdyz potrebuju chytat vyjimku a je mi jedno, jestli je kvuli masce nebo kvuli adrese.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public abstract class SpatneVytvorenaAdresaException extends RuntimeException {
 

@@ -9,7 +9,7 @@ import pocitac.*;
 import prikazy.*;
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxIpLink extends AbstraktniPrikaz{
     public LinuxIpLink(AbstraktniPocitac pc, Konsole kon, List<String> slova, LinuxIp puv) {

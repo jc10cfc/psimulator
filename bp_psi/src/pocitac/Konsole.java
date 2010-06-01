@@ -22,7 +22,7 @@ import static prikazy.AbstraktniPrikaz.*;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class Konsole extends Thread {
     boolean ladiciVypisovani = false;
@@ -153,7 +153,7 @@ public class Konsole extends Thread {
      * Posila po radcich se zpozdenim v ms. Vyuziva metodu posliRadek().
      * @param s, retezec, ktery ma posilat
      * @param cekej, prodleva v ms mezi jednotlivejma radkama
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public void posliPoRadcich(String s, int cekej) throws ChybaSpojeniException {
         BufferedReader input = new BufferedReader(new StringReader(s));

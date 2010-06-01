@@ -18,7 +18,7 @@ import vyjimky.SpatnaAdresaException;
  * Kaslu na rozsahlou implementaci parseru, bude to umet jen blbe precist adresu, nic vic.
  * Vsechny pakety, ktery mi zpatky dojdou pocitam za prijaty (prijate++), z toho pak pocitam,
  * jestli neco timeoutovalo.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxTraceroute extends AbstraktniTraceroute {
 

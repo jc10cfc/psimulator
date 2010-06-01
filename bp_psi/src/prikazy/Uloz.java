@@ -21,7 +21,7 @@ import static Main.Main.*;
 
 /**
  * Prikaz ukladani do XML souboru vsechny pocitace dle aktualnich nastaveni.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class Uloz extends AbstraktniPrikaz {
 

@@ -11,7 +11,7 @@ import prikazy.AbstraktniPrikaz;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxHelp extends AbstraktniPrikaz{
     public LinuxHelp(AbstraktniPocitac pc, Konsole kon, List<String> slova) {

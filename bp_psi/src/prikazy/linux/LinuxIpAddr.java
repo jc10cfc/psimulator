@@ -14,7 +14,7 @@ import vyjimky.SpatneVytvorenaAdresaException;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxIpAddr extends AbstraktniPrikaz {
     public LinuxIpAddr(AbstraktniPocitac pc, Konsole kon, List<String> slova, LinuxIp puv) {

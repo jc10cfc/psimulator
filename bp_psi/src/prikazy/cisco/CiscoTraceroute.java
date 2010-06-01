@@ -18,7 +18,7 @@ import static Main.Main.*;
  * Implementovana je pouze zakladni funkcnost 'traceroute IP'.
  * Vsechny pakety, ktery mi zpatky dojdou pocitam za prijaty (prijate++), z toho pak pocitam,
  * jestli neco timeoutovalo.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoTraceroute extends AbstraktniTraceroute {
 

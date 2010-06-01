@@ -11,7 +11,7 @@ import pocitac.Konsole;
 
 /**
  * Trida pro vypis podporovanych prikazu v moji implementaci.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoHelp extends CiscoPrikaz {
 

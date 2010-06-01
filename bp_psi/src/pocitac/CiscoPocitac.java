@@ -9,7 +9,7 @@ import datoveStruktury.CiscoWrapper;
 
 /**
  *
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoPocitac extends AbstraktniPocitac {
 

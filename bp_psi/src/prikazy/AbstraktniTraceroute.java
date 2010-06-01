@@ -13,7 +13,7 @@ import pocitac.Konsole;
 
 /**
  * 
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public abstract class AbstraktniTraceroute extends AbstraktniPing {
 

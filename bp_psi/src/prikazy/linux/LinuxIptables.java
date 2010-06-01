@@ -20,7 +20,7 @@ import vyjimky.SpatnaAdresaException;
 /**
  *
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxIptables extends AbstraktniPrikaz {
 

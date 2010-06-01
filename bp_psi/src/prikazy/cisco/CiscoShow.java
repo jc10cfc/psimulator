@@ -15,7 +15,7 @@ import static prikazy.cisco.CiscoShow.Stav.*;
 
 /**
  * Trida pro zpracovani a obsluhu prikazu 'show'.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoShow extends CiscoPrikaz {
 

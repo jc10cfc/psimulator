@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Predek uplne vseho, dedi od nej AbstraktniPrikaz a ParserPrikazu (cili temer vsechny tridy).
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public abstract class Abstraktni {
 

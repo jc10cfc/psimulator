@@ -29,7 +29,7 @@ import vyjimky.ChybaKonfigurakuException;
  * Náš vlastní content handler pro obsluhu SAX událostí.
  * Implementuje metody interface ContentHandler.
  *
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class SAXHandler implements ContentHandler {
 

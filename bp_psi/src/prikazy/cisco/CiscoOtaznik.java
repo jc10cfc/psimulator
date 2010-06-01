@@ -14,7 +14,7 @@ import prikazy.AbstraktniPrikaz;
 
 /**
  * Zakladni napoveda, jake prikazy to umi.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoOtaznik extends AbstraktniPrikaz{
 

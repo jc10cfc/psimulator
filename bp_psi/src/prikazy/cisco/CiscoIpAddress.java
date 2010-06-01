@@ -14,7 +14,7 @@ import vyjimky.SpatnaMaskaException;
 
 /**
  * Trida pro prikaz 'ip address' ve stavu IFACE.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoIpAddress extends CiscoPrikaz {
 

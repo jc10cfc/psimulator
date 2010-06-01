@@ -16,7 +16,7 @@ import prikazy.*;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxIp extends AbstraktniPrikaz {
     public LinuxIp(AbstraktniPocitac pc, Konsole kon, List<String> slova) {

@@ -12,7 +12,7 @@ import pocitac.*;
 /**
  * Tuhle tridu jsem delal jen kvuli abstraktni metode zpracujPaket(), ktera zpracovava prichozi icmp pakety,
  * ktery je treba nejak vypsat.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public abstract class AbstraktniPing extends AbstraktniPrikaz {
 

@@ -16,7 +16,7 @@ import vyjimky.SpatneVytvorenaAdresaException;
 
 /**
  * Trida pro podprikaz route linxoveho prikazu ip.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxIpRoute extends AbstraktniPrikaz {
 

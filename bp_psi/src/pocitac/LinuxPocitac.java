@@ -8,7 +8,7 @@ package pocitac;
 import datoveStruktury.*;
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxPocitac extends AbstraktniPocitac {
     

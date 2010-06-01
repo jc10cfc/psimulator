@@ -16,7 +16,7 @@ import prikazy.AbstraktniPing;
 
 /**
  * Virtualni pocitac, predek Linuxu a Cisca.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public abstract class AbstraktniPocitac {
 

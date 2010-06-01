@@ -10,7 +10,7 @@ import pocitac.Konsole;
 
 /**
  * Parser prikazu pro linux, zde se volaji prikazy dle toho, co poslal uzivatel.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxParserPrikazu extends ParserPrikazu {
 

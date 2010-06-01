@@ -12,7 +12,7 @@ import prikazy.AbstraktniPrikaz;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxMan extends AbstraktniPrikaz{
 

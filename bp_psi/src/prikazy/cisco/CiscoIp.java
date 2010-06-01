@@ -14,7 +14,7 @@ import static datoveStruktury.CiscoStavy.*;
 
 /**
  * Trida pro rozhodovani u prikazu ip.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoIp extends CiscoPrikaz {
 

@@ -10,7 +10,7 @@ import pocitac.*;
 
 /**
  * Tahleta třída slouží k čtení souborů, jako třeba /proc/sys/net/ipv4/ip_forward
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxCat extends AbstraktniPrikaz{
 

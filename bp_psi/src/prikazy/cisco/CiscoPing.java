@@ -13,7 +13,7 @@ import prikazy.AbstraktniPing;
 
 /**
  *
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoPing extends AbstraktniPing {
 

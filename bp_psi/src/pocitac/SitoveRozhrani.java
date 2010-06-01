@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Třída pro jedno síťové rozhraní.
- * @author neiss & haldyr
+ * @author Tomáš Pitřinec & Stanislav Řehák
  *
  * DŮLEŽITÁ POZNÁMKA:
  * V pátek 16.4.2010 jsme zavedli více IpAdres pro jedno rozhraní. Původně jsme všechno
@@ -97,7 +97,7 @@ public class SitoveRozhrani {
     /**
      * Vrati ip adresu na pozici 0 nebo null, pokud tam zadna IP neni.
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public IpAdresa vratPrvni() {
         if (seznamAdres.size() == 0) {
@@ -111,7 +111,7 @@ public class SitoveRozhrani {
      * Hleda pomoci jeStejnaAdresa().
      * @param hledana
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public boolean obsahujeStejnouAdresu(IpAdresa hledana) {
         for (IpAdresa ip : seznamAdres) {
@@ -127,7 +127,7 @@ public class SitoveRozhrani {
      * Hleda pomoci equals().
      * @param hledana
      * @return
-     * @author neiss
+     * @author Tomáš Pitřinec
      */
     public boolean obsahujeStejnouAdresuEq(IpAdresa hledana) {
         for (IpAdresa ip : seznamAdres) {
@@ -142,7 +142,7 @@ public class SitoveRozhrani {
      * Zmeni tu privilegovanou prvni adresu. Starou nejdriv smaze a pak tam da novou.
      * Ma smysl, kdyz je ta prvni adresa null.
      * @param adr
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public void zmenPrvniAdresu(IpAdresa adr) {
         if (seznamAdres.size() > 0) {
@@ -156,7 +156,7 @@ public class SitoveRozhrani {
 
     /**
      * Prvni adresu si schovam, vsechny IP smazu a prvni zase pridam.
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public void smazVsechnyIpKromPrvni() {
         IpAdresa prvni = null;

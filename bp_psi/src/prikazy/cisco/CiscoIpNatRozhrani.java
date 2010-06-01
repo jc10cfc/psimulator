@@ -13,7 +13,7 @@ import static Main.Main.*;
 /**
  * Cisco trida pro nastavovani inside/outside rozhrani.
  * Outside rozhrani muze byt pouze jedno. V cisco jde sice i vice, ale pro nasi praci to neni potreba.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoIpNatRozhrani extends CiscoPrikaz {
 

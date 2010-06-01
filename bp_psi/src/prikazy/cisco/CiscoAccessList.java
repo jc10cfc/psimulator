@@ -11,7 +11,7 @@ import pocitac.Konsole;
 
 /**
  * Trida pro zpracovani prikazu 'access-list 7 permit 1.1.1.0 0.0.0.31
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoAccessList extends CiscoPrikaz {
 

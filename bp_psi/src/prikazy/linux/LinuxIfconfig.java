@@ -23,7 +23,7 @@ import vyjimky.SpatneVytvorenaAdresaException;
 
 /**
  *
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class LinuxIfconfig extends AbstraktniPrikaz {
 

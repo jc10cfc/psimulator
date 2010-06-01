@@ -19,7 +19,7 @@ import prikazy.linux.LinuxRoute;
 
 /**
  * Parser prikazu pro cisco, zde se volaji prikazy dle toho, co poslal uzivatel.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoParserPrikazu extends ParserPrikazu {
 
