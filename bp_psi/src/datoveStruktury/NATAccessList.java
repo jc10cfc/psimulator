@@ -11,7 +11,7 @@ import java.util.List;
  * Datova struktura pro seznam Access-listu.
  * Kazdy access-list obsahuje jmeno (cislo 1-2699) a IpAdresu,
  * ktera definuje rozsah pristupnych IpAdres.
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class NATAccessList {
 

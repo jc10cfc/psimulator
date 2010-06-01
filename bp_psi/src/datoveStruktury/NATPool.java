@@ -13,7 +13,7 @@ import java.util.List;
  * Datova struktura pro seznam poolu IP adres. <br />
  * Kazdy pool obsahuje jmeno a seznam IpAdres. <br />
  * (cisco prikaz: "ip nat pool 'jmenoPoolu' 'ip_start' 'ip_konec' prefix 'cislo'" )
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class NATPool {
     

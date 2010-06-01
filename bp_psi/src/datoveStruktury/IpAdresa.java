@@ -1,14 +1,10 @@
-/*
- * DODELAT:
- *      osetrit vyjimky u zakazanejch IP adres
- */
 package datoveStruktury;
 
 import vyjimky.*;
 
 /**
  * Trida reprezentujici IP adresu
- * @author neiss + haldyr (kde je vyslovne poznamenano)
+ * @author Tomáš Pitřinec + Stanislav Řehák (kde je vyslovne poznamenano)
  */
 public class IpAdresa {
 
@@ -53,7 +49,7 @@ public class IpAdresa {
      * @param moduloMaska
      * @throws SpatnaMaskaException
      * @throws SpatnaAdresaException
-     * @author neiss
+     * @author Tomáš Pitřinec
      */
     public IpAdresa(String adrm, int defMaska, boolean moduloMaska) {
         //nejdriv se pro jistotu zkontrolujou zadany hodnoty:
@@ -119,7 +115,7 @@ public class IpAdresa {
     /**
      * Nastavi masku ze Stringu, pokud je maska spatna, ponecha starou masku!!!
      * @param maska
-     * @autor neiss
+     * @autor Tomáš Pitřinec
      */
     public void nastavMasku(String maska) {
         if (!spravnaAdresaNebMaska(maska, true)) {
@@ -159,7 +155,7 @@ public class IpAdresa {
      * Vrati long hodnotu z adresy. Vhodne pro porovnavani adres.
      * @param ip
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public long dejLongIP() {
         long l = 0L;
@@ -242,7 +238,7 @@ public class IpAdresa {
      * Vrati true, kdyz je stejna adresa i port, na masce nezalezi.
      * @param jina
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public boolean jeStejnaAdresaSPortem(IpAdresa jina) {
         if(jina==null) return false;
@@ -255,7 +251,7 @@ public class IpAdresa {
     /**
      * Vrati true, kdyz IP patri do A tridy.
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public boolean jeAckovehoRozsahu() {
         int[] pole = prevedNaPole(adresa);
@@ -298,7 +294,7 @@ public class IpAdresa {
     /**
      * Vrati kopii IpAdresy se stejnou adresou, maskou a portem.
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public IpAdresa vratKopii() {
         IpAdresa vratCopy = new IpAdresa(this.vypisAdresu());
@@ -325,7 +321,7 @@ public class IpAdresa {
     /**
      * Spocita wildcard z masky a vrati ho jako retezec.
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public String vypisWildcard() {
         long broadcast = (long)(new IpAdresa("255.255.255.255").adresa);
@@ -373,7 +369,7 @@ public class IpAdresa {
      * @param adresa
      * @param jeToMaska kdyz je to true, porovnava to jako masku
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public static boolean spravnaAdresaNebMaska(String adresa, boolean jeToMaska){
         if (!jednoduchaKontrola(adresa)) {
@@ -415,7 +411,7 @@ public class IpAdresa {
      * @param wildcard
      * @return maska - retezec, ktery je maskou z wildcard <br />
      *         null - kdyz to nebyla validni maska (po preklopeni)
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public static String vratMaskuZWildCard(IpAdresa wildcard) {
         long wc = (long)wildcard.adresa;
@@ -433,7 +429,7 @@ public class IpAdresa {
      * Ostatni adresy jsou pro multicast + vyhrazeny
      * @param adr
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public static boolean jeZakazanaIpAdresa(String adr) {
         /*
@@ -511,7 +507,7 @@ public class IpAdresa {
      * vraci string - citelnou formu IP adresy ze zadaneho pole integeru
      * @param pole
      * @return
-     * @autor neiss
+     * @autor Tomáš Pitřinec
      */
     private static String vypisPole(int[] pole) {
         String ret = pole[0] + "." + pole[1] + "." + pole[2] + "." + pole[3];
@@ -523,7 +519,7 @@ public class IpAdresa {
      * Pomocna metoda kontroly IP, dle regularniho vyrazu
      * @param adr
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     private static boolean jednoduchaKontrola(String adr) { //kontrola IP, jestli to jsou cisla s teckama
         if (adr == null) {

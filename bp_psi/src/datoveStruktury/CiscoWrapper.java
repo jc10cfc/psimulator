@@ -13,7 +13,7 @@ import pocitac.SitoveRozhrani;
  * Cisco samo o sobe ma tez 2 tabulky: <br />
  *      1. zadane uzivatelem (tato trida) <br />
  *      2. vypocitane routy z tabulky c. 1 (trida RoutovaciTabulka)
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class CiscoWrapper {
 

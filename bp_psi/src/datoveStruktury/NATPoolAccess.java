@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Datova struktura pro seznam PoolAccess. Jednoznacny identifikator je cislo.
  * (cisco prikaz: "ip nat inside source list 'cisloAccessListu' pool 'jmenoPoolu' overload?" )
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class NATPoolAccess {
 

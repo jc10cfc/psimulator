@@ -15,7 +15,7 @@ import vyjimky.ChybaKonfigurakuException;
  * Pozn:
  * Zaznamy se nakonec budou radit jen podle masky. Pro pridavani novyho zaznamu UG plati podminka, za nove
  * zadavana brana musi jiz bejt dosazitelna priznakem U.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class RoutovaciTabulka {
 
@@ -189,7 +189,7 @@ public class RoutovaciTabulka {
      * @param rozhr
      * @param primo
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public int pridejZaznam(IpAdresa adresat, SitoveRozhrani rozhr, boolean primo) {
         Zaznam z=new Zaznam(adresat, rozhr, primo);
@@ -207,7 +207,7 @@ public class RoutovaciTabulka {
      * @param adresat
      * @param brana
      * @param rozhr
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     public void pridejZaznamBezKontrol(IpAdresa adresat,IpAdresa brana,SitoveRozhrani rozhr){
         if(!adresat.jeCislemSite()){
@@ -315,7 +315,7 @@ public class RoutovaciTabulka {
      * Prida zaznam na spravnou pozici. Jen vytazeny radky z puvodnich metod na pridani zaznamu U nebo UG
      * @param z
      * @return
-     * @author haldyr
+     * @author Stanislav Řehák
      */
     private int pridejZaznam(Zaznam z) {
         if(existujeStejnyZaznam(z))return 1;

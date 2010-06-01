@@ -23,7 +23,7 @@ import static prikazy.AbstraktniPrikaz.*;
  * Datova struktura pro NATovaci tabulku. <br />
  * Pri natovani zavolat mamNatovat(), kdyz to vrati 0, tak zavolat metodu zanatuj(). <br />
  * Pri odnatovani zavolat mamOdnatovat(), kdyz to vrati true, tak zavolat metodu odnatuj().
- * @author haldyr
+ * @author Stanislav Řehák
  */
 public class NATtabulka {
 

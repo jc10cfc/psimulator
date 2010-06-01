@@ -11,7 +11,7 @@ import prikazy.*;
 
 /**
  * Třída representující paket pro ping, kterej si budou počítače mezi sebou předávat.
- * @author neiss
+ * @author Tomáš Pitřinec
  */
 public class Paket {
     /**
