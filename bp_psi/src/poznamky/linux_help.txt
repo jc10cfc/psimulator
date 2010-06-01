@@ -6,11 +6,12 @@ uloz / save   ulozeni stavijici virtualni site do souboru
 help          vypsani teto napovedy
 
 Z linuxovych prikazu jsou podporovany tyto:
-ifconfig      parametry adresa, netmask
+ifconfig      parametry adresa, netmask, up, down
 route         akce add, del; parametry -net, -host, dev, gw, netmask
 iptables      jen pro pridani pravidla k natovani
               napr: iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
 ping          prepinace -c, -i, -s, -t
+              prednastaven na 4 pakety
 traceroute    jen napr. traceroute 1.1.1.1
 exit
 ip            podprikazy addr a route

@@ -7,9 +7,7 @@ package datoveStruktury;
 import vyjimky.*;
 
 /**
- * Hele, clovece, premejslel jsem dneska, jak dodelat ty metody, ktery budou pocitat cislo site a tak
- * a nakonec jsem tu implementaci zmenil na jeden integer, cislo site a pocitace a podobny veci se
- * pak pocitaj lip.
+ * Trida reprezentujici IP adresu
  * @author neiss + haldyr (kde je vyslovne poznamenano)
  */
 public class IpAdresa {
