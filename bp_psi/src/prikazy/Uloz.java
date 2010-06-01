@@ -85,7 +85,7 @@ public class Uloz extends AbstraktniPrikaz {
 
         ulozNATtabulku(pocitac);
         
-        zapisUkoncovaci("pocitac\n");
+        zapisUkoncovaci("pocitac");
     }
 
     /**

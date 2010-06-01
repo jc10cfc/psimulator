@@ -72,6 +72,7 @@ public class CiscoHelp extends CiscoPrikaz {
                 "  exit\n" +
 
                 "\nconfigure mode\n" +
+                "  (no) ip classless\n" +
                 "  (no) ip route\n" +
                 "  (no) ip nat pool\n" +
                 "  (no) ip nat inside source list\n" +
