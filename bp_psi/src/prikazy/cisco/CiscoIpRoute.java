@@ -104,11 +104,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
             String posledni = dalsiSlovo();
             dalsi += posledni; // nemuze byt null
 
-            for (SitoveRozhrani iface : pc.rozhrani) {
-                if (iface.jmeno.equalsIgnoreCase(dalsi)) {
-                    rozhrani = iface;
-                }
-            }
+            rozhrani = pc.najdiRozhrani(dalsi);
             if (rozhrani == null) { // rozhrani nenalezeno
                 invalidInputDetected();
                 return false;

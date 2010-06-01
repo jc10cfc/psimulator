@@ -80,6 +80,15 @@ public class CiscoIp extends CiscoPrikaz {
                 prikaz = new CiscoIpNat(pc, kon, slova, no);
                 return true;
             }
+
+            if (kontrolaBezVypisu("classless", dalsi, 2)) {
+                if (no) {
+                    pc.routovaciTabulka.classless = false;
+                } else {
+                    pc.routovaciTabulka.classless = true;
+                }
+                return true;
+            }
         }
 
         if (stav == IFACE) {

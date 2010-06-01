@@ -21,10 +21,15 @@ public class CiscoShow extends CiscoPrikaz {
 
     Stav stavShow = null;
     CiscoStavy stavCisco;
+    /**
+     * Pomocne rozhrani pro prikaz 'show interfaces FastEthernet0/0'
+     */
+    SitoveRozhrani iface;
 
     public CiscoShow(AbstraktniPocitac pc, Konsole kon, List<String> slova, CiscoStavy stavCisco) {
         super(pc, kon, slova);
         this.stavCisco = stavCisco;
+        iface = null;
 
         debug = false;
         boolean pokracovat = zpracujRadek();
@@ -33,19 +38,41 @@ public class CiscoShow extends CiscoPrikaz {
         }
     }
 
+    // show interfaces (rozhrani 0/0)?
+    private boolean zpracujInterfaces() {
+        stavShow = INTERFACES;
+
+        String rozh = dalsiSlovo();
+        if (rozh.isEmpty()) {
+            return true;
+        }
+        rozh += dalsiSlovo();
+
+        iface = null;
+        iface = pc.najdiRozhrani(rozh);
+        if (iface == null) {
+            invalidInputDetected();
+            return false;
+        }
+        return true;
+    }
+
     enum Stav {
+
         RUN,
         ROUTE,
         NAT,
-        OTAZNIK
+        OTAZNIK,
+        INTERFACES
     };
 
     @Override
     protected boolean zpracujRadek() {
         // show ip route
         // show running-config      - jen v ROOT rezimu
+        // show interfaces          - jen v ROOT rezimu
         // show ip nat translations
-        
+
         String dalsi = dalsiSlovo(); // druhe slovo
         if (dalsi.length() == 0) {
             kon.posliRadek("% Type \"show ?\" for a list of subcommands\n");
@@ -54,8 +81,8 @@ public class CiscoShow extends CiscoPrikaz {
 
         if (dalsi.equals("?")) {
             String s = "";
-            s += Main.Main.jmenoProgramu+": v opravdovem ciscu je tady holy seznam parametru " +
-                    "(bez celeho prikazu jako zde!)\n\n";
+            s += Main.Main.jmenoProgramu + ": v opravdovem ciscu je tady holy seznam parametru "
+                    + "(bez celeho prikazu jako zde!)\n\n";
             s += "  show ip route                   IP routing table\n";
             s += "  show ip nat translations        Translation entries\n";
             if (stavCisco == CiscoStavy.ROOT) {
@@ -72,12 +99,23 @@ public class CiscoShow extends CiscoPrikaz {
                 return false;
             }
 
-            if(!kontrola("running-config", dalsi, 3)) {
+            if (!kontrola("running-config", dalsi, 3)) {
                 return false;
             }
             stavShow = RUN;
             return true;
         } else {
+            if (dalsi.startsWith("in")) {
+                if (stavCisco != CiscoStavy.ROOT) {
+                    invalidInputDetected();
+                    return false;
+                }
+                if (!kontrola("interfaces", dalsi, 3)) {
+                    return false;
+                }
+                return zpracujInterfaces();
+            }
+
             if (!kontrola("ip", dalsi, 2)) {
                 return false;
             }
@@ -118,7 +156,24 @@ public class CiscoShow extends CiscoPrikaz {
             case NAT:
                 ipNatTranslations();
                 break;
+            case INTERFACES:
+                interfaces();
+                break;
         }
+    }
+
+    /**
+     * Posle vypis pro prikaz 'show interfaces.
+     */
+    private void interfaces() {
+        if (iface == null) {
+            for (SitoveRozhrani sr : pc.rozhrani) {
+                kon.posliPoRadcich(sr.vratCiscoVypis(), 30);
+            }
+            kon.posliRadek("");
+            return;
+        }
+        kon.posliPoRadcich(iface.vratCiscoVypis(), 30);
     }
 
     /**
@@ -198,8 +253,8 @@ public class CiscoShow extends CiscoPrikaz {
             }
 
             if (pc.natTabulka.vratInside() != null) {
-                for (SitoveRozhrani iface : pc.natTabulka.vratInside()) {
-                    if (iface.jmeno.equals(sr.jmeno)) {
+                for (SitoveRozhrani iface0 : pc.natTabulka.vratInside()) {
+                    if (iface0.jmeno.equals(sr.jmeno)) {
                         s += " ip nat inside" + "\n";
                         break;
                     }
@@ -212,6 +267,9 @@ public class CiscoShow extends CiscoPrikaz {
             s += " duplex auto\n speed auto\n!\n";
         }
 
+        if (pc.routovaciTabulka.classless) {
+            s += "ip classless\n";
+        }
         s += ((CiscoPocitac) pc).getWrapper().vypisRunningConfig();
 
         s += "!\n";
@@ -232,7 +290,7 @@ public class CiscoShow extends CiscoPrikaz {
 
         for (NATzaznam zaznam : pc.natTabulka.vratTabulku()) {
             if (zaznam.jeStaticke()) {
-                s += "ip nat inside source static "+zaznam.vratIn().vypisAdresu()+" "+zaznam.vratOut().vypisAdresu()+"\n";
+                s += "ip nat inside source static " + zaznam.vratIn().vypisAdresu() + " " + zaznam.vratOut().vypisAdresu() + "\n";
             }
         }
 

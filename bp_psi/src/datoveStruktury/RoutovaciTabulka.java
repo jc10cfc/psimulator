@@ -89,6 +89,10 @@ public class RoutovaciTabulka {
 
     private List<Zaznam>radky; //jednotlive radky routovaci tabulky
     private boolean ladiciVypisovani=false;
+    /**
+     * Special pro cisco.
+     */
+    public boolean classless = true;
 
     /**
      * V konstruktoru se hazi odkaz na pocitac, aby byl prostup k jeho rozhranim.

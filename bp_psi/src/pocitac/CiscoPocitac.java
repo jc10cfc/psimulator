@@ -33,6 +33,24 @@ public class CiscoPocitac extends AbstraktniPocitac {
     private boolean debug = false;
 
     /**
+     * Vrati bud rozhrani se zadanym jmenem, nebo null, kdyz zadny rozhrani nenajde.
+     * @param jmeno
+     * @return null, kdyz nic nenajdes
+     */
+    @Override
+    public SitoveRozhrani najdiRozhrani(String jmeno) {
+        if (jmeno == null) {
+            return null;
+        }
+        for (SitoveRozhrani rozhr : rozhrani) {
+            if (rozhr.jmeno.equalsIgnoreCase(jmeno)) {
+                return rozhr;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Ethernetove prijima nebo odmita prichozi pakety.
      * @param p
      * @param rozhr vstupni rozhrani pocitace, kterej ma paket prijmout, tzn. tohodle pocitace
