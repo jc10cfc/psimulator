@@ -23,7 +23,7 @@ public abstract class AbstraktniPocitac {
     /**
      * Ladeni paketu, bude se vypisovat i v zaverecny versi programu.
      */
-    public boolean ladeniPaketu=true;
+    public boolean pruchodPaketu=true;
 
     private boolean ladeni=false; //obycejny ladeni na ostatni veci...
 
@@ -176,14 +176,14 @@ public abstract class AbstraktniPocitac {
             if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ //adresa souhlasi
                 //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                vypisLadeni("odesliEthernetove", "Nemohl jsem odeslat paket, poslal jsem Host Unreachable. "
+                vypisPruchod("odesliEthernetove", "Nemohl jsem odeslat paket, poslal jsem Host Unreachable. "
                         +p.toString());
                 posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
             }
         }else{
             //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
             //a zpatky se nic neposila
-            vypisLadeni("odesliEthernetove", "K rozhrani "+mojeRozhr.jmeno+" neni nikdo pripojen. " +
+            vypisPruchod("odesliEthernetove", "K rozhrani "+mojeRozhr.jmeno+" neni nikdo pripojen. " +
                     "Paket tedy nemohu poslat. "+p.toString());
         }
     }
@@ -242,7 +242,7 @@ public abstract class AbstraktniPocitac {
             }
         }
         if (mojeRozhr == null) { //kdyz nenajdu spavny rozhrani ani v routovaci tabulce, vratim false
-            vypisLadeni("odesliNovejPaket", "Nemohu odeslat paket, nenalezl jsem rozhrani, na ktere" +
+            vypisPruchod("odesliNovejPaket", "Nemohu odeslat paket, nenalezl jsem rozhrani, na ktere" +
                     " bych ho poslal. cil: "+cil.vypisAdresu()+
                     " typ: "+typ);
             return false;
@@ -256,7 +256,7 @@ public abstract class AbstraktniPocitac {
         Paket paket = new Paket(zdroj, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
         if(paket.icmp_seq != -1 && //to signalisuje, ze se paket nema odeslat, ale jen se zkousi, jestli to pujde
                 paket.zdroj != null ) { //rozhrani, kterym to chci poslat ma prirazenou IP adresu
-            vypisLadeni("Posilam novy paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
+            vypisPruchod("Posilam novy paket na rozhrani "+mojeRozhr.jmeno+" na sousedni adresu "
                     +sousedni.vypisAdresu()+" "+paket.toString());
             odesliEthernetove(paket, mojeRozhr, ciziRozhr, sousedni);
                     // -> sama se hlida, jestli ciziRozhrani neni null
@@ -278,11 +278,11 @@ public abstract class AbstraktniPocitac {
         paket.ttl -= 1;
         if (paket.ttl == 0) {
             if(paket.typ==8){ //kdyz puvodni paket byl icmp request, posila se zpatky ttl exceed
-                posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
-                vypisLadeni("Dosel mi paket, kteremu vyprselo ttl. Zpatky jsem poslal ICMP Time Exceed. "
+                vypisPruchod("Dosel mi paket, kteremu vyprselo ttl. Zpatky jsem posilam ICMP Time Exceed. "
                         + "dosly paket: "+paket.toString());
+                posliTimeExceeded(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
             } else { // jinak to aspon vypisu, co se stalo
-                vypisLadeni("Dosel mi paket, kteremu vyprselo ttl. Neni to ICMP request, nic zpatky neposilam. "
+                vypisPruchod("Dosel mi paket, kteremu vyprselo ttl. Neni to ICMP request, nic zpatky neposilam. "
                         + paket.toString());
             }
         } else { //ttl v poradku, muzu pokracovat
@@ -295,11 +295,11 @@ public abstract class AbstraktniPocitac {
                //jeste se musi vyridit natovani:
                 int mamNatovat=natTabulka.mamNatovat(paket.zdroj, vstupniRozhrani, vystupniRozhrani);
                 if(mamNatovat==0){ //mam natovat
-                    vypisLadeni("Zanatovani: puvodni paket:   "+paket);
+                    vypisPruchod("Zanatovani: puvodni paket:   "+paket);
                     paket=natTabulka.zanatuj(paket);
-                    vypisLadeni("Zanatovani: prelozeny paket: "+paket);
+                    vypisPruchod("Zanatovani: prelozeny paket: "+paket);
                 }else if(mamNatovat==1||mamNatovat==2){// neni pool nebo dosly IP v poolu
-                    vypisLadeni("Zanatovani: Nepodarilo se prelozit paket: "+paket+
+                    vypisPruchod("Zanatovani: Nepodarilo se prelozit paket: "+paket+
                             ", posila se host unreachable");
                     posliNovejPaketOdpoved(paket,vstupniRozhrani.vratPrvni(), 3, 1); //host unreachable
                 } else{
@@ -307,10 +307,12 @@ public abstract class AbstraktniPocitac {
                     if(ladeni)vypis("Natovani: Nenatuje se paket:   "+paket);
                 }
                //natovani vytizeno, posila se:
-                vypisLadeni("Preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
+                vypisPruchod("Preposilam paket na rozhrani " + vystupniRozhrani.jmeno +
                       " na sousedni adresu " + sousedni.vypisAdresu() + " " + paket.toString());
                 odesliEthernetove(paket, vystupniRozhrani, vystupniRozhrani.pripojenoK, sousedni);
             } else {//rozhrani nenalezeno - paket neni kam poslat
+                vypisPruchod( "preposliPaket", "Nemohu preposlat paket, nenalezl jsem rozhrani, na ktere" +
+                    " bych ho poslal. "+paket.toString() );
                 posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
                 // -> net unreachable
             }
@@ -325,13 +327,12 @@ public abstract class AbstraktniPocitac {
      * @param vstupniRozhrani - rozhrani kterym paket prisel (dulezity pro natovani)
      */
     protected void prijmiPaket(Paket paket, SitoveRozhrani vstupniRozhrani) {
-        vypisLadeni("Prijal jsem paket "+paket.toString());
+        vypisPruchod("Prijal jsem paket "+paket.toString());
         paket.cas += Math.random()*0.03 + 0.07; //nejnizsi hodnota asi 0.07 ms, nejvyssi 0.1 ms
 
         // zjistuje, je-li paket pro me, kvuli odnatovani
         SitoveRozhrani rozhr = najdiMeziRozhranima(paket.cil); // -> pro jistotu si pred odnatovanim kontroluju,
         if (rozhr!=null && natTabulka.mamOdnatovat(vstupniRozhrani)) { // zkusi se odnatovat
-
             /*
              * TODO: Zatim jen takovy hack; pak nekdy doresit.
              */
@@ -339,12 +340,10 @@ public abstract class AbstraktniPocitac {
             IpAdresa puvodni = paket.cil.vratKopii();
 //            vypisLadeni("Odnatovani: puvodni paket:   " + paket);
             paket = natTabulka.odnatuj(paket);
-
             if (! puvodni.jeStejnaAdresaSPortem(paket.cil)) {
-                vypisLadeni(prvni);
-                vypisLadeni("Odnatovani: prelozeny paket: " + paket);
-            }
-            
+                vypisPruchod(prvni);
+                vypisPruchod("Odnatovani: prelozeny paket: " + paket);
+            } 
         } else {
             if (ladeni) {
                 vypis("Odnatovani: Neodnatovava se paket:   " + paket);
@@ -352,8 +351,9 @@ public abstract class AbstraktniPocitac {
         }
 
         rozhr = najdiMeziRozhranima(paket.cil); //znovu hledam, jestli je na mejch rozhranich takova IP
+        // -> odnatovanim se to totiz mohlo zmenit
 
-
+//Tohlecto jsou nejaky Standovy upravy: ----------------------------------------------------------------
         /* TODO: zkontrolovat dohromady; predelal jsem to kvuli ciscu
          * 
          * Puvodne to bylo tak, ze kdyz byla cil. adres paketu na rozhrani jako neprivilegovana,
@@ -369,10 +369,12 @@ public abstract class AbstraktniPocitac {
                 break;
             }
         }
-
-
-                    // -> odnatovanim se to totiz mohlo zmenit
+//------------------------------------------------------------------------------------------------------
+        
         if (rozhr != null) { // takovou IP mam && port je pro me => paket je u me v cili
+            if (ladeni) {
+                vypis("Prijal jsem paket, kterej je pro me." + paket);
+            }
             //zpracovani paketu:
             if(paket.typ==8){ //icmp request
                 posliNovejPaketOdpoved(paket,null, 0, 0); //zpatky se posila icmp reply
@@ -380,7 +382,7 @@ public abstract class AbstraktniPocitac {
                 if(paket.prikaz.getPc()==this){ // prikaz v paketu odpovida
                     paket.prikaz.zpracujPaket(paket);
                 } else { //prikaz v paketu neodpovida
-                    vypisLadeni("Dosel mi paket, ktery sice je pro me, ale prikaz, ktery ho poslal, " +
+                    vypisPruchod("Dosel mi paket, ktery sice je pro me, ale prikaz, ktery ho poslal, " +
                             "nesouhlasi. Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
                             + paket.toString());
                 }
@@ -393,7 +395,7 @@ public abstract class AbstraktniPocitac {
                 preposliPaket(paket, vstupniRozhrani);
             }else{
                 // Jestli se nepletu, tak paket proste zahodi. Chce to ale jeste overit.
-                vypisLadeni("prijmiPaket", "Nemohu preposlat paket, nemam nastaveno ip_forward "
+                vypisPruchod("prijmiPaket", "Nemohu preposlat paket, nemam nastaveno ip_forward "
                         +paket.toString());
             }
         }
@@ -461,8 +463,8 @@ public abstract class AbstraktniPocitac {
      * Pres tuhle metodu se budou vypisovat zpravy o pruchodu paketu.
      * @param zprava
      */
-    private void vypisLadeni(String zprava){
-        if( ladeniPaketu ) {
+    private void vypisPruchod(String zprava){
+        if( pruchodPaketu ) {
             this.vypis("Pruchod paketu: "+zprava);
         }
     }
@@ -471,9 +473,15 @@ public abstract class AbstraktniPocitac {
      * Pres tuhle metodu se budou vypisovat zpravy o pruchodu paketu.
      * @param zprava
      */
-    private void vypisLadeni(String metoda, String zprava){
-        if( ladeniPaketu && ladeni ) {
-            this.vypis("Pruchod paketu: "+"metoda "+metoda+": "+zprava);
+    private void vypisPruchod(String metoda, String zprava){
+        String vypsat="Pruchod paketu: ";
+        if(ladeni){
+            vypsat+="metoda "+metoda+": ";
+        }
+        vypsat+=zprava;
+        
+        if( pruchodPaketu) {
+            this.vypis(vypsat);
         }
     }
 
