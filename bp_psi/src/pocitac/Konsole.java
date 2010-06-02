@@ -21,7 +21,7 @@ import vyjimky.NeznamyTypPcException;
 import static prikazy.AbstraktniPrikaz.*;
 
 /**
- *
+ * Třída obsluhuje jedno spojení s klientem.
  * @author Tomáš Pitřinec
  */
 public class Konsole extends Thread {

@@ -6,7 +6,7 @@
 package vyjimky;
 
 /**
- * Tahleta vyjimka se hazi, kdyz chvi nastavit masku, ale ta ma nespravny cisla, napr. maska 32.123.12.23
+ * Tato vyjimka se hazi, kdyz chvi nastavit masku, ale ta ma nespravná cisla, napr. maska 32.123.12.23
  * Potomek SpatneVytvorenaAdresaException
  * @author Tomáš Pitřinec
  */

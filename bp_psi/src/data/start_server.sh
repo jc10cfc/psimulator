@@ -12,4 +12,4 @@ if [ -z "$1" -o "$1" == "-h" -o "$1" == "--help" ]; then
     exit 1
 fi
 
-java -jar bp_psi.jar $@
+java -jar psimulator.jar $@

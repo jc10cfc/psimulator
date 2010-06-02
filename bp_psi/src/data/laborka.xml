@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- DTD tady musi byt!!! -->
-<!DOCTYPE konfigurak SYSTEM "psi.dtd">
+<!DOCTYPE konfigurak SYSTEM "psimulator.dtd">
 
 <konfigurak>
 <pocitac jmeno="linux1" typ="linux">
@@ -62,6 +62,17 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
+			<adresat>172.16.1.0</adresat>
+			<maskaAdresata>255.255.255.252</maskaAdresata>
+			<rozhraniKam>eth2</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.1.128</adresat>
+			<maskaAdresata>255.255.255.192</maskaAdresata>
+			<brana>192.168.1.66</brana>
+			<rozhraniKam>eth1</rozhraniKam>
+		</zaznam>
+		<zaznam>
 			<adresat>192.168.1.64</adresat>
 			<maskaAdresata>255.255.255.192</maskaAdresata>
 			<rozhraniKam>eth1</rozhraniKam>
@@ -70,12 +81,6 @@
 			<adresat>192.168.1.0</adresat>
 			<maskaAdresata>255.255.255.192</maskaAdresata>
 			<rozhraniKam>eth0</rozhraniKam>
-		</zaznam>
-		<zaznam>
-			<adresat>192.168.1.128</adresat>
-			<maskaAdresata>255.255.255.128</maskaAdresata>
-			<brana>192.168.1.66</brana>
-			<rozhraniKam>eth1</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>0.0.0.0</adresat>

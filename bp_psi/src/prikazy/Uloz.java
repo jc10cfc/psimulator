@@ -388,7 +388,7 @@ public class Uloz extends AbstraktniPrikaz {
             out = new BufferedWriter(new FileWriter(soubor));
             zapis("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             zapis("<!-- DTD tady musi byt!!! -->\n"
-                    + "<!DOCTYPE konfigurak SYSTEM \"psi.dtd\">\n\n"
+                    + "<!DOCTYPE konfigurak SYSTEM \"psimulator.dtd\">\n\n"
                     + "<konfigurak>\n");
 
             for (AbstraktniPocitac pocitac : pocitace) {

@@ -6,7 +6,7 @@
 package vyjimky;
 
 /**
- * Hazi se v konstruktoru IpAdresy, kdyz je zadanej spatnej String.
+ * Hazi se v konstruktoru IpAdresy, kdyz je zadaný spatný String.
  * Potomek SpatneVytvorenaAdresaException
  * @author Tomáš Pitřinec
  */

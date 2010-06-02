@@ -5,7 +5,7 @@
 package vyjimky;
 
 /**
- * Tuhletu vyjimku hazi trida konsole, kdyz dojde k nejaky chybe komunikace
+ * Tuto vyjimku hazi trida konsole, kdyz dojde k nejaké chybě komunikace
  * @author Tomáš Pitřinec
  */
 public class ChybaSpojeniException extends RuntimeException {

@@ -22,7 +22,7 @@ import vyjimky.SpatnaMaskaException;
 import vyjimky.SpatneVytvorenaAdresaException;
 
 /**
- *
+ * Příkaz ifconfig.
  * @author Tomáš Pitřinec
  */
 public class LinuxIfconfig extends AbstraktniPrikaz {

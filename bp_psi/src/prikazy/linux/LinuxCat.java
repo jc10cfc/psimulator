@@ -9,7 +9,7 @@ import java.util.List;
 import pocitac.*;
 
 /**
- * Tahleta třída slouží k čtení souborů, jako třeba /proc/sys/net/ipv4/ip_forward
+ * Tato třída slouží k čtení souborů, jako třeba /proc/sys/net/ipv4/ip_forward
  * @author Tomáš Pitřinec
  */
 public class LinuxCat extends AbstraktniPrikaz{

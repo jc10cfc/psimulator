@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import pocitac.*;
 
 /**
- * Metoda zpracujRadek(String s) prijme a zpracuje vstupni string od klienta. Ten se pak metodou rozsekej()
- * rozseka na jednotlivy slova. Pak se testuje,
+ * Abstraktní parser příkazů. 
  * @author Tomáš Pitřinec & Stanislav Řehák
  */
 public abstract class ParserPrikazu extends Abstraktni {

@@ -14,9 +14,7 @@ import java.util.List;
 /**
  * Trida pro sitovou komunikaci s uzivatelem.
  * Prevzato z KarelServer.
- * Posloucha na zadaným portu a vytváří vlákna pro jednotlivý Konsole (připojení)
- * Nakonec jsem sem tu tridu pro tu sitovou komunikaci stejne hodil. Bude to prehlednejsi i vzhledem k tem vlaknum
- * a tak.
+ * Posloucha na zadaným portu a vytváří vlákna pro jednotlivý Konsole (připojení).
  * @author Tomáš Pitřinec
  */
 public class Komunikace extends Thread {

@@ -10,8 +10,7 @@ import java.util.List;
 import pocitac.*;
 
 /**
- * Tuhle tridu jsem delal jen kvuli abstraktni metode zpracujPaket(), ktera zpracovava prichozi icmp pakety,
- * ktery je treba nejak vypsat.
+ * Predek vsech prikazu, ktere posilaji pakety. Definuje abstraktni metodu zpracujPaket.
  * @author Stanislav Řehák
  */
 public abstract class AbstraktniPing extends AbstraktniPrikaz {

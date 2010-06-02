@@ -13,7 +13,7 @@ import prikazy.*;
 import vyjimky.SpatneVytvorenaAdresaException;
 
 /**
- *
+ * Podpříkaz ip addr.
  * @author Tomáš Pitřinec
  */
 public class LinuxIpAddr extends AbstraktniPrikaz {

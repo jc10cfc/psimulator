@@ -10,8 +10,8 @@ import java.util.List;
 import pocitac.*;
 
 /**
- * Tahleta třída slouží k zapisování do souboru /proc/sys/net/ipv4/ip_forward.
- * Je to takovej kanón na vrabce, ale snažil jsem se zachovat strukturu ostatních linuxovejch příkazů
+ * Tato třída slouží k zapisování do souboru /proc/sys/net/ipv4/ip_forward.
+ * Je to kanón na vrabce, protože jsem se smažil zachovat strukturu ostatních linuxových příkazů.
  * @author Tomáš Pitřinec
  */
 public class LinuxEcho extends AbstraktniPrikaz{

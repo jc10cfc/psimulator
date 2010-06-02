@@ -30,7 +30,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
     /**
      * Vypis metody prijmiEthernetove().
      */
-    private boolean debug = true;
+    private boolean debug = false;
 
     /**
      * Vrati bud rozhrani se zadanym jmenem, nebo null, kdyz zadny rozhrani nenajde.

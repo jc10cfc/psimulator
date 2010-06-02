@@ -8,8 +8,8 @@ import java.util.List;
 import pocitac.*;
 
 /**
- * Predek vsech, linuxovejch i cicsovejch prikazu. Dulezity jsou jen promenny a abstraktni metoda vykonejPrikaz().
- * Ostatni jsou jen nejaky uzitecny staticky metody.
+ * Predek vsech, linuxových i ciscových prikazu. Dulezité jsou jen promenné a abstraktni metoda vykonejPrikaz().
+ * Ostatni jsou nejaké uzitecné statické metody.
  * @author Tomáš Pitřinec
  */
 public abstract class AbstraktniPrikaz extends Abstraktni {

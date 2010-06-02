@@ -6,7 +6,7 @@
 package vyjimky;
 
 /**
- * Tahleta vyjimka se hazi, kdyz se snazi SAXHandler nacist pocitac z XML a nezna typ pocitace (zatim zna jen Linux a Cisco).
+ * Tato vyjimka se hazi, kdyz se snazi SAXHandler nacist pocitac z XML a nezna typ pocitace (zatim zna jen Linux a Cisco).
  * @author Stanislav Řehák
  */
 public class NeznamyTypPcException extends RuntimeException {

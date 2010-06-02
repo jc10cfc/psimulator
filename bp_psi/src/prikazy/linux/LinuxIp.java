@@ -12,10 +12,9 @@ package prikazy.linux;
 import java.util.List;
 import pocitac.*;
 import prikazy.*;
-//import static prikazy.linux.LinuxIp.Terminal.*; //tohle tady musi bejt, takhle divne
 
 /**
- *
+ * Linuxový příkaz ip.
  * @author Tomáš Pitřinec
  */
 public class LinuxIp extends AbstraktniPrikaz {

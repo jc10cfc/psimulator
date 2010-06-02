@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- DTD tady musi byt!!! -->
-<!DOCTYPE konfigurak SYSTEM "psi.dtd">
+<!DOCTYPE konfigurak SYSTEM "psimulator.dtd">
 
 <konfigurak>
 <pocitac jmeno="linux1" typ="linux">

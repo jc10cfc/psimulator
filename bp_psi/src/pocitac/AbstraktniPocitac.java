@@ -396,9 +396,12 @@ public abstract class AbstraktniPocitac {
                 if(paket.prikaz.getPc()==this){ // prikaz v paketu odpovida
                     paket.prikaz.zpracujPaket(paket);
                 } else { //prikaz v paketu neodpovida
-                    vypisPruchod("Dosel mi paket, ktery sice je pro me, ale prikaz, ktery ho poslal, " +
-                            "nesouhlasi. Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
-                            + paket.toString());
+//                    vypisPruchod("Dosel mi paket, ktery sice je pro me, ale prikaz, ktery ho poslal, " +
+//                            "nesouhlasi. Tohle by nikdy nemelo nastat, kontaktujte prosim tvurce softwaru. "
+//                            + paket.toString());
+                    vypisPruchod("metoda primiPaket, podezrely chovani","Dosel mi paket, ktery sice je pro me, " +
+                            "ale neni odpovedi na ping poslany z tohoto"
+                            + "pocitace. Paket zahazuji. "+ paket.toString());
                 }
             }
         } else { // => cilovou IP nemam
@@ -448,6 +451,9 @@ public abstract class AbstraktniPocitac {
      *         false - ping se nepodarilo odeslat, nenaslo se vhodny rozhrani
      */
     public boolean posliIcmpRequest(IpAdresa cil, int icmp_seq, int ttl, AbstraktniPing prikaz){
+        if(pruchodPaketu){ // odradkovani pro prehlednost
+            System.out.println("");
+        }
         int typ=8; //icmp request
         int kod=0;
         double cas = 0;

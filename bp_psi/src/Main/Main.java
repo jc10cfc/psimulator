@@ -16,7 +16,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class Main {
 
     public static String jmenoProgramu = "psi simulator";
-    static int port = 4000;
+    static int port = 4001;
     static boolean bezNastaveni = false;
     public static boolean chyba_spusteni = false;
     /**

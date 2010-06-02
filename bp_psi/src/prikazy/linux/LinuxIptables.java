@@ -18,8 +18,7 @@ import pocitac.*;
 import vyjimky.SpatnaAdresaException;
 
 /**
- *
- *
+ * Linuxový příkaz iptables implementovaný ale jen pro potřeby překladu adres.
  * @author Tomáš Pitřinec
  */
 public class LinuxIptables extends AbstraktniPrikaz {

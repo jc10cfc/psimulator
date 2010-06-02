@@ -10,7 +10,7 @@ import pocitac.*;
 import prikazy.AbstraktniPrikaz;
 
 /**
- *
+ * Pomocný příkaz help. Implementován jen zde v simulátoru, na skutečném linuxu není.
  * @author Tomáš Pitřinec
  */
 public class LinuxHelp extends AbstraktniPrikaz{

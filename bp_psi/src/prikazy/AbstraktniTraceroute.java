@@ -12,7 +12,7 @@ import pocitac.AbstraktniPocitac;
 import pocitac.Konsole;
 
 /**
- * 
+ * Předek traceroute na linuxu i ciscu.
  * @author Tomáš Pitřinec
  */
 public abstract class AbstraktniTraceroute extends AbstraktniPing {

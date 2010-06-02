@@ -15,8 +15,8 @@ import vyjimky.SpatnaAdresaException;
 
 /**
  * Prikaz traceroute.
- * Kaslu na rozsahlou implementaci parseru, bude to umet jen blbe precist adresu, nic vic.
- * Vsechny pakety, ktery mi zpatky dojdou pocitam za prijaty (prijate++), z toho pak pocitam,
+ * Neimplementuji rozsahly parser, bude to umet jen precist adresu, nic vic.
+ * Vsechny pakety, kter0 mi zpatky dojdou pocitam za prijat0 (prijate++), z toho pak pocitam,
  * jestli neco timeoutovalo.
  * @author Tomáš Pitřinec
  */

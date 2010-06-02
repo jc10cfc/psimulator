@@ -1,6 +1,7 @@
 /*
- * http://jiri.patera.name/!old-data/ppi/ping-linux.html - pekny
- * http://cs.wikipedia.org/wiki/Ping - jen wikipedie
+ * Zdroje:
+ *      http://jiri.patera.name/!old-data/ppi/ping-linux.html - pekny
+ *      http://cs.wikipedia.org/wiki/Ping - jen wikipedie
  */
 
 package prikazy.linux;
@@ -12,7 +13,7 @@ import pocitac.*;
 import vyjimky.SpatnaAdresaException;
 
 /**
- *
+ * Linuxový příkaz ping.
  * @author Tomáš Pitřinec
  */
 public class LinuxPing extends AbstraktniPing{
@@ -27,17 +28,17 @@ public class LinuxPing extends AbstraktniPing{
     int ttl=64; //zadava se prepinacem -t
     boolean minus_q=false; //tichy vystup, vypisujou se jen statistiky, ale ne jednotlivy pakety
     boolean minus_b=false; //dovoluje pingat na broadcastovou adresu
+    boolean minus_h=false;
     //dalsi prepinace, ktery bych mel minimalne akceptovat: -a, -v
 
     //parametry parseru:
     private String slovo; //slovo parseru, se kterym se zrovna pracuje
     /**
      * 0 - v poradku
-     * 1 - nezadano nic krome slova ping
+     * 1 - nezadana adresa
      * 2 - spatna adresa
      * 4 - chyba v ciselny hodnote prepinace
      * 8 - neznamy prepinac
-     * 16 - adresa nebyla zadana
      */
     private int navratovyKod=0;
 
@@ -55,6 +56,10 @@ public class LinuxPing extends AbstraktniPing{
         }
 
         if(navratovyKod != 0) return; //neni-li vsechno v poradku, nic se nekona
+        if(minus_h){
+            vypisNapovedu();
+            return; //ne -h se taky konci
+        }
 
         /*
          * Neodesilani zkusebniho paketu s icmp_seq -1. Je jen zkusebni, metoda odesliNovejPaket(...)
@@ -145,26 +150,26 @@ public class LinuxPing extends AbstraktniPing{
      */
     private void parsujPrikaz(){
         slovo=dalsiSlovo();
-        if(slovo.equals("")){
-            navratovyKod |=1;
-            vypisNapovedu(); //vypise napovedu a skonci
-        }else{
-            while( slovo.length()>1 && slovo.charAt(0)=='-'){ //cteni prepinacu
+        while (!slovo.isEmpty()) {
+            if (slovo.length() > 1 && slovo.charAt(0) == '-') { //cteni prepinacu
                 zpracujPrepinace();
-                slovo=dalsiSlovo();
-                if(navratovyKod!=0)return; // !!!!!!!! NA CHYBU SE OKAMZITE KONCI !!!!!!!!!
-            }
-            try{ //cteni ip adresy
-                cil=new IpAdresa(slovo);
-            }catch(SpatnaAdresaException ex){
-                if(slovo.equals("")){ //zadna adresa nebyla zadana
-                    navratovyKod |= 16;
-                    vypisNapovedu();
-                }else{
-                    navratovyKod |=2;
-                    kon.posliRadek("ping: unknown host "+slovo);
+                if (navratovyKod != 0 || minus_h) {
+                    return; // !!!!!!!! NA CHYBU NEBO "-h" SE OKAMZITE KONCI !!!!!!!!!
+                }
+            } else {
+                try { //cteni ip adresy
+                    cil = new IpAdresa(slovo);
+                } catch (SpatnaAdresaException ex) {
+                    navratovyKod |= 2;
+                    kon.posliRadek("ping: unknown host " + slovo);
                 }
             }
+            slovo=dalsiSlovo();
+        }
+        //kdyz se vsechno zparsovalo, zkontroluje se, je-li zadana adresa:
+        if(cil==null){
+            navratovyKod |= 1;
+            vypisNapovedu();
         }
 
     }
@@ -181,6 +186,8 @@ public class LinuxPing extends AbstraktniPing{
                 minus_b = true;
             } else if (slovo.charAt(uk) == 'q') { //-q
                 minus_q = true;
+            } else if (slovo.charAt(uk) == 'h') { //-h
+                minus_h = true;
             } else if (slovo.charAt(uk) == 'c') { //-c
                 pom = zpracujCiselnejPrepinac(uk);
                 if (pom <= 0){ //povoleny interval je 1 .. nekonecno
