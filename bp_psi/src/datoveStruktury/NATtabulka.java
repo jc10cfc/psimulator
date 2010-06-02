@@ -401,7 +401,9 @@ public class NATtabulka {
         // nejdriv prochazim staticka pravidla
         for (NATzaznam zaznam : tabulka) {
             if (zaznam.staticke && zaznam.in.jeStejnaAdresa(ip)) {
-                return zaznam.out;
+                IpAdresa vrat = zaznam.out.vratKopii();
+                vrat.port = ip.port;
+                return vrat;
             }
         }
 
@@ -428,10 +430,21 @@ public class NATtabulka {
 
     /**
      * Mrkne se do tabulky a vrati prislusny zaznam pokud existuje.
+     * Kdyz je v tabulce staticky zaznam, tak to prelozi na adresu o stejnem portu.
      * @param ip
      * @return null - pokud neexistuje zaznam pro danou ip
      */
     private IpAdresa odnatujZdrojovouIpAdresu(IpAdresa ip) {
+        for (NATzaznam zaznam : tabulka) {
+            if (zaznam.staticke) {
+                if (zaznam.out.jeStejnaAdresa(ip)) {
+                    IpAdresa vrat = zaznam.in;
+                    vrat.port = ip.port;
+                    return vrat;
+                }
+            }
+        }
+
         for (NATzaznam zaznam : tabulka) {
             if (zaznam.out.jeStejnaAdresaSPortem(ip)) {
                 return zaznam.in;

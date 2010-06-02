@@ -30,7 +30,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
     /**
      * Vypis metody prijmiEthernetove().
      */
-    private boolean debug = false;
+    private boolean debug = true;
 
     /**
      * Vrati bud rozhrani se zadanym jmenem, nebo null, kdyz zadny rozhrani nenajde.
@@ -91,7 +91,8 @@ public class CiscoPocitac extends AbstraktniPocitac {
                 prijmiPaket(p, rozhr);
                 return true;
             }
-
+            vypis("XXX: "+p.cil.vypisAdresuSPortem());
+            vypis("XXX: "+natTabulka.vypisZaznamyCisco());
             ladici("nemam zaznam v NAT tabulce => neprijimam");
             return false;
         }
