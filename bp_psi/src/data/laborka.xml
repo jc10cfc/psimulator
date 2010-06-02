@@ -39,7 +39,7 @@
 	<rozhrani>
 		<jmeno>eth0</jmeno>
 		<ip>192.168.1.2</ip>
-		<maska>255.255.255.0</maska>
+		<maska>255.255.255.192</maska>
 		<mac>00:01:02:03:04:05</mac>
 		<nahozene>true</nahozene>
 		<nat>soukrome</nat>
@@ -55,17 +55,12 @@
 	<rozhrani>
 		<jmeno>eth2</jmeno>
 		<ip>172.16.1.1</ip>
-		<maska>255.255.255.0</maska>
+		<maska>255.255.255.252</maska>
 		<mac>00:01:02:03:04:05</mac>
 		<nahozene>true</nahozene>
 		<nat>verejne</nat>
 	</rozhrani>
 	<routy>
-		<zaznam>
-			<adresat>172.16.1.0</adresat>
-			<maskaAdresata>255.255.255.252</maskaAdresata>
-			<rozhraniKam>eth2</rozhraniKam>
-		</zaznam>
 		<zaznam>
 			<adresat>192.168.1.64</adresat>
 			<maskaAdresata>255.255.255.192</maskaAdresata>
@@ -73,14 +68,20 @@
 		</zaznam>
 		<zaznam>
 			<adresat>192.168.1.0</adresat>
-			<maskaAdresata>255.255.255.0</maskaAdresata>
+			<maskaAdresata>255.255.255.192</maskaAdresata>
 			<rozhraniKam>eth0</rozhraniKam>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.1.128</adresat>
+			<maskaAdresata>255.255.255.128</maskaAdresata>
+			<brana>192.168.1.66</brana>
+			<rozhraniKam>eth1</rozhraniKam>
 		</zaznam>
 		<zaznam>
 			<adresat>0.0.0.0</adresat>
 			<maskaAdresata>0.0.0.0</maskaAdresata>
-			<brana>172.16.1.2</brana>
-			<rozhraniKam>eth2</rozhraniKam>
+			<brana>192.168.1.66</brana>
+			<rozhraniKam>eth1</rozhraniKam>
 		</zaznam>
 	</routy>
 	<ip_forward>1</ip_forward>
@@ -121,11 +122,21 @@
 	<rozhrani>
 		<jmeno>FastEthernet0/1</jmeno>
 		<ip>192.168.1.129</ip>
-		<maska>255.255.255.192</maska>
+		<maska>255.255.255.128</maska>
 		<mac>03:08:b7:30:24:e1</mac>
 		<nahozene>true</nahozene>
 	</rozhrani>
 	<routy>
+		<zaznam>
+			<adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>192.168.1.254</brana>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.1.0</adresat>
+			<maskaAdresata>255.255.255.192</maskaAdresata>
+			<brana>192.168.1.65</brana>
+		</zaznam>
 	</routy>
 	<natovani>
 		<pooly>
@@ -140,31 +151,68 @@
 <pocitac jmeno="cisco2" typ="cisco">
 	<rozhrani>
 		<jmeno>FastEthernet0/0</jmeno>
-		<ip>192.168.1.129</ip>
-		<maska>255.255.255.192</maska>
+		<ip>192.168.1.254</ip>
+		<maska>255.255.255.128</maska>
 		<mac>00:0b:0c:0d:0a:01</mac>
 		<nahozene>true</nahozene>
+		<nat>soukrome</nat>
 	</rozhrani>
 	<rozhrani>
 		<jmeno>FastEthernet0/1</jmeno>
 		<ip>172.16.0.1</ip>
-		<maska>255.255.255.252</maska>
+		<maska>255.255.255.192</maska>
 		<mac>00:0b:3c:6d:5a:01</mac>
 		<nahozene>true</nahozene>
+		<nat>verejne</nat>
 	</rozhrani>
 	<routy>
+		<zaznam>
+			<adresat>0.0.0.0</adresat>
+			<maskaAdresata>0.0.0.0</maskaAdresata>
+			<brana>172.16.0.2</brana>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.1.0</adresat>
+			<maskaAdresata>255.255.255.192</maskaAdresata>
+			<brana>192.168.1.129</brana>
+		</zaznam>
+		<zaznam>
+			<adresat>192.168.1.64</adresat>
+			<maskaAdresata>255.255.255.192</maskaAdresata>
+			<brana>192.168.1.129</brana>
+		</zaznam>
 	</routy>
 	<natovani>
 		<pooly>
+			<pool>
+				<pJmeno>ovrld</pJmeno>
+				<ip_start>172.16.0.1</ip_start>
+				<ip_konec>172.16.0.1</ip_konec>
+				<prefix>24</prefix>
+			</pool>
 		</pooly>
 		<prirazeniVice>
+			<prirazeni>
+				<accessCislo>7</accessCislo>
+				<poolJmeno>ovrld</poolJmeno>
+				<overload>true</overload>
+			</prirazeni>
 		</prirazeniVice>
 		<access-listy>
+			<access-list>
+				<cislo>7</cislo>
+				<ipA>192.168.1.0</ipA>
+				<ipAWildcard>0.0.0.255</ipAWildcard>
+			</access-list>
 		</access-listy>
+		<staticke>
+			<in>192.168.1.129</in>
+			<out>172.16.0.3</out>
+		</staticke>
 	</natovani>
 </pocitac>
 
-<pocitac jmeno="fw" typ="linux" zamknute="true">
+<pocitac jmeno="fw" typ="cisco" zamknute="true">
 	<rozhrani>
 		<jmeno>eth0</jmeno>
 		<ip>172.16.1.2</ip>
@@ -176,7 +224,7 @@
 	<rozhrani>
 		<jmeno>eth1</jmeno>
 		<ip>172.16.0.2</ip>
-		<maska>255.255.255.252</maska>
+		<maska>255.255.255.192</maska>
 		<mac>10:f1:a2:d3:64:90</mac>
 		<nahozene>true</nahozene>
 		<nat>soukrome</nat>
@@ -191,51 +239,26 @@
 	</rozhrani>
 	<routy>
 		<zaznam>
-			<adresat>172.16.0.0</adresat>
-			<maskaAdresata>255.255.255.252</maskaAdresata>
-			<rozhraniKam>eth1</rozhraniKam>
-		</zaznam>
-		<zaznam>
-			<adresat>172.16.1.0</adresat>
-			<maskaAdresata>255.255.255.252</maskaAdresata>
-			<rozhraniKam>eth0</rozhraniKam>
-		</zaznam>
-		<zaznam>
-			<adresat>147.32.81.64</adresat>
-			<maskaAdresata>255.255.255.192</maskaAdresata>
-			<rozhraniKam>eth2</rozhraniKam>
-		</zaznam>
-		<zaznam>
 			<adresat>0.0.0.0</adresat>
 			<maskaAdresata>0.0.0.0</maskaAdresata>
 			<brana>147.32.81.66</brana>
-			<rozhraniKam>eth2</rozhraniKam>
 		</zaznam>
 	</routy>
-	<ip_forward>1</ip_forward>
 	<natovani>
 		<pooly>
-			<pool>
-				<pJmeno>ovrld</pJmeno>
-				<ip_start>147.32.81.65</ip_start>
-				<ip_konec>147.32.81.65</ip_konec>
-				<prefix>24</prefix>
-			</pool>
 		</pooly>
 		<prirazeniVice>
-			<prirazeni>
-				<accessCislo>1</accessCislo>
-				<poolJmeno>ovrld</poolJmeno>
-				<overload>true</overload>
-			</prirazeni>
 		</prirazeniVice>
 		<access-listy>
-			<access-list>
-				<cislo>1</cislo>
-				<ipA>0.0.0.0</ipA>
-				<ipAWildcard>255.255.255.255</ipAWildcard>
-			</access-list>
 		</access-listy>
+		<staticke>
+			<in>172.16.0.1</in>
+			<out>147.32.81.73</out>
+		</staticke>
+		<staticke>
+			<in>172.16.1.1</in>
+			<out>147.32.81.74</out>
+		</staticke>
 	</natovani>
 </pocitac>
 

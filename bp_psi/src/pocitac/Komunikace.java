@@ -27,6 +27,10 @@ public class Komunikace extends Thread {
     AbstraktniPocitac pc;//odkaz na pocitac
     private final Object zamekPocitace = new Object(); //zamek celyho pocitace, slouzi k tomu, aby se zmeny
     // v nastaveni poctace (tedy vykonavani prikazu)
+    /**
+     * Kdyz true, tak se vypisuje port u zamknutych pocitacu pri startu serveru.
+     */
+    private boolean vypisPort = false;
 
     public Komunikace(int cisloPortu, AbstraktniPocitac pc) {
         this.cisloPortu = cisloPortu;
@@ -70,7 +74,12 @@ public class Komunikace extends Thread {
             // ok
         }
         if (pc.zamknute) {
-            pc.vypis("zamknute");
+            if (vypisPort) {
+                pc.vypis("zamknute: "+cisloPortu);
+            } else {
+                pc.vypis("zamknute");
+            }
+            
             try {
                 ss.close();
             } catch (IOException ex) {
