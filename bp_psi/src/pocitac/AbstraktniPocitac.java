@@ -122,8 +122,11 @@ public abstract class AbstraktniPocitac {
  * Síťová (IP) vrstva:
  * - všechny nový pakety se posílaj metodou odesliNovejPaket(...)
  *   všechny pakety k přeposílání se přeposílaj metodou preposliPaket(...)
- * - metody začínající slovem posli sloužej k odesílání novejch paketů na vyšší úrovni, nespecifikujou se třeba
- *   všechny parametry; všechny ale interne používaj metodu odesliNovejPaket(...)
+ * - na této vrsvě se vypisuje o průchodu paketu
+ * - varovný hlášení (net/host unreachable, time exceeded se posílají jenom na pakety icmp request)
+ * Transportní vrstva
+ * - metody začínající slovem posli
+ * - sloužej k odesílání novejch paketů na vyšší úrovni, nespecifikujou se třeba všechny parametry
  */
     int default_ttl=64; //defaultni ttl
     /**
@@ -176,9 +179,14 @@ public abstract class AbstraktniPocitac {
             if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ //adresa souhlasi
                 //paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
-                vypisPruchod("odesliEthernetove", "Nemohl jsem odeslat paket, poslal jsem Host Unreachable. "
-                        +p.toString());
-                posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
+                if(p.typ==8){
+                    vypisPruchod("odesliEthernetove", "Nemohl jsem odeslat paket po linkove vrstve - next hop" +
+                            "nesouhlasi, posilam Host Unreachable. " + p.toString());
+                    posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
+                }else{
+                    vypisPruchod("odesliEthernetove", "Nemohl jsem odeslat paket po linkove vrstve, next hop" +
+                            "nesouhlasi. " + p.toString());
+                }
             }
         }else{
             //na druhym konci kabelu nikdo neposloucha - paket se ale povazuje za odeslanej
@@ -299,9 +307,13 @@ public abstract class AbstraktniPocitac {
                     paket=natTabulka.zanatuj(paket);
                     vypisPruchod("Zanatovani: prelozeny paket: "+paket);
                 }else if(mamNatovat==1||mamNatovat==2){// neni pool nebo dosly IP v poolu
-                    vypisPruchod("Zanatovani: Nepodarilo se prelozit paket: "+paket+
-                            ", posila se host unreachable");
-                    posliNovejPaketOdpoved(paket,vstupniRozhrani.vratPrvni(), 3, 1); //host unreachable
+                    if (paket.typ == 8) {
+                        vypisPruchod("Zanatovani: Nepodarilo se prelozit paket: " + paket +
+                                ", posila se host unreachable");
+                        posliNovejPaketOdpoved(paket, vstupniRozhrani.vratPrvni(), 3, 1); //host unreachable
+                    }else{
+                        vypisPruchod("Zanatovani: Nepodarilo se prelozit paket: " + paket);
+                    }
                 } else{
                     //nic se nedela, posila se dal bez natovani
                     if(ladeni)vypis("Natovani: Nenatuje se paket:   "+paket);
@@ -313,8 +325,10 @@ public abstract class AbstraktniPocitac {
             } else {//rozhrani nenalezeno - paket neni kam poslat
                 vypisPruchod( "preposliPaket", "Nemohu preposlat paket, nenalezl jsem rozhrani, na ktere" +
                     " bych ho poslal. "+paket.toString() );
-                posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
-                // -> net unreachable
+                if(paket.typ==8){
+                    posliNetUnreachable(paket.zdroj, paket.cas, paket.icmp_seq, default_ttl, paket.prikaz);
+                    // -> net unreachable
+                }
             }
         }
     }

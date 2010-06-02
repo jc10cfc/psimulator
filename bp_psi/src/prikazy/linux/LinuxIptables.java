@@ -118,7 +118,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
      * nat).
      */
     private void zpracujBeznyPrepinace() {
-        if (slovo.equals("-h")) {
+        if (slovo.equals("-h") || slovo.equals("--help")) {
             minus_h=true;
         }else if (slovo.equals("-t")) {
             zpracujMinus_t();
