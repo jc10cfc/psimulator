@@ -99,7 +99,7 @@ public class PocitacBuilder {
     }
 
     public void nactiPooly(AbstraktniPocitac pocitac) {
-        if (bezNastaveni) {
+        if (bezNastaveni && ! pocitac.zamknute) {
             return;
         }
 
@@ -154,7 +154,7 @@ public class PocitacBuilder {
     }
 
     public void nactiAccessListy(AbstraktniPocitac pocitac) {
-        if (bezNastaveni) {
+        if (bezNastaveni && ! pocitac.zamknute) {
             return;
         }
 
@@ -179,7 +179,7 @@ public class PocitacBuilder {
     }
 
     public void nactiPoolAccess(AbstraktniPocitac pocitac) {
-        if (bezNastaveni) {
+        if (bezNastaveni && ! pocitac.zamknute) {
             return;
         }
 
@@ -211,7 +211,7 @@ public class PocitacBuilder {
     }
 
     public void nactiStatickyNat(AbstraktniPocitac pocitac) {
-        if (bezNastaveni) {
+        if (bezNastaveni && ! pocitac.zamknute) {
             return;
         }
 
@@ -242,7 +242,7 @@ public class PocitacBuilder {
     }
 
     public void nactiRoutovaciTabulku(AbstraktniPocitac pocitac) {
-        if (bezNastaveni) {
+        if (bezNastaveni && ! pocitac.zamknute) {
             return;
         }
 

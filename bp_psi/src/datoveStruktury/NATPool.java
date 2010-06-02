@@ -196,6 +196,7 @@ public class NATPool {
 
     /**
      * Nasype vsechny adresy ze vsech poolu na verejne rozhrani.
+     * Prida IP z dynamickych i statickych pravidel.
      */
     public void updateIpNaRozhrani() {
         if (natTabulka.verejne == null) {
@@ -209,11 +210,7 @@ public class NATPool {
         }
 
         // jeste staticky
-        for (NATtabulka.NATzaznam z : natTabulka.tabulka) {
-            if (z.staticke) {
-                natTabulka.verejne.seznamAdres.add(z.out);
-            }
-        }
+        natTabulka.pridejIpAdresyZeStatickychPravidel(natTabulka.verejne);
     }
 
     /**

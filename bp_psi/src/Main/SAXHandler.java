@@ -654,7 +654,7 @@ public class SAXHandler implements ContentHandler {
                 }
             }
             pocitac.natTabulka.lPool.updateIpNaRozhrani();
-            pocitac.natTabulka.pridejIpAdresyZeStatickychPravidel(pocitac.natTabulka.vratVerejne());
+//            pocitac.natTabulka.pridejIpAdresyZeStatickychPravidel(pocitac.natTabulka.vratVerejne());
             hotovePocitace.add(pocitac);
         }
 
