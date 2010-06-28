@@ -271,7 +271,7 @@
 	<rozhrani>
 		<jmeno>eth0</jmeno>
 		<ip>147.32.81.66</ip>
-		<maska>255.255.255.192</maska>
+		<maska>255.255.255.0</maska>
 		<mac>00:41:52:d3:64:90</mac>
 		<nahozene>true</nahozene>
 	</rozhrani>
