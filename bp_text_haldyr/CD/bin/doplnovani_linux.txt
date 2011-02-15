@@ -1,9 +1,0 @@
-ifconfig
-route
-ip
-iptables
-echo
-ping
-traceroute
-exit
-cat
