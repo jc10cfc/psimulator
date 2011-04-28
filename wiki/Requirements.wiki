@@ -1,5 +1,8 @@
 #summary System requirements for simulator
 
+Simulator is in download section: <br>
+http://code.google.com/p/psimulator/downloads/
+
 = Linux =
 All utils should be in repositories of your distribution.<br>
 On Debian-based distribution (like Ubuntu, ..) install with one command:<br>
@@ -25,10 +28,9 @@ http://snapshot.debian.org/binary/rlwrap
 If not in repository, install from:<br>
 http://snapshot.debian.org/binary/telnet/ 
 
-
-[Downloads]
-
 = Microsoft Windows =
+== Java Runtime Environment ==
+http://www.java.com/en/download/
 
 
 
