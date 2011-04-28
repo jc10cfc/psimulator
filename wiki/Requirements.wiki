@@ -9,10 +9,9 @@ aptitude install sun-java6-jre rlwrap telnet
 
 
 == Java Runtime Environment ==
-If not in repository, install from:
-{{{ 
+If not in repository, install from:<br>
 http://www.java.com/en/download/
-}}}
+
 
 == rlwrap ==
 For all features version 0.32+ 
