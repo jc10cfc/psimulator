@@ -9,7 +9,7 @@ On Debian-based distribution (like Ubuntu, ..) install with one command:<br>
 {{{ 
 aptitude install sun-java6-jre rlwrap telnet 
 }}}
-
+If previous command didn't work you have to install by your own way:
 
 == Java Runtime Environment ==
 If not in repository, install from:<br>
@@ -34,6 +34,8 @@ http://snapshot.debian.org/binary/telnet/
 == Java Runtime Environment ==
 http://www.java.com/en/download/
 
+Other needed parts are in zip archive in [http://code.google.com/p/psimulator/downloads/ download section].
+
 ----
 
 = Mac OS X =
@@ -46,3 +48,4 @@ from mac ports install via:
 {{{
 sudo port install rlwrap 
 }}}
+Telnet and JRE is supplied with Mac OS X by default.
