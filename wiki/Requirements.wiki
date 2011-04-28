@@ -28,17 +28,23 @@ http://snapshot.debian.org/binary/rlwrap
 If not in repository, install from:<br>
 http://snapshot.debian.org/binary/telnet/ 
 
+----
+
 = Microsoft Windows =
 == Java Runtime Environment ==
 http://www.java.com/en/download/
 
-
+----
 
 = Mac OS X =
+== mac ports ==
+http://www.macports.org/install.php
 
-
-
-
+== rlwrap ==
+from mac ports install via:
+{{
+sudo port install rlwrap 
+}}
 
 
 
