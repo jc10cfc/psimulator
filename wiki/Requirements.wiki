@@ -1,0 +1,48 @@
+#summary System requirements for simulator
+
+= Linux =
+All utils should be in repositories of your distribution.<br>
+On Debian-based distribution (like Ubuntu, ..) install with one command:<br>
+{{{ 
+aptitude install sun-java6-jre rlwrap telnet 
+}}}
+
+
+* Java Runtime Environment <br>
+If not in repository, install from:
+{{{ 
+http://www.java.com/en/download/
+}}}
+
+* rlwrap <br>
+For all features version 0.32+ 
+If not in repository, install from:
+{{{ 
+http://utopia.knoware.nl/~hlub/rlwrap/
+or
+http://snapshot.debian.org/binary/rlwr
+}}}
+
+* telnet <br>
+{{{ 
+http://snapshot.debian.org/binary/telnet/ 
+}}}
+
+= Microsoft Windows =
+
+= Mac OS X =
+
+
+
+
+
+
+
+
+
+
+= Details =
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
