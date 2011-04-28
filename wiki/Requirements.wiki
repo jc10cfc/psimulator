@@ -8,13 +8,13 @@ aptitude install sun-java6-jre rlwrap telnet
 }}}
 
 
-* Java Runtime Environment <br>
+== Java Runtime Environment ==
 If not in repository, install from:
 {{{ 
 http://www.java.com/en/download/
 }}}
 
-* rlwrap <br>
+== rlwrap ==
 For all features version 0.32+ 
 If not in repository, install from:
 {{{ 
@@ -23,7 +23,7 @@ or
 http://snapshot.debian.org/binary/rlwr
 }}}
 
-* telnet <br>
+== telnet ==
 {{{ 
 http://snapshot.debian.org/binary/telnet/ 
 }}}
