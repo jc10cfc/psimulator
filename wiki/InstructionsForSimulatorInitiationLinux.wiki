@@ -1,0 +1,35 @@
+#summary Instructions for simulator initiation under linux (starting a server, connecting clients to server)
+
+= Prerequisities =
+ * installed needed parts (see SystemRequirements)
+ * unpacked zip archive with simulator
+
+= Server startup =
+Start server in terminal with command:
+{{{
+./start_server <config> <port> -n
+}}}
+Where
+ * *`<config>`* is XML file with network settings (routers, interfaces, )
+ * *`<port>`* is number specifying from which port number will routers will be listening on. If not specified value 4000 is used.
+ * *`-n`* is for loading only skelet of routers, interfaces, NAT, .. (completely without settings), *this is optional argument*
+
+Sometimes there is handy to have some network device, which no one can change their configuration. Such routers are used for network structure.
+
+After running script the server will write list of computers/routers with port numbers on which they listen
+
+Server writes also some service information about what is going on in virtual network.
+
+== Example ==
+For starting server with empty configuration (just with skelet of network = cables between routers):
+{{{
+./start_server laborka.xml 3000 -n
+}}}
+
+For starting server with full configuration:
+{{{
+./start_server laborka.xml 3000 
+}}}
+
+
+= Connecting clients to server =
