@@ -1,4 +1,5 @@
 #summary System requirements for simulator
+#labels Phase-Deploy
 
 Simulator is in download section: <br>
 http://code.google.com/p/psimulator/downloads/
@@ -34,7 +35,7 @@ http://snapshot.debian.org/binary/telnet/
 == Java Runtime Environment ==
 http://www.java.com/en/download/
 
-Other needed parts are in zip archive in [http://code.google.com/p/psimulator/downloads/ download section].
+Other needed parts are in zip archive in [http://code.google.com/p/psimulator/downloads/ download section] in windows archive.
 
 ----
 
