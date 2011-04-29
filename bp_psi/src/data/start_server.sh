@@ -1,4 +1,6 @@
 #!/bin/bash
+# script for starting a simulator server
+# author Stanislav Řehák
 
 help() {
     echo "This is help for starting a server."

@@ -1,6 +1,6 @@
 #!/bin/bash
-# skript pro pripojeni klienta na linux
-# author haldyr
+# script for connecting client to a linux router
+# author Stanislav Řehák
 
 VERSION=`rlwrap -v | cut -d" " -f2 | sed 's/\./,/g'`
 COLOR=green
@@ -25,6 +25,6 @@ fi
 
 OPT="$OPT -f $COMPLETION"
 
-# echo pouzivam OPT=$OPT
+# echo using OPT=$OPT
 
 rlwrap $OPT telnet localhost $@

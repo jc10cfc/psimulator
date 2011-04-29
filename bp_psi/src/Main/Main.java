@@ -1,5 +1,5 @@
 /**
- * Projekt založen v pondělí 4.1.2010
+ * Project was created on Monday 4.1.2010
  */
 package Main;
 

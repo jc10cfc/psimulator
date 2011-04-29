@@ -1,6 +1,6 @@
 #!/bin/bash
-# skript pro pripojeni klienta na cisco
-# author haldyr
+# script for connecting client to a cisco router
+# author Stanislav Řehák
 
 VERSION=`rlwrap -v | cut -d" " -f2 | sed 's/\./,/g'`
 COLOR=cyan
@@ -25,6 +25,6 @@ fi
 
 OPT="$OPT -b'(){}[],+=&^%0@;|\' -f $COMPLETION"
 
-# echo pouzivam OPT=$OPT
+# echo using OPT=$OPT
 
 rlwrap $OPT telnet localhost $@
