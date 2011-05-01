@@ -33,3 +33,16 @@ For starting server with full configuration:
 
 
 = Connecting clients to server =
+Use one terminal window for every connection to router (linux, cisco). There is a possibility to connect remotely. 
+
+ * to connect to a linux router
+{{{
+./linux.sh <port>
+}}}
+
+ * to connect to a cisco router
+{{{
+./cisco.sh <port>
+}}}
+
+On both routers are implemented *help* command (in czech language) and *help_en* (in english).
