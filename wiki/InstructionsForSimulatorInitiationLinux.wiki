@@ -7,7 +7,7 @@
 = Server startup =
 Start server in terminal with command:
 {{{
-./start_server <config> <port> -n
+./start_server.sh <config> <port> -n
 }}}
 Where
  * *`<config>`* is XML file with network settings (routers, interfaces, )
