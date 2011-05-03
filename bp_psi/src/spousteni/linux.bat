@@ -13,7 +13,7 @@ IF "%1"=="-h" (
 )
 
 
-cygwin\bin\rlwrap.exe -f "doplnovani_linux.txt" "cygwin/bin/telnet.exe" localhost %1
+cygwin\bin\rlwrap.exe -f "doplnovani_linux.txt" -H rlwrap_history_lin.txt "cygwin/bin/telnet.exe" localhost %1
 
 exit
 
