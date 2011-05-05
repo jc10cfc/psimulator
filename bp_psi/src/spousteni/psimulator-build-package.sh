@@ -6,7 +6,7 @@
 LOC=/home/haldyr/NetBeansProjects/psimulator
 
 # kde je cygwin
-CYGWIN=/home/haldyr/NetBeansProjects/psimulator/cygwin
+CYGWIN=/home/haldyr/NetBeansProjects/psimulator/cygwin_orezany
 
 # verze aplikace - tak se bude jmenovat soubor zip archiv
 VERSION=v1.0
@@ -15,9 +15,9 @@ VERSION=v1.0
 CURR_PATH=`pwd`
 
 DATE=`date +"%F"`
-LINUX="psimulator_$VERSION"_"$DATE"_linux".zip" 
-WINDOWS="psimulator_$VERSION"_"$DATE"_windows".zip" 
 
+
+NAME="psimulator_$VERSION"_"$DATE"_all".zip"
 TEMP="temp.$$"
 
 cd $LOC
@@ -28,32 +28,33 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+cd $CURR_PATH
+
 mkdir $TEMP
 cd $TEMP
 
-cp ../dist/psimulator.jar .
-cp ../src/data/{cisco,linux,start_server}.sh .
-cp ../src/data/laborka.xml .
-cp ../src/data/psimulator.dtd .
-cp ../src/data/doplnovani_{cisco,linux}.txt .
-cp ../src/poznamky/{install,readme}.txt .
-zip $CURR_PATH/$LINUX *
+# nakopirovat vsechny soubory:
+cp $LOC/dist/psimulator.jar .
 
-echo
+for f in cisco.bat cisco.sh doplnovani_cisco.txt doplnovani_linux.txt linux.bat linux.sh start_server.bat start_server.sh INSTALL.txt RUN.txt; do
+	cp $LOC/src/spousteni/$f .
+done
 
-if [ -f $CURR_PATH/$LINUX ]; then
-    echo Verze pro linux: $LINUX
-fi
+for f in psimulator.dtd laborka.xml; do
+	cp $LOC/src/data/$f .
+done
 
-cp * $CYGWIN/etc/skel/
-cd $CYGWIN
-zip -rq $CURR_PATH/$WINDOWS .
+cp $LOC/images/laborka.png .
 
-if [ -f $CURR_PATH/$WINDOWS ]; then
-    echo Verze pro windows: $WINDOWS
-fi
 
-cd "$CURR_PATH"
+cp -r $CYGWIN .
+mv cygwin_orezany cygwin
 
-rm -r $LOC/$TEMP
-rm $CYGWIN/etc/skel/*
+# vytvorit zip
+zip -rqv ../$NAME *
+
+
+cd ..
+rm -r $TEMP
+
+echo "Archiv ulozen do $CURR_PATH/$NAME"
