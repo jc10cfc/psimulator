@@ -4,6 +4,8 @@
  * installed needed parts (see SystemRequirements)
  * unpacked zip archive with simulator
 
+Examples are written for linux, on windows just change ".sh" suffix with ".bat".
+
 = Server startup =
 Start server in terminal with command:
 {{{
@@ -23,12 +25,12 @@ Server writes also some service information about what is going on in virtual ne
 == Example ==
 For starting server with empty configuration (just with skelet of network = cables between routers):
 {{{
-./start_server laborka.xml 3000 -n
+./start_server.sh laborka.xml 3000 -n
 }}}
 
 For starting server with full configuration:
 {{{
-./start_server laborka.xml 3000 
+./start_server.sh laborka.xml 3000 
 }}}
 
 
