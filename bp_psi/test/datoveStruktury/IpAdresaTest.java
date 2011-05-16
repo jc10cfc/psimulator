@@ -243,6 +243,7 @@ public class IpAdresaTest {
 
     @Test
     public void testSpravnaAdresaNebMaska(){
+        //testovani masky:
         assertTrue(IpAdresa.spravnaAdresaNebMaska("255.255.255.0", true));
         assertTrue(IpAdresa.spravnaAdresaNebMaska("0.0.0.0", true));
         assertTrue(IpAdresa.spravnaAdresaNebMaska("255.255.255.255", true));
@@ -254,12 +255,14 @@ public class IpAdresaTest {
         assertFalse(IpAdresa.spravnaAdresaNebMaska("255.255.255.129", true));
         assertFalse(IpAdresa.spravnaAdresaNebMaska("255.0.155.0", true));
 
+        //testovani adresy:
         assertTrue(IpAdresa.spravnaAdresaNebMaska("192.168.1.1", false));
         assertTrue(IpAdresa.spravnaAdresaNebMaska("1.1.1.1", false));
         assertTrue(IpAdresa.spravnaAdresaNebMaska("10.10.10.10", false));
         
         assertFalse(IpAdresa.spravnaAdresaNebMaska("0.0.256.0", false));
         assertFalse(IpAdresa.spravnaAdresaNebMaska("0.0.254.0.9", false));
+        assertFalse(IpAdresa.spravnaAdresaNebMaska("1,1,1,1", false));
     }
 
     @Test

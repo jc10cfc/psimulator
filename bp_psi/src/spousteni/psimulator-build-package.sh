@@ -17,7 +17,7 @@ CURR_PATH=`pwd`
 DATE=`date +"%F"`
 
 
-NAME="psimulator_$VERSION"_"$DATE"_all".zip"
+NAME="psimulator_$VERSION"_"$DATE.zip"
 TEMP="temp.$$"
 
 cd $LOC

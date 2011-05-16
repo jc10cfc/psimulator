@@ -13,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -40,36 +39,15 @@ public class ParserPrikazuTest {
     public void tearDown() {
     }
 
-
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-    @Test
-    public void pokusIndexOf() {
-        ParserPrikazu par = new LinuxParserPrikazu(null, null);
-        par.zpracujRadek("ifconfig wlan0 1.2.3.4/24");
-    }
-
     /**
-     * Test of zpracujRadek method, of class ParserPrikazu.
+     * Netusim, co ma tohle bejt...
      */
-    @Test
-    public void testZpracujRadek() {
-        System.out.println("zpracujRadek");
-        String s = "";
-        ParserPrikazu instance = null;
-        instance.zpracujRadek(s);
-
-        fail("The test case is a prototype.");
-    }
-
     /*
     Method method = ParserPrikazu.getDeclaredMethod(rozsekej, argClasses);
     method.setAccessible(true);
     return method.invoke(targetObject, argObjects);
      */
-    //@Test
+    @Test
     public void testZpracujLepe() {
         System.out.println("testZpracujLepe");
 
