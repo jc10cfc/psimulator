@@ -385,7 +385,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         if ( ! IpAdresa.spravnaAdresaNebMaska(slovo, true)){
             kon.posliRadek("route: bogus netmask "+slovo+"");
             navratovyKod |= 1024;
-        }else{ //spravna brana
+        }else{ //spravna maska
             maska=slovo;
             slovo=dalsiSlovo();
             if(slovo.equals("dev")){
@@ -407,7 +407,9 @@ public class LinuxRoute extends AbstraktniPrikaz{
         pocetBituMasky=0;
         ipAdresa=new IpAdresa("0.0.0.0",0); // a adresa se rovnou vytvori
         defaultni=true;
-        nastavovanaMaska=true;
+        //nastavovanaMaska=true;    //zakomentovano 18.5.2011, potom, co jsem zjistil, ze na mym pocitaci projde i
+            // "route add default netmask 255.0.0.0 gw 192.168.0.20", pricemz to nastavi
+            // "0.0.0.0         192.168.0.20    255.0.0.0       UG    0      0        0 eth0"
     }
 
 

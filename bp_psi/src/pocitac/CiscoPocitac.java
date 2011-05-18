@@ -14,6 +14,11 @@ import datoveStruktury.CiscoWrapper;
 public class CiscoPocitac extends AbstraktniPocitac {
 
     private CiscoWrapper wrapper;
+    
+    /**
+     * Vypis metody prijmiEthernetove().
+     */
+    private boolean debug = false;
 
     public CiscoPocitac(String jmeno, int port) {
         super(jmeno, port);
@@ -27,11 +32,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
     public CiscoWrapper getWrapper() {
         return wrapper;
     }
-    /**
-     * Vypis metody prijmiEthernetove().
-     */
-    private boolean debug = false;
-
+    
     /**
      * Vrati bud rozhrani se zadanym jmenem, nebo null, kdyz zadny rozhrani nenajde.
      * @param jmeno

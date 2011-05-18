@@ -159,7 +159,7 @@ public abstract class AbstraktniPocitac {
     private void odesliEthernetove(Paket p,SitoveRozhrani mojeRozhr,
             SitoveRozhrani ciziRozhr, IpAdresa sousedni) {
         /**
-         * Adresa mojeho rozhrani, ze kteryho to posilam. POZOR, strasna prasarna!
+         * Adresa meho rozhrani, ze kteryho to posilam. POZOR, strasna prasarna!
          * Nechtelo se mi zjistovat, s jako adresou to linux nebo cisco posilaj,
          * a tak to posilam prakticky vzdycky s prvni adresou na tomhle rozhrani.
          * Jen kdyz rozhrani obsahuje zdrojovou adresu paketu, poslu to s ni (pro
@@ -176,16 +176,16 @@ public abstract class AbstraktniPocitac {
 
         //posilani paketu
         if (ciziRozhr != null) { //cizi rozhrani by teoreticky mohlo bejt null
-            if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ //adresa souhlasi
-                //paket odeslan
+            if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ 
+                //adresa souhlasi - paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
                 if(p.typ==8){
                     vypisPruchod("odesliEthernetove", "Nemohl jsem odeslat paket po linkove vrstve - next hop" +
-                            "nesouhlasi, posilam Host Unreachable. " + p.toString());
+                            " nesouhlasi, posilam Host Unreachable. " + p.toString());
                     posliNovejPaketOdpoved(p,mojeRozhr.vratPrvni(), 3, 1); //host unreachable
                 }else{
                     vypisPruchod("odesliEthernetove", "Nemohl jsem odeslat paket po linkove vrstve, next hop" +
-                            "nesouhlasi. " + p.toString());
+                            " nesouhlasi. " + p.toString());
                 }
             }
         }else{
