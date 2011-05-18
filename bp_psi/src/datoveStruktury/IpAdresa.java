@@ -398,6 +398,7 @@ public class IpAdresa {
      * Udelany metosou pokus - omyl, ale testy prosly.
      * @param p
      * @return adresu o jednicku vetsi, maska bude 255.0.0.0
+     * @author Stanislav Řehák
      */
     public static IpAdresa vratOJednaVetsi(IpAdresa p){
         int nova=(int) ( (long)(p.adresa) + 1L );
@@ -522,10 +523,7 @@ public class IpAdresa {
      * @author Stanislav Řehák
      */
     private static boolean jednoduchaKontrola(String adr) { //kontrola IP, jestli to jsou cisla s teckama
-        if(adr.contains(",")){  //nevim proc, ale v nasledujicim regularnim vyrazu proslo i "1,1,1,1",
-            return false;       //a vracelo to true, tak jsem to musel vyresit takovouhle prasarnou
-        }
-        if (!adr.matches("[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}")) {
+        if (!adr.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}")) {
             return false;
         }
         return true;
