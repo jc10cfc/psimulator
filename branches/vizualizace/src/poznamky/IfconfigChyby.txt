@@ -1,0 +1,113 @@
+V tomhle souboru je pěkně vidět, jakou prioritu mají chyby v ifconfigu.
+
+
+root: /home/neiss# ifconfig -q qwe 266.1.1.1 7.7.7.7/40 234.1.1.1 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1  netmask
+ifconfig: neznámá volba `-q'.                     //hlavni je prepinac - nic jinyho se neresi                                                                                
+ifconfig: `--help' vypíše návod k použití.  
+      
+
+// odstaněn špatnej přepínač                                                                                
+root: /home/neiss# ifconfig qwe 266.1.1.1 7.7.7.7/40 234.1.1.1 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1  netmask
+266.1.1.1: Unknown host                           //i kdyz se prikaz jinak provadi, hlavni je tady spatna adresa                                                                             
+ifconfig: `--help' vypíše návod k použití.  
+       
+
+// odstraněna špatná adresa                                                                            
+root: /home/neiss# ifconfig qwe 7.7.7.7/40 234.1.1.1 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1  netmask
+SIOCSIFADDR: No such device                                      //souvisi s nenalezenym rozhranim                                                   
+qwe: Chyba při zjišťování příznaků rozhraní: No such device      //souvisi s nenalezenym rozhranim                                                    
+SIOCSIFADDR: No such device                                      //souvisi s nenalezenym rozhranim - pridavam totiž 2 IP                                                   
+qwe: Chyba při zjišťování příznaků rozhraní: No such device      //souvisi s nenalezenym rozhranim                                                    
+267.1.1.1: Unknown host                                          //ty 4 radky jsou ty add a del                                                    
+268.1.1.1: Unknown host                                                                                              
+269.1.1.1: Unknown host                                                                                              
+270.1.1.1: Unknown host                                                                                              
+Použití:                                                                                                             
+	... vypise napovedu //napovedu to vypisuje kvuli tomu poslednimu netmask
+
+
+
+root: /home/neiss# ifconfig qwe 7.7.7.7/40 234.1.1.1 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1
+SIOCSIFADDR: No such device										//souvisi s nenalezenym rozhranim  
+qwe: Chyba při zjišťování příznaků rozhraní: No such device
+SIOCSIFADDR: No such device
+qwe: Chyba při zjišťování příznaků rozhraní: No such device
+267.1.1.1: Unknown host
+268.1.1.1: Unknown host
+269.1.1.1: Unknown host
+270.1.1.1: Unknown host
+SIOCSIFNETMASK: No such device				//souvisi s nenalezenym rozhranim - snazi se totiz nastavit masku
+
+
+
+//smazana spatna maska - zadna podstatna zmena
+root: /home/neiss# ifconfig qwe 7.7.7.7/8 234.1.1.1 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1
+SIOCSIFADDR: No such device
+qwe: Chyba při zjišťování příznaků rozhraní: No such device
+SIOCSIFADDR: No such device
+qwe: Chyba při zjišťování příznaků rozhraní: No such device
+267.1.1.1: Unknown host
+268.1.1.1: Unknown host
+269.1.1.1: Unknown host
+270.1.1.1: Unknown host
+SIOCSIFNETMASK: No such device
+
+
+//špatný rozhraní, smazaná zakázaná adresa
+root: /home/neiss# ifconfig qwe 7.7.7.7/8 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1
+SIOCSIFADDR: No such device
+qwe: Chyba při zjišťování příznaků rozhraní: No such device
+267.1.1.1: Unknown host
+268.1.1.1: Unknown host
+269.1.1.1: Unknown host
+270.1.1.1: Unknown host
+SIOCSIFNETMASK: No such device
+
+
+
+root: /home/neiss# ifconfig wlan0 7.7.7.7/8 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1
+267.1.1.1: Unknown host
+268.1.1.1: Unknown host
+269.1.1.1: Unknown host
+270.1.1.1: Unknown host
+
+
+// správný rozhraní, zakázaná adresa
+root: /home/neiss# ifconfig wlan0 234.1.1.1 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1
+SIOCSIFADDR: Invalid argument
+267.1.1.1: Unknown host
+268.1.1.1: Unknown host
+269.1.1.1: Unknown host
+270.1.1.1: Unknown host
+
+
+
+
+root: /home/neiss# ifconfig qwe 7.7.7.7 add 267.1.1.1 add 268.1.1.1 del 269.1.1.1 del 270.1.1.1
+SIOCSIFADDR: No such device
+qwe: Chyba při zjišťování příznaků rozhraní: No such device
+267.1.1.1: Unknown host
+268.1.1.1: Unknown host
+269.1.1.1: Unknown host
+270.1.1.1: Unknown host
+
+
+// špatný rozhraní:
+root: /home/neiss# ifconfig wer 1.2.3.4/23
+SIOCSIFADDR: No such device //snazi se nastavit adresu
+wer: Chyba při zjišťování příznaků rozhraní: No such device //nenaslo se rozhrani
+SIOCSIFNETMASK: No such device //snazi se nastavit masku
+
+root: /home/neiss# ifconfig wer 1.2.3.4
+SIOCSIFADDR: No such device
+wer: Chyba při zjišťování příznaků rozhraní: No such device
+
+root: /home/neiss# ifconfig wer
+wer: chyba při získávání informací o rozhraní Zařízení nebylo nalezeno
+
+
+
+root: /home/neiss# ifconfig wlan0 234.1.1.1/24
+SIOCSIFADDR: Invalid argument
+
+

@@ -1,0 +1,54 @@
+SYSTEM REQUIREMENTS
+
+
+Linux
+
+All utils should be in repositories of your distribution.
+On Debian-based distribution (like Ubuntu, ..) install with one command:
+
+aptitude install sun-java6-jre rlwrap telnet
+
+If previous command didn't work you have to install by your own way:
+
+    Java Runtime Environment
+
+    If not in repository, install from:
+    http://www.java.com/en/download/
+
+    rlwrap
+
+    For all features version 0.32+ If not in repository, install from:
+    http://utopia.knoware.nl/~hlub/rlwrap/
+    or
+    http://snapshot.debian.org/binary/rlwrap
+
+    telnet
+
+    If not in repository, install from:
+    http://snapshot.debian.org/binary/telnet/
+
+-----------------
+
+Microsoft Windows
+
+    Java Runtime Environment
+
+    http://www.java.com/en/download/
+
+Other needed parts are in zip archive in download section in windows archive.
+
+-----------------
+
+Mac OS X
+
+    mac ports
+
+    http://www.macports.org/install.php
+
+    rlwrap
+
+    from mac ports install via:
+
+    sudo port install rlwrap
+
+Telnet and JRE is supplied with Mac OS X by default.

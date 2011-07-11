@@ -1,0 +1,122 @@
+root: /home/neiss# iptn -I POSTROUTING -o vvdfvf -ovfdvd -ovfdvfd -j DNAT -j MASQUERADE
+iptables v1.4.1.1: multiple -o flags not allowed
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptables -t bla -t nat
+iptables v1.4.1.1: no command specified
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -I POSTROUTING -o vvdfvf -ovfdvd -ovfdvfd -j DNAT -j MASQUERADE -tbla
+iptables v1.4.1.1: multiple -o flags not allowed
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -I POSTROUTING -o vvdfvf -ovfdvd -ovfdvfd -j DNAT -j MASQUERADE -t bla
+iptables v1.4.1.1: multiple -o flags not allowed
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -t bla -I POSTROUTING -o vvdfvf -ovfdvd -ovfdvfd -j DNAT -j MASQUERADE
+iptables v1.4.1.1: multiple -o flags not allowed
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -t bla -I POSTROUTING -o vvdfvf -o vfdvd -o vfdvfd -j DNAT -j MASQUERADE
+iptables v1.4.1.1: multiple -o flags not allowed
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -t bla -I POSTROUTING -o vvdfvf -j DNAT -j MASQUERADE
+iptables v1.4.1.1: multiple -j flags not allowed
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -t bla -I POSTROUTING -j DNAT -j MASQUERADE -o fds -o vfdsvds
+iptables v1.4.1.1: multiple -j flags not allowed
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -t bla -I POSTROUTING -j DNAT -o fds
+iptables v1.4.1.1: You must specify --to-destination
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptn -t bla -I POSTROUTING -j MASQUERADE -o fds
+iptables v1.4.1.1: can't initialize iptables table `bla': Table does not exist (do you need to insmod?)
+Perhaps iptables or your kernel needs to be upgraded.
+
+
+
+root: /home/neiss# iptn -t bla -I POSTROUTING -j DNAT -o fds --to 1.2.3.4
+iptables v1.4.1.1: can't initialize iptables table `bla': Table does not exist (do you need to insmod?)
+Perhaps iptables or your kernel needs to be upgraded.
+
+
+
+root: /home/neiss# iptn -t nat -I POSTROUTING -j DNAT -o fds --to 1.2.3.4
+iptables: Invalid argument
+
+
+
+iptables: Invalid argument
+root: /home/neiss# iptables -t nat -A PREROUTING -s 3.4.5.6 -j DNAT --to-destination 1.2.3.4
+
+
+
+root: /home/neiss# iptables -t nat -A PREROUTING -s 3.4.5.6 -j DNAT --to 1.2.3.4 -o fds
+iptables v1.4.1.1: Can't use -o with PREROUTING
+
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptables -tnat -L
+iptables v1.4.1.1: can't initialize iptables table `-tnat': Table does not exist (do you need to insmod?)
+Perhaps iptables or your kernel needs to be upgraded.
+
+
+
+root: /home/neiss# iptables -tnat
+iptables v1.4.1.1: no command specified
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptables -t nat blabla -A POSTROUTING -o fdvdf -j MASQUERADE -o bbfsdb -ofvdvfd
+Bad argument `blabla'
+Try `iptables -h' or 'iptables --help' for more information.
+
+
+
+root: /home/neiss# iptables -t bla -t nat -n -L
+ // -> v poradku to vypise tabulku nat
+
+
+
+root: /home/neiss# iptn -L -n
+Chain PREROUTING (policy ACCEPT)
+target     prot opt source               destination
+
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+           all  --  0.0.0.0/0            1.2.3.4
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+           all  --  0.0.0.0/0            0.0.0.0/0
+MASQUERADE  all  --  0.0.0.0/0            0.0.0.0/0
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
