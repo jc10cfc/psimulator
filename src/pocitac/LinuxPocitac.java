@@ -6,12 +6,13 @@
 package pocitac;
 
 import datoveStruktury.*;
+import prikazy.linux.LinuxParserPrikazu;
 /**
  *
  * @author Tomáš Pitřinec
  */
 public class LinuxPocitac extends AbstraktniPocitac {
-    
+
     public LinuxPocitac(String jmeno, int port) {
         super(jmeno,port);
     }
@@ -35,5 +36,11 @@ public class LinuxPocitac extends AbstraktniPocitac {
         }
     }
 
-    
+    @Override
+    public void nastavKonsoli(Konsole konsole) {
+        konsole.setParser(new LinuxParserPrikazu(this, konsole));
+        konsole.prompt=this.jmeno + ":~# ";
+    }
+
+
 }

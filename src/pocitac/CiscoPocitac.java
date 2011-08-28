@@ -6,6 +6,7 @@ package pocitac;
 
 import datoveStruktury.*;
 import datoveStruktury.CiscoWrapper;
+import prikazy.cisco.CiscoParserPrikazu;
 
 /**
  *
@@ -14,7 +15,7 @@ import datoveStruktury.CiscoWrapper;
 public class CiscoPocitac extends AbstraktniPocitac {
 
     private CiscoWrapper wrapper;
-    
+
     /**
      * Vypis metody prijmiEthernetove().
      */
@@ -32,7 +33,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
     public CiscoWrapper getWrapper() {
         return wrapper;
     }
-    
+
     /**
      * Vrati bud rozhrani se zadanym jmenem, nebo null, kdyz zadny rozhrani nenajde.
      * @param jmeno
@@ -103,7 +104,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
             prijmiPaket(p, rozhr);
             return true;
         }
-        
+
         // jinak zahazuju
         ladici("mohu odpovedet sousedovi na arp dotaz, neni to pro me a ja nevim kam s tim, tak to radsi neprijmu");
         return false;
@@ -117,5 +118,11 @@ public class CiscoPocitac extends AbstraktniPocitac {
         if (debug) {
             vypis("Ethernet: " + s);
         }
+    }
+
+    @Override
+    public void nastavKonsoli(Konsole konsole) {
+        konsole.setParser(new CiscoParserPrikazu(this, konsole));
+        konsole.prompt = this.jmeno + ">";
     }
 }

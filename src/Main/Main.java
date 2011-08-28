@@ -5,9 +5,15 @@ package Main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+import telnetd.BootException;
+import telnetd.TelnetD;
+import telnetd.pridaneTridy.TelnetProperties;
 
 /**
  * Trida main zpracuje parametry a podle nich pozada SAXHandler o data z konfiguraku.
@@ -49,7 +55,7 @@ public class Main {
 
             // Nastavíme náš vlastní content handler pro obsluhu SAX událostí.
             parser.setContentHandler(sax);
-            
+
             // Zpracujeme vstupní proud XML dat.
             parser.parse(source);
             o = sax.vratNastaveni();
@@ -68,6 +74,23 @@ public class Main {
 
         parsujParametry(args);
         vsechno = new Main().nacti();
+
+        Properties prop = TelnetProperties.getProperties();
+        prop.list(System.out);
+
+        TelnetD daemon;
+        try {
+            System.out.println("Startuji telnet listenery pro vsechny nakonfigurovane pocitace");
+            //1. create singleton instance
+            daemon = TelnetD.createTelnetD(TelnetProperties.getProperties());
+            //2.start serving
+            daemon.start();
+            System.out.println("Listenery běží");
+        } catch (BootException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
 
         if (vsechno == null) {
             if (! konfigurak.endsWith(".xml")) {
@@ -99,7 +122,7 @@ public class Main {
             }
             param.add(s);
         }
-        
+
         if (param.size() >= 1) {
             konfigurak = param.get(0);
             if (param.size() >= 2) {

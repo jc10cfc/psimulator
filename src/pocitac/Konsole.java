@@ -2,68 +2,43 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package pocitac;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import telnetd.io.BasicTerminalIO;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+import telnetd.net.Connection;
+import telnetd.net.ConnectionEvent;
 import prikazy.ParserPrikazu;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.StringReader;
-import java.net.Socket;
-import prikazy.cisco.CiscoParserPrikazu;
-import prikazy.linux.LinuxParserPrikazu;
+import telnetd.shell.Shell;
 import vyjimky.ChybaSpojeniException;
-import vyjimky.NeznamyTypPcException;
 import static prikazy.AbstraktniPrikaz.*;
 
 /**
  * Třída obsluhuje jedno spojení s klientem.
  * @author Tomáš Pitřinec
  */
-public class Konsole extends Thread {
-    boolean ladiciVypisovani = false;
+public class Konsole implements Shell {
 
-    private Socket s;
+    private static Log log = LogFactory.getLog(Konsole.class);
+    private Connection m_Connection;
+    private BasicTerminalIO m_IO;
+    boolean ladiciVypisovani = true;
     private AbstraktniPocitac pocitac;
     private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
-    public String prompt="divnej defaultni promt:~# ";
+    public String prompt = "divnej defaultni promt:~# ";
     private boolean ukoncit;
-    private OutputStream out;
-    private BufferedReader in;
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
     public boolean doplnovani = false;
     private boolean vypisy = false;
-
-    private final Object zamek;
-
-    /**
-     * Konstruktor
-     * @param s odkaz na socket, kterej to ma obsluhovat
-     * @param pc odkaz na pocitac
-     * @param cislo podarove cislo konsole
-     * @param zamek zamek, aby se metoda parser.zpracujRadek() nevykonavala v nekolika vlaknech vicekrat
-     */
-    public Konsole(Socket s,AbstraktniPocitac pc, int cislo, Object zamek){
-        this.s = s;
-        pocitac = pc;
-        if (pc instanceof LinuxPocitac) {
-            parser=new LinuxParserPrikazu(pc, this);
-            prompt = pc.jmeno+":~# ";
-        } else if (pc instanceof CiscoPocitac) {
-            parser = new CiscoParserPrikazu(pc, this);
-            prompt = pc.jmeno+">";
-        } else throw new NeznamyTypPcException("Neznamy typ PC. Nelze pro nej vytvorit parser.");
-        this.cislo=cislo;
-        this.zamek=zamek;
-
-        this.start();
-    }
-
+    private Object zamek;
 
     /**
      * metoda nacita z proudu dokud neprijde \r\n
@@ -71,36 +46,45 @@ public class Konsole extends Thread {
      * @param in
      * @return celej radek do \r\n jako string. kterej to \r\n uz ale neobsahuje
      */
-    public String ctiRadek(BufferedReader in) throws ChybaSpojeniException{
-        String ret = ""; //radek nacitany
-        char z;
-        int citac = 0;
+    public String ctiRadek() {
+        StringBuilder sb = new StringBuilder(); //radek nacitany
+        boolean konecCteni = false;
 
-        for(;;){              
-                citac++;
-                if (citac > 200) { // pocitam, ze zadny prikaz nebude delsi, mozna muzem i snizit
-                    throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek: " +
-                            "klient poslal moc znaku.");
+        try {
+
+            while (!konecCteni && !ukoncit) {
+
+                int i = m_IO.read();
+
+                if(i==BasicTerminalIO.BACKSPACE)
+                {
+                m_IO.write(BasicTerminalIO.BACKSPACE);
+                }else{
+                m_IO.write(i);
                 }
-            try {
-                z = (char) in.read();
-            } catch (IOException ex) {
-                throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda ctiRadek: " +
-                            "klient zrejme poslal necitelny znak.");
-            }
-                ret+=z;
-            if(ret.length()>=2){ //tzn. uz je to dost dlouhy na to, aby tam mohlo bejt \r\n
-                if ( ret.charAt(ret.length()-2)=='\r' && ret.charAt(ret.length()-1)=='\n'){ //kdyz uz jsou ukoncovaci znaky
-                    ret=ret.substring(0, ret.length()-2);
-                    break;
+
+                if (i == -1 || i == -2) {
+                    log.debug("Input(Code):" + i);
+                    konecCteni = true;
                 }
-            }
-            if(ladiciVypisovani){
-                pocitac.vypis("vypisuju po znaku: "+ret);
+                if (i == BasicTerminalIO.ENTER) {
+                    konecCteni = true;
+                }
+                if (!konecCteni) {
+                    sb.append((char) i);
+                }
             }
 
+        } catch (IOException ex) {
+            Logger.getLogger(Konsole.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return ret;
+
+        if (ladiciVypisovani) {
+            pocitac.vypis("vypisuju po znaku: " + sb.toString());
+        }
+
+
+        return sb.toString();
     }
 
     /**
@@ -108,7 +92,7 @@ public class Konsole extends Thread {
      * @param ret
      */
     public void posliServisne(String ret) {
-        posliRadek(Main.Main.jmenoProgramu+": "+ret);
+        posliRadek(Main.Main.jmenoProgramu + ": " + ret);
     }
 
     /**
@@ -118,15 +102,16 @@ public class Konsole extends Thread {
      * @param ret
      * @throws java.io.IOException
      */
-    public void posliRadek(String ret) throws ChybaSpojeniException{
+    public void posliRadek(String ret) throws ChybaSpojeniException {
         try {
-            out.write((ret + "\r\n").getBytes());
+
+            m_IO.write((ret + "\r\n"));
             if (vypisy) {
                 pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
             }
         } catch (IOException ex) {
             //ex.printStackTrace();
-            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posliRadek, nastala chyba.");
+            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda posliRadek, nastala chyba.");
         }
     }
 
@@ -137,15 +122,15 @@ public class Konsole extends Thread {
      * @param ret
      * @throws java.io.IOException
      */
-    public void posli(String ret) throws ChybaSpojeniException{
+    public void posli(String ret) throws ChybaSpojeniException {
         try {
-            out.write((ret).getBytes());
+            m_IO.write(ret);
             if (vypisy) {
                 pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
             }
         } catch (IOException ex) {
             //ex.printStackTrace();
-            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posli: nastala chyba.");
+            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda posli: nastala chyba.");
         }
     }
 
@@ -164,7 +149,7 @@ public class Konsole extends Thread {
                 posliRadek(lajna);
             }
         } catch (IOException e) { //tohleto chyta vyjimku z BufferedReadru, ne z posliRadek
-            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda posliPoRadcich: nastala chyba.");
+            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda posliPoRadcich: nastala chyba.");
         }
     }
 
@@ -172,13 +157,13 @@ public class Konsole extends Thread {
      * Vypise prompt na prikazou radku.
      * @throws IOException
      */
-    public void vypisPrompt() throws ChybaSpojeniException{
-        try{
-            out.write((prompt).getBytes());
+    public void vypisPrompt() throws ChybaSpojeniException {
+        try {
+            m_IO.write(prompt);
             //pocitac.vypis("(socket c. "+cislo+" posilam): "+prompt);
         } catch (IOException ex) {
             //ex.printStackTrace();
-            throw new ChybaSpojeniException("Konsole cislo "+cislo+", metoda vypisPrompt, nastala chyba.");
+            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda vypisPrompt, nastala chyba.");
         }
     }
 
@@ -186,63 +171,138 @@ public class Konsole extends Thread {
      * Hlavni bezici metoda Konsole, bezi v nekonecny smycce a zastavuje se booleanem ukoncit.
      */
     @Override
-    public void run() {
-
-        String radek;
-
+    public void run(Connection con) {
+        System.out.println("Vytvářím novou telnet konsoli na portu:" + con.getConnectionData().getSocket().getLocalPort());
         try {
-            pocitac.vypis("Konsole c. " + cislo + " startuje.");
-            try {
-                in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                out = s.getOutputStream();
-            } catch (IOException ex) {
-                throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda run, nastala chyba. " +
-                        "Nepodarilo se inicialisovat vstupni nebo vystupni proud.");
+            m_Connection = con;
+            m_IO = m_Connection.getTerminalIO();
+            m_Connection.addConnectionListener(this); //dont forget to register listener
+            String radek = null;
+
+
+            // potrebuju najit pocitac ktery je urcen pro dany port.
+            List<AbstraktniPocitac> vsechnyPocitace = (List<AbstraktniPocitac>) Main.Main.vsechno;
+            int port = m_Connection.getConnectionData().getSocket().getLocalPort();
+            for (AbstraktniPocitac computer : vsechnyPocitace) {
+                if (computer.getPort() == port) {
+                    this.pocitac = computer;
+                }
             }
+
+            // přídám tento objekt konsole do seznamu konzolí počítače
+            this.pocitac.getKonsolePocitace().add(this);
+            this.cislo = this.pocitac.getKonsolePocitace().size();
+
+            System.out.println("Konsole č."+this.cislo+" vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
+
+            // nastavím prompt a parser podle typu počítače, předtím tu bylo instanceof :(
+            this.pocitac.nastavKonsoli(this);
+
+            this.zamek = this.pocitac.zamekPocitace;
+
+            //clear the screen and start from zero
+            m_IO.eraseScreen();
+            m_IO.homeCursor();
+            m_IO.setLinewrapping(true);
+
+            pocitac.vypis("Konsole c. " + cislo + " startuje.");
+
             ukoncit = false;
-            //posliBajtyTelnetu();
+
             while (!ukoncit) {
                 if (vypisPrompt) {
                     vypisPrompt();
                 }
-                radek = ctiRadek(in);
+
+
+
+                radek = ctiRadek();
+
+                if (ladiciVypisovani) {
+                    System.out.println("PRECETL JSEM :" + radek);
+                }
+
                 if (vypisy) {
                     pocitac.vypis("(klient c. " + cislo + " poslal): '" + radek + "'");
                 }
                 //pocitac.vypis("dylka predchoziho radku: "+radek.length());
                 //posliRadek(out,radek);
-                synchronized(zamek) {
+                synchronized (zamek) {
                     parser.zpracujRadek(radek);
                 }
+
+                m_IO.flush();
             }
 
-        } catch (ChybaSpojeniException ex) {
-            if(ladiciVypisovani){
-                ex.printStackTrace();
-            }
-            pocitac.vypis("Nastala chyba v komunikaci: "+ex.getMessage());
-        } finally {
-            pocitac.vypis("Konsole c. " + cislo + " konci.");
-            try { //ten socket sice urcite existuje, ale java to jinak nedovoli
-                s.close();
-            } catch (IOException ex) {
-                if (ladiciVypisovani) {
-                    pocitac.vypis("Konsole cislo " + cislo + ", metoda run: Spojeni se nepodarilo " +
-                            "korektne ukoncit.");
-                }
-            }
+            ////////////////////
+        } catch (IOException ex) {
+            Logger.getLogger(Konsole.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        // po ukončení konsole ji odstraním ze seznamu počítače
+        this.pocitac.getKonsolePocitace().remove(this);
     }
 
     /**
      * Ukonci spojeni.
      */
     public void ukonciSpojeni() {
-        if(ladiciVypisovani){
+        if (ladiciVypisovani) {
             pocitac.vypis("Zavolala se metoda ukonci.");
         }
-        ukoncit=true;
+        ukoncit = true;
     }
 
+
+    public void setParser(ParserPrikazu parser){
+        this.parser = parser;
+    }
+
+    //this implements the ConnectionListener!
+    @Override
+    public void connectionTimedOut(ConnectionEvent ce) {
+        try {
+            m_IO.write("CONNECTION_TIMEDOUT");
+            m_IO.flush();
+            //close connection
+            m_Connection.close();
+        } catch (Exception ex) {
+            log.error("connectionTimedOut()", ex);
+        }
+    }//connectionTimedOut
+
+    @Override
+    public void connectionIdle(ConnectionEvent ce) {
+        try {
+            m_IO.write("CONNECTION_IDLE");
+            m_IO.flush();
+        } catch (IOException e) {
+            log.error("connectionIdle()", e);
+        }
+
+    }//connectionIdle
+
+    @Override
+    public void connectionLogoutRequest(ConnectionEvent ce) {
+        try {
+            this.ukonciSpojeni();
+            //m_IO.write("CONNECTION_LOGOUTREQUEST");
+            m_IO.flush();
+        } catch (Exception ex) {
+            log.error("connectionLogoutRequest()", ex);
+        }
+    }//connectionLogout
+
+    @Override
+    public void connectionSentBreak(ConnectionEvent ce) {
+        try {
+            m_IO.write("CONNECTION_BREAK");
+            m_IO.flush();
+        } catch (Exception ex) {
+            log.error("connectionSentBreak()", ex);
+        }
+    }//connectionSentBreak
+
+    public static Shell createShell() {
+        return new Konsole();
+    }//createShell
 }
