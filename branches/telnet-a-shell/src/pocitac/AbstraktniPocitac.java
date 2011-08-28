@@ -11,8 +11,11 @@ package pocitac;
 import datoveStruktury.*;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import prikazy.AbstraktniPing;
+import prikazy.ParserPrikazu;
+import telnetd.pridaneTridy.TelnetProperties;
 
 /**
  * Virtualni pocitac, predek Linuxu a Cisca.
@@ -27,8 +30,12 @@ public abstract class AbstraktniPocitac {
 
     private boolean ladeni=false; //obycejny ladeni na ostatni veci...
 
-    // promenny pro technicky zabezpeceni pocitace:
-    public Komunikace komunikace;
+    public final Object zamekPocitace = new Object(); //zamek celyho pocitace, slouzi k tomu, aby se zmeny
+    // v nastaveni poctace (tedy vykonavani prikazu)
+
+    private List<Konsole> konsolePocitace = new LinkedList<Konsole>();
+    private int port=-1;
+
 
     public List<SitoveRozhrani> rozhrani; //kvuli vypisum to musi bejt verejny
     public String jmeno; //jmeno pocitace
@@ -41,7 +48,7 @@ public abstract class AbstraktniPocitac {
      */
     public boolean ip_forward = true; //defaultne nastaveno, linux si to v konstruktoru prepise
     /**
-     * Zamknuty pocitac, nelze se na nej pripojit (tedy ho menit), 
+     * Zamknuty pocitac, nelze se na nej pripojit (tedy ho menit),
      * jeho konfigurace se nacita vzdy (i s prepinacem -n).
      */
     public boolean zamknute = false;
@@ -49,23 +56,27 @@ public abstract class AbstraktniPocitac {
     @Deprecated
     public AbstraktniPocitac(String jmeno) {
         vypis("Pouziva se deprecated metoda AbstractPocitac(String jmeno)");
-        komunikace = new Komunikace(3567, this);
+
         rozhrani = new ArrayList<SitoveRozhrani>();
         this.jmeno = jmeno;
     }
 
     public AbstraktniPocitac(String jmeno, int port) {
         this.jmeno = jmeno;
+        this.port = port;
         rozhrani = new ArrayList<SitoveRozhrani>();
-        komunikace = new Komunikace(port, this);
+
         routovaciTabulka = new RoutovaciTabulka();
         natTabulka = new NATtabulka(this);
+
+         if(!this.zamknute) // pokud není počítač zamknutý pro komunikaci skrze telnet
+            TelnetProperties.addListener(jmeno, port);
     }
 
     @Deprecated
     public AbstraktniPocitac(int port) {
         vypis("Pouziva se deprecated metoda AbstractPocitac(int port)");
-        komunikace = new Komunikace(port, this);
+
         rozhrani = new ArrayList<SitoveRozhrani>();
     }
 
@@ -109,6 +120,16 @@ public abstract class AbstraktniPocitac {
         System.out.println("(" + jmeno + ":) " + ret);
     }
 
+    public int getPort(){
+        return port;
+    }
+
+    public List<Konsole> getKonsolePocitace(){
+        return konsolePocitace;
+    }
+
+
+    public abstract void nastavKonsoli(Konsole konsole);
 //****************************************************************************************************
 //tady zacinaj metody pro posilani pingu:
 
@@ -176,7 +197,7 @@ public abstract class AbstraktniPocitac {
 
         //posilani paketu
         if (ciziRozhr != null) { //cizi rozhrani by teoreticky mohlo bejt null
-            if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){ 
+            if ( ciziRozhr.getPc().prijmiEthernetove(p, ciziRozhr, sousedni, moje) ){
                 //adresa souhlasi - paket odeslan
             }else{//adresa nesouhlasi, zpatky se musi poslat host unreachable
                 if(p.typ==8){
@@ -357,7 +378,7 @@ public abstract class AbstraktniPocitac {
             if (! puvodni.jeStejnaAdresaSPortem(paket.cil)) {
                 vypisPruchod(prvni);
                 vypisPruchod("Odnatovani: prelozeny paket: " + paket);
-            } 
+            }
         } else {
             if (ladeni) {
                 vypis("Odnatovani: Neodnatovava se paket:   " + paket);
@@ -369,7 +390,7 @@ public abstract class AbstraktniPocitac {
 
 //Tohlecto jsou nejaky Standovy upravy: ----------------------------------------------------------------
         /* TODO: zkontrolovat dohromady; predelal jsem to kvuli ciscu
-         * 
+         *
          * Puvodne to bylo tak, ze kdyz byla cil. adres paketu na rozhrani jako neprivilegovana,
          * tak se to prijalo, i kdyz si s tim NAT nevedel rady.
          *
@@ -384,7 +405,7 @@ public abstract class AbstraktniPocitac {
             }
         }
 //------------------------------------------------------------------------------------------------------
-        
+
         if (rozhr != null) { // takovou IP mam && port je pro me => paket je u me v cili
             if (ladeni) {
                 vypis("Prijal jsem paket, kterej je pro me." + paket);
@@ -419,7 +440,7 @@ public abstract class AbstraktniPocitac {
     }
 
 
-    
+
     /**
      * Transportni vrstva
      * Slouzi k odeslani odpovedi - odesila icmp reply nebo host unreachable. V odpovednim paketu
@@ -478,7 +499,7 @@ public abstract class AbstraktniPocitac {
         return odesliNovejPaket(null, cil, typ, kod, cas, icmp_seq, ttl, prikaz);
     }
 
-    
+
     /**
      * Pres tuhle metodu se budou vypisovat zpravy o pruchodu paketu.
      * @param zprava
@@ -499,7 +520,7 @@ public abstract class AbstraktniPocitac {
             vypsat+="metoda "+metoda+": ";
         }
         vypsat+=zprava;
-        
+
         if( pruchodPaketu) {
             this.vypis(vypsat);
         }
