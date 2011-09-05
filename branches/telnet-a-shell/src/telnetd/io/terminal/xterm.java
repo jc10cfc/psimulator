@@ -29,8 +29,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ***/
-
 package telnetd.io.terminal;
+
+import telnetd.io.TerminalIO;
 
 /**
  * This class implements the xterm terminal emulation.
@@ -40,12 +41,41 @@ package telnetd.io.terminal;
  */
 public class xterm extends BasicTerminal {
 
-  public boolean supportsSGR() {
-    return true;
-  }//supportsSGR
+    public boolean supportsSGR() {
+        return true;
+    }//supportsSGR
 
-  public boolean supportsScrolling() {
-    return true;
-  }//supportsScrolling
+    public boolean supportsScrolling() {
+        return true;
+    }//supportsScrolling
 
+    /**
+     * metoda, která převádí kody kontrolních znaků z xtermu na univerzální
+     * použité napříč jinými podporovanými terminály
+     * @param c
+     * @return
+     */
+    @Override
+    public int translateControlCharacter(int c) {
+
+        switch (c) {
+            case 10:
+                return TerminalIO.ENTER;
+            case 126:
+                return TerminalIO.DELETE;
+            case 127:
+                return TerminalIO.BACKSPACE;
+            case 9:
+                return TerminalIO.TABULATOR;
+            case 27:
+                return TerminalIO.ESCAPE;
+            case SGR:
+                return TerminalIO.COLORINIT;
+            case EOT:
+                return TerminalIO.LOGOUTREQUEST;
+            default:
+                return c;
+        }
+    }//translateControlCharacter
 }//class xterm
+

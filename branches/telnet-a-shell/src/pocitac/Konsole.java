@@ -4,6 +4,8 @@
  */
 package pocitac;
 
+import telnetd.net.ConnectionData;
+import telnetd.io.TerminalIO;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +31,8 @@ public class Konsole implements Shell {
     private static Log log = LogFactory.getLog(Konsole.class);
     private Connection m_Connection;
     private BasicTerminalIO m_IO;
+
+
     boolean ladiciVypisovani = true;
     private AbstraktniPocitac pocitac;
     private ParserPrikazu parser;
@@ -39,7 +43,12 @@ public class Konsole implements Shell {
     public boolean doplnovani = false;
     private boolean vypisy = false;
     private Object zamek;
+    private ShellRenderer renderer;
 
+  
+      public BasicTerminalIO getTerminalIO() {
+        return m_IO;
+    }
     /**
      * metoda nacita z proudu dokud neprijde \r\n
      * Prevzata z KarelServer, ale pak jsem ji stejne celou prepsal.
@@ -47,44 +56,9 @@ public class Konsole implements Shell {
      * @return celej radek do \r\n jako string. kterej to \r\n uz ale neobsahuje
      */
     public String ctiRadek() {
-        StringBuilder sb = new StringBuilder(); //radek nacitany
-        boolean konecCteni = false;
 
-        try {
+        return renderer.handleInput();
 
-            while (!konecCteni && !ukoncit) {
-
-                int i = m_IO.read();
-
-                if(i==BasicTerminalIO.BACKSPACE)
-                {
-                m_IO.write(BasicTerminalIO.BACKSPACE);
-                }else{
-                m_IO.write(i);
-                }
-
-                if (i == -1 || i == -2) {
-                    log.debug("Input(Code):" + i);
-                    konecCteni = true;
-                }
-                if (i == BasicTerminalIO.ENTER) {
-                    konecCteni = true;
-                }
-                if (!konecCteni) {
-                    sb.append((char) i);
-                }
-            }
-
-        } catch (IOException ex) {
-            Logger.getLogger(Konsole.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        if (ladiciVypisovani) {
-            pocitac.vypis("vypisuju po znaku: " + sb.toString());
-        }
-
-
-        return sb.toString();
     }
 
     /**
@@ -106,6 +80,7 @@ public class Konsole implements Shell {
         try {
 
             m_IO.write((ret + "\r\n"));
+            m_IO.flush();
             if (vypisy) {
                 pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
             }
@@ -125,6 +100,7 @@ public class Konsole implements Shell {
     public void posli(String ret) throws ChybaSpojeniException {
         try {
             m_IO.write(ret);
+            m_IO.flush();
             if (vypisy) {
                 pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
             }
@@ -160,6 +136,7 @@ public class Konsole implements Shell {
     public void vypisPrompt() throws ChybaSpojeniException {
         try {
             m_IO.write(prompt);
+            m_IO.flush();
             //pocitac.vypis("(socket c. "+cislo+" posilam): "+prompt);
         } catch (IOException ex) {
             //ex.printStackTrace();
@@ -177,6 +154,7 @@ public class Konsole implements Shell {
             m_Connection = con;
             m_IO = m_Connection.getTerminalIO();
             m_Connection.addConnectionListener(this); //dont forget to register listener
+            this.renderer = new ShellRenderer(this);
             String radek = null;
 
 
@@ -208,6 +186,44 @@ public class Konsole implements Shell {
             pocitac.vypis("Konsole c. " + cislo + " startuje.");
 
             ukoncit = false;
+/////////////////////////////DEBUG////////////////////////////////////////////
+          ConnectionData cd = m_Connection.getConnectionData();
+            m_IO.write(BasicTerminalIO.CRLF +
+              "DEBUG: Active Connection" +
+              BasicTerminalIO.CRLF);
+          m_IO.write("------------------------" + BasicTerminalIO.CRLF);
+
+          //output connection data
+          m_IO.write("Connected from: " + cd.getHostName() +
+              "[" + cd.getHostAddress() + ":" + cd.getPort() + "]"
+              + BasicTerminalIO.CRLF);
+          m_IO.write("Guessed Locale: " + cd.getLocale() +
+              BasicTerminalIO.CRLF);
+          m_IO.write(BasicTerminalIO.CRLF);
+          //output negotiated terminal properties
+          m_IO.write("Negotiated Terminal Type: " +
+              cd.getNegotiatedTerminalType() + BasicTerminalIO.CRLF);
+          m_IO.write("Negotiated Columns: " + cd.getTerminalColumns() +
+              BasicTerminalIO.CRLF);
+          m_IO.write("Negotiated Rows: " + cd.getTerminalRows() +
+              BasicTerminalIO.CRLF);
+
+          //output of assigned terminal instance (the cast is a hack, please
+          //do not copy for other TCommands, because it would break the
+          //decoupling of interface and implementation!
+          m_IO.write(BasicTerminalIO.CRLF);
+          m_IO.write("Assigned Terminal instance: " +
+              ((TerminalIO) m_IO).getTerminal());
+          m_IO.write(BasicTerminalIO.CRLF);
+          m_IO.write("Environment: " + cd.getEnvironment().toString());
+          m_IO.write(BasicTerminalIO.CRLF);
+          //output footer
+          m_IO.write("-----------------------------------------------" +
+              BasicTerminalIO.CRLF + BasicTerminalIO.CRLF);
+
+          m_IO.flush();
+
+/////////////////////////////DEBUG////////////////////////////////////////////
 
             while (!ukoncit) {
                 if (vypisPrompt) {
