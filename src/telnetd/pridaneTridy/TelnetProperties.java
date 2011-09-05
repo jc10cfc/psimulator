@@ -34,7 +34,7 @@ public class TelnetProperties {
         properties.setProperty("term.xterm.class", "telnetd.io.terminal.xterm");
         properties.setProperty("term.xterm.aliases", "");
         properties.setProperty("shells", "std");
-        //properties.setProperty("shell.std.class", "telnetd.shell.DummyShell");
+      //  properties.setProperty("shell.std.class", "telnetd.shell.DummyShell");
         properties.setProperty("shell.std.class", "pocitac.Konsole");
 
         
