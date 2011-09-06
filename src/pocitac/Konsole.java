@@ -18,6 +18,7 @@ import prikazy.ParserPrikazu;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import telnetd.shell.Shell;
 import vyjimky.ChybaSpojeniException;
 import static prikazy.AbstraktniPrikaz.*;
@@ -31,8 +32,8 @@ public class Konsole implements Shell {
     private static Log log = LogFactory.getLog(Konsole.class);
     private Connection m_Connection;
     private BasicTerminalIO m_IO;
-
-
+    private ArrayList<String> history = new ArrayList<String>();
+    private int historyIterator = 0;
     boolean ladiciVypisovani = true;
     private AbstraktniPocitac pocitac;
     private ParserPrikazu parser;
@@ -45,10 +46,10 @@ public class Konsole implements Shell {
     private Object zamek;
     private ShellRenderer renderer;
 
-  
-      public BasicTerminalIO getTerminalIO() {
+    public BasicTerminalIO getTerminalIO() {
         return m_IO;
     }
+
     /**
      * metoda nacita z proudu dokud neprijde \r\n
      * Prevzata z KarelServer, ale pak jsem ji stejne celou prepsal.
@@ -171,7 +172,7 @@ public class Konsole implements Shell {
             this.pocitac.getKonsolePocitace().add(this);
             this.cislo = this.pocitac.getKonsolePocitace().size();
 
-            System.out.println("Konsole č."+this.cislo+" vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
+            System.out.println("Konsole č." + this.cislo + " vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
 
             // nastavím prompt a parser podle typu počítače, předtím tu bylo instanceof :(
             this.pocitac.nastavKonsoli(this);
@@ -187,41 +188,41 @@ public class Konsole implements Shell {
 
             ukoncit = false;
 /////////////////////////////DEBUG////////////////////////////////////////////
-          ConnectionData cd = m_Connection.getConnectionData();
-            m_IO.write(BasicTerminalIO.CRLF +
-              "DEBUG: Active Connection" +
-              BasicTerminalIO.CRLF);
-          m_IO.write("------------------------" + BasicTerminalIO.CRLF);
+            ConnectionData cd = m_Connection.getConnectionData();
+            m_IO.write(BasicTerminalIO.CRLF
+                    + "DEBUG: Active Connection"
+                    + BasicTerminalIO.CRLF);
+            m_IO.write("------------------------" + BasicTerminalIO.CRLF);
 
-          //output connection data
-          m_IO.write("Connected from: " + cd.getHostName() +
-              "[" + cd.getHostAddress() + ":" + cd.getPort() + "]"
-              + BasicTerminalIO.CRLF);
-          m_IO.write("Guessed Locale: " + cd.getLocale() +
-              BasicTerminalIO.CRLF);
-          m_IO.write(BasicTerminalIO.CRLF);
-          //output negotiated terminal properties
-          m_IO.write("Negotiated Terminal Type: " +
-              cd.getNegotiatedTerminalType() + BasicTerminalIO.CRLF);
-          m_IO.write("Negotiated Columns: " + cd.getTerminalColumns() +
-              BasicTerminalIO.CRLF);
-          m_IO.write("Negotiated Rows: " + cd.getTerminalRows() +
-              BasicTerminalIO.CRLF);
+            //output connection data
+            m_IO.write("Connected from: " + cd.getHostName()
+                    + "[" + cd.getHostAddress() + ":" + cd.getPort() + "]"
+                    + BasicTerminalIO.CRLF);
+            m_IO.write("Guessed Locale: " + cd.getLocale()
+                    + BasicTerminalIO.CRLF);
+            m_IO.write(BasicTerminalIO.CRLF);
+            //output negotiated terminal properties
+            m_IO.write("Negotiated Terminal Type: "
+                    + cd.getNegotiatedTerminalType() + BasicTerminalIO.CRLF);
+            m_IO.write("Negotiated Columns: " + cd.getTerminalColumns()
+                    + BasicTerminalIO.CRLF);
+            m_IO.write("Negotiated Rows: " + cd.getTerminalRows()
+                    + BasicTerminalIO.CRLF);
 
-          //output of assigned terminal instance (the cast is a hack, please
-          //do not copy for other TCommands, because it would break the
-          //decoupling of interface and implementation!
-          m_IO.write(BasicTerminalIO.CRLF);
-          m_IO.write("Assigned Terminal instance: " +
-              ((TerminalIO) m_IO).getTerminal());
-          m_IO.write(BasicTerminalIO.CRLF);
-          m_IO.write("Environment: " + cd.getEnvironment().toString());
-          m_IO.write(BasicTerminalIO.CRLF);
-          //output footer
-          m_IO.write("-----------------------------------------------" +
-              BasicTerminalIO.CRLF + BasicTerminalIO.CRLF);
+            //output of assigned terminal instance (the cast is a hack, please
+            //do not copy for other TCommands, because it would break the
+            //decoupling of interface and implementation!
+            m_IO.write(BasicTerminalIO.CRLF);
+            m_IO.write("Assigned Terminal instance: "
+                    + ((TerminalIO) m_IO).getTerminal());
+            m_IO.write(BasicTerminalIO.CRLF);
+            m_IO.write("Environment: " + cd.getEnvironment().toString());
+            m_IO.write(BasicTerminalIO.CRLF);
+            //output footer
+            m_IO.write("-----------------------------------------------"
+                    + BasicTerminalIO.CRLF + BasicTerminalIO.CRLF);
 
-          m_IO.flush();
+            m_IO.flush();
 
 /////////////////////////////DEBUG////////////////////////////////////////////
 
@@ -233,6 +234,8 @@ public class Konsole implements Shell {
 
 
                 radek = ctiRadek();
+                this.history.add(radek);
+                this.historyIterator=0;
 
                 if (ladiciVypisovani) {
                     System.out.println("PRECETL JSEM :" + radek);
@@ -268,9 +271,39 @@ public class Konsole implements Shell {
         ukoncit = true;
     }
 
-
-    public void setParser(ParserPrikazu parser){
+    public void setParser(ParserPrikazu parser) {
         this.parser = parser;
+    }
+
+    public String getPreviousCommand() {
+
+        if (history.isEmpty()) {
+            return "";
+        }
+
+        if (historyIterator < history.size()) {
+            historyIterator++;
+        }
+
+        return history.get(history.size() - historyIterator);
+
+    }
+
+    public String getNextCommand() {
+
+        if (history.isEmpty()) {
+            return "";
+        }
+
+        if (historyIterator > 1) {
+            historyIterator--;
+        } else if(historyIterator <= 1){
+            historyIterator=0;
+            return "";
+        }
+
+        return history.get(history.size() - historyIterator);
+
     }
 
     //this implements the ConnectionListener!

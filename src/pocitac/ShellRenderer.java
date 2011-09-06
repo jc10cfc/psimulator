@@ -22,18 +22,25 @@ public class ShellRenderer {
     private Konsole konsole;
     private BasicTerminalIO termIO;
     private int cursor = 0;
-    private StringBuilder sb = new StringBuilder(50); //radek nacitany
+    private StringBuilder sb = new StringBuilder(50); //buffer načítaného řádku, čtecí buffer
 
     ShellRenderer(Konsole aThis) {
         this.konsole = aThis;
         termIO = this.konsole.getTerminalIO();
     }
 
+
+
+
+    /**
+     * hlavní funkce zobrazování shellu a čtení z terminálu, reakce na různé klávesy ENETER, BACKSCAPE, LEFT ....
+     * @return  vrací přečtenou hodnotu z řádku, příkaz
+     */
     public String handleInput() {
 
-        sb = new StringBuilder(50);
-        boolean konecCteni = false;
-        boolean printOut;
+        this.sb = new StringBuilder(50);
+        boolean konecCteni = false; // příznak pro ukončení čtecí smyčky jednoho příkazu
+        boolean printOut; // příznak zda přečtený znak bude vytištěn do terminálu a zapsán do čtecího bufferu this.sb
         this.cursor = 0;
 
         try {
@@ -44,21 +51,23 @@ public class ShellRenderer {
                 int i = termIO.read();
 
                 if (i == TerminalIO.LEFT) {
-
-                    moveCursorLeft();
                     printOut = false;
-
-                    System.out.println("VLEVO, pozice: " + cursor);
-
+                    moveCursorLeft();
                 }
 
-
                 if (i == TerminalIO.RIGHT) {
-
-                    moveCursorRight();
                     printOut = false;
-                    System.out.println("VPRAVO, pozice: " + cursor);
+                    moveCursorRight();
+                }
 
+                if (i == TerminalIO.UP) {
+                    printOut = false;
+                    this.handleHistory(TerminalIO.UP);
+                }
+
+                if (i == TerminalIO.DOWN) {
+                    printOut = false;
+                    this.handleHistory(TerminalIO.DOWN);
                 }
 
                 if (i == TerminalIO.BACKSPACE) {
@@ -78,8 +87,8 @@ public class ShellRenderer {
                     printOut = false;
                 }
                 if (i == TerminalIO.ENTER) {
-                    konecCteni = true;
                     printOut = false;
+                    konecCteni = true;
                     termIO.write(BasicTerminalIO.CRLF);
                 }
 
@@ -100,6 +109,10 @@ public class ShellRenderer {
 
     }
 
+    /**
+     * funkce která překreslí řádek od pozice kurzoru až do jeho konce dle čtecího bufferu
+     * @throws IOException
+     */
     public void renderRestOfLine() throws IOException {
 
         if (cursor <= sb.length()) // pokud nejsem na konci řádku
@@ -123,6 +136,39 @@ public class ShellRenderer {
 
     }
 
+    /**
+     * funkce obsluhující historii, respektive funkce volaná při přečtení kláves UP a DOWN
+     * @param key typ klávesy který byl přečten
+     * @throws IOException
+     */
+    public void handleHistory(int key) throws IOException {
+        if (!(key == TerminalIO.UP || key == TerminalIO.DOWN)) // historie se ovládá pomocí šipek nahoru a dolů, ostatní klávesy ignoruji
+        {
+            return;
+        }
+
+        termIO.eraseLine();
+        termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
+
+        this.konsole.vypisPrompt();
+
+        if (key == TerminalIO.UP) {
+            this.sb = new StringBuilder(this.konsole.getPreviousCommand());
+        } else if (key == TerminalIO.DOWN) {
+            this.sb = new StringBuilder(this.konsole.getNextCommand());
+        }
+
+        termIO.write(this.sb.toString());
+        termIO.moveLeft(100);
+        termIO.moveRight(sb.length() + this.konsole.prompt.length());
+        this.cursor = sb.length();
+
+    }
+
+    /**
+     * funkce obstarávající posun kurzoru vlevo.
+     * Posouvá "blikající" kurzor, ale i "neviditelný" kurzor značící pracovní místo v čtecím bufferu
+     */
     public void moveCursorLeft() {
         if (cursor == 0) {
             return;
@@ -136,9 +182,14 @@ public class ShellRenderer {
 
 
         }
+        System.out.println("VLEVO, pozice: " + cursor);
 
     }
 
+    /**
+     *  funkce obstarávající posun kurzoru vpravo.
+     *  Posouvá "blikající" kurzor, ale i "neviditelný" kurzor značící pracovní místo v čtecím bufferu
+     */
     public void moveCursorRight() {
         if (cursor >= this.sb.length()) {
             return;
@@ -152,5 +203,6 @@ public class ShellRenderer {
 
 
         }
+         System.out.println("VPRAVO, pozice: " + cursor);
     }
 }
