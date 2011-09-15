@@ -1,0 +1,23 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2011-06-16T18:08:39+02:00
+
+====== Navrh ======
+Created Čtvrtek 16 červen 2011
+
+==== Funkce shellu ====
+
+== Interface ==
+* předává řádek parseru
+* vypisuje na konzoli
+* napovídání
+
+historie - dle stavu (ten nastavuje napr. cisco, defaultne se může používat třeba stav 0)
+editování souborů?
+
+
+==== Síťový modul ====
+- stará se o veškerou síťovou komunikaci
+- na něm informace (routovací tabulka, nastavení rozhraní)
+
++ 2 obrázky (viz telefon)

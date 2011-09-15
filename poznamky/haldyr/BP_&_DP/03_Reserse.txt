@@ -1,0 +1,10 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2011-09-15T16:33:16+02:00
+
+====== 03 Reserse ======
+Created Čtvrtek 15 září 2011
+
+Ns-3
+http://en.wikipedia.org/wiki/Ns-3
+ns-3 is often criticized because modeling is a very complex and time-consuming task, since it has no GUI and one needs to learn scripting language, queuing theory and modeling techniques. Of late, there have been complaints that results are not consistent (probably because of continuous changes in the code base) and that certain protocols are replete with bugs.
