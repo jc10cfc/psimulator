@@ -1,0 +1,24 @@
+Tady si budu psát svoje vlastní síťový poznatky.
+
+
+
+duben 2011
+Linuxová maškaráda - ping na soukromou adresu
+
+Zjistil jsem, že maškarádou se dá dopingnout z veřejný adresy na adresu soukromou. Přišel jsem na to při zkoumání sítě datainfa, některý printscreeny jsou tady ve složce sit_datainfo. Připojil jsem ke svýmu počítači přes wifinu jinej počítač, kterýmu jsem poskytoval internet (maškarádou) přes síť se soukromým rozsahem. Pak jsem na ubnt na půdě přidal routu na ten soukromej rozsah přes můj počítač. Pingoval jsem z ubnt ten jinej zanatovanej počítač, paket šel přes můj počítač a prošel, druhej počítač odpověděl, a, což mě právě překvapilo, můj počítač ho nezanatoval ale nechal ho normálně projí nezanatovanej. Nevím proč, ale prostě to tak funguje. Když jsem z toho druhýho počítače pingoval ubnt, fungovalo všechno normálně, jako vždy.
+
+
+
+27.5.2011
+Linuxová maškaráda - outgoing interface
+
+Nastavil jsem si maškarádu pro připojení k netu podle Standova skriptu a to takhle: 
+iptables -A POSTROUTING -t nat -j MASQUERADE
+tedy bez odchozího rozhraní. Zjistil jsem, že to tak překládá adresy na všechny rozhraní. Počítač byl routerem mezi sítí celodomovní (s ubnt na střeše) a mojí (mezi mým počítačem a mobilem). Při pingování z ubnt na mobil můj počítač paket přeložil a ten tak pokračoval s adresou mýho počítače. A při prohlížení stránek na mobilu zase překládal požadavky mobilu můj počítač na svojí adresu, tedy se to maškarádovalo na obě strany. K tomu samozřejmě fungoval i jev z předchozího článku (protože jinak by to nejelo vůbec).
+
+
+
+16.6.2011
+ICMP - porty při natování a podobné
+
+Položka identifier v hlavičce ICMP značí, z jakýho programu byl paket poslanej. Z jednoho běžícího pingu mají všechny pakety stejnej identifier, pustím-li 2 pingy v různejch oknech konsole, maj pakety z různejch spuštěnejch instancí pingů různý identifiery (zkoušeli jsme to ve wiresharku). Tento identifier však zřejmě funguje i jako port - tedy slouží i k natování: sice se nemění, ale nat si někam ukládá jeho hodnotu a pak to podle toho přeposílá.

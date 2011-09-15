@@ -1,0 +1,27 @@
+Tady si píšu poznatky o laborce DSN na Karláku.
+
+
+Odkaz přímo na stránku s laborkama: https://dsn.felk.cvut.cz/wiki/vyuka/y36psi/cviceni/zadani-velke
+
+
+Pro přístup na linuxy:
+Nutno se přihlásit: ssh dsy@147.32.81.72', heslo je NoD123
+Přihlašování: "minicom S1"
+Tabulka počítačů a skupin:
+		A	node-1	S1
+		A	node-2	S2
+		B	node-3	S3
+		B	node-4	S4
+		C	node-5	S5
+		C	node-6	S6
+Minicom se ukončuje sekvencí "ctrl+a", "x", pro nápovědu se zmáčkne "ctrl+a" "z"
+
+
+Propojení:
+Zjistil jsem, že počítače S1 a S5 jsou propojeny po rozhraních eth1, čekám, že stejně bude propojen i S3, to ale nejsem schopnej ověřit, protože se na něj nemůžu přihlásit.
+Jinak je to propojený tak, jak mám tady uloženo na obrázku (ten je z stm-wiki, ale původně je podle mě přímo z DSN)
+
+
+Cisca:
+Na cisca se dá připojit telnetem jedině ze sunraye - bylo by dobrý zařídit si přístup z toho počítače, ze kterýho se leze i na ty linuxy.
+

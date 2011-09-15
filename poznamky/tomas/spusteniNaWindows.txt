@@ -1,0 +1,11 @@
+(na zaèátku kvìtna 2011)
+
+Ve složce dohromady jsou všechny potøebný soubory k tomu, abych moh spustil rlwrap s telnetem bez cygwina. Zjistil jsem totiž, že kromì souborù dole vyjmenovanejch je ještì potøeba soubor cygwin z /usr. Jinak to sice funguje, nefunguje ale backspace. Takhle to tedy funguje dobøe. Ve složkách samotnýho telnetu a rlwrapu asi nebude fungovat ten backspace.
+
+spuštìní: cygwin\bin\rlwrap.exe -f "doplnovani_linux.txt" -H rlwrap_history_lin.txt "cygwin/bin/telnet.exe" localhost 4001
+
+Pro spuštìní samotnýho rlwrapu je potøeba: cyggcc_s-1.dll  cygncurses-9.dll  cygreadline6.dll  cygwin1.dll  rlwrap.exe
+Pro spuštìní samotnýho telnetu je potøeba: cyggcc_s-1.dll  cygncursesw-10.dll  cygwin1.dll  telnet.exe
+	- navíc potøeba ještì ty soubory z /usr!
+
+spuštìní pomocí bash.exe: .\bash.exe -c "./rlwrap -H historie_rlwrapu.txt ./telnet localhost 4001" (To jako pokus, asi to nebude potøeba. Jsou taky potøeba soubory z /usr)
