@@ -128,6 +128,8 @@ public abstract class AbstraktniPocitac {
         return konsolePocitace;
     }
 
+    public abstract List<String> getCommandList();
+
 
     public abstract void nastavKonsoli(Konsole konsole);
 //****************************************************************************************************
