@@ -306,6 +306,11 @@ public class Konsole implements Shell {
 
     }
 
+
+    public List<String> getCommandList(){
+        return this.pocitac.getCommandList();
+    }
+
     //this implements the ConnectionListener!
     @Override
     public void connectionTimedOut(ConnectionEvent ce) {

@@ -5,6 +5,8 @@
 package pocitac;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
@@ -29,18 +31,16 @@ public class ShellRenderer {
         termIO = this.konsole.getTerminalIO();
     }
 
-
-
-
     /**
      * hlavní funkce zobrazování shellu a čtení z terminálu, reakce na různé klávesy ENETER, BACKSCAPE, LEFT ....
      * @return  vrací přečtenou hodnotu z řádku, příkaz
      */
     public String handleInput() {
 
-        this.sb = new StringBuilder(50);
+        this.sb.setLength(0); // clear string builder
         boolean konecCteni = false; // příznak pro ukončení čtecí smyčky jednoho příkazu
         boolean printOut; // příznak zda přečtený znak bude vytištěn do terminálu a zapsán do čtecího bufferu this.sb
+        List<String> nalezenePrikazy = new LinkedList<String>(); // seznam nalezenych příkazů po zmáčknutí tabu
         this.cursor = 0;
 
         try {
@@ -49,6 +49,15 @@ public class ShellRenderer {
 
                 printOut = true;
                 int i = termIO.read();
+
+                if (i == TerminalIO.TABULATOR) {
+                    printOut = false;
+                    this.handleTabulator(nalezenePrikazy);
+
+
+                } else {
+                    nalezenePrikazy = new LinkedList<String>(); // vyčistím pro další hledání
+                }
 
                 if (i == TerminalIO.LEFT) {
                     printOut = false;
@@ -153,9 +162,11 @@ public class ShellRenderer {
         this.konsole.vypisPrompt();
 
         if (key == TerminalIO.UP) {
-            this.sb = new StringBuilder(this.konsole.getPreviousCommand());
+            this.sb.setLength(0);
+            this.sb.append(this.konsole.getPreviousCommand());
         } else if (key == TerminalIO.DOWN) {
-            this.sb = new StringBuilder(this.konsole.getNextCommand());
+            this.sb.setLength(0);
+            this.sb.append(this.konsole.getNextCommand());
         }
 
         termIO.write(this.sb.toString());
@@ -203,6 +214,74 @@ public class ShellRenderer {
 
 
         }
-         System.out.println("VPRAVO, pozice: " + cursor);
+        System.out.println("VPRAVO, pozice: " + cursor);
+    }
+
+    /**
+     *
+     * @param nalezenePrikazy seznam nalezených příkazů z předchozího hledání,
+     * pokud prázdný, tak jde o první stisk tabulatoru
+     */
+    private void handleTabulator(List<String> nalezenePrikazy) throws IOException {
+
+        if (!nalezenePrikazy.isEmpty() && nalezenePrikazy.size() > 1) { // dvakrat zmacknuty tab a mám více než jeden výsledek
+
+            termIO.write(TerminalIO.CRLF); // nový řádek
+
+            for(String nalezeny : nalezenePrikazy){
+              termIO.write(nalezeny + "  ");
+            }
+
+            termIO.write(TerminalIO.CRLF); // nový řádek
+            this.konsole.vypisPrompt();
+            termIO.write(this.sb.toString());
+
+
+            return;
+        }
+
+
+// nové hledání
+
+        String hledanyPrikaz = this.sb.substring(0, cursor);
+        List<String> prikazy = this.konsole.getCommandList();
+
+
+        for (String temp : prikazy) {
+            if (temp.startsWith(hledanyPrikaz)) {
+                nalezenePrikazy.add(temp);
+            }
+
+        }
+
+        if (nalezenePrikazy.isEmpty()) // nic jsem nenašel, nic nedělám :)
+        {
+            return;
+        }
+
+
+        if (nalezenePrikazy.size() == 1) // našel jsem jeden odpovídající příkaz tak ho doplním
+        {
+
+            termIO.eraseLine();
+            termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
+
+            this.konsole.vypisPrompt();
+            this.sb.setLength(0); // empty string builder
+            this.sb.append(nalezenePrikazy.get(0));
+            this.cursor = 0;
+
+
+            while(this.cursor != this.sb.length())
+            {
+            termIO.write(sb.charAt(cursor));
+            // možná RIGHT
+            cursor++;
+            }
+            
+
+        }
+
+
     }
 }

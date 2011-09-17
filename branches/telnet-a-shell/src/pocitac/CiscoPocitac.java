@@ -6,6 +6,8 @@ package pocitac;
 
 import datoveStruktury.*;
 import datoveStruktury.CiscoWrapper;
+import java.util.LinkedList;
+import java.util.List;
 import prikazy.cisco.CiscoParserPrikazu;
 
 /**
@@ -24,6 +26,33 @@ public class CiscoPocitac extends AbstraktniPocitac {
     public CiscoPocitac(String jmeno, int port) {
         super(jmeno, port);
         wrapper = new CiscoWrapper(this);
+        
+        if(CiscoPocitac.commandList.isEmpty())
+           CiscoPocitac.naplnCommandList();
+    }
+
+    /**
+     * statická proměná s názvy příkazů počítače, využito pro doplnění tabulatorem
+     */
+    public static LinkedList<String> commandList = new LinkedList<String>();
+    /**
+     * metoda která naplní commandList, měla by se spustit jen jednou a to při
+     * vytvoření první instance pocitace.
+     * Později se může upravit na čtení ze souboru, ale to je asi zbytečné,
+     * protože když někdo přidá příkaz tak se aplikace stejně znovu kompiluje...
+     */
+    public static void naplnCommandList(){
+        // pro lepsi orientaci nechat abecedne serazene
+        commandList.add("accesslist");
+        commandList.add("help");
+        commandList.add("ipaddress");
+        commandList.add("ipnat");
+        commandList.add("iproute");
+        commandList.add("?");
+        commandList.add("ping");
+        commandList.add("show");
+        commandList.add("traceroute");
+        
     }
 
     /**
@@ -124,5 +153,10 @@ public class CiscoPocitac extends AbstraktniPocitac {
     public void nastavKonsoli(Konsole konsole) {
         konsole.setParser(new CiscoParserPrikazu(this, konsole));
         konsole.prompt = this.jmeno + ">";
+    }
+
+    @Override
+    public List<String> getCommandList() {
+        return CiscoPocitac.commandList;
     }
 }

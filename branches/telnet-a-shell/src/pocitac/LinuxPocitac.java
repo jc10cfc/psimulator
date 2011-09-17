@@ -6,6 +6,8 @@
 package pocitac;
 
 import datoveStruktury.*;
+import java.util.LinkedList;
+import java.util.List;
 import prikazy.linux.LinuxParserPrikazu;
 /**
  *
@@ -15,6 +17,37 @@ public class LinuxPocitac extends AbstraktniPocitac {
 
     public LinuxPocitac(String jmeno, int port) {
         super(jmeno,port);
+
+        if(LinuxPocitac.commandList.isEmpty())
+            LinuxPocitac.naplnCommandList();
+    }
+
+    /**
+     * statická proměná s názvy příkazů počítače, využito pro doplnění tabulatorem
+     */
+    public static LinkedList<String> commandList = new LinkedList<String>();
+    /**
+     * metoda která naplní commandList, měla by se spustit jen jednou a to při
+     * vytvoření první instance pocitace.
+     * Později se může upravit na čtení ze souboru, ale to je asi zbytečné,
+     * protože když někdo přidá příkaz tak se aplikace stejně znovu kompiluje...
+     */
+    public static void naplnCommandList(){
+        // pro lepsi orientaci nechat abecedne serazene
+        commandList.add("cat");
+        commandList.add("echo");
+        commandList.add("exit");
+        commandList.add("help");
+        commandList.add("ifconfig");
+        commandList.add("ip");
+        commandList.add("ipaddr");
+        commandList.add("iplink");
+        commandList.add("iproute");
+        commandList.add("iptables");
+        commandList.add("man");
+        commandList.add("ping");
+        commandList.add("route");
+        commandList.add("traceroute");
     }
 
     /**
@@ -40,6 +73,11 @@ public class LinuxPocitac extends AbstraktniPocitac {
     public void nastavKonsoli(Konsole konsole) {
         konsole.setParser(new LinuxParserPrikazu(this, konsole));
         konsole.prompt=this.jmeno + ":~# ";
+    }
+
+    @Override
+    public List<String> getCommandList() {
+        return LinuxPocitac.commandList;
     }
 
 
