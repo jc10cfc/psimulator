@@ -50,6 +50,15 @@ public class ShellRenderer {
                 printOut = true;
                 int i = termIO.read();
 
+                if(i == TerminalIO.DEL || i == TerminalIO.DELETE){
+                    printOut = false;
+                    termIO.eraseLine();
+                    termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
+                    this.cursor=0;
+                    this.sb.setLength(0);
+                    this.konsole.vypisPrompt();
+                }
+
                 if (i == TerminalIO.TABULATOR) {
                     printOut = false;
                     this.handleTabulator(nalezenePrikazy);
