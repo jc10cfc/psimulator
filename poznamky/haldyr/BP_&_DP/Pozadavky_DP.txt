@@ -11,6 +11,7 @@ Created Úterý 13 září 2011
 [ ] realnejsi simulace - zpozdeni paketu (ohodnoceny kabely, ..)
 	[ ] co prikaz to vlakno (asi)
 [ ] DHCP server
+[ ] DNS server
 [ ] www server (neco jednoduchyho..)
 [ ] linkova vrstva
 	[ ] switch
@@ -23,4 +24,6 @@ Created Úterý 13 září 2011
 [ ] preklad adres NAT
 	[ ] staticky
 	[ ] dynamicky (cisco)
-
+[ ] cisco parser prikazu
+	[ ] show interfaces ⇒ sh int 
+	[ ] interface fastEthernet 0/0 ⇒ int fastE0/0 

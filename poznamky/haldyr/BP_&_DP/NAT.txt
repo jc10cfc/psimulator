@@ -10,4 +10,4 @@ The number of simultaneous translations that a router will support is determined
 
 
 
-
+Jak se natuje ping? Pres cisla portu? Kde jsou uvedeny? -> Wireshark

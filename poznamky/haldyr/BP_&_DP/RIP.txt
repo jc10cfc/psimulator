@@ -1,0 +1,13 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2011-09-22T18:23:48+02:00
+
+====== RIP ======
+Created Čtvrtek 22 září 2011
+
+RIPv1
+http://tools.ietf.org/html/rfc1058
+
+RIPv2
+http://tools.ietf.org/html/rfc1388
+

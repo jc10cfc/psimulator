@@ -28,7 +28,7 @@ ICMP paket:
 
 Identifier je pro 1 konzoli furt stejny pro vsechny ICMP pakety, kdyz to pustim z jiny konzole, tak je to cislo jiny, ale zustava stejne "jiny".
 
-Jak se natuje ping? Pres cisla portu? Kde jsou uvedeny? -> Wireshark
+
 
 The identifier and sequence number may be used by the echo sender to aid in matching the replies with the echo requests.  For example, the identifier might be used like a port in TCP or UDP to a session, and the sequence number might be incremented each echo request sent.  The echoer returns these same values the echo reply.
 http://www.ietf.org/rfc/rfc792.txt RFC 792, September 1981

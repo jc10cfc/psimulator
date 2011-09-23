@@ -1,0 +1,23 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2011-09-23T17:20:25+02:00
+
+====== XML nacitani Castor ======
+Created Pátek 23 září 2011
+
+=== Castor ===
+- castor 1.3.2 obsahuje chybu -> oprava ma byt v 1.3.3; zatim pouzivam 1.3.1
+- import knihoven do Netbeans 6.9.1 - bug: nestaci pridat adresar s *.jar, ale musi se pridat vsechny rucne
+http://www.castor.org/reference/html/XML%20data%20binding.html#xml.framework.data.binding.framework
+
+**prvni metoda - Introspection mode**
+- na tu nejjednodusi metodu musi byt u kazdeho atributu getter, pac jinak se to neulozi do XML
+- nastavit odsazovani v XML dokumentech
+	- castor-1.3.1-xml.jar/org/exolab/castor/castor.property
+	- nastavit org.exolab.castor.indent=true
+- CastorTest.Main
+- CastorTest.Main2
+
+**druha metoda - Mapping mode**
+
+**treti metoda - Descriptor mode (zatim asi nepopsana??)**
