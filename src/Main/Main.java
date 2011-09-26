@@ -33,6 +33,17 @@ public class Main {
      * Konfigurak se kterym to bylo spusteny.
      */
     public static String konfigurak;
+    public static boolean debug = true;
+
+    /**
+     * metoda pro výpis ladících informací programu
+     * @param text
+     */
+    public static void debug(String text) {
+        if (debug) {
+            System.out.println(text);
+        }
+    }
 
     /**
      * Vrati List vytvorenych pocitacu.
@@ -93,14 +104,14 @@ public class Main {
 
 
         if (vsechno == null) {
-            if (! konfigurak.endsWith(".xml")) {
-                System.err.println("\nNepodarilo se nic nacist z konfiguracniho souboru "+konfigurak+".");
+            if (!konfigurak.endsWith(".xml")) {
+                System.err.println("\nNepodarilo se nic nacist z konfiguracniho souboru " + konfigurak + ".");
                 System.out.println("Zkousim pridat koncovku .xml:\n");
                 konfigurak = konfigurak + ".xml";
                 vsechno = new Main().nacti();
             }
             if (vsechno == null) {
-                System.err.println("Nepodarilo se nic nacist z konfiguracniho souboru "+konfigurak+".\nUkoncuji..");
+                System.err.println("Nepodarilo se nic nacist z konfiguracniho souboru " + konfigurak + ".\nUkoncuji..");
                 System.exit(131);
             }
         }

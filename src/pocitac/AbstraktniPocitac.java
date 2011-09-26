@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import prikazy.AbstraktniPing;
-import prikazy.ParserPrikazu;
 import telnetd.pridaneTridy.TelnetProperties;
 
 /**
