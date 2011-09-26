@@ -4,6 +4,7 @@
  */
 package pocitac;
 
+import Main.Main;
 import telnetd.net.ConnectionData;
 import telnetd.io.TerminalIO;
 import java.util.List;
@@ -32,17 +33,14 @@ public class Konsole implements Shell {
     private static Log log = LogFactory.getLog(Konsole.class);
     private Connection m_Connection;
     private BasicTerminalIO m_IO;
-    private ArrayList<String> history = new ArrayList<String>();
-    private int historyIterator = 0;
-    boolean ladiciVypisovani = true;
+    private History history = new History();
+    
     private AbstraktniPocitac pocitac;
     private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
     public String prompt = "divnej defaultni promt:~# ";
     private boolean ukoncit;
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
-    public boolean doplnovani = false;
-    private boolean vypisy = false;
     private Object zamek;
     private ShellRenderer renderer;
 
@@ -67,7 +65,7 @@ public class Konsole implements Shell {
      * @param ret
      */
     public void posliServisne(String ret) {
-        posliRadek(Main.Main.jmenoProgramu + ": " + ret);
+        posliRadek(Main.jmenoProgramu + ": " + ret);
     }
 
     /**
@@ -82,7 +80,7 @@ public class Konsole implements Shell {
 
             m_IO.write((ret + "\r\n"));
             m_IO.flush();
-            if (vypisy) {
+            if (Main.debug) {
                 pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
             }
         } catch (IOException ex) {
@@ -102,7 +100,7 @@ public class Konsole implements Shell {
         try {
             m_IO.write(ret);
             m_IO.flush();
-            if (vypisy) {
+            if (Main.debug) {
                 pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
             }
         } catch (IOException ex) {
@@ -135,6 +133,11 @@ public class Konsole implements Shell {
      * @throws IOException
      */
     public void vypisPrompt() throws ChybaSpojeniException {
+
+        if (!vypisPrompt) {
+            return;
+        }
+
         try {
             m_IO.write(prompt);
             m_IO.flush();
@@ -150,7 +153,7 @@ public class Konsole implements Shell {
      */
     @Override
     public void run(Connection con) {
-        System.out.println("Vytvářím novou telnet konsoli na portu:" + con.getConnectionData().getSocket().getLocalPort());
+        Main.debug("Vytvářím novou telnet konsoli na portu:" + con.getConnectionData().getSocket().getLocalPort());
         try {
             m_Connection = con;
             m_IO = m_Connection.getTerminalIO();
@@ -160,7 +163,7 @@ public class Konsole implements Shell {
 
 
             // potrebuju najit pocitac ktery je urcen pro dany port.
-            List<AbstraktniPocitac> vsechnyPocitace = (List<AbstraktniPocitac>) Main.Main.vsechno;
+            List<AbstraktniPocitac> vsechnyPocitace = (List<AbstraktniPocitac>) Main.vsechno;
             int port = m_Connection.getConnectionData().getSocket().getLocalPort();
             for (AbstraktniPocitac computer : vsechnyPocitace) {
                 if (computer.getPort() == port) {
@@ -172,7 +175,7 @@ public class Konsole implements Shell {
             this.pocitac.getKonsolePocitace().add(this);
             this.cislo = this.pocitac.getKonsolePocitace().size();
 
-            System.out.println("Konsole č." + this.cislo + " vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
+            Main.debug("Konsole č." + this.cislo + " vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
 
             // nastavím prompt a parser podle typu počítače, předtím tu bylo instanceof :(
             this.pocitac.nastavKonsoli(this);
@@ -188,60 +191,57 @@ public class Konsole implements Shell {
 
             ukoncit = false;
 /////////////////////////////DEBUG////////////////////////////////////////////
-            ConnectionData cd = m_Connection.getConnectionData();
-            m_IO.write(BasicTerminalIO.CRLF
-                    + "DEBUG: Active Connection"
-                    + BasicTerminalIO.CRLF);
-            m_IO.write("------------------------" + BasicTerminalIO.CRLF);
 
-            //output connection data
-            m_IO.write("Connected from: " + cd.getHostName()
-                    + "[" + cd.getHostAddress() + ":" + cd.getPort() + "]"
-                    + BasicTerminalIO.CRLF);
-            m_IO.write("Guessed Locale: " + cd.getLocale()
-                    + BasicTerminalIO.CRLF);
-            m_IO.write(BasicTerminalIO.CRLF);
-            //output negotiated terminal properties
-            m_IO.write("Negotiated Terminal Type: "
-                    + cd.getNegotiatedTerminalType() + BasicTerminalIO.CRLF);
-            m_IO.write("Negotiated Columns: " + cd.getTerminalColumns()
-                    + BasicTerminalIO.CRLF);
-            m_IO.write("Negotiated Rows: " + cd.getTerminalRows()
-                    + BasicTerminalIO.CRLF);
+            if (Main.debug) {
+                ConnectionData cd = m_Connection.getConnectionData();
+                m_IO.write(BasicTerminalIO.CRLF
+                        + "DEBUG: Active Connection"
+                        + BasicTerminalIO.CRLF);
+                m_IO.write("------------------------" + BasicTerminalIO.CRLF);
 
-            //output of assigned terminal instance (the cast is a hack, please
-            //do not copy for other TCommands, because it would break the
-            //decoupling of interface and implementation!
-            m_IO.write(BasicTerminalIO.CRLF);
-            m_IO.write("Assigned Terminal instance: "
-                    + ((TerminalIO) m_IO).getTerminal());
-            m_IO.write(BasicTerminalIO.CRLF);
-            m_IO.write("Environment: " + cd.getEnvironment().toString());
-            m_IO.write(BasicTerminalIO.CRLF);
-            //output footer
-            m_IO.write("-----------------------------------------------"
-                    + BasicTerminalIO.CRLF + BasicTerminalIO.CRLF);
+                //output connection data
+                m_IO.write("Connected from: " + cd.getHostName()
+                        + "[" + cd.getHostAddress() + ":" + cd.getPort() + "]"
+                        + BasicTerminalIO.CRLF);
+                m_IO.write("Guessed Locale: " + cd.getLocale()
+                        + BasicTerminalIO.CRLF);
+                m_IO.write(BasicTerminalIO.CRLF);
+                //output negotiated terminal properties
+                m_IO.write("Negotiated Terminal Type: "
+                        + cd.getNegotiatedTerminalType() + BasicTerminalIO.CRLF);
+                m_IO.write("Negotiated Columns: " + cd.getTerminalColumns()
+                        + BasicTerminalIO.CRLF);
+                m_IO.write("Negotiated Rows: " + cd.getTerminalRows()
+                        + BasicTerminalIO.CRLF);
 
-            m_IO.flush();
+                //output of assigned terminal instance (the cast is a hack, please
+                //do not copy for other TCommands, because it would break the
+                //decoupling of interface and implementation!
+                m_IO.write(BasicTerminalIO.CRLF);
+                m_IO.write("Assigned Terminal instance: "
+                        + ((TerminalIO) m_IO).getTerminal());
+                m_IO.write(BasicTerminalIO.CRLF);
+                m_IO.write("Environment: " + cd.getEnvironment().toString());
+                m_IO.write(BasicTerminalIO.CRLF);
+                //output footer
+                m_IO.write("-----------------------------------------------"
+                        + BasicTerminalIO.CRLF + BasicTerminalIO.CRLF);
+
+                m_IO.flush();
+            }
 
 /////////////////////////////DEBUG////////////////////////////////////////////
 
             while (!ukoncit) {
-                if (vypisPrompt) {
-                    vypisPrompt();
-                }
 
-
+                vypisPrompt();
 
                 radek = ctiRadek();
                 this.history.add(radek);
-                this.historyIterator=0;
+                
+                Main.debug("PRECETL JSEM :" + radek);
 
-                if (ladiciVypisovani) {
-                    System.out.println("PRECETL JSEM :" + radek);
-                }
-
-                if (vypisy) {
+                if (Main.debug) {
                     pocitac.vypis("(klient c. " + cislo + " poslal): '" + radek + "'");
                 }
                 //pocitac.vypis("dylka predchoziho radku: "+radek.length());
@@ -265,7 +265,7 @@ public class Konsole implements Shell {
      * Ukonci spojeni.
      */
     public void ukonciSpojeni() {
-        if (ladiciVypisovani) {
+        if (Main.debug) {
             pocitac.vypis("Zavolala se metoda ukonci.");
         }
         ukoncit = true;
@@ -275,39 +275,15 @@ public class Konsole implements Shell {
         this.parser = parser;
     }
 
-    public String getPreviousCommand() {
-
-        if (history.isEmpty()) {
-            return "";
-        }
-
-        if (historyIterator < history.size()) {
-            historyIterator++;
-        }
-
-        return history.get(history.size() - historyIterator);
-
+    public History getHistory() {
+        return history;
     }
 
-    public String getNextCommand() {
-
-        if (history.isEmpty()) {
-            return "";
-        }
-
-        if (historyIterator > 1) {
-            historyIterator--;
-        } else if(historyIterator <= 1){
-            historyIterator=0;
-            return "";
-        }
-
-        return history.get(history.size() - historyIterator);
-
+    public void setHistory(History history) {
+        this.history = history;
     }
 
-
-    public List<String> getCommandList(){
+    public List<String> getCommandList() {
         return this.pocitac.getCommandList();
     }
 

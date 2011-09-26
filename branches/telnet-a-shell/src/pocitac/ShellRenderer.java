@@ -4,11 +4,13 @@
  */
 package pocitac;
 
+import Main.Main;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import telnetd.io.BasicTerminalIO;
@@ -47,14 +49,16 @@ public class ShellRenderer {
 
             while (!konecCteni) {
 
-                printOut = true;
-                int i = termIO.read();
 
-                if(i == TerminalIO.DEL || i == TerminalIO.DELETE){
+                int i = termIO.read();
+                printOut = isPrintable(i);
+
+
+                if (i == TerminalIO.DEL || i == TerminalIO.DELETE) {
                     printOut = false;
                     termIO.eraseLine();
                     termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
-                    this.cursor=0;
+                    this.cursor = 0;
                     this.sb.setLength(0);
                     this.konsole.vypisPrompt();
                 }
@@ -95,8 +99,13 @@ public class ShellRenderer {
                         sb.deleteCharAt(cursor - 1);
                         moveCursorLeft();
                         renderRestOfLine();
-                        System.out.println("Pozice kurzoru: " + cursor);
+                        Main.debug("Pozice kurzoru: " + cursor);
                     }
+                }
+
+                if (i == 12) {
+                    printOut = false;
+                    this.clearScreen();
                 }
 
                 if (i == -1 || i == -2) {
@@ -117,6 +126,7 @@ public class ShellRenderer {
                     renderRestOfLine();
                 }
 
+                Main.debug("Pozice kurzoru: " + cursor + " Tisknul jsem znak? TRUE/FALSE " + printOut);
             }
 
         } catch (IOException ex) {
@@ -127,11 +137,49 @@ public class ShellRenderer {
 
     }
 
+    private boolean isPrintable(int znakInt) {
+
+        String s = String.valueOf((char) znakInt);
+
+        return s.matches("[a-zA-Z]|"
+                + "[0-9]|"
+                + "\\s|"
+                + "[(]|"
+                + "[)]|"
+                + "[{]|"
+                + "[}]"
+                + "[\\[]|"
+                + "[\\]]|"
+                + "[$]|"
+                + "[\"]|"
+                + "[\']|"
+                + "[;]|"
+                + "[:]|"
+                + "[.]|"
+                + "[,]|"
+                + "[+]|"
+                + "[-]|"
+                + "[/]|"
+                + "[\\*]|"
+                + "[!]|"
+                + "[%]|"
+                + "[\\|]|"
+                + "[&]|"
+                + "[#]|"
+                + "[~]|"
+                + "[@]|"
+                + "[?]|"
+                + "[<]|"
+                + "[>]|"
+                + "[=]|");
+
+    }
+
     /**
      * funkce která překreslí řádek od pozice kurzoru až do jeho konce dle čtecího bufferu
      * @throws IOException
      */
-    public void renderRestOfLine() throws IOException {
+    private void renderRestOfLine() throws IOException {
 
         if (cursor <= sb.length()) // pokud nejsem na konci řádku
         {
@@ -155,11 +203,27 @@ public class ShellRenderer {
     }
 
     /**
+     * překreslí celou řádku, umístí kurzor na konec řádky
+     * @throws IOException
+     */
+    private void updateWholeLine() throws IOException {
+
+        this.cursor = 0;
+
+        while (this.cursor != this.sb.length()) {
+            termIO.write(sb.charAt(cursor));
+            // možná RIGHT
+            cursor++;
+        }
+
+    }
+
+    /**
      * funkce obsluhující historii, respektive funkce volaná při přečtení kláves UP a DOWN
      * @param key typ klávesy který byl přečten
      * @throws IOException
      */
-    public void handleHistory(int key) throws IOException {
+    private void handleHistory(int key) throws IOException {
         if (!(key == TerminalIO.UP || key == TerminalIO.DOWN)) // historie se ovládá pomocí šipek nahoru a dolů, ostatní klávesy ignoruji
         {
             return;
@@ -172,10 +236,10 @@ public class ShellRenderer {
 
         if (key == TerminalIO.UP) {
             this.sb.setLength(0);
-            this.sb.append(this.konsole.getPreviousCommand());
+            this.sb.append(this.konsole.getHistory().getPreviousCommand());
         } else if (key == TerminalIO.DOWN) {
             this.sb.setLength(0);
-            this.sb.append(this.konsole.getNextCommand());
+            this.sb.append(this.konsole.getHistory().getNextCommand());
         }
 
         termIO.write(this.sb.toString());
@@ -189,7 +253,7 @@ public class ShellRenderer {
      * funkce obstarávající posun kurzoru vlevo.
      * Posouvá "blikající" kurzor, ale i "neviditelný" kurzor značící pracovní místo v čtecím bufferu
      */
-    public void moveCursorLeft() {
+    private void moveCursorLeft() {
         if (cursor == 0) {
             return;
         } else {
@@ -202,7 +266,7 @@ public class ShellRenderer {
 
 
         }
-        System.out.println("VLEVO, pozice: " + cursor);
+        Main.debug("VLEVO, pozice: " + cursor);
 
     }
 
@@ -210,7 +274,7 @@ public class ShellRenderer {
      *  funkce obstarávající posun kurzoru vpravo.
      *  Posouvá "blikající" kurzor, ale i "neviditelný" kurzor značící pracovní místo v čtecím bufferu
      */
-    public void moveCursorRight() {
+    private void moveCursorRight() {
         if (cursor >= this.sb.length()) {
             return;
         } else {
@@ -223,7 +287,7 @@ public class ShellRenderer {
 
 
         }
-        System.out.println("VPRAVO, pozice: " + cursor);
+        Main.debug("VPRAVO, pozice: " + cursor);
     }
 
     /**
@@ -237,8 +301,8 @@ public class ShellRenderer {
 
             termIO.write(TerminalIO.CRLF); // nový řádek
 
-            for(String nalezeny : nalezenePrikazy){
-              termIO.write(nalezeny + "  ");
+            for (String nalezeny : nalezenePrikazy) {
+                termIO.write(nalezeny + "  ");
             }
 
             termIO.write(TerminalIO.CRLF); // nový řádek
@@ -278,18 +342,20 @@ public class ShellRenderer {
             this.konsole.vypisPrompt();
             this.sb.setLength(0); // empty string builder
             this.sb.append(nalezenePrikazy.get(0));
-            this.cursor = 0;
 
-
-            while(this.cursor != this.sb.length())
-            {
-            termIO.write(sb.charAt(cursor));
-            // možná RIGHT
-            cursor++;
-            }
-            
+            updateWholeLine();
 
         }
+
+
+    }
+
+    private void clearScreen() throws IOException {
+        this.termIO.eraseScreen();
+        termIO.setCursor(0, 0);
+        this.konsole.vypisPrompt();
+        
+        updateWholeLine();
 
 
     }
