@@ -341,7 +341,7 @@ public class ShellRenderer {
 
             this.konsole.vypisPrompt();
             this.sb.setLength(0); // empty string builder
-            this.sb.append(nalezenePrikazy.get(0));
+            this.sb.append(nalezenePrikazy.get(0)).append(" ");
 
             updateWholeLine();
 
