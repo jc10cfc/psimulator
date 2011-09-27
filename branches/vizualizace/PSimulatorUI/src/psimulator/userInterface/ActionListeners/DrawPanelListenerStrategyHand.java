@@ -28,6 +28,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     protected Point originalDefaultLocation;
     protected Point newDefaultLocation;
     protected List<Markable> markedComponents = new ArrayList<Markable>();
+    
+    protected Point startPointOfMarking;
 
     public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
         super(drawPanel, undoManager, zoomManager, mainWindow);
@@ -101,6 +103,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        // try if start dragging of some component
         for (AbstractHwComponent c : graph.getHwComponents()) {
             if (c.intersects(e.getPoint())) {
                 draggedComponent = c;
@@ -111,17 +114,27 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 // set original location for undoable edit
                 originalDefaultLocation = new Point(zoomManager.doScaleToDefault(e.getX() - differenceX),
                         zoomManager.doScaleToDefault(e.getY() - differenceY));
-                break;
+                return;
             }
         }
+        
+        // start painting transparent rectange for marking more components
+        startPointOfMarking = e.getPoint();
+   
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        // painting transparent rectange for marking more components
         if (draggedComponent == null) {
+            drawPanel.setTransparetnRectangleInProgress(true, startPointOfMarking, e.getPoint());
+            
+            drawPanel.repaint();
+            
             return;
         }
 
+        // drag of component
         Point p = new Point(e.getX() - differenceX, e.getY() - differenceY);
 
         draggedComponent.setLocation(p);
@@ -131,6 +144,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        // dragging components
         if (draggedComponent != null) {
             // new default location for undoable edit
             newDefaultLocation = new Point(zoomManager.doScaleToDefault(e.getX() - differenceX),
@@ -153,8 +167,12 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 + "New default loc: x="+newDefaultLocation.x +", y="+newDefaultLocation.y+".");*/
             }
             draggedComponent = null;
+            return;
         }
 
+        // painting transparent rectange for marking more components
+        drawPanel.setTransparetnRectangleInProgress(false, null, null);
+        drawPanel.repaint();
     }
 
     @Override
