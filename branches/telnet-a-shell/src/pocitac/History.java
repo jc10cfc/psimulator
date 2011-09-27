@@ -40,23 +40,38 @@ public class History {
     /**
      * metoda, která rotuje dvě různé historie
      */
-    public void swapHistory(){
-        if(historyList.size() == 1)
+    public void swapHistory() {
+        if (historyList.size() == 1) {
             historyList.add(new ArrayList<String>());
+        }
 
-        if(!iteratorList.hasNext()) // pokud nemá další pak nastavím iterátor nastavím na začátek
+        if (!iteratorList.hasNext()) // pokud nemá další pak nastavím iterátor nastavím na začátek
+        {
             this.iteratorList = historyList.listIterator();
+        }
 
         this.acctualHistory = iteratorList.next();
 
         resetIterator();
-    
+
     }
 
     public void add(String command) {
 
-        if(command.isEmpty() || command.equalsIgnoreCase(""))
+        command = command.trim();
+
+        if (command.isEmpty() || command.equalsIgnoreCase("")) {
             return;
+        }
+
+        if (!acctualHistory.isEmpty()) {
+
+            String lastCommand = acctualHistory.get(acctualHistory.size()-1).trim();
+
+            if (command.equalsIgnoreCase(lastCommand)) {
+                return;
+            }
+        }
 
         this.acctualHistory.add(command);
         resetIterator();
