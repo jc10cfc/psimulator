@@ -1,5 +1,7 @@
 package psimulator.userInterface.Editor;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -41,14 +43,22 @@ public class DrawPanel extends JPanel implements Observer {
     private ZoomManager zoomManager = new ZoomManager();
     private AbstractImageFactory imageFactory;
     private MainWindowInterface mainWindow;
-    private boolean lineInProgres = false;
+    // variables for creating cables
+    private boolean lineInProgress = false;
     private Point lineStart;
     private Point lineEnd;
+    // variables for marking components with transparent rectangle
+    private boolean rectangleInProgress = false;
+    private Point rectangleStart;
+    private Point rectangleEnd;
+    
+    //
     private List<AbstractComponent> markedCables = new ArrayList<AbstractComponent>();
     private List<AbstractComponent> markedComponents = new ArrayList<AbstractComponent>();
     private Dimension defaultZoomAreaMin = new Dimension(800, 600);
     private Dimension defaultZoomArea = new Dimension(defaultZoomAreaMin);
     private Dimension area = new Dimension(defaultZoomArea);
+    private int i;
 
     public DrawPanel(MainWindowInterface mainWindow, AbstractImageFactory imageFactory) {
         super();
@@ -184,9 +194,16 @@ public class DrawPanel extends JPanel implements Observer {
      * @param end 
      */
     public void setLineInProgras(boolean lineInProgres, Point start, Point end) {
-        this.lineInProgres = lineInProgres;
+        this.lineInProgress = lineInProgres;
         lineStart = start;
         lineEnd = end;
+    }
+    
+    
+    public void setTransparetnRectangleInProgress(boolean rectangleInProgress, Point rectangleStart, Point rectangleEnd){
+        this.rectangleInProgress = rectangleInProgress;
+        this.rectangleStart = rectangleStart;
+        this.rectangleEnd = rectangleEnd;
     }
 
     public AbstractImageFactory getImageFactory() {
@@ -246,10 +263,9 @@ public class DrawPanel extends JPanel implements Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         // paint line that is being currently made
-        if (lineInProgres) {
+        if (lineInProgress) {
             g2.drawLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
         }
-
 
         // DRAW cables
         markedCables.clear();
@@ -277,6 +293,15 @@ public class DrawPanel extends JPanel implements Observer {
         }
         for (AbstractComponent c : markedComponents) {
             c.paint(g2);
+        }
+        
+        
+        // DRAW makring rectangle
+        if(rectangleInProgress){
+            g2.setColor(Color.BLUE);
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            g2.fillRect(rectangleStart.x, rectangleStart.y, rectangleEnd.x, rectangleEnd.y);
+            
         }
     }
 
