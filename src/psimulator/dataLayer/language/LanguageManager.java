@@ -118,6 +118,7 @@ public class LanguageManager extends Observable implements Saveable {
     /**
      * Saves current language to Preferences
      */
+    @Override
     public final void savePreferences() {
         //System.out.println("Saving to preferences:" + LANGUAGE_PREFS + " - " + (String) avaiableLanguagesSorted[selectedLanguagePosition]);
         prefs.put(LANGUAGE_PREFS, (String) avaiableLanguagesSorted[selectedLanguagePosition]);
@@ -126,6 +127,7 @@ public class LanguageManager extends Observable implements Saveable {
     /**
      * Loads current language from Preferences
      */
+    @Override
     public final void loadPreferences() {
         // load language saved in preferences, if no language stored, than default is lodaded
         String language = prefs.get(LANGUAGE_PREFS, DEFAULT_LANGUAGE);

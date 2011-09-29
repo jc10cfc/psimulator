@@ -76,16 +76,6 @@ public class EditorPanel extends AbstractEditor implements Observer{
         Point newViewPos = new Point();
         Rectangle oldView = jScrollPane.getViewport().getViewRect();
         
-        //System.out.println("Old view="+oldView);
-        
-        newViewPos.x = oldView.x * zoomWrapper.getMouseX();
-        
-        //newViewPos.x = (int)(jScrollPane.getWidth() * (zoomWrapper.getMouseX()/(double)jScrollPane.getWidth()));
-        //newViewPos.y = (int)(jScrollPane.getHeight() * (zoomWrapper.getMouseY()/(double)jScrollPane.getHeight()));
-        
-        // Move the viewport to the new position to keep the area our mouse was in the same spot
-        //jScrollPane.getViewport().setViewPosition(newViewPos);
-
         
         // update zoom buttons in main window
         mainWindow.updateZoomButtons();

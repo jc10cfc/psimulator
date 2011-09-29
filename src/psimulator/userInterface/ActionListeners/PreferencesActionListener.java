@@ -38,6 +38,8 @@ public class PreferencesActionListener implements ActionListener {
 
             // set current language to language at index
             controller.getLanguageManager().setCurrentLanguage(index);
+            
+            
 
             closeDialog();
         }

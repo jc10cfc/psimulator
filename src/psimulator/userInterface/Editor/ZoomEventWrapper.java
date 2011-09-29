@@ -5,14 +5,16 @@ package psimulator.userInterface.Editor;
  * @author Martin
  */
 public class ZoomEventWrapper {
-    private double scale;
+    private boolean scaleToMousePosition;
     private int mouseX;
     private int mouseY;
+    private double newZoomDivOld;
 
-    public ZoomEventWrapper(double scale, int mouseX, int mouseY) {
-        this.scale = scale;
+    public ZoomEventWrapper(boolean scaleToMousePosition, int mouseX, int mouseY, double newZoomDivOld) {
+        this.scaleToMousePosition = scaleToMousePosition;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
+        this.newZoomDivOld = newZoomDivOld;
     }
 
     public int getMouseX() {
@@ -23,8 +25,13 @@ public class ZoomEventWrapper {
         return mouseY;
     }
 
-    public double getScale() {
-        return scale;
+    public boolean isScaleToMousePosition() {
+        return scaleToMousePosition;
     }
+
+    public double getNewZoomDivOld() {
+        return newZoomDivOld;
+    }
+    
     
 }

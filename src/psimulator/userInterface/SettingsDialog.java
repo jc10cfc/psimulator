@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,7 +13,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -32,14 +30,11 @@ public class SettingsDialog extends JDialog {
     private JButton jButtonOk;
     private JButton jButtonCancel;
     private JComboBox languageList;
-    private Component parentComponent;
     /* END of window components */
 
     public SettingsDialog(Component mainWindow, LanguageManager languageManager, ActionListener okButtonListener, ActionListener cancelButtonListener) {
         this.languageManager = languageManager;
 
-        this.parentComponent = mainWindow;
-        
         this.setTitle(languageManager.getString("PREFERENCES"));
 
         // add TabbedPane
@@ -98,26 +93,49 @@ public class SettingsDialog extends JDialog {
 
     private JPanel createApplicationPanel() {
         JPanel pane = new JPanel();
-
-        pane.setBorder(BorderFactory.createTitledBorder(languageManager.getString("APPLICATION")));
-
-        BoxLayout boxLayout = new BoxLayout(pane, BoxLayout.X_AXIS);
-        pane.setLayout(boxLayout);
-
-
-        JLabel label = new JLabel(languageManager.getString("LANGUAGE"));
-        Font font = new Font(label.getFont().getName(), Font.BOLD, label.getFont().getSize());
-        label.setFont(font);
+        pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+        
+        // APPLICATION PANEL
+        JPanel applicationPanel = new JPanel();
+        applicationPanel.setLayout(new BoxLayout(applicationPanel, BoxLayout.Y_AXIS));
+        applicationPanel.setBorder(BorderFactory.createTitledBorder(languageManager.getString("APPLICATION")));
+        
+        // LANGUAGE
+        JPanel languagePanel = new JPanel();
+        
+        languagePanel.setLayout(new BoxLayout(languagePanel, BoxLayout.X_AXIS));
+        
+        JLabel languageLabel = new JLabel(languageManager.getString("LANGUAGE"));
+        Font font = new Font(languageLabel.getFont().getName(), Font.BOLD, languageLabel.getFont().getSize());
+        languageLabel.setFont(font);
         
         languageList = new JComboBox(languageManager.getAvaiableLanguageNames());
         languageList.setBackground(Color.white);
         languageList.setSelectedIndex(languageManager.getCurrentLanguagePosition());
+  
+        languagePanel.add(languageLabel);
+        languagePanel.add(Box.createRigidArea(new Dimension(5,0)));
+        languagePanel.add(languageList);
+
+        applicationPanel.add(languagePanel);
+        applicationPanel.add(Box.createRigidArea(new Dimension(0,5)));
         
+        // TOOLBAR ICON SIZE
+        JPanel iconSizePanel = new JPanel();
+        iconSizePanel.setLayout(new BoxLayout(iconSizePanel, BoxLayout.X_AXIS));
+        
+        JLabel iconSizeLabel = new JLabel(languageManager.getString("LANGUAGE"));
+        iconSizeLabel.setFont(font);
+        
+        iconSizePanel.add(iconSizeLabel);
+        iconSizePanel.add(Box.createRigidArea(new Dimension(5,0)));
 
-        pane.add(label);
-        pane.add(Box.createRigidArea(new Dimension(5,0)));
-        pane.add(languageList);
-
+        applicationPanel.add(iconSizePanel);
+        
+        
+        // END APPLICATION PANEL
+        pane.add(applicationPanel);
+        
         return pane;
     }
     
