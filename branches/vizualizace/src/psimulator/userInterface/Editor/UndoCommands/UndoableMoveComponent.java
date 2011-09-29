@@ -42,7 +42,7 @@ public class UndoableMoveComponent extends AbstractUndoableEdit {
       }
       
       // panel could be resized before undo, so we need to update its size
-     drawPanel.updateSize(drawPanel.getGraph().getLowerRightBound(components));
+     drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
     }
 
     @Override
@@ -53,6 +53,6 @@ public class UndoableMoveComponent extends AbstractUndoableEdit {
           component.doChangePosition(offsetInDefaultZoom, true);
       }
       // panel could be resized before redo, so we need to update its size
-      drawPanel.updateSize(drawPanel.getGraph().getLowerRightBound(components));
+      drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
     }
   }

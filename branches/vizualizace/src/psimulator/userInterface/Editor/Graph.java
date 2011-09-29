@@ -35,7 +35,7 @@ public class Graph {
 
         return temp;
     }
-    
+
     /**
      * Retruns new ArrayList with marked cables
      * @return 
@@ -129,57 +129,65 @@ public class Graph {
             removeCable(it.next());
         }
     }
-    
+
     /**
      * Finds out whether there is connetction between components
      * @param component1
      * @param component2
      * @return true if there is connection, otherwise false
      */
-    public boolean isConnection(AbstractHwComponent component1, AbstractHwComponent component2){
-        for(Cable source : component1.getCables()){
-            if(component2.containsCable(source)){
+    public boolean isConnection(AbstractHwComponent component1, AbstractHwComponent component2) {
+        for (Cable source : component1.getCables()) {
+            if (component2.containsCable(source)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
      * Gets upper left bound point from all components
      * @param components to look in
      * @return UpperLeft bound point
      */
-    public Point getUpperLeftBound(List<AbstractHwComponent> components){
+    public Point getUpperLeftBound(List<AbstractHwComponent> components) {
         Point p = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
-        
-        for(AbstractHwComponent c: components){
-            if(c.getX()<p.x){
+
+        for (AbstractHwComponent c : components) {
+            if (c.getX() < p.x) {
                 p.x = c.getX();
             }
-            if(c.getY()<p.y){
+            if (c.getY() < p.y) {
                 p.y = c.getY();
             }
         }
         return p;
     }
-    
+
     /**
      * Gets lower right bound point from all components
      * @param components to look in
      * @return LowerRight bound point
      */
-    public Point getLowerRightBound(List<AbstractHwComponent> components){
+    public Point getLowerRightBound(List<AbstractHwComponent> components) {
         Point p = new Point(0, 0);
-        
-        for(AbstractHwComponent c: components){
-            if(c.getX()>p.x){
-                p.x = c.getX();
+
+        for (AbstractHwComponent c : components) {
+            if (c.getX() + c.getWidth() > p.x) {
+                p.x = c.getX() + c.getWidth();
             }
-            if(c.getY()>p.y){
-                p.y = c.getY();
+            if (c.getY() + c.getHeight() > p.y) {
+                p.y = c.getY() + c.getHeight();
             }
         }
         return p;
+    }
+
+    /**
+     * Gets lower right bound point from all graph components
+     * @return LowerRight bound point
+     */
+    public Point getGraphLowerRightBound() {
+        return getLowerRightBound(components);
     }
 }

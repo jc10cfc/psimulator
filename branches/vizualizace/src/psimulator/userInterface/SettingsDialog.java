@@ -118,7 +118,7 @@ public class SettingsDialog extends JDialog {
         languagePanel.add(languageList);
 
         applicationPanel.add(languagePanel);
-        applicationPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        applicationPanel.add(Box.createRigidArea(new Dimension(0,8)));
         
         // TOOLBAR ICON SIZE
         JPanel iconSizePanel = new JPanel();
