@@ -225,8 +225,6 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             component.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), true);
         }
 
-        drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
-        
         drawPanel.repaint();
     }
 
@@ -261,6 +259,9 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 System.out.println("Original default loc: x="+originalDefaultZoomLocation.x+", y="+originalDefaultZoomLocation.y+". "
                 + "New default loc: x="+newDefaultZoomLocation.x +", y="+newDefaultZoomLocation.y+".");*/
             }
+            
+            drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
+            
             draggedComponents = null;
             return;
         }
