@@ -178,6 +178,7 @@ public class MenuBar extends JMenuBar implements Observer {
         
     }
 
+    @Override
     public void update(Observable o, Object o1) {
         this.setTextsToComponents();
     }

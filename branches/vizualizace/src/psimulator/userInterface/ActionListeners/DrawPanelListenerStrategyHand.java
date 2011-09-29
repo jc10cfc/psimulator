@@ -214,16 +214,6 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         if(draggedComponentsTmpPoint.y + differenceInActualZoom.height < 0){
             differenceInActualZoom.height = 0;
         }
-        /*
-        // if any of the components would be placed outside of draw panel, than place it to 0
-        if (draggedComponentsTmpPoint.x == 0 && differenceInDefaultZoom.width < 0) {
-            differenceInDefaultZoom.width = 0;
-        }
-
-        // if any of the components would be placed outside of draw panel, than place it to 0
-        if (draggedComponentsTmpPoint.y == 0 && differenceInDefaultZoom.height < 0) {
-            differenceInDefaultZoom.height = 0;
-        }*/
 
         // if nothing happend, return
         if (differenceInActualZoom.width == 0 && differenceInActualZoom.height == 0) {

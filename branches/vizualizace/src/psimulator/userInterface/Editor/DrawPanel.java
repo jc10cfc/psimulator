@@ -57,7 +57,7 @@ public class DrawPanel extends JPanel implements Observer {
     private List<AbstractComponent> markedComponents = new ArrayList<AbstractComponent>();
     private Dimension defaultZoomAreaMin = new Dimension(800, 600);
     private Dimension defaultZoomArea = new Dimension(defaultZoomAreaMin);
-    private Dimension area = new Dimension(defaultZoomArea);
+    private Dimension actualZoomArea = new Dimension(defaultZoomArea);
     
 
     public DrawPanel(MainWindowInterface mainWindow, AbstractImageFactory imageFactory) {
@@ -66,12 +66,12 @@ public class DrawPanel extends JPanel implements Observer {
         this.mainWindow = mainWindow;
         this.imageFactory = imageFactory;
 
-        area.width = zoomManager.doScaleToActual(defaultZoomArea.width);
-        area.height = zoomManager.doScaleToActual(defaultZoomArea.height);
+        actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
+        actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
         
-        this.setPreferredSize(area);
-        this.setMinimumSize(area);
-        this.setMaximumSize(area);
+        this.setPreferredSize(actualZoomArea);
+        this.setMinimumSize(actualZoomArea);
+        this.setMaximumSize(actualZoomArea);
 
         this.setBackground(ColorMixerSignleton.drawPanelColor);
 
@@ -94,17 +94,14 @@ public class DrawPanel extends JPanel implements Observer {
      */
     @Override
     public void update(Observable o, Object o1) {
-        ZoomEventWrapper zoomWrapper = (ZoomEventWrapper) o1;
-
         //set new sizes of this (JDrawPanel)
-        area.width = zoomManager.doScaleToActual(defaultZoomArea.width);
-        area.height = zoomManager.doScaleToActual(defaultZoomArea.height);
+        actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
+        actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
 
-        this.setSize(area);
-        this.setPreferredSize(area);
-        this.setMinimumSize(area);
-        this.setMaximumSize(area);
-        //System.out.println(this.getSize());
+        this.setSize(actualZoomArea);
+        this.setPreferredSize(actualZoomArea);
+        this.setMinimumSize(actualZoomArea);
+        this.setMaximumSize(actualZoomArea);
     }
 
     /**
@@ -134,14 +131,14 @@ public class DrawPanel extends JPanel implements Observer {
             defaultZoomArea.setSize(defaultZoomAreaMin.width, defaultZoomAreaMin.height); 
             
             // set area according to defaultZoomArea
-            area.setSize(zoomManager.doScaleToActual(defaultZoomArea.width), 
+            actualZoomArea.setSize(zoomManager.doScaleToActual(defaultZoomArea.width), 
                     zoomManager.doScaleToActual(defaultZoomArea.height));
         } else {
             // update area size
-            area.setSize(maxX, maxY);
+            actualZoomArea.setSize(maxX, maxY);
             // update default zoom size
-            defaultZoomArea.setSize(zoomManager.doScaleToDefault(area.width),
-                    zoomManager.doScaleToDefault(area.height));
+            defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
+                    zoomManager.doScaleToDefault(actualZoomArea.height));
         }
 
         //System.out.println("area update");
@@ -158,25 +155,25 @@ public class DrawPanel extends JPanel implements Observer {
      */
     public void updateSize(Point lowerRightCorner) {
         // if nothing to resize
-        if (!(lowerRightCorner.x > area.width || lowerRightCorner.y > area.height)) {
+        if (!(lowerRightCorner.x > actualZoomArea.width || lowerRightCorner.y > actualZoomArea.height)) {
             return;
         }
 
         // if lowerRightCorner.x is out of area
-        if (lowerRightCorner.x > area.width) {
+        if (lowerRightCorner.x > actualZoomArea.width) {
             // update area width
-            area.width = lowerRightCorner.x;
+            actualZoomArea.width = lowerRightCorner.x;
         }
 
         // if lowerRightCorner.y is out of area
-        if (lowerRightCorner.y > area.height) {
+        if (lowerRightCorner.y > actualZoomArea.height) {
             // update area height
-            area.height = lowerRightCorner.y;
+            actualZoomArea.height = lowerRightCorner.y;
         }
 
         // update default zoom size
-        defaultZoomArea.setSize(zoomManager.doScaleToDefault(area.width),
-                zoomManager.doScaleToDefault(area.height));
+        defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
+                zoomManager.doScaleToDefault(actualZoomArea.height));
 
         // let scrool pane in editor know about the change
         this.revalidate();
@@ -263,7 +260,6 @@ public class DrawPanel extends JPanel implements Observer {
         }
     }
 
-    
     
     /**
      * Creates mouse listeners for all tools
