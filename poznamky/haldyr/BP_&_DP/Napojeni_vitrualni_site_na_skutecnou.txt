@@ -40,7 +40,7 @@ je postaven na jnetpcap
 
 ==== 14.9.2011 ====
 **Prvni navrh propojeni virtualni site se skutecnou:**
-[[./IMG_20110914_134326.jpg|IMG_20110914_134326.jpg]]
+[[../Postup_prace/IMG_20110914_134326.jpg|IMG_20110914_134326.jpg]]
 
 Myslenka je takova, ze na skutecnem pocitaci pobezi nase aplikace s virtualni siti, ktera bude napojena na skutecnou sit. Kazdy virtualni PC (ktery bude pripojen na skutecnou sit) bude mit prirazene virtualni sitove rozhrani (nainstalovane na skutecnem pocitaci). 
 Tomas nasel pro linux 'vde'.
@@ -48,7 +48,7 @@ Tomas nasel pro linux 'vde'.
 	- asi zadny program neumi, takze asi druhe reseni
 
 **Druhy navrh propojeni virtualni site se skutecnou:**
-[[./IMG_20110914_142007.jpg|IMG_20110914_142007.jpg]]
+[[../Postup_prace/IMG_20110914_142007.jpg|IMG_20110914_142007.jpg]]
 Kazdy virtualni PC (ktery bude pripojen na skutecnou sit) bude mit prirazene **dve **virtualni sitove rozhrani (nainstalovane na skutecnem pocitaci). 
 1. virt. rozrani: pouze na odesila pakety ven z programu, je virtualne propojeno se druhym
 2. virt. rozrani: tady to zachyti sitovy modul skut. PC a nalozi s nim podle sebe

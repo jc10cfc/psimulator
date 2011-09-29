@@ -22,9 +22,8 @@ ICMP paket:
    |           Identifier          |        Sequence Number        |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |     Data (optional, lenght max MTU of network)...
+   +-+-+-+-+-
 '''
-
-''      +-+-+-+-+-''
 
 Identifier je pro 1 konzoli furt stejny pro vsechny ICMP pakety, kdyz to pustim z jiny konzole, tak je to cislo jiny, ale zustava stejne "jiny".
 

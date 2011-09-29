@@ -10,6 +10,7 @@ Created Úterý 13 září 2011
 	[ ] windows
 [ ] realnejsi simulace - zpozdeni paketu (ohodnoceny kabely, ..)
 	[ ] co prikaz to vlakno (asi)
+	[ ] posilani informaci Martinoj S !
 [ ] DHCP server
 [ ] DNS server
 [ ] www server (neco jednoduchyho..)

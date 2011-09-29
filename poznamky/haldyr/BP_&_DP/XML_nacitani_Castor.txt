@@ -11,7 +11,7 @@ Created Pátek 23 září 2011
 http://www.castor.org/reference/html/XML%20data%20binding.html#xml.framework.data.binding.framework
 
 **prvni metoda - Introspection mode**
-- na tu nejjednodusi metodu musi byt u kazdeho atributu getter, pac jinak se to neulozi do XML
+- na tu nejjednodusi metodu musi byt u kazdeho atributu getter, pac jinak se to neulozi do XML, (private metody maj smulu?? - co to znamena netusim:)
 - nastavit odsazovani v XML dokumentech
 	- castor-1.3.1-xml.jar/org/exolab/castor/castor.property
 	- nastavit org.exolab.castor.indent=true
@@ -19,5 +19,7 @@ http://www.castor.org/reference/html/XML%20data%20binding.html#xml.framework.dat
 - CastorTest.Main2
 
 **druha metoda - Mapping mode**
+http://www.castor.org/xml-mapping.html
+Kazdy objekt, ktery chci ulozit, tak musim vyrobit XMLContext a na nej navesim Mapping (mapping.loadMapping("mapping.xml");)
 
 **treti metoda - Descriptor mode (zatim asi nepopsana??)**
