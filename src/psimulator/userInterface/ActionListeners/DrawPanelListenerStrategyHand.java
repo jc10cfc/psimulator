@@ -225,6 +225,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             component.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), true);
         }
 
+        drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
+        
         drawPanel.repaint();
     }
 
