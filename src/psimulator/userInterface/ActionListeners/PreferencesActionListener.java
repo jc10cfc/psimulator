@@ -25,7 +25,7 @@ public class PreferencesActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        dialog = new SettingsDialog(parentComponent, controller.getLanguageManager(), new OkButtonListener(), new CancelButtonListener());
+        dialog = new SettingsDialog(parentComponent, controller, new OkButtonListener(), new CancelButtonListener());
         dialog.setVisible(true);
     }
 
@@ -39,8 +39,9 @@ public class PreferencesActionListener implements ActionListener {
             // set current language to language at index
             controller.getLanguageManager().setCurrentLanguage(index);
             
+            // get icon size selected and set it to preferences manager
+            controller.setToolbarIconSize(dialog.getSelectedToolbarIconSize());
             
-
             closeDialog();
         }
     }

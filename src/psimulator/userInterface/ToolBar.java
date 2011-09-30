@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import psimulator.dataLayer.ColorMixerSignleton;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.userInterface.Editor.Enums.Zoom;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.userInterface.Editor.Enums.UndoRedo;
@@ -110,9 +111,39 @@ public class ToolBar extends JToolBar implements Observer {
         }
     }
 
+    @Override
     public void update(Observable o, Object o1) {
         setTextsToComponents();
     }
+    
+    public void updateIconSize(ToolbarIconSizeEnum size){
+        String path = "/resources/toolbarIcons/";
+        
+        switch(size){
+            case SMALL:
+                path += "16";
+                break;
+            case MEDIUM:
+                path += "32";
+                break;
+            case LARGE:
+                path += "48";
+                break;
+        }
+        path += "/";
+        
+        jButtonNew.setIcon(new ImageIcon(getClass().getResource(path+"filenew.png")));
+        jButtonClose.setIcon(new ImageIcon(getClass().getResource(path+"fileclose.png")));
+        jButtonOpen.setIcon(new ImageIcon(getClass().getResource(path+"folder_green_open.png")));
+        jButtonSave.setIcon(new ImageIcon(getClass().getResource(path+"filesave.png")));
+        jButtonSaveAs.setIcon(new ImageIcon(getClass().getResource(path+"filesaveas.png")));
+        jButtonUndo.setIcon(new ImageIcon(getClass().getResource(path+"undo.png")));
+        jButtonRedo.setIcon(new ImageIcon(getClass().getResource(path+"redo.png")));
+        jButtonZoomIn.setIcon(new ImageIcon(getClass().getResource(path+"viewmag+.png")));
+        jButtonZoomOut.setIcon(new ImageIcon(getClass().getResource(path+"viewmag-.png")));
+        jButtonZoomReset.setIcon(new ImageIcon(getClass().getResource(path+"viewmag1.png")));
+    }
+    
     
     public void setUndoEnabled(boolean enabled){
         jButtonUndo.setEnabled(enabled);
@@ -205,4 +236,5 @@ public class ToolBar extends JToolBar implements Observer {
         jButtonZoomOut.setToolTipText(languageManager.getString("ZOOM_OUT"));
         jButtonZoomReset.setToolTipText(languageManager.getString("ZOOM_RESET"));
     }
+    
 }

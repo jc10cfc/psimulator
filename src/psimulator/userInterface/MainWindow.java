@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayer;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.userInterface.Editor.Enums.Zoom;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.logicLayer.Controller;
@@ -54,6 +55,7 @@ public class MainWindow extends JFrame implements MainWindowInterface {
 
     }
 
+    @Override
     public void initView(Controller controller) {
         this.controller = controller;
 
@@ -61,6 +63,7 @@ public class MainWindow extends JFrame implements MainWindowInterface {
 
         updateUndoRedoButtons();
         updateZoomButtons();
+        updateToolBarIconsSize(controller.getToolbarIconSize());
 
         addActionListenersToViewComponents();
 
@@ -93,6 +96,11 @@ public class MainWindow extends JFrame implements MainWindowInterface {
 
         jMenuBar.setZoomOutEnabled(jEditor.canZoomOut());
         jToolBar.setZoomOutEnabled(jEditor.canZoomOut());
+    }
+    
+    @Override
+    public void updateToolBarIconsSize(ToolbarIconSizeEnum size){
+        jToolBar.updateIconSize(size);
     }
 
     /////////////////////-----------------------------------////////////////////
