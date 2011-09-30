@@ -3,7 +3,7 @@ package psimulator.userInterface.ActionListeners;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import psimulator.logicLayer.Controller;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SettingsDialog;
 
 /**
@@ -14,18 +14,18 @@ public class PreferencesActionListener implements ActionListener {
 
     private SettingsDialog dialog;
     private Component parentComponent;
-    private Controller controller;
+    private DataLayerFacade dataLayer;
 
-    public PreferencesActionListener(Component parentComponent, Controller controller) {
+    public PreferencesActionListener(Component parentComponent, DataLayerFacade dataLayer) {
         super();
         
         this.parentComponent = parentComponent;
-        this.controller = controller;
+        this.dataLayer = dataLayer;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        dialog = new SettingsDialog(parentComponent, controller, new OkButtonListener(), new CancelButtonListener());
+        dialog = new SettingsDialog(parentComponent, dataLayer, new OkButtonListener(), new CancelButtonListener());
         dialog.setVisible(true);
     }
 
@@ -37,10 +37,10 @@ public class PreferencesActionListener implements ActionListener {
             int index = dialog.getSelectedLanguagePosition();
 
             // set current language to language at index
-            controller.getLanguageManager().setCurrentLanguage(index);
+            dataLayer.setCurrentLanguage(index);
             
             // get icon size selected and set it to preferences manager
-            controller.setToolbarIconSize(dialog.getSelectedToolbarIconSize());
+            dataLayer.setToolbarIconSize(dialog.getSelectedToolbarIconSize());
             
             closeDialog();
         }

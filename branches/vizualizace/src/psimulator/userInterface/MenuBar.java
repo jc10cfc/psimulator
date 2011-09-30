@@ -10,8 +10,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.UpdateEventType;
 import psimulator.userInterface.Editor.Enums.Zoom;
-import psimulator.dataLayer.language.LanguageManager;
 import psimulator.userInterface.Editor.Enums.UndoRedo;
 
 /**
@@ -20,7 +21,7 @@ import psimulator.userInterface.Editor.Enums.UndoRedo;
  */
 public class MenuBar extends JMenuBar implements Observer {
 
-    private LanguageManager languageManager;
+    private DataLayerFacade dataLayer;
     
     
     private JMenu jMenuFile;
@@ -43,14 +44,13 @@ public class MenuBar extends JMenuBar implements Observer {
     private JMenu jMenuOptions;
     private JMenuItem jMenuItemPreferences;
 
-    public MenuBar(LanguageManager languageManager) {
+    public MenuBar(DataLayerFacade dataLayer) {
         super();
-        this.languageManager = languageManager;
+        this.dataLayer = dataLayer;
 
-        // add this MenuBar as observer to languageManager
-        languageManager.addObserver(this);
+        // add this MenuBar as observer to langage manager
+        dataLayer.addLanguageObserver(this);
         
-       
         /* menu File */
         jMenuFile = new JMenu();
         
@@ -129,50 +129,50 @@ public class MenuBar extends JMenuBar implements Observer {
 
     private void setTextsToComponents() {
         /* menu File */
-        jMenuFile.setText(languageManager.getString("FILE"));
-        jMenuFile.setMnemonic(languageManager.getString("FILE_mnemonic").charAt(0));
+        jMenuFile.setText(dataLayer.getString("FILE"));
+        jMenuFile.setMnemonic(dataLayer.getString("FILE_mnemonic").charAt(0));
 
-        jMenuItemNew.setText(languageManager.getString("NEW_PROJECT"));
-        jMenuItemNew.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("NEW_PROJECT_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
-        jMenuItemClose.setText(languageManager.getString("CLOSE"));
-        jMenuItemClose.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("CLOSE_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
-        jMenuItemOpen.setText(languageManager.getString("OPEN"));
-        jMenuItemOpen.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("OPEN_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
-        jMenuItemSave.setText(languageManager.getString("SAVE"));
-        jMenuItemSave.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("SAVE_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
-        jMenuItemSaveAs.setText(languageManager.getString("SAVE_AS"));
-        jMenuItemSaveAs.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("SAVE_AS_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+        jMenuItemNew.setText(dataLayer.getString("NEW_PROJECT"));
+        jMenuItemNew.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("NEW_PROJECT_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+        jMenuItemClose.setText(dataLayer.getString("CLOSE"));
+        jMenuItemClose.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("CLOSE_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
+        jMenuItemOpen.setText(dataLayer.getString("OPEN"));
+        jMenuItemOpen.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("OPEN_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+        jMenuItemSave.setText(dataLayer.getString("SAVE"));
+        jMenuItemSave.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("SAVE_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
+        jMenuItemSaveAs.setText(dataLayer.getString("SAVE_AS"));
+        jMenuItemSaveAs.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("SAVE_AS_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         
-        jMenuItemExit.setText(languageManager.getString("EXIT"));
-        jMenuItemExit.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("EXIT_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
+        jMenuItemExit.setText(dataLayer.getString("EXIT"));
+        jMenuItemExit.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("EXIT_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
         /* END menu File */
         
         /* menu Edit */
-        jMenuEdit.setText(languageManager.getString("EDIT"));
-        jMenuEdit.setMnemonic(languageManager.getString("EDIT_mnemonic").charAt(0));
+        jMenuEdit.setText(dataLayer.getString("EDIT"));
+        jMenuEdit.setMnemonic(dataLayer.getString("EDIT_mnemonic").charAt(0));
         
-        jMenuItemUndo.setText(languageManager.getString("UNDO"));
-        jMenuItemUndo.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("UNDO_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK));
+        jMenuItemUndo.setText(dataLayer.getString("UNDO"));
+        jMenuItemUndo.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("UNDO_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK));
         
-        jMenuItemRedo.setText(languageManager.getString("REDO"));
-        jMenuItemRedo.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("REDO_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK));
+        jMenuItemRedo.setText(dataLayer.getString("REDO"));
+        jMenuItemRedo.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("REDO_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK));
         /* END menu Edit */
         
         /* menu View */
-        jMenuView.setText(languageManager.getString("VIEW"));
-        jMenuView.setMnemonic(languageManager.getString("VIEW_mnemonic").charAt(0));
+        jMenuView.setText(dataLayer.getString("VIEW"));
+        jMenuView.setMnemonic(dataLayer.getString("VIEW_mnemonic").charAt(0));
         
-        jMenuItemZoomIn.setText(languageManager.getString("ZOOM_IN"));
-        jMenuItemZoomOut.setText(languageManager.getString("ZOOM_OUT"));
-        jMenuItemZoomReset.setText(languageManager.getString("ZOOM_RESET"));
+        jMenuItemZoomIn.setText(dataLayer.getString("ZOOM_IN"));
+        jMenuItemZoomOut.setText(dataLayer.getString("ZOOM_OUT"));
+        jMenuItemZoomReset.setText(dataLayer.getString("ZOOM_RESET"));
         /* END menu View */
         
         /* menu Options */
-        jMenuOptions.setText(languageManager.getString("OPTIONS"));
-        jMenuOptions.setMnemonic(languageManager.getString("OPTIONS_mnemonic").charAt(0));
+        jMenuOptions.setText(dataLayer.getString("OPTIONS"));
+        jMenuOptions.setMnemonic(dataLayer.getString("OPTIONS_mnemonic").charAt(0));
         
-        jMenuItemPreferences.setText(languageManager.getString("PREFERENCES"));
-        jMenuItemPreferences.setAccelerator(KeyStroke.getKeyStroke(languageManager.getString("PREFERENCES_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
+        jMenuItemPreferences.setText(dataLayer.getString("PREFERENCES"));
+        jMenuItemPreferences.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("PREFERENCES_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
         /* END menu Options */
 
         

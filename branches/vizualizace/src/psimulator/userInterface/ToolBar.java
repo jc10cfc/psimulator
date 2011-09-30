@@ -7,19 +7,20 @@ import java.util.Observer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Enums.UpdateEventType;
 import psimulator.userInterface.Editor.Enums.Zoom;
-import psimulator.dataLayer.language.LanguageManager;
 import psimulator.userInterface.Editor.Enums.UndoRedo;
 
 /**
  *
  * @author Martin
  */
-public class ToolBar extends JToolBar implements Observer {
+public final class ToolBar extends JToolBar implements Observer {
     
-    private LanguageManager languageManager;
+    private DataLayerFacade dataLayer;
     
     private JButton jButtonNew;
     private JButton jButtonClose;
@@ -34,51 +35,40 @@ public class ToolBar extends JToolBar implements Observer {
     
     //private Color backgroundColor = new Color(198, 83, 83);
     
-    public ToolBar(LanguageManager languageManager){
+    public ToolBar(DataLayerFacade dataLayer){
         super();
-        this.languageManager = languageManager;
+        this.dataLayer = dataLayer;
         
                 
         // add this ToolBar as observer to languageManager
-        languageManager.addObserver(this);
+        dataLayer.addLanguageObserver(this);
         
+        // add this as observer to preferences manager
+        dataLayer.addPreferencesObserver(this);
+       
         // tool bar is not possible to move
         this.setFloatable(false);
         
         
         jButtonNew = new JButton();
-        jButtonNew.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/filenew.png")));
-        
         jButtonClose = new JButton();
-        jButtonClose.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/fileclose.png")));
-        
         jButtonOpen = new JButton();
-        jButtonOpen.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/folder_green_open.png")));
-        
         jButtonSave = new JButton();
-        jButtonSave.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/filesave.png")));
-        
         jButtonSaveAs = new JButton();
-        jButtonSaveAs.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/filesaveas.png")));
         
         jButtonUndo = new JButton();
-        jButtonUndo.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/undo.png")));
         jButtonUndo.setActionCommand(UndoRedo.UNDO.toString());
         
         jButtonRedo = new JButton();
-        jButtonRedo.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/redo.png")));
         jButtonRedo.setActionCommand(UndoRedo.REDO.toString());
         
         jButtonZoomIn = new JButton();
-        jButtonZoomIn.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/viewmag+.png")));
         jButtonZoomIn.setActionCommand(Zoom.IN.toString());
         
         jButtonZoomOut = new JButton();
-        jButtonZoomOut.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/viewmag-.png")));
         jButtonZoomOut.setActionCommand(Zoom.OUT.toString());
                 
         jButtonZoomReset = new JButton();
-        jButtonZoomReset.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/viewmag1.png")));
         jButtonZoomReset.setActionCommand(Zoom.RESET.toString());
                 
         this.add(jButtonNew);
@@ -109,13 +99,27 @@ public class ToolBar extends JToolBar implements Observer {
         for(Component c : comp){
             c.setBackground(ColorMixerSignleton.mainToolbarColor);
         }
+        
+        updateIconSize(dataLayer.getToolbarIconSize());
     }
 
     @Override
     public void update(Observable o, Object o1) {
-        setTextsToComponents();
+        // find out what event type occured
+        switch((UpdateEventType)o1){
+            case LANGUAGE:
+                this.setTextsToComponents();
+                break;
+            case ICON_SIZE:
+                this.updateIconSize(dataLayer.getToolbarIconSize());
+                break;
+        }
     }
     
+    /**
+     * Updates images on toolbar buttons according to size
+     * @param size 
+     */
     public void updateIconSize(ToolbarIconSizeEnum size){
         String path = "/resources/toolbarIcons/";
         
@@ -225,16 +229,16 @@ public class ToolBar extends JToolBar implements Observer {
     ////////------------ PRIVATE------------///////////
     
     private void setTextsToComponents() {
-        jButtonNew.setToolTipText(languageManager.getString("NEW_PROJECT"));
-        jButtonClose.setToolTipText(languageManager.getString("CLOSE"));
-        jButtonOpen.setToolTipText(languageManager.getString("OPEN"));
-        jButtonSave.setToolTipText(languageManager.getString("SAVE"));
-        jButtonSaveAs.setToolTipText(languageManager.getString("SAVE_AS"));
-        jButtonUndo.setToolTipText(languageManager.getString("UNDO"));
-        jButtonRedo.setToolTipText(languageManager.getString("REDO"));
-        jButtonZoomIn.setToolTipText(languageManager.getString("ZOOM_IN"));
-        jButtonZoomOut.setToolTipText(languageManager.getString("ZOOM_OUT"));
-        jButtonZoomReset.setToolTipText(languageManager.getString("ZOOM_RESET"));
+        jButtonNew.setToolTipText(dataLayer.getString("NEW_PROJECT"));
+        jButtonClose.setToolTipText(dataLayer.getString("CLOSE"));
+        jButtonOpen.setToolTipText(dataLayer.getString("OPEN"));
+        jButtonSave.setToolTipText(dataLayer.getString("SAVE"));
+        jButtonSaveAs.setToolTipText(dataLayer.getString("SAVE_AS"));
+        jButtonUndo.setToolTipText(dataLayer.getString("UNDO"));
+        jButtonRedo.setToolTipText(dataLayer.getString("REDO"));
+        jButtonZoomIn.setToolTipText(dataLayer.getString("ZOOM_IN"));
+        jButtonZoomOut.setToolTipText(dataLayer.getString("ZOOM_OUT"));
+        jButtonZoomReset.setToolTipText(dataLayer.getString("ZOOM_RESET"));
     }
     
 }

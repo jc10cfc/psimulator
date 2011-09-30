@@ -9,13 +9,14 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
-import psimulator.dataLayer.Saveable;
+import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.SaveableInterface;
 
 /**
  *
  * @author Martin
  */
-public class LanguageManager extends Observable implements Saveable {
+public class LanguageManager extends Observable implements SaveableInterface {
 
     private Preferences prefs;
     private final String LANGUAGE_PREFS = "LANGUAGE";
@@ -86,7 +87,7 @@ public class LanguageManager extends Observable implements Saveable {
         
         // notify all observers
         setChanged();
-        notifyObservers();
+        notifyObservers(UpdateEventType.LANGUAGE);
     }
 
     /**

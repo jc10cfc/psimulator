@@ -10,6 +10,7 @@ import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.userInterface.Editor.Enums.Tools;
 import psimulator.userInterface.MainWindowInterface;
@@ -28,7 +29,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
     private AbstractImageFactory imageFactory;
     private MainWindowInterface mainWindow;
 
-    public EditorPanel(MainWindowInterface mainWindow, LanguageManager languageManager) {
+    public EditorPanel(MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
         super(new BorderLayout());
         
         this.mainWindow = mainWindow;
@@ -39,7 +40,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
         // create tool bar and add to panel
-        jToolBarEditor = new EditorToolBar(languageManager, imageFactory);
+        jToolBarEditor = new EditorToolBar(dataLayer, imageFactory);
         this.add(jToolBarEditor, BorderLayout.WEST);
 
         // create draw panel

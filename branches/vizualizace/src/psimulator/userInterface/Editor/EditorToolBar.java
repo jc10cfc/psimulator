@@ -8,8 +8,8 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
-import psimulator.dataLayer.language.LanguageManager;
 import psimulator.userInterface.Editor.Enums.Tools;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -19,7 +19,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class EditorToolBar extends JToolBar implements Observer {
 
-    private LanguageManager languageManager;
+    private DataLayerFacade dataLayer;
     private AbstractImageFactory imageFactory;
     private JButton jButtonPc;
     private JButton jButtonMac;
@@ -28,13 +28,13 @@ public class EditorToolBar extends JToolBar implements Observer {
     private JButton jButtonFitToSize;
     private JButton selectedButton = null;
 
-    public EditorToolBar(LanguageManager languageManager, AbstractImageFactory imageFactory) {
+    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory) {
         super();
-        this.languageManager = languageManager;
+        this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
 
         // add this ToolBar as observer to languageManager
-        languageManager.addObserver(this);
+        dataLayer.addLanguageObserver(this);
 
         // tool bar is not possible to move
         this.setFloatable(false);
@@ -131,10 +131,10 @@ public class EditorToolBar extends JToolBar implements Observer {
 
     ////////------------ PRIVATE------------///////////
     private void setTextsToComponents() {
-        jButtonHand.setToolTipText(languageManager.getString("HAND"));
-        jButtonMac.setToolTipText(languageManager.getString("MAC"));
-        jButtonPc.setToolTipText(languageManager.getString("PC"));
-        jButtonCable.setToolTipText(languageManager.getString("CABLE"));
-        jButtonFitToSize.setToolTipText(languageManager.getString("FIT_TO_SIZE"));
+        jButtonHand.setToolTipText(dataLayer.getString("HAND"));
+        jButtonMac.setToolTipText(dataLayer.getString("MAC"));
+        jButtonPc.setToolTipText(dataLayer.getString("PC"));
+        jButtonCable.setToolTipText(dataLayer.getString("CABLE"));
+        jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
     }
 }
