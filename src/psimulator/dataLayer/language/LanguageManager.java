@@ -22,7 +22,7 @@ public class LanguageManager extends Observable implements SaveableInterface {
     private final String LANGUAGE_PREFS = "LANGUAGE";
     private final String CZECH = "Čeština";
     private final String ENGLISH = "English";
-    private final String DEFAULT_LANGUAGE = CZECH;
+    private final String DEFAULT_LANGUAGE = ENGLISH;
     private Locale enLocale = new Locale("en", "US");
     private Locale czLocale = new Locale("cz", "CZ");
     //private Locale currentLocale = czLocale;
