@@ -6,11 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
-import psimulator.dataLayer.DataLayer;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.logicLayer.ControllerFacade;
 import psimulator.userInterface.Editor.Enums.Zoom;
-import psimulator.dataLayer.language.LanguageManager;
-import psimulator.logicLayer.Controller;
 import psimulator.userInterface.ActionListeners.PreferencesActionListener;
 import psimulator.userInterface.Editor.AbstractEditor;
 import psimulator.userInterface.Editor.EditorPanel;
@@ -20,11 +19,10 @@ import psimulator.userInterface.Editor.Enums.UndoRedo;
  *
  * @author Martin
  */
-public class MainWindow extends JFrame implements MainWindowInterface {
+public class MainWindow extends JFrame implements MainWindowInterface, UserInterfaceFacade {
 
-    private DataLayer dataLayer;
-    private Controller controller;
-    private LanguageManager languageManager;
+    private DataLayerFacade dataLayer;
+    private ControllerFacade controller;
 
     /* window componenets */
     private MenuBar jMenuBar;
@@ -32,9 +30,9 @@ public class MainWindow extends JFrame implements MainWindowInterface {
     private AbstractEditor jEditor;
     /* end of window components */
 
-    public MainWindow(DataLayer dataLayer) {
+    public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
-        this.languageManager = dataLayer.getLanguageManager();
+
 
         //if OS is Windows we set the windows look and feel
         if (isWindows()) {
@@ -44,11 +42,11 @@ public class MainWindow extends JFrame implements MainWindowInterface {
             }
         }
 
-        jMenuBar = new MenuBar(languageManager);
-        jToolBar = new ToolBar(languageManager);
-        jEditor = new EditorPanel(this, languageManager);
+        jMenuBar = new MenuBar(dataLayer);
+        jToolBar = new ToolBar(dataLayer);
+        jEditor = new EditorPanel(this, dataLayer);
 
-        this.setTitle(languageManager.getString("WINDOW_TITLE"));
+        this.setTitle(dataLayer.getString("WINDOW_TITLE"));
 
         this.setJMenuBar(jMenuBar);
         this.add(jToolBar, BorderLayout.PAGE_START);
@@ -56,14 +54,14 @@ public class MainWindow extends JFrame implements MainWindowInterface {
     }
 
     @Override
-    public void initView(Controller controller) {
+    public void initView(ControllerFacade controller) {
         this.controller = controller;
 
         jEditor.init();
 
         updateUndoRedoButtons();
         updateZoomButtons();
-        updateToolBarIconsSize(controller.getToolbarIconSize());
+        updateToolBarIconsSize(dataLayer.getToolbarIconSize());
 
         addActionListenersToViewComponents();
 
@@ -290,7 +288,7 @@ public class MainWindow extends JFrame implements MainWindowInterface {
         // END add listeners to Menu Bar - VIEW
 
         // add listeners to Menu Bar - OPTIONS
-        jMenuBar.addPreferencesActionListener(new PreferencesActionListener(this, controller));
+        jMenuBar.addPreferencesActionListener(new PreferencesActionListener(this, dataLayer));
 
         // END add listeners to Menu Bar - OPTIONS
     }

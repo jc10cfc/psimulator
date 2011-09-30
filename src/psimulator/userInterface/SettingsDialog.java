@@ -20,9 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.language.LanguageManager;
-import psimulator.logicLayer.Controller;
 
 /**
  *
@@ -30,8 +29,8 @@ import psimulator.logicLayer.Controller;
  */
 public class SettingsDialog extends JDialog {
 
-    private Controller controller;
-    private LanguageManager languageManager;
+    //private Controller controller;
+    private DataLayerFacade dataLayer;
     
     /* window componenets */
     private JButton jButtonOk;
@@ -45,11 +44,10 @@ public class SettingsDialog extends JDialog {
     /* END of window components */
     private ToolbarIconSizeEnum toolbarIconSizeSelected;
 
-    public SettingsDialog(Component mainWindow, Controller controller, ActionListener okButtonListener, ActionListener cancelButtonListener) {
-        this.languageManager = controller.getLanguageManager();
-        this.controller = controller;
+    public SettingsDialog(Component mainWindow, DataLayerFacade dataLayer, ActionListener okButtonListener, ActionListener cancelButtonListener) {
+        this.dataLayer = dataLayer;
         
-        this.setTitle(languageManager.getString("PREFERENCES"));
+        this.setTitle(dataLayer.getString("PREFERENCES"));
 
         // add TabbedPane
         this.getContentPane().add(createTabbedPane());
@@ -91,7 +89,7 @@ public class SettingsDialog extends JDialog {
     private JTabbedPane createTabbedPane() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tabbedPane.addTab(languageManager.getString("GENERAL"), new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/home.png")), createCardGeneral());
+        tabbedPane.addTab(dataLayer.getString("GENERAL"), new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/home.png")), createCardGeneral());
 
         tabbedPane.addTab("Second", new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/exec.png")), createCard2());
 
@@ -119,18 +117,18 @@ public class SettingsDialog extends JDialog {
         // APPLICATION PANEL
         JPanel applicationPanel = new JPanel();
         applicationPanel.setLayout(new BoxLayout(applicationPanel, BoxLayout.Y_AXIS));
-        applicationPanel.setBorder(BorderFactory.createTitledBorder(languageManager.getString("APPLICATION")));
+        applicationPanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("APPLICATION")));
 
         // LANGUAGE
         JPanel languagePanel = new JPanel();
 
         languagePanel.setLayout(new BoxLayout(languagePanel, BoxLayout.X_AXIS));
 
-        JLabel languageLabel = new JLabel(languageManager.getString("LANGUAGE"));
+        JLabel languageLabel = new JLabel(dataLayer.getString("LANGUAGE"));
         Font font = new Font(languageLabel.getFont().getName(), Font.BOLD, languageLabel.getFont().getSize());
         languageLabel.setFont(font);
 
-        languageList = new JComboBox(languageManager.getAvaiableLanguageNames());
+        languageList = new JComboBox(dataLayer.getAvaiableLanguageNames());
         languageList.setBackground(Color.white);
 
         languagePanel.add(languageLabel);
@@ -144,7 +142,7 @@ public class SettingsDialog extends JDialog {
         JPanel iconSizePanel = new JPanel();
         iconSizePanel.setLayout(new BoxLayout(iconSizePanel, BoxLayout.X_AXIS));
 
-        JLabel iconSizeLabel = new JLabel(languageManager.getString("TOOLBAR_ICON_SIZE"));
+        JLabel iconSizeLabel = new JLabel(dataLayer.getString("TOOLBAR_ICON_SIZE"));
         iconSizeLabel.setFont(font);
 
         iconSizePanel.add(iconSizeLabel);
@@ -169,15 +167,15 @@ public class SettingsDialog extends JDialog {
         ButtonGroup buttonGroup = new ButtonGroup();
         ActionListener toolbarIconSizeListener = new IconSizeListener();
         
-        smallToolbarIconButton = new JRadioButton(languageManager.getString("SMALL"));
+        smallToolbarIconButton = new JRadioButton(dataLayer.getString("SMALL"));
         smallToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.SMALL.toString());
         smallToolbarIconButton.addActionListener(toolbarIconSizeListener);
 
-        mediumToolbarIconButton = new JRadioButton(languageManager.getString("MEDIUM"));
+        mediumToolbarIconButton = new JRadioButton(dataLayer.getString("MEDIUM"));
         mediumToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.MEDIUM.toString());
         mediumToolbarIconButton.addActionListener(toolbarIconSizeListener);
 
-        largeToolbarIconButton = new JRadioButton(languageManager.getString("LARGE"));
+        largeToolbarIconButton = new JRadioButton(dataLayer.getString("LARGE"));
         largeToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.LARGE.toString());
         largeToolbarIconButton.addActionListener(toolbarIconSizeListener);
 
@@ -203,8 +201,8 @@ public class SettingsDialog extends JDialog {
     private JPanel createOkCancelPanel() {
         JPanel buttonPane = new JPanel();
 
-        jButtonOk = new JButton(languageManager.getString("OK"));
-        jButtonCancel = new JButton(languageManager.getString("CANCEL"));
+        jButtonOk = new JButton(dataLayer.getString("OK"));
+        jButtonCancel = new JButton(dataLayer.getString("CANCEL"));
 
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
         buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
@@ -226,9 +224,9 @@ public class SettingsDialog extends JDialog {
 
     private void setPreferencesLikeInModel() {
         // set selected language
-        languageList.setSelectedIndex(languageManager.getCurrentLanguagePosition());
+        languageList.setSelectedIndex(dataLayer.getCurrentLanguagePosition());
         // set image like in preferences
-        setIconSize(controller.getToolbarIconSize());
+        setIconSize(dataLayer.getToolbarIconSize());
     }
 
     private void setIconSize(ToolbarIconSizeEnum iconSize) {
