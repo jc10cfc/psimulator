@@ -209,14 +209,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // if the corner would be out of panel
         if(draggedComponentsTmpPoint.x + differenceInActualZoom.width < 0){
-            //differenceInActualZoom.width = 0;
             differenceInActualZoom.width = 0 - draggedComponentsTmpPoint.x;
-            System.out.println("tady1");
         }
         if(draggedComponentsTmpPoint.y + differenceInActualZoom.height < 0){
-            //differenceInActualZoom.height = 0;
             differenceInActualZoom.height = 0 - draggedComponentsTmpPoint.y;
-            System.out.println("tady2");
         }
         
 
