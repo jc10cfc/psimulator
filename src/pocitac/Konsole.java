@@ -186,7 +186,7 @@ public class Konsole implements Shell {
             m_IO.eraseScreen();
             m_IO.homeCursor();
             m_IO.setLinewrapping(true);
-
+            
             pocitac.vypis("Konsole c. " + cislo + " startuje.");
 
             ukoncit = false;
