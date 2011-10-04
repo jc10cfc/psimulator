@@ -69,11 +69,10 @@ public class Konsole implements Shell {
                 this.printKonsoleInfo();
                 Main.debug("Konsole č." + this.cislo + " vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
             }
-
-
-
             // run command shell
-            CommandShell sh = new CommandShell(m_IO, pocitac);
+            int exitValue = new CommandShell(m_IO, pocitac).run();
+
+            Main.debug("CommandShell return exit value:"+exitValue);
 
         } catch (IOException ex) {
             System.err.println("Problem with telnet io connection");
@@ -113,6 +112,7 @@ public class Konsole implements Shell {
         try {
             m_IO.write("CONNECTION_LOGOUTREQUEST");
             m_IO.flush();
+            this.m_Connection.close();
         } catch (Exception ex) {
             log.error("connectionLogoutRequest()", ex);
         }

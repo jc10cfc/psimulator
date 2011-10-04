@@ -15,10 +15,16 @@ import telnetd.io.BasicTerminalIO;
  */
 public class TextEditor extends  TerminalApplication {
 
+    public TextEditor(BasicTerminalIO terminalIO, AbstraktniPocitac pocitac) {
+        super(terminalIO, pocitac);
+    }
+
     @Override
-    public int run(BasicTerminalIO terminalIO, AbstraktniPocitac pocitac) {
+    protected int run() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    
 
   
 

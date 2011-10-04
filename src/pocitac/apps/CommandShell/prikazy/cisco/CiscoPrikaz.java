@@ -145,28 +145,28 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
      * Vypise hlasku do konzole "% Incomplete command.".
      */
     protected void incompleteCommand() {
-        kon.posliRadek("% Incomplete command.");
+        kon.printLine("% Incomplete command.");
     }
 
     /**
      * Vypise hlasku do konzole "% Ambiguous command: ".
      */
     protected void ambiguousCommand() {
-        kon.posliRadek("% Ambiguous command:  \""+radka+"\"");
+        kon.printLine("% Ambiguous command:  \""+radka+"\"");
     }
 
     /**
      * Vypise hlasku do konzole "% Invalid input detected.".
      */
     protected void invalidInputDetected() {
-        kon.posliRadek("\n% Invalid input detected.\n");
+        kon.printLine("\n% Invalid input detected.\n");
     }
 
     /**
      * Vypise hlasku do konzole, ze nase implementace nepodoporuje tento prikaz.
      */
     protected void unsupported() {
-        kon.posliServisne("\nThis command is not implemented in this app \n" +
+        kon.printWithSimulatorName("\nThis command is not implemented in this app \n" +
                 "but it is implemented in real cisco. Use help/help_en for a hint.\n");
     }
 }

@@ -112,12 +112,11 @@ public abstract class AbstraktniPocitac {
     }
 
     /**
-     * Tahle metoda vypisuje na standartni vystup. Pouzivat pro vypisy v Komunikaci, Konsoli i Parseru atd.
-     * pro snadnejsi debugovani, aby se vedelo, co kterej pocitac dela.
-     * @param ret
+     * method used for debugging. It print "text" with prefix(name of computer)
+     * @param text text to be print
      */
-    public void vypis(String ret) {
-        System.out.println("(" + jmeno + ":) " + ret);
+    public void vypis(String text) {
+        Main.Main.debug("(" + jmeno + ":) " + text);
     }
 
     public int getPort(){
@@ -128,10 +127,21 @@ public abstract class AbstraktniPocitac {
         return konsolePocitace;
     }
 
+    /**
+     * method used to get all posible commands executable in shell on that computer
+     * @return list of all posible commands
+     */
     public abstract List<String> getCommandList();
 
 
-    public abstract void nastavKonsoli(CommandShell cshell);
+    /**
+     * method that should by called only by CommandShell, this method setup some
+     * CommandShell properties like parser or prompt
+     * @param cshell CommandShell that will be configured
+     */
+    public abstract void configureCommandShell(CommandShell cshell);
+
+
 //****************************************************************************************************
 //tady zacinaj metody pro posilani pingu:
 

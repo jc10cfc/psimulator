@@ -107,7 +107,7 @@ public class LinuxIp extends AbstraktniPrikaz {
                     ukoncit=true;
                 }else{
                     navrKod|=spatnaFamily;
-                    kon.posliRadek("Error: argument \"invalid protocol family\" is wrong: "+slovo);
+                    kon.printLine("Error: argument \"invalid protocol family\" is wrong: "+slovo);
                     ukoncit=true;
                 }
             }else if(slovo.equals("-o")||slovo.equals("-oneline")){
@@ -119,7 +119,7 @@ public class LinuxIp extends AbstraktniPrikaz {
                 ukoncit=true;
             }else{
                 navrKod|=neexistujiciPrepinac;
-                kon.posliRadek("Option \""+slovo+"\" is unknown, try \"ip -help\".");
+                kon.printLine("Option \""+slovo+"\" is unknown, try \"ip -help\".");
                 ukoncit=true;
             }
             slovo=dalsiSlovo();
@@ -163,20 +163,20 @@ public class LinuxIp extends AbstraktniPrikaz {
             cisloPrikazu=5;
             prikaz= "xfrm";
         }else{
-            kon.posliRadek("Object \""+slovo+"\" is unknown, try \"ip help\".");
+            kon.printLine("Object \""+slovo+"\" is unknown, try \"ip help\".");
             navrKod|=neexistujiciPrikaz;
         }
         if(cisloPrikazu==5){
             navrKod |= nepodporovanyPrikaz;
-            kon.posliServisne("Prikaz "+prikaz+" neni v simulatoru zatim podporovan.");
-//            if(ladeni)kon.posliRadek("Jsem tu.");
+            kon.printWithSimulatorName("Prikaz "+prikaz+" neni v simulatoru zatim podporovan.");
+//            if(ladeni)kon.printLine("Jsem tu.");
         }
     }
 
     @Override
     protected void vykonejPrikaz() {
         if(minus_V){
-            kon.posliRadek("ip utility, iproute2-ss060323");
+            kon.printLine("ip utility, iproute2-ss060323");
             return;
         }
         if(minus_h || cisloPrikazu==4){
@@ -185,7 +185,7 @@ public class LinuxIp extends AbstraktniPrikaz {
         }
         podSlova=slova.subList(getUk()-1, slova.size());
 
-        if(ladeni)kon.posliRadek(toString());
+        if(ladeni)kon.printLine(toString());
         
         if(cisloPrikazu==1){
             pr=new LinuxIpLink(pc, kon, podSlova, this);
@@ -200,13 +200,13 @@ public class LinuxIp extends AbstraktniPrikaz {
     }
 
     private void vypisHelp() {
-        kon.posliRadek("Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }");
-        kon.posliRadek("       ip [ -force ] [-batch filename");
-        kon.posliRadek("where  OBJECT := { link | addr | addrlabel | route | rule | neigh | ntable |");
-        kon.posliRadek("                   tunnel | maddr | mroute | monitor | xfrm }");
-        kon.posliRadek("       OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |");
-        kon.posliRadek("                    -f[amily] { inet | inet6 | ipx | dnet | link } |");
-        kon.posliRadek("                    -o[neline] | -t[imestamp] }");
+        kon.printLine("Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }");
+        kon.printLine("       ip [ -force ] [-batch filename");
+        kon.printLine("where  OBJECT := { link | addr | addrlabel | route | rule | neigh | ntable |");
+        kon.printLine("                   tunnel | maddr | mroute | monitor | xfrm }");
+        kon.printLine("       OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |");
+        kon.printLine("                    -f[amily] { inet | inet6 | ipx | dnet | link } |");
+        kon.printLine("                    -o[neline] | -t[imestamp] }");
     }
 
 /**

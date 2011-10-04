@@ -227,8 +227,8 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
      */
     private void vypisChybovyHlaseni(){
         if(ladeni){
-            kon.posliRadek(toString());
-            kon.posliRadek("----------------------------------");
+            kon.printLine(toString());
+            kon.printLine("----------------------------------");
         }
 
         // Serazeny je to podle priority - co se vypise driv:
@@ -242,39 +242,39 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
             return; //nic dalsiho se neprovadi
         }
         if ((navrKod & 16) != 0) { //aspon jedna z adres je neplatna
-            kon.posliRadek(spatnaAdresa+": unknown host");
-            kon.posliRadek("ifconfig: `--help' gives usage information.");
+            kon.printLine(spatnaAdresa+": unknown host");
+            kon.printLine("ifconfig: `--help' gives usage information.");
             return;
         }
         if ((navrKod & 4) != 0) { //rozhrani neexistuje
             if(pouzitIp!=-1) //adresa byla zadana
-                kon.posliRadek("SIOCSIFADDR: No such device");
-            kon.posliRadek(jmenoRozhrani + ": error fetching interface information: Device not found");
+                kon.printLine("SIOCSIFADDR: No such device");
+            kon.printLine(jmenoRozhrani + ": error fetching interface information: Device not found");
             // vypis o masce ma mensi prioritu, je az pod chybou v gramatice (navratovyKod & 2)
         }
         if ((navrKod & 256) != 0) {//zakazana ip adresa
             if((navrKod & 4) == 0) //vypisuje se, jen kdyz rozhrani je v poradku
-                kon.posliRadek("SIOCSIFADDR: Invalid argument");
+                kon.printLine("SIOCSIFADDR: Invalid argument");
         }
         if ((navrKod & 64) != 0) { //neplatna adresa add
             for(int i=0;i<neplatnyAdd.size();i++){ //vsechny se poporade vypisou
-                kon.posliRadek(neplatnyAdd.get(i)+": unknown host");
+                kon.printLine(neplatnyAdd.get(i)+": unknown host");
             }
         }
         if ((navrKod & 128) != 0) { //vsechny se poporade vypisou
             for(int i=0;i<neplatnyDel.size();i++){
-                kon.posliRadek(neplatnyDel.get(i)+": unknown host");
+                kon.printLine(neplatnyDel.get(i)+": unknown host");
             }
         }
         if ((navrKod & 4) != 0) { //rozhrani neexistuje
             //pokracovani zezhora - vypis o masce ma totiz nizsi prioritu
             if(pocetBituMasky != -1 ||maska!=null) //maska byla zadana
-                kon.posliRadek("SIOCSIFNETMASK: No such device");
+                kon.printLine("SIOCSIFNETMASK: No such device");
         }
         if ((navrKod & 2) != 0) { //nejaka chyba v gramatice
             vypisHelp();
             if (ladiciVypisovani) {
-                kon.posliRadek("blok pro navratovy kod 2, navratovy kod:" + navrKod);
+                kon.printLine("blok pro navratovy kod 2, navratovy kod:" + navrKod);
             }
         }
         
@@ -289,7 +289,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         }
 
         if(broadcast!=null || add.size()>0 ||del.size()>0){
-            kon.posliServisne("Parametry broadcast, add a del prikazu ifconfig zatim nejsou podporovane.");
+            kon.printWithSimulatorName("Parametry broadcast, add a del prikazu ifconfig zatim nejsou podporovane.");
         }
         
         
@@ -411,7 +411,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
      */
     private void priradMasku(IpAdresa ip, int pocetBitu){
         if(ip==null){
-            kon.posliRadek("SIOCSIFNETMASK: Cannot assign requested address");
+            kon.printLine("SIOCSIFNETMASK: Cannot assign requested address");
             return;
         }else{
             ip.nastavMasku(pocetBitu);
@@ -426,13 +426,13 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
      */
     private void priradMasku(IpAdresa ip, String m){//pokusi se nastavit masku
         if(ip==null){ //neni nastavena IP adresa, vypise se chybovy hlaseni a skonci se
-            kon.posliRadek("SIOCSIFNETMASK: Cannot assign requested address");
+            kon.printLine("SIOCSIFNETMASK: Cannot assign requested address");
             return;
         }
         try{//je potreba zkontrolovat spravnost masky!!! //proto vyjimka
             ip.nastavMasku(m);
         }catch(SpatnaMaskaException ex){
-            kon.posliRadek("SIOCSIFNETMASK: Invalid argument");
+            kon.printLine("SIOCSIFNETMASK: Invalid argument");
             return;
         }
     }
@@ -447,7 +447,7 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
     private void nahodRozhrani(SitoveRozhrani r){
         if(! r.jeNahozene() ){
             r.nastavRozhrani(true);
-            kon.posliRadek(r.jmeno+": link up, 100Mbps, full-duplex, lpa 0x41E1");
+            kon.printLine(r.jmeno+": link up, 100Mbps, full-duplex, lpa 0x41E1");
         }
     }
 
@@ -459,36 +459,36 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
         int a = (int) (Math.random() * 100); //nahodne cislo 0 - 99
         int b = (int) (Math.random() * 100); //nahodne cislo 0 - 99
 
-        kon.posliRadek(r.jmeno + "\tLink encap:Ethernet  HWadr " + r.macAdresa);
+        kon.printLine(r.jmeno + "\tLink encap:Ethernet  HWadr " + r.macAdresa);
         if (r.vratPrvni() != null) {
-            kon.posliRadek("\tinet adr:" + r.vratPrvni().vypisAdresu() + "  Bcast:"
+            kon.printLine("\tinet adr:" + r.vratPrvni().vypisAdresu() + "  Bcast:"
                     + r.vratPrvni().vypisBroadcast() +
                     "  Mask:" + r.vratPrvni().vypisMasku());
         }
-        kon.posliRadek("\tUP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1"); //asi ne cesky
+        kon.printLine("\tUP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1"); //asi ne cesky
         if (r.pripojenoK != null) {
-            kon.posliRadek("\tRX packets:" + (a * b) + " errors:" + (b / 50) + "+ dropped:"
+            kon.printLine("\tRX packets:" + (a * b) + " errors:" + (b / 50) + "+ dropped:"
                     + (a / 20) + " overruns:" + (a / 50) + " frame:0");
-            kon.posliRadek("\tTX packets:" + (b * 100 + a) + " errors:0 dropped:0 overruns:0 carrier:0");
+            kon.printLine("\tTX packets:" + (b * 100 + a) + " errors:0 dropped:0 overruns:0 carrier:0");
         } else {
-            kon.posliRadek("\tRX packets:0 errors:0 dropped:0 overruns:0 frame:0");
-            kon.posliRadek("\tTX packets:0 errors:0 dropped:0 overruns:0 carrier:0");
+            kon.printLine("\tRX packets:0 errors:0 dropped:0 overruns:0 frame:0");
+            kon.printLine("\tTX packets:0 errors:0 dropped:0 overruns:0 carrier:0");
         }
-        kon.posliRadek("\tcollisions:0 txqueuelen:1000");
+        kon.printLine("\tcollisions:0 txqueuelen:1000");
         if (r.pripojenoK != null) {
-            kon.posliRadek("\tRX bytes:" + (a * 1000 + b * 10 + (a / 10)) + " ("
+            kon.printLine("\tRX bytes:" + (a * 1000 + b * 10 + (a / 10)) + " ("
                     + ((a * 1000 + b * 10 + (a / 10)) / 1000) + " KiB)  TX bytes:1394 (1.3 KiB)");
         } else {
-            kon.posliRadek("\tRX bytes:0 (0 KiB)  TX bytes:1394 (1.3 KiB)");
+            kon.printLine("\tRX bytes:0 (0 KiB)  TX bytes:1394 (1.3 KiB)");
         }
-        kon.posliRadek("\tInterrupt:12 Base address:0xdc00");
-        kon.posliRadek("");
+        kon.printLine("\tInterrupt:12 Base address:0xdc00");
+        kon.printLine("");
     }
 
     @Deprecated //zjistil jsem, ze tahle metoda vlastne neni vubec potreba
     private void unknownHost(String vypsat){
-        kon.posliRadek(vypsat+": Unknown host");
-        kon.posliRadek("ifconfig: `--help' vypíše návod k použití.)");
+        kon.printLine(vypsat+": Unknown host");
+        kon.printLine("ifconfig: `--help' vypíše návod k použití.)");
     }
 
     @Override
@@ -520,45 +520,45 @@ public class LinuxIfconfig extends AbstraktniPrikaz {
     }
 
     private void errNeznamyPrepinac(String ret) {
-        kon.posliRadek("ifconfig: neznámá volba `" + ret + "'.");
-        kon.posliRadek("ifconfig: `--help' vypíše návod k použití.");
+        kon.printLine("ifconfig: neznámá volba `" + ret + "'.");
+        kon.printLine("ifconfig: `--help' vypíše návod k použití.");
         navrKod = 1;
     }
 
     private void vypisHelp() { // funkce na ladiciVypisovani napovedy --help
-        kon.posliRadek("Usage:");
-        kon.posliRadek("  ifconfig [-a] [-v] [-s] <interface> [[<AF>] <address>]");
-        kon.posliRadek("  [add <address>[/<prefixlen>]]");
-        kon.posliRadek("  [del <address>[/<prefixlen>]]");
-        kon.posliRadek("  [[-]broadcast [<address>]]  [[-]pointopoint [<address>]]");
-        kon.posliRadek("  [netmask <address>]  [dstaddr <address>]  [tunnel <address>]");
-        kon.posliRadek("  [outfill <NN>] [keepalive <NN>]");
-        kon.posliRadek("  [hw <HW> <address>]  [metric <NN>]  [mtu <NN>]");
-        kon.posliRadek("  [[-]trailers]  [[-]arp]  [[-]allmulti]");
-        kon.posliRadek("  [multicast]  [[-]promisc]");
-        kon.posliRadek("  [mem_start <NN>]  [io_addr <NN>]  [irq <NN>]  [media <type>]");
-        kon.posliRadek("  [txqueuelen <NN>]");
-        kon.posliRadek("  [[-]dynamic]");
-        kon.posliRadek("  [up|down] ...");
-        kon.posliRadek("");
-        kon.posliRadek("  <HW>=Hardware Type.");
-        kon.posliRadek("  List of possible hardware types:");
-        kon.posliRadek("    loop (Local Loopback) slip (Serial Line IP) cslip (VJ Serial Line IP)");
-        kon.posliRadek("    slip6 (6-bit Serial Line IP) cslip6 (VJ 6-bit Serial Line IP) adaptive (Adaptive Serial Line IP)");
-        kon.posliRadek("    strip (Metricom Starmode IP) ash (Ash) ether (Ethernet)");
-        kon.posliRadek("    tr (16/4 Mbps Token Ring) tr (16/4 Mbps Token Ring (New)) ax25 (AMPR AX.25)");
-        kon.posliRadek("    netrom (AMPR NET/ROM) rose (AMPR ROSE) tunnel (IPIP Tunnel)");
-        kon.posliRadek("    ppp (Point-to-Point Protocol) hdlc ((Cisco)-HDLC) lapb (LAPB)");
-        kon.posliRadek("    arcnet (ARCnet) dlci (Frame Relay DLCI) frad (Frame Relay Access Device)");
-        kon.posliRadek("    sit (IPv6-in-IPv4) fddi (Fiber Distributed Data Interface) hippi (HIPPI)");
-        kon.posliRadek("    irda (IrLAP) ec (Econet) x25 (generic X.25)");
-        kon.posliRadek("    eui64 (Generic EUI-64)");
-        kon.posliRadek("  <AF>=Address family. Default: inet");
-        kon.posliRadek("  List of possible address families:");
-        kon.posliRadek("    unix (UNIX Domain) inet (DARPA Internet) inet6 (IPv6)");
-        kon.posliRadek("    ax25 (AMPR AX.25) netrom (AMPR NET/ROM) rose (AMPR ROSE)");
-        kon.posliRadek("    ipx (Novell IPX) ddp (Appletalk DDP) ec (Econet)");
-        kon.posliRadek("    ash (Ash) x25 (CCITT X.25)");
+        kon.printLine("Usage:");
+        kon.printLine("  ifconfig [-a] [-v] [-s] <interface> [[<AF>] <address>]");
+        kon.printLine("  [add <address>[/<prefixlen>]]");
+        kon.printLine("  [del <address>[/<prefixlen>]]");
+        kon.printLine("  [[-]broadcast [<address>]]  [[-]pointopoint [<address>]]");
+        kon.printLine("  [netmask <address>]  [dstaddr <address>]  [tunnel <address>]");
+        kon.printLine("  [outfill <NN>] [keepalive <NN>]");
+        kon.printLine("  [hw <HW> <address>]  [metric <NN>]  [mtu <NN>]");
+        kon.printLine("  [[-]trailers]  [[-]arp]  [[-]allmulti]");
+        kon.printLine("  [multicast]  [[-]promisc]");
+        kon.printLine("  [mem_start <NN>]  [io_addr <NN>]  [irq <NN>]  [media <type>]");
+        kon.printLine("  [txqueuelen <NN>]");
+        kon.printLine("  [[-]dynamic]");
+        kon.printLine("  [up|down] ...");
+        kon.printLine("");
+        kon.printLine("  <HW>=Hardware Type.");
+        kon.printLine("  List of possible hardware types:");
+        kon.printLine("    loop (Local Loopback) slip (Serial Line IP) cslip (VJ Serial Line IP)");
+        kon.printLine("    slip6 (6-bit Serial Line IP) cslip6 (VJ 6-bit Serial Line IP) adaptive (Adaptive Serial Line IP)");
+        kon.printLine("    strip (Metricom Starmode IP) ash (Ash) ether (Ethernet)");
+        kon.printLine("    tr (16/4 Mbps Token Ring) tr (16/4 Mbps Token Ring (New)) ax25 (AMPR AX.25)");
+        kon.printLine("    netrom (AMPR NET/ROM) rose (AMPR ROSE) tunnel (IPIP Tunnel)");
+        kon.printLine("    ppp (Point-to-Point Protocol) hdlc ((Cisco)-HDLC) lapb (LAPB)");
+        kon.printLine("    arcnet (ARCnet) dlci (Frame Relay DLCI) frad (Frame Relay Access Device)");
+        kon.printLine("    sit (IPv6-in-IPv4) fddi (Fiber Distributed Data Interface) hippi (HIPPI)");
+        kon.printLine("    irda (IrLAP) ec (Econet) x25 (generic X.25)");
+        kon.printLine("    eui64 (Generic EUI-64)");
+        kon.printLine("  <AF>=Address family. Default: inet");
+        kon.printLine("  List of possible address families:");
+        kon.printLine("    unix (UNIX Domain) inet (DARPA Internet) inet6 (IPv6)");
+        kon.printLine("    ax25 (AMPR AX.25) netrom (AMPR NET/ROM) rose (AMPR ROSE)");
+        kon.printLine("    ipx (Novell IPX) ddp (Appletalk DDP) ec (Econet)");
+        kon.printLine("    ash (Ash) x25 (CCITT X.25)");
     }
     
 }

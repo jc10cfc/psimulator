@@ -35,7 +35,7 @@ public class LinuxTraceroute extends AbstraktniTraceroute {
             adr=new IpAdresa(dalsiSlovo());
         }catch(SpatnaAdresaException ex){
             navrKod=1;
-            kon.posliRadek(Main.jmenoProgramu + ": traceroute: Chyba v syntaxi prikazu," +
+            kon.printLine(Main.jmenoProgramu + ": traceroute: Chyba v syntaxi prikazu," +
                     " jedina povolena syntaxe je \"traceroute <adresa>\"");
 
         }
@@ -51,12 +51,12 @@ public class LinuxTraceroute extends AbstraktniTraceroute {
          */
         if (pc.posliIcmpRequest(adr, -1, maxTtl, this)) {
             //paket pujde poslat - vypsani prvniho radku:
-            kon.posliRadek("traceroute to "+adr.vypisAdresu()+" ("+adr.vypisAdresu()+
+            kon.printLine("traceroute to "+adr.vypisAdresu()+" ("+adr.vypisAdresu()+
                     "), "+maxTtl+" hops max, 40 byte packets");
         } else {
             //paket nepujde poslat, vypise se hlaseni a program se ukonci
             //ve skutecnosti se ale neukoncuje
-            kon.posliRadek("traceroute: Warning: findsaddr: netlink error: Network is unreachable");
+            kon.printLine("traceroute: Warning: findsaddr: netlink error: Network is unreachable");
             return; //dalsi pakety se neposilaj, prvni radek se nevypisuje
         }
 
@@ -70,7 +70,7 @@ public class LinuxTraceroute extends AbstraktniTraceroute {
             }
             if (prijate < odeslane) { //posledni paket nedorazil
                 stavKonani=2;
-//                kon.posliRadek("paket timeoutoval");
+//                kon.printLine("paket timeoutoval");
                 dopisZbylyHvezdicky(i-1);
                 break;
             }
@@ -103,28 +103,28 @@ public class LinuxTraceroute extends AbstraktniTraceroute {
 
         if (p.typ == 0) { //icmp reply - jsem v cili
             stavKonani=1;
-            kon.posliRadek(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
+            kon.printLine(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
                     +")  "+zaokrouhli(p.cas)+" ms  "+zaokrouhli(p.cas*k1)+" ms  "+zaokrouhli(p.cas*k2)+" ms ");
         } else if (p.typ == 3) {
             stavKonani=3;
             if (p.kod == 0) {
-                kon.posliRadek(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
+                kon.printLine(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
                     +")  "+zaokrouhli(p.cas)+" ms !N  "+zaokrouhli(p.cas*k1)+" ms !N  "
                     +zaokrouhli(p.cas*k2)+" ms !N");
             } else if (p.kod == 1) {
-                kon.posliRadek(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
+                kon.printLine(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
                     +")  "+zaokrouhli(p.cas)+" ms !H  "+zaokrouhli(p.cas*k1)+" ms !H  "
                     +zaokrouhli(p.cas*k2)+" ms !H");
             }
         } else if (p.typ == 11) { //timeout - musim pokracovat
-            kon.posliRadek(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
+            kon.printLine(zarovnejZLeva(prijate+"", 2)+"  "+p.zdroj.vypisAdresu()+" ("+p.zdroj.vypisAdresu()
                     +")  "+zaokrouhli(p.cas)+" ms  "+zaokrouhli(p.cas*k1)+" ms  "+zaokrouhli(p.cas*k2)+" ms ");
         }
     }
 
     protected void dopisZbylyHvezdicky(int a) {
         for (int i = a; i < maxTtl; i++) {
-            kon.posliRadek(zarovnejZLeva((i + 1) + "", 2) + "  * * *");
+            kon.printLine(zarovnejZLeva((i + 1) + "", 2) + "  * * *");
         }
     }
 }

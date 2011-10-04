@@ -35,9 +35,9 @@ public class CiscoTraceroute extends AbstraktniTraceroute {
         try {
             adr = new IpAdresa(dalsi);
         } catch (Exception e) {
-            kon.posliRadek("Translating \"" + dalsi + "\"...domain server (255.255.255.255)");
-            kon.posliRadek("% Unrecognized host or address.");
-            kon.posliRadek(jmenoProgramu + ": Preklad hostname na IP neni implementovan.");
+            kon.printLine("Translating \"" + dalsi + "\"...domain server (255.255.255.255)");
+            kon.printLine("% Unrecognized host or address.");
+            kon.printLine(jmenoProgramu + ": Preklad hostname na IP neni implementovan.");
             navrKod = 1;
             return;
         }
@@ -48,7 +48,7 @@ public class CiscoTraceroute extends AbstraktniTraceroute {
     protected void vykonejPrikaz() {
         if(navrKod!=0)return;
         
-        kon.posliPoRadcich("\n"
+        kon.printWithDelay("\n"
                 + "Type escape sequence to abort.\n"
                 + "Tracing the route to " + adr.vypisAdresu() + "\n\n", 250);
 
@@ -62,9 +62,9 @@ public class CiscoTraceroute extends AbstraktniTraceroute {
             }
             if (prijate < odeslane) { //posledni paket nedorazil
                 stavKonani = 2;
-//                kon.posliRadek("paket timeoutoval");
+//                kon.printLine("paket timeoutoval");
                 for (int k = i-1; k < maxTtl; k++) {
-                    kon.posliRadek(zarovnejZLeva((k + 1) + "", 3) + "  *  *  *");
+                    kon.printLine(zarovnejZLeva((k + 1) + "", 3) + "  *  *  *");
                 }
                 break;
             }
@@ -90,28 +90,28 @@ public class CiscoTraceroute extends AbstraktniTraceroute {
     public void zpracujPaket(Paket p) {
         prijate++;
 
-        kon.posli(zarovnejZLeva(prijate+"", 3)+" "+p.zdroj.vypisAdresu()+ " ");
+        kon.print(zarovnejZLeva(prijate+"", 3)+" "+p.zdroj.vypisAdresu()+ " ");
 
         if (p.typ == 0) { //icmp reply - jsem v cili
             stavKonani = 1;
-            kon.posli(vratCasyPaketu(p));
+            kon.print(vratCasyPaketu(p));
             
         } else if (p.typ == 3) {
             stavKonani = 3;
             if (p.kod == 0) {
-                kon.posli("!N  *  !N");
+                kon.print("!N  *  !N");
             } else if (p.kod == 1) {
-                kon.posli("!H  *  !H");
+                kon.print("!H  *  !H");
             } else if (p.kod == 3) {
-                kon.posli("!P  *  !P");
+                kon.print("!P  *  !P");
             } else {
-                kon.posli("?  *  ?");
+                kon.print("?  *  ?");
             }
         } else if (p.typ == 11) { //timeout - musim pokracovat
-            kon.posli(vratCasyPaketu(p));
+            kon.print(vratCasyPaketu(p));
         }
 
-        kon.posli("\n");
+        kon.print("\n");
     }
 
     public long zaokrouhliNaCely(double cislo) {

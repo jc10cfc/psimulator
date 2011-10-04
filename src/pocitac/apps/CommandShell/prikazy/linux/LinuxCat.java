@@ -36,7 +36,7 @@ public class LinuxCat extends AbstraktniPrikaz{
                     slovo.equals("/proc/sys/net/ipv4/ip_forward")){//zavedl jsem si alias
                 soubory |= 1;
             } else {
-                kon.posliRadek("cat: "+slovo+": No such file or directory");
+                kon.printLine("cat: "+slovo+": No such file or directory");
             }
             slovo=dalsiSlovo();
         }
@@ -47,9 +47,9 @@ public class LinuxCat extends AbstraktniPrikaz{
     protected void vykonejPrikaz() {
         if((soubory&1)==1){
             if(pc.ip_forward==true){
-                kon.posliRadek("1");
+                kon.printLine("1");
             }else{
-                kon.posliRadek("0");
+                kon.printLine("0");
             }
         }
     }

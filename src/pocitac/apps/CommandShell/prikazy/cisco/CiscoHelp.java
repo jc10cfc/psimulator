@@ -90,6 +90,6 @@ public class CiscoHelp extends CiscoPrikaz {
                 "  end\n" +
                 "  exit\n\n";
                         
-        kon.posliPoRadcich(s, 10);
+        kon.printWithDelay(s, 10);
     }
 }

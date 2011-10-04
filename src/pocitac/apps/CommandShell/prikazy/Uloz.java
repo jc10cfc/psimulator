@@ -383,7 +383,7 @@ public class Uloz extends AbstraktniPrikaz {
     @Override
     public synchronized void vykonejPrikaz() {
 
-        kon.posliRadek("Ukladam do " + soubor + "..");
+        kon.printLine("Ukladam do " + soubor + "..");
 
         try {
             out = new BufferedWriter(new FileWriter(soubor));

@@ -9,11 +9,25 @@ import pocitac.AbstraktniPocitac;
 import telnetd.io.BasicTerminalIO;
 
 /**
- *
+ * class that should be inherited when creating a terminal application like command shell or text editor
  * @author zaltair
  */
 public abstract class TerminalApplication {
 
-    protected abstract int run(BasicTerminalIO terminalIO, AbstraktniPocitac pocitac);
+    protected BasicTerminalIO terminalIO;
+    protected AbstraktniPocitac pocitac;
+
+    public TerminalApplication(BasicTerminalIO terminalIO, AbstraktniPocitac pocitac) {
+        this.terminalIO = terminalIO;
+        this.pocitac = pocitac;
+    }
+    
+    /**
+     *  execute application
+     * @param terminalIO
+     * @param pocitac
+     * @return return exit value of program retValue == 0 ==> OK , retValue <-1  ==> fail
+     */
+    protected abstract int run();
 
 }

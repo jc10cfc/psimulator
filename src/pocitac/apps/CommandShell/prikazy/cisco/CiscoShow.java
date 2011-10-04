@@ -75,7 +75,7 @@ public class CiscoShow extends CiscoPrikaz {
 
         String dalsi = dalsiSlovo(); // druhe slovo
         if (dalsi.length() == 0) {
-            kon.posliRadek("% Type \"show ?\" for a list of subcommands\n");
+            kon.printLine("% Type \"show ?\" for a list of subcommands\n");
             return false;
         }
 
@@ -89,7 +89,7 @@ public class CiscoShow extends CiscoPrikaz {
                 s += "  show running-config             Current operating configuration\n";
             }
             s += "\n";
-            kon.posliPoRadcich(s, 50);
+            kon.printWithDelay(s, 50);
             return false;
         }
 
@@ -168,12 +168,12 @@ public class CiscoShow extends CiscoPrikaz {
     private void interfaces() {
         if (iface == null) {
             for (SitoveRozhrani sr : pc.rozhrani) {
-                kon.posliPoRadcich(sr.vratCiscoVypis(), 30);
+                kon.printWithDelay(sr.vratCiscoVypis(), 30);
             }
-            kon.posliRadek("");
+            kon.printLine("");
             return;
         }
-        kon.posliPoRadcich(iface.vratCiscoVypis(), 30);
+        kon.printWithDelay(iface.vratCiscoVypis(), 30);
     }
 
     /**
@@ -182,7 +182,7 @@ public class CiscoShow extends CiscoPrikaz {
     private void ipNatTranslations() {
         String s = "";
         s += pc.natTabulka.vypisZaznamyCisco();
-        kon.posliPoRadcich(s, 50);
+        kon.printWithDelay(s, 50);
     }
 
     /**
@@ -191,7 +191,7 @@ public class CiscoShow extends CiscoPrikaz {
     private void ipRoute() {
         String s = "";
         s += ((CiscoPocitac) pc).getWrapper().vypisRT();
-        kon.posliPoRadcich(s, 80);
+        kon.printWithDelay(s, 80);
     }
 
     /**
@@ -306,6 +306,6 @@ public class CiscoShow extends CiscoPrikaz {
                     + "line aux 0\n" + "line vty 0 4\n" + " login\n" + "!\n" + "end\n\n";
 
         }
-        kon.posliPoRadcich(s, 10);
+        kon.printWithDelay(s, 10);
     }
 }

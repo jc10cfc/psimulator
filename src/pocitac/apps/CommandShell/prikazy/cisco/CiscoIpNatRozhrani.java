@@ -91,7 +91,7 @@ public class CiscoIpNatRozhrani extends CiscoPrikaz {
             pc.natTabulka.pridejRozhraniInside(rozhrani);
         } else if (outside) {
             if (pc.natTabulka.vratVerejne() != null && ! pc.natTabulka.vratVerejne().jmeno.equals(rozhrani.jmeno)) {
-                kon.posliRadek(jmenoProgramu + ": Implementace nepovoluje mit vice nastavenych verejnych rozhrani. "
+                kon.printLine(jmenoProgramu + ": Implementace nepovoluje mit vice nastavenych verejnych rozhrani. "
                         + "Takze se rusi aktualni verejne: " + pc.natTabulka.vratVerejne().jmeno+ " a nastavi se "+rozhrani.jmeno);
             }
             pc.natTabulka.nastavRozhraniOutside(rozhrani);

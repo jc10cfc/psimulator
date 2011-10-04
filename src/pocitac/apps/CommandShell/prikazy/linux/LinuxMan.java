@@ -23,10 +23,10 @@ public class LinuxMan extends AbstraktniPrikaz{
 
     @Override
     protected void vykonejPrikaz() {
-        kon.posliServisne("Manualove stranky nejsou v simulatoru dostupne. Doporucuji pouzit manualove " +
+        kon.printWithSimulatorName("Manualove stranky nejsou v simulatoru dostupne. Doporucuji pouzit manualove " +
                 "stranky na webu, napriklad: http://linux.die.net/man/, nebo pouzit google.");
 
-        kon.posliServisne("Seznam prikazu implementovanych v tomto pocitaci vypisete " +
+        kon.printWithSimulatorName("Seznam prikazu implementovanych v tomto pocitaci vypisete " +
                 "zvlastnim prikazem help.");
     }
 

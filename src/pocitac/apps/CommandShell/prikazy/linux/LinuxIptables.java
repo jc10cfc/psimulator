@@ -404,91 +404,91 @@ public class LinuxIptables extends AbstraktniPrikaz {
      */
     private void vypisChybovyHlaseni() {
         if (ladeni) {
-            kon.posliRadek(toString());
-            kon.posliRadek("----------------------------");
+            kon.printLine(toString());
+            kon.printLine("----------------------------");
         }
         if ((navrKod & 1) != 0) { //nesmysl v gramatice
-            kon.posliRadek("Bad argument `" + nesmysl + "'");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("Bad argument `" + nesmysl + "'");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
             return; //asi by tadyu melo bejt...
         }
 
         if ((navrKod & 2) != 0) { //nezadano jmeno tabulky
-            kon.posliRadek(Main.jmenoProgramu + ": Normalne by se pouzila tabulka filter, " +
+            kon.printLine(Main.jmenoProgramu + ": Normalne by se pouzila tabulka filter, " +
                     "ta ale v tomto simulatoru neni. Podporujeme zatim jen tabulku nat.");
         }
         if ((navrKod & 4) != 0) { //prepinac nedokoncen
-            kon.posliRadek("iptables v1.4.1.1: Unknown arg `" + nedokoncenejPrepinac + "'");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("iptables v1.4.1.1: Unknown arg `" + nedokoncenejPrepinac + "'");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
         if ((navrKod & 8) != 0) { //zadana spatna tabulka
-            kon.posliRadek("iptables v1.4.1.1: can't initialize iptables table `" + tabulka + "': " +
+            kon.printLine("iptables v1.4.1.1: can't initialize iptables table `" + tabulka + "': " +
                     "Table does not exist (do you need to insmod?)");
-            kon.posliRadek("Perhaps iptables or your kernel needs to be upgraded.");
+            kon.printLine("Perhaps iptables or your kernel needs to be upgraded.");
         }
 
         if ((navrKod & 32768) != 0) { //zadanej spatnej retez
-            kon.posliRadek("iptables: No chain/target/match by that name");
+            kon.printLine("iptables: No chain/target/match by that name");
         }
 
         if ((navrKod & 16) != 0) { //nejakej prepinac zadanej dvakrat
-            kon.posliRadek("iptables v1.4.1.1: multiple " + dvojityPrepinace.get(0) + " flags not allowed");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("iptables v1.4.1.1: multiple " + dvojityPrepinace.get(0) + " flags not allowed");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 32) != 0) { //spatna adresa -d
-            kon.posliRadek("iptables v1.4.1.1: host/network `" + cilAdr + "' not found");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("iptables v1.4.1.1: host/network `" + cilAdr + "' not found");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 64) != 0) { //spatna adresa --to-destination
-            kon.posliRadek("iptables v1.4.1.1: Bad IP address `" + preklAdr + "'");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("iptables v1.4.1.1: Bad IP address `" + preklAdr + "'");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 128) != 0) { //nezadan zadny prikaz
-            kon.posliRadek("iptables v1.4.1.1: no command specified");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("iptables v1.4.1.1: no command specified");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 256) != 0) { //vic retezu
-            kon.posliServisne("Parametry -A, -I, -D nemuzete zadavat vicektrat.");
+            kon.printWithSimulatorName("Parametry -A, -I, -D nemuzete zadavat vicektrat.");
             // -> normalne to pise: "iptables v1.4.1.1: Can't use -A with -I"  - to se mi nechtelo pamatovat
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 512) != 0) { //spatny cislo
-            kon.posliRadek("iptables v1.4.1.1: Invalid rule number `" + cisloPr + "'");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("iptables v1.4.1.1: Invalid rule number `" + cisloPr + "'");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 1024) != 0) { //neznama akce
-            kon.posliRadek("iptables v1.4.1.1: Couldn't load target `" + akceJump + "':/lib/xtables/libipt_" +
+            kon.printLine("iptables v1.4.1.1: Couldn't load target `" + akceJump + "':/lib/xtables/libipt_" +
                     akceJump + ".so: cannot open shared object file: No such file or directory");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 2048) != 0) { //zakazanyPrepinace
-            kon.posliRadek("iptables v1.4.1.1: Illegal option `" + vypisSeznam(zakazanyPrepinace)
+            kon.printLine("iptables v1.4.1.1: Illegal option `" + vypisSeznam(zakazanyPrepinace)
                     + "' with this command");
-            kon.posliRadek("Try `iptables -h' or 'iptables --help' for more information.");
+            kon.printLine("Try `iptables -h' or 'iptables --help' for more information.");
         }
 
         if ((navrKod & 4096) != 0) { //pro akci zatim nepodporovany prepinac
-            kon.posliRadek(Main.jmenoProgramu+": Takova moznost by mozna normalne byla mozna, simulator ji vsak "
+            kon.printLine(Main.jmenoProgramu+": Takova moznost by mozna normalne byla mozna, simulator ji vsak "
                     +"zatim nepodporuje. Zkuste odstranit prepinac: "+ vypisSeznam(nepovolenyPrepinace));
         }
 
         if ((navrKod & 8192) != 0) { //zadany vystupni rozhrani neexistuje kontroluje se jen na POSTROUTING)
-            kon.posliRadek(Main.jmenoProgramu+": Zadane rozhrani "+vystupniRozhr+" neexistuje.");
+            kon.printLine(Main.jmenoProgramu+": Zadane rozhrani "+vystupniRozhr+" neexistuje.");
         }
         if ((navrKod & 16384) != 0) { //zadany vystupni rozhrani neexistuje kontroluje se jen na POSTROUTING)
-            kon.posliRadek(Main.jmenoProgramu+": Pro danou moznost chybeji tyto prepinace: "
+            kon.printLine(Main.jmenoProgramu+": Pro danou moznost chybeji tyto prepinace: "
                     +vypisSeznam(chybejiciPrepinace));
         }
 
         if ((navrKod & 131072) != 0) { //nepodporovanej retez PREROUTING
-            kon.posliServisne("Retez PREROUTING neni zatim simulatorem podporovan.");
+            kon.printWithSimulatorName("Retez PREROUTING neni zatim simulatorem podporovan.");
         }
 
 
@@ -510,7 +510,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
             if(! pc.natTabulka.jeNastavenaLinuxovaMaskarada()){
                 pc.natTabulka.nastavLinuxMaskaradu(vystupni);
             } else {
-                kon.posliServisne("Simulator neumoznuje pridat vic nez jedno pravidlo do tabulky. " +
+                kon.printWithSimulatorName("Simulator neumoznuje pridat vic nez jedno pravidlo do tabulky. " +
                         "Nejprve smazte existujici pravidlo.");
             }
         }
@@ -518,7 +518,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
             if(pc.natTabulka.jeNastavenaLinuxovaMaskarada()){
                 pc.natTabulka.zrusLinuxMaskaradu();
             } else {
-                kon.posliRadek("iptables: Index of deletion too big");
+                kon.printLine("iptables: Index of deletion too big");
             }
             
         }
@@ -526,16 +526,16 @@ public class LinuxIptables extends AbstraktniPrikaz {
 
 
     private void vypis() {
-        kon.posliRadek("Chain PREROUTING (policy ACCEPT)");
-        kon.posliRadek("target     prot opt source               destination");
-        kon.posliRadek("");
-        kon.posliRadek("Chain POSTROUTING (policy ACCEPT)");
-        kon.posliRadek("target     prot opt source               destination");
+        kon.printLine("Chain PREROUTING (policy ACCEPT)");
+        kon.printLine("target     prot opt source               destination");
+        kon.printLine("");
+        kon.printLine("Chain POSTROUTING (policy ACCEPT)");
+        kon.printLine("target     prot opt source               destination");
         if(pc.natTabulka.jeNastavenaLinuxovaMaskarada())
-            kon.posliRadek("MASQUERADE  all  --  0.0.0.0/0            0.0.0.0/0");
-        kon.posliRadek("");
-        kon.posliRadek("Chain OUTPUT (policy ACCEPT)");
-        kon.posliRadek("target     prot opt source               destination");
+            kon.printLine("MASQUERADE  all  --  0.0.0.0/0            0.0.0.0/0");
+        kon.printLine("");
+        kon.printLine("Chain OUTPUT (policy ACCEPT)");
+        kon.printLine("target     prot opt source               destination");
     }
 
     private String vypisSeznam(List<String> l){
@@ -586,67 +586,67 @@ public class LinuxIptables extends AbstraktniPrikaz {
     }
 
     private void vypisHelp() {
-        kon.posliRadek("iptables v1.4.1.1    ");
-        kon.posliRadek("");
-        kon.posliRadek("Usage: iptables -[AD] chain rule-specification [options]");
-        kon.posliRadek("       iptables -[RI] chain rulenum rule-specification [options]");
-        kon.posliRadek("       iptables -D chain rulenum [options]                      ");
-        kon.posliRadek("       iptables -[LS] [chain [rulenum]] [options]               ");
-        kon.posliRadek("       iptables -[FZ] [chain] [options]                         ");
-        kon.posliRadek("       iptables -[NX] chain                                     ");
-        kon.posliRadek("       iptables -E old-chain-name new-chain-name                ");
-        kon.posliRadek("       iptables -P chain target [options]                       ");
-        kon.posliRadek("       iptables -h (print this help information)                ");
-        kon.posliRadek("");
-        kon.posliRadek("Commands:");
-        kon.posliRadek("Either long or short options are allowed.");
-        kon.posliRadek("  --append  -A chain            Append to chain");
-        kon.posliRadek("  --delete  -D chain            Delete matching rule from chain");
-        kon.posliRadek("  --delete  -D chain rulenum                                   ");
-        kon.posliRadek("                                Delete rule rulenum (1 = first) from chain");
-        kon.posliRadek("  --insert  -I chain [rulenum]                                            ");
-        kon.posliRadek("                                Insert in chain as rulenum (default 1=first)");
-        kon.posliRadek("  --replace -R chain rulenum");
-        kon.posliRadek("                                Replace rule rulenum (1 = first) in chain");
-        kon.posliRadek("  --list    -L [chain [rulenum]]");
-        kon.posliRadek("                                List the rules in a chain or all chains");
-        kon.posliRadek("  --list-rules -S [chain [rulenum]]");
-        kon.posliRadek("                                Print the rules in a chain or all chains");
-        kon.posliRadek("  --flush   -F [chain]          Delete all rules in  chain or all chains");
-        kon.posliRadek("  --zero    -Z [chain]          Zero counters in chain or all chains");
-        kon.posliRadek("  --new     -N chain            Create a new user-defined chain");
-        kon.posliRadek("  --delete-chain");
-        kon.posliRadek("            -X [chain]          Delete a user-defined chain");
-        kon.posliRadek("  --policy  -P chain target");
-        kon.posliRadek("                                Change policy on chain to target");
-        kon.posliRadek("  --rename-chain");
-        kon.posliRadek("            -E old-chain new-chain");
-        kon.posliRadek("                                Change chain name, (moving any references)");
-        kon.posliRadek("Options:");
-        kon.posliRadek("  --proto       -p [!] proto    protocol: by number or name, eg. `tcp'");
-        kon.posliRadek("  --source      -s [!] address[/mask]");
-        kon.posliRadek("                                source specification");
-        kon.posliRadek("  --destination -d [!] address[/mask]");
-        kon.posliRadek("                                destination specification");
-        kon.posliRadek("  --in-interface -i [!] input name[+]");
-        kon.posliRadek("                                network interface name ([+] for wildcard)");
-        kon.posliRadek("  --jump        -j target");
-        kon.posliRadek("                                target for rule (may load target extension)");
-        kon.posliRadek("  --goto      -g chain");
-        kon.posliRadek("                              jump to chain with no return");
-        kon.posliRadek("  --match       -m match");
-        kon.posliRadek("                                extended match (may load extension)");
-        kon.posliRadek("  --numeric     -n              numeric output of addresses and ports");
-        kon.posliRadek("  --out-interface -o [!] output name[+]");
-        kon.posliRadek("                                network interface name ([+] for wildcard)");
-        kon.posliRadek("  --table       -t table        table to manipulate (default: `filter')");
-        kon.posliRadek("  --verbose     -v              verbose mode");
-        kon.posliRadek("  --line-numbers                print line numbers when listing");
-        kon.posliRadek("  --exact       -x              expand numbers (display exact values)");
-        kon.posliRadek("[!] --fragment  -f              match second or further fragments only");
-        kon.posliRadek("  --modprobe=<command>          try to insert modules using this command");
-        kon.posliRadek("  --set-counters PKTS BYTES     set the counter during insert/append");
-        kon.posliRadek("[!] --version   -V              print package version.");
+        kon.printLine("iptables v1.4.1.1    ");
+        kon.printLine("");
+        kon.printLine("Usage: iptables -[AD] chain rule-specification [options]");
+        kon.printLine("       iptables -[RI] chain rulenum rule-specification [options]");
+        kon.printLine("       iptables -D chain rulenum [options]                      ");
+        kon.printLine("       iptables -[LS] [chain [rulenum]] [options]               ");
+        kon.printLine("       iptables -[FZ] [chain] [options]                         ");
+        kon.printLine("       iptables -[NX] chain                                     ");
+        kon.printLine("       iptables -E old-chain-name new-chain-name                ");
+        kon.printLine("       iptables -P chain target [options]                       ");
+        kon.printLine("       iptables -h (print this help information)                ");
+        kon.printLine("");
+        kon.printLine("Commands:");
+        kon.printLine("Either long or short options are allowed.");
+        kon.printLine("  --append  -A chain            Append to chain");
+        kon.printLine("  --delete  -D chain            Delete matching rule from chain");
+        kon.printLine("  --delete  -D chain rulenum                                   ");
+        kon.printLine("                                Delete rule rulenum (1 = first) from chain");
+        kon.printLine("  --insert  -I chain [rulenum]                                            ");
+        kon.printLine("                                Insert in chain as rulenum (default 1=first)");
+        kon.printLine("  --replace -R chain rulenum");
+        kon.printLine("                                Replace rule rulenum (1 = first) in chain");
+        kon.printLine("  --list    -L [chain [rulenum]]");
+        kon.printLine("                                List the rules in a chain or all chains");
+        kon.printLine("  --list-rules -S [chain [rulenum]]");
+        kon.printLine("                                Print the rules in a chain or all chains");
+        kon.printLine("  --flush   -F [chain]          Delete all rules in  chain or all chains");
+        kon.printLine("  --zero    -Z [chain]          Zero counters in chain or all chains");
+        kon.printLine("  --new     -N chain            Create a new user-defined chain");
+        kon.printLine("  --delete-chain");
+        kon.printLine("            -X [chain]          Delete a user-defined chain");
+        kon.printLine("  --policy  -P chain target");
+        kon.printLine("                                Change policy on chain to target");
+        kon.printLine("  --rename-chain");
+        kon.printLine("            -E old-chain new-chain");
+        kon.printLine("                                Change chain name, (moving any references)");
+        kon.printLine("Options:");
+        kon.printLine("  --proto       -p [!] proto    protocol: by number or name, eg. `tcp'");
+        kon.printLine("  --source      -s [!] address[/mask]");
+        kon.printLine("                                source specification");
+        kon.printLine("  --destination -d [!] address[/mask]");
+        kon.printLine("                                destination specification");
+        kon.printLine("  --in-interface -i [!] input name[+]");
+        kon.printLine("                                network interface name ([+] for wildcard)");
+        kon.printLine("  --jump        -j target");
+        kon.printLine("                                target for rule (may load target extension)");
+        kon.printLine("  --goto      -g chain");
+        kon.printLine("                              jump to chain with no return");
+        kon.printLine("  --match       -m match");
+        kon.printLine("                                extended match (may load extension)");
+        kon.printLine("  --numeric     -n              numeric output of addresses and ports");
+        kon.printLine("  --out-interface -o [!] output name[+]");
+        kon.printLine("                                network interface name ([+] for wildcard)");
+        kon.printLine("  --table       -t table        table to manipulate (default: `filter')");
+        kon.printLine("  --verbose     -v              verbose mode");
+        kon.printLine("  --line-numbers                print line numbers when listing");
+        kon.printLine("  --exact       -x              expand numbers (display exact values)");
+        kon.printLine("[!] --fragment  -f              match second or further fragments only");
+        kon.printLine("  --modprobe=<command>          try to insert modules using this command");
+        kon.printLine("  --set-counters PKTS BYTES     set the counter during insert/append");
+        kon.printLine("[!] --version   -V              print package version.");
     }
 
 }

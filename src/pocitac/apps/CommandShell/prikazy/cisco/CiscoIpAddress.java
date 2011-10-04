@@ -62,7 +62,7 @@ public class CiscoIpAddress extends CiscoPrikaz {
         }
 
         if (IpAdresa.jeZakazanaIpAdresa(ip)) {
-            kon.posliRadek("Not a valid host address - " + ip);
+            kon.printLine("Not a valid host address - " + ip);
             return false;
         }
 
@@ -83,7 +83,7 @@ public class CiscoIpAddress extends CiscoPrikaz {
                     return false;
                 }
             }
-            kon.posliRadek("Bad mask 0x" + s.toUpperCase() + " for address " + ip);
+            kon.printLine("Bad mask 0x" + s.toUpperCase() + " for address " + ip);
             return false;
         } catch (SpatnaAdresaException e) {
             invalidInputDetected();
@@ -95,14 +95,14 @@ public class CiscoIpAddress extends CiscoPrikaz {
         }
 
         if (adr.dej32BitAdresu() == 0) {
-            kon.posliRadek("Not a valid host address - " + ip);
+            kon.printLine("Not a valid host address - " + ip);
             return false;
         }
 
         if (adr.jeCislemSite() || adr.jeBroadcastemSite() || adr.dej32BitMasku() == 0) {
             // Router(config-if)#ip address 147.32.120.0 255.255.255.0
             // Bad mask /24 for address 147.32.120.0
-            kon.posliRadek("Bad mask /" + adr.pocetBituMasky() + " for address " + adr.vypisAdresu());
+            kon.printLine("Bad mask /" + adr.pocetBituMasky() + " for address " + adr.vypisAdresu());
             return false;
         }
 
@@ -124,11 +124,11 @@ public class CiscoIpAddress extends CiscoPrikaz {
             }
 
             if (rozhrani.vratPrvni().dej32BitAdresu() != adr.dej32BitAdresu()) {
-                kon.posliRadek("Invalid address");
+                kon.printLine("Invalid address");
                 return;
             }
             if (rozhrani.vratPrvni().dej32BitMasku() != adr.dej32BitMasku()) {
-                kon.posliRadek("Invalid address mask");
+                kon.printLine("Invalid address mask");
                 return;
             }
 

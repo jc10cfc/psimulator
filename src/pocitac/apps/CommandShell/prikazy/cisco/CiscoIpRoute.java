@@ -76,12 +76,12 @@ public class CiscoIpRoute extends CiscoPrikaz {
         }
 
         if (!adresat.jeCislemSite()) {
-            kon.posliRadek("%Inconsistent address and mask");
+            kon.printLine("%Inconsistent address and mask");
             return false;
         }
 
         if (IpAdresa.jeZakazanaIpAdresa(adresat.vypisAdresu())) {
-            kon.posliRadek("%Invalid destination prefix");
+            kon.printLine("%Invalid destination prefix");
             return false;
         }
 
@@ -96,7 +96,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
             }
 
             if (IpAdresa.jeZakazanaIpAdresa(brana.vypisAdresu())) {
-                kon.posliRadek("%Invalid next hop address");
+                kon.printLine("%Invalid next hop address");
                 return false;
             }
 
@@ -140,7 +140,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
         } else { // mazu
             int n = ((CiscoPocitac) pc).getWrapper().smazZaznam(adresat, brana, rozhrani);
             if (n == 1) {
-                kon.posliRadek("%No matching route to delete");
+                kon.printLine("%No matching route to delete");
             }
         }
     }

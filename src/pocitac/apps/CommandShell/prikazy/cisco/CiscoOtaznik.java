@@ -33,7 +33,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
         List napoveda = new ArrayList<String>();
         switch (stav) {
                 case USER:
-                    kon.posliRadek("Exec commands:");
+                    kon.printLine("Exec commands:");
                     napoveda.add("  enable           Turn on privileged commands");
                     napoveda.add("  exit             Exit from the EXEC");
                     napoveda.add("  ping             Send echo messages");
@@ -42,7 +42,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
                     break;
 
                 case ROOT:
-                    kon.posliRadek("Exec commands:");
+                    kon.printLine("Exec commands:");
                     napoveda.add("  configure        Enter configuration mode");
                     napoveda.add("  disable          Turn off privileged commands");
                     napoveda.add("  enable           Turn on privileged commands");
@@ -52,7 +52,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
                     break;
 
                 case CONFIG:
-                    kon.posliRadek("Configure commands:");
+                    kon.printLine("Configure commands:");
                     napoveda.add("  interface              Select an interface to configure");
                     napoveda.add("  ip                     Global IP configuration subcommands");
                     napoveda.add("  exit                   Exit from configure mode");
@@ -60,7 +60,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
                     break;
 
                 case IFACE:
-                    kon.posliRadek("Interface configuration commands:");
+                    kon.printLine("Interface configuration commands:");
                     napoveda.add("  exit                    Exit from interface configuration mode");
                     napoveda.add("  ip                      Interface Internet Protocol config commands");
                     napoveda.add("  no                      Negate a command or set its defaults");
@@ -76,7 +76,7 @@ public class CiscoOtaznik extends AbstraktniPrikaz{
     private void posliList(List n) {
         Collections.sort(n);
         for (Object s : n) {
-            kon.posliPoRadcich((String) s, 50);
+            kon.printWithDelay((String) s, 50);
         }
     }
 }

@@ -35,8 +35,8 @@ public class LinuxEcho extends AbstraktniPrikaz{
 
     private void parsujPrikaz() {
         if(slova.size()!=4){
-            kon.posliRadek(Main.jmenoProgramu+": Spravna syntaxe napr: \"echo 1 > jmenoSouboru\".");
-            kon.posliRadek(Main.jmenoProgramu+": Podporuji jen tuto variantu zadani prikazu, " +
+            kon.printLine(Main.jmenoProgramu+": Spravna syntaxe napr: \"echo 1 > jmenoSouboru\".");
+            kon.printLine(Main.jmenoProgramu+": Podporuji jen tuto variantu zadani prikazu, " +
                     "ty mezery jsou povinny");
         }
         String hodnota=dalsiSlovo();
@@ -44,12 +44,12 @@ public class LinuxEcho extends AbstraktniPrikaz{
         try{
             h = Integer.parseInt(hodnota);
         }catch(NumberFormatException ex){
-            kon.posliRadek("bash: echo: write error: Invalid argument");
+            kon.printLine("bash: echo: write error: Invalid argument");
             navrKod=1;
             return;
         }
         if(! dalsiSlovo().equals(">") ){
-            kon.posliRadek("echo: spatna syntaxe");
+            kon.printLine("echo: spatna syntaxe");
             navrKod=1;
             return;
         }
@@ -57,7 +57,7 @@ public class LinuxEcho extends AbstraktniPrikaz{
         if(soubor.equals("/proc/sys/net/ipv4/ip_forward") || soubor.equals("/proc/sys/net/ipv4/ip_forward")){
             //v poradku
         }else{
-            kon.posliRadek(Main.jmenoProgramu+": echo: neznamy soubor");
+            kon.printLine(Main.jmenoProgramu+": echo: neznamy soubor");
             navrKod=1;
         }
 

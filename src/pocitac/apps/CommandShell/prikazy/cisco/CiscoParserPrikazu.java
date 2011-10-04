@@ -181,8 +181,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         }
 
         if (prvniSlovo.equals("kill")) {
-            kon.posliServisne("servisni ukonceni");
-            kon.ukonciSpojeni();
+            kon.printWithSimulatorName("servisni ukonceni");
+            kon.closeSession();
             return;
         }
 
@@ -221,7 +221,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("exit", prvniSlovo) || kontrola("logout", prvniSlovo)) {
-                    kon.ukonciSpojeni();
+                    kon.closeSession();
                     return;
                 }
                 break;
@@ -252,7 +252,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     return;
                 }
                 if (kontrola("exit", prvniSlovo) || kontrola("logout", prvniSlovo)) {
-                    kon.ukonciSpojeni();
+                    kon.closeSession();
                     return;
                 }
 
@@ -278,7 +278,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     kon.prompt = pc.jmeno + "#";
                     Date d = new Date();
                     cekej(100);
-                    kon.posliRadek(formator.format(d) + ": %SYS-5-CONFIG_I: Configured from console by console");
+                    kon.printLine(formator.format(d) + ": %SYS-5-CONFIG_I: Configured from console by console");
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
@@ -310,7 +310,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                     stav = ROOT;
                     kon.prompt = pc.jmeno + "#";
                     Date d = new Date();
-                    kon.posliRadek(formator.format(d) + ": %SYS-5-CONFIG_I: Configured from console by console");
+                    kon.printLine(formator.format(d) + ": %SYS-5-CONFIG_I: Configured from console by console");
                     return;
                 }
                 if (kontrola("ip", prvniSlovo)) {
@@ -350,7 +350,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
                 break;
 
             default:
-                kon.posliRadek("% Unknown command or computer name, or unable to find computer address");
+                kon.printLine("% Unknown command or computer name, or unable to find computer address");
         }
     }
 
@@ -360,7 +360,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
     private void configure() {
 
         if (slova.size() == 1 && !configure1) {
-            kon.posli("Configuring from terminal, memory, or network [terminal]? ");
+            kon.print("Configuring from terminal, memory, or network [terminal]? ");
             kon.vypisPrompt = false;
             configure1 = true;
             return;
@@ -380,7 +380,7 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (kontrola("terminal", slova.get(cis)) || configure1) {
             stav = CONFIG;
             kon.prompt = pc.jmeno + "(config)#";
-            kon.posliRadek("Enter configuration commands, one per line.  End with 'exit'."); // zmena oproti ciscu: End with CNTL/Z.
+            kon.printLine("Enter configuration commands, one per line.  End with 'exit'."); // zmena oproti ciscu: End with CNTL/Z.
             configure1 = false;
             kon.vypisPrompt = true;
             return;
@@ -393,8 +393,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
             ret += " ";
         }
         ret += "^";
-        kon.posliRadek(ret);
-        kon.posliRadek("% Invalid input detected at '^' marker.\n");
+        kon.printLine(ret);
+        kon.printLine("% Invalid input detected at '^' marker.\n");
     }
 
     /**
@@ -443,21 +443,21 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Vypise chybovou hlasku pri zadani nekompletniho prikazu.
      */
     private void incompleteCommand() {
-        kon.posliRadek("% Incomplete command.");
+        kon.printLine("% Incomplete command.");
     }
 
     /**
      * Vypise chybovou hlasku pri zadani neplatneho vstupu.
      */
     private void invalidInputDetected() {
-        kon.posliRadek("\n% Invalid input detected.\n");
+        kon.printLine("\n% Invalid input detected.\n");
     }
 
     /**
      * Vypise hlasku do konzole "% Ambiguous command: ".
      */
     protected void ambiguousCommand() {
-        kon.posliRadek("% Ambiguous command:  \"" + radek + "\"");
+        kon.printLine("% Ambiguous command:  \"" + radek + "\"");
     }
 
     /**
@@ -467,9 +467,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (aktualni.jeNahozene()) {
             AbstraktniPrikaz.cekej(250);
             Date d = new Date();
-            kon.posliRadek(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
+            kon.printLine(formator.format(d) + ": %LINK-5-UPDOWN: Interface " + aktualni.jmeno + ", changed state to down");
             cekej(100);
-            kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
+            kon.printLine(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to down");
             aktualni.nastavRozhrani(false);
             ((CiscoPocitac) pc).getWrapper().update();
         }
@@ -485,9 +485,9 @@ public class CiscoParserPrikazu extends ParserPrikazu {
         if (aktualni.jeNahozene() == false) { // kdyz nahazuju rozhrani
             AbstraktniPrikaz.cekej(500);
             Date d = new Date();
-            kon.posliRadek(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
+            kon.printLine(formator.format(d) + ": %LINK-3-UPDOWN: Interface " + aktualni.jmeno + ", changed state to up");
             cekej(100);
-            kon.posliRadek(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
+            kon.printLine(formator.format(d) + ": %LINEPROTO-5-UPDOWN: Line protocol on Interface " + aktualni.jmeno + ", changed state to up");
             aktualni.nastavRozhrani(true);
             ((CiscoPocitac) pc).getWrapper().update();
         }
@@ -542,8 +542,8 @@ public class CiscoParserPrikazu extends ParserPrikazu {
      * Vypise chybu pri 'configure' a nastavi vypisovani promptu+zrusi configure1 flag
      */
     private void configureVypisChybu() {
-        kon.posliRadek("?Must be \"terminal\"");
-                kon.posliServisne("podporovan je pouze terminal");
+        kon.printLine("?Must be \"terminal\"");
+                kon.printWithSimulatorName("podporovan je pouze terminal");
                 configure1 = false;
                 kon.vypisPrompt = true;
     }
