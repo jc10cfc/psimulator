@@ -9,7 +9,7 @@ import static datoveStruktury.CiscoStavy.*;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import pocitac.SitoveRozhrani;
 import prikazy.AbstraktniPrikaz;
 import prikazy.AbstraktniPrikaz.*;
@@ -23,7 +23,7 @@ import prikazy.linux.LinuxRoute;
  */
 public class CiscoParserPrikazu extends ParserPrikazu {
 
-    public CiscoParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
+    public CiscoParserPrikazu(AbstraktniPocitac pc, CommandShell kon) {
         super(pc, kon);
     }
     /**

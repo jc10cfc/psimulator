@@ -14,7 +14,7 @@ import datoveStruktury.IpAdresa;
 import datoveStruktury.RoutovaciTabulka;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import pocitac.SitoveRozhrani;
 
 /**
@@ -81,7 +81,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     private int navratovyKodProvedeni=0;
 
     
-    public LinuxRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxRoute(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon,slova);
         parsujPrikaz();
         vykonejPrikaz();

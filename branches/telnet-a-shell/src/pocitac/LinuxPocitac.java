@@ -8,6 +8,7 @@ package pocitac;
 import datoveStruktury.*;
 import java.util.LinkedList;
 import java.util.List;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.linux.LinuxParserPrikazu;
 /**
  *
@@ -70,7 +71,7 @@ public class LinuxPocitac extends AbstraktniPocitac {
     }
 
     @Override
-    public void nastavKonsoli(Konsole konsole) {
+    public void nastavKonsoli(CommandShell konsole) {
         konsole.setParser(new LinuxParserPrikazu(this, konsole));
         konsole.prompt=this.jmeno + ":~# ";
     }

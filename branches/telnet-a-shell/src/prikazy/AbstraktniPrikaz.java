@@ -6,6 +6,7 @@ package prikazy;
 
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Predek vsech, linuxových i ciscových prikazu. Dulezité jsou jen promenné a abstraktni metoda vykonejPrikaz().
@@ -15,9 +16,9 @@ import pocitac.*;
 public abstract class AbstraktniPrikaz extends Abstraktni {
 
     protected AbstraktniPocitac pc;
-    protected Konsole kon;
+    protected CommandShell kon;
 
-    public AbstraktniPrikaz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public AbstraktniPrikaz(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(slova);
         this.pc = pc;
         this.kon = kon;

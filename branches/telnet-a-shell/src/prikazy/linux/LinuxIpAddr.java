@@ -9,6 +9,7 @@ package prikazy.linux;
 import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.*;
 import vyjimky.SpatneVytvorenaAdresaException;
 
@@ -17,7 +18,7 @@ import vyjimky.SpatneVytvorenaAdresaException;
  * @author Tomáš Pitřinec
  */
 public class LinuxIpAddr extends AbstraktniPrikaz {
-    public LinuxIpAddr(AbstraktniPocitac pc, Konsole kon, List<String> slova, LinuxIp puv) {
+    public LinuxIpAddr(AbstraktniPocitac pc, CommandShell kon, List<String> slova, LinuxIp puv) {
         super(pc, kon, slova);
         this.puv=puv;
         parsujPrikaz();

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import pocitac.LinuxPocitac;
 import pocitac.SitoveRozhrani;
 import vyjimky.NeznamyTypPcException;
@@ -31,7 +31,7 @@ public class Uloz extends AbstraktniPrikaz {
     String soubor = konfigurak;
     List<PCJmeno> pripojenoKnove;
 
-    public Uloz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public Uloz(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         pocitace = (List<AbstraktniPocitac>) Main.Main.vsechno;
         pripojenoKnove = new ArrayList();

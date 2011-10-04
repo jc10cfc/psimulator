@@ -6,7 +6,7 @@ package prikazy.linux;
 
 import prikazy.*;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Parser prikazu pro linux, zde se volaji jednotlivé příkazy.
@@ -15,11 +15,11 @@ import pocitac.Konsole;
 public class LinuxParserPrikazu extends ParserPrikazu {
 
     /**
-     * Volan jen v konstruktoru konsole.
+     * Volan jen v konstruktoru CommandShell.
      * @param pc
      * @param kon
      */
-    public LinuxParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
+    public LinuxParserPrikazu(AbstraktniPocitac pc, CommandShell kon) {
         super(pc, kon);
     }
 

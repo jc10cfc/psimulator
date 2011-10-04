@@ -2,7 +2,7 @@ package prikazy.cisco;
 
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.AbstraktniPrikaz;
 
 /**
@@ -22,12 +22,12 @@ public abstract class CiscoPrikaz extends AbstraktniPrikaz {
     boolean debug = false;
     protected boolean ambiguous = false;
 
-    public CiscoPrikaz(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public CiscoPrikaz(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         vyplnRadku();
     }
 
-    public CiscoPrikaz(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
+    public CiscoPrikaz(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean no) {
         super(pc, kon, slova);
         this.no = no;
         vyplnRadku();

@@ -9,7 +9,7 @@ import datoveStruktury.NATtabulka.NATzaznam;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import pocitac.SitoveRozhrani;
 import static prikazy.cisco.CiscoShow.Stav.*;
 
@@ -26,7 +26,7 @@ public class CiscoShow extends CiscoPrikaz {
      */
     SitoveRozhrani iface;
 
-    public CiscoShow(AbstraktniPocitac pc, Konsole kon, List<String> slova, CiscoStavy stavCisco) {
+    public CiscoShow(AbstraktniPocitac pc, CommandShell kon, List<String> slova, CiscoStavy stavCisco) {
         super(pc, kon, slova);
         this.stavCisco = stavCisco;
         iface = null;

@@ -10,6 +10,7 @@ import datoveStruktury.RoutovaciTabulka;
 import java.util.ArrayList;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.*;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatneVytvorenaAdresaException;
@@ -20,7 +21,7 @@ import vyjimky.SpatneVytvorenaAdresaException;
  */
 public class LinuxIpRoute extends AbstraktniPrikaz {
 
-    public LinuxIpRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova, LinuxIp puv) {
+    public LinuxIpRoute(AbstraktniPocitac pc, CommandShell kon, List<String> slova, LinuxIp puv) {
         super(pc, kon, slova);
         this.puv=puv;
         parsujPrikaz();

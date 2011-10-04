@@ -6,6 +6,7 @@ package prikazy;
 
 import java.util.ArrayList;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Abstraktní parser příkazů. 
@@ -15,15 +16,15 @@ public abstract class ParserPrikazu extends Abstraktni {
 
     protected String radek;
     protected AbstraktniPocitac pc;
-    protected Konsole kon;
+    protected CommandShell kon;
 
     /**
-     * Konstruktor. Kazda konsole si uchovava prave jeden parser. Tenhle konstruktor se tedy vola
-     * v konstruktoru konsole.
+     * Konstruktor. Kazda CommandShell si uchovava prave jeden parser. Tenhle konstruktor se tedy vola
+     * v konstruktoru CommandShell.
      * @param pc
      * @param kon
      */
-    public ParserPrikazu(AbstraktniPocitac pc, Konsole kon) {
+    public ParserPrikazu(AbstraktniPocitac pc, CommandShell kon) {
         super(new ArrayList<String>());
         this.pc = pc;
         this.kon = kon;

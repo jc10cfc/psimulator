@@ -9,6 +9,7 @@ import datoveStruktury.IpAdresa;
 import datoveStruktury.Paket;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.AbstraktniPrikaz;
 import prikazy.AbstraktniTraceroute;
 import vyjimky.SpatnaAdresaException;
@@ -22,7 +23,7 @@ import vyjimky.SpatnaAdresaException;
  */
 public class LinuxTraceroute extends AbstraktniTraceroute {
 
-    public LinuxTraceroute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxTraceroute(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

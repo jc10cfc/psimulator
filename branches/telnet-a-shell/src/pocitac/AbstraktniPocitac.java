@@ -13,6 +13,7 @@ import datoveStruktury.RoutovaciTabulka;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.AbstraktniPing;
 import telnetd.pridaneTridy.TelnetProperties;
 
@@ -130,7 +131,7 @@ public abstract class AbstraktniPocitac {
     public abstract List<String> getCommandList();
 
 
-    public abstract void nastavKonsoli(Konsole konsole);
+    public abstract void nastavKonsoli(CommandShell cshell);
 //****************************************************************************************************
 //tady zacinaj metody pro posilani pingu:
 

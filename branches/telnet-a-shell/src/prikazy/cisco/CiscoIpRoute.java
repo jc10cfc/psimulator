@@ -14,7 +14,7 @@ import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.CiscoPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
 
@@ -29,7 +29,7 @@ public class CiscoIpRoute extends CiscoPrikaz {
     private IpAdresa brana;
     private SitoveRozhrani rozhrani;
 
-    public CiscoIpRoute(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
+    public CiscoIpRoute(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean no) {
         super(pc, kon, slova, no);
         this.adresat = null;
         this.brana = null;

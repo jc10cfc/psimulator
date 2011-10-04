@@ -8,6 +8,7 @@ import datoveStruktury.*;
 import datoveStruktury.CiscoWrapper;
 import java.util.LinkedList;
 import java.util.List;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.cisco.CiscoParserPrikazu;
 
 /**
@@ -150,7 +151,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
     }
 
     @Override
-    public void nastavKonsoli(Konsole konsole) {
+    public void nastavKonsoli(CommandShell konsole) {
         konsole.setParser(new CiscoParserPrikazu(this, konsole));
         konsole.prompt = this.jmeno + ">";
     }

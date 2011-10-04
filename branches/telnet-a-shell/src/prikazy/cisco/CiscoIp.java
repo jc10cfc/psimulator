@@ -7,7 +7,7 @@ package prikazy.cisco;
 import datoveStruktury.CiscoStavy;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import pocitac.SitoveRozhrani;
 import prikazy.AbstraktniPrikaz;
 import static datoveStruktury.CiscoStavy.*;
@@ -31,14 +31,14 @@ public class CiscoIp extends CiscoPrikaz {
      * @param stav
      * @param rozhrani
      */
-    public CiscoIp(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no, CiscoStavy stav, SitoveRozhrani rozhrani) {
+    public CiscoIp(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean no, CiscoStavy stav, SitoveRozhrani rozhrani) {
         super(pc, kon, slova, no);
         this.stav = stav;
         this.rozhrani = rozhrani;
         dal();
     }
 
-    public CiscoIp(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no, CiscoStavy stav) {
+    public CiscoIp(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean no, CiscoStavy stav) {
         super(pc, kon, slova, no);
         this.stav = stav;
 

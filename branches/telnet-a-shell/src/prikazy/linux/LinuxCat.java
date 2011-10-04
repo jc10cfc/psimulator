@@ -7,6 +7,7 @@ package prikazy.linux;
 import prikazy.*;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Tato třída slouží k čtení souborů, jako třeba /proc/sys/net/ipv4/ip_forward
@@ -14,7 +15,7 @@ import pocitac.*;
  */
 public class LinuxCat extends AbstraktniPrikaz{
 
-    public LinuxCat(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxCat(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

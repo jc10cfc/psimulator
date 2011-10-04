@@ -8,21 +8,14 @@ import Main.Main;
 import telnetd.net.ConnectionData;
 import telnetd.io.TerminalIO;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import telnetd.io.BasicTerminalIO;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import telnetd.net.Connection;
 import telnetd.net.ConnectionEvent;
-import prikazy.ParserPrikazu;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
+import pocitac.apps.CommandShell.CommandShell;
 import telnetd.shell.Shell;
-import vyjimky.ChybaSpojeniException;
-import static prikazy.AbstraktniPrikaz.*;
 
 /**
  * Třída obsluhuje jedno spojení s klientem.
@@ -33,133 +26,20 @@ public class Konsole implements Shell {
     private static Log log = LogFactory.getLog(Konsole.class);
     private Connection m_Connection;
     private BasicTerminalIO m_IO;
-    private History history = new History();
-    
     private AbstraktniPocitac pocitac;
-    private ParserPrikazu parser;
     int cislo; //poradove cislo vlakna, jak je v tom listu, spis pro ladeni
-    public String prompt = "divnej defaultni promt:~# ";
-    private boolean ukoncit;
-    public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
-    private Object zamek;
-    private ShellRenderer renderer;
-
-    public BasicTerminalIO getTerminalIO() {
-        return m_IO;
-    }
-
-    /**
-     * metoda nacita z proudu dokud neprijde \r\n
-     * Prevzata z KarelServer, ale pak jsem ji stejne celou prepsal.
-     * @param in
-     * @return celej radek do \r\n jako string. kterej to \r\n uz ale neobsahuje
-     */
-    public String ctiRadek() {
-
-        return renderer.handleInput();
-
-    }
-
-    /**
-     * Posle servisni vypis pres posliRadek. Prida tam navic jmeno programu s dvojteckou a mezerou.
-     * @param ret
-     */
-    public void posliServisne(String ret) {
-        posliRadek(Main.jmenoProgramu + ": " + ret);
-    }
-
-    /**
-     * Metoda na posilani celeho radku do výstupního proudu. Zaroven vypisuje poslané řetězce na standartni vystup.
-     * Prevzata z KarelServer
-     * @param out
-     * @param ret
-     * @throws java.io.IOException
-     */
-    public void posliRadek(String ret) throws ChybaSpojeniException {
-        try {
-
-            m_IO.write((ret + "\r\n"));
-            m_IO.flush();
-            if (Main.debug) {
-                pocitac.vypis("(socket c. " + cislo + " posilam radek): " + ret);
-            }
-        } catch (IOException ex) {
-            //ex.printStackTrace();
-            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda posliRadek, nastala chyba.");
-        }
-    }
-
-    /**
-     * Metoda na posilani do výstupního proudu. Zaroven vypisuje poslané řetězce na standartni vystup.
-     * Prevzata z KarelServer
-     * @param out
-     * @param ret
-     * @throws java.io.IOException
-     */
-    public void posli(String ret) throws ChybaSpojeniException {
-        try {
-            m_IO.write(ret);
-            m_IO.flush();
-            if (Main.debug) {
-                pocitac.vypis("(socket c. " + cislo + " posilam): " + ret);
-            }
-        } catch (IOException ex) {
-            //ex.printStackTrace();
-            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda posli: nastala chyba.");
-        }
-    }
-
-    /**
-     * Posila po radcich se zpozdenim v ms. Vyuziva metodu posliRadek().
-     * @param s, retezec, ktery ma posilat
-     * @param cekej, prodleva v ms mezi jednotlivejma radkama
-     * @author Stanislav Řehák
-     */
-    public void posliPoRadcich(String s, int cekej) throws ChybaSpojeniException {
-        BufferedReader input = new BufferedReader(new StringReader(s));
-        String lajna = "";
-        try {
-            while ((lajna = input.readLine()) != null) {
-                cekej(cekej);
-                posliRadek(lajna);
-            }
-        } catch (IOException e) { //tohleto chyta vyjimku z BufferedReadru, ne z posliRadek
-            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda posliPoRadcich: nastala chyba.");
-        }
-    }
-
-    /**
-     * Vypise prompt na prikazou radku.
-     * @throws IOException
-     */
-    public void vypisPrompt() throws ChybaSpojeniException {
-
-        if (!vypisPrompt) {
-            return;
-        }
-
-        try {
-            m_IO.write(prompt);
-            m_IO.flush();
-            //pocitac.vypis("(socket c. "+cislo+" posilam): "+prompt);
-        } catch (IOException ex) {
-            //ex.printStackTrace();
-            throw new ChybaSpojeniException("Konsole cislo " + cislo + ", metoda vypisPrompt, nastala chyba.");
-        }
-    }
 
     /**
      * Hlavni bezici metoda Konsole, bezi v nekonecny smycce a zastavuje se booleanem ukoncit.
      */
     @Override
     public void run(Connection con) {
-        Main.debug("Vytvářím novou telnet konsoli na portu:" + con.getConnectionData().getSocket().getLocalPort());
+
         try {
+            Main.debug("Vytvářím novou telnet konsoli na portu:" + con.getConnectionData().getSocket().getLocalPort());
             m_Connection = con;
             m_IO = m_Connection.getTerminalIO();
             m_Connection.addConnectionListener(this); //dont forget to register listener
-            this.renderer = new ShellRenderer(this);
-            String radek = null;
 
 
             // potrebuju najit pocitac ktery je urcen pro dany port.
@@ -170,121 +50,38 @@ public class Konsole implements Shell {
                     this.pocitac = computer;
                 }
             }
-
             // přídám tento objekt konsole do seznamu konzolí počítače
             this.pocitac.getKonsolePocitace().add(this);
             this.cislo = this.pocitac.getKonsolePocitace().size();
 
-            Main.debug("Konsole č." + this.cislo + " vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
 
-            // nastavím prompt a parser podle typu počítače, předtím tu bylo instanceof :(
-            this.pocitac.nastavKonsoli(this);
-
-            this.zamek = this.pocitac.zamekPocitace;
 
             //clear the screen and start from zero
             m_IO.eraseScreen();
             m_IO.homeCursor();
             m_IO.setLinewrapping(true);
-            
+
+
             pocitac.vypis("Konsole c. " + cislo + " startuje.");
 
-            ukoncit = false;
-/////////////////////////////DEBUG////////////////////////////////////////////
 
             if (Main.debug) {
-                ConnectionData cd = m_Connection.getConnectionData();
-                m_IO.write(BasicTerminalIO.CRLF
-                        + "DEBUG: Active Connection"
-                        + BasicTerminalIO.CRLF);
-                m_IO.write("------------------------" + BasicTerminalIO.CRLF);
-
-                //output connection data
-                m_IO.write("Connected from: " + cd.getHostName()
-                        + "[" + cd.getHostAddress() + ":" + cd.getPort() + "]"
-                        + BasicTerminalIO.CRLF);
-                m_IO.write("Guessed Locale: " + cd.getLocale()
-                        + BasicTerminalIO.CRLF);
-                m_IO.write(BasicTerminalIO.CRLF);
-                //output negotiated terminal properties
-                m_IO.write("Negotiated Terminal Type: "
-                        + cd.getNegotiatedTerminalType() + BasicTerminalIO.CRLF);
-                m_IO.write("Negotiated Columns: " + cd.getTerminalColumns()
-                        + BasicTerminalIO.CRLF);
-                m_IO.write("Negotiated Rows: " + cd.getTerminalRows()
-                        + BasicTerminalIO.CRLF);
-
-                //output of assigned terminal instance (the cast is a hack, please
-                //do not copy for other TCommands, because it would break the
-                //decoupling of interface and implementation!
-                m_IO.write(BasicTerminalIO.CRLF);
-                m_IO.write("Assigned Terminal instance: "
-                        + ((TerminalIO) m_IO).getTerminal());
-                m_IO.write(BasicTerminalIO.CRLF);
-                m_IO.write("Environment: " + cd.getEnvironment().toString());
-                m_IO.write(BasicTerminalIO.CRLF);
-                //output footer
-                m_IO.write("-----------------------------------------------"
-                        + BasicTerminalIO.CRLF + BasicTerminalIO.CRLF);
-
-                m_IO.flush();
+                this.printKonsoleInfo();
+                Main.debug("Konsole č." + this.cislo + " vytvořena pro počítač:" + this.pocitac.jmeno + " který naslouchá na portu:" + port);
             }
 
-/////////////////////////////DEBUG////////////////////////////////////////////
 
-            while (!ukoncit) {
 
-                vypisPrompt();
+            // run command shell
+            CommandShell sh = new CommandShell(m_IO, pocitac);
 
-                radek = ctiRadek();
-                this.history.add(radek);
-                
-                Main.debug("PRECETL JSEM :" + radek);
-
-                if (Main.debug) {
-                    pocitac.vypis("(klient c. " + cislo + " poslal): '" + radek + "'");
-                }
-                //pocitac.vypis("dylka predchoziho radku: "+radek.length());
-                //posliRadek(out,radek);
-                synchronized (zamek) {
-                    parser.zpracujRadek(radek);
-                }
-
-                m_IO.flush();
-            }
-
-            ////////////////////
         } catch (IOException ex) {
-            Logger.getLogger(Konsole.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Problem with telnet io connection");
         }
-        // po ukončení konsole ji odstraním ze seznamu počítače
+
+
+        // před ukončením konsole ji odstraním ze seznamu počítače
         this.pocitac.getKonsolePocitace().remove(this);
-    }
-
-    /**
-     * Ukonci spojeni.
-     */
-    public void ukonciSpojeni() {
-        if (Main.debug) {
-            pocitac.vypis("Zavolala se metoda ukonci.");
-        }
-        ukoncit = true;
-    }
-
-    public void setParser(ParserPrikazu parser) {
-        this.parser = parser;
-    }
-
-    public History getHistory() {
-        return history;
-    }
-
-    public void setHistory(History history) {
-        this.history = history;
-    }
-
-    public List<String> getCommandList() {
-        return this.pocitac.getCommandList();
     }
 
     //this implements the ConnectionListener!
@@ -314,8 +111,7 @@ public class Konsole implements Shell {
     @Override
     public void connectionLogoutRequest(ConnectionEvent ce) {
         try {
-            this.ukonciSpojeni();
-            //m_IO.write("CONNECTION_LOGOUTREQUEST");
+            m_IO.write("CONNECTION_LOGOUTREQUEST");
             m_IO.flush();
         } catch (Exception ex) {
             log.error("connectionLogoutRequest()", ex);
@@ -331,6 +127,39 @@ public class Konsole implements Shell {
             log.error("connectionSentBreak()", ex);
         }
     }//connectionSentBreak
+
+    /**
+     * this method printOut information about konsole
+     */
+    private void printKonsoleInfo() {
+        try {
+            ConnectionData cd = m_Connection.getConnectionData();
+            m_IO.write(BasicTerminalIO.CRLF + "DEBUG: Active Connection" + BasicTerminalIO.CRLF);
+            m_IO.write("------------------------" + BasicTerminalIO.CRLF);
+            //output connection data
+            m_IO.write("Connected from: " + cd.getHostName() + "[" + cd.getHostAddress() + ":" + cd.getPort() + "]" + BasicTerminalIO.CRLF);
+            m_IO.write("Guessed Locale: " + cd.getLocale() + BasicTerminalIO.CRLF);
+            m_IO.write(BasicTerminalIO.CRLF);
+            //output negotiated terminal properties
+            m_IO.write("Negotiated Terminal Type: " + cd.getNegotiatedTerminalType() + BasicTerminalIO.CRLF);
+            m_IO.write("Negotiated Columns: " + cd.getTerminalColumns() + BasicTerminalIO.CRLF);
+            m_IO.write("Negotiated Rows: " + cd.getTerminalRows() + BasicTerminalIO.CRLF);
+            //output of assigned terminal instance (the cast is a hack, please
+            //do not copy for other TCommands, because it would break the
+            //decoupling of interface and implementation!
+            m_IO.write(BasicTerminalIO.CRLF);
+            m_IO.write("Assigned Terminal instance: " + ((TerminalIO) m_IO).getTerminal());
+            m_IO.write(BasicTerminalIO.CRLF);
+            m_IO.write("Environment: " + cd.getEnvironment().toString());
+            m_IO.write(BasicTerminalIO.CRLF);
+            //output footer
+            m_IO.write("-----------------------------------------------" + BasicTerminalIO.CRLF + BasicTerminalIO.CRLF);
+            m_IO.flush();
+        } catch (IOException ex) {
+            System.err.println("Exception occured when calling printOutDebugInfo method ");
+        }
+
+    }
 
     public static Shell createShell() {
         return new Konsole();
