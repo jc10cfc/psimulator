@@ -151,7 +151,7 @@ public class CiscoPocitac extends AbstraktniPocitac {
     }
 
     @Override
-    public void nastavKonsoli(CommandShell konsole) {
+    public void configureCommandShell(CommandShell konsole) {
         konsole.setParser(new CiscoParserPrikazu(this, konsole));
         konsole.prompt = this.jmeno + ">";
     }

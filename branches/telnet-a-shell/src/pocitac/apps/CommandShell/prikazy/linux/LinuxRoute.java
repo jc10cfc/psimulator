@@ -93,7 +93,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     @Override
     protected void vykonejPrikaz() {
         if (ladiciVypisovani) {
-            kon.posliRadek(this.toString());
+            kon.printLine(this.toString());
         }
         if(minus_h){
             vypisDelsiNapovedu();
@@ -110,13 +110,13 @@ public class LinuxRoute extends AbstraktniPrikaz{
                     navratovyKodProvedeni=pc.routovaciTabulka.pridejZaznam(ipAdresa, brana, rozhr);
                 }
                 if(navratovyKodProvedeni == 1){
-                    kon.posliRadek("SIOCADDRT: File exists");
+                    kon.printLine("SIOCADDRT: File exists");
                 }else if(navratovyKodProvedeni == 2){
-                    kon.posliRadek("SIOCADDRT: No such process");
+                    kon.printLine("SIOCADDRT: No such process");
                 }
             }else if (akce==2){
                 if ( ! pc.routovaciTabulka.smazZaznam(ipAdresa, brana, rozhr) ){
-                    kon.posliRadek("SIOCDELRT: No such process");
+                    kon.printLine("SIOCDELRT: No such process");
                     navratovyKodProvedeni=4;
                 }
             }else if(akce==4){
@@ -144,7 +144,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }else if( slovo.equals("-h") || slovo.equals("--help") ){
                 minus_h=true;
             }else{
-                kon.posliRadek("route: invalid option -- "+slovo); //neznamej prepinac
+                kon.printLine("route: invalid option -- "+slovo); //neznamej prepinac
                 vypisDelsiNapovedu();
                 navratovyKod=navratovyKod|1;
                 return;
@@ -202,9 +202,9 @@ public class LinuxRoute extends AbstraktniPrikaz{
     }
 
     private void nastavFlush() {
-        kon.posliRadek(Main.jmenoProgramu+": Flush normalne neni podporovano, ale v simulatoru se zaznam " +
+        kon.printLine(Main.jmenoProgramu+": Flush normalne neni podporovano, ale v simulatoru se zaznam " +
                 "smazal.");
-        kon.posliRadek("Spravny prikaz je: \"ip route flush all\"");
+        kon.printLine("Spravny prikaz je: \"ip route flush all\"");
         akce=4;
     }
 
@@ -220,7 +220,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
             if(IpAdresa.spravnaAdresaNebMaska(slovo, false)){ //samotna IP je spravna
                 adr=slovo;
             }else{ //samotna IP neni spravna
-                kon.posliRadek(adr+": unknown host");
+                kon.printLine(adr+": unknown host");
                 navratovyKod |= 4; //spatny adresat
                 bezChyby=false;
             }
@@ -249,7 +249,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }else{
                 if(! defaultni){ //kdyz bylo zadano defaultni, nic se nedeje
                     navratovyKod |=4;
-                    kon.posliRadek("SIOCADDRT: Invalid argument");
+                    kon.printLine("SIOCADDRT: Invalid argument");
                 }
             }
         }
@@ -265,11 +265,11 @@ public class LinuxRoute extends AbstraktniPrikaz{
         }else if( ! IpAdresa.spravnaAdresaNebMaska(slovo,false)){ //adresa je spatna
             if(slovo.contains("/")){ //kdyz je zadana IP adresa s maskou (zatim na to kaslu a kontroluju jen 
                                      //lomitko vypise se jina hlaska, nez normalne.
-                kon.posliRadek("route: netmask doesn't make sense with host route");
+                kon.printLine("route: netmask doesn't make sense with host route");
                 vypisDelsiNapovedu();
                 navratovyKod |= 256;
             }else{
-                kon.posliRadek(slovo+": unknown host");
+                kon.printLine(slovo+": unknown host");
                 navratovyKod |= 4;
             }
             chyba=true;
@@ -314,7 +314,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }
         }
         if ( chyba ){
-            kon.posliRadek(slovo+": unknown host");
+            kon.printLine(slovo+": unknown host");
             navratovyKod |= 8;
         }else{ //spravna brana
             slovo=dalsiSlovo();
@@ -341,7 +341,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         rozhr=pc.najdiRozhrani(slovo);
         if(rozhr==null){ // rozhrani nebylo nalezeno
             if(ladiciVypisovani)rozhr=new SitoveRozhrani(slovo, null, null);
-            kon.posliRadek("SIOCADDRT: No such device");
+            kon.printLine("SIOCADDRT: No such device");
             navratovyKod |= 32;
         }else{ //rozhrani je spravne a je jiz ulozeno v promenne rozhr
             slovo=dalsiSlovo();
@@ -373,7 +373,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
     private void nastavNetmask(){
         if(minusHost){ // kontrola, jestli to vubec muzu nastavovat
             navratovyKod |= 256;
-            kon.posliRadek("route: netmask doesn't make sense with host route");
+            kon.printLine("route: netmask doesn't make sense with host route");
             vypisDelsiNapovedu();
             return; //nic se nema nastavovat
         }
@@ -384,7 +384,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
         }
         nastavovanaMaska=true;
         if ( ! IpAdresa.spravnaAdresaNebMaska(slovo, true)){
-            kon.posliRadek("route: bogus netmask "+slovo+"");
+            kon.printLine("route: bogus netmask "+slovo+"");
             navratovyKod |= 1024;
         }else{ //spravna maska
             maska=slovo;
@@ -447,16 +447,16 @@ public class LinuxRoute extends AbstraktniPrikaz{
                         pocetBituMasky = pocetBituMasky % 32; //opravdu to tak funguje, dokonce i se zapornejma
                                                                 //cislama
                         if( pocetBituMasky == 0 ) { //tohle jediny neni povoleny, opravdu
-                            kon.posliRadek("SIOCADDRT: Invalid argument");//napr: route add -net 128.0.0.0/64 dev eth0
+                            kon.printLine("SIOCADDRT: Invalid argument");//napr: route add -net 128.0.0.0/64 dev eth0
                         }else{ //konecne vsechno spravne
                             return true; // NAVRAT Z METODY, KDYZ JE VSECHNO SPRAVNE
                         }
                     }
                 }else{ //adresa neni spravna
-                    kon.posliRadek(adresa+": Unknown host");
+                    kon.printLine(adresa+": Unknown host");
                 }
             }else{ //kdyz je lomitko poslednim znakem retezce
-                kon.posliRadek("SIOCADDRT: Invalid argument"); //napr: route add -net 1.0.0.0/ dev eth0
+                kon.printLine("SIOCADDRT: Invalid argument"); //napr: route add -net 1.0.0.0/ dev eth0
             }
         }
         // kdyz se vyskytne nejaka chyba:
@@ -481,8 +481,8 @@ public class LinuxRoute extends AbstraktniPrikaz{
             }
             if( ! ipAdresa.jeCislemSite() ) { //adresa neni cislem site, to je chyba
                 navratovyKod |= 2048; //adresat neni cislem site
-                kon.posliRadek("route: netmask doesn't match route address");
-                //kon.posliRadek("route: síťová maska nevyhovuje adrese cesty");
+                kon.printLine("route: netmask doesn't match route address");
+                //kon.printLine("route: síťová maska nevyhovuje adrese cesty");
                 vypisDelsiNapovedu();
             }
         }
@@ -491,10 +491,10 @@ public class LinuxRoute extends AbstraktniPrikaz{
     private void vypisTabulku() {
 
         String v; //string na vraceni
-        //kon.posliRadek("Směrovací tabulka v jádru pro IP");
-        kon.posliRadek("Kernel IP routing table");
-        //kon.posliRadek("Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní");
-        kon.posliRadek("Destination     Gateway         Genmask         Flags Metric Ref    Use Iface");
+        //kon.printLine("Směrovací tabulka v jádru pro IP");
+        kon.printLine("Kernel IP routing table");
+        //kon.printLine("Adresát         Brána           Maska           Přízn Metrik Odkaz  Užt Rozhraní");
+        kon.printLine("Destination     Gateway         Genmask         Flags Metric Ref    Use Iface");
         int pocet = pc.routovaciTabulka.pocetZaznamu();
         for (int i = 0; i < pocet; i++) {
             v="";
@@ -518,7 +518,7 @@ public class LinuxRoute extends AbstraktniPrikaz{
 
                 }
                 v += "0      0        0 " + z.getRozhrani().jmeno;
-                kon.posliRadek(v);
+                kon.printLine(v);
             }
         }  
     }
@@ -568,33 +568,33 @@ public class LinuxRoute extends AbstraktniPrikaz{
      * Tyto metody byly udělány nahrazením v Kate. Znak pro začátek řádku je ^ a pro konec řádku $.
      */
     private void vypisKratkouNapovedu() {
-        kon.posliRadek("Usage: inet_route [-vF] del {-host|-net} Target[/prefix] [gw Gw] [metric M] [[dev] If]");
-        kon.posliRadek("       inet_route [-vF] add {-host|-net} Target[/prefix] [gw Gw] [metric M]");
-        kon.posliRadek("                              [netmask N] [mss Mss] [window W] [irtt I]");
-        kon.posliRadek("                              [mod] [dyn] [reinstate] [[dev] If]");
-        kon.posliRadek("       inet_route [-vF] add {-host|-net} Target[/prefix] [metric M] reject");
-        kon.posliRadek("       inet_route [-FC] flush      NOT supported");
+        kon.printLine("Usage: inet_route [-vF] del {-host|-net} Target[/prefix] [gw Gw] [metric M] [[dev] If]");
+        kon.printLine("       inet_route [-vF] add {-host|-net} Target[/prefix] [gw Gw] [metric M]");
+        kon.printLine("                              [netmask N] [mss Mss] [window W] [irtt I]");
+        kon.printLine("                              [mod] [dyn] [reinstate] [[dev] If]");
+        kon.printLine("       inet_route [-vF] add {-host|-net} Target[/prefix] [metric M] reject");
+        kon.printLine("       inet_route [-FC] flush      NOT supported");
     }
 
     private void vypisDelsiNapovedu() {
         //napoveda z pocitacu ve skole:
-        kon.posliRadek("Usage: route [-nNvee] [-FC] [<AF>]           List kernel routing tables");
-        kon.posliRadek("       route [-v] [-FC] {add|del|flush} ...  Modify routing table for AF.");
-        kon.posliRadek("");
-        kon.posliRadek("       route {-h|--help} [<AF>]              Detailed usage syntax for specified AF.");
-        kon.posliRadek("       route {-V|--version}                  Display version/author and exit.");
-        kon.posliRadek("");
-        kon.posliRadek("        -v, --verbose            be verbose");
-        kon.posliRadek("        -n, --numeric            don't resolve names");
-        kon.posliRadek("        -e, --extend             display other/more information");
-        kon.posliRadek("        -F, --fib                display Forwarding Information Base (default)");
-        kon.posliRadek("        -C, --cache              display routing cache instead of FIB");
-        kon.posliRadek("");
-        kon.posliRadek("  <AF>=Use '-A <af>' or '--<af>'; default: inet");
-        kon.posliRadek("  List of possible address families (which support routing):");
-        kon.posliRadek("    inet (DARPA Internet) inet6 (IPv6) ax25 (AMPR AX.25)");
-        kon.posliRadek("    netrom (AMPR NET/ROM) ipx (Novell IPX) ddp (Appletalk DDP)");
-        kon.posliRadek("    x25 (CCITT X.25)");
+        kon.printLine("Usage: route [-nNvee] [-FC] [<AF>]           List kernel routing tables");
+        kon.printLine("       route [-v] [-FC] {add|del|flush} ...  Modify routing table for AF.");
+        kon.printLine("");
+        kon.printLine("       route {-h|--help} [<AF>]              Detailed usage syntax for specified AF.");
+        kon.printLine("       route {-V|--version}                  Display version/author and exit.");
+        kon.printLine("");
+        kon.printLine("        -v, --verbose            be verbose");
+        kon.printLine("        -n, --numeric            don't resolve names");
+        kon.printLine("        -e, --extend             display other/more information");
+        kon.printLine("        -F, --fib                display Forwarding Information Base (default)");
+        kon.printLine("        -C, --cache              display routing cache instead of FIB");
+        kon.printLine("");
+        kon.printLine("  <AF>=Use '-A <af>' or '--<af>'; default: inet");
+        kon.printLine("  List of possible address families (which support routing):");
+        kon.printLine("    inet (DARPA Internet) inet6 (IPv6) ax25 (AMPR AX.25)");
+        kon.printLine("    netrom (AMPR NET/ROM) ipx (Novell IPX) ddp (Appletalk DDP)");
+        kon.printLine("    x25 (CCITT X.25)");
 
     }
 

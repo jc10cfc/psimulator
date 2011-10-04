@@ -62,7 +62,7 @@ public class ShellRenderer {
                     termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
                     this.cursor = 0;
                     this.sb.setLength(0);
-                    this.commandShell.vypisPrompt();
+                    this.commandShell.printPrompt();
                 }
 
                 if (i == TerminalIO.TABULATOR) {
@@ -234,7 +234,7 @@ public class ShellRenderer {
         termIO.eraseLine();
         termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
 
-        this.commandShell.vypisPrompt();
+        this.commandShell.printPrompt();
 
         if (key == TerminalIO.UP) {
             this.sb.setLength(0);
@@ -308,7 +308,7 @@ public class ShellRenderer {
             }
 
             termIO.write(TerminalIO.CRLF); // nový řádek
-            this.commandShell.vypisPrompt();
+            this.commandShell.printPrompt();
             termIO.write(this.sb.toString());
 
 
@@ -341,7 +341,7 @@ public class ShellRenderer {
             termIO.eraseLine();
             termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
 
-            this.commandShell.vypisPrompt();
+            this.commandShell.printPrompt();
             this.sb.setLength(0); // empty string builder
             this.sb.append(nalezenePrikazy.get(0)).append(" ");
 
@@ -355,7 +355,7 @@ public class ShellRenderer {
     private void clearScreen() throws IOException {
         this.termIO.eraseScreen();
         termIO.setCursor(0, 0);
-        this.commandShell.vypisPrompt();
+        this.commandShell.printPrompt();
         
         updateWholeLine();
 

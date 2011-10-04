@@ -71,9 +71,9 @@ public class LinuxPocitac extends AbstraktniPocitac {
     }
 
     @Override
-    public void nastavKonsoli(CommandShell konsole) {
-        konsole.setParser(new LinuxParserPrikazu(this, konsole));
-        konsole.prompt=this.jmeno + ":~# ";
+    public void configureCommandShell(CommandShell commandShell) {
+        commandShell.setParser(new LinuxParserPrikazu(this, commandShell));
+        commandShell.prompt=this.jmeno + ":~# ";
     }
 
     @Override

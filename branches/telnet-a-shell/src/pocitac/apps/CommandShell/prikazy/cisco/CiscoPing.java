@@ -68,14 +68,14 @@ public class CiscoPing extends AbstraktniPing {
      */
     private boolean zpracujParametry(String typVolby) {
         if (!kontrola("timeout", typVolby) && !kontrola("repeat", typVolby) && !kontrola("size", typVolby)) {
-            kon.posliRadek("% Invalid input detected.");
+            kon.printLine("% Invalid input detected.");
             return false;
         }
 
         String volba = dalsiSlovo();
 
         if (volba.equals("")) {
-            kon.posliRadek("% Incomplete command.");
+            kon.printLine("% Incomplete command.");
             return false;
         }
 
@@ -83,7 +83,7 @@ public class CiscoPing extends AbstraktniPing {
             try {
                 timeout = Integer.valueOf(volba) * 1000;
             } catch (NumberFormatException e) {
-                kon.posliRadek("% Invalid input detected.");
+                kon.printLine("% Invalid input detected.");
                 return false;
             }
         }
@@ -92,7 +92,7 @@ public class CiscoPing extends AbstraktniPing {
             try {
                 pocet = Integer.valueOf(volba);
             } catch (NumberFormatException e) {
-                kon.posliRadek("% Invalid input detected.");
+                kon.printLine("% Invalid input detected.");
                 return false;
             }
         }
@@ -101,11 +101,11 @@ public class CiscoPing extends AbstraktniPing {
             try {
                 n = Integer.valueOf(volba);
             } catch (NumberFormatException e) {
-                kon.posliRadek("% Invalid input detected.");
+                kon.printLine("% Invalid input detected.");
                 return false;
             }
             if (n < 36 || n > 18024) {
-                kon.posliRadek("% Invalid input detected.");
+                kon.printLine("% Invalid input detected.");
                 return false;
             }
             velikost = n;
@@ -125,16 +125,16 @@ public class CiscoPing extends AbstraktniPing {
      */
     private boolean zpracujRadek() {
         if (slova.size() < 2) {
-            kon.posliServisne("podporovana syntaxe: <IP> (<size|timeout|repeat> <cislo>)* ");
+            kon.printWithSimulatorName("podporovana syntaxe: <IP> (<size|timeout|repeat> <cislo>)* ");
             return false;
         }
         String ip = dalsiSlovo();
         try {
             cil = new IpAdresa(ip);
         } catch (Exception e) {
-            kon.posliRadek("Translating \"" + ip + "\"" + "...domain server (255.255.255.255)");
+            kon.printLine("Translating \"" + ip + "\"" + "...domain server (255.255.255.255)");
             cekej(500);
-            kon.posliRadek("% Unrecognized host or address, or protocol not running.");
+            kon.printLine("% Unrecognized host or address, or protocol not running.");
             return false;
         }
 
@@ -160,7 +160,7 @@ public class CiscoPing extends AbstraktniPing {
         s += "\nType escape sequence to abort.\n"
                 + "Sending " + pocet + ", " + velikost + "-byte ICMP Echos to " + cil.vypisAdresu() + ", timeout is " + timeout / 1000 + " seconds:";
 
-        kon.posliPoRadcich(s, 20);
+        kon.printWithDelay(s, 20);
         for (int i = 0; i < pocet; i++) {
             int icmp_seq = i % 65536;
             boolean doslo = pc.posliIcmpRequest(cil, icmp_seq, 255, this); // skolni cisca odpovidaj s TTL=255
@@ -168,7 +168,7 @@ public class CiscoPing extends AbstraktniPing {
 
             if (!doslo) {
                 cekej(timeout);
-                kon.posli(".");
+                kon.print(".");
             }
         }
 
@@ -177,29 +177,29 @@ public class CiscoPing extends AbstraktniPing {
         if (prijate > 0) {
             s += ", round-trip min/avg/max = " + Math.round(min) + "/" + Math.round(avg) + "/" + Math.round(max) + " ms";
         }
-        kon.posliPoRadcich(s, 10);
+        kon.printWithDelay(s, 10);
     }
 
     @Override
     public void zpracujPaket(Paket p) {
         if (p.typ == 0) {
             odezvy.add(p.cas);
-            kon.posli("!");
+            kon.print("!");
         } else if (p.typ == 3) {
             cekej(timeout);
             if (p.kod == 0) {
                 // cisco posila 'U' a '.', jak se mu chce
                 if (Math.round(Math.random()) % 2 == 0) {
-                    kon.posli("U");
+                    kon.print("U");
                 } else {
-                    kon.posli(".");
+                    kon.print(".");
                 }
             } else if (p.kod == 1) {
-                kon.posli(".");
+                kon.print(".");
             }
         } else {
             cekej(timeout);
-            kon.posli(".");
+            kon.print(".");
         }
     }
 }

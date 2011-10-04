@@ -54,8 +54,8 @@ public class LinuxPing extends AbstraktniPing{
     @Override
     protected void vykonejPrikaz() {
         if (ladeni){
-            kon.posliRadek(toString());
-            kon.posliRadek("--------------------");
+            kon.printLine(toString());
+            kon.printLine("--------------------");
         }
 
         if(navratovyKod != 0) return; //neni-li vsechno v poradku, nic se nekona
@@ -69,10 +69,10 @@ public class LinuxPing extends AbstraktniPing{
          * ho zablokuje a nikam se NEPOSILA ani nepocita.
          */
         if (pc.posliIcmpRequest(cil, -1, ttl, this)) {
-            kon.posliRadek("PING " + cil.vypisAdresu() + " (" + cil.vypisAdresu() + ") " //vypsani 1. radku
+            kon.printLine("PING " + cil.vypisAdresu() + " (" + cil.vypisAdresu() + ") " //vypsani 1. radku
                     + size + "(" + (size + 28) + ") bytes of data.");
         } else {
-            kon.posliRadek("connect: Network is unreachable");
+            kon.printLine("connect: Network is unreachable");
             return; //dalsi pakety se neposilaj, prvni radek se nevypisuje
         }
         
@@ -84,7 +84,7 @@ public class LinuxPing extends AbstraktniPing{
             if (pc.posliIcmpRequest(cil, icmp_seq, ttl, this)) {
                 //paket se odeslal
             } else {
-                kon.posliRadek("ping: sendmsg: Network is unreachable");
+                kon.printLine("ping: sendmsg: Network is unreachable");
             }
             odeslane++;
             if(i!=count-1) //cekani po zadany interval - naposled se neceka
@@ -96,25 +96,25 @@ public class LinuxPing extends AbstraktniPing{
          */
         aktualizujStatistiky();
         if(ladeni){
-            kon.posliRadek("ztrata: "+ztrata+", odeslane: "+odeslane+", prijate: "+prijate);
+            kon.printLine("ztrata: "+ztrata+", odeslane: "+odeslane+", prijate: "+prijate);
         }
         int cas = (int) (odeslane * interval * 1000 + Math.random() * 10); //na okrasu musim vymyslet nejakej cas
-        kon.posliRadek("");
-        kon.posliRadek("--- " + cil.vypisAdresu() + " ping statistics ---");
+        kon.printLine("");
+        kon.printLine("--- " + cil.vypisAdresu() + " ping statistics ---");
         if (errors == 0) {//errory nebyly - tak se nevypisujou
-            kon.posliRadek(odeslane + " packets transmitted, " + prijate + " received, " +
+            kon.printLine(odeslane + " packets transmitted, " + prijate + " received, " +
                     ztrata + "% packet loss, time " + cas + "ms");
         } else { //vypis i s errorama
-            kon.posliRadek(odeslane + " packets transmitted, " + prijate + " received, +" + errors + " errors, " +
+            kon.printLine(odeslane + " packets transmitted, " + prijate + " received, +" + errors + " errors, " +
                     ztrata + "% packet loss, time " + cas + "ms");
         }
         if (prijate > 0) { //aspon jeden prijaty paket - vypisuji se statistiky
             double mdev = zaokrouhli((((avg - min) + (max - avg)) / 2) * 0.666); //ma to bejt stredni odchylka,
             //je tam jen na okrasu, tak si ji pocitam po svym =)
-            kon.posliRadek("rtt min/avg/max/mdev = " + zaokrouhli(min) + "/" + zaokrouhli(max) + "/" +
+            kon.printLine("rtt min/avg/max/mdev = " + zaokrouhli(min) + "/" + zaokrouhli(max) + "/" +
                     zaokrouhli(avg) + "/" + mdev + " ms");
         } else { // neprijat zadny paket, statistiky se nevypisuji
-            kon.posliRadek(", pipe 3");
+            kon.printLine(", pipe 3");
         }
         
     }
@@ -126,23 +126,23 @@ public class LinuxPing extends AbstraktniPing{
     public void zpracujPaket(Paket p) {
         if (p.typ == 0) {
             if(!minus_q)
-                kon.posliRadek((size+8)+" bytes from " + p.zdroj.vypisAdresu() + ": icmp_seq=" +p.icmp_seq +
+                kon.printLine((size+8)+" bytes from " + p.zdroj.vypisAdresu() + ": icmp_seq=" +p.icmp_seq +
                     " ttl=" + p.ttl + " time=" + ((double) Math.round(p.cas * 1000)) / 1000 + " ms");
             odezvy.add(p.cas);
         } else if (p.typ == 3) {
             if (p.kod == 0) {
                 if(!minus_q)
-                    kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
+                    kon.printLine("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
                         p.icmp_seq + " Destination Net Unreachable");
             } else if (p.kod == 1) {
                 if(!minus_q)
-                    kon.posliRadek("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
+                    kon.printLine("From " + p.zdroj.vypisAdresu() + ": icmp_seq=" +
                         p.icmp_seq + " Destination Host Unreachable");
             }
             errors++;
         } else if (p.typ == 11) {
             if(!minus_q)
-                kon.posliRadek("From " + p.zdroj.vypisAdresu() + " icmp_seq=" + p.icmp_seq
+                kon.printLine("From " + p.zdroj.vypisAdresu() + " icmp_seq=" + p.icmp_seq
                     + " Time to live exceeded");
             errors++;
         }
@@ -164,7 +164,7 @@ public class LinuxPing extends AbstraktniPing{
                     cil = new IpAdresa(slovo);
                 } catch (SpatnaAdresaException ex) {
                     navratovyKod |= 2;
-                    kon.posliRadek("ping: unknown host " + slovo);
+                    kon.printLine("ping: unknown host " + slovo);
                 }
             }
             slovo=dalsiSlovo();
@@ -195,7 +195,7 @@ public class LinuxPing extends AbstraktniPing{
                 pom = zpracujCiselnejPrepinac(uk);
                 if (pom <= 0){ //povoleny interval je 1 .. nekonecno
                     navratovyKod |= 4;
-                    kon.posliRadek("ping: bad number of packets to transmit.");
+                    kon.printLine("ping: bad number of packets to transmit.");
                 } else {
                     count = pom;
                 }
@@ -204,7 +204,7 @@ public class LinuxPing extends AbstraktniPing{
                 pom = zpracujCiselnejPrepinac(uk);
                 if (pom < 0 || pom > 65508){//v sesite...
                     navratovyKod |= 4;
-                    kon.posliRadek("ping: bad size of packet.");
+                    kon.printLine("ping: bad size of packet.");
                 } else {
                     size = pom;
                 }
@@ -213,8 +213,8 @@ public class LinuxPing extends AbstraktniPing{
                 pom = zpracujCiselnejPrepinac(uk);
                 if (pom <= 0 || pom > 255){ //povoleny interval je 1 .. nekonecno
                     navratovyKod |= 4;
-                    if (pom==-1)kon.posliRadek("ping: can't set unicast time-to-live: Invalid argument");
-                    else kon.posliRadek("ping: ttl "+pom+" out of range");
+                    if (pom==-1)kon.printLine("ping: can't set unicast time-to-live: Invalid argument");
+                    else kon.printLine("ping: ttl "+pom+" out of range");
                 } else {
                     ttl = pom;
                 }
@@ -225,11 +225,11 @@ public class LinuxPing extends AbstraktniPing{
                     interval=p;
                 }else{
                     navratovyKod|=4;
-                    kon.posliRadek("ping: bad timing interval.");
+                    kon.printLine("ping: bad timing interval.");
                 }
                 break;
             }else{
-                kon.posliRadek("ping: invalid option -- '"+slovo.charAt(uk)+"'");
+                kon.printLine("ping: invalid option -- '"+slovo.charAt(uk)+"'");
                 vypisNapovedu();
                 navratovyKod |= 8;
                 break;
@@ -279,10 +279,10 @@ public class LinuxPing extends AbstraktniPing{
 
 
     private void vypisNapovedu() {
-        kon.posliRadek("Usage: ping [-LRUbdfnqrvVaA] [-c count] [-i interval] [-w deadline]");
-        kon.posliRadek("            [-p pattern] [-s packetsize] [-t ttl] [-I interface or address]");
-        kon.posliRadek("            [-M mtu discovery hint] [-S sndbuf]");
-        kon.posliRadek("            [ -T timestamp option ] [ -Q tos ] [hop1 ...] destination");
+        kon.printLine("Usage: ping [-LRUbdfnqrvVaA] [-c count] [-i interval] [-w deadline]");
+        kon.printLine("            [-p pattern] [-s packetsize] [-t ttl] [-I interface or address]");
+        kon.printLine("            [-M mtu discovery hint] [-S sndbuf]");
+        kon.printLine("            [ -T timestamp option ] [ -Q tos ] [hop1 ...] destination");
     }
 
     /**

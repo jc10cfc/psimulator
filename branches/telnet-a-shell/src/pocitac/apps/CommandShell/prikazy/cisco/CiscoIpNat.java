@@ -77,7 +77,7 @@ public class CiscoIpNat extends CiscoPrikaz {
                 return zpracujInside();
             }
             if (dalsi.startsWith("outside")) {
-                kon.posliServisne("Tato funkcionalita neni implementovana.");
+                kon.printWithSimulatorName("Tato funkcionalita neni implementovana.");
             }
             return false;
         }
@@ -91,24 +91,24 @@ public class CiscoIpNat extends CiscoPrikaz {
             if (stav == INSIDE) { // no ip nat inside source list 7 pool ovrld overload?
                 n = pc.natTabulka.lPoolAccess.smazPoolAccess(accesslist);
                 if (n == 1) {
-                    kon.posliRadek("%Dynamic mapping not found");
+                    kon.printLine("%Dynamic mapping not found");
                 }
                 return;
             }
             if (stav == POOL) { // no ip nat pool ovrld 172.16.10.1 172.16.10.1 prefix 24
                 n = pc.natTabulka.lPool.smazPool(poolJmeno);
                 if (n == 1) {
-                    kon.posliRadek("%Pool " + poolJmeno + " not found");
+                    kon.printLine("%Pool " + poolJmeno + " not found");
                 }
                 if (n == 2) {
-                    kon.posliRadek("%Pool " + poolJmeno + " in use, cannot redefine");
+                    kon.printLine("%Pool " + poolJmeno + " in use, cannot redefine");
                 }
             }
 
             if (stav == STATIC) {
                 n = pc.natTabulka.smazStatickyZaznam(start, konec);
                 if (n == 1) {
-                    kon.posliRadek("% Translation not found");
+                    kon.printLine("% Translation not found");
                 }
             }
 
@@ -122,16 +122,16 @@ public class CiscoIpNat extends CiscoPrikaz {
                     // ok
                     break;
                 case 1:
-                    kon.posliRadek("%End address less than start address");
+                    kon.printLine("%End address less than start address");
                     break;
                 case 2:
-                    kon.posliRadek("%Pool ovrld in use, cannot redefine");
+                    kon.printLine("%Pool ovrld in use, cannot redefine");
                     break;
                 case 3:
                     invalidInputDetected();
                     break;
                 case 4:
-                    kon.posliRadek("%Start and end addresses on different subnets");
+                    kon.printLine("%Start and end addresses on different subnets");
                     break;
                 default:
                     invalidInputDetected();
@@ -146,11 +146,11 @@ public class CiscoIpNat extends CiscoPrikaz {
         if (stav == STATIC) { // ip nat inside source static 10.10.10.2 171.16.68.5
             n = pc.natTabulka.pridejStatickePravidloCisco(start, konec);
             if (n == 1) {
-                kon.posliRadek("% " + start.vypisAdresu() + " already mapped (" + start.vypisAdresu() + " -> " 
+                kon.printLine("% " + start.vypisAdresu() + " already mapped (" + start.vypisAdresu() + " -> "
                         + konec.vypisAdresu() + ")");
             }
             if (n == 2) {
-                kon.posliRadek("% similar static entry (" + start.vypisAdresu() + " -> " + konec.vypisAdresu() + ") "
+                kon.printLine("% similar static entry (" + start.vypisAdresu() + " -> " + konec.vypisAdresu() + ") "
                         + "already exists");
             }
         }
@@ -199,7 +199,7 @@ public class CiscoIpNat extends CiscoPrikaz {
             if (!kontrola("netmask", dalsi, 1)) {
                 return false;
             }
-            kon.posliServisne("netmask neni implementovan; pouzijte volbu prefix-length");
+            kon.printWithSimulatorName("netmask neni implementovan; pouzijte volbu prefix-length");
             return false;
         }
 
@@ -218,7 +218,7 @@ public class CiscoIpNat extends CiscoPrikaz {
             return false;
         }
         if (poolPrefix > 30) {
-            kon.posliRadek("%Pool " + poolJmeno + " prefix length " + poolPrefix + " too large; should be no more than 30");
+            kon.printLine("%Pool " + poolJmeno + " prefix length " + poolPrefix + " too large; should be no more than 30");
             return false;
         } else if (poolPrefix < 1) {
             invalidInputDetected();

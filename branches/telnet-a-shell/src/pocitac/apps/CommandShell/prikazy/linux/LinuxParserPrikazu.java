@@ -75,7 +75,7 @@ public class LinuxParserPrikazu extends ParserPrikazu {
         } else if (slova.get(0).equals("help")) {
             pr = new LinuxHelp(pc, kon, slova);
         } else {
-            kon.posliRadek("bash: " + slova.get(0) + ": command not found");
+            kon.printLine("bash: " + slova.get(0) + ": command not found");
         }
     }
 }

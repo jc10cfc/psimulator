@@ -28,7 +28,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
         parsujPrikaz();
         zkontrolujPrikaz();
         if(ladeni){
-            kon.posliRadek(toString());
+            kon.printLine(toString());
         }
         vykonejPrikaz();
         vypisChybovyHlaseni();
@@ -121,42 +121,42 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
         }
       //parser:
         if ( (navrKod & md(6)) != 0 ) { //neznama akce
-            kon.posliRadek("Command \"" + necoSpatne + "\" is unknown, try \"ip addr help\".");
+            kon.printLine("Command \"" + necoSpatne + "\" is unknown, try \"ip addr help\".");
             return;
         }
         if ( ( (navrKod & md(1)) != 0 ) || ( (navrKod & md(12)) != 0) ) { //spatna adresa
-            kon.posliRadek("Error: an inet prefix is expected rather than  \"" + necoSpatne + "\"");
+            kon.printLine("Error: an inet prefix is expected rather than  \"" + necoSpatne + "\"");
             return;
         }
         if ((navrKod & md(0)) != 0) { //nejakej nesmysl
-            kon.posliRadek("Error: either \"local\" is duplicate, or \"" + necoSpatne + "\" is a garbage.");
+            kon.printLine("Error: either \"local\" is duplicate, or \"" + necoSpatne + "\" is a garbage.");
             return;
         }
         if ((navrKod & md(2)) != 0) { // napsano dev a nic po nem
-            kon.posliRadek("Command line is not complete. Try option \"help\"");
+            kon.printLine("Command line is not complete. Try option \"help\"");
             return;
         }
       //kontrola:
         if ((navrKod & md(5)) != 0) { // chybejici parametry u add nebo del
-            kon.posliRadek("RTNETLINK answers: No such device");
+            kon.printLine("RTNETLINK answers: No such device");
             return;
         }
         if ((navrKod & md(3)) != 0) { // spatne rozhrani
-            kon.posliRadek("Cannot find device \""+rozhrRet+"\"");
+            kon.printLine("Cannot find device \""+rozhrRet+"\"");
             return;
         }
         if ((navrKod & md(13)) != 0) { // chybi parametry u flush
-            kon.posliRadek("\"ip route flush\" requires arguments.");
+            kon.printLine("\"ip route flush\" requires arguments.");
             return;
         }
         if ((navrKod & md(18)) != 0) { // u get zadanej nepodporovanej parametr dev
-            kon.posliServisne("Parametr dev u akce get je normalne mozny, neni ale simulatorem " +
+            kon.printWithSimulatorName("Parametr dev u akce get je normalne mozny, neni ale simulatorem " +
                     "podporovany, protoze v pripade zadani nespravneho rozhrani vraci tezko zjistitelne " +
                     "nesmysly. Zadejte tedy prosim prikaz get bez tohoto parametru.");
             //tady nedavam return
         }
         if ((navrKod & md(14)) != 0) { // chybi adresa u get
-            kon.posliRadek("need at least destination address");
+            kon.printLine("need at least destination address");
             return;
         }
 
@@ -234,7 +234,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
         if(akce==2){//add
             if(pc.routovaciTabulka.existujeZaznamSAdresatem(adresat)!=null){
                 navrKod |= md(8);
-                kon.posliRadek("RTNETLINK answers: File exists");
+                kon.printLine("RTNETLINK answers: File exists");
             } else { //v poradku, zaznam se muze pridat
                 if (brana == null) { //brana nezadana
                     pc.routovaciTabulka.pridejZaznam(adresat, rozhr);
@@ -245,7 +245,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
                     nk=pc.routovaciTabulka.pridejZaznam(adresat, brana, rozhr);
                     if(nk==2){//zaznam nejde pridat, protoze na brana neni dosazitelna
                         navrKod |= md(15);
-                        kon.posliRadek("RTNETLINK answers: Network is unreachable");
+                        kon.printLine("RTNETLINK answers: Network is unreachable");
                     }
                 }
             }
@@ -253,7 +253,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
         if (akce == 3) {//del
             if (!pc.routovaciTabulka.smazZaznam(adresat, brana, rozhr)) {
                 navrKod |= md(9);
-                kon.posliRadek("RTNETLINK answers: No such process");
+                kon.printLine("RTNETLINK answers: No such process");
             }
         }
         if(akce==1){ //show - vypsani
@@ -277,7 +277,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
                         }
                     }
                     if (!v.equals("")) {
-                        kon.posliRadek(v);
+                        kon.printLine(v);
                     }
                 }
             }
@@ -297,7 +297,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
             }
             if (keSmazani.size() == 0) {
                 navrKod |= md(16);
-                kon.posliRadek("Nothing to flush.");
+                kon.printLine("Nothing to flush.");
             } else {
                 for (RoutovaciTabulka.Zaznam z : keSmazani) {
                     pc.routovaciTabulka.smazZaznam(z);
@@ -310,7 +310,7 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
         if(akce==6){ //get
             RoutovaciTabulka.Zaznam zazn=pc.routovaciTabulka.najdiSpravnejZaznam(adresat);
             if(zazn==null){
-                kon.posliRadek("RTNETLINK answers: Network is unreachable");
+                kon.printLine("RTNETLINK answers: Network is unreachable");
                 navrKod |=md(17);
             }else{ //zaznam se podarilo najit, vypise se
                 String prvni=adresat.vypisAdresu();
@@ -319,8 +319,8 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
                 }
                 prvni+=" dev "+zazn.getRozhrani().jmeno+
                         "  src "+zazn.getRozhrani().vratPrvni().vypisAdresu();
-                kon.posliRadek(prvni);
-                kon.posliRadek("    cache  mtu 1500 advmss 1460 hoplimit 64");
+                kon.printLine(prvni);
+                kon.printLine("    cache  mtu 1500 advmss 1460 hoplimit 64");
             }
         }
     }
@@ -474,33 +474,33 @@ public class LinuxIpRoute extends AbstraktniPrikaz {
     }
 
     private void vypisHelp() {
-        kon.posliRadek("Usage: ip route { list | flush } SELECTOR");
-        kon.posliRadek("       ip route get ADDRESS [ from ADDRESS iif STRING ]");
-        kon.posliRadek("                            [ oif STRING ]  [ tos TOS ]");
-        kon.posliRadek("       ip route { add | del | change | append | replace | monitor } ROUTE");
-        kon.posliRadek("SELECTOR := [ root PREFIX ] [ match PREFIX ] [ exact PREFIX ]");
-        kon.posliRadek("            [ table TABLE_ID ] [ proto RTPROTO ]");
-        kon.posliRadek("            [ type TYPE ] [ scope SCOPE ]");
-        kon.posliRadek("ROUTE := NODE_SPEC [ INFO_SPEC ]");
-        kon.posliRadek("NODE_SPEC := [ TYPE ] PREFIX [ tos TOS ]");
-        kon.posliRadek("             [ table TABLE_ID ] [ proto RTPROTO ]");
-        kon.posliRadek("             [ scope SCOPE ] [ metric METRIC ]");
-        kon.posliRadek("INFO_SPEC := NH OPTIONS FLAGS [ nexthop NH ]...");
-        kon.posliRadek("NH := [ via ADDRESS ] [ dev STRING ] [ weight NUMBER ] NHFLAGS");
-        kon.posliRadek("OPTIONS := FLAGS [ mtu NUMBER ] [ advmss NUMBER ]");
-        kon.posliRadek("           [ rtt TIME ] [ rttvar TIME ] [ window NUMBER]");
-        kon.posliRadek("           [ cwnd NUMBER ] [ hoplimit NUMBER ] [ initcwnd NUMBER ]");
-        kon.posliRadek("           [ ssthresh NUMBER ] [ realms REALM ] [ src ADDRESS ]");
-        kon.posliRadek("           [ rto_min TIME ]");
-        kon.posliRadek("TYPE := [ unicast | local | broadcast | multicast | throw |");
-        kon.posliRadek("          unreachable | prohibit | blackhole | nat ]");
-        kon.posliRadek("TABLE_ID := [ local | main | default | all | NUMBER ]");
-        kon.posliRadek("SCOPE := [ host | link | global | NUMBER ]");
-        kon.posliRadek("FLAGS := [ equalize ]");
-        kon.posliRadek("MP_ALGO := { rr | drr | random | wrandom }");
-        kon.posliRadek("NHFLAGS := [ onlink | pervasive ]");
-        kon.posliRadek("RTPROTO := [ kernel | boot | static | NUMBER ]");
-        kon.posliRadek("TIME := NUMBER[s|ms|us|ns|j]");
+        kon.printLine("Usage: ip route { list | flush } SELECTOR");
+        kon.printLine("       ip route get ADDRESS [ from ADDRESS iif STRING ]");
+        kon.printLine("                            [ oif STRING ]  [ tos TOS ]");
+        kon.printLine("       ip route { add | del | change | append | replace | monitor } ROUTE");
+        kon.printLine("SELECTOR := [ root PREFIX ] [ match PREFIX ] [ exact PREFIX ]");
+        kon.printLine("            [ table TABLE_ID ] [ proto RTPROTO ]");
+        kon.printLine("            [ type TYPE ] [ scope SCOPE ]");
+        kon.printLine("ROUTE := NODE_SPEC [ INFO_SPEC ]");
+        kon.printLine("NODE_SPEC := [ TYPE ] PREFIX [ tos TOS ]");
+        kon.printLine("             [ table TABLE_ID ] [ proto RTPROTO ]");
+        kon.printLine("             [ scope SCOPE ] [ metric METRIC ]");
+        kon.printLine("INFO_SPEC := NH OPTIONS FLAGS [ nexthop NH ]...");
+        kon.printLine("NH := [ via ADDRESS ] [ dev STRING ] [ weight NUMBER ] NHFLAGS");
+        kon.printLine("OPTIONS := FLAGS [ mtu NUMBER ] [ advmss NUMBER ]");
+        kon.printLine("           [ rtt TIME ] [ rttvar TIME ] [ window NUMBER]");
+        kon.printLine("           [ cwnd NUMBER ] [ hoplimit NUMBER ] [ initcwnd NUMBER ]");
+        kon.printLine("           [ ssthresh NUMBER ] [ realms REALM ] [ src ADDRESS ]");
+        kon.printLine("           [ rto_min TIME ]");
+        kon.printLine("TYPE := [ unicast | local | broadcast | multicast | throw |");
+        kon.printLine("          unreachable | prohibit | blackhole | nat ]");
+        kon.printLine("TABLE_ID := [ local | main | default | all | NUMBER ]");
+        kon.printLine("SCOPE := [ host | link | global | NUMBER ]");
+        kon.printLine("FLAGS := [ equalize ]");
+        kon.printLine("MP_ALGO := { rr | drr | random | wrandom }");
+        kon.printLine("NHFLAGS := [ onlink | pervasive ]");
+        kon.printLine("RTPROTO := [ kernel | boot | static | NUMBER ]");
+        kon.printLine("TIME := NUMBER[s|ms|us|ns|j]");
     }
 
 

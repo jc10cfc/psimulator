@@ -145,12 +145,12 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
             prvniRadek+="NO-CARRIER,";
         }
         prvniRadek+="BROADCAST,MULTICAST,UP,10000> mtu 1500 qdisc pfifo_fast qlen 1000";
-        kon.posliRadek(prvniRadek);
+        kon.printLine(prvniRadek);
         if(puv.family==0 || puv.family==puv.fam_ethernet){
-            kon.posliRadek("link/ether "+r.macAdresa+" brd ff:ff:ff:ff:ff:ff");
+            kon.printLine("link/ether "+r.macAdresa+" brd ff:ff:ff:ff:ff:ff");
         }
         if( (puv.family==0 || puv.family==puv.fam_ipv4) &&r.vratPrvni()!=null ){
-            kon.posliRadek("inet "+r.vratPrvni().vypisAdresuSMaskou()+" brd "+
+            kon.printLine("inet "+r.vratPrvni().vypisAdresuSMaskou()+" brd "+
                 r.vratPrvni().vypisBroadcast()+" scope global "+r.jmeno);
         }
 
@@ -214,7 +214,7 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
     }
 
     private void vypisChybovyHlaseni() {
-        if(ladeni)kon.posliRadek(toString());
+        if(ladeni)kon.printLine(toString());
 
         /*
          * Poradi vypisovani:
@@ -235,58 +235,58 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
             return;
         }
         if ((navrKod & md(6)) != 0) { //neznama akce
-            kon.posliRadek("Command \"" + necoNavic + "\" is unknown, try \"ip addr help\".");
+            kon.printLine("Command \"" + necoNavic + "\" is unknown, try \"ip addr help\".");
             return;
         }
         if ((navrKod & md(1)) != 0) { //spatna adresa
-            kon.posliRadek("Error: an inet prefix is expected rather than  \"" + adresa + "\"");
+            kon.printLine("Error: an inet prefix is expected rather than  \"" + adresa + "\"");
             return;
         }
         if ((navrKod & md(0)) != 0) { //nejakej nesmysl
-            kon.posliRadek("Error: either \"local\" is duplicate, or \"" + necoNavic + "\" is a garbage.");
+            kon.printLine("Error: either \"local\" is duplicate, or \"" + necoNavic + "\" is a garbage.");
             return;
         }
         if ((navrKod & md(2)) != 0) { // napsano dev a nic po nem
-            kon.posliRadek("Command line is not complete. Try option \"help\"");
+            kon.printLine("Command line is not complete. Try option \"help\"");
             return;
         }
         if ((navrKod & md(5)) != 0) { //nezadano rozhrani, kdyz by melo
-            kon.posliRadek("Not enough information: \"dev\" argument is required.");
+            kon.printLine("Not enough information: \"dev\" argument is required.");
             return;
         }
         if ((navrKod & md(10)) != 0) { //u mazani nezadana maska
-            kon.posliRadek("Warning: Executing wildcard deletion to stay compatible with old scripts.");
-            kon.posliRadek("         Explicitly specify the prefix length (1.1.1.1/32) to avoid this warning.");
-            kon.posliRadek("         This special behaviour is likely to disappear in further releases,");
-            kon.posliRadek("         fix your scripts!");
+            kon.printLine("Warning: Executing wildcard deletion to stay compatible with old scripts.");
+            kon.printLine("         Explicitly specify the prefix length (1.1.1.1/32) to avoid this warning.");
+            kon.printLine("         This special behaviour is likely to disappear in further releases,");
+            kon.printLine("         fix your scripts!");
         }
         if ((navrKod & md(3)) != 0) { // neexistujici rozhrani
             if (akce == 2 || akce == 3) {
-                kon.posliRadek("Cannot find device \"" + rozhrRet + "\"");
+                kon.printLine("Cannot find device \"" + rozhrRet + "\"");
             } else {
-                kon.posliRadek("Device \"" + rozhrRet + "\" does not exist.");
+                kon.printLine("Device \"" + rozhrRet + "\" does not exist.");
             }
             return;
         }
         if ((navrKod & md(4)) != 0) { // u akce add nebo del nezadana adresa
             if (akce == 2) {
-                kon.posliRadek("RTNETLINK answers: Invalid argument");
+                kon.printLine("RTNETLINK answers: Invalid argument");
             } else {
-                kon.posliRadek("RTNETLINK answers: Cannot assign requested address");
+                kon.printLine("RTNETLINK answers: Cannot assign requested address");
             }
         }
         if ((navrKod & md(8)) != 0) { // na rozhrani je stejna adresa
-            kon.posliRadek("RTNETLINK answers: File exists");
+            kon.printLine("RTNETLINK answers: File exists");
             return;
         }
         if ((navrKod & md(7)) != 0) { // na rozhrani existuje jina adresa
-            kon.posliServisne("Simulator nepodporuje vice adres na jednom rozhrani. Na rozhrani " +
+            kon.printWithSimulatorName("Simulator nepodporuje vice adres na jednom rozhrani. Na rozhrani " +
                     rozhr.jmeno + " je jiz adresa " + rozhr.vratPrvni().vypisAdresuSMaskou() +
                     ". Odstrante ji prikazem flush nebo del. ");
             return;
         }
         if ((navrKod & md(9)) != 0) { // mazana adresa neexistuje
-            kon.posliRadek("RTNETLINK answers: Cannot assign requested address");
+            kon.printLine("RTNETLINK answers: Cannot assign requested address");
             return;
         }
     }
@@ -437,16 +437,16 @@ public class LinuxIpAddr extends AbstraktniPrikaz {
     }
 
     private void vypisHelp() {
-        kon.posliRadek("Usage: ip addr {add|del} IFADDR dev STRING");
-        kon.posliRadek("       ip addr {show|flush} [ dev STRING ] [ scope SCOPE-ID ]");
-        kon.posliRadek("                            [ to PREFIX ] [ FLAG-LIST ] [ label PATTERN ]");
-        kon.posliRadek("IFADDR := PREFIX | ADDR peer PREFIX");
-        kon.posliRadek("          [ broadcast ADDR ] [ anycast ADDR ]");
-        kon.posliRadek("          [ label STRING ] [ scope SCOPE-ID ]");
-        kon.posliRadek("SCOPE-ID := [ host | link | global | NUMBER ]");
-        kon.posliRadek("FLAG-LIST := [ FLAG-LIST ] FLAG");
-        kon.posliRadek("FLAG  := [ permanent | dynamic | secondary | primary |");
-        kon.posliRadek("           tentative | deprecated ]");
+        kon.printLine("Usage: ip addr {add|del} IFADDR dev STRING");
+        kon.printLine("       ip addr {show|flush} [ dev STRING ] [ scope SCOPE-ID ]");
+        kon.printLine("                            [ to PREFIX ] [ FLAG-LIST ] [ label PATTERN ]");
+        kon.printLine("IFADDR := PREFIX | ADDR peer PREFIX");
+        kon.printLine("          [ broadcast ADDR ] [ anycast ADDR ]");
+        kon.printLine("          [ label STRING ] [ scope SCOPE-ID ]");
+        kon.printLine("SCOPE-ID := [ host | link | global | NUMBER ]");
+        kon.printLine("FLAG-LIST := [ FLAG-LIST ] FLAG");
+        kon.printLine("FLAG  := [ permanent | dynamic | secondary | primary |");
+        kon.printLine("           tentative | deprecated ]");
     }
 
 }

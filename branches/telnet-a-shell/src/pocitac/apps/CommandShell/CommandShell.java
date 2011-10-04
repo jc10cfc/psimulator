@@ -24,23 +24,16 @@ import vyjimky.ChybaSpojeniException;
 public class CommandShell extends TerminalApplication {
 
     private ShellRenderer shellRenderer;
-    private BasicTerminalIO terminalIO;
     private History history = new History();
-    private AbstraktniPocitac pocitac;
     public boolean vypisPrompt = true; // v ciscu obcas potrebuju zakazat si vypisovani promptu
     public String prompt = "default promt:~# ";
-    private boolean ukoncit=false;
+    private boolean ukoncit = false;
     private ParserPrikazu parser;
     private Object zamek;
 
     public CommandShell(BasicTerminalIO terminalIO, AbstraktniPocitac pocitac) {
-
+        super(terminalIO, pocitac);
         this.shellRenderer = new ShellRenderer(terminalIO, this);
-        this.pocitac = pocitac;
-        this.terminalIO = terminalIO;
-
-        this.run(terminalIO, pocitac);
-
     }
 
     public History getHistory() {
@@ -56,113 +49,96 @@ public class CommandShell extends TerminalApplication {
     }
 
     /**
-     * metoda nacita z proudu dokud neprijde \r\n
-     * Prevzata z KarelServer, ale pak jsem ji stejne celou prepsal.
-     * @param in
-     * @return celej radek do \r\n jako string. kterej to \r\n uz ale neobsahuje
+     * method that read  till \r\n occured
+     * @return whole line without \r\n
      */
-    public String ctiRadek() {
-
+    public String readLine() {
         return shellRenderer.handleInput();
-
     }
 
-    /**
-     * Posle servisni vypis pres posliRadek. Prida tam navic jmeno programu s dvojteckou a mezerou.
-     * @param ret
-     */
-    public void posliServisne(String ret) {
-        posliRadek(Main.jmenoProgramu + ": " + ret);
-    }
-
-    /**
-     * Metoda na posilani celeho radku do výstupního proudu. Zaroven vypisuje poslané řetězce na standartni vystup.
-     * Prevzata z KarelServer
-     * @param out
-     * @param ret
-     * @throws java.io.IOException
-     */
-    public void posliRadek(String ret) throws ChybaSpojeniException {
+    public String readCharacter(){
         try {
+            return String.valueOf((char) this.terminalIO.read());
+        } catch (IOException ex) {
+            System.err.println("IOException, cannot read a single character from terminal");
+        }
 
-            terminalIO.write((ret + "\r\n"));
+        return "";
+    }
+
+    /**
+     * print text with program name
+     * @param text
+     */
+    public void printWithSimulatorName(String text) {
+        printLine(Main.jmenoProgramu + ": " + text);
+    }
+
+    /**
+     * method used to printLine to the terminal, this method call print(text+"\r\n") nothing more
+     * @param text text to be printed to the terminal
+     */
+    public void printLine(String text) {
+            this.print((text + "\r\n"));
+    }
+
+    
+    /**
+     * method used to print text to the terminal
+     * @param text text to be printed to the terminal
+     * @throws ChybaSpojeniException
+     */
+    public void print(String text) throws ChybaSpojeniException {
+        try {
+            terminalIO.write(text);
             terminalIO.flush();
+
             if (Main.debug) {
-                pocitac.vypis("posilam radek): " + ret);
+                pocitac.vypis("Print): " + text);
             }
         } catch (IOException ex) {
-            //ex.printStackTrace();
-            throw new ChybaSpojeniException("Metoda posliRadek, nastala chyba.");
+            throw new ChybaSpojeniException("Method CommandShell.print failed");
         }
     }
 
     /**
-     * Metoda na posilani do výstupního proudu. Zaroven vypisuje poslané řetězce na standartni vystup.
-     * Prevzata z KarelServer
-     * @param out
-     * @param ret
-     * @throws java.io.IOException
+     * method that print lines with delay
+     * @param lines
+     * @param delay in milliseconds
+     *
      */
-    public void posli(String ret) throws ChybaSpojeniException {
+    public void printWithDelay(String lines, int delay){
         try {
-            terminalIO.write(ret);
-            terminalIO.flush();
-            if (Main.debug) {
-                pocitac.vypis("posilam): " + ret);
-            }
-        } catch (IOException ex) {
-            //ex.printStackTrace();
-            throw new ChybaSpojeniException("Metoda posli: nastala chyba.");
-        }
-    }
-
-    /**
-     * Posila po radcich se zpozdenim v ms. Vyuziva metodu posliRadek().
-     * @param s, retezec, ktery ma posilat
-     * @param cekej, prodleva v ms mezi jednotlivejma radkama
-     * @author Stanislav Řehák
-     */
-    public void posliPoRadcich(String s, int cekej) throws ChybaSpojeniException {
-        BufferedReader input = new BufferedReader(new StringReader(s));
-        String lajna = "";
-        try {
-            while ((lajna = input.readLine()) != null) {
+            BufferedReader input = new BufferedReader(new StringReader(lines));
+            String singleLine = "";
+            while ((singleLine = input.readLine()) != null) {
                 try {
-                    Thread.sleep(cekej);
+                    Thread.sleep(delay);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(CommandShell.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println("Thread interruped exception occured in printWithDelay method");
                 }
-                posliRadek(lajna);
+
+                printLine(singleLine);
             }
-        } catch (IOException e) { //tohleto chyta vyjimku z BufferedReadru, ne z posliRadek
-            throw new ChybaSpojeniException("Metoda posliPoRadcich: nastala chyba.");
-        }
-    }
-
-    /**
-     * Vypise prompt na prikazou radku.
-     * @throws IOException
-     */
-    public void vypisPrompt() throws ChybaSpojeniException {
-
-        if (!vypisPrompt) {
-            return;
-        }
-
-        try {
-            terminalIO.write(prompt);
-            terminalIO.flush();
-            //pocitac.vypis("(socket c. "+cislo+" posilam): "+prompt);
         } catch (IOException ex) {
-            //ex.printStackTrace();
-            throw new ChybaSpojeniException("Metoda vypisPrompt, nastala chyba.");
+            System.err.println("IO exception occured in printWithDelay method");
+        }
+        
+    }
+
+    /**
+     * just print prompt
+     */
+    public void printPrompt() {
+        if (vypisPrompt) {
+            print(prompt);
         }
     }
 
     /**
-     * Ukonci spojeni.
+     * close session, terminal connection will be closed
      */
-    public void ukonciSpojeni() {
+    public void closeSession() {
         if (Main.debug) {
             pocitac.vypis("Zavolala se metoda ukonci.");
         }
@@ -174,32 +150,32 @@ public class CommandShell extends TerminalApplication {
     }
 
     @Override
-    public final int run(BasicTerminalIO terminalIO, AbstraktniPocitac pocitac) {
+    public final int run() {
 
-        pocitac.nastavKonsoli(this);
+        pocitac.configureCommandShell(this);
         this.zamek = this.pocitac.zamekPocitace;
 
-        String radek ;
+        String radek;
 
 
-                    while (!ukoncit) {
+        while (!ukoncit) {
 
-                vypisPrompt();
+            printPrompt();
 
-                radek = ctiRadek();
-                this.history.add(radek);
+            radek = readLine();
+            this.history.add(radek);
 
-                Main.debug("PRECETL JSEM :" + radek);
+            Main.debug("PRECETL JSEM :" + radek);
 
-                synchronized (zamek) {
-                    parser.zpracujRadek(radek);
-                }
+            synchronized (zamek) {
+                parser.zpracujRadek(radek);
+            }
             try {
                 terminalIO.flush();
             } catch (IOException ex) {
                 return -1;
             }
-            }
+        }
 
         return 0;
     }
