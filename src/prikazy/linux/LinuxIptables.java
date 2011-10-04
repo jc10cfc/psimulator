@@ -15,6 +15,7 @@ import datoveStruktury.IpAdresa;
 import java.util.ArrayList;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import vyjimky.SpatnaAdresaException;
 
 /**
@@ -88,7 +89,7 @@ public class LinuxIptables extends AbstraktniPrikaz {
     IpAdresa prekladanaAdr;//ip adresa, na kterou se ma prekladat
     SitoveRozhrani vystupni;
 
-    public LinuxIptables(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxIptables(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         zkontrolujPrikaz();

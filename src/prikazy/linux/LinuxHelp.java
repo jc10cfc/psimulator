@@ -7,6 +7,7 @@ package prikazy.linux;
 
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.AbstraktniPrikaz;
 
 /**
@@ -14,7 +15,7 @@ import prikazy.AbstraktniPrikaz;
  * @author Tomáš Pitřinec
  */
 public class LinuxHelp extends AbstraktniPrikaz{
-    public LinuxHelp(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxHelp(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc,kon,slova);
         vykonejPrikaz();
     }

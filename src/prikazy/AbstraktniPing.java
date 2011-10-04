@@ -8,6 +8,7 @@ import datoveStruktury.*;
 import java.util.ArrayList;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Predek vsech prikazu, ktere posilaji pakety. Definuje abstraktni metodu zpracujPaket.
@@ -46,7 +47,7 @@ public abstract class AbstraktniPing extends AbstraktniPrikaz {
     protected double celkovyCas; //soucet vsech milisekund
     
 
-    public AbstraktniPing(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public AbstraktniPing(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         odezvy = new ArrayList<Double>() {
 

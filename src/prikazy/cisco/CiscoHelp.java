@@ -7,7 +7,7 @@ package prikazy.cisco;
 
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Trida pro vypis podporovanych prikazu v moji implementaci.
@@ -17,7 +17,7 @@ public class CiscoHelp extends CiscoPrikaz {
 
     boolean english;
 
-    public CiscoHelp(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean english) {
+    public CiscoHelp(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean english) {
         super(pc, kon, slova);
         this.english = english;
         vykonejPrikaz();

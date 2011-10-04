@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.AbstraktniPrikaz;
 
 /**
@@ -18,7 +19,7 @@ import prikazy.AbstraktniPrikaz;
  */
 public class CiscoOtaznik extends AbstraktniPrikaz{
 
-    public CiscoOtaznik(AbstraktniPocitac pc, Konsole kon, List<String> slova, CiscoStavy stav) {
+    public CiscoOtaznik(AbstraktniPocitac pc, CommandShell kon, List<String> slova, CiscoStavy stav) {
         super(pc,kon,slova);
         this.stav = stav;
         vykonejPrikaz();

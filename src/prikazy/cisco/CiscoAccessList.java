@@ -7,7 +7,7 @@ package prikazy.cisco;
 import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Trida pro zpracovani prikazu 'access-list 7 permit 1.1.1.0 0.0.0.31
@@ -18,7 +18,7 @@ public class CiscoAccessList extends CiscoPrikaz {
     int access;
     IpAdresa adr;
 
-    public CiscoAccessList(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
+    public CiscoAccessList(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean no) {
         super(pc, kon, slova);
         this.no = no;
 

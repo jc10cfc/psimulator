@@ -8,6 +8,7 @@ package prikazy.linux;
 import prikazy.*;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  *
@@ -15,7 +16,7 @@ import pocitac.*;
  */
 public class LinuxExit extends AbstraktniPrikaz{
 
-    public LinuxExit(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxExit(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc,kon,slova);
         vykonejPrikaz();
     }

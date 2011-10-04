@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package pocitac;
+package pocitac.apps.CommandShell;
 
 import Main.Main;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import pocitac.Konsole;
 import telnetd.io.BasicTerminalIO;
 import telnetd.io.TerminalIO;
 
@@ -23,14 +24,15 @@ import telnetd.io.TerminalIO;
 public class ShellRenderer {
 
     private static Log log = LogFactory.getLog(ShellRenderer.class);
-    private Konsole konsole;
+    private CommandShell commandShell;
     private BasicTerminalIO termIO;
     private int cursor = 0;
     private StringBuilder sb = new StringBuilder(50); //buffer načítaného řádku, čtecí buffer
 
-    ShellRenderer(Konsole aThis) {
-        this.konsole = aThis;
-        termIO = this.konsole.getTerminalIO();
+
+    ShellRenderer(BasicTerminalIO terminalIO, CommandShell commandShell) {
+        this.termIO = terminalIO;
+        this.commandShell = commandShell;
     }
 
     /**
@@ -60,7 +62,7 @@ public class ShellRenderer {
                     termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
                     this.cursor = 0;
                     this.sb.setLength(0);
-                    this.konsole.vypisPrompt();
+                    this.commandShell.vypisPrompt();
                 }
 
                 if (i == TerminalIO.TABULATOR) {
@@ -232,19 +234,19 @@ public class ShellRenderer {
         termIO.eraseLine();
         termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
 
-        this.konsole.vypisPrompt();
+        this.commandShell.vypisPrompt();
 
         if (key == TerminalIO.UP) {
             this.sb.setLength(0);
-            this.sb.append(this.konsole.getHistory().getPreviousCommand());
+            this.sb.append(this.commandShell.getHistory().getPreviousCommand());
         } else if (key == TerminalIO.DOWN) {
             this.sb.setLength(0);
-            this.sb.append(this.konsole.getHistory().getNextCommand());
+            this.sb.append(this.commandShell.getHistory().getNextCommand());
         }
 
         termIO.write(this.sb.toString());
         termIO.moveLeft(100);
-        termIO.moveRight(sb.length() + this.konsole.prompt.length());
+        termIO.moveRight(sb.length() + this.commandShell.prompt.length());
         this.cursor = sb.length();
 
     }
@@ -306,7 +308,7 @@ public class ShellRenderer {
             }
 
             termIO.write(TerminalIO.CRLF); // nový řádek
-            this.konsole.vypisPrompt();
+            this.commandShell.vypisPrompt();
             termIO.write(this.sb.toString());
 
 
@@ -317,7 +319,7 @@ public class ShellRenderer {
 // nové hledání
 
         String hledanyPrikaz = this.sb.substring(0, cursor);
-        List<String> prikazy = this.konsole.getCommandList();
+        List<String> prikazy = this.commandShell.getCommandList();
 
 
         for (String temp : prikazy) {
@@ -339,7 +341,7 @@ public class ShellRenderer {
             termIO.eraseLine();
             termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
 
-            this.konsole.vypisPrompt();
+            this.commandShell.vypisPrompt();
             this.sb.setLength(0); // empty string builder
             this.sb.append(nalezenePrikazy.get(0)).append(" ");
 
@@ -353,7 +355,7 @@ public class ShellRenderer {
     private void clearScreen() throws IOException {
         this.termIO.eraseScreen();
         termIO.setCursor(0, 0);
-        this.konsole.vypisPrompt();
+        this.commandShell.vypisPrompt();
         
         updateWholeLine();
 

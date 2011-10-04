@@ -6,13 +6,14 @@
 package prikazy.linux;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.*;
 /**
  *
  * @author Tomáš Pitřinec
  */
 public class LinuxIpLink extends AbstraktniPrikaz{
-    public LinuxIpLink(AbstraktniPocitac pc, Konsole kon, List<String> slova, LinuxIp puv) {
+    public LinuxIpLink(AbstraktniPocitac pc, CommandShell kon, List<String> slova, LinuxIp puv) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

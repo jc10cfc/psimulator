@@ -11,6 +11,7 @@
 package prikazy.linux;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.*;
 
 /**
@@ -18,7 +19,7 @@ import prikazy.*;
  * @author Tomáš Pitřinec
  */
 public class LinuxIp extends AbstraktniPrikaz {
-    public LinuxIp(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxIp(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

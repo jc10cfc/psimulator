@@ -7,7 +7,7 @@ package prikazy.cisco;
 import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import pocitac.SitoveRozhrani;
 import vyjimky.SpatnaAdresaException;
 import vyjimky.SpatnaMaskaException;
@@ -22,7 +22,7 @@ public class CiscoIpAddress extends CiscoPrikaz {
     IpAdresa adr;
     boolean noBezAdresy = false;
 
-    public CiscoIpAddress(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no, SitoveRozhrani rozhrani) {
+    public CiscoIpAddress(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean no, SitoveRozhrani rozhrani) {
         super(pc, kon, slova, no);
         this.rozhrani = rozhrani;
 

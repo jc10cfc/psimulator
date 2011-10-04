@@ -8,7 +8,7 @@ import datoveStruktury.IpAdresa;
 import datoveStruktury.Paket;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import prikazy.AbstraktniPrikaz;
 import prikazy.AbstraktniTraceroute;
 import static Main.Main.*;
@@ -22,7 +22,7 @@ import static Main.Main.*;
  */
 public class CiscoTraceroute extends AbstraktniTraceroute {
 
-    public CiscoTraceroute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public CiscoTraceroute(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
 
         parsujPrikaz();

@@ -8,7 +8,7 @@ package prikazy.cisco;
 import datoveStruktury.IpAdresa;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 import static prikazy.cisco.CiscoIpNat.Stav.*;
 
 /**
@@ -35,7 +35,7 @@ public class CiscoIpNat extends CiscoPrikaz {
         STATIC // ip nat inside source static 10.10.10.1 171.16.68.5 
     }
 
-    public CiscoIpNat(AbstraktniPocitac pc, Konsole kon, List<String> slova, boolean no) {
+    public CiscoIpNat(AbstraktniPocitac pc, CommandShell kon, List<String> slova, boolean no) {
         super(pc, kon, slova, no);
 
         debug = false;

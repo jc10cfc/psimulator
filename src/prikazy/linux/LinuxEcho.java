@@ -8,6 +8,7 @@ import Main.Main;
 import prikazy.*;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Tato třída slouží k zapisování do souboru /proc/sys/net/ipv4/ip_forward.
@@ -16,7 +17,7 @@ import pocitac.*;
  */
 public class LinuxEcho extends AbstraktniPrikaz{
 
-    public LinuxEcho(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxEcho(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

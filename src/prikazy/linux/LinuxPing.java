@@ -10,6 +10,7 @@ import prikazy.*;
 import datoveStruktury.*;
 import java.util.List;
 import pocitac.*;
+import pocitac.apps.CommandShell.CommandShell;
 import vyjimky.SpatnaAdresaException;
 
 /**
@@ -42,7 +43,7 @@ public class LinuxPing extends AbstraktniPing{
      */
     private int navratovyKod=0;
 
-    public LinuxPing(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public LinuxPing(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
         parsujPrikaz();
         vykonejPrikaz();

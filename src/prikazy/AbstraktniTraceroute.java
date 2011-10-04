@@ -9,7 +9,7 @@ import datoveStruktury.IpAdresa;
 import datoveStruktury.Paket;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
-import pocitac.Konsole;
+import pocitac.apps.CommandShell.CommandShell;
 
 /**
  * Předek traceroute na linuxu i ciscu.
@@ -30,7 +30,7 @@ public abstract class AbstraktniTraceroute extends AbstraktniPing {
      */
     protected int stavKonani = 0;
 
-    public AbstraktniTraceroute(AbstraktniPocitac pc, Konsole kon, List<String> slova) {
+    public AbstraktniTraceroute(AbstraktniPocitac pc, CommandShell kon, List<String> slova) {
         super(pc, kon, slova);
     }
 
