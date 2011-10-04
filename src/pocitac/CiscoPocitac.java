@@ -9,7 +9,7 @@ import datoveStruktury.CiscoWrapper;
 import java.util.LinkedList;
 import java.util.List;
 import pocitac.apps.CommandShell.CommandShell;
-import prikazy.cisco.CiscoParserPrikazu;
+import pocitac.apps.CommandShell.prikazy.cisco.CiscoParserPrikazu;
 
 /**
  *

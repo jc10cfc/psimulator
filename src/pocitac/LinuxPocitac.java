@@ -9,7 +9,7 @@ import datoveStruktury.*;
 import java.util.LinkedList;
 import java.util.List;
 import pocitac.apps.CommandShell.CommandShell;
-import prikazy.linux.LinuxParserPrikazu;
+import pocitac.apps.CommandShell.prikazy.linux.LinuxParserPrikazu;
 /**
  *
  * @author Tomáš Pitřinec

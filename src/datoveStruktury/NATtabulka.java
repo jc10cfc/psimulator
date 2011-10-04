@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import pocitac.AbstraktniPocitac;
 import pocitac.SitoveRozhrani;
-import static prikazy.AbstraktniPrikaz.*;
+import static pocitac.apps.CommandShell.prikazy.AbstraktniPrikaz.*;
 
 /**
  * Datova struktura pro NATovaci tabulku. <br />
