@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pocitac.AbstraktniPocitac;
 import pocitac.apps.TerminalApplication;
-import prikazy.ParserPrikazu;
+import pocitac.apps.CommandShell.prikazy.ParserPrikazu;
 import telnetd.io.BasicTerminalIO;
 import vyjimky.ChybaSpojeniException;
 

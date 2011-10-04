@@ -7,7 +7,8 @@
 
 package datoveStruktury;
 
-import prikazy.*;
+import pocitac.apps.CommandShell.prikazy.AbstraktniPing;
+
 
 /**
  * Třída representující paket pro ping, kterej si budou počítače mezi sebou předávat.

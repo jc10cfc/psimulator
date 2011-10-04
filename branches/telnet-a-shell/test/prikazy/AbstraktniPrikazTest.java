@@ -5,6 +5,7 @@
 
 package prikazy;
 
+import pocitac.apps.CommandShell.prikazy.AbstraktniPrikaz;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

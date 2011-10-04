@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import pocitac.apps.CommandShell.CommandShell;
-import prikazy.AbstraktniPing;
+import pocitac.apps.CommandShell.prikazy.AbstraktniPing;
 import telnetd.pridaneTridy.TelnetProperties;
 
 /**
