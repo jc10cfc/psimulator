@@ -10,10 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import pocitac.Konsole;
 import telnetd.io.BasicTerminalIO;
 import telnetd.io.TerminalIO;
 
@@ -76,12 +74,12 @@ public class ShellRenderer {
 
                 if (i == TerminalIO.LEFT) {
                     printOut = false;
-                    moveCursorLeft();
+                    moveCursorLeft(1);
                 }
 
                 if (i == TerminalIO.RIGHT) {
                     printOut = false;
-                    moveCursorRight();
+                    moveCursorRight(1);
                 }
 
                 if (i == TerminalIO.UP) {
@@ -99,8 +97,8 @@ public class ShellRenderer {
 
                     if (cursor != 0) {
                         sb.deleteCharAt(cursor - 1);
-                        moveCursorLeft();
-                        renderRestOfLine();
+                        moveCursorLeft(1);
+                        draw();
                         Main.debug("Pozice kurzoru: " + cursor);
                     }
                 }
@@ -125,7 +123,7 @@ public class ShellRenderer {
                     termIO.write(i);
                     sb.insert(cursor, (char) i);
                     cursor++;
-                    renderRestOfLine();
+                    draw();
                 }
 
                 Main.debug("Pozice kurzoru: " + cursor + " Tisknul jsem znak? TRUE/FALSE " + printOut);
@@ -181,43 +179,25 @@ public class ShellRenderer {
      * funkce která překreslí řádek od pozice kurzoru až do jeho konce dle čtecího bufferu
      * @throws IOException
      */
-    private void renderRestOfLine() throws IOException {
+    private void draw() throws IOException {
 
-        if (cursor <= sb.length()) // pokud nejsem na konci řádku
-        {
-            termIO.storeCursor();
-            termIO.eraseToEndOfScreen();
-            termIO.restoreCursor();
-            termIO.storeCursor();
-
-            int tempCursor = cursor;
-
-            while (tempCursor < sb.length()) { //dokud jsem nevypsal zbytek textu
-                termIO.write(sb.charAt(tempCursor));
-                tempCursor++;
-            }
-
-        }
-        termIO.restoreCursor();
-        termIO.moveLeft(1);
-        termIO.moveRight(1);
-
+        termIO.eraseToEndOfScreen();
+        termIO.write(sb.substring(cursor, sb.length()));
+        termIO.moveLeft(sb.length() - cursor);
     }
 
     /**
      * překreslí celou řádku, umístí kurzor na konec řádky
      * @throws IOException
      */
-    private void updateWholeLine() throws IOException {
+    private void drawLine() throws IOException {
 
-        this.cursor = 0;
-
-        while (this.cursor != this.sb.length()) {
-            termIO.write(sb.charAt(cursor));
-            // možná RIGHT
-            cursor++;
-        }
-
+        moveCursorLeft(cursor);
+        termIO.eraseToEndOfScreen();
+        this.cursor=0;
+        termIO.write(sb.toString());
+        this.cursor = sb.length();
+        
     }
 
     /**
@@ -255,7 +235,9 @@ public class ShellRenderer {
      * funkce obstarávající posun kurzoru vlevo.
      * Posouvá "blikající" kurzor, ale i "neviditelný" kurzor značící pracovní místo v čtecím bufferu
      */
-    private void moveCursorLeft() {
+    private void moveCursorLeft(int times) {
+
+        for(int i=0;i<times; i++){
         if (cursor == 0) {
             return;
         } else {
@@ -269,6 +251,7 @@ public class ShellRenderer {
 
         }
         Main.debug("VLEVO, pozice: " + cursor);
+        }
 
     }
 
@@ -276,7 +259,11 @@ public class ShellRenderer {
      *  funkce obstarávající posun kurzoru vpravo.
      *  Posouvá "blikající" kurzor, ale i "neviditelný" kurzor značící pracovní místo v čtecím bufferu
      */
-    private void moveCursorRight() {
+    private void moveCursorRight(int times) {
+
+        for(int i=0;i<times; i++){
+
+
         if (cursor >= this.sb.length()) {
             return;
         } else {
@@ -290,6 +277,8 @@ public class ShellRenderer {
 
         }
         Main.debug("VPRAVO, pozice: " + cursor);
+
+    }
     }
 
     /**
@@ -338,14 +327,15 @@ public class ShellRenderer {
         if (nalezenePrikazy.size() == 1) // našel jsem jeden odpovídající příkaz tak ho doplním
         {
 
-            termIO.eraseLine();
-            termIO.moveLeft(100);  // kdyby byla lepsi cesta jak smazat řádku, nenašel jsem
+            String nalezenyPrikaz = nalezenePrikazy.get(0);
+            String doplnenyPrikaz = nalezenyPrikaz.substring(hledanyPrikaz.length(), nalezenyPrikaz.length());
 
-            this.commandShell.printPrompt();
-            this.sb.setLength(0); // empty string builder
-            this.sb.append(nalezenePrikazy.get(0)).append(" ");
+            sb.insert(cursor, doplnenyPrikaz);
 
-            updateWholeLine();
+            int tempCursor = cursor;
+            drawLine();
+
+            moveCursorLeft(sb.length()-(tempCursor+doplnenyPrikaz.length()));
 
         }
 
@@ -356,9 +346,8 @@ public class ShellRenderer {
         this.termIO.eraseScreen();
         termIO.setCursor(0, 0);
         this.commandShell.printPrompt();
-        
-        updateWholeLine();
-
+        this.cursor=0;
+        drawLine();
 
     }
 }
