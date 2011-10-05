@@ -1,0 +1,53 @@
+zbyva:
+testovani
+rozstipat SAXHandler
+co @author? prejmenovat na jmena nebo nechat prezdivky?
+
+
+kubalik:
+udelat help
+preklopit do Aj
+detekce fungujicich prikazu na realnem ciscu u me neprochazejicich?
+port parametrem
+\r\n
+nacteni z konfiguraku bez dat (jen vytvorit PC+rozhrani)
+
+
+haldyr:
+clear ip nat translation - netreba
+clear ip route * - stejnak nefunguje
+prikaz ?
+
+pozor:
+pri zmene/mazani IP je potreba take zmenit/smazat prislusnou routu!!!
+kontrola IP
+    Router(config-if)#ip address 147.32.120.0 255.255.255.0
+    Bad mask /24 for address 147.32.120.0 (mam poreseny)
+routovat _pouze_ na nahozenych rozhranich
+pri nacitani Cisco stroje z konfiguraku se pri route na GW vubec nekouka na rozhrani!!! (jen adresat + brana)
+
+musi projit na Linuxu:
+route add 255.2.2.2 eth1
+
+pokud poustime terminal pro cisco timto prikazem, tak mame funknci i doplnovani
+rlwrap -pcyan -w-3 -I -b'(){}[],+=&^%0@;|\' -f /home/haldyr/NetBeansProjects/bp_psi/src/data/cisco_doplnovani.txt telnet localhost
+
+
+zpracovani signalu INT (Ctrl+C)
+Signal.handle(new Signal("INT"), new SignalHandler() {
+            @Override
+            public void handle(Signal sig) {
+                System.out.println(
+                        "Aaarggh, a user is trying to interrupt me!!");
+                System.out.println(
+                        "(throw garlic at user, say `shoo, go away')");
+            }
+        });
+
+
+
+http://bppsi.beanstalkapp.com/bp_projekt
+http://bppsi.svn.beanstalkapp.com/bp_projekt/
+ucet read-only
+jmeno: kubalik
+heslo: bakalarka890
