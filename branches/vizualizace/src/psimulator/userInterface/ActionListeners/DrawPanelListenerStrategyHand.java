@@ -16,6 +16,7 @@ import psimulator.userInterface.Editor.DrawPanel;
 import psimulator.userInterface.Editor.UndoCommands.UndoableMoveComponent;
 import psimulator.userInterface.Editor.ZoomManager;
 import psimulator.userInterface.MainWindowInterface;
+
 /**
  *
  * @author Martin
@@ -45,8 +46,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     /**
      * point in actual zoom where started components marking
      */
-    protected Point startPointOfMarking;
-
+    protected Point startPointOfMarkingTransparentRectangle;
 
     public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
         super(drawPanel, undoManager, zoomManager, mainWindow);
@@ -99,7 +99,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // if is clicked component marked 
         if (clickedComponent.isMarked()) {
             // if there are more marked components, mark only clicked one
-            if (markedComponents.size() >= 2) {
+            if (getMarkedHwComponentsCount() > 1) {
                 setMarkedComponentsUnmarked();
                 doMarkHwComponentAndItsCables(true, clickedComponent);
             } else { // if only one marked component remove marking 
@@ -125,6 +125,15 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             draggedComponents = new ArrayList<AbstractHwComponent>();
         } else {
             draggedComponents.clear();
+        }
+
+        // start painting transparent rectange for marking more components
+        startPointOfMarkingTransparentRectangle = e.getPoint();
+
+        Markable clickedComponent = getClickedHwComponent(e.getPoint());
+
+        if (clickedComponent == null) {
+            return;
         }
 
         // try if start dragging of some component
@@ -157,14 +166,11 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             draggedComponentsOriginalPoint = graph.getUpperLeftBound(draggedComponents);
             // scale properly
             draggedComponentsOriginalPoint = zoomManager.doScaleToDefault(draggedComponentsOriginalPoint);
-            
+
             // count difference between upper left corner of component and clicked point on component
             differenceXdefaultZoom = zoomManager.doScaleToDefault(e.getX()) - draggedComponentsOriginalPoint.x;
             differenceYdefaultZoom = zoomManager.doScaleToDefault(e.getY()) - draggedComponentsOriginalPoint.y;
         }
-
-        // start painting transparent rectange for marking more components
-        startPointOfMarking = e.getPoint();
 
     }
 
@@ -173,12 +179,12 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // painting transparent rectange for marking more components
         if (draggedComponents.isEmpty()) {
             // calculate width an height
-            int width = startPointOfMarking.x - e.getPoint().x;
-            int height = startPointOfMarking.y - e.getPoint().y;
+            int width = startPointOfMarkingTransparentRectangle.x - e.getPoint().x;
+            int height = startPointOfMarkingTransparentRectangle.y - e.getPoint().y;
 
             // calculate x and y position
-            int x = width < 0 ? startPointOfMarking.x : e.getPoint().x;
-            int y = height < 0 ? startPointOfMarking.y : e.getPoint().y;
+            int x = width < 0 ? startPointOfMarkingTransparentRectangle.x : e.getPoint().x;
+            int y = height < 0 ? startPointOfMarkingTransparentRectangle.y : e.getPoint().y;
 
             // create rectangle
             Rectangle rect = new Rectangle(x, y, Math.abs(width), Math.abs(height));
@@ -196,25 +202,31 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         // --- DRAGGING components-----
+        // if are marked other components than dragged, mark only the dragged component (if ctrl not down)
+        if(!e.isControlDown() && draggedComponents.size() == 1 && !draggedComponents.get(0).isMarked()){
+            setMarkedComponentsUnmarked();
+            doMarkHwComponentAndItsCables(true, draggedComponents.get(0));
+        }
+        
 
         // get point from mouse in actual zoom shifted by difference
         Point p = new Point(e.getX() - zoomManager.doScaleToActual(differenceXdefaultZoom),
                 e.getY() - zoomManager.doScaleToActual(differenceYdefaultZoom));
-        
+
         // get upper left bound of dragged components
         Point draggedComponentsTmpPoint = graph.getUpperLeftBound(draggedComponents);
-        
-        
+
+
         Dimension differenceInActualZoom = new Dimension(p.x - draggedComponentsTmpPoint.x, p.y - draggedComponentsTmpPoint.y);
 
         // if the corner would be out of panel
-        if(draggedComponentsTmpPoint.x + differenceInActualZoom.width < 0){
+        if (draggedComponentsTmpPoint.x + differenceInActualZoom.width < 0) {
             differenceInActualZoom.width = 0 - draggedComponentsTmpPoint.x;
         }
-        if(draggedComponentsTmpPoint.y + differenceInActualZoom.height < 0){
+        if (draggedComponentsTmpPoint.y + differenceInActualZoom.height < 0) {
             differenceInActualZoom.height = 0 - draggedComponentsTmpPoint.y;
         }
-        
+
 
         // if nothing happend, return
         if (differenceInActualZoom.width == 0 && differenceInActualZoom.height == 0) {
@@ -260,9 +272,9 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 System.out.println("Original default loc: x="+originalDefaultZoomLocation.x+", y="+originalDefaultZoomLocation.y+". "
                 + "New default loc: x="+newDefaultZoomLocation.x +", y="+newDefaultZoomLocation.y+".");*/
             }
-            
+
             drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
-            
+
             draggedComponents = null;
             return;
         }
@@ -352,20 +364,49 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
     }
 
-    /**
-     * Return component at point
-     * @param point
-     * @return component clicked
-     */
-    private Markable getClickedItem(Point point) {
+    private Markable getDraggedComponents(Point point){
+        Markable component = null;
+        
+        if(draggedComponents == null || draggedComponents.isEmpty()){
+            return component;
+        }
+        
+        // search HwComponents
+        for (AbstractHwComponent c : draggedComponents) {
+            if (c.intersects(point)) {
+                component = c;
+                break;
+            }
+        }
+
+        return component;
+    }
+    
+    private Markable getClickedHwComponent(Point point) {
         Markable clickedComponent = null;
 
         // search HwComponents
         for (AbstractHwComponent c : graph.getHwComponents()) {
             if (c.intersects(point)) {
                 clickedComponent = c;
-                return clickedComponent;
+                break;
             }
+        }
+
+        return clickedComponent;
+    }
+
+    /**
+     * Return component at point
+     * @param point
+     * @return component clicked
+     */
+    private Markable getClickedItem(Point point) {
+        // search HwComponents
+        Markable clickedComponent = getClickedHwComponent(point);
+
+        if (clickedComponent != null) {
+            return clickedComponent;
         }
 
         // create small rectangle arround clicked point
@@ -389,5 +430,15 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             m.setMarked(false);
         }
         markedComponents.clear();
+    }
+
+    private int getMarkedHwComponentsCount() {
+        int count = 0;
+        for (Markable m : markedComponents) {
+            if (m instanceof AbstractHwComponent) {
+                count++;
+            }
+        }
+        return count;
     }
 }

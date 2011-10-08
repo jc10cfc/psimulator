@@ -60,22 +60,8 @@ public class HwComponent extends AbstractHwComponent {
                     defaultZoomYPos - offsetInDefaultZoom.height);
         }
         // set new postion
-        //setUndoRedoPostition(defaultZoomPoint);
         setLocation(defaultZoomPoint.x, defaultZoomPoint.y);
     }
-
-    /**
-     * Sets position to defaultZoomPoint
-     * @param defaultZoomP 
-     */
-    /*@Override
-    protected void setUndoRedoPostition(Point defaultZoomP) {
-        // from default original location count actual location considering zoom
-        int x = zoomManager.doScaleToActual(defaultZoomP.x);
-        int y = zoomManager.doScaleToActual(defaultZoomP.y);
-        // set location to counted coordinates
-        setLocation(x, y);
-    }*/
 
     /**
      * Sets position with center of image in the middlePoint
@@ -90,31 +76,20 @@ public class HwComponent extends AbstractHwComponent {
     @Override
     public void setLocation(int defaultZoomXPos, int defaultZoomYPos) {
         //System.out.println("tady");
-
-        /*
-        if (x < 0) {
-            x = 0;
+        
+        if (defaultZoomXPos < 0) {
+            defaultZoomXPos = 0;
         }
-        if (y < 0) {
-            y = 0;
-        }*/
+        if (defaultZoomYPos < 0) {
+            defaultZoomYPos = 0;
+        }
         
         // update defautl position (without zoom)
         this.defaultZoomXPos = defaultZoomXPos;
         this.defaultZoomYPos = defaultZoomYPos;
-
+        
         this.xPos = zoomManager.doScaleToActual(defaultZoomXPos);
         this.yPos = zoomManager.doScaleToActual(defaultZoomYPos);
-        
-        /*
-        // set new position
-        this.xPos = x;
-        this.yPos = y;
-
-        // update defautl position (without zoom)
-        this.defaultZoomXPos = zoomManager.doScaleToDefault(x);
-        this.defaultZoomYPos = zoomManager.doScaleToDefault(y);
-         */
     }
 
     @Override
@@ -130,10 +105,4 @@ public class HwComponent extends AbstractHwComponent {
         g2.drawImage(bi, xPos, yPos, null);
 
     }
-    /*
-    @Override
-    public void translate(Point p) {
-    xPos -= p.x;
-    yPos -= p.y;
-    }*/
 }
