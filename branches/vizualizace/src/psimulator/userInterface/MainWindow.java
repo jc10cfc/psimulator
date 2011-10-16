@@ -10,7 +10,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.logicLayer.ControllerFacade;
 import psimulator.userInterface.Editor.Enums.Zoom;
-import psimulator.userInterface.ActionListeners.PreferencesActionListener;
+import psimulator.userInterface.MouseActionListeners.PreferencesActionListener;
 import psimulator.userInterface.Editor.AbstractEditor;
 import psimulator.userInterface.Editor.EditorPanel;
 import psimulator.userInterface.Editor.Enums.UndoRedo;
