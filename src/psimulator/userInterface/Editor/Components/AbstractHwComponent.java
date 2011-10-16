@@ -30,14 +30,24 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
     
     private List<Cable> cables = new ArrayList<Cable>();
     
+    private List<EthInterface> interfaces = new ArrayList<EthInterface>();
+    
     protected BufferedImage bi;
 
     public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager) {
         super();
         this.zoomManager = zoomManager;
         this.imageFactory = imageFactory;
+        
+        for(int i =0;i<3;i++){
+            interfaces.add(new EthInterface("Eth"+i));
+        }
     }
 
+    public List<EthInterface> getInterfaces(){
+        return interfaces;
+    }
+    
     public boolean containsCable(Cable cable){
         return cables.contains(cable);
     }

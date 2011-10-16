@@ -1,4 +1,4 @@
-package psimulator.userInterface.ActionListeners;
+package psimulator.userInterface.MouseActionListeners;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -7,6 +7,7 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.Cable;
+import psimulator.userInterface.Editor.Dialogs.CableConnectToInterfacePopupMenu;
 import psimulator.userInterface.Editor.DrawPanel;
 import psimulator.userInterface.Editor.UndoCommands.UndoableAddCable;
 import psimulator.userInterface.Editor.ZoomManager;
@@ -21,9 +22,13 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
     private Point startPoint;
-
+    
+    private CableConnectToInterfacePopupMenu popupMenu;
+    
     public DrawPanelListenerStrategyAddCable(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
         super(drawPanel, undoManager, zoomManager, mainWindow);
+        
+        popupMenu = new CableConnectToInterfacePopupMenu(drawPanel);
     }
 
     @Override
@@ -36,7 +41,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         }
         drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
-    
+
     @Override
     public void mousePressed(MouseEvent e) {
         boolean isFirstComponent = false;
@@ -90,6 +95,9 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
             } else {
                 // if not yet connected
                 if (!graph.isConnection(component1, component2)) {
+                    //System.out.println("E:getComponent " + e.getComponent());
+                    popupMenu.showPopupInterfaceChoose(component2, e.getX(), e.getY());
+                    
                     // create new cabel
                     Cable cable = new Cable(component1, component2);
                     // add cabel to graph
@@ -105,4 +113,5 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         // repaint draw panel
         drawPanel.repaint();
     }
+
 }

@@ -1,4 +1,4 @@
-package psimulator.userInterface.ActionListeners;
+package psimulator.userInterface.MouseActionListeners;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
