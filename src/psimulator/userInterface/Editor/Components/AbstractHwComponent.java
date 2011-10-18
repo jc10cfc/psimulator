@@ -5,8 +5,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 import java.util.Observer;
 import psimulator.userInterface.Editor.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -42,8 +42,90 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         for(int i =0;i<3;i++){
             interfaces.add(new EthInterface("Eth"+i, null));
         }
+        
+        zoomManager.addObserver(this);
+    }
+    
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        zoomManager.deleteObserver(this);
     }
 
+    /**
+     * Updates Components position after zoom
+     * @param o
+     * @param o1 
+     */
+    @Override
+    public void update(Observable o, Object o1) {
+        xPos = zoomManager.doScaleToActual(defaultZoomXPos);
+        yPos = zoomManager.doScaleToActual(defaultZoomYPos);
+    }
+
+    /**
+     * Changes position by offset in parameter adding it to default zoom
+     * @param offsetInDefaultZoom 
+     */
+    public void doChangePosition(Dimension offsetInDefaultZoom, boolean positive) {
+        Point defaultZoomPoint;
+        // count point to move component
+        if (positive) {
+            defaultZoomPoint = new Point(defaultZoomXPos + offsetInDefaultZoom.width,
+                    defaultZoomYPos + offsetInDefaultZoom.height);
+        }else{
+            defaultZoomPoint = new Point(defaultZoomXPos - offsetInDefaultZoom.width,
+                    defaultZoomYPos - offsetInDefaultZoom.height);
+        }
+        // set new postion
+        setLocation(defaultZoomPoint.x, defaultZoomPoint.y);
+    }
+
+    /**
+     * Sets position with center of image in the middlePoint
+     * @param middlePoint Center of image
+     */
+    public void setLocationByMiddlePoint(Point middlePoint) {
+        setLocation(zoomManager.doScaleToDefault(middlePoint.x - (bi.getWidth() / 2)), 
+                zoomManager.doScaleToDefault(middlePoint.y - (bi.getHeight() / 2)));
+    }
+
+    @Override
+    public void setLocation(int defaultZoomXPos, int defaultZoomYPos) {
+        //System.out.println("tady");
+        
+        if (defaultZoomXPos < 0) {
+            defaultZoomXPos = 0;
+        }
+        if (defaultZoomYPos < 0) {
+            defaultZoomYPos = 0;
+        }
+        
+        // update defautl position (without zoom)
+        this.defaultZoomXPos = defaultZoomXPos;
+        this.defaultZoomYPos = defaultZoomYPos;
+        
+        this.xPos = zoomManager.doScaleToActual(defaultZoomXPos);
+        this.yPos = zoomManager.doScaleToActual(defaultZoomYPos);
+    }
+    
+    
+    @Override
+    public boolean intersects(Point p) {
+        if ((p.x >= xPos && p.x <= xPos + bi.getWidth()) && (p.y >= yPos && p.y <= yPos + bi.getHeight())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean intersects(Rectangle r) {
+        Rectangle rect = new Rectangle(xPos, yPos, bi.getWidth(), bi.getHeight());
+        return r.intersects(rect);
+    }
+    
+    //----------- GETTERS AND SETTERS
     /**
      * returns all EthInterfaces 
      * @return 
@@ -88,22 +170,34 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         return false;
     }*/
     
+    /**
+     * gets all bundles of cables
+     * @return 
+     */
     public List<BundleOfCables> getBundleOfCableses(){
         return bundlesOfCables;
     }
     
+    /**
+     * adds bundle of cables to component
+     * @param boc 
+     */
     public void addBundleOfCables(BundleOfCables boc){
         bundlesOfCables.add(boc);
     }
     
+    /**
+     * removes bundle of cables from this component
+     * @param boc 
+     */
     public void removeBundleOfCables(BundleOfCables boc){
         bundlesOfCables.remove(boc);
     }
-    
-    public boolean containsBundleOfCables(BundleOfCables boc){
-        return bundlesOfCables.contains(boc);
-    }
- 
+
+    /**
+     * gets center of this component
+     * @return 
+     */
     public Point getCenterLocation() {
         return new Point(xPos + zoomManager.getIconSize() / 2, yPos + zoomManager.getIconSize() / 2);
     }
@@ -114,22 +208,6 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
      */
     public Point getLowerRightCornerLocation(){
         return new Point(xPos + zoomManager.getIconSize(), yPos + zoomManager.getIconSize());
-    }
-
-    @Override
-    public boolean intersects(Point p) {
-        if ((p.x >= xPos && p.x <= xPos + bi.getWidth()) && (p.y >= yPos && p.y <= yPos + bi.getHeight())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    @Override
-    public boolean intersects(Rectangle r) {
-        Rectangle rect = new Rectangle(xPos, yPos, bi.getWidth(), bi.getHeight());
-        
-        return r.intersects(rect);
     }
     
     @Override
@@ -151,9 +229,5 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
     public int getY() {
         return yPos;
     }
-    
-    public abstract void doChangePosition(Dimension offsetInDefaultZoom, boolean positive);
 
-    public abstract void setLocationByMiddlePoint(Point middlePoint);
- 
 }
