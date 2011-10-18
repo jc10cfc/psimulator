@@ -6,6 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
+import psimulator.userInterface.Editor.Components.BundleOfCables;
 import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel;
 import psimulator.userInterface.Editor.Graph;
@@ -38,10 +39,10 @@ public class ActionOnDelete extends AbstractAction {
     public void actionPerformed(ActionEvent ae) {
         // get all marked components
         List<AbstractHwComponent> markedComponents = graph.getMarkedHwComponentsCopy();
-        
+
         // put all marked cables to cables toRemove
         List<Cable> cablesToRemove = graph.getMarkedCablesCopy();
-        
+
         // if there is no marked cable or component
         if (markedComponents.isEmpty() && cablesToRemove.isEmpty()) {
             markedComponents = null;
@@ -51,33 +52,33 @@ public class ActionOnDelete extends AbstractAction {
 
         // remove marked components from graph
         graph.removeHwComponents(markedComponents);
-        
-        
+
+
         // for all removed components
         for (AbstractHwComponent c : markedComponents) {
             // all its cables add to cablesToRemove
-            for(Cable cable: c.getCables()){
-                // if collection doesnt contain, than add cable
-                if(!cablesToRemove.contains(cable)){
-                    cablesToRemove.add(cable);
+            for (BundleOfCables boc : c.getBundleOfCableses()) {
+                for (Cable cable : boc.getCables()) {
+                    // if collection doesnt contain, than add cable
+                    if (!cablesToRemove.contains(cable)) {
+                        cablesToRemove.add(cable);
+                    }
                 }
             }
-            
-            
             // unmark component
             c.setMarked(false);
         }
         // remove cables from graph
         graph.removeCables(cablesToRemove);
-        
+
         //System.out.println("Removing "+markedComponents.size()+ " components and "+cablesToRemove.size()+" cables" );
-        
-        undoManager.undoableEditHappened(new UndoableEditEvent(this,
-            new UndoableRemoveComponents(markedComponents, cablesToRemove, drawPanel.getGraph(), drawPanel)));
-        
+        undoManager.undoableEditHappened(
+                new UndoableEditEvent(this,
+                new UndoableRemoveComponents(markedComponents, cablesToRemove, drawPanel.getGraph(), drawPanel)));
+
         // update undo redo buttons
-        mainWindow.updateUndoRedoButtons(); 
-        
+        mainWindow.updateUndoRedoButtons();
+
         // reapaint draw panel
         drawPanel.repaint();
     }

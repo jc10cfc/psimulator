@@ -28,7 +28,7 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
     protected ZoomManager zoomManager;
     protected AbstractImageFactory imageFactory;
     
-    private List<Cable> cables = new ArrayList<Cable>();
+    private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
     
     private List<EthInterface> interfaces = new ArrayList<EthInterface>();
     
@@ -44,10 +44,18 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         }
     }
 
+    /**
+     * returns all EthInterfaces 
+     * @return 
+     */
     public List<EthInterface> getInterfaces(){
         return interfaces;
     }
     
+    /**
+     * gets first avaiable ethInterface, if no avaiable null is renturned
+     * @return 
+     */
     public EthInterface getFirstFreeInterface(){
         for(EthInterface ei : interfaces){
             if(!ei.hasCable()){
@@ -57,6 +65,10 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         return null;
     }
     
+    /**
+     * finds out whether component has any free EthInterface
+     * @return 
+     */
     public boolean hasFreeInterace(){
         for(EthInterface ei: interfaces){
             if(!ei.hasCable()){
@@ -66,7 +78,7 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         return false;
     }
     
-    
+    /*
     public boolean containsCable(Cable cable){
         for(EthInterface ei : interfaces){
             if(ei.hasCable()){
@@ -74,25 +86,22 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
             }
         }
         return false;
+    }*/
+    
+    public List<BundleOfCables> getBundleOfCableses(){
+        return bundlesOfCables;
     }
     
-    public void addCable(Cable cable, EthInterface eth){
-        // add cable to cables list
-        cables.add(cable);
-        // connect cable to eth interface
-        eth.setCable(cable);
+    public void addBundleOfCables(BundleOfCables boc){
+        bundlesOfCables.add(boc);
     }
     
-    public void removeCable(Cable cable, EthInterface eth){
-        // remove cable from cables
-        cables.remove(cable);
-        // disconnect cable from eth interface
-        eth.removeCable();
+    public void removeBundleOfCables(BundleOfCables boc){
+        bundlesOfCables.remove(boc);
     }
-
     
-    public List<Cable> getCables(){
-        return cables;
+    public boolean containsBundleOfCables(BundleOfCables boc){
+        return bundlesOfCables.contains(boc);
     }
  
     public Point getCenterLocation() {

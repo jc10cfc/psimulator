@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
+import psimulator.userInterface.Editor.Components.BundleOfCables;
 import psimulator.userInterface.Editor.Components.Cable;
+import psimulator.userInterface.Editor.Components.EthInterface;
 
 /**
  *
@@ -14,7 +16,7 @@ import psimulator.userInterface.Editor.Components.Cable;
 public class Graph {
 
     private List<AbstractHwComponent> components = new ArrayList<AbstractHwComponent>();
-    private List<Cable> cables = new ArrayList<Cable>();
+    private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
 
     /**
      * Retruns new ArrayList with marked components
@@ -37,20 +39,44 @@ public class Graph {
     }
 
     /**
+     * Retruns new ArrayList with marked bundles of cables
+     * @return 
+     
+    public List<BundleOfCables> getMarkedBundleOfCablesCopy() {
+        List<BundleOfCables> temp = new ArrayList<BundleOfCables>();
+
+        Iterator<BundleOfCables> it = bundleOfCables.iterator();
+
+        // get all marked components
+        while (it.hasNext()) {
+            BundleOfCables b = it.next();
+            if (b.isMarked()) {
+                temp.add(b);
+            }
+        }
+
+        return temp;
+    }*/
+
+    /**
      * Retruns new ArrayList with marked cables
      * @return 
      */
     public List<Cable> getMarkedCablesCopy() {
         List<Cable> temp = new ArrayList<Cable>();
 
-        Iterator<Cable> it = cables.iterator();
+        Iterator<BundleOfCables> it = bundlesOfCables.iterator();
 
         // get all marked components
         while (it.hasNext()) {
-            Cable c = it.next();
-            if (c.isMarked()) {
-                temp.add(c);
+            BundleOfCables b = it.next();
+
+            for (Cable c : b.getCables()) {
+                if (c.isMarked()) {
+                    temp.add(c);
+                }
             }
+
         }
 
         return temp;
@@ -76,12 +102,58 @@ public class Graph {
         components.removeAll(componentList);
     }
 
+    public List<BundleOfCables> getBundlesOfCables() {
+        return bundlesOfCables;
+    }
+
+    public int getCablesCount() {
+        int count = 0;
+        for (BundleOfCables boc : bundlesOfCables) {
+            count += boc.getCables().size();
+        }
+        return count;
+    }
+
     /**
-     * Gets all cables from graph
+     * Returns bundle of cables between component1 and component2.
+     * If such a bundle does not exist, it creates it and adds it to graph and both components.
+     * @param component1
+     * @param component2
      * @return 
      */
-    public List<Cable> getCables() {
-        return cables;
+    private BundleOfCables getBundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2) {
+        BundleOfCables bundle = null;
+
+        // find bundle to place the cable in
+        for (BundleOfCables boc : bundlesOfCables) {
+            if ((boc.getComponent1() == component1 && boc.getComponent2() == component2) || 
+                    (boc.getComponent1() == component2 && boc.getComponent2() == component1)){
+                bundle = boc;
+                break;
+            }
+        }
+
+        // if there is not a bundle between component1 and component2, we make the bundle
+        if (bundle == null) {
+            bundle = new BundleOfCables(component1, component2);
+            bundlesOfCables.add(bundle);
+            component1.addBundleOfCables(bundle);
+            component2.addBundleOfCables(bundle);
+        }
+        return bundle;
+    }
+    
+    /**
+     * removes BundleOfCables from both components and graph
+     * @param bundleOfCables 
+     */
+    private void removeBundleOfCables(BundleOfCables bundleOfCables){
+        bundleOfCables.getComponent1().removeBundleOfCables(bundleOfCables);
+        bundleOfCables.getComponent2().removeBundleOfCables(bundleOfCables);
+        
+        bundlesOfCables.remove(bundleOfCables);
+        
+        bundleOfCables = null;
     }
 
     /**
@@ -89,13 +161,14 @@ public class Graph {
      * @param cable 
      */
     public void addCable(Cable cable) {
-        // add cable to cables
-        cables.add(cable);
-        // add cables to both components
-        cable.getComponent1().addCable(cable, cable.getEth1());
-        cable.getComponent2().addCable(cable, cable.getEth2());
+        // get bundle of cables between c1 and c2
+        BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
+        boc.addCable(cable);
+        cable.getEth1().setCable(cable);
+        cable.getEth2().setCable(cable);
+        
     }
-
+    
     /**
      * Adds all cables to graph
      * @param cableList 
@@ -111,13 +184,17 @@ public class Graph {
      * @param cable 
      */
     public void removeCable(Cable cable) {
-        // unmark cable
-        cable.setMarked(false);
-        // remove cable from cables
-        cables.remove(cable);
-        // remove cables from both components
-        cable.getComponent1().removeCable(cable, cable.getEth1());
-        cable.getComponent2().removeCable(cable, cable.getEth2());
+         // get bundle of cables between c1 and c2
+        BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
+        boc.removeCable(cable);
+        cable.getEth1().removeCable();
+        cable.getEth2().removeCable();
+        
+        // if no cable in bundle of cables
+        if(boc.getCablesCount() == 0){
+            // remove bundle of cables
+            removeBundleOfCables(boc);
+        }
     }
 
     /**
@@ -128,21 +205,6 @@ public class Graph {
         for (Iterator<Cable> it = cableList.iterator(); it.hasNext();) {
             removeCable(it.next());
         }
-    }
-
-    /**
-     * Finds out whether there is connetction between components
-     * @param component1
-     * @param component2
-     * @return true if there is connection, otherwise false
-     */
-    public boolean isConnection(AbstractHwComponent component1, AbstractHwComponent component2) {
-        for (Cable source : component1.getCables()) {
-            if (component2.containsCable(source)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
