@@ -230,4 +230,8 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         return yPos;
     }
 
+    
+    public ZoomManager getZoomManager(){
+        return zoomManager;
+    }
 }
