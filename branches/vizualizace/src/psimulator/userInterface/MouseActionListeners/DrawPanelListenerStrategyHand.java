@@ -445,17 +445,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // create small rectangle arround clicked point
         Rectangle r = new Rectangle(point.x - 1, point.y - 1, 3, 3);
         // search cables
-        /*
-        for (Cable c : graph.getCables()) {
-        if (c.intersects(r)) {
-        clickedComponent = c;
-        return clickedComponent;
-        }
-        }*/
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
-            if (boc.intersects(r)) {
-                clickedComponent = boc.getIntersectingCable(r);
-                return clickedComponent;
+            clickedComponent = boc.getIntersectingCable(r);
+            if(clickedComponent != null){
+               return clickedComponent; 
             }
         }
 

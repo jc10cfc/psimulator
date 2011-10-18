@@ -7,7 +7,6 @@ import java.util.List;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.BundleOfCables;
 import psimulator.userInterface.Editor.Components.Cable;
-import psimulator.userInterface.Editor.Components.EthInterface;
 
 /**
  *

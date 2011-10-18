@@ -39,7 +39,13 @@ public class BundleOfCables extends AbstractComponent{
     }
     
     public Cable getIntersectingCable(Rectangle r){
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
+        for(Cable c : cables){
+            if(c.intersects(r)){
+                return c;
+            }
+        }
+        return null;
     }
 
     public List<Cable> getCables() {
@@ -68,10 +74,42 @@ public class BundleOfCables extends AbstractComponent{
      
     @Override
     public void paintComponent(Graphics g) {
+        boolean horizontal;
+        
+        int distance;
+        
+        int minDistanceBetweenCables = component1.getWidth() / cables.size();
+        int maxDistanceBetweenCables = component1.getWidth() / 3;
+        
+        if(minDistanceBetweenCables < maxDistanceBetweenCables){
+            distance = minDistanceBetweenCables;
+        }else{
+            distance = maxDistanceBetweenCables;
+        }
+        
+        int x1 = component1.getCenterLocation().x;
+        int y1 = component1.getCenterLocation().y; 
+        
+        int x2 = component2.getCenterLocation().x;
+        int y2 = component2.getCenterLocation().y; 
+        
+        if(isHorizontalDistanceLonger()){
+            
+        }
+        
+        System.out.println("mindist=" +minDistanceBetweenCables);
+        
         for(Cable c : cables){
             c.paintComponent(g);
         }
           
+    }
+    
+    private boolean isHorizontalDistanceLonger(){
+        if(Math.abs(getX1()-getX2()) >=  Math.abs(getY1()-getY2())){
+            return true;
+        }
+        return false;
     }
     
     @Override
