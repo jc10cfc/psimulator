@@ -11,6 +11,7 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
+import psimulator.userInterface.Editor.Components.BundleOfCables;
 import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel;
@@ -52,7 +53,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
         super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
     }
-    
+
     @Override
     public void deInitialize() {
         setMarkedComponentsUnmarked();
@@ -72,7 +73,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // if nothing clicked
         if (clickedComponent == null) {
-            System.out.println("Graph - " + graph.getHwComponents().size() + " components and " + graph.getCables().size() + " cables");
+            System.out.println("Graph - " + graph.getHwComponents().size() + " components, " + graph.getCablesCount()
+                    + " cables and " + graph.getBundlesOfCables().size() + " bundles of cables");
             if (e.isControlDown()) {
                 // do nothing
             } else {
@@ -210,11 +212,11 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // --- DRAGGING components-----
         // if are marked other components than dragged, mark only the dragged component (if ctrl not down)
-        if(!e.isControlDown() && draggedComponents.size() == 1 && !draggedComponents.get(0).isMarked()){
+        if (!e.isControlDown() && draggedComponents.size() == 1 && !draggedComponents.get(0).isMarked()) {
             setMarkedComponentsUnmarked();
             doMarkHwComponentAndItsCables(true, draggedComponents.get(0));
         }
-        
+
 
         // get point from mouse in actual zoom shifted by difference
         Point p = new Point(e.getX() - zoomManager.doScaleToActual(differenceXdefaultZoom),
@@ -301,8 +303,14 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
-        for (Cable c : graph.getCables()) {
-            if (c.intersects(r)) {
+        /*for (Cable c : graph.getCables()) {
+        if (c.intersects(r)) {
+        drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return;
+        }
+        }*/
+        for (BundleOfCables boc : graph.getBundlesOfCables()) {
+            if (boc.intersects(r)) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 return;
             }
@@ -346,19 +354,35 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             }
 
             // set marked to all its cables
-            List<Cable> cables = ((AbstractHwComponent) component).getCables();
+            List<BundleOfCables> bundlesOfCables = ((AbstractHwComponent) component).getBundleOfCableses();
+
+            for (BundleOfCables boc : bundlesOfCables) {
+                for (Cable c : boc.getCables()) {
+                    if (marked) {
+                        c.setMarked(marked);
+                        markedComponents.add(c);
+                    } else {
+                        // if both ends of calbe not marked, than unmark cable
+                        if (!boc.getComponent1().isMarked() && !boc.getComponent2().isMarked()) {
+                            c.setMarked(marked);
+                            markedComponents.remove(c);
+                        }
+                    }
+                }
+            }
+            /*
             for (Cable c : cables) {
                 if (marked) {
                     c.setMarked(marked);
                     markedComponents.add(c);
                 } else {
                     // if both ends of calbe not marked, than unmark cable
-                    if (!c.getComponent1().isMarked() && !c.getComponent2().isMarked()) {
+                    if (!c.getBundleOfCables().getComponent1().isMarked() && !c.getBundleOfCables().getComponent2().isMarked()) {
                         c.setMarked(marked);
                         markedComponents.remove(c);
                     }
                 }
-            }
+            }*/
         } else {
             // component is cable
             component.setMarked(marked);
@@ -370,25 +394,27 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         }
     }
-
+    /*
     private Markable getDraggedComponents(Point point){
-        Markable component = null;
-        
-        if(draggedComponents == null || draggedComponents.isEmpty()){
-            return component;
-        }
-        
-        // search HwComponents
-        for (AbstractHwComponent c : draggedComponents) {
-            if (c.intersects(point)) {
-                component = c;
-                break;
-            }
-        }
-
-        return component;
+    Markable component = null;
+    
+    if(draggedComponents == null || draggedComponents.isEmpty()){
+    return component;
     }
     
+    // search HwComponents
+    for (AbstractHwComponent c : draggedComponents) {
+    if (c.intersects(point)) {
+    component = c;
+    break;
+    }
+    }
+    
+    return component;
+    }
+    
+     */
+
     private Markable getClickedHwComponent(Point point) {
         Markable clickedComponent = null;
 
@@ -419,12 +445,20 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // create small rectangle arround clicked point
         Rectangle r = new Rectangle(point.x - 1, point.y - 1, 3, 3);
         // search cables
+        /*
         for (Cable c : graph.getCables()) {
-            if (c.intersects(r)) {
-                clickedComponent = c;
+        if (c.intersects(r)) {
+        clickedComponent = c;
+        return clickedComponent;
+        }
+        }*/
+        for (BundleOfCables boc : graph.getBundlesOfCables()) {
+            if (boc.intersects(r)) {
+                clickedComponent = boc.getIntersectingCable(r);
                 return clickedComponent;
             }
         }
+
         return clickedComponent;
     }
 

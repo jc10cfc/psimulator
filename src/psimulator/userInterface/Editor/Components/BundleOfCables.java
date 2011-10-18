@@ -1,8 +1,8 @@
 package psimulator.userInterface.Editor.Components;
 
-import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
@@ -12,27 +12,23 @@ import java.awt.geom.Point2D;
  *
  * @author Martin
  */
-public class Cable extends AbstractComponent{
+public class BundleOfCables extends AbstractComponent{
 
-    
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
-    private EthInterface eth1;
-    private EthInterface eth2;
-
+    
+    private List<Cable> cables;
+    
     private static final int LINE_WIDTH = 2;
     
     Line2D line = new Line2D.Float();
-
     
     
-    public Cable(AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2) {
+    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
+        cables = new ArrayList<Cable>();
         this.component1 = component1;
         this.component2 = component2;
-        this.eth1 = eth1;
-        this.eth2 = eth2;
     }
- 
     
     public AbstractHwComponent getComponent1(){
         return component1;
@@ -41,27 +37,39 @@ public class Cable extends AbstractComponent{
     public AbstractHwComponent getComponent2(){
         return component2;
     }
-
-    public EthInterface getEth1() {
-        return eth1;
-    }
-
-    public EthInterface getEth2() {
-        return eth2;
-    }
-
     
+    public Cable getIntersectingCable(Rectangle r){
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public List<Cable> getCables() {
+        return cables;
+    }
+ 
+    public int getCablesCount(){
+        return cables.size();
+    }
+    
+    /**
+     * adds cable to bundle
+     * @param c 
+     */
+    public void addCable(Cable c){
+        cables.add(c);
+    }
+    
+    /**
+     * remove cable from bundle
+     * @param c 
+     */
+    public void removeCable(Cable c){
+        cables.remove(c);
+    }
+     
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-
-        if (isMarked()) {
-            Color color = g2.getColor();
-            g2.setColor(Color.blue);
-            g2.drawLine(getX1(),getY1(), getX2(), getY2());
-            g2.setColor(color);
-        }else{
-            g2.drawLine(getX1(),getY1(), getX2(), getY2());
+        for(Cable c : cables){
+            c.paintComponent(g);
         }
           
     }
@@ -108,27 +116,26 @@ public class Cable extends AbstractComponent{
     }
 
     public int getX1() {
-        return component1.getCenterLocation().x;
+        return getComponent1().getCenterLocation().x;
     }
 
     public int getY1() {
-        return component1.getCenterLocation().y;
+        return getComponent1().getCenterLocation().y;
     }
 
     public Point2D getP1() {
-        return component1.getCenterLocation();
+        return getComponent1().getCenterLocation();
     }
 
     public int getX2() {
-        return component2.getCenterLocation().x;
+        return getComponent2().getCenterLocation().x;
     }
 
     public int getY2() {
-        return component2.getCenterLocation().y;
+        return getComponent2().getCenterLocation().y;
     }
 
     public Point2D getP2() {
-        return component2.getCenterLocation();
+        return getComponent2().getCenterLocation();
     }
-    
 }

@@ -11,6 +11,7 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
+import psimulator.userInterface.Editor.Components.BundleOfCables;
 import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.Components.EthInterface;
 import psimulator.userInterface.Editor.Dialogs.CableConnectToInterfacePopupMenu;
@@ -212,9 +213,10 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterface eth1, EthInterface eth2) {
         // create new cabel
         Cable cable = new Cable(c1, c2, eth1, eth2);
+        
         // add cabel to graph
         graph.addCable(cable);
-
+        
         // add to undo manager
         undoManager.undoableEditHappened(new UndoableEditEvent(this,
                 new UndoableAddCable(cable, graph)));

@@ -227,7 +227,7 @@ public class DrawPanel extends JPanel implements Observer {
 
         // DRAW cables
         markedCables.clear();
-        for (AbstractComponent c : graph.getCables()) {
+        for (AbstractComponent c : graph.getBundlesOfCables()) {
             if (!c.isMarked()) {
                 //g2.draw(c);
                 c.paint(g2);
