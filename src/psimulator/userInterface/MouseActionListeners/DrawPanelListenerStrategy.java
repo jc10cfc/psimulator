@@ -4,6 +4,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.undo.UndoManager;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel;
 import psimulator.userInterface.Editor.Graph;
 import psimulator.userInterface.Editor.ZoomManager;
@@ -20,8 +21,9 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     protected MainWindowInterface mainWindow;
     protected UndoManager undoManager;
     protected ZoomManager zoomManager;
+    protected DataLayerFacade dataLayer;
 
-    public DrawPanelListenerStrategy(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
+    public DrawPanelListenerStrategy(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
         super();
 
         this.drawPanel = drawPanel;
@@ -29,6 +31,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         this.mainWindow = mainWindow;
         this.graph = drawPanel.getGraph();
         this.zoomManager = zoomManager;
+        this.dataLayer = dataLayer;
     }
     
     public abstract void deInitialize();

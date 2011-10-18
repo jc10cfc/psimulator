@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategy;
 import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategyAddCable;
 import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategyAddHwComponent;
@@ -34,11 +35,11 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class DrawPanel extends JPanel implements Observer {
     // mouse listeners
-
     private DrawPanelListenerStrategy mouseListenerHand;
     private DrawPanelListenerStrategy mouseListenerAddHwComponent;
     private DrawPanelListenerStrategy mouseListenerCable;
     private DrawPanelListenerStrategy currentMouseListener;
+    // END mouse listenrs
     private Graph graph = new Graph();
     private UndoManager undoManager = new UndoManager();
     private ZoomManager zoomManager = new ZoomManager();
@@ -59,12 +60,15 @@ public class DrawPanel extends JPanel implements Observer {
     private Dimension defaultZoomArea = new Dimension(defaultZoomAreaMin);
     private Dimension actualZoomArea = new Dimension(defaultZoomArea);
     
+    private DataLayerFacade dataLayer;
+    
 
-    public DrawPanel(MainWindowInterface mainWindow, AbstractImageFactory imageFactory) {
+    public DrawPanel(MainWindowInterface mainWindow, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
 
         this.mainWindow = mainWindow;
         this.imageFactory = imageFactory;
+        this.dataLayer = dataLayer;
 
         actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
         actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
@@ -265,9 +269,9 @@ public class DrawPanel extends JPanel implements Observer {
      * Creates mouse listeners for all tools
      */
     protected final void createDrawPaneMouseListeners() {
-        mouseListenerHand = new DrawPanelListenerStrategyHand(this, undoManager, zoomManager, mainWindow);
-        mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow);
-        mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow);
+        mouseListenerHand = new DrawPanelListenerStrategyHand(this, undoManager, zoomManager, mainWindow, dataLayer);
+        mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow, dataLayer);
+        mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow, dataLayer);
     }
     
     /**

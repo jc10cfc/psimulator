@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.HwComponentEnum;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.HwComponent;
@@ -18,8 +19,8 @@ import psimulator.userInterface.MainWindowInterface;
  */
 public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerStrategy{
     
-    public DrawPanelListenerStrategyAddHwComponent(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
-        super(drawPanel, undoManager, zoomManager, mainWindow);
+    public DrawPanelListenerStrategyAddHwComponent(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
+        super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
     }
     
     @Override
