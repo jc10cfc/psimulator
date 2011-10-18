@@ -40,7 +40,7 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         this.imageFactory = imageFactory;
         
         for(int i =0;i<3;i++){
-            interfaces.add(new EthInterface("Eth"+i));
+            interfaces.add(new EthInterface("Eth"+i, null));
         }
     }
 
@@ -48,21 +48,48 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         return interfaces;
     }
     
+    public EthInterface getFirstFreeInterface(){
+        for(EthInterface ei : interfaces){
+            if(!ei.hasCable()){
+                return ei;
+            }
+        }
+        return null;
+    }
+    
+    public boolean hasFreeInterace(){
+        for(EthInterface ei: interfaces){
+            if(!ei.hasCable()){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
     public boolean containsCable(Cable cable){
-        return cables.contains(cable);
+        for(EthInterface ei : interfaces){
+            if(ei.hasCable()){
+                return true;
+            }
+        }
+        return false;
     }
     
-    public void addCable(Cable cable){
+    public void addCable(Cable cable, EthInterface eth){
+        // add cable to cables list
         cables.add(cable);
+        // connect cable to eth interface
+        eth.setCable(cable);
     }
     
-    public void removeCable(Cable cable){
+    public void removeCable(Cable cable, EthInterface eth){
+        // remove cable from cables
         cables.remove(cable);
+        // disconnect cable from eth interface
+        eth.removeCable();
     }
-    
-    public Iterator<Cable> getCableIterator(){
-        return cables.iterator();
-    }
+
     
     public List<Cable> getCables(){
         return cables;
@@ -117,8 +144,6 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
     }
     
     public abstract void doChangePosition(Dimension offsetInDefaultZoom, boolean positive);
-
-    //protected abstract void setUndoRedoPostition(Point defaultZoomP);
 
     public abstract void setLocationByMiddlePoint(Point middlePoint);
  

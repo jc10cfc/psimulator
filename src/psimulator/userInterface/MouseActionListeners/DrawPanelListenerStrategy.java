@@ -31,6 +31,8 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         this.zoomManager = zoomManager;
     }
     
+    public abstract void deInitialize();
+    
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {

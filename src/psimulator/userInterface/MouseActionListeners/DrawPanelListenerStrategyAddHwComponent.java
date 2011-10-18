@@ -23,6 +23,11 @@ public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerSt
     }
     
     @Override
+    public void deInitialize() {
+        
+    }
+    
+    @Override
     public void mousePressed(MouseEvent e) {
         AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, HwComponentEnum.PC);
         component.setLocationByMiddlePoint(e.getPoint());
@@ -49,4 +54,8 @@ public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerSt
     public void mouseExited(MouseEvent e) {
        drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
+
+    
+
+    
 }

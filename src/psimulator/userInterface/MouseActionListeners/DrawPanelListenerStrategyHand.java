@@ -51,6 +51,12 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
         super(drawPanel, undoManager, zoomManager, mainWindow);
     }
+    
+    @Override
+    public void deInitialize() {
+        setMarkedComponentsUnmarked();
+        drawPanel.repaint();
+    }
 
     /**
      * Marks component at Point clicked if any

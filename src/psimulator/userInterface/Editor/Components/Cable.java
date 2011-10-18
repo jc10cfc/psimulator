@@ -16,15 +16,37 @@ public class Cable extends AbstractComponent{
 
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
+    private EthInterface eth1;
+    private EthInterface eth2;
 
-    private static final int LINE_WIDTH = 1;
+    private static final int LINE_WIDTH = 2;
     
     Line2D line = new Line2D.Float();
 
-    public Cable(AbstractHwComponent component1, AbstractHwComponent component2) {
+    public Cable(AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2) {
         this.component1 = component1;
         this.component2 = component2;
+        this.eth1 = eth1;
+        this.eth2 = eth2;
     }
+    
+    
+    public AbstractHwComponent getComponent1(){
+        return component1;
+    }
+    
+    public AbstractHwComponent getComponent2(){
+        return component2;
+    }
+
+    public EthInterface getEth1() {
+        return eth1;
+    }
+
+    public EthInterface getEth2() {
+        return eth2;
+    }
+
     
     @Override
     public void paintComponent(Graphics g) {
@@ -80,14 +102,6 @@ public class Cable extends AbstractComponent{
     public boolean intersects(Rectangle r) {
         line.setLine(getP1(), getP2());
         return line.intersects(r);
-    }
-    
-    public AbstractHwComponent getComponent1(){
-        return component1;
-    }
-    
-    public AbstractHwComponent getComponent2(){
-        return component2;
     }
 
     public int getX1() {
