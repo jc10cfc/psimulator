@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.Components.Markable;
@@ -48,8 +49,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      */
     protected Point startPointOfMarkingTransparentRectangle;
 
-    public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
-        super(drawPanel, undoManager, zoomManager, mainWindow);
+    public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
+        super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
     }
     
     @Override

@@ -9,6 +9,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.Components.EthInterface;
@@ -33,8 +34,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     private Point startPoint;
     private CableConnectToInterfacePopupMenu popupMenu;
 
-    public DrawPanelListenerStrategyAddCable(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow) {
-        super(drawPanel, undoManager, zoomManager, mainWindow);
+    public DrawPanelListenerStrategyAddCable(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
+        super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
 
         popupMenu = new CableConnectToInterfacePopupMenu(drawPanel, new PopupInterfaceChooseListener(), this);
     }
@@ -78,10 +79,11 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     public void mousePressed(MouseEvent e) {
 
         // if popup shown, no pressing on other components
+        /*
         if (popupMenu.isVisible()) {
             System.out.println("No pressing");
             return;
-        }
+        }*/
 
         // clicked component
         AbstractHwComponent tmp = null;
@@ -117,35 +119,71 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         if (hasFirstComponent && !hasSecondComponent) {
             // if first component dont have any free interface
             if (!component1.hasFreeInterace()) {
-                JOptionPane.showMessageDialog(mainWindow.getRootPane(), "No free interface", "Connection warning", JOptionPane.INFORMATION_MESSAGE);
+                // show meesage dialog
+                doShowInformMessageDialog(dataLayer.getString("NO_INTERFACE_AVAIABLE"), dataLayer.getString("CONNECTION_PROBLEM"));
+                // cancel cable making
                 initVariablesForCableMaking();
             } else {
                 // if component has free interface
-                doChooseInterface(e, component2);
+                doChooseInterface(e, component1);
             }
         }
 
         // if we have both components
         if (hasFirstComponent && hasSecondComponent) {
             if (component1 == component2) {
-                JOptionPane.showMessageDialog(mainWindow.getRootPane(), "Cant connect to itself", "Connection warning", JOptionPane.INFORMATION_MESSAGE);
+                // show meesage dialog
+                doShowInformMessageDialog(dataLayer.getString("CANT_CONNECT_TO_ITSELF"), dataLayer.getString("CONNECTION_PROBLEM"));
+                
             } else {
-                //if (!graph.isConnection(component1, component2)) {
-
                 // if second component dont have any free interface
                 if (!component2.hasFreeInterace()) {
-                    JOptionPane.showMessageDialog(mainWindow.getRootPane(), "No free interface", "Connection warning", JOptionPane.INFORMATION_MESSAGE);
+                    // show meesage dialog
+                    doShowInformMessageDialog(dataLayer.getString("NO_INTERFACE_AVAIABLE"), dataLayer.getString("CONNECTION_PROBLEM"));
+                    // remove second component from cable making
                     removeSecondComponentFromCable();
                 } else {
                     // if component has free interface
                     doChooseInterface(e, component2);
                 }
-                //}
             }
+        }
+    }
+
+    /**
+     * sets chosen interface to component accornig to actual cable making progres.
+     * @param ethInterface 
+     */
+    @Override
+    public void setChosenInterface(EthInterface ethInterface) {
+        // if we have only first component
+        if (hasFirstComponent && !hasSecondComponent) {
+            // get choosen ethInterface
+            eth1 = ethInterface;
+            //System.out.println("chosen interface1" + eth1);
+        }
+
+        // if we have first and second component
+        if (hasFirstComponent && hasSecondComponent) {
+            // get choosen ethInterface
+            eth2 = ethInterface;
+            //System.out.println("chosen interface2" + eth2);
+            // connect components
+            connectComponents(component1, component2, eth1, eth2);
         }
 
     }
 
+    
+    /**
+     * Shows inform message dialog with message and title
+     * @param message
+     * @param title 
+     */
+    private void doShowInformMessageDialog(String message, String title){
+        JOptionPane.showMessageDialog(mainWindow.getRootPane(), message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     /**
      * Chooses interface. If right mouse button clicked, than user sets which interface to use, if left
      * button clicked, than it uses first avaiable interface
@@ -162,63 +200,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
             setChosenInterface(component.getFirstFreeInterface());
         }
     }
-
-    /**
-     * sets chosen interface to component accornig to actual cable making progres.
-     * @param ethInterface 
-     */
-    @Override
-    public void setChosenInterface(EthInterface ethInterface) {
-        // if we have only first component
-        if (hasFirstComponent && !hasSecondComponent) {
-            // get choosen ethInterface
-            eth1 = ethInterface;
-            System.out.println("chosen interface1" + eth1);
-        }
-
-        // if we have first and second component
-        if (hasFirstComponent && hasSecondComponent) {
-            // get choosen ethInterface
-            eth2 = ethInterface;
-            System.out.println("chosen interface2" + eth2);
-            // connect components
-            connectComponents(component1, component2, eth1, eth2);
-        }
-
-    }
-
-    /**
-     * PopupMenuListener to handle events on popup
-     */
-    class PopupInterfaceChooseListener implements PopupMenuListener {
-
-        @Override
-        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-            // not used
-        }
-
-        @Override
-        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-            // not used
-        }
-
-        @Override
-        public void popupMenuCanceled(PopupMenuEvent e) {
-            //System.out.println("Popup canceled!");
-            // if canceled on first component
-            if (!hasSecondComponent) {
-                // remove cable and init
-                initVariablesForCableMaking();
-            } else {
-                // if canceled on second component
-                // remove second component from cable
-                removeSecondComponentFromCable();
-            }
-
-            drawPanel.repaint();
-        }
-    }
-
+    
+    
     /**
      * connects components c1 and c2 on EthInterfaces eth1 and eth2 in Graph
      * @param c1
@@ -262,5 +245,38 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         component2 = null;
         eth2 = null;
         hasSecondComponent = false;
+    }
+    
+    
+    /**
+     * PopupMenuListener to handle events on popup
+     */
+    class PopupInterfaceChooseListener implements PopupMenuListener {
+
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            // not used
+        }
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            // not used
+        }
+
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent e) {
+            //System.out.println("Popup canceled!");
+            // if canceled on first component
+            if (!hasSecondComponent) {
+                // remove cable and init
+                initVariablesForCableMaking();
+            } else {
+                // if canceled on second component
+                // remove second component from cable
+                removeSecondComponentFromCable();
+            }
+
+            drawPanel.repaint();
+        }
     }
 }

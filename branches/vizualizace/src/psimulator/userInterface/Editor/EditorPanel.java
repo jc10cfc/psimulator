@@ -28,11 +28,13 @@ public class EditorPanel extends AbstractEditor implements Observer{
     private JScrollPane jScrollPane;
     private AbstractImageFactory imageFactory;
     private MainWindowInterface mainWindow;
+    private DataLayerFacade dataLayer;
 
     public EditorPanel(MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
         super(new BorderLayout());
         
         this.mainWindow = mainWindow;
+        this.dataLayer = dataLayer;
         
         imageFactory = new AwtImageFactory();
 
@@ -44,7 +46,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
         this.add(jToolBarEditor, BorderLayout.WEST);
 
         // create draw panel
-        jPanelDraw = new DrawPanel(mainWindow, imageFactory);
+        jPanelDraw = new DrawPanel(mainWindow, imageFactory, dataLayer);
         
         //create scroll pane
         jScrollPane = new JScrollPane(jPanelDraw);
