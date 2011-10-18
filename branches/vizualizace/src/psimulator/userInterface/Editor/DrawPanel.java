@@ -275,6 +275,10 @@ public class DrawPanel extends JPanel implements Observer {
      * @param tool 
      */
     protected final void setMouseListener(Tools tool) {
+        if(currentMouseListener != null){
+            currentMouseListener.deInitialize();
+        }
+        
         this.removeMouseListener(currentMouseListener);
         this.removeMouseMotionListener(currentMouseListener);
         this.removeMouseWheelListener(currentMouseListener);

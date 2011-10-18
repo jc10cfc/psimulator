@@ -92,8 +92,8 @@ public class Graph {
         // add cable to cables
         cables.add(cable);
         // add cables to both components
-        cable.getComponent1().addCable(cable);
-        cable.getComponent2().addCable(cable);
+        cable.getComponent1().addCable(cable, cable.getEth1());
+        cable.getComponent2().addCable(cable, cable.getEth2());
     }
 
     /**
@@ -116,8 +116,8 @@ public class Graph {
         // remove cable from cables
         cables.remove(cable);
         // remove cables from both components
-        cable.getComponent1().removeCable(cable);
-        cable.getComponent2().removeCable(cable);
+        cable.getComponent1().removeCable(cable, cable.getEth1());
+        cable.getComponent2().removeCable(cable, cable.getEth2());
     }
 
     /**
