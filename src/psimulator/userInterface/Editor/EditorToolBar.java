@@ -6,11 +6,15 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -27,6 +31,17 @@ public class EditorToolBar extends JToolBar implements Observer {
     private JButton jButtonCable;
     private JButton jButtonFitToSize;
     private JButton selectedButton = null;
+
+    
+    private ButtonGroup toolsButtonGroup;
+    
+    private MenuToggleButton toggleButtonHand;
+    
+    private MenuToggleButton toggleButtonRouters;
+    private MenuToggleButton toggleButtonSwitches;
+    private MenuToggleButton toggleButtonEndDevices;
+    private MenuToggleButton toggleButtonRealPC;
+    private MenuToggleButton toggleButtonCable;
 
     public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory) {
         super();
@@ -45,7 +60,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-
+        /*
         jButtonHand = new JButton();
         jButtonHand.setIcon(imageFactory.getImageIconForToolbar(Tools.HAND));
         jButtonHand.setActionCommand(Tools.HAND.toString());
@@ -65,7 +80,8 @@ public class EditorToolBar extends JToolBar implements Observer {
         jButtonFitToSize = new JButton();
         jButtonFitToSize.setText("Fit to size");
         jButtonFitToSize.setActionCommand(Tools.FIT_TO_SIZE.toString());
-
+        
+        
         this.add(jButtonHand);
         this.add(jButtonPc);
         this.add(jButtonMac);
@@ -74,6 +90,65 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.addSeparator();
         this.add(jButtonFitToSize);
         this.addSeparator();
+        */
+
+        /// new code
+        jButtonFitToSize = new JButton();
+        jButtonFitToSize.setText("Fit to size");
+        jButtonFitToSize.setActionCommand(Tools.FIT_TO_SIZE.toString());
+        
+        
+        toolsButtonGroup = new ButtonGroup();
+        
+        toggleButtonHand = new MenuToggleButton(imageFactory.getImageIconForToolbar(Tools.HAND), "hand");
+        toggleButtonRouters = new MenuToggleButton(null, imageFactory.getImageIconForToolbar(Tools.HAND));
+        toggleButtonSwitches = new MenuToggleButton(null,  imageFactory.getImageIconForToolbar(Tools.HAND));
+        toggleButtonEndDevices = new MenuToggleButton(null,  imageFactory.getImageIconForToolbar(Tools.PC));
+        toggleButtonRealPC = new MenuToggleButton(imageFactory.getImageIconForToolbar(Tools.REAL_PC), "real PC");
+        toggleButtonCable = new MenuToggleButton(imageFactory.getImageIconForToolbar(Tools.CABLE), "cable");
+        
+        toolsButtonGroup.add(toggleButtonHand);
+        toolsButtonGroup.add(toggleButtonRouters);
+        toolsButtonGroup.add(toggleButtonSwitches);
+        toolsButtonGroup.add(toggleButtonEndDevices);
+        toolsButtonGroup.add(toggleButtonRealPC);
+        toolsButtonGroup.add(toggleButtonCable);
+ 
+        
+        this.add(toggleButtonHand);
+        this.addSeparator();
+        this.add(toggleButtonRouters);
+        this.add(toggleButtonSwitches);
+        this.add(toggleButtonEndDevices);
+        this.add(toggleButtonRealPC);
+        this.addSeparator();
+        this.add(toggleButtonCable);
+        this.addSeparator();
+        this.add(jButtonFitToSize);
+        
+        
+        
+        /*
+        JMenuItem item1 = new JMenuItem(imageFactory.getImageIconForToolbar(Tools.HAND));
+        JMenuItem item2 = new JMenuItem(imageFactory.getImageIconForToolbar(Tools.MAC));
+        
+        JMenuItem [] items = new JMenuItem[2];
+        items[0] = item1;
+        items[1] = item2;
+        
+        MenuToggleButton toggleButton = new MenuToggleButton(items, "routers",imageFactory.getImageIconForToolbar(Tools.MAC));
+        
+        this.add(toggleButton);
+        
+        
+        MenuToggleButton toggleButton2 = new MenuToggleButton(null, "routers",imageFactory.getImageIconForToolbar(Tools.PC));
+        this.add(toggleButton2);
+        
+        ButtonGroup bg = new ButtonGroup();
+        bg.add(toggleButton);
+        bg.add(toggleButton2);
+        */
+        //end new code
 
         setTextsToComponents();
 
@@ -83,10 +158,6 @@ public class EditorToolBar extends JToolBar implements Observer {
         for (Component c : comp) {
             c.setBackground(ColorMixerSignleton.editToolbarColor);
         }
-
-
-        setSelectedButton(jButtonHand);
-
 
     }
 
@@ -115,10 +186,12 @@ public class EditorToolBar extends JToolBar implements Observer {
      * @param listener Action listener
      */
     public void addToolActionListener(ActionListener listener) {
+        /*
         jButtonHand.addActionListener(listener);
         jButtonPc.addActionListener(listener);
         jButtonMac.addActionListener(listener);
         jButtonCable.addActionListener(listener);
+        */
     }
 
     /**
@@ -131,10 +204,12 @@ public class EditorToolBar extends JToolBar implements Observer {
 
     ////////------------ PRIVATE------------///////////
     private void setTextsToComponents() {
+        /*
         jButtonHand.setToolTipText(dataLayer.getString("HAND"));
         jButtonMac.setToolTipText(dataLayer.getString("MAC"));
         jButtonPc.setToolTipText(dataLayer.getString("PC"));
         jButtonCable.setToolTipText(dataLayer.getString("CABLE"));
         jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
+        */
     }
 }
