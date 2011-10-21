@@ -185,6 +185,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (draggedComponents == null){
+            return;
+        }
+        
         // painting transparent rectange for marking more components
         if (draggedComponents.isEmpty()) {
             // calculate width an height
@@ -255,7 +259,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // dragging all marked components
 
         // if we are dragging some components
-        if (!draggedComponents.isEmpty()) {
+        if (draggedComponents != null && !draggedComponents.isEmpty()) {
             // new default location for undoable edit  (math.max(0,x) because we dont want to move it to negative position)
 
             Point newDefaultZoomLocation = new Point(Math.max(0, zoomManager.doScaleToDefault(e.getX()) - differenceXdefaultZoom),

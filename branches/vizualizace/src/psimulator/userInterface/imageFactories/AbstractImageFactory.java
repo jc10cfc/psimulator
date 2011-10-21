@@ -39,6 +39,9 @@ public abstract class AbstractImageFactory {
             case CABLE:
                 name = "network-wired";
                 break;
+            case REAL_PC:
+                name = "desktop";
+                break;
         }
         ImageIcon icon = new ImageIcon(getClass().getResource("/resources/toolbarIcons/editor/"+name+".png"));
         
