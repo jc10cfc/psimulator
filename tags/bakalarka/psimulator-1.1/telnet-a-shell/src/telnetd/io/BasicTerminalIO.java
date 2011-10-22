@@ -432,7 +432,9 @@ public interface BasicTerminalIO {
   /**
    * Enter (defining the return or enter key)
    */
-  public static final int ENTER = 10;
+  //CHANGE
+  //public static final int ENTER = 10;
+  public static final int ENTER = 1300;
 
   /**
    * Color init (defining ctrl-a atm)
