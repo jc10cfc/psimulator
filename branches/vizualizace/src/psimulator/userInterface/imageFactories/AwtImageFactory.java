@@ -5,7 +5,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import psimulator.dataLayer.Enums.HwComponentEnum;
+import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 
 /**
  *
@@ -14,7 +14,7 @@ import psimulator.dataLayer.Enums.HwComponentEnum;
 public class AwtImageFactory extends AbstractImageFactory {
 
     @Override
-    public BufferedImage getBufferedImage(HwComponentEnum hwComponent, Integer size, boolean marked) {
+    public BufferedImage getBufferedImage(HwTypeEnum hwComponent, Integer size, boolean marked) {
         BufferedImage bufferedImage;
 
         bufferedImage = imageBuffer.getBufferedImage(hwComponent, size, marked);
@@ -36,7 +36,7 @@ public class AwtImageFactory extends AbstractImageFactory {
      * @param marked if icon marked
      * @return BufferedImage with result image
      */
-    private BufferedImage loadImage(HwComponentEnum hwComponent, Integer size, boolean marked) {
+    private BufferedImage loadImage(HwTypeEnum hwComponent, Integer size, boolean marked) {
         BufferedImage bi = null;
         BufferedImage temp = null;
         
@@ -47,7 +47,7 @@ public class AwtImageFactory extends AbstractImageFactory {
         
         try {
             switch (hwComponent) {
-                case PC:
+                case END_DEVICE:
                     temp = ImageIO.read(getClass().getResource("/resources/toolbarIcons/editor/modern/iMac"+tail+".png"));
                     break;
             }

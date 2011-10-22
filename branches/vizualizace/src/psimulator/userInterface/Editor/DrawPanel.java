@@ -291,10 +291,10 @@ public class DrawPanel extends JPanel implements Observer {
             case HAND:
                 currentMouseListener = mouseListenerHand;
                 break;
-            case MAC:
-                currentMouseListener = mouseListenerAddHwComponent;
-                break;
-            case PC:
+            case REAL_PC:
+            case END_DEVICE:
+            case SWITCH:
+            case ROUTER:    
                 currentMouseListener = mouseListenerAddHwComponent;
                 break;
             case CABLE:

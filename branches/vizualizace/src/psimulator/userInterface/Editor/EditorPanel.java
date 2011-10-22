@@ -102,7 +102,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
             JButton sourceButton = ((JButton)e.getSource());
             
             // set Button as the only selected
-            jToolBarEditor.setSelectedButton(sourceButton);
+            //jToolBarEditor.setSelectedButton(sourceButton);
             
             // chage mouse listener in jPanelDraw according to TOOL
             jPanelDraw.setMouseListener(Tools.valueOf(e.getActionCommand()));

@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import psimulator.dataLayer.Enums.HwComponentEnum;
+import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 
 /**
  *
@@ -12,16 +12,16 @@ import psimulator.dataLayer.Enums.HwComponentEnum;
  */
 public class ImageBuffer {
     /* Data structures for buffering */
-    private EnumMap<HwComponentEnum,HashMap<Integer, BufferedImage>> hwComponentBuffer;
-    private EnumMap<HwComponentEnum,HashMap<Integer, BufferedImage>> hwMarkedComponentBuffer;
+    private EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> hwComponentBuffer;
+    private EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> hwMarkedComponentBuffer;
     
     public ImageBuffer(){
         // create EnumMap with all HW components
-        hwComponentBuffer = new EnumMap<HwComponentEnum,HashMap<Integer, BufferedImage>>(HwComponentEnum.class);
-        hwMarkedComponentBuffer = new EnumMap<HwComponentEnum,HashMap<Integer, BufferedImage>>(HwComponentEnum.class);
+        hwComponentBuffer = new EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>>(HwTypeEnum.class);
+        hwMarkedComponentBuffer = new EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>>(HwTypeEnum.class);
         
         // for each component create HashMap with Integer (size) and BufferredImage
-        for(HwComponentEnum c : HwComponentEnum.values()){
+        for(HwTypeEnum c : HwTypeEnum.values()){
             hwComponentBuffer.put(c, new HashMap<Integer, BufferedImage>());
             hwMarkedComponentBuffer.put(c, new HashMap<Integer, BufferedImage>());
         }
@@ -32,11 +32,11 @@ public class ImageBuffer {
      */
     public void clearBuffer(){
         // each HW components HashMap is cleared
-        for(Entry<HwComponentEnum,HashMap<Integer, BufferedImage>> e : hwComponentBuffer.entrySet()){
+        for(Entry<HwTypeEnum,HashMap<Integer, BufferedImage>> e : hwComponentBuffer.entrySet()){
             e.getValue().clear();
         }
         
-        for(Entry<HwComponentEnum,HashMap<Integer, BufferedImage>> e : hwMarkedComponentBuffer.entrySet()){
+        for(Entry<HwTypeEnum,HashMap<Integer, BufferedImage>> e : hwMarkedComponentBuffer.entrySet()){
             e.getValue().clear();
         }
     }
@@ -48,8 +48,8 @@ public class ImageBuffer {
      * @param image 
      * @param marked 
      */
-    public void putBufferedImage(HwComponentEnum hwComponent, Integer size, BufferedImage image, boolean marked){
-        EnumMap<HwComponentEnum,HashMap<Integer, BufferedImage>> map;
+    public void putBufferedImage(HwTypeEnum hwComponent, Integer size, BufferedImage image, boolean marked){
+        EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> map;
         
         if(marked){
             map = hwMarkedComponentBuffer;
@@ -67,8 +67,8 @@ public class ImageBuffer {
      * @return BufferedImage if found, otherwise null
      * @param marked 
      */
-    public BufferedImage getBufferedImage(HwComponentEnum hwComponent, Integer size, boolean marked){
-        EnumMap<HwComponentEnum,HashMap<Integer, BufferedImage>> map;
+    public BufferedImage getBufferedImage(HwTypeEnum hwComponent, Integer size, boolean marked){
+        EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> map;
         
         if(marked){
             map = hwMarkedComponentBuffer;
