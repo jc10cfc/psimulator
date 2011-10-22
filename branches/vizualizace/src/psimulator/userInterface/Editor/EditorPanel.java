@@ -7,12 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.language.LanguageManager;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
 import psimulator.userInterface.MainWindowInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 import psimulator.userInterface.imageFactories.AwtImageFactory;
@@ -41,10 +39,6 @@ public class EditorPanel extends AbstractEditor implements Observer{
         // set border
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
-        // create tool bar and add to panel
-        jToolBarEditor = new EditorToolBar(dataLayer, imageFactory);
-        this.add(jToolBarEditor, BorderLayout.WEST);
-
         // create draw panel
         jPanelDraw = new DrawPanel(mainWindow, imageFactory, dataLayer);
         
@@ -57,6 +51,12 @@ public class EditorPanel extends AbstractEditor implements Observer{
 
         // add scroll pane to panel
         this.add(jScrollPane, BorderLayout.CENTER);
+        
+        // create tool bar and add to panel
+        jToolBarEditor = new EditorToolBar(dataLayer, imageFactory, jPanelDraw);
+        
+        // add tool bar to panel
+        this.add(jToolBarEditor, BorderLayout.WEST);
 
         jToolBarEditor.addToolActionListener(new JMenuToolActionListener());
         jToolBarEditor.addToolActionFitToSizeListener(new JMenuToolFitToSizeActionListener());
@@ -99,13 +99,14 @@ public class EditorPanel extends AbstractEditor implements Observer{
         @Override
         public void actionPerformed(ActionEvent e) {
             // get source button
-            JButton sourceButton = ((JButton)e.getSource());
+            MenuToggleButton sourceButton = ((MenuToggleButton)e.getSource());
+            
             
             // set Button as the only selected
             //jToolBarEditor.setSelectedButton(sourceButton);
             
             // chage mouse listener in jPanelDraw according to TOOL
-            jPanelDraw.setMouseListener(Tools.valueOf(e.getActionCommand()));
+            //jPanelDraw.setMouseListener(Tools.valueOf(e.getActionCommand()));
         }
     }
     

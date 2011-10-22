@@ -6,10 +6,10 @@ package psimulator.userInterface.Editor.Enums;
  */
 public enum Tools {
     HAND,
-    CABLE,
+    ADD_CABLE,
     FIT_TO_SIZE,
-    ROUTER,
-    SWITCH,
-    END_DEVICE,
-    REAL_PC; 
+    ADD_ROUTER,
+    ADD_SWITCH,
+    ADD_END_DEVICE,
+    ADD_REAL_PC; 
 }

@@ -9,6 +9,8 @@ import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.HwComponent;
 import psimulator.userInterface.Editor.DrawPanel;
+import psimulator.userInterface.Editor.Tools.AbstractTool;
+import psimulator.userInterface.Editor.Tools.AddDeviceTool;
 import psimulator.userInterface.Editor.UndoCommands.UndoableAddHwComponent;
 import psimulator.userInterface.Editor.ZoomManager;
 import psimulator.userInterface.MainWindowInterface;
@@ -30,7 +32,16 @@ public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerSt
     
     @Override
     public void mousePressed(MouseEvent e) {
-        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, HwTypeEnum.END_DEVICE);
+        // new code
+        AddDeviceTool t = (AddDeviceTool)drawPanel.getCurrentTool();
+        
+        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, 
+                HwTypeEnum.END_DEVICE, t.getInterfaces(), t.getImagePath(), t.getName());
+        
+        //end new code
+        
+        //AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, HwTypeEnum.END_DEVICE);
+        
         component.setLocationByMiddlePoint(e.getPoint());
         graph.addHwComponent(component);
         
