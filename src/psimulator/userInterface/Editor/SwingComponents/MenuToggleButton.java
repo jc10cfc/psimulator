@@ -19,6 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import psimulator.userInterface.Editor.ToolChangeInterface;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -36,14 +37,20 @@ public class MenuToggleButton extends JToggleButton {
      * popup menu for this menu tohhle button
      */
     protected JPopupMenu pop;
-    //private List<AbstractTool> tools;
     /**
      * current selected tool
      */
     private AbstractTool currentTool;
+    
+    /**
+     * interface which to inform about tool change
+     */
+    private ToolChangeInterface toolChangeInterface;
 
-    public MenuToggleButton(List<AbstractTool> tools) {
+    public MenuToggleButton(List<AbstractTool> tools, ToolChangeInterface toolChangeInterface) {
         super();
+        
+        this.toolChangeInterface = toolChangeInterface;
 
         if (tools == null || tools.isEmpty()) {
             this.setToolTipText("no tool avaiable");
@@ -88,7 +95,7 @@ public class MenuToggleButton extends JToggleButton {
             //a.putValue(Action.SMALL_ICON, icon);
             setAction(a);
             
-            // set first tool asi current tool
+            // set first tool as current tool
             setCurrentTool(tools.get(0));
         }
         
@@ -106,7 +113,7 @@ public class MenuToggleButton extends JToggleButton {
         // set Image icon of this MenuToggleButton
         this.setIcon(currentTool.getImageIcon());
         // enable tool
-        //currentTool.setEnabled();
+        toolChangeInterface.setToolChanged(tool);
     }
     
     private JPopupMenu createPopupMenu(List<AbstractTool> tools) {

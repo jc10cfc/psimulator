@@ -37,7 +37,7 @@ public class EditorToolBar extends JToolBar implements Observer {
     private MenuToggleButton toggleButtonRealPC;
     private MenuToggleButton toggleButtonCable;
 
-    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory) {
+    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ToolChangeInterface toolChangeInterface) {
         super();
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
@@ -62,13 +62,13 @@ public class EditorToolBar extends JToolBar implements Observer {
         
         toolsButtonGroup = new ButtonGroup();
         
-        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(Tools.HAND, imageFactory));
-        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(Tools.ROUTER, imageFactory));
-        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(Tools.SWITCH, imageFactory));
-        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(Tools.END_DEVICE, imageFactory));
-        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(Tools.REAL_PC, imageFactory));
-        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(Tools.CABLE, imageFactory));
-        //toggleButtonCable = new MenuToggleButton(null, imageFactory.getImageIconForToolbar(Tools.CABLE));
+        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(Tools.HAND, imageFactory), toolChangeInterface);
+        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_ROUTER, imageFactory), toolChangeInterface);
+        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_SWITCH, imageFactory), toolChangeInterface);
+        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_END_DEVICE, imageFactory), toolChangeInterface);
+        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_REAL_PC, imageFactory), toolChangeInterface);
+        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_CABLE, imageFactory), toolChangeInterface);
+        //toggleButtonCable = new MenuToggleButton(null, imageFactory.getImageIconForToolbar(Tools.ADD_CABLE));
         
         
         toolsButtonGroup.add(toggleButtonHand);
@@ -94,7 +94,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         
         //end new code
 
-        toggleButtonHand.setSelected(true);
+        //toggleButtonHand.setSelected(true);
         
         setTextsToComponents();
 
@@ -143,9 +143,9 @@ public class EditorToolBar extends JToolBar implements Observer {
         jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
         
         
-        //toggleButtonRouters.setToolTipText(dataLayer.getString("ROUTER"));
-        //toggleButtonSwitches.setToolTipText(dataLayer.getString("SWITCH"));
-        //toggleButtonEndDevices.setToolTipText(dataLayer.getString("END_DEVICE"));
+        //toggleButtonRouters.setToolTipText(dataLayer.getString("ADD_ROUTER"));
+        //toggleButtonSwitches.setToolTipText(dataLayer.getString("ADD_SWITCH"));
+        //toggleButtonEndDevices.setToolTipText(dataLayer.getString("ADD_END_DEVICE"));
         
         
     }

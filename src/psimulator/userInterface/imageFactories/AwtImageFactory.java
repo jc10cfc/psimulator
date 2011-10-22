@@ -13,6 +13,7 @@ import psimulator.userInterface.Editor.Enums.HwTypeEnum;
  */
 public class AwtImageFactory extends AbstractImageFactory {
 
+    
     @Override
     public BufferedImage getBufferedImage(HwTypeEnum hwComponent, Integer size, boolean marked) {
         BufferedImage bufferedImage;

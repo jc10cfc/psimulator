@@ -8,12 +8,25 @@ import psimulator.userInterface.Editor.Enums.Tools;
  *
  * @author Martin
  */
-public class CableCreateTool extends AbstractCreationTool{
+public class AddDeviceTool extends AbstractCreationTool{
 
-    public CableCreateTool(Tools tool, String name, ImageIcon imageIcon, HwTypeEnum hwType) {
+    private int interfaces;
+    protected String imagePath;
+    
+    public AddDeviceTool(Tools tool, String name, ImageIcon imageIcon, HwTypeEnum hwType, int interfaces, String imagePath) {
         super(tool, name, imageIcon, hwType);
+        this.imagePath = imagePath;
+        this.interfaces = interfaces;
     }
 
+    public int getInterfaces() {
+        return interfaces;
+    }
+    
+    public String getImagePath() {
+        return imagePath;
+    }
+    
     @Override
     public void setEnabled() {
         throw new UnsupportedOperationException("Not supported yet.");

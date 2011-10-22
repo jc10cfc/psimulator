@@ -2,7 +2,6 @@ package psimulator.userInterface.Editor.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.Enums.Tools;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -16,32 +15,46 @@ public class ToolsFactory {
     public static List<AbstractTool> getTools(Tools tool, AbstractImageFactory imageFactory) {
         List<AbstractTool> tools = new ArrayList<AbstractTool>();
         
-        ImageIcon image = imageFactory.getImageIconForToolbar(tool);
+        String path;
         
         switch(tool){
             case HAND:
-                tools.add(new ManipulationTool(tool, "hand", image));
+                path = AbstractImageFactory.HAND_PATH;
+                
+                tools.add(new ManipulationTool(tool, "hand", imageFactory.getImageIconForToolbar(tool, path)));
                 break;
             case FIT_TO_SIZE:
-                tools.add(new ManipulationTool(tool, "fit to size", image));
+                // TODO !! DODELAT
+                tools.add(new ManipulationTool(tool, "fit to size", imageFactory.getImageIconForToolbar(tool)));
                 break;
-            case ROUTER:
-                tools.add(new DeviceAddTool(tool, "Router Linux Generic", image, HwTypeEnum.LINUX_ROUTER, 4));
-                tools.add(new DeviceAddTool(tool, "Router Cisco Generic", image, HwTypeEnum.CISCO_ROUTER, 4));
+            case ADD_ROUTER:
+                path = AbstractImageFactory.ROUTER_PATH;
+                
+                tools.add(new AddDeviceTool(tool, "Router Linux Generic", imageFactory.getImageIconForToolbar(tool, path), 
+                        HwTypeEnum.LINUX_ROUTER, 4, path));
+                tools.add(new AddDeviceTool(tool, "Router Cisco Generic", imageFactory.getImageIconForToolbar(tool, path), 
+                        HwTypeEnum.CISCO_ROUTER, 4, path));
                 break;
-            case SWITCH:
-                tools.add(new DeviceAddTool(tool, "Switch Linux Generic", image, HwTypeEnum.LINUX_SWITCH, 4));
-                tools.add(new DeviceAddTool(tool, "Switch Cisco Generic", image, HwTypeEnum.CISCO_SWITCH, 4));
+            case ADD_SWITCH:
+                path = AbstractImageFactory.SWITCH_PATH;
+                
+                tools.add(new AddDeviceTool(tool, "Switch Linux Generic", imageFactory.getImageIconForToolbar(tool, path), HwTypeEnum.LINUX_SWITCH, 4, path));
+                tools.add(new AddDeviceTool(tool, "Switch Cisco Generic", imageFactory.getImageIconForToolbar(tool, path), HwTypeEnum.CISCO_SWITCH, 4, path));
                 break;
-            case END_DEVICE:
-                tools.add(new DeviceAddTool(tool, "PC", image, HwTypeEnum.END_DEVICE, 1));
-                tools.add(new DeviceAddTool(tool, "Notebook", image, HwTypeEnum.END_DEVICE, 1));
+            case ADD_END_DEVICE:
+                path = AbstractImageFactory.END_DEVICE_PATH;
+                tools.add(new AddDeviceTool(tool, "PC", imageFactory.getImageIconForToolbar(tool, path), HwTypeEnum.END_DEVICE, 1, path));
+                tools.add(new AddDeviceTool(tool, "Notebook", imageFactory.getImageIconForToolbar(tool, path), HwTypeEnum.END_DEVICE, 1, path));
                 break;
-            case REAL_PC:
-                tools.add(new DeviceAddTool(tool, "Real PC", image, HwTypeEnum.REAL_PC, 1));
+            case ADD_REAL_PC:
+                path = AbstractImageFactory.REAL_PC_PATH;
+                
+                tools.add(new AddDeviceTool(tool, "Real PC", imageFactory.getImageIconForToolbar(tool, path), HwTypeEnum.REAL_PC, 1, path));
                 break;
-            case CABLE:
-                tools.add(new CableCreateTool(tool, "Cable", image, HwTypeEnum.CABLE));
+            case ADD_CABLE:
+                path = AbstractImageFactory.CABLE_PATH;
+                
+                tools.add(new CreateCableTool(tool, "Cable", imageFactory.getImageIconForToolbar(tool, path), HwTypeEnum.CABLE));
                 break;
             default:
                 break;

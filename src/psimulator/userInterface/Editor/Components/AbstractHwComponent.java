@@ -34,12 +34,12 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
     
     protected BufferedImage bi;
 
-    public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager) {
+    public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, int interfacesCount) {
         super();
         this.zoomManager = zoomManager;
         this.imageFactory = imageFactory;
         
-        for(int i =0;i<3;i++){
+        for(int i =0;i<interfacesCount;i++){
             interfaces.add(new EthInterface("Eth"+i, null));
         }
         
