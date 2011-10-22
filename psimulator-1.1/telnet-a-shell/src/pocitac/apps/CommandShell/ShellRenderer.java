@@ -138,7 +138,7 @@ public class ShellRenderer {
     }
 
     private boolean isPrintable(int znakInt) {
-
+        
         String s = String.valueOf((char) znakInt);
 
         return s.matches("[a-zA-Z]|"

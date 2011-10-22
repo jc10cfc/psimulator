@@ -9,9 +9,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pocitac.AbstraktniPocitac;
 import pocitac.apps.TerminalApplication;
 import pocitac.apps.CommandShell.prikazy.ParserPrikazu;
+import pocitac.apps.TextEditor.TextEditor;
 import telnetd.io.BasicTerminalIO;
 import vyjimky.ChybaSpojeniException;
 
@@ -153,6 +156,17 @@ public class CommandShell extends TerminalApplication {
         pocitac.configureCommandShell(this);
         this.zamek = this.pocitac.zamekPocitace;
 
+        new TextEditor(terminalIO, pocitac).run();
+
+        try {
+            terminalIO.setAutoflushing(true);
+            terminalIO.eraseScreen();
+            terminalIO.homeCursor();
+        } catch (IOException ex) {
+            Logger.getLogger(CommandShell.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
         String radek;
 
 

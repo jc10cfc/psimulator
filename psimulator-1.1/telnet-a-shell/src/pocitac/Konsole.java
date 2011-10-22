@@ -15,6 +15,7 @@ import telnetd.net.Connection;
 import telnetd.net.ConnectionEvent;
 import java.io.IOException;
 import pocitac.apps.CommandShell.CommandShell;
+import pocitac.apps.TextEditor.TextEditor;
 import telnetd.shell.Shell;
 
 /**
