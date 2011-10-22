@@ -1,0 +1,15 @@
+Navrhněte a implementujte aplikaci, která umožní vytvoření virtuální počítačové
+sítě, pro potřeby předmetu Y36PSI.
+
+Na systém se bude možno připojit pomocí telnetu. Pro užitele bude systém podobný
+reálnému počítači. Systém bude implementovat příkazy potřebné ke konfiguraci síťových rozhraní.
+
+
+
+Tomáš:
+skutečná komunikace uživatele s programem po síti pomocí telnetu, jádro (datové struktury pro počítač, rozhraní,
+směrovací tabulka, ip forward, masquerade), příkazy linuxu (ping, traceroute, ifconfig, ip, ... v rozumném rozsahu),
+
+Standa:
+parser konfiguráků, rozhraní do skutečné sítě, jádro (metody pro posílání pingu, traceroute), cisco (parser příkazové řádky, ..)
+Zaměřte se především na konfiguraci Cisca.
