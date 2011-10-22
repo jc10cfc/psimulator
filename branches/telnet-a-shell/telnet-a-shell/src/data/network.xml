@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
+ <object id="Network0" class="StaticConfig.Beans.Network"> 
+  <void property="computers"> 
+   <object class="java.util.LinkedList"> 
+    <void method="add"> 
+     <object class="StaticConfig.Beans.Computer"> 
+      <void property="interfaces"> 
+       <object class="java.util.LinkedList"> 
+        <void method="add"> 
+         <object id="NetworkInterface0" class="StaticConfig.Beans.NetworkInterface"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void property="name"> 
+       <void property="description"> 
+        <string>muhehehe</string> 
+       </void> 
+      </void> 
+      <void property="network"> 
+       <object idref="Network0"/> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="StaticConfig.Beans.Computer"> 
+      <void property="interfaces"> 
+       <object class="java.util.LinkedList"> 
+        <void method="add"> 
+         <object idref="NetworkInterface0"/> 
+        </void> 
+       </object> 
+      </void> 
+      <void property="network"> 
+       <object idref="Network0"/> 
+      </void> 
+     </object> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 
