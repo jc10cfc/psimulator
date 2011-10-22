@@ -1,5 +1,8 @@
 package psimulator.dataLayer;
 
+import psimulator.dataLayer.interfaces.PreferencesInterface;
+import psimulator.dataLayer.interfaces.LanguageInterface;
+
 
 /**
  *

@@ -1,4 +1,4 @@
-package psimulator.dataLayer;
+package psimulator.dataLayer.interfaces;
 
 import java.util.Observer;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;

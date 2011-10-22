@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.prefs.Preferences;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Enums.UpdateEventType;
-import psimulator.dataLayer.SaveableInterface;
+import psimulator.dataLayer.interfaces.SaveableInterface;
 
 /**
  *

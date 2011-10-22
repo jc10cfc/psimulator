@@ -7,19 +7,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
+import psimulator.userInterface.Editor.Tools.AbstractTool;
+import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -27,69 +28,104 @@ import javax.swing.event.PopupMenuListener;
  */
 public class MenuToggleButton extends JToggleButton {
 
+    /**
+     * arrow icon for lower right corner
+     */
     private static final Icon i = new MenuArrowIcon();
+    /**
+     * popup menu for this menu tohhle button
+     */
     protected JPopupMenu pop;
+    //private List<AbstractTool> tools;
+    /**
+     * current selected tool
+     */
+    private AbstractTool currentTool;
 
-    public MenuToggleButton(Icon icon, String toolTipText) {
-        this(null, icon);
-        
-        this.setToolTipText(toolTipText);
-    }
-    
-    public MenuToggleButton(JMenuItem[] menuItems, Icon icon) {
+    public MenuToggleButton(List<AbstractTool> tools) {
         super();
 
-        // if there are tools in menuItems
-        if (menuItems != null) {
-            // create popup menu
-            this.pop = createPopupMenu(menuItems);
-            // add mouse adapter for right click
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    MenuToggleButton b = (MenuToggleButton) e.getSource();
+        if (tools == null || tools.isEmpty()) {
+            this.setToolTipText("no tool avaiable");
+            this.setEnabled(false);
+        } else {
+            // if more than one tool, create and add popup menu
+            if (tools.size() > 1) {
+                // create popup menu
+                this.pop = createPopupMenu(tools);
 
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        if (pop != null) {
-                            pop.show(b, b.getWidth(), 0);
+                // add mouse adapter for right click
+                addMouseListener(new MouseAdapter() {
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        MenuToggleButton b = (MenuToggleButton) e.getSource();
+
+                        if (SwingUtilities.isRightMouseButton(e)) {
+                            if (pop != null) {
+                                pop.show(b, b.getWidth(), 0);
+                            }
                         }
                     }
-                }
-            });
-        }
-
-        // create and add action
-        Action a = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-
-                MenuToggleButton b = (MenuToggleButton) ae.getSource();
-
-                // if tool enabled
-                if (b.isSelected()) {
-                    System.out.println("set proper tool");
-
-                    //set proper tool
-                }
+                });
             }
-        };
-        a.putValue(Action.SMALL_ICON, icon);
-        setAction(a);
 
+            // create and add action
+            Action a = new AbstractAction() {
 
-        this.setToolTipText("ahoj");
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+
+                    MenuToggleButton b = (MenuToggleButton) ae.getSource();
+
+                    // if tool enabled
+                    if (b.isSelected()) {
+                        //set proper tool
+                        setCurrentTool(currentTool);
+                    }
+                }
+            };
+            //a.putValue(Action.SMALL_ICON, icon);
+            setAction(a);
+            
+            // set first tool asi current tool
+            setCurrentTool(tools.get(0));
+        }
+        
+        
+        
         setFocusable(false);
         setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
     }
-
-    private JPopupMenu createPopupMenu(JMenuItem[] menuItems) {
+ 
+    private void setCurrentTool(AbstractTool tool){
+        // set current tool to tool
+        currentTool = tool;
+        // set tool tip text of this MenuToggleButton
+        this.setToolTipText(tool.getName());
+        // set Image icon of this MenuToggleButton
+        this.setIcon(currentTool.getImageIcon());
+        // enable tool
+        //currentTool.setEnabled();
+    }
+    
+    private JPopupMenu createPopupMenu(List<AbstractTool> tools) {
         JPopupMenu popup = new JPopupMenu();
-        popup.setLayout(new BoxLayout(popup, BoxLayout.X_AXIS));
-
-        for (JMenuItem mi : menuItems) {
+        
+        for(final AbstractTool tool : tools){
+            JMenuItem mi = new JMenuItem(tool.getName(), tool.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
+            mi.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    // set current tool to this tool
+                    setCurrentTool(tool);
+                }
+            });
+            
             popup.add(mi);
         }
 
+        /*
         popup.addPopupMenuListener(new PopupMenuListener() {
 
             @Override
@@ -104,7 +140,7 @@ public class MenuToggleButton extends JToggleButton {
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
                 //setSelected(false);
             }
-        });
+        });*/
 
         return popup;
     }

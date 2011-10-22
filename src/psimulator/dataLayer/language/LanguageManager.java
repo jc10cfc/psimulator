@@ -10,7 +10,7 @@ import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 import psimulator.dataLayer.Enums.UpdateEventType;
-import psimulator.dataLayer.SaveableInterface;
+import psimulator.dataLayer.interfaces.SaveableInterface;
 
 /**
  *

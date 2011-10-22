@@ -12,10 +12,12 @@ import psimulator.dataLayer.language.LanguageManager;
 public class DataLayer extends DataLayerFacade{
     private LanguageManager languageManager;
     private PreferencesManager preferencesManager;
+    private HardwareDevicesManager hwDeviceManager;
     
     public DataLayer(){
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
+        hwDeviceManager =  new HardwareDevicesManager();
     }
 
     @Override
@@ -63,6 +65,7 @@ public class DataLayer extends DataLayerFacade{
     public void addPreferencesObserver(Observer observer) {
         preferencesManager.addObserver(observer);
     }
+   
 
     
 

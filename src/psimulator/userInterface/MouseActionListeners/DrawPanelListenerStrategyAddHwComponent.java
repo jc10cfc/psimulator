@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Enums.HwComponentEnum;
+import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.HwComponent;
 import psimulator.userInterface.Editor.DrawPanel;
@@ -30,7 +30,7 @@ public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerSt
     
     @Override
     public void mousePressed(MouseEvent e) {
-        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, HwComponentEnum.PC);
+        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, HwTypeEnum.END_DEVICE);
         component.setLocationByMiddlePoint(e.getPoint());
         graph.addHwComponent(component);
         
