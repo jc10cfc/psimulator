@@ -106,7 +106,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         }
 
     }
-
+ 
     /**
      * reaction to update from LanguageManager
      */ 
@@ -115,6 +115,14 @@ public class EditorToolBar extends JToolBar implements Observer {
         setTextsToComponents();
     }
 
+    /**
+     * Enables deafult tool of this toolbar
+     */
+    public void setDefaultTool(){
+        toggleButtonHand.setCurrentToolEnabled();
+        toggleButtonHand.setSelected(true);
+    }
+    
     /**
      * adds action listener to jButtonFitToSize
      * @param listener 

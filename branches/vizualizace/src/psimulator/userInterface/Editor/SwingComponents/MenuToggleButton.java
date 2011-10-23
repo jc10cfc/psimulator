@@ -19,7 +19,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
-import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -82,7 +81,7 @@ public class MenuToggleButton extends JToggleButton {
                     // if tool enabled
                     if (b.isSelected()) {
                         // enable current tool tool
-                        currentTool.setEnabled();
+                        setCurrentToolEnabled();
                     }
                 }
             };
@@ -97,6 +96,10 @@ public class MenuToggleButton extends JToggleButton {
         setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
     }
  
+    /**
+     * sets current tool in MenuTogglebutton  to tool in parameter
+     * @param tool Chosen tool
+     */
     private void setCurrentTool(AbstractTool tool){
         // set current tool to tool
         currentTool = tool;
@@ -104,9 +107,17 @@ public class MenuToggleButton extends JToggleButton {
         this.setToolTipText(tool.getName());
         // set Image icon of this MenuToggleButton
         this.setIcon(currentTool.getImageIcon());
+        if(this.isSelected()){
+            setCurrentToolEnabled();
+        }
     }
     
-    
+    /**
+     * enables current tool in this Menu ToggleButton 
+     */
+    public void setCurrentToolEnabled(){
+        currentTool.setEnabled();
+    }
     
     private JPopupMenu createPopupMenu(List<AbstractTool> tools) {
         JPopupMenu popup = new JPopupMenu();
@@ -118,6 +129,7 @@ public class MenuToggleButton extends JToggleButton {
                 public void actionPerformed(ActionEvent ae) {
                     // set current tool to this tool
                     setCurrentTool(tool);
+                    
                 }
             });
             
