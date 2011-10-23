@@ -2,7 +2,8 @@ package psimulator.userInterface.Editor.Tools;
 
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
+import psimulator.userInterface.Editor.ToolChangeInterface;
 
 /**
  *
@@ -10,19 +11,8 @@ import psimulator.userInterface.Editor.Enums.Tools;
  */
 public class CreateCableTool extends AbstractCreationTool{
 
-    public CreateCableTool(Tools tool, String name, ImageIcon imageIcon, HwTypeEnum hwType) {
-        super(tool, name, imageIcon, hwType);
+    public CreateCableTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeInterface toolChangeInterface, HwTypeEnum hwType) {
+        super(tool, name, imageIcon, toolChangeInterface, hwType);
     }
-    
-    @Override
-    public void setEnabled() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setDisabled() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    
+  
 }

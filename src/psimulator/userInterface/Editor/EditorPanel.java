@@ -10,7 +10,6 @@ import java.util.Observer;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
 import psimulator.userInterface.MainWindowInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 import psimulator.userInterface.imageFactories.AwtImageFactory;
@@ -58,7 +57,6 @@ public class EditorPanel extends AbstractEditor implements Observer{
         // add tool bar to panel
         this.add(jToolBarEditor, BorderLayout.WEST);
 
-        jToolBarEditor.addToolActionListener(new JMenuToolActionListener());
         jToolBarEditor.addToolActionFitToSizeListener(new JMenuToolFitToSizeActionListener());
     }
     
@@ -86,30 +84,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
         this.revalidate();
         this.repaint();
     }
-    
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for Tool buttons
-     */
-    class JMenuToolActionListener implements ActionListener {
-
-        /**
-         * calls zoom operation on jPanelEditor according to actionCommand
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // get source button
-            MenuToggleButton sourceButton = ((MenuToggleButton)e.getSource());
-            
-            
-            // set Button as the only selected
-            //jToolBarEditor.setSelectedButton(sourceButton);
-            
-            // chage mouse listener in jPanelDraw according to TOOL
-            //jPanelDraw.setMouseListener(Tools.valueOf(e.getActionCommand()));
-        }
-    }
-    
+   
     /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for FitToSize button

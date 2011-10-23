@@ -2,7 +2,8 @@ package psimulator.userInterface.Editor.Tools;
 
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
+import psimulator.userInterface.Editor.ToolChangeInterface;
 
 /**
  *
@@ -10,11 +11,11 @@ import psimulator.userInterface.Editor.Enums.Tools;
  */
 public class AddDeviceTool extends AbstractCreationTool{
 
-    private int interfaces;
+    protected int interfaces;
     protected String imagePath;
     
-    public AddDeviceTool(Tools tool, String name, ImageIcon imageIcon, HwTypeEnum hwType, int interfaces, String imagePath) {
-        super(tool, name, imageIcon, hwType);
+    public AddDeviceTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeInterface toolChangeInterface, HwTypeEnum hwType, int interfaces, String imagePath) {
+        super(tool, name, imageIcon, toolChangeInterface, hwType);
         this.imagePath = imagePath;
         this.interfaces = interfaces;
     }
@@ -26,16 +27,4 @@ public class AddDeviceTool extends AbstractCreationTool{
     public String getImagePath() {
         return imagePath;
     }
-    
-    @Override
-    public void setEnabled() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setDisabled() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    
 }

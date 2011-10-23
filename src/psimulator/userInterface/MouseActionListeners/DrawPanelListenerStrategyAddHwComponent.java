@@ -19,8 +19,10 @@ import psimulator.userInterface.MainWindowInterface;
  *
  * @author Martin
  */
-public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerStrategy{
+public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerStrategy{
     
+    private AddDeviceTool addDeviceTool;
+
     public DrawPanelListenerStrategyAddHwComponent(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
         super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
     }
@@ -31,12 +33,17 @@ public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerSt
     }
     
     @Override
+    public void setTool(AbstractTool tool) {
+        this.addDeviceTool = (AddDeviceTool) tool;
+    }
+    
+    @Override
     public void mousePressed(MouseEvent e) {
         // new code
-        AddDeviceTool t = (AddDeviceTool)drawPanel.getCurrentTool();
         
         AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, 
-                HwTypeEnum.END_DEVICE, t.getInterfaces(), t.getImagePath(), t.getName());
+                addDeviceTool.getHwType(), addDeviceTool.getInterfaces(), addDeviceTool.getImagePath(), 
+                addDeviceTool.getName());
         
         //end new code
         
@@ -66,8 +73,4 @@ public class DrawPanelListenerStrategyAddHwComponent extends DrawPanelListenerSt
     public void mouseExited(MouseEvent e) {
        drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
-
-    
-
-    
 }

@@ -16,13 +16,14 @@ public class HwComponent extends AbstractHwComponent {
     
     private String imagePath;
 
+    /*
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, HwTypeEnum hwComponentType) {
         super(imageFactory, zoomManager, 3);
 
         //zoomManager.addObserver(this);
         this.hwComponentType = hwComponentType;
         bi = imageFactory.getBufferedImage(hwComponentType, zoomManager.getIconSize(), true);
-    }
+    }*/
     
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, 
             HwTypeEnum hwComponentType, int interfacesCount, String imagePath, String name) {

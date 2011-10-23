@@ -18,7 +18,6 @@ import javax.swing.KeyStroke;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategy;
 import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategyAddCable;
 import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategyAddHwComponent;
@@ -26,7 +25,7 @@ import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategyHa
 import psimulator.userInterface.Editor.Actions.ActionOnDelete;
 import psimulator.userInterface.Editor.Components.AbstractComponent;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
 import psimulator.userInterface.MainWindowInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -62,9 +61,7 @@ public class DrawPanel extends JPanel implements Observer, ToolChangeInterface {
     private Dimension actualZoomArea = new Dimension(defaultZoomArea);
     
     private DataLayerFacade dataLayer;
-    
-    private AbstractTool currentTool;
-            
+           
 
     public DrawPanel(MainWindowInterface mainWindow, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
@@ -85,7 +82,7 @@ public class DrawPanel extends JPanel implements Observer, ToolChangeInterface {
         createDrawPaneMouseListeners();
 
         // set mouse listener
-        //setMouseListener(Tools.HAND);
+        //setMouseListener(MainTool.HAND);
         //setHandTool();
 
         // add key binding for delete
@@ -277,14 +274,51 @@ public class DrawPanel extends JPanel implements Observer, ToolChangeInterface {
         mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow, dataLayer);
         mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow, dataLayer);
     }
-
-    public AbstractTool getCurrentTool() {
-        return currentTool;
+    
+    // ------ IMPLEMENTATION OF TOOL CHANGE INTERFACE
+    @Override
+    public void removeCurrentMouseListener(){
+        if(currentMouseListener != null){
+            currentMouseListener.deInitialize();
+        }
+        
+        this.removeMouseListener(currentMouseListener);
+        this.removeMouseMotionListener(currentMouseListener);
+        this.removeMouseWheelListener(currentMouseListener);
     }
-     
     
+    @Override
+    public DrawPanelListenerStrategy getMouseListener(MainTool tool){
+        switch (tool) {
+            case HAND:
+                return mouseListenerHand;
+            case ADD_CABLE:
+                return mouseListenerCable;
+            case ADD_REAL_PC:
+            case ADD_END_DEVICE:
+            case ADD_SWITCH:
+            case ADD_ROUTER:    
+                return mouseListenerAddHwComponent;
+            
+        }
+        
+        // this should never happen
+        System.out.println("chyba v DrawPanel metoda getMouseListener(MainTool tool)");
+        return mouseListenerHand;
+    }
     
+    @Override
+    public void setCurrentMouseListener(DrawPanelListenerStrategy mouseListener){
+        currentMouseListener = mouseListener;
+        
+        this.addMouseListener(currentMouseListener);
+        this.addMouseMotionListener(currentMouseListener);
+        this.addMouseWheelListener(currentMouseListener);
+    }
+  
+    // END------ IMPLEMENTATION OF TOOL CHANGE INTERFACE
     
+    /*
     @Override
     public void setToolChanged(AbstractTool tool) {
         if(currentMouseListener != null){
@@ -295,9 +329,6 @@ public class DrawPanel extends JPanel implements Observer, ToolChangeInterface {
         this.removeMouseMotionListener(currentMouseListener);
         this.removeMouseWheelListener(currentMouseListener);
 
-        // set current tool
-        this.currentTool = tool;
-        
         switch (tool.getTool()) {
             case HAND:
                 currentMouseListener = mouseListenerHand;
@@ -307,6 +338,8 @@ public class DrawPanel extends JPanel implements Observer, ToolChangeInterface {
             case ADD_SWITCH:
             case ADD_ROUTER:    
                 currentMouseListener = mouseListenerAddHwComponent;
+                //currentMouseListener.setTool();
+                
                 break;
             case ADD_CABLE:
                 currentMouseListener = mouseListenerCable;
@@ -317,6 +350,8 @@ public class DrawPanel extends JPanel implements Observer, ToolChangeInterface {
         this.addMouseMotionListener(currentMouseListener);
         this.addMouseWheelListener(currentMouseListener);
     }
+     * 
+     */
     
     protected UndoManager getUndoManager() {
         return undoManager;

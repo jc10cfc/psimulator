@@ -15,6 +15,8 @@ import psimulator.userInterface.Editor.Components.BundleOfCables;
 import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel;
+import psimulator.userInterface.Editor.Tools.AbstractTool;
+import psimulator.userInterface.Editor.Tools.ManipulationTool;
 import psimulator.userInterface.Editor.UndoCommands.UndoableMoveComponent;
 import psimulator.userInterface.Editor.ZoomManager;
 import psimulator.userInterface.MainWindowInterface;
@@ -49,6 +51,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      * point in actual zoom where started components marking
      */
     protected Point startPointOfMarkingTransparentRectangle;
+    
+    private ManipulationTool manipulationTool;
 
     public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
         super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
@@ -60,6 +64,11 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         drawPanel.repaint();
     }
 
+    @Override
+    public void setTool(AbstractTool tool) {
+        this.manipulationTool = (ManipulationTool) tool;
+    }
+    
     /**
      * Marks component at Point clicked if any
      * IF control pressed, than add component to marked components
