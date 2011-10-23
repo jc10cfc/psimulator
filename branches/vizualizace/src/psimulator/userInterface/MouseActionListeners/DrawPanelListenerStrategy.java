@@ -7,6 +7,7 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel;
 import psimulator.userInterface.Editor.Graph;
+import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.Editor.ZoomManager;
 import psimulator.userInterface.MainWindowInterface;
 
@@ -35,6 +36,8 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     }
     
     public abstract void deInitialize();
+    
+    public abstract void setTool(AbstractTool tool);
     
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {

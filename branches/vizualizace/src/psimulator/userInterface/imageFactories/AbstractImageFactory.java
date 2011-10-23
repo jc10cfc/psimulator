@@ -8,7 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
 
 /**
  *
@@ -55,7 +55,7 @@ public abstract class AbstractImageFactory {
         return bi;
     }
 
-    public ImageIcon getImageIconForToolbar(Tools tool) {
+    public ImageIcon getImageIconForToolbar(MainTool tool) {
         String name = "";
 
         switch (tool) {
@@ -77,16 +77,13 @@ public abstract class AbstractImageFactory {
             case ADD_REAL_PC:
                 name = "desktop";
                 break;
-            case FIT_TO_SIZE:
-                return null;
-            //break;
         }
         ImageIcon icon = new ImageIcon(getClass().getResource("/resources/toolbarIcons/editor/" + name + ".png"));
 
         return (new ImageIcon(icon.getImage().getScaledInstance(ICON_SIZE_MENU_BAR, ICON_SIZE_MENU_BAR, Image.SCALE_SMOOTH)));
     }
 
-    public ImageIcon getImageIconForToolbar(Tools tool, String path) {
+    public ImageIcon getImageIconForToolbar(MainTool tool, String path) {
         ImageIcon icon = null;
         if (path == null) {
             icon = getImageIconForToolbar(tool);

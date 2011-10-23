@@ -2,7 +2,9 @@ package psimulator.userInterface.Editor.Tools;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
+import psimulator.userInterface.Editor.ToolChangeInterface;
+import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategy;
 
 /**
  *
@@ -11,20 +13,22 @@ import psimulator.userInterface.Editor.Enums.Tools;
 public abstract class AbstractTool {
     
     protected String name;
-    protected Tools tool;
+    protected MainTool tool;
     protected ImageIcon imageIcon;
+    protected ToolChangeInterface toolChangeInterface;
     
-    public AbstractTool(Tools tool, String name, ImageIcon imageIcon) {
+    public AbstractTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeInterface toolChangeInterface) {
         this.tool = tool;
         this.name = name;
         this.imageIcon = imageIcon;
+        this.toolChangeInterface = toolChangeInterface;
     }
 
     public String getName() {
         return name;
     }
 
-    public Tools getTool() {
+    public MainTool getTool() {
         return tool;
     }
 
@@ -35,7 +39,18 @@ public abstract class AbstractTool {
     public ImageIcon getImageIcon(int size) {
         return (new ImageIcon(imageIcon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH)));
     }
-
-    public abstract void setEnabled();
-    public abstract void setDisabled();
+ 
+    /**
+     * Sets proper DrawPanelListenerStrategy in toolChangeInterface
+     */
+    public void setEnabled(){
+        // remove current mouse listener
+        toolChangeInterface.removeCurrentMouseListener();
+        // get mouse listener for needed tool
+        DrawPanelListenerStrategy listener =  toolChangeInterface.getMouseListener(tool);
+        // tell mouse listener about tool change
+        listener.setTool(this);
+        // add mouse listener to toolChangeInterface
+        toolChangeInterface.setCurrentMouseListener(listener);
+    }
 }

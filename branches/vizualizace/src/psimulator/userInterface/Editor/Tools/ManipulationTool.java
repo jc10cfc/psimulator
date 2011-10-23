@@ -1,7 +1,8 @@
 package psimulator.userInterface.Editor.Tools;
 
 import javax.swing.ImageIcon;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
+import psimulator.userInterface.Editor.ToolChangeInterface;
 
 /**
  *
@@ -9,19 +10,7 @@ import psimulator.userInterface.Editor.Enums.Tools;
  */
 public class ManipulationTool extends AbstractTool{
 
-    public ManipulationTool(Tools tool, String name, ImageIcon imageIcon) {
-        super(tool, name, imageIcon);
+    public ManipulationTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeInterface toolChangeInterface) {
+        super(tool, name, imageIcon, toolChangeInterface);
     }
-
-    @Override
-    public void setEnabled() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setDisabled() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    
 }

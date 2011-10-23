@@ -2,7 +2,8 @@ package psimulator.userInterface.Editor.Tools;
 
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
+import psimulator.userInterface.Editor.ToolChangeInterface;
 
 /**
  *
@@ -11,8 +12,8 @@ import psimulator.userInterface.Editor.Enums.Tools;
 public abstract class AbstractCreationTool extends AbstractTool{
     protected HwTypeEnum hwType;
 
-    public AbstractCreationTool(Tools tool, String name, ImageIcon imageIcon, HwTypeEnum hwType) {
-        super(tool, name, imageIcon);
+    public AbstractCreationTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeInterface toolChangeInterface, HwTypeEnum hwType) {
+        super(tool, name, imageIcon, toolChangeInterface);
         this.hwType = hwType;
     }
 

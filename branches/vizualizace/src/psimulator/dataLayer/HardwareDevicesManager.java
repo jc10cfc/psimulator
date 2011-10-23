@@ -6,7 +6,7 @@ import java.util.List;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 import psimulator.dataLayer.devices.AbstractDevice;
 import psimulator.dataLayer.devices.CableDevice;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
 
 /**
  *
@@ -14,7 +14,7 @@ import psimulator.userInterface.Editor.Enums.Tools;
  */
 public class HardwareDevicesManager {
     
-    public List<AbstractDevice> getDevices(Tools tool) {
+    public List<AbstractDevice> getDevices(MainTool tool) {
         List<AbstractDevice> devices = new ArrayList<AbstractDevice> ();
         
         switch(tool){

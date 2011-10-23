@@ -16,6 +16,8 @@ import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.Components.EthInterface;
 import psimulator.userInterface.Editor.Dialogs.CableConnectToInterfacePopupMenu;
 import psimulator.userInterface.Editor.DrawPanel;
+import psimulator.userInterface.Editor.Tools.AbstractTool;
+import psimulator.userInterface.Editor.Tools.CreateCableTool;
 import psimulator.userInterface.Editor.UndoCommands.UndoableAddCable;
 import psimulator.userInterface.Editor.ZoomManager;
 import psimulator.userInterface.MainWindowInterface;
@@ -34,6 +36,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     boolean hasSecondComponent = false;
     private Point startPoint;
     private CableConnectToInterfacePopupMenu popupMenu;
+    
+    private CreateCableTool createCableTool;
 
     public DrawPanelListenerStrategyAddCable(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
         super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
@@ -49,6 +53,11 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         initVariablesForCableMaking();
         drawPanel.repaint();
+    }
+    
+    @Override
+    public void setTool(AbstractTool tool) {
+        this.createCableTool = (CreateCableTool) tool;
     }
 
     @Override
@@ -248,8 +257,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         eth2 = null;
         hasSecondComponent = false;
     }
-    
-    
+
+
     /**
      * PopupMenuListener to handle events on popup
      */

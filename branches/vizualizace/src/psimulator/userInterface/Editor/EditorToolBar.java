@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
-import psimulator.userInterface.Editor.Enums.Tools;
+import psimulator.userInterface.Editor.Enums.MainTool;
 import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
 import psimulator.userInterface.Editor.Tools.ToolsFactory;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -57,18 +57,18 @@ public class EditorToolBar extends JToolBar implements Observer {
         /// new code
         jButtonFitToSize = new JButton();
         jButtonFitToSize.setText("Fit to size");
-        jButtonFitToSize.setActionCommand(Tools.FIT_TO_SIZE.toString());
+        //jButtonFitToSize.setActionCommand(MainTool.FIT_TO_SIZE.toString());
         
         
         toolsButtonGroup = new ButtonGroup();
         
-        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(Tools.HAND, imageFactory), toolChangeInterface);
-        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_ROUTER, imageFactory), toolChangeInterface);
-        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_SWITCH, imageFactory), toolChangeInterface);
-        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_END_DEVICE, imageFactory), toolChangeInterface);
-        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_REAL_PC, imageFactory), toolChangeInterface);
-        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(Tools.ADD_CABLE, imageFactory), toolChangeInterface);
-        //toggleButtonCable = new MenuToggleButton(null, imageFactory.getImageIconForToolbar(Tools.ADD_CABLE));
+        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, imageFactory, toolChangeInterface));
+        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_ROUTER, imageFactory, toolChangeInterface));
+        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_SWITCH, imageFactory, toolChangeInterface));
+        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_END_DEVICE, imageFactory, toolChangeInterface));
+        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_REAL_PC, imageFactory, toolChangeInterface));
+        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_CABLE, imageFactory, toolChangeInterface));
+        //toggleButtonCable = new MenuToggleButton(null, imageFactory.getImageIconForToolbar(MainTool.ADD_CABLE));
         
         
         toolsButtonGroup.add(toggleButtonHand);
@@ -107,23 +107,12 @@ public class EditorToolBar extends JToolBar implements Observer {
 
     }
 
-    // reaction to update from LanguageManager
+    /**
+     * reaction to update from LanguageManager
+     */ 
     @Override
     public void update(Observable o, Object o1) {
         setTextsToComponents();
-    }
-
-    /**
-     * Adds action listener to all buttons in tool bar
-     * @param listener Action listener
-     */
-    public void addToolActionListener(ActionListener listener) {
-        /*
-        jButtonHand.addActionListener(listener);
-        jButtonPc.addActionListener(listener);
-        jButtonMac.addActionListener(listener);
-        jButtonCable.addActionListener(listener);
-        */
     }
 
     /**
@@ -136,7 +125,7 @@ public class EditorToolBar extends JToolBar implements Observer {
 
     ////////------------ PRIVATE------------///////////
     private void setTextsToComponents() {
-        
+        // set text only to Tools that cant be changed
         toggleButtonHand.setToolTipText(dataLayer.getString("HAND"));
         toggleButtonRealPC.setToolTipText(dataLayer.getString("REAL_PC"));
         toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));

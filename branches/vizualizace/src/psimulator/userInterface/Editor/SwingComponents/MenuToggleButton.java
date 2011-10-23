@@ -19,7 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
-import psimulator.userInterface.Editor.ToolChangeInterface;
+import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -41,17 +41,11 @@ public class MenuToggleButton extends JToggleButton {
      * current selected tool
      */
     private AbstractTool currentTool;
-    
-    /**
-     * interface which to inform about tool change
-     */
-    private ToolChangeInterface toolChangeInterface;
 
-    public MenuToggleButton(List<AbstractTool> tools, ToolChangeInterface toolChangeInterface) {
+    public MenuToggleButton(List<AbstractTool> tools) {
         super();
         
-        this.toolChangeInterface = toolChangeInterface;
-
+        
         if (tools == null || tools.isEmpty()) {
             this.setToolTipText("no tool avaiable");
             this.setEnabled(false);
@@ -87,8 +81,8 @@ public class MenuToggleButton extends JToggleButton {
 
                     // if tool enabled
                     if (b.isSelected()) {
-                        //set proper tool
-                        setCurrentTool(currentTool);
+                        // enable current tool tool
+                        currentTool.setEnabled();
                     }
                 }
             };
@@ -98,9 +92,7 @@ public class MenuToggleButton extends JToggleButton {
             // set first tool as current tool
             setCurrentTool(tools.get(0));
         }
-        
-        
-        
+     
         setFocusable(false);
         setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
     }
@@ -112,9 +104,9 @@ public class MenuToggleButton extends JToggleButton {
         this.setToolTipText(tool.getName());
         // set Image icon of this MenuToggleButton
         this.setIcon(currentTool.getImageIcon());
-        // enable tool
-        toolChangeInterface.setToolChanged(tool);
     }
+    
+    
     
     private JPopupMenu createPopupMenu(List<AbstractTool> tools) {
         JPopupMenu popup = new JPopupMenu();
