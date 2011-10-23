@@ -25,11 +25,18 @@ public abstract class AbstractImageFactory {
     public static final String ROUTER_PATH = "/resources/toolbarIcons/editor/router.png";
     public static final String SWITCH_PATH = "/resources/toolbarIcons/editor/switch.png";
     public static final String CABLE_PATH = "/resources/toolbarIcons/editor/network-wired.png";
-    public static final String REAL_PC_PATH = "/resources/toolbarIcons/editor/desktop.png";
+    public static final String END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor/desktop.png";
+    public static final String REAL_PC_PATH = "/resources/toolbarIcons/editor/local_network.png";
     
     protected ImageBuffer imageBuffer;
-    protected RescaleOp rescaleOp = new RescaleOp(1.3f, 0, null);
     
+    // scales 3 je alpha
+    private float[] scales = {1f, 1f, 1f, 1f};
+    private float[] offsets = {40f, 40f, 40f, 1f};
+
+    //protected RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
+    protected RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
+
 
     public AbstractImageFactory() {
         this.imageBuffer = new ImageBuffer();

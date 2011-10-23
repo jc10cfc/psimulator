@@ -1,4 +1,4 @@
-package psimulator.userInterface.MouseActionListeners;
+package psimulator.userInterface.Editor.MouseActionListeners;
 
 import psimulator.userInterface.Editor.Components.EthInterface;
 

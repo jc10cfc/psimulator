@@ -48,6 +48,10 @@ public class ToolsFactory {
                 path = AbstractImageFactory.END_DEVICE_NOTEBOOK_PATH;
                 tools.add(new AddDeviceTool(tool, "Notebook", imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.END_DEVICE, 1, path));
+                
+                path = AbstractImageFactory.END_DEVICE_WORKSTATION_PATH;
+                tools.add(new AddDeviceTool(tool, "Workstation", imageFactory.getImageIconForToolbar(tool, path), 
+                        toolChangeInterface, HwTypeEnum.END_DEVICE, 4, path));
                 break;
             case ADD_REAL_PC:
                 path = AbstractImageFactory.REAL_PC_PATH;
