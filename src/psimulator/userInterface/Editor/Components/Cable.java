@@ -58,8 +58,6 @@ public class Cable extends AbstractComponent {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-
-
         
         if (isMarked()) {
             Color color = g2.getColor();
