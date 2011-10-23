@@ -74,6 +74,7 @@ public class BundleOfCables extends AbstractComponent{
      
     @Override
     public void paintComponent(Graphics g) {
+        /*
         boolean horizontal;
         
         int distance;
@@ -98,7 +99,7 @@ public class BundleOfCables extends AbstractComponent{
         }
         
         System.out.println("mindist=" +minDistanceBetweenCables);
-        
+        */
         for(Cable c : cables){
             c.paintComponent(g);
         }
