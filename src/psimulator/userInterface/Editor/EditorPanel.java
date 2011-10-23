@@ -57,7 +57,11 @@ public class EditorPanel extends AbstractEditor implements Observer{
         // add tool bar to panel
         this.add(jToolBarEditor, BorderLayout.WEST);
 
+        // add listener for FitToSize button
         jToolBarEditor.addToolActionFitToSizeListener(new JMenuToolFitToSizeActionListener());
+        
+        // set default tool in ToolBar
+        jToolBarEditor.setDefaultTool();
     }
     
     @Override

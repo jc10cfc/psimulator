@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -16,42 +17,76 @@ import psimulator.userInterface.Editor.Enums.MainTool;
  */
 public abstract class AbstractImageFactory {
 
-    protected ImageBuffer imageBuffer;
     public static final int ICON_SIZE_MENU_BAR = 48;
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
     public static final String HAND_PATH = "/resources/toolbarIcons/editor/cursor_arrow.png";
-    public static final String END_DEVICE_PATH = "/resources/toolbarIcons/editor/modern/PC.png";
+    public static final String END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor/modern/PC.png";
+    public static final String END_DEVICE_NOTEBOOK_PATH = "/resources/toolbarIcons/editor/notebook.png";
     public static final String ROUTER_PATH = "/resources/toolbarIcons/editor/router.png";
     public static final String SWITCH_PATH = "/resources/toolbarIcons/editor/switch.png";
     public static final String CABLE_PATH = "/resources/toolbarIcons/editor/network-wired.png";
     public static final String REAL_PC_PATH = "/resources/toolbarIcons/editor/desktop.png";
+    
+    protected ImageBuffer imageBuffer;
+    protected RescaleOp rescaleOp = new RescaleOp(1.3f, 0, null);
+    
 
     public AbstractImageFactory() {
         this.imageBuffer = new ImageBuffer();
     }
 
-    public abstract BufferedImage getBufferedImage(HwTypeEnum hwComponent, Integer size, boolean marked);
+    public BufferedImage getImage(HwTypeEnum hwComponentType, String path, Integer size, boolean marked) {
+        BufferedImage image;
 
-    public BufferedImage getBufferedImage(String path, Integer size) {
-        BufferedImage bi = null;
-        BufferedImage temp = null;
+        image = imageBuffer.getBufferedImage(path, size, marked);
 
-        try {
-            temp = ImageIO.read(getClass().getResource(path));
-            
-
-            bi = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D graphics2D = bi.createGraphics();
-            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            graphics2D.drawImage(temp, 0, 0, size, size, null);
-
-            graphics2D.dispose();
-
-        } catch (IOException ex) {
-            // should never happen
-            //Logger.getLogger(PcComponent.class.getName()).log(Level.SEVERE, null, ex);
+        if (image == null) {
+            // load image from file
+            image = createImage(hwComponentType, path, size, marked);
+            // put image into buffer
+            imageBuffer.putBufferedImage(path, size, image, marked);
         }
+
+        return image;
+    }
+
+    protected BufferedImage createImage(HwTypeEnum hwComponentType, String path, Integer size, boolean marked) {
+
+        BufferedImage bi = null;
+    
+        Image temp = null;
+        
+        try {
+            // loads image from path and scales it to desired size
+            temp = ImageIO.read(getClass().getResource(path)).getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        } catch (IOException ex) {
+            try {
+                temp = ImageIO.read(getClass().getResource(getPath(hwComponentType))).getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            } catch (IOException ex1) {
+                // should never happen
+            }
+        }
+        
+        // create new buffered image to paint on
+        bi = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+
+        // create graphics and set hints
+        Graphics2D graphics2D = bi.createGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        // draw image
+        graphics2D.drawImage(temp, 0, 0, null);
+
+        // if marked, draw transparent white rectangle over
+        if (marked) {
+            rescaleOp.filter(bi, bi);
+        }
+
+        graphics2D.dispose();
+
         return bi;
     }
 
@@ -101,5 +136,23 @@ public abstract class AbstractImageFactory {
 
     public void clearBuffer() {
         imageBuffer.clearBuffer();
+    }
+    
+    private String getPath(HwTypeEnum type){
+        switch(type){
+            case CISCO_ROUTER:
+            case LINUX_ROUTER:
+                return ROUTER_PATH;
+            case CISCO_SWITCH:
+            case LINUX_SWITCH:
+                return SWITCH_PATH;
+            case END_DEVICE:
+                return END_DEVICE_PC_PATH;
+            case CABLE:
+                return CABLE_PATH;
+            case REAL_PC:
+            default:
+                return REAL_PC_PATH;
+        }
     }
 }

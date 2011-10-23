@@ -1,10 +1,9 @@
 package psimulator.userInterface.imageFactories;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 
 /**
  *
@@ -12,63 +11,64 @@ import psimulator.userInterface.Editor.Enums.HwTypeEnum;
  */
 public class ImageBuffer {
     /* Data structures for buffering */
-    private EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> hwComponentBuffer;
-    private EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> hwMarkedComponentBuffer;
+    // String is path to image = the identificator
+    private HashMap<String,HashMap<Integer, Image>> hwComponentBuffer;
+    private HashMap<String,HashMap<Integer, Image>> hwMarkedComponentBuffer;
     
     public ImageBuffer(){
         // create EnumMap with all HW components
-        hwComponentBuffer = new EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>>(HwTypeEnum.class);
-        hwMarkedComponentBuffer = new EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>>(HwTypeEnum.class);
+        hwComponentBuffer = new HashMap<String,HashMap<Integer, Image>>();
+        hwMarkedComponentBuffer = new HashMap<String,HashMap<Integer, Image>>();
         
-        // for each component create HashMap with Integer (size) and BufferredImage
-        for(HwTypeEnum c : HwTypeEnum.values()){
-            hwComponentBuffer.put(c, new HashMap<Integer, BufferedImage>());
-            hwMarkedComponentBuffer.put(c, new HashMap<Integer, BufferedImage>());
-        }
     }
     
     /**
-     * Clears alll BufferImages in buffer
+     * Clears alll Images in buffer
      */
     public void clearBuffer(){
         // each HW components HashMap is cleared
-        for(Entry<HwTypeEnum,HashMap<Integer, BufferedImage>> e : hwComponentBuffer.entrySet()){
+        for(Entry<String,HashMap<Integer, Image>> e : hwComponentBuffer.entrySet()){
             e.getValue().clear();
         }
         
-        for(Entry<HwTypeEnum,HashMap<Integer, BufferedImage>> e : hwMarkedComponentBuffer.entrySet()){
+        for(Entry<String,HashMap<Integer, Image>> e : hwMarkedComponentBuffer.entrySet()){
             e.getValue().clear();
         }
     }
     
     /**
-     * Puts BufferedImage into buffer
-     * @param hwComponent
+     * Puts Image into buffer
+     * @param path
      * @param size
      * @param image 
      * @param marked 
      */
-    public void putBufferedImage(HwTypeEnum hwComponent, Integer size, BufferedImage image, boolean marked){
-        EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> map;
-        
+    public void putBufferedImage(String path, Integer size, Image image, boolean marked){
+        HashMap<String,HashMap<Integer, Image>> map;
+
         if(marked){
             map = hwMarkedComponentBuffer;
         }else{
             map = hwComponentBuffer;
         }
         
-        map.get(hwComponent).put(size, image);
+        // if map does not contains path
+        if(!map.containsKey(path)){
+            map.put(path, new HashMap<Integer, Image>());
+        }
+        
+        map.get(path).put(size, image);
     }
     
     /**
-     * Gets specified BufferedImage
-     * @param hwComponent
+     * Gets specified Image
+     * @param path
      * @param size
-     * @return BufferedImage if found, otherwise null
+     * @return Image if found, otherwise null
      * @param marked 
      */
-    public BufferedImage getBufferedImage(HwTypeEnum hwComponent, Integer size, boolean marked){
-        EnumMap<HwTypeEnum,HashMap<Integer, BufferedImage>> map;
+    public BufferedImage getBufferedImage(String path, Integer size, boolean marked){
+        HashMap<String,HashMap<Integer, Image>> map;
         
         if(marked){
             map = hwMarkedComponentBuffer;
@@ -76,13 +76,19 @@ public class ImageBuffer {
             map = hwComponentBuffer;
         }
         
+        // if map does not contains path
+        if(!map.containsKey(path)){
+            return null;
+        }
+        
         // if is specified BufferedImage in buffer
-        if(map.get(hwComponent).containsKey(size)){
-            return (BufferedImage) map.get(hwComponent).get(size);
+        if(map.get(path).containsKey(size)){
+            return (BufferedImage) map.get(path).get(size);
         }else{
-            // if isnt
+            // if isn't
             return null;
         }
     }
+    
     
 }

@@ -1,11 +1,5 @@
 package psimulator.userInterface.imageFactories;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 
 /**
  *
@@ -13,22 +7,6 @@ import psimulator.userInterface.Editor.Enums.HwTypeEnum;
  */
 public class AwtImageFactory extends AbstractImageFactory {
 
-    
-    @Override
-    public BufferedImage getBufferedImage(HwTypeEnum hwComponent, Integer size, boolean marked) {
-        BufferedImage bufferedImage;
-
-        bufferedImage = imageBuffer.getBufferedImage(hwComponent, size, marked);
-
-        if (bufferedImage == null) {
-            // load image from file
-            bufferedImage = loadImage(hwComponent, size, marked);
-            // put image into buffer
-            imageBuffer.putBufferedImage(hwComponent, size, bufferedImage, marked);
-        }
-
-        return bufferedImage;
-    }
 
     /**
      * Loads image from file
@@ -36,7 +14,7 @@ public class AwtImageFactory extends AbstractImageFactory {
      * @param size Size of returned BufferedImage
      * @param marked if icon marked
      * @return BufferedImage with result image
-     */
+     
     private BufferedImage loadImage(HwTypeEnum hwComponent, Integer size, boolean marked) {
         BufferedImage bi = null;
         BufferedImage temp = null;
@@ -66,5 +44,5 @@ public class AwtImageFactory extends AbstractImageFactory {
             //Logger.getLogger(PcComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bi;
-    }
+    }*/
 }

@@ -41,9 +41,11 @@ public class ToolsFactory {
                         toolChangeInterface, HwTypeEnum.CISCO_SWITCH, 4, path));
                 break;
             case ADD_END_DEVICE:
-                path = AbstractImageFactory.END_DEVICE_PATH;
+                path = AbstractImageFactory.END_DEVICE_PC_PATH;
                 tools.add(new AddDeviceTool(tool, "PC", imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.END_DEVICE, 1, path));
+                
+                path = AbstractImageFactory.END_DEVICE_NOTEBOOK_PATH;
                 tools.add(new AddDeviceTool(tool, "Notebook", imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.END_DEVICE, 1, path));
                 break;
