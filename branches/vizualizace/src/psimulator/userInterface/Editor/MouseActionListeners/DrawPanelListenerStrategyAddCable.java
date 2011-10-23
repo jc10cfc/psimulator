@@ -1,4 +1,4 @@
-package psimulator.userInterface.MouseActionListeners;
+package psimulator.userInterface.Editor.MouseActionListeners;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -221,7 +221,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      */
     private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterface eth1, EthInterface eth2) {
         // create new cabel
-        Cable cable = new Cable(c1, c2, eth1, eth2);
+        Cable cable = new Cable(c1, c2, eth1, eth2, zoomManager);
         
         // add cabel to graph
         graph.addCable(cable);

@@ -9,7 +9,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuListener;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.EthInterface;
-import psimulator.userInterface.MouseActionListeners.ChooseEthInterfaceInterface;
+import psimulator.userInterface.Editor.MouseActionListeners.ChooseEthInterfaceInterface;
 
 /**
  *

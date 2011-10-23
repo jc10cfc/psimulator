@@ -1,7 +1,7 @@
 package psimulator.userInterface.Editor;
 
 import psimulator.userInterface.Editor.Enums.MainTool;
-import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategy;
+import psimulator.userInterface.Editor.MouseActionListeners.DrawPanelListenerStrategy;
 
 /**
  *

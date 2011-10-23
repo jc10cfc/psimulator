@@ -68,9 +68,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_END_DEVICE, imageFactory, toolChangeInterface));
         toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_REAL_PC, imageFactory, toolChangeInterface));
         toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_CABLE, imageFactory, toolChangeInterface));
-        //toggleButtonCable = new MenuToggleButton(null, imageFactory.getImageIconForToolbar(MainTool.ADD_CABLE));
-        
-        
+                
         toolsButtonGroup.add(toggleButtonHand);
         toolsButtonGroup.add(toggleButtonEndDevices);
         toolsButtonGroup.add(toggleButtonRouters);

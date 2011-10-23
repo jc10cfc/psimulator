@@ -4,7 +4,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.Enums.MainTool;
 import psimulator.userInterface.Editor.ToolChangeInterface;
-import psimulator.userInterface.MouseActionListeners.DrawPanelListenerStrategy;
+import psimulator.userInterface.Editor.MouseActionListeners.DrawPanelListenerStrategy;
 
 /**
  *
