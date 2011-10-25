@@ -1,8 +1,11 @@
 package psimulator.userInterface.Editor.Components;
 
+import java.awt.Color;
+import java.awt.GradientPaint;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
@@ -100,8 +103,12 @@ public class BundleOfCables extends AbstractComponent{
         
         System.out.println("mindist=" +minDistanceBetweenCables);
         */
+        
+        
         for(Cable c : cables){
-            c.paintComponent(g);
+            //c.paintComponent(g);
+            c.paintComponent(g, component1.getCenterLocation().x, component1.getCenterLocation().y,
+                    component2.getCenterLocation().x, component2.getCenterLocation().y);
         }
           
     }

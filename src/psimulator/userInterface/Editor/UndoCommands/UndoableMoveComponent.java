@@ -1,7 +1,6 @@
 package psimulator.userInterface.Editor.UndoCommands;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.util.List;
 import javax.swing.undo.AbstractUndoableEdit;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
@@ -13,11 +12,8 @@ import psimulator.userInterface.Editor.DrawPanel;
  */
 public class UndoableMoveComponent extends AbstractUndoableEdit {
     
-    //protected AbstractHwComponent component;
     protected List<AbstractHwComponent> components;
-    protected Point originalDefaultLocation;
-    protected Point newDefaultLocation;
-    protected DrawPanel drawPanel;
+     protected DrawPanel drawPanel;
     
     protected Dimension offsetInDefaultZoom;
     

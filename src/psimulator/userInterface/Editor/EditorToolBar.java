@@ -26,11 +26,11 @@ public class EditorToolBar extends JToolBar implements Observer {
     private AbstractImageFactory imageFactory;
     
     private JButton jButtonFitToSize;
+    private JButton jButtonAlignToGrid;
     
     private ButtonGroup toolsButtonGroup;
     
     private MenuToggleButton toggleButtonHand;
-    
     private MenuToggleButton toggleButtonRouters;
     private MenuToggleButton toggleButtonSwitches;
     private MenuToggleButton toggleButtonEndDevices;
@@ -58,6 +58,9 @@ public class EditorToolBar extends JToolBar implements Observer {
         jButtonFitToSize = new JButton();
         jButtonFitToSize.setText("Fit to size");
         //jButtonFitToSize.setActionCommand(MainTool.FIT_TO_SIZE.toString());
+        
+        jButtonAlignToGrid = new JButton();
+        jButtonAlignToGrid.setText("Align to grid");
         
         
         toolsButtonGroup = new ButtonGroup();
@@ -87,6 +90,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.add(toggleButtonCable);
         this.addSeparator();
         this.add(jButtonFitToSize);
+        this.add(jButtonAlignToGrid);
         
         
         
@@ -127,6 +131,14 @@ public class EditorToolBar extends JToolBar implements Observer {
      */
     public void addToolActionFitToSizeListener(ActionListener listener) {
         jButtonFitToSize.addActionListener(listener);
+    }
+    
+    /**
+     * adds action listener to jButtonAlignToGrid
+     * @param listener 
+     */
+    public void addToolActionAlignToGridListener(ActionListener listener) {
+        jButtonAlignToGrid.addActionListener(listener);
     }
 
     ////////------------ PRIVATE------------///////////

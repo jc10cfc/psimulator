@@ -2,8 +2,6 @@ package psimulator.userInterface.Editor.Components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;

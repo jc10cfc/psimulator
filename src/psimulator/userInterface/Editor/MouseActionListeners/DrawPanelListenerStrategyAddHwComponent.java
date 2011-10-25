@@ -42,8 +42,8 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         // new code
         
         AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, 
-                addDeviceTool.getHwType(), addDeviceTool.getInterfaces(), addDeviceTool.getImagePath(), 
-                addDeviceTool.getName());
+                addDeviceTool.getHwType(), addDeviceTool.getInterfaces(), 
+                addDeviceTool.getImagePath(), addDeviceTool.getName());
         
         //end new code
         

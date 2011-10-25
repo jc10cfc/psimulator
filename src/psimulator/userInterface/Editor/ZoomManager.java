@@ -15,7 +15,7 @@ public class ZoomManager extends Observable {
     private double scale = defaultScale;
     private double zoomInc = 0.1;
     private double minScale = 0.1;
-    private double maxScale = 1.5;
+    private double maxScale = 1.0;
 
     /**
      * returns Icon size according to scale and default icon size
