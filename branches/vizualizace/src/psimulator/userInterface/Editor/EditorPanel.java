@@ -60,6 +60,9 @@ public class EditorPanel extends AbstractEditor implements Observer{
         // add listener for FitToSize button
         jToolBarEditor.addToolActionFitToSizeListener(new JMenuToolFitToSizeActionListener());
         
+        // add listener for FitToSize button
+        jToolBarEditor.addToolActionAlignToGridListener(new JMenuToolAlignToGridActionListener());
+        
         // set default tool in ToolBar
         jToolBarEditor.setDefaultTool();
     }
@@ -104,6 +107,24 @@ public class EditorPanel extends AbstractEditor implements Observer{
             jPanelDraw.updateSizeToFitComponents();
         }
     }
+    
+    /////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for AlignToGrid button
+     */
+    class JMenuToolAlignToGridActionListener implements ActionListener {
+
+        /**
+         * calls zoom operation on jPanelEditor according to actionCommand
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // align components in DrawPanel
+            jPanelDraw.alignComponentsToGrid();
+            
+        }
+    }
+    
 
     @Override
     public boolean canUndo() {

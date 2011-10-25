@@ -160,16 +160,6 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         return false;
     }
     
-    /*
-    public boolean containsCable(Cable cable){
-        for(EthInterface ei : interfaces){
-            if(ei.hasCable()){
-                return true;
-            }
-        }
-        return false;
-    }*/
-    
     /**
      * gets all bundles of cables
      * @return 

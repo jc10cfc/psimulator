@@ -38,26 +38,6 @@ public class Graph {
     }
 
     /**
-     * Retruns new ArrayList with marked bundles of cables
-     * @return 
-     
-    public List<BundleOfCables> getMarkedBundleOfCablesCopy() {
-        List<BundleOfCables> temp = new ArrayList<BundleOfCables>();
-
-        Iterator<BundleOfCables> it = bundleOfCables.iterator();
-
-        // get all marked components
-        while (it.hasNext()) {
-            BundleOfCables b = it.next();
-            if (b.isMarked()) {
-                temp.add(b);
-            }
-        }
-
-        return temp;
-    }*/
-
-    /**
      * Retruns new ArrayList with marked cables
      * @return 
      */

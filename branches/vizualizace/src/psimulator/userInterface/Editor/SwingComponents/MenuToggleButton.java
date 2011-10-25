@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -43,8 +44,8 @@ public class MenuToggleButton extends JToggleButton {
 
     public MenuToggleButton(List<AbstractTool> tools) {
         super();
-        
-        
+
+
         if (tools == null || tools.isEmpty()) {
             this.setToolTipText("no tool avaiable");
             this.setEnabled(false);
@@ -80,77 +81,79 @@ public class MenuToggleButton extends JToggleButton {
 
                     // if tool enabled
                     if (b.isSelected()) {
-                        // enable current tool tool
+                        // enable current tool
                         setCurrentToolEnabled();
                     }
                 }
             };
             //a.putValue(Action.SMALL_ICON, icon);
             setAction(a);
-            
+
             // set first tool as current tool
             setCurrentTool(tools.get(0));
         }
-     
+
         setFocusable(false);
         setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
     }
- 
+
     /**
      * sets current tool in MenuTogglebutton  to tool in parameter
      * @param tool Chosen tool
      */
-    private void setCurrentTool(AbstractTool tool){
+    private void setCurrentTool(AbstractTool tool) {
         // set current tool to tool
         currentTool = tool;
         // set tool tip text of this MenuToggleButton
         this.setToolTipText(tool.getName());
         // set Image icon of this MenuToggleButton
         this.setIcon(currentTool.getImageIcon());
-        if(this.isSelected()){
-            setCurrentToolEnabled();
-        }
+        // enable current tool in 
+        setCurrentToolEnabled();
+        // set toggle button selected
+        this.setSelected(true);
     }
-    
+
     /**
      * enables current tool in this Menu ToggleButton 
      */
-    public void setCurrentToolEnabled(){
+    public void setCurrentToolEnabled() {
         currentTool.setEnabled();
     }
-    
+
     private JPopupMenu createPopupMenu(List<AbstractTool> tools) {
         JPopupMenu popup = new JPopupMenu();
-        
-        for(final AbstractTool tool : tools){
+
+        for (final AbstractTool tool : tools) {
             JMenuItem mi = new JMenuItem(tool.getName(), tool.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
             mi.addActionListener(new ActionListener() {
+
                 @Override
                 public void actionPerformed(ActionEvent ae) {
                     // set current tool to this tool
                     setCurrentTool(tool);
-                    
+
                 }
             });
-            
+
             popup.add(mi);
         }
 
         /*
         popup.addPopupMenuListener(new PopupMenuListener() {
-
-            @Override
-            public void popupMenuCanceled(PopupMenuEvent e) {
-            }
-
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-            }
-
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-                //setSelected(false);
-            }
+        
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent e) {
+        }
+        
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+        }
+        
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+        //setSelected(false);
+        }
         });*/
 
         return popup;
@@ -184,11 +187,14 @@ class MenuArrowIcon implements Icon {
         g2.setPaint(Color.BLACK);
         g2.translate(x, y);
 
-        g2.drawLine(6, 2, 6, 2);
-        g2.drawLine(5, 3, 6, 3);
-        g2.drawLine(4, 4, 6, 4);
-        g2.drawLine(3, 5, 6, 5);
-        g2.drawLine(2, 6, 6, 6);
+        int[] xPoints = {6, 2, 6};
+        int[] yPoints = {2, 6, 6};
+        
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        g2.drawPolygon(xPoints, yPoints, 3);
+        g2.fillPolygon(xPoints, yPoints, 3);
 
         g2.translate(-x, -y);
     }
