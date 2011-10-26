@@ -64,6 +64,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         drawPanel.repaint();
     }
 
+    /**
+     * Abstract Tool can set itself as
+     * @param tool 
+     */
     @Override
     public void setTool(AbstractTool tool) {
         this.manipulationTool = (ManipulationTool) tool;
@@ -76,7 +80,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      * @param e 
      */
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClickedLeft(MouseEvent e) {
         // get clicked component
         Markable clickedComponent = getClickedItem(e.getPoint());
 
@@ -137,7 +141,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressedLeft(MouseEvent e) {
         boolean addToDragAllMarkedComponents = false;
         if (draggedComponents == null) {
             draggedComponents = new ArrayList<AbstractHwComponent>();
@@ -148,7 +152,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // start painting transparent rectange for marking more components
         startPointOfMarkingTransparentRectangle = e.getPoint();
 
-        Markable clickedComponent = getClickedHwComponent(e.getPoint());
+        Markable clickedComponent = getClickedAbstractHwComponent(e.getPoint());
 
         if (clickedComponent == null) {
             return;
@@ -193,7 +197,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDraggedLeft(MouseEvent e) {
         if (draggedComponents == null){
             return;
         }
@@ -264,7 +268,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleasedLeft(MouseEvent e) {
         // dragging all marked components
 
         // if we are dragging some components
@@ -406,66 +410,6 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             }
 
         }
-    }
-    /*
-    private Markable getDraggedComponents(Point point){
-    Markable component = null;
-    
-    if(draggedComponents == null || draggedComponents.isEmpty()){
-    return component;
-    }
-    
-    // search HwComponents
-    for (AbstractHwComponent c : draggedComponents) {
-    if (c.intersects(point)) {
-    component = c;
-    break;
-    }
-    }
-    
-    return component;
-    }
-    
-     */
-
-    private Markable getClickedHwComponent(Point point) {
-        Markable clickedComponent = null;
-
-        // search HwComponents
-        for (AbstractHwComponent c : graph.getHwComponents()) {
-            if (c.intersects(point)) {
-                clickedComponent = c;
-                break;
-            }
-        }
-
-        return clickedComponent;
-    }
-
-    /**
-     * Return component at point
-     * @param point
-     * @return component clicked
-     */
-    private Markable getClickedItem(Point point) {
-        // search HwComponents
-        Markable clickedComponent = getClickedHwComponent(point);
-
-        if (clickedComponent != null) {
-            return clickedComponent;
-        }
-
-        // create small rectangle arround clicked point
-        Rectangle r = new Rectangle(point.x - 1, point.y - 1, 3, 3);
-        // search cables
-        for (BundleOfCables boc : graph.getBundlesOfCables()) {
-            clickedComponent = boc.getIntersectingCable(r);
-            if(clickedComponent != null){
-               return clickedComponent; 
-            }
-        }
-
-        return clickedComponent;
     }
 
     /**

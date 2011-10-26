@@ -26,11 +26,9 @@ public class BufferedImageLoader {
     public Image getImage(String path) throws IOException {
         // if hash map contains key, return value
         if (imageBuffer.containsKey(path)) {
-            System.out.println("hit");
             return imageBuffer.get(path);
         } else { // else load image and return value
             Image image = ImageIO.read(getClass().getResource(path));
-            System.out.println("miss");
             imageBuffer.put(path, image);
             return image;
         }
