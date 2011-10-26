@@ -49,7 +49,7 @@ public abstract class AbstractTool {
         // get mouse listener for needed tool
         DrawPanelListenerStrategy listener =  toolChangeInterface.getMouseListener(tool);
         // tell mouse listener about tool change
-        listener.setTool(this);
+        //listener.setTool(this);
         // add mouse listener to toolChangeInterface
         toolChangeInterface.setCurrentMouseListener(listener);
     }

@@ -11,7 +11,6 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.Components.BundleOfCables;
 import psimulator.userInterface.Editor.Components.Cable;
 import psimulator.userInterface.Editor.Components.EthInterface;
 import psimulator.userInterface.Editor.Dialogs.CableConnectToInterfacePopupMenu;
@@ -86,7 +85,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      * @param e 
      */
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressedLeft(MouseEvent e) {
 
         // if popup shown, no pressing on other components
         /*
@@ -159,7 +158,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
             }
         }
     }
-
+   
     /**
      * sets chosen interface to component accornig to actual cable making progres.
      * @param ethInterface 

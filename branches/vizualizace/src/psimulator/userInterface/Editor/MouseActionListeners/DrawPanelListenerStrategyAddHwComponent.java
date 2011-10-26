@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.Components.HwComponent;
 import psimulator.userInterface.Editor.DrawPanel;
@@ -38,18 +37,16 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     }
     
     @Override
-    public void mousePressed(MouseEvent e) {
-        // new code
-        
+    public void mousePressedLeft(MouseEvent e) {
+        // create new component
         AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, 
                 addDeviceTool.getHwType(), addDeviceTool.getInterfaces(), 
                 addDeviceTool.getImagePath(), addDeviceTool.getName());
         
-        //end new code
-        
-        //AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, HwTypeEnum.END_DEVICE);
-        
+        // set position of new component
         component.setLocationByMiddlePoint(e.getPoint());
+        
+        // add component to graph
         graph.addHwComponent(component);
         
         // inform drawPanel about size change if component placed out of draw panel
@@ -63,7 +60,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         
         mainWindow.updateUndoRedoButtons();
     }
-   
+    
     @Override
     public void mouseEntered(MouseEvent e) {
        drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
