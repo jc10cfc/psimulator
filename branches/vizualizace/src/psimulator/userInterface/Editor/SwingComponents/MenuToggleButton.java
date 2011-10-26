@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -16,12 +15,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -53,7 +50,7 @@ public class MenuToggleButton extends JToggleButton {
             // if more than one tool, create and add popup menu
             if (tools.size() > 1) {
                 // create popup menu
-                this.pop = createPopupMenu(tools);
+                this.pop = new ToolPopupMenu(tools, this);
 
                 // add mouse adapter for right click
                 addMouseListener(new MouseAdapter() {
@@ -64,6 +61,7 @@ public class MenuToggleButton extends JToggleButton {
 
                         if (SwingUtilities.isRightMouseButton(e)) {
                             if (pop != null) {
+                                // show popup menu
                                 pop.show(b, b.getWidth(), 0);
                             }
                         }
@@ -101,7 +99,7 @@ public class MenuToggleButton extends JToggleButton {
      * sets current tool in MenuTogglebutton  to tool in parameter
      * @param tool Chosen tool
      */
-    private void setCurrentTool(AbstractTool tool) {
+    public final void setCurrentTool(AbstractTool tool) {
         // set current tool to tool
         currentTool = tool;
         // set tool tip text of this MenuToggleButton
@@ -120,45 +118,12 @@ public class MenuToggleButton extends JToggleButton {
     public void setCurrentToolEnabled() {
         currentTool.setEnabled();
     }
-
-    private JPopupMenu createPopupMenu(List<AbstractTool> tools) {
-        JPopupMenu popup = new JPopupMenu();
-
-        for (final AbstractTool tool : tools) {
-            JMenuItem mi = new JMenuItem(tool.getName(), tool.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
-            mi.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent ae) {
-                    // set current tool to this tool
-                    setCurrentTool(tool);
-
-                }
-            });
-
-            popup.add(mi);
-        }
-
-        /*
-        popup.addPopupMenuListener(new PopupMenuListener() {
-        
-        @Override
-        public void popupMenuCanceled(PopupMenuEvent e) {
-        }
-        
-        @Override
-        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-        }
-        
-        @Override
-        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-        //setSelected(false);
-        }
-        });*/
-
-        return popup;
+    
+    public AbstractTool getSelectedTool(){
+       return currentTool;
     }
 
+    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

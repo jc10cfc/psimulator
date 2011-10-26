@@ -32,15 +32,19 @@ public class MainWindow extends JFrame implements MainWindowInterface, UserInter
 
     public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
-
-
-        //if OS is Windows we set the windows look and feel
-        if (isWindows()) {
-            try {
-                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-            } catch (Exception e) {
-            }
+        
+        try{
+          //if OS is Windows we set the windows look and feel
+          if(isWindows()){
+              UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+          }else{ // otherwise we set metal look and feel
+              //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+          }
+            
+        }catch(Exception e){
+            
         }
+                
 
         jMenuBar = new MenuBar(dataLayer);
         jToolBar = new ToolBar(dataLayer);

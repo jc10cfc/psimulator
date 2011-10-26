@@ -6,7 +6,6 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.Enums.MainTool;
@@ -29,10 +28,11 @@ public abstract class AbstractImageFactory {
     public static final String REAL_PC_PATH = "/resources/toolbarIcons/editor/local_network.png";
     
     protected ImageBuffer imageBuffer;
+    protected BufferedImageLoader bufferedImageLoader;
     
     // scales 3 je alpha
     private float[] scales = {1f, 1f, 1f, 1f};
-    private float[] offsets = {40f, 40f, 40f, 1f};
+    private float[] offsets = {50f, 50f, 50f, 1f};
 
     //protected RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
     protected RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
@@ -40,8 +40,18 @@ public abstract class AbstractImageFactory {
 
     public AbstractImageFactory() {
         this.imageBuffer = new ImageBuffer();
+        this.bufferedImageLoader = new BufferedImageLoader();
     }
 
+    /**
+     * Returns BufferedImage  for hwComponentType at path of size. If marked,
+     * the result image is brighter by 50%.
+     * @param hwComponentType
+     * @param path
+     * @param size
+     * @param marked
+     * @return 
+     */
     public BufferedImage getImage(HwTypeEnum hwComponentType, String path, Integer size, boolean marked) {
         BufferedImage image;
 
@@ -57,20 +67,30 @@ public abstract class AbstractImageFactory {
         return image;
     }
 
+    /**
+     * Creates BufferedImage  for hwComponentType at path of size. If marked,
+     * the result image is brighter by 50%.
+     * @param hwComponentType
+     * @param path
+     * @param size
+     * @param marked
+     * @return 
+     */
     protected BufferedImage createImage(HwTypeEnum hwComponentType, String path, Integer size, boolean marked) {
 
         BufferedImage bi = null;
     
-        Image temp = null;
+        Image tmp = null;
         
         try {
             // loads image from path and scales it to desired size
-            temp = ImageIO.read(getClass().getResource(path)).getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            tmp = getScaledImage(path, size);
         } catch (IOException ex) {
             try {
-                temp = ImageIO.read(getClass().getResource(getPath(hwComponentType))).getScaledInstance(size, size, Image.SCALE_SMOOTH);
+                // load default image
+                tmp = getScaledImage(getPath(hwComponentType), size);
             } catch (IOException ex1) {
-                // should never happen
+                // should never happen, all hwComponentType default icons are in .jar as a resource
             }
         }
         
@@ -85,7 +105,7 @@ public abstract class AbstractImageFactory {
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
         // draw image
-        graphics2D.drawImage(temp, 0, 0, null);
+        graphics2D.drawImage(tmp, 0, 0, null);
 
         // if marked, draw transparent white rectangle over
         if (marked) {
@@ -97,50 +117,86 @@ public abstract class AbstractImageFactory {
         return bi;
     }
 
+    /**
+     * Returns default image for MainTool tool.
+     * @param tool
+     * @return ImageIcon with ICON_SIZE_MENU_BAR size
+     */
     public ImageIcon getImageIconForToolbar(MainTool tool) {
-        String name = "";
+        String path ;
 
         switch (tool) {
             case HAND:
-                name = "cursor_arrow";
+                path = HAND_PATH;
                 break;
             case ADD_END_DEVICE:
-                name = "modern/PC";
+                path = END_DEVICE_PC_PATH;
                 break;
             case ADD_ROUTER:
-                name = "router";
+                path = ROUTER_PATH;
                 break;
             case ADD_SWITCH:
-                name = "switch";
+                path = SWITCH_PATH;
                 break;
             case ADD_CABLE:
-                name = "network-wired";
+                path = CABLE_PATH;
                 break;
             case ADD_REAL_PC:
-                name = "desktop";
+            default:
+                path = REAL_PC_PATH;
                 break;
         }
-        ImageIcon icon = new ImageIcon(getClass().getResource("/resources/toolbarIcons/editor/" + name + ".png"));
-
-        return (new ImageIcon(icon.getImage().getScaledInstance(ICON_SIZE_MENU_BAR, ICON_SIZE_MENU_BAR, Image.SCALE_SMOOTH)));
+        
+        ImageIcon tmp = null;
+        
+        // load image
+        try {
+            tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+        } catch (IOException ex) {
+            // should never happen, all hwComponentType default icons are in .jar as a resource
+        }
+        
+        // return scaled image
+        return tmp;
     }
+ 
 
+    /**
+     * Returns image for MainTool tool at path. If image at path could
+     * not be loaded, the default image for tool is returned.
+     * @param tool
+     * @param path
+     * @return ImageIcon with ICON_SIZE_MENU_BAR size.
+     */
     public ImageIcon getImageIconForToolbar(MainTool tool, String path) {
         ImageIcon icon = null;
         if (path == null) {
             icon = getImageIconForToolbar(tool);
         } else {
             try {
-                icon = new ImageIcon(getClass().getResource(path));
+                icon = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
             } catch (Exception e) {
                 System.out.println("chyba pri nacitani obrazku");
                 icon = getImageIconForToolbar(tool);
             }
         }
 
-        return (new ImageIcon(icon.getImage().getScaledInstance(ICON_SIZE_MENU_BAR, ICON_SIZE_MENU_BAR, Image.SCALE_SMOOTH)));
+        return icon;
     }
 
+    /**
+     * Creates scaled image of image at path. Size will be size x size.
+     * @param path
+     * @param size
+     * @return scaled image
+     * @throws IOException 
+     */
+    private Image getScaledImage(String path, int size) throws IOException{
+        Image tmp = bufferedImageLoader.getImage(path);
+        tmp = tmp.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        return tmp;
+    }
+    
     public void clearBuffer() {
         imageBuffer.clearBuffer();
     }

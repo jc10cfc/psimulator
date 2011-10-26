@@ -49,8 +49,8 @@ public final class ToolBar extends JToolBar implements Observer {
         // tool bar is not possible to move
         this.setFloatable(false);
         
-        
         jButtonNew = new JButton();
+        
         jButtonClose = new JButton();
         jButtonOpen = new JButton();
         jButtonSave = new JButton();
@@ -96,8 +96,11 @@ public final class ToolBar extends JToolBar implements Observer {
         // apply background color
         this.setBackground(ColorMixerSignleton.mainToolbarColor);
         Component [] comp = this.getComponents();
+        
         for(Component c : comp){
             c.setBackground(ColorMixerSignleton.mainToolbarColor);
+            // tool icon cannot be marked
+            c.setFocusable(false);
         }
         
         updateIconSize(dataLayer.getToolbarIconSize());
