@@ -7,7 +7,7 @@ import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelL
  *
  * @author Martin
  */
-public interface ToolChangeOuterInterface {
+public interface DrawPanelToolChangeOuterInterface {
  
     public void removeCurrentMouseListener();
     

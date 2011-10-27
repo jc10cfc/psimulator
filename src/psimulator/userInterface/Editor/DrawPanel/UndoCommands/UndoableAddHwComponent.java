@@ -3,7 +3,7 @@ package psimulator.userInterface.Editor.DrawPanel.UndoCommands;
 import javax.swing.undo.AbstractUndoableEdit;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph;
+import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 
 /**
  *

@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel;
+package psimulator.userInterface.Editor.DrawPanel.Graph;
 
 import java.awt.Point;
 import java.util.ArrayList;
