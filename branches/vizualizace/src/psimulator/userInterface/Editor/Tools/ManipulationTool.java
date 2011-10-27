@@ -2,7 +2,7 @@ package psimulator.userInterface.Editor.Tools;
 
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanelToolChangeOuterInterface;
 
 /**
  *
@@ -10,7 +10,7 @@ import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
  */
 public class ManipulationTool extends AbstractTool{
 
-    public ManipulationTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeOuterInterface toolChangeInterface) {
+    public ManipulationTool(MainTool tool, String name, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface) {
         super(tool, name, imageIcon, toolChangeInterface);
     }
 }

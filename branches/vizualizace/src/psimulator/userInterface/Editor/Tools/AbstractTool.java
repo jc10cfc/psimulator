@@ -3,7 +3,7 @@ package psimulator.userInterface.Editor.Tools;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
 
 /**
@@ -15,9 +15,9 @@ public abstract class AbstractTool {
     protected String name;
     protected MainTool tool;
     protected ImageIcon imageIcon;
-    protected ToolChangeOuterInterface toolChangeInterface;
+    protected DrawPanelToolChangeOuterInterface toolChangeInterface;
     
-    public AbstractTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeOuterInterface toolChangeInterface) {
+    public AbstractTool(MainTool tool, String name, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface) {
         this.tool = tool;
         this.name = name;
         this.imageIcon = imageIcon;

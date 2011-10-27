@@ -1,6 +1,6 @@
 package psimulator.userInterface.Editor;
 
-import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
@@ -38,7 +38,7 @@ public class EditorToolBar extends JToolBar implements Observer {
     private MenuToggleButton toggleButtonRealPC;
     private MenuToggleButton toggleButtonCable;
 
-    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ToolChangeOuterInterface toolChangeInterface) {
+    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, DrawPanelToolChangeOuterInterface toolChangeInterface) {
         super();
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;

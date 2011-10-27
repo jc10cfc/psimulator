@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import psimulator.userInterface.Editor.DrawPanel.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -13,7 +13,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class ToolsFactory {
     
-    public static List<AbstractTool> getTools(MainTool tool, AbstractImageFactory imageFactory, ToolChangeOuterInterface toolChangeInterface) {
+    public static List<AbstractTool> getTools(MainTool tool, AbstractImageFactory imageFactory, DrawPanelToolChangeOuterInterface toolChangeInterface) {
         List<AbstractTool> tools = new ArrayList<AbstractTool>();
         
         String path;

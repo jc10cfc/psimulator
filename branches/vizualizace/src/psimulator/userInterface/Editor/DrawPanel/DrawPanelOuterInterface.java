@@ -8,7 +8,7 @@ import javax.swing.JPanel;
  *
  * @author Martin
  */
-public abstract class DrawPanelOuterInterface extends JPanel implements ToolChangeOuterInterface{
+public abstract class DrawPanelOuterInterface extends JPanel implements DrawPanelToolChangeOuterInterface{
    
     // USED BY EDITOR PANEL
     public abstract boolean canUndo();

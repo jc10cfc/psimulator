@@ -1,6 +1,5 @@
 package psimulator.userInterface.Editor.DrawPanel;
 
-import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;

@@ -1,5 +1,6 @@
 package psimulator.userInterface.Editor.DrawPanel;
 
+import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
