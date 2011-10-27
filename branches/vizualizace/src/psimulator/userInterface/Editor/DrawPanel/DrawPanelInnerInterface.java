@@ -1,11 +1,11 @@
 package psimulator.userInterface.Editor.DrawPanel;
 
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.ComponentAction;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -18,7 +18,7 @@ public interface DrawPanelInnerInterface {
     public void updateSize(Point lowerRightCorner);
     
     // getters
-    public Graph getGraph();
+    public GraphInterface getGraph();
     public AbstractImageFactory getImageFactory();
     public AbstractAction getAbstractAction(ComponentAction action);
     

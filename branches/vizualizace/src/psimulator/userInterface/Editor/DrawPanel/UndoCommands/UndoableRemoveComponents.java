@@ -5,7 +5,7 @@ import javax.swing.undo.AbstractUndoableEdit;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
 
 /**
  *
@@ -14,10 +14,10 @@ import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 public class UndoableRemoveComponents extends AbstractUndoableEdit {
     protected List<AbstractHwComponent> components;
     protected List<Cable> cables;
-    protected Graph graph;
+    protected GraphInterface graph;
     protected DrawPanelInnerInterface drawPanel;
     
-    public UndoableRemoveComponents(List<AbstractHwComponent> components, List<Cable> cables, Graph graph, DrawPanelInnerInterface drawPanel){
+    public UndoableRemoveComponents(List<AbstractHwComponent> components, List<Cable> cables, GraphInterface graph, DrawPanelInnerInterface drawPanel){
         super();
         this.components = components;
         this.graph = graph;

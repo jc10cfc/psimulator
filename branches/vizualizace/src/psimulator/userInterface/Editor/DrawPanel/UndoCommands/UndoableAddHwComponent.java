@@ -3,7 +3,7 @@ package psimulator.userInterface.Editor.DrawPanel.UndoCommands;
 import javax.swing.undo.AbstractUndoableEdit;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
 
 /**
  *
@@ -11,10 +11,10 @@ import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
  */
 public class UndoableAddHwComponent extends AbstractUndoableEdit {
     protected AbstractHwComponent component;
-    protected Graph graph;
+    protected GraphInterface graph;
     protected DrawPanelInnerInterface drawPanel;
     
-    public UndoableAddHwComponent(AbstractHwComponent component, Graph graph, DrawPanelInnerInterface drawPanel){
+    public UndoableAddHwComponent(AbstractHwComponent component, GraphInterface graph, DrawPanelInnerInterface drawPanel){
         super();
         this.component = component;
         this.graph = graph;

@@ -17,7 +17,6 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
@@ -32,6 +31,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Enums.ComponentAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
 import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableAlignComponentsToGrid;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -353,7 +353,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
      * @return 
      */
     @Override
-    public Graph getGraph() {
+    public GraphInterface getGraph() {
         return graph;
     }
     

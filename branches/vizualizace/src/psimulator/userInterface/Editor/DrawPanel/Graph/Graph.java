@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.JComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
@@ -12,15 +13,18 @@ import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
  *
  * @author Martin
  */
-public class Graph {
+public class Graph extends JComponent implements GraphInterface{
 
     private List<AbstractHwComponent> components = new ArrayList<AbstractHwComponent>();
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
 
+  
+    
     /**
      * Retruns new ArrayList with marked components
      * @return 
      */
+    @Override
     public List<AbstractHwComponent> getMarkedHwComponentsCopy() {
         List<AbstractHwComponent> temp = new ArrayList<AbstractHwComponent>();
 
@@ -41,6 +45,7 @@ public class Graph {
      * Retruns new ArrayList with marked cables
      * @return 
      */
+    @Override
     public List<Cable> getMarkedCablesCopy() {
         List<Cable> temp = new ArrayList<Cable>();
 
@@ -61,30 +66,37 @@ public class Graph {
         return temp;
     }
 
+    @Override
     public List<AbstractHwComponent> getHwComponents() {
         return components;
     }
-
+    
+    @Override
     public void addHwComponent(AbstractHwComponent component) {
         components.add(component);
     }
-
+    
+    @Override
     public void addHwComponents(List<AbstractHwComponent> componentList) {
         components.addAll(componentList);
     }
 
+    @Override
     public void removeHwComponent(AbstractHwComponent component) {
         components.remove(component);
     }
 
+    @Override
     public void removeHwComponents(List<AbstractHwComponent> componentList) {
         components.removeAll(componentList);
     }
 
+    @Override
     public List<BundleOfCables> getBundlesOfCables() {
         return bundlesOfCables;
     }
 
+    @Override
     public int getCablesCount() {
         int count = 0;
         for (BundleOfCables boc : bundlesOfCables) {
@@ -139,6 +151,7 @@ public class Graph {
      * adds cable to graph
      * @param cable 
      */
+    @Override
     public void addCable(Cable cable) {
         // get bundle of cables between c1 and c2
         BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
@@ -152,6 +165,7 @@ public class Graph {
      * Adds all cables to graph
      * @param cableList 
      */
+    @Override
     public void addCables(List<Cable> cableList) {
         for (Cable c : cableList) {
             addCable(c);
@@ -162,6 +176,7 @@ public class Graph {
      * removes cable from graph
      * @param cable 
      */
+    @Override
     public void removeCable(Cable cable) {
          // get bundle of cables between c1 and c2
         BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
@@ -180,6 +195,7 @@ public class Graph {
      * Removes all cables from cableList in Graph
      * @param cableList 
      */
+    @Override
     public void removeCables(List<Cable> cableList) {
         for (Iterator<Cable> it = cableList.iterator(); it.hasNext();) {
             removeCable(it.next());
@@ -191,6 +207,7 @@ public class Graph {
      * @param components to look in
      * @return UpperLeft bound point
      */
+    @Override
     public Point getUpperLeftBound(List<AbstractHwComponent> components) {
         Point p = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
@@ -210,6 +227,7 @@ public class Graph {
      * @param components to look in
      * @return LowerRight bound point
      */
+    @Override
     public Point getLowerRightBound(List<AbstractHwComponent> components) {
         Point p = new Point(0, 0);
 
@@ -228,6 +246,7 @@ public class Graph {
      * Gets lower right bound point from all graph components
      * @return LowerRight bound point
      */
+    @Override
     public Point getGraphLowerRightBound() {
         return getLowerRightBound(components);
     }

@@ -10,6 +10,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
 import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableRemoveComponents;
 import psimulator.userInterface.MainWindowInnerInterface;
 
@@ -19,12 +20,12 @@ import psimulator.userInterface.MainWindowInnerInterface;
  */
 public class ActionOnDelete extends AbstractAction {
 
-    private Graph graph;
+    private GraphInterface graph;
     private UndoManager undoManager;
     private DrawPanelInnerInterface drawPanel;
     protected MainWindowInnerInterface mainWindow;
 
-    public ActionOnDelete(Graph graph, UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
+    public ActionOnDelete(GraphInterface graph, UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
         this.graph = graph;
         this.undoManager = undoManager;
         this.drawPanel = drawPanel;
