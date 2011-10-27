@@ -4,6 +4,7 @@ import java.util.Observer;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.preferences.PreferencesManager;
 import psimulator.dataLayer.language.LanguageManager;
+import psimulator.dataLayer.language.LanguageManagerSingleton;
 
 /**
  *

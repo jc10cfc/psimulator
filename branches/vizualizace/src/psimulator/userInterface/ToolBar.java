@@ -11,8 +11,8 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Enums.UpdateEventType;
-import psimulator.userInterface.Editor.Enums.Zoom;
-import psimulator.userInterface.Editor.Enums.UndoRedo;
+import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
+import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
 
 /**
  *
@@ -99,7 +99,7 @@ public final class ToolBar extends JToolBar implements Observer {
         
         for(Component c : comp){
             c.setBackground(ColorMixerSignleton.mainToolbarColor);
-            // tool icon cannot be marked
+            // tool icon cannot be marked (ugly frame)
             c.setFocusable(false);
         }
         

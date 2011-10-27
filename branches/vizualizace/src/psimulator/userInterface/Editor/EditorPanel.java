@@ -1,5 +1,8 @@
 package psimulator.userInterface.Editor;
 
+import psimulator.userInterface.Editor.DrawPanel.ZoomEventWrapper;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanelOuterInterface;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -10,7 +13,7 @@ import java.util.Observer;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.MainWindowInterface;
+import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 import psimulator.userInterface.imageFactories.AwtImageFactory;
 
@@ -18,16 +21,17 @@ import psimulator.userInterface.imageFactories.AwtImageFactory;
  *
  * @author Martin
  */
-public class EditorPanel extends AbstractEditor implements Observer{
+public class EditorPanel extends EditorOuterInterface implements Observer{
 
     private EditorToolBar jToolBarEditor;
-    private DrawPanel jPanelDraw;
+    //private DrawPanel jPanelDraw;
+    private DrawPanelOuterInterface jPanelDraw;
     private JScrollPane jScrollPane;
     private AbstractImageFactory imageFactory;
-    private MainWindowInterface mainWindow;
+    private MainWindowInnerInterface mainWindow;
     private DataLayerFacade dataLayer;
 
-    public EditorPanel(MainWindowInterface mainWindow, DataLayerFacade dataLayer) {
+    public EditorPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         super(new BorderLayout());
         
         this.mainWindow = mainWindow;
@@ -60,7 +64,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
         // add listener for FitToSize button
         jToolBarEditor.addToolActionFitToSizeListener(new JMenuToolFitToSizeActionListener());
         
-        // add listener for FitToSize button
+        // add listener for AlignToGrid button
         jToolBarEditor.addToolActionAlignToGridListener(new JMenuToolAlignToGridActionListener());
         
         // set default tool in ToolBar
@@ -69,7 +73,8 @@ public class EditorPanel extends AbstractEditor implements Observer{
     
     @Override
     public void init(){
-        jPanelDraw.getZoomManager().addObserver(this);
+        //jPanelDraw.getZoomManager().addObserver(this);
+        jPanelDraw.addObserverToZoomManager(this);
     }
 
     /**
@@ -104,7 +109,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
         @Override
         public void actionPerformed(ActionEvent e) {
             // update jPanelDraw size
-            jPanelDraw.updateSizeToFitComponents();
+            //jPanelDraw.updateSizeToFitComponents();
         }
     }
     
@@ -120,7 +125,7 @@ public class EditorPanel extends AbstractEditor implements Observer{
         @Override
         public void actionPerformed(ActionEvent e) {
             // align components in DrawPanel
-            jPanelDraw.alignComponentsToGrid();
+            //jPanelDraw.alignComponentsToGrid();
             
         }
     }
@@ -128,53 +133,59 @@ public class EditorPanel extends AbstractEditor implements Observer{
 
     @Override
     public boolean canUndo() {
-        return jPanelDraw.getUndoManager().canUndo();
+        return jPanelDraw.canUndo();
+        //return jPanelDraw.getUndoManager().canUndo();
     }
 
     @Override
     public boolean canRedo() {
-        return jPanelDraw.getUndoManager().canRedo();
+        return jPanelDraw.canRedo();
+        //return jPanelDraw.getUndoManager().canRedo();
     }
 
     @Override
     public void undo() {
-        jPanelDraw.getUndoManager().undo();
+        jPanelDraw.undo();
+        //jPanelDraw.getUndoManager().undo();
     }
 
     @Override
     public void redo() {
-        jPanelDraw.getUndoManager().redo();
+        jPanelDraw.redo();
+        //jPanelDraw.getUndoManager().redo();
     }
 
     @Override
     public boolean canZoomIn() {
-        return jPanelDraw.getZoomManager().canZoomIn();
+        return jPanelDraw.canZoomIn();
+        //return jPanelDraw.getZoomManager().canZoomIn();
     }
 
     @Override
     public boolean canZoomOut() {
-        return jPanelDraw.getZoomManager().canZoomOut();
+        return jPanelDraw.canZoomOut();
+        //return jPanelDraw.getZoomManager().canZoomOut();
     }
 
     @Override
     public void zoomIn() {
         // TODO: Point of zoom in parameter
-        
-        jPanelDraw.getZoomManager().zoomIn();
+        jPanelDraw.zoomIn();
+        //jPanelDraw.getZoomManager().zoomIn();
     }
 
     @Override
     public void zoomOut() {
         // TODO: Point of zoom in parameter
-        
-        jPanelDraw.getZoomManager().zoomOut();
+        jPanelDraw.zoomOut();
+        //jPanelDraw.getZoomManager().zoomOut();
     }
 
     @Override
     public void zoomReset() {
         // TODO: Point of zoom in parameter
-        
-        jPanelDraw.getZoomManager().zoomReset();
+        jPanelDraw.zoomReset();
+        //jPanelDraw.getZoomManager().zoomReset();
     }
 
 }

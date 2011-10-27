@@ -9,17 +9,17 @@ import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.logicLayer.ControllerFacade;
-import psimulator.userInterface.Editor.Enums.Zoom;
-import psimulator.userInterface.Editor.MouseActionListeners.PreferencesActionListener;
-import psimulator.userInterface.Editor.AbstractEditor;
+import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
+import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.PreferencesActionListener;
+import psimulator.userInterface.Editor.EditorOuterInterface;
 import psimulator.userInterface.Editor.EditorPanel;
-import psimulator.userInterface.Editor.Enums.UndoRedo;
+import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
 
 /**
  *
  * @author Martin
  */
-public class MainWindow extends JFrame implements MainWindowInterface, UserInterfaceFacade {
+public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade {
 
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
@@ -27,7 +27,7 @@ public class MainWindow extends JFrame implements MainWindowInterface, UserInter
     /* window componenets */
     private MenuBar jMenuBar;
     private ToolBar jToolBar;
-    private AbstractEditor jEditor;
+    private EditorOuterInterface jEditor;
     /* end of window components */
 
     public MainWindow(DataLayerFacade dataLayer) {

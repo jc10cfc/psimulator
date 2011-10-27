@@ -2,9 +2,9 @@ package psimulator.userInterface.Editor.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.userInterface.Editor.Enums.HwTypeEnum;
-import psimulator.userInterface.Editor.Enums.MainTool;
-import psimulator.userInterface.Editor.ToolChangeInterface;
+import psimulator.userInterface.Editor.DrawPanel.Enums.HwTypeEnum;
+import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -13,7 +13,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class ToolsFactory {
     
-    public static List<AbstractTool> getTools(MainTool tool, AbstractImageFactory imageFactory, ToolChangeInterface toolChangeInterface) {
+    public static List<AbstractTool> getTools(MainTool tool, AbstractImageFactory imageFactory, ToolChangeOuterInterface toolChangeInterface) {
         List<AbstractTool> tools = new ArrayList<AbstractTool>();
         
         String path;

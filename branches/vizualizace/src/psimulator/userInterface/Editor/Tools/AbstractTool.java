@@ -2,9 +2,9 @@ package psimulator.userInterface.Editor.Tools;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import psimulator.userInterface.Editor.Enums.MainTool;
-import psimulator.userInterface.Editor.ToolChangeInterface;
-import psimulator.userInterface.Editor.MouseActionListeners.DrawPanelListenerStrategy;
+import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
+import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
 
 /**
  *
@@ -15,9 +15,9 @@ public abstract class AbstractTool {
     protected String name;
     protected MainTool tool;
     protected ImageIcon imageIcon;
-    protected ToolChangeInterface toolChangeInterface;
+    protected ToolChangeOuterInterface toolChangeInterface;
     
-    public AbstractTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeInterface toolChangeInterface) {
+    public AbstractTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeOuterInterface toolChangeInterface) {
         this.tool = tool;
         this.name = name;
         this.imageIcon = imageIcon;
@@ -49,7 +49,7 @@ public abstract class AbstractTool {
         // get mouse listener for needed tool
         DrawPanelListenerStrategy listener =  toolChangeInterface.getMouseListener(tool);
         // tell mouse listener about tool change
-        //listener.setTool(this);
+        listener.setTool(this);
         // add mouse listener to toolChangeInterface
         toolChangeInterface.setCurrentMouseListener(listener);
     }
