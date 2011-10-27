@@ -121,140 +121,15 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
     }
     
     /**
-     * Gets AbstractAction corresponding to ComponentAction
-     * @param action
-     * @return 
+     * Creates mouse listeners for all tools
      */
-    @Override
-    public AbstractAction getAbstractAction(ComponentAction action){
-        return actions.get(action);
+    private void createDrawPaneMouseListeners() {
+        mouseListenerHand = new DrawPanelListenerStrategyHand(this, undoManager, zoomManager, mainWindow, dataLayer);
+        mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow, dataLayer);
+        mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow, dataLayer);
     }
+    
 
-    /**
-     * Reaction to notification from zoom manager
-     * @param o
-     * @param o1 
-     */
-    @Override
-    public void update(Observable o, Object o1) {
-        //set new sizes of this (JDrawPanel)
-        actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
-        actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
-
-        this.setSize(actualZoomArea);
-        this.setPreferredSize(actualZoomArea);
-        this.setMinimumSize(actualZoomArea);
-        this.setMaximumSize(actualZoomArea);
-    }
-
-    /**
-     * Updates size of draw panel after graph change
-     
-    public void updateSizeToFitComponents() {
-        // find max X and max Y point in components
-        int maxX = 0;
-        int maxY = 0;
-
-        for (AbstractHwComponent c : graph.getHwComponents()) {
-            Point p = c.getLowerRightCornerLocation();
-            if (p.x > maxX) {
-                maxX = p.x;
-            }
-            if (p.y > maxY) {
-                maxY = p.y;
-            }
-            //System.out.println("maxx = "+maxX + ", maxy = "+maxY);
-        }
-
-        // validate if new size is not smaller than defaultZoomAreaMin
-        if (zoomManager.doScaleToDefault(maxX) < defaultZoomAreaMin.getWidth()
-                && zoomManager.doScaleToDefault(maxY) < defaultZoomAreaMin.getHeight()) {
-            // new size is smaller than defaultZoomAreaMin
-            // set default zoom to default zoom min
-            defaultZoomArea.setSize(defaultZoomAreaMin.width, defaultZoomAreaMin.height);
-
-            // set area according to defaultZoomArea
-            actualZoomArea.setSize(zoomManager.doScaleToActual(defaultZoomArea.width),
-                    zoomManager.doScaleToActual(defaultZoomArea.height));
-        } else {
-            // update area size
-            actualZoomArea.setSize(maxX, maxY);
-            // update default zoom size
-            defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
-                    zoomManager.doScaleToDefault(actualZoomArea.height));
-        }
-
-        //System.out.println("area update");
-
-
-        // let scrool pane in editor know about the change
-        this.revalidate();
-    }*/
-
-    /**
-     * Updates size of panel according to parameter if lowerRightCorner is
-     * placed out of panel
-     * @param rightDownCorner 
-     */
-    @Override
-    public void updateSize(Point lowerRightCorner) {
-        // if nothing to resize
-        if (!(lowerRightCorner.x > actualZoomArea.width || lowerRightCorner.y > actualZoomArea.height)) {
-            return;
-        }
-
-        // if lowerRightCorner.x is out of area
-        if (lowerRightCorner.x > actualZoomArea.width) {
-            // update area width
-            actualZoomArea.width = lowerRightCorner.x;
-        }
-
-        // if lowerRightCorner.y is out of area
-        if (lowerRightCorner.y > actualZoomArea.height) {
-            // update area height
-            actualZoomArea.height = lowerRightCorner.y;
-        }
-
-        // update default zoom size
-        defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
-                zoomManager.doScaleToDefault(actualZoomArea.height));
-
-        // let scrool pane in editor know about the change
-        this.revalidate();
-    }
-
-    /**
-     * Sets that cable is being paint
-     * @param lineInProgres
-     * @param start
-     * @param end 
-     */
-    @Override
-    public void setLineInProgras(boolean lineInProgres, Point start, Point end) {
-        this.lineInProgress = lineInProgres;
-        lineStart = start;
-        lineEnd = end;
-    }
-
-    /**
-     * Sets transparent rectangle that is being paint
-     * @param rectangleInProgress
-     * @param rectangle 
-     */
-    public void setTransparetnRectangleInProgress(boolean rectangleInProgress, Rectangle rectangle) {
-        this.rectangleInProgress = rectangleInProgress;
-        this.rectangle = rectangle;
-    }
-
-    @Override
-    public AbstractImageFactory getImageFactory() {
-        return imageFactory;
-    }
-
-    @Override
-    public Graph getGraph() {
-        return graph;
-    }
 
     @Override
     public void paintComponent(Graphics g) {
@@ -319,65 +194,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
     }
 
     /**
-     * Creates mouse listeners for all tools
-     */
-    protected final void createDrawPaneMouseListeners() {
-        mouseListenerHand = new DrawPanelListenerStrategyHand(this, undoManager, zoomManager, mainWindow, dataLayer);
-        mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow, dataLayer);
-        mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow, dataLayer);
-    }
-
-    // ------ IMPLEMENTATION OF TOOL CHANGE INTERFACE
-    @Override
-    public void removeCurrentMouseListener() {
-        if (currentMouseListener != null) {
-            currentMouseListener.deInitialize();
-        }
-
-        this.removeMouseListener(currentMouseListener);
-        this.removeMouseMotionListener(currentMouseListener);
-        this.removeMouseWheelListener(currentMouseListener);
-    }
-
-    @Override
-    public DrawPanelListenerStrategy getMouseListener(MainTool tool) {
-        switch (tool) {
-            case HAND:
-                return mouseListenerHand;
-            case ADD_CABLE:
-                return mouseListenerCable;
-            case ADD_REAL_PC:
-            case ADD_END_DEVICE:
-            case ADD_SWITCH:
-            case ADD_ROUTER:
-                return mouseListenerAddHwComponent;
-
-        }
-
-        // this should never happen
-        System.out.println("chyba v DrawPanel metoda getMouseListener(MainTool tool)");
-        return mouseListenerHand;
-    }
-
-    @Override
-    public void setCurrentMouseListener(DrawPanelListenerStrategy mouseListener) {
-        currentMouseListener = mouseListener;
-
-        this.addMouseListener(currentMouseListener);
-        this.addMouseMotionListener(currentMouseListener);
-        this.addMouseWheelListener(currentMouseListener);
-    }
-    // END ------ IMPLEMENTATION OF TOOL CHANGE INTERFACE
-
-    protected UndoManager getUndoManager() {
-        return undoManager;
-    }
-
-    protected ZoomManager getZoomManager() {
-        return zoomManager;
-    }
-
-    /**
      * aligns all AbstractHWcomponents in graph to grid
      */
     public void alignComponentsToGrid() {
@@ -420,7 +236,164 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
     }
 
     
-    // ============== IMPLEMENTATION OF DrawPanelOuterInterface ================
+    
+// ====================  IMPLEMENTATION OF Observer ======================   
+    /**
+     * Reaction to notification from zoom manager
+     * @param o
+     * @param o1 
+     */
+    @Override
+    public void update(Observable o, Object o1) {
+        //set new sizes of this (JDrawPanel)
+        actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
+        actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
+
+        this.setSize(actualZoomArea);
+        this.setPreferredSize(actualZoomArea);
+        this.setMinimumSize(actualZoomArea);
+        this.setMaximumSize(actualZoomArea);
+    }  
+// END ====================  IMPLEMENTATION OF Observer ======================      
+    
+    
+// ================  IMPLEMENTATION OF ToolChangeInterface =================
+    
+    @Override
+    public void removeCurrentMouseListener() {
+        if (currentMouseListener != null) {
+            currentMouseListener.deInitialize();
+        }
+
+        this.removeMouseListener(currentMouseListener);
+        this.removeMouseMotionListener(currentMouseListener);
+        this.removeMouseWheelListener(currentMouseListener);
+    }
+
+    @Override
+    public DrawPanelListenerStrategy getMouseListener(MainTool tool) {
+        switch (tool) {
+            case HAND:
+                return mouseListenerHand;
+            case ADD_CABLE:
+                return mouseListenerCable;
+            case ADD_REAL_PC:
+            case ADD_END_DEVICE:
+            case ADD_SWITCH:
+            case ADD_ROUTER:
+                return mouseListenerAddHwComponent;
+
+        }
+
+        // this should never happen
+        System.out.println("chyba v DrawPanel metoda getMouseListener(MainTool tool)");
+        return mouseListenerHand;
+    }
+
+    @Override
+    public void setCurrentMouseListener(DrawPanelListenerStrategy mouseListener) {
+        currentMouseListener = mouseListener;
+
+        this.addMouseListener(currentMouseListener);
+        this.addMouseMotionListener(currentMouseListener);
+        this.addMouseWheelListener(currentMouseListener);
+    }
+// END ==============  IMPLEMENTATION OF ToolChangeInterface ===============
+    
+    
+    
+    
+// ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
+    
+    /**
+     * Gets AbstractAction corresponding to ComponentAction
+     * @param action
+     * @return 
+     */
+    @Override
+    public AbstractAction getAbstractAction(ComponentAction action){
+        return actions.get(action);
+    }
+    
+    /**
+     * Updates size of panel according to parameter if lowerRightCorner is
+     * placed out of panel
+     * @param rightDownCorner 
+     */
+    @Override
+    public void updateSize(Point lowerRightCorner) {
+        // if nothing to resize
+        if (!(lowerRightCorner.x > actualZoomArea.width || lowerRightCorner.y > actualZoomArea.height)) {
+            return;
+        }
+
+        // if lowerRightCorner.x is out of area
+        if (lowerRightCorner.x > actualZoomArea.width) {
+            // update area width
+            actualZoomArea.width = lowerRightCorner.x;
+        }
+
+        // if lowerRightCorner.y is out of area
+        if (lowerRightCorner.y > actualZoomArea.height) {
+            // update area height
+            actualZoomArea.height = lowerRightCorner.y;
+        }
+
+        // update default zoom size
+        defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
+                zoomManager.doScaleToDefault(actualZoomArea.height));
+
+        // let scrool pane in editor know about the change
+        this.revalidate();
+    }
+    
+    /**
+     * returns graph
+     * @return 
+     */
+    @Override
+    public Graph getGraph() {
+        return graph;
+    }
+    
+    /**
+     * Gets image factory
+     * @return 
+     */
+    @Override
+    public AbstractImageFactory getImageFactory() {
+        return imageFactory;
+    }
+    
+    /**
+     * Sets that cable is being paint
+     * @param lineInProgres
+     * @param start
+     * @param end 
+     */
+    @Override
+    public void setLineInProgras(boolean lineInProgres, Point start, Point end) {
+        this.lineInProgress = lineInProgres;
+        lineStart = start;
+        lineEnd = end;
+    }
+    
+    
+    /**
+     * Sets transparent rectangle that is being paint
+     * @param rectangleInProgress
+     * @param rectangle 
+     */
+    @Override
+    public void setTransparetnRectangleInProgress(boolean rectangleInProgress, Rectangle rectangle) {
+        this.rectangleInProgress = rectangleInProgress;
+        this.rectangle = rectangle;
+    }
+    
+// END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+    
+    
+// ============== IMPLEMENTATION OF DrawPanelOuterInterface ================
     
     @Override
     public boolean canUndo() {
@@ -472,7 +445,54 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
         zoomManager.addObserver(obsrvr);
     }
     
-    // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+// END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
     
 }
 
+
+
+
+
+    /**
+     * Updates size of draw panel after graph change
+     
+    public void updateSizeToFitComponents() {
+        // find max X and max Y point in components
+        int maxX = 0;
+        int maxY = 0;
+
+        for (AbstractHwComponent c : graph.getHwComponents()) {
+            Point p = c.getLowerRightCornerLocation();
+            if (p.x > maxX) {
+                maxX = p.x;
+            }
+            if (p.y > maxY) {
+                maxY = p.y;
+            }
+            //System.out.println("maxx = "+maxX + ", maxy = "+maxY);
+        }
+
+        // validate if new size is not smaller than defaultZoomAreaMin
+        if (zoomManager.doScaleToDefault(maxX) < defaultZoomAreaMin.getWidth()
+                && zoomManager.doScaleToDefault(maxY) < defaultZoomAreaMin.getHeight()) {
+            // new size is smaller than defaultZoomAreaMin
+            // set default zoom to default zoom min
+            defaultZoomArea.setSize(defaultZoomAreaMin.width, defaultZoomAreaMin.height);
+
+            // set area according to defaultZoomArea
+            actualZoomArea.setSize(zoomManager.doScaleToActual(defaultZoomArea.width),
+                    zoomManager.doScaleToActual(defaultZoomArea.height));
+        } else {
+            // update area size
+            actualZoomArea.setSize(maxX, maxY);
+            // update default zoom size
+            defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
+                    zoomManager.doScaleToDefault(actualZoomArea.height));
+        }
+
+        //System.out.println("area update");
+
+
+        // let scrool pane in editor know about the change
+        this.revalidate();
+    }*/
