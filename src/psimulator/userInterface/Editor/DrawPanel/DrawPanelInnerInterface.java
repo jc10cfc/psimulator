@@ -13,13 +13,13 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public interface DrawPanelInnerInterface {
     
-    public AbstractAction getAbstractAction(ComponentAction action);
-    
-    
+
     public void updateSize(Point lowerRightCorner);
     
+    // getters
     public Graph getGraph();
     public AbstractImageFactory getImageFactory();
+    public AbstractAction getAbstractAction(ComponentAction action);
     
     // jPanel related methods
     public void setCursor(Cursor cursor);
