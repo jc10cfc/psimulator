@@ -1,9 +1,9 @@
 package psimulator.userInterface.Editor.Tools;
 
 import javax.swing.ImageIcon;
-import psimulator.userInterface.Editor.Enums.HwTypeEnum;
-import psimulator.userInterface.Editor.Enums.MainTool;
-import psimulator.userInterface.Editor.ToolChangeInterface;
+import psimulator.userInterface.Editor.DrawPanel.Enums.HwTypeEnum;
+import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
 
 /**
  *
@@ -14,7 +14,7 @@ public class AddDeviceTool extends AbstractCreationTool{
     protected int interfaces;
     protected String imagePath;
     
-    public AddDeviceTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeInterface toolChangeInterface, HwTypeEnum hwType, int interfaces, String imagePath) {
+    public AddDeviceTool(MainTool tool, String name, ImageIcon imageIcon, ToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, int interfaces, String imagePath) {
         super(tool, name, imageIcon, toolChangeInterface, hwType);
         this.imagePath = imagePath;
         this.interfaces = interfaces;

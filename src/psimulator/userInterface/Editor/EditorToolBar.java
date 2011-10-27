@@ -1,5 +1,6 @@
 package psimulator.userInterface.Editor;
 
+import psimulator.userInterface.Editor.DrawPanel.ToolChangeOuterInterface;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
@@ -11,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
-import psimulator.userInterface.Editor.Enums.MainTool;
+import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
 import psimulator.userInterface.Editor.Tools.ToolsFactory;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -37,7 +38,7 @@ public class EditorToolBar extends JToolBar implements Observer {
     private MenuToggleButton toggleButtonRealPC;
     private MenuToggleButton toggleButtonCable;
 
-    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ToolChangeInterface toolChangeInterface) {
+    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ToolChangeOuterInterface toolChangeInterface) {
         super();
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
@@ -56,13 +57,10 @@ public class EditorToolBar extends JToolBar implements Observer {
 
         /// new code
         jButtonFitToSize = new JButton();
-        jButtonFitToSize.setText("Fit to size");
-        //jButtonFitToSize.setActionCommand(MainTool.FIT_TO_SIZE.toString());
-        
+        jButtonFitToSize.setFocusable(false);
         jButtonAlignToGrid = new JButton();
-        jButtonAlignToGrid.setText("Align to grid");
         
-        
+
         toolsButtonGroup = new ButtonGroup();
         
         toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, imageFactory, toolChangeInterface));
@@ -105,6 +103,8 @@ public class EditorToolBar extends JToolBar implements Observer {
         Component[] comp = this.getComponents();
         for (Component c : comp) {
             c.setBackground(ColorMixerSignleton.editToolbarColor);
+            // tool icon cannot be marked (ugly frame)
+            c.setFocusable(false);
         }
 
     }
@@ -149,6 +149,8 @@ public class EditorToolBar extends JToolBar implements Observer {
         toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));
         jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
         
+        jButtonFitToSize.setText(dataLayer.getString("FIT_TO_SIZE"));
+        jButtonAlignToGrid.setText(dataLayer.getString("ALIGN_TO_GRID"));
         
         //toggleButtonRouters.setToolTipText(dataLayer.getString("ADD_ROUTER"));
         //toggleButtonSwitches.setToolTipText(dataLayer.getString("ADD_SWITCH"));
