@@ -79,7 +79,10 @@ public class ActionOnDelete extends AbstractAction {
         // update undo redo buttons
         mainWindow.updateUndoRedoButtons();
 
+        
+        
         // reapaint draw panel
+        drawPanel.repaint();
         drawPanel.repaint();
     }
 }
