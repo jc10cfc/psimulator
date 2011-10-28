@@ -13,7 +13,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.Editor.Tools.ManipulationTool;
 import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableMoveComponent;
@@ -50,7 +50,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     
     private ManipulationTool manipulationTool;
 
-    public DrawPanelListenerStrategyHand(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+    public DrawPanelListenerStrategyHand(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
     }
 
@@ -282,10 +282,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
                 // add edit to undo manager
                 undoManager.undoableEditHappened(new UndoableEditEvent(this,
-                        new UndoableMoveComponent(draggedComponents, dim, drawPanel)));
+                        new UndoableMoveComponent(graph, draggedComponents, dim)));
 
                 // inform drawPanel about position change
-                drawPanel.updateSize(graph.getLowerRightBound(draggedComponents));
+                //drawPanel.updateSize(graph.getLowerRightBound(draggedComponents));
 
                 // update Undo and Redo buttons
                 mainWindow.updateUndoRedoButtons();
@@ -295,7 +295,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 + "New default loc: x="+newDefaultZoomLocation.x +", y="+newDefaultZoomLocation.y+".");*/
             }
 
-            drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
+            //drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
 
             draggedComponents = null;
             return;

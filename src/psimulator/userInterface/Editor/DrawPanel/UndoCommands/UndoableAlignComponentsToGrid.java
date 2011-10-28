@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.util.HashMap;
 import javax.swing.undo.AbstractUndoableEdit;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
  *
@@ -12,24 +12,30 @@ import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
  */
 public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
 
-    private HashMap<AbstractHwComponent, Dimension> map;
-    private DrawPanel drawPanel;
-
-    public UndoableAlignComponentsToGrid(HashMap<AbstractHwComponent, Dimension> map, DrawPanel drawPanel) {
+    protected GraphOuterInterface graph;
+    protected HashMap<AbstractHwComponent, Dimension> map;
+    
+    public UndoableAlignComponentsToGrid(GraphOuterInterface graph, HashMap<AbstractHwComponent, Dimension> map) {
         super();
         this.map = map;
-        this.drawPanel = drawPanel;
     }
 
     @Override
     public void undo() {
         super.undo();
 
+   
+        for (AbstractHwComponent component : map.keySet()) {
+            graph.changePositionOfAbstractHwComponent(component, map.get(component), true);
+        }
+        
+        /*
         for (AbstractHwComponent component : map.keySet()) {
             component.doChangePosition(map.get(component), true);
         }
         // panel could be resized before undo, so we need to update its size
         drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
+        */
     }
 
     @Override
@@ -37,9 +43,15 @@ public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
         super.redo();
 
         for (AbstractHwComponent component : map.keySet()) {
+            graph.changePositionOfAbstractHwComponent(component, map.get(component), false);
+        }
+        
+        /*
+        for (AbstractHwComponent component : map.keySet()) {
             component.doChangePosition(map.get(component), false);
         }
         // panel could be resized before redo, so we need to update its size
         drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
+         */
     }
 }

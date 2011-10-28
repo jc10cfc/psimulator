@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.ComponentAction;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -14,11 +14,8 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public interface DrawPanelInnerInterface {
     
-
-    public void updateSize(Point lowerRightCorner);
-    
     // getters
-    public GraphInterface getGraph();
+    public GraphOuterInterface getGraph();
     public AbstractImageFactory getImageFactory();
     public AbstractAction getAbstractAction(ComponentAction action);
     
@@ -30,9 +27,5 @@ public interface DrawPanelInnerInterface {
     public void setLineInProgras(boolean lineInProgres, Point start, Point end);
     public void setTransparetnRectangleInProgress(boolean rectangleInProgress, Rectangle rectangle);
     
-    // used by Grid
-    public int getWidth();
-    public int getHeight();
-    
-    
+   
 }

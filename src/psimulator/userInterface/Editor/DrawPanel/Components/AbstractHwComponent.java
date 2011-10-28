@@ -6,8 +6,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -15,15 +13,11 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public abstract class AbstractHwComponent extends AbstractComponent implements Observer {// implements DragGestureListener, DragSourceListener{
+public abstract class AbstractHwComponent extends AbstractComponent {
 
-    // position in current zoom
-    protected int xPos = 50;
-    protected int yPos = 50;
-    
     // position in 1:1 zoom
-    protected int defaultZoomXPos = 50;
-    protected int defaultZoomYPos = 50;
+    protected int defaultZoomXPos;
+    protected int defaultZoomYPos;
     
     protected ZoomManager zoomManager;
     protected AbstractImageFactory imageFactory;
@@ -42,25 +36,6 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         for(int i =0;i<interfacesCount;i++){
             interfaces.add(new EthInterface("Eth"+i, null));
         }
-        
-        zoomManager.addObserver(this);
-    }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        zoomManager.deleteObserver(this);
-    }
-
-    /**
-     * Updates Components position after zoom
-     * @param o
-     * @param o1 
-     */
-    @Override
-    public void update(Observable o, Object o1) {
-        xPos = zoomManager.doScaleToActual(defaultZoomXPos);
-        yPos = zoomManager.doScaleToActual(defaultZoomYPos);
     }
 
     /**
@@ -104,15 +79,12 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
         // update defautl position (without zoom)
         this.defaultZoomXPos = defaultZoomXPos;
         this.defaultZoomYPos = defaultZoomYPos;
-        
-        this.xPos = zoomManager.doScaleToActual(defaultZoomXPos);
-        this.yPos = zoomManager.doScaleToActual(defaultZoomYPos);
     }
     
     
     @Override
     public boolean intersects(Point p) {
-        if ((p.x >= xPos && p.x <= xPos + bi.getWidth()) && (p.y >= yPos && p.y <= yPos + bi.getHeight())) {
+        if ((p.x >= getX() && p.x <= getX() + bi.getWidth()) && (p.y >= getY() && p.y <= getY() + bi.getHeight())) {
             return true;
         } else {
             return false;
@@ -121,7 +93,7 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
     
     @Override
     public boolean intersects(Rectangle r) {
-        Rectangle rect = new Rectangle(xPos, yPos, bi.getWidth(), bi.getHeight());
+        Rectangle rect = new Rectangle(getX(), getY(), bi.getWidth(), bi.getHeight());
         return r.intersects(rect);
     }
     
@@ -189,15 +161,15 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
      * @return 
      */
     public Point getCenterLocation() {
-        return new Point(xPos + zoomManager.getIconSize() / 2, yPos + zoomManager.getIconSize() / 2);
+        return new Point(getX() + zoomManager.getIconSize() / 2, getY() + zoomManager.getIconSize() / 2);
     }
     
     /**
      * Gets Point in actual scale of lower right corner of component
-     * @return Actual scale ponint
+     * @return Actual-scale ponint
      */
     public Point getLowerRightCornerLocation(){
-        return new Point(xPos + zoomManager.getIconSize(), yPos + zoomManager.getIconSize());
+        return new Point(getX() + zoomManager.getIconSize(), getY() + zoomManager.getIconSize());
     }
     
     @Override
@@ -212,16 +184,11 @@ public abstract class AbstractHwComponent extends AbstractComponent implements O
 
     @Override
     public int getX() {
-        return xPos;
+        return zoomManager.doScaleToActual(defaultZoomXPos);
     }
 
     @Override
     public int getY() {
-        return yPos;
-    }
-
-    
-    public ZoomManager getZoomManager(){
-        return zoomManager;
+        return zoomManager.doScaleToActual(defaultZoomYPos);
     }
 }

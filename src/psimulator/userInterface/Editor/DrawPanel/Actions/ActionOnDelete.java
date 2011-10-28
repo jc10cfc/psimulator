@@ -9,8 +9,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableRemoveComponents;
 import psimulator.userInterface.MainWindowInnerInterface;
 
@@ -20,12 +19,12 @@ import psimulator.userInterface.MainWindowInnerInterface;
  */
 public class ActionOnDelete extends AbstractAction {
 
-    private GraphInterface graph;
+    private GraphOuterInterface graph;
     private UndoManager undoManager;
     private DrawPanelInnerInterface drawPanel;
     protected MainWindowInnerInterface mainWindow;
 
-    public ActionOnDelete(GraphInterface graph, UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
+    public ActionOnDelete(GraphOuterInterface graph, UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
         this.graph = graph;
         this.undoManager = undoManager;
         this.drawPanel = drawPanel;
@@ -75,7 +74,7 @@ public class ActionOnDelete extends AbstractAction {
         //System.out.println("Removing "+markedComponents.size()+ " components and "+cablesToRemove.size()+" cables" );
         undoManager.undoableEditHappened(
                 new UndoableEditEvent(this,
-                new UndoableRemoveComponents(markedComponents, cablesToRemove, drawPanel.getGraph(), drawPanel)));
+                new UndoableRemoveComponents(graph, markedComponents, cablesToRemove)));
 
         // update undo redo buttons
         mainWindow.updateUndoRedoButtons();

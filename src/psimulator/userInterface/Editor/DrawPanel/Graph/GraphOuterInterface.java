@@ -1,5 +1,6 @@
 package psimulator.userInterface.Editor.DrawPanel.Graph;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.util.List;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
@@ -10,7 +11,13 @@ import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
  *
  * @author Martin
  */
-public interface GraphInterface {
+public interface GraphOuterInterface {
+    
+    public int getWidth();
+    public int getHeight();
+    
+    public void changePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive);
+    public void changePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive);
     
     public List<AbstractHwComponent> getMarkedHwComponentsCopy();
     public List<Cable> getMarkedCablesCopy();

@@ -17,7 +17,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
@@ -29,7 +29,7 @@ import psimulator.userInterface.MainWindowInnerInterface;
  */
 public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implements MouseWheelListener {
 
-    protected GraphInterface graph;
+    protected GraphOuterInterface graph;
     protected DrawPanelInnerInterface drawPanel;
     protected MainWindowInnerInterface mainWindow;
     protected UndoManager undoManager;
