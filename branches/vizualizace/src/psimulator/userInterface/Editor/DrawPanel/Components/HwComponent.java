@@ -36,6 +36,6 @@ public class HwComponent extends AbstractHwComponent {
             bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconSize(), false);
         }
 
-        g2.drawImage(bi, xPos, yPos, null);
+        g2.drawImage(bi, getX(), getY(), null);
     }
 }

@@ -134,58 +134,49 @@ public class EditorPanel extends EditorOuterInterface implements Observer{
     @Override
     public boolean canUndo() {
         return jPanelDraw.canUndo();
-        //return jPanelDraw.getUndoManager().canUndo();
     }
 
     @Override
     public boolean canRedo() {
         return jPanelDraw.canRedo();
-        //return jPanelDraw.getUndoManager().canRedo();
     }
 
     @Override
     public void undo() {
         jPanelDraw.undo();
-        //jPanelDraw.getUndoManager().undo();
     }
 
     @Override
     public void redo() {
         jPanelDraw.redo();
-        //jPanelDraw.getUndoManager().redo();
     }
 
     @Override
     public boolean canZoomIn() {
         return jPanelDraw.canZoomIn();
-        //return jPanelDraw.getZoomManager().canZoomIn();
     }
 
     @Override
     public boolean canZoomOut() {
         return jPanelDraw.canZoomOut();
-        //return jPanelDraw.getZoomManager().canZoomOut();
     }
 
     @Override
     public void zoomIn() {
         // TODO: Point of zoom in parameter
         jPanelDraw.zoomIn();
-        //jPanelDraw.getZoomManager().zoomIn();
     }
 
     @Override
     public void zoomOut() {
         // TODO: Point of zoom in parameter
         jPanelDraw.zoomOut();
-        //jPanelDraw.getZoomManager().zoomOut();
     }
 
     @Override
     public void zoomReset() {
         // TODO: Point of zoom in parameter
         jPanelDraw.zoomReset();
-        //jPanelDraw.getZoomManager().zoomReset();
     }
 
 }

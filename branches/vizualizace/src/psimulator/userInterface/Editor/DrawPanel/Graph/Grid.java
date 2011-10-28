@@ -1,8 +1,9 @@
-package psimulator.userInterface.Editor.DrawPanel;
+package psimulator.userInterface.Editor.DrawPanel.Graph;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
 
 /**
  *
@@ -10,21 +11,21 @@ import java.awt.Point;
  */
 public class Grid{
 
-    private DrawPanelInnerInterface drawPanel;
+    private GraphOuterInterface graph;
     private ZoomManager zoomManager;
     private int distance;
     
     
-    public Grid(DrawPanelInnerInterface drawPanel, ZoomManager zoomManager) {
-        this.drawPanel = drawPanel;
+    public Grid(GraphOuterInterface graph, ZoomManager zoomManager) {
+        this.graph = graph;
         this.zoomManager = zoomManager;
     }
     
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         
-        int width = drawPanel.getWidth();
-        int height = drawPanel.getHeight();
+        int width = graph.getWidth();
+        int height = graph.getHeight();
         
         distance = zoomManager.getIconSize()/2;
     

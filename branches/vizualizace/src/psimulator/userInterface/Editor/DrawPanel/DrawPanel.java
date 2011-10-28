@@ -9,16 +9,12 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
@@ -27,12 +23,9 @@ import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelL
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyAddHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyHand;
 import psimulator.userInterface.Editor.DrawPanel.Actions.ActionOnDelete;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Enums.ComponentAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
-import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableAlignComponentsToGrid;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -40,7 +33,8 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public final class DrawPanel extends DrawPanelOuterInterface implements DrawPanelInnerInterface, Observer {
+public final class DrawPanel extends DrawPanelOuterInterface implements 
+        DrawPanelInnerInterface, Observer, DrawPanelSizeChangeInnerInterface {
     // mouse listeners
 
     private DrawPanelListenerStrategy mouseListenerHand;
@@ -48,7 +42,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
     private DrawPanelListenerStrategy mouseListenerCable;
     private DrawPanelListenerStrategy currentMouseListener;
     // END mouse listenrs
-    private Graph graph = new Graph();
+    private Graph graph;
     private UndoManager undoManager = new UndoManager();
     private ZoomManager zoomManager = new ZoomManager();
     private AbstractImageFactory imageFactory;
@@ -61,13 +55,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
     private boolean rectangleInProgress = false;
     private Rectangle rectangle;
     //
-    private List<AbstractComponent> markedCables = new ArrayList<AbstractComponent>();
-    private List<AbstractComponent> markedComponents = new ArrayList<AbstractComponent>();
     private Dimension defaultZoomAreaMin = new Dimension(800, 600);
     private Dimension defaultZoomArea = new Dimension(defaultZoomAreaMin);
     private Dimension actualZoomArea = new Dimension(defaultZoomArea);
-    //
-    private Grid grid;
+    
     private DataLayerFacade dataLayer;
     
     private EnumMap<ComponentAction, AbstractAction> actions;
@@ -79,6 +70,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
         this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
 
+        
+        this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
+        
         actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
         actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
 
@@ -94,11 +88,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
         // add key binding for delete
         mainWindow.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("DELETE"), "DELETE");
         mainWindow.getRootPane().getActionMap().put("DELETE", getAbstractAction(ComponentAction.DELETE));
-
-        // init grid
-        grid = new Grid(this, zoomManager);
-
-        zoomManager.addObserver(this);
+  
+        
+        zoomManager.addObserver((Observer)this);
 
     }
     
@@ -138,14 +130,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
 
         Graphics2D g2 = (Graphics2D) g;
 
-        
-        // GRID PAINT
-        /*
-        g2.setColor(Color.gray);
-        grid.paintComponent(g);
-        g2.setColor(Color.black);*/
-
-
         // set antialiasing
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -155,34 +139,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
             g2.drawLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
         }
 
-        // DRAW cables
-        markedCables.clear();
-        for (AbstractComponent c : graph.getBundlesOfCables()) {
-            if (!c.isMarked()) {
-                //g2.draw(c);
-                c.paint(g2);
-            } else {
-                markedCables.add(c);
-            }
-        }
-        for (AbstractComponent c : markedCables) {
-            c.paint(g2);
-        }
-
-
-        // DRAW HWcomponents
-        markedComponents.clear();
-        for (AbstractComponent c : graph.getHwComponents()) {
-            if (!c.isMarked()) {
-                c.paint(g2);
-            } else {
-                markedComponents.add(c);
-            }
-        }
-        for (AbstractComponent c : markedComponents) {
-            c.paint(g2);
-        }
-
+        graph.paint(g2);
 
         // DRAW makring rectangle
         if (rectangleInProgress) {
@@ -196,7 +153,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
 
     /**
      * aligns all AbstractHWcomponents in graph to grid
-     */
+     
     public void alignComponentsToGrid() {
 
         HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
@@ -234,7 +191,42 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
         }else{
             movedComponentsMap = null;
         }
-    }
+    }*/
+
+// ========  IMPLEMENTATION OF DrawPanelSizeChangeInnerInterface ==========   
+    
+    /**
+     * Updates size of panel according to parameter if dimension is bigger than actual
+     * size of drawPanel
+     * @param dimension of Graph
+     */
+    @Override
+    public void updateSize(Dimension dim) {
+        // if nothing to resize
+        if (!(dim.width > actualZoomArea.width || dim.height > actualZoomArea.height)) {
+            return;
+        }
+
+        // if lowerRightCorner.x is out of area
+        if (dim.width > actualZoomArea.width) {
+            // update area width
+            actualZoomArea.width = dim.width;
+        }
+
+        // if lowerRightCorner.y is out of area
+        if (dim.height > actualZoomArea.height) {
+            // update area height
+            actualZoomArea.height = dim.height;
+        }
+
+        // update default zoom size
+        defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
+                zoomManager.doScaleToDefault(actualZoomArea.height));
+
+        // let scrool pane in editor know about the change
+        this.revalidate();
+    }  
+// END ========  IMPLEMENTATION OF DrawPanelSizeChangeInnerInterface ==========  
 
     
     
@@ -301,9 +293,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
     }
 // END ==============  IMPLEMENTATION OF ToolChangeInterface ===============
     
-    
-    
-    
+  
 // ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
     
     /**
@@ -317,43 +307,11 @@ public final class DrawPanel extends DrawPanelOuterInterface implements DrawPane
     }
     
     /**
-     * Updates size of panel according to parameter if lowerRightCorner is
-     * placed out of panel
-     * @param rightDownCorner 
-     */
-    @Override
-    public void updateSize(Point lowerRightCorner) {
-        // if nothing to resize
-        if (!(lowerRightCorner.x > actualZoomArea.width || lowerRightCorner.y > actualZoomArea.height)) {
-            return;
-        }
-
-        // if lowerRightCorner.x is out of area
-        if (lowerRightCorner.x > actualZoomArea.width) {
-            // update area width
-            actualZoomArea.width = lowerRightCorner.x;
-        }
-
-        // if lowerRightCorner.y is out of area
-        if (lowerRightCorner.y > actualZoomArea.height) {
-            // update area height
-            actualZoomArea.height = lowerRightCorner.y;
-        }
-
-        // update default zoom size
-        defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
-                zoomManager.doScaleToDefault(actualZoomArea.height));
-
-        // let scrool pane in editor know about the change
-        this.revalidate();
-    }
-    
-    /**
      * returns graph
      * @return 
      */
     @Override
-    public GraphInterface getGraph() {
+    public GraphOuterInterface getGraph() {
         return graph;
     }
     

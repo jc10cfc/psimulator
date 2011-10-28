@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.MouseActionListeners;
+package psimulator.userInterface.actionListerners;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

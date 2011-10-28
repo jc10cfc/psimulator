@@ -4,8 +4,7 @@ import java.util.List;
 import javax.swing.undo.AbstractUndoableEdit;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
  *
@@ -14,15 +13,13 @@ import psimulator.userInterface.Editor.DrawPanel.Graph.GraphInterface;
 public class UndoableRemoveComponents extends AbstractUndoableEdit {
     protected List<AbstractHwComponent> components;
     protected List<Cable> cables;
-    protected GraphInterface graph;
-    protected DrawPanelInnerInterface drawPanel;
+    protected GraphOuterInterface graph;
     
-    public UndoableRemoveComponents(List<AbstractHwComponent> components, List<Cable> cables, GraphInterface graph, DrawPanelInnerInterface drawPanel){
+    public UndoableRemoveComponents(GraphOuterInterface graph, List<AbstractHwComponent> components, List<Cable> cables){
         super();
         this.components = components;
         this.graph = graph;
         this.cables = cables;
-        this.drawPanel = drawPanel;
     }
 
     @Override
@@ -39,7 +36,7 @@ public class UndoableRemoveComponents extends AbstractUndoableEdit {
       
       // panel could be resized before undo, so we need to update its size
       //drawPanel.updateSizeToFitComponents();
-      drawPanel.updateSize(graph.getLowerRightBound(components));
+      //drawPanel.updateSize(graph.getLowerRightBound(components));
     }
 
     @Override

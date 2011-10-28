@@ -7,7 +7,7 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.HwComponent;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
+import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.Editor.Tools.AddDeviceTool;
 import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableAddHwComponent;
@@ -22,7 +22,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     
     private AddDeviceTool addDeviceTool;
 
-    public DrawPanelListenerStrategyAddHwComponent(DrawPanel drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+    public DrawPanelListenerStrategyAddHwComponent(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
     }
     
@@ -50,13 +50,13 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         graph.addHwComponent(component);
         
         // inform drawPanel about size change if component placed out of draw panel
-        drawPanel.updateSize(component.getLowerRightCornerLocation());
+        //drawPanel.updateSize(component.getLowerRightCornerLocation());
         
         drawPanel.repaint();
         
         // add to undo manager
         undoManager.undoableEditHappened(new UndoableEditEvent(this,
-                        new UndoableAddHwComponent(component, drawPanel.getGraph(), drawPanel)));
+                        new UndoableAddHwComponent(graph, component)));
         
         mainWindow.updateUndoRedoButtons();
     }
