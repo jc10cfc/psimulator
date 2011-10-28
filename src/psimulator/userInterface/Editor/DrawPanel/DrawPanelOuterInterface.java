@@ -20,5 +20,7 @@ public abstract class DrawPanelOuterInterface extends JPanel implements DrawPane
     public abstract void zoomIn();
     public abstract void zoomOut();
     public abstract void zoomReset();
+    
     public abstract void addObserverToZoomManager(Observer obsrvr);
+    //public abstract void doFitToGraphSize();
 }
