@@ -1,5 +1,6 @@
 package psimulator.userInterface.Editor.DrawPanel.Graph;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -61,39 +62,15 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         g2.setColor(Color.gray);
         grid.paintComponent(g);
         g2.setColor(Color.black);*/
+        
+        g2.setColor(Color.gray);
+        g2.drawLine(getWidth(), 0, getWidth(), getHeight());
+        g2.drawLine(0, getHeight(), getWidth(), getHeight());
+        g2.setColor(Color.black);
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // DRAW cables
-        /*
-        markedCables.clear();
-        for (AbstractComponent c : getBundlesOfCables()) {
-            if (!c.isMarked()) {
-                //g2.draw(c);
-                c.paint(g2);
-            } else {
-                markedCables.add(c);
-            }
-        }
-
-        for (AbstractComponent c : markedCables) {
-            c.paint(g2);
-        }*/
-        /*
-        // DRAW HWcomponents
-        markedComponents.clear();
-        for (AbstractComponent c : getHwComponents()) {
-            if (!c.isMarked()) {
-                c.paint(g2);
-            } else {
-                markedComponents.add(c);
-            }
-        }
-        
-        for (AbstractComponent c : markedComponents) {
-            c.paint(g2);
-        }*/
         
         // DRAW cables
         for (AbstractComponent c : getBundlesOfCables()) {
@@ -106,7 +83,9 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             c.paint(g2); 
         }
         
-
+        
+        
+        
         // DRAW HWcomponents
         for (AbstractComponent c : getHwComponents()) {
             if (!c.isMarked()) {
@@ -117,8 +96,9 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         for (AbstractComponent c : markedAbstractHwComponentsComponents) {
             c.paint(g2); 
         }
+        
 
-
+        //System.out.println("marked comp="+markedAbstractHwComponentsComponents.size());
     }
 
     /**
@@ -341,15 +321,15 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     @Override
     public void removeHwComponent(AbstractHwComponent component) {
         components.remove(component);
-        updateSizeRemoveComponents(component.getLowerRightCornerLocation());
-        //updateSizeByRecalculate();
+        //updateSizeRemoveComponents(component.getLowerRightCornerLocation());
+        updateSizeByRecalculate();
     }
 
     @Override
     public void removeHwComponents(List<AbstractHwComponent> componentList) {
         components.removeAll(componentList);
-        updateSizeRemoveComponents(getLowerRightBound(components));
-        //updateSizeByRecalculate();
+        //updateSizeRemoveComponents(getLowerRightBound(components));
+        updateSizeByRecalculate();
     }
 
     @Override
@@ -388,6 +368,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         Point newPosition = component.getLowerRightCornerLocation();
         // update size of graph
         updateSizeMovePosition(oldPosition, newPosition);
+        System.out.println("tady1: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
     }
     
     @Override
@@ -403,6 +384,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         Point newPosition = getLowerRightBound(components);
         // update size of graph
         updateSizeMovePosition(oldPosition, newPosition);
+        System.out.println("tady2: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
     }
     
     /**
@@ -418,26 +400,29 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         if(oldPositionLowerRightCorner.x == newPositionLowerRightCorner.x
                 && oldPositionLowerRightCorner.y == newPositionLowerRightCorner.y){
             // do nothing
+            System.out.println("update size move nothingto do, sizes the same, case 4");
             return;
         }
         
         // 3.case - moved out of graph dimension
         // if x or y is out of current width or height
-        if((newPositionLowerRightCorner.x > zoomManager.doScaleToActual(widthDefault))
-                || newPositionLowerRightCorner.y > zoomManager.doScaleToActual(heightDefault)){
+        if((newPositionLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault))
+                && newPositionLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)){
             // update like addComponent
+            System.out.println("update size move calling updateSizeAddComponent, case 3");
             updateSizeAddComponent(newPositionLowerRightCorner);
             return;
         }
         
         
         // 1.case - moved right or down in graph dimension (not out of them)
-        // if (oldX < newX <  width) or (oldY < newY < height)
-        if((oldPositionLowerRightCorner.x < newPositionLowerRightCorner.x
-                && newPositionLowerRightCorner.x < zoomManager.doScaleToActual(widthDefault))
-                || (oldPositionLowerRightCorner.y < newPositionLowerRightCorner.y
-                && newPositionLowerRightCorner.y < zoomManager.doScaleToActual(heightDefault))){
+        // if (oldX <= newX <=  width) and (oldY <= newY <= height)
+        if((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
+                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
+                && (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
+                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))){
             // do nothing, graph size is not changed
+            System.out.println("update size move nothingto do, case 1");
             return;
         }
         
@@ -445,12 +430,24 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         if((newPositionLowerRightCorner.x < oldPositionLowerRightCorner.x)
                 || newPositionLowerRightCorner.y < oldPositionLowerRightCorner.y){
             // size could change, the same asi in remove
-            updateSizeRemoveComponents(oldPositionLowerRightCorner);
-            //updateSizeByRecalculate();
+            System.out.println("update size move calling update size remove components, case 2");
+            //updateSizeRemoveComponents(oldPositionLowerRightCorner);
+            updateSizeByRecalculate();
             return;
         }
         
+        // 5. case 
+        if((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
+                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
+                || (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
+                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))){
+            // update like addComponent
+            System.out.println("update size move nothingto do, case 5");
+            updateSizeAddComponent(newPositionLowerRightCorner);
+            return;
+        }
         
+        System.out.println("dalsi moznost neni");
     }
     
     /**
@@ -460,7 +457,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         Point p = zoomManager.doScaleToDefault(getGraphLowerRightBound());
         this.widthDefault = p.x;
         this.heightDefault = p.y;
-        
+        //System.out.println("update size recalculate");
         doInformDrawPanelAboutSizeChange();
     }
     
@@ -473,11 +470,13 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     private void updateSizeRemoveComponents(Point removedComponentLowerRightCorner){
         // if removed component touches width with x, or height with y
         if(removedComponentLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault)
-                || removedComponentLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault)){
+                || removedComponentLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)){
+            //System.out.println("update size remove calling recalculate");
             updateSizeByRecalculate();
             return;
         }
         // if removed component do not touch width or height position, nothing to do
+        //System.out.println("update size remove nothingto do");
     }
     
     /**
@@ -495,7 +494,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             // resize height
             this.heightDefault = zoomManager.doScaleToDefault(lowerRightCorner.y);
         }
-        
+        //System.out.println("update size add");
         doInformDrawPanelAboutSizeChange();
     }
     
@@ -504,7 +503,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
      */
     private void doInformDrawPanelAboutSizeChange(){
         Dimension d = new Dimension(zoomManager.doScaleToActual(widthDefault), zoomManager.doScaleToActual(heightDefault));
-        System.out.println("new size of graph = "+d.width+","+d.height);
+        //System.out.println("new size of graph = "+d.width+","+d.height);
         drawPanel.updateSize(d);
     }
 

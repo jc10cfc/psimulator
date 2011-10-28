@@ -66,7 +66,7 @@ public class ActionOnDelete extends AbstractAction {
                 }
             }
             // unmark component
-            c.setMarked(false);
+            graph.doMarkComponentWithCables(c, false);
         }
         // remove cables from graph
         graph.removeCables(cablesToRemove);
