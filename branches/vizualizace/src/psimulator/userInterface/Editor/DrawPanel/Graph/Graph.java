@@ -341,13 +341,15 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     @Override
     public void removeHwComponent(AbstractHwComponent component) {
         components.remove(component);
-        updateSizeRemoveComponents();
+        //updateSizeRemoveComponents(component.getLowerRightCornerLocation());
+        updateSizeByRecalculate();
     }
 
     @Override
     public void removeHwComponents(List<AbstractHwComponent> componentList) {
         components.removeAll(componentList);
-        updateSizeRemoveComponents();
+        //updateSizeRemoveComponents(getLowerRightBound(components));
+        updateSizeByRecalculate();
     }
 
     @Override
@@ -442,8 +444,9 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         // 2. case - moved left or up in graph dimension (not out of them)
         if((newPositionLowerRightCorner.x < oldPositionLowerRightCorner.x)
                 || newPositionLowerRightCorner.y < oldPositionLowerRightCorner.y){
-            // size could change and we dont know how
-            updateSizeRemoveComponents();
+            // size could change, the same asi in remove
+            //updateSizeRemoveComponents(oldPositionLowerRightCorner);
+            updateSizeByRecalculate();
             return;
         }
         
@@ -451,16 +454,31 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     }
     
     /**
-     * Updates size of Graph after remove of AbstractHwComponent.
-     * We have to go through all components to determine size of it
+     * call when need to go through all components to lower right bound
      */
-    private void updateSizeRemoveComponents(){
+    private void updateSizeByRecalculate(){
         Point p = zoomManager.doScaleToDefault(getGraphLowerRightBound());
         this.widthDefault = p.x;
         this.heightDefault = p.y;
         
         doInformDrawPanelAboutSizeChange();
     }
+    
+    /**
+     * Updates size of Graph after remove of AbstractHwComponent (s).
+     * If point lies on (or beyond) width or height of graph, we have to go through all 
+     * components to determine size of it.
+     * Otherwise nothing to do.
+     
+    private void updateSizeRemoveComponents(Point removedComponentLowerRightCorner){
+        // if removed component touches width with x, or height with y
+        if(removedComponentLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault)
+                || removedComponentLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault)){
+            updateSizeByRecalculate();
+            return;
+        }
+        // if removed component do not touch width or height position, nothing to do
+    }*/
     
     /**
      * Updates size of Graph. Call after AbstractHwComponent ADD only.
@@ -556,6 +574,11 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             m.setMarked(false);
         }
         markedAbstractHwComponentsComponents.clear();
+        
+        for (Markable m : markedCables) {
+            m.setMarked(false);
+        }
+        markedCables.clear();
     }
 
     
