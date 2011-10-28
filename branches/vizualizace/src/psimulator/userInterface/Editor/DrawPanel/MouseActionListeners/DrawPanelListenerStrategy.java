@@ -39,7 +39,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     /**
      * list for all marked components
      */
-    protected List<Markable> markedComponents = new ArrayList<Markable>();
+    //protected List<Markable> markedComponents = new ArrayList<Markable>();
 
     public DrawPanelListenerStrategy(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, 
             MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
@@ -117,7 +117,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
             return;
         }
         
-        doMarkHwComponentAndItsCables(true,clickedComponent);
+        //doMarkHwComponentAndItsCables(true,clickedComponent);
         
         
         PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(clickedComponent, drawPanel, dataLayer);
@@ -197,7 +197,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
      * it to marked components.
      * @param marked True if mark, false if unmark.
      * @param component Component that needs to be marked.
-     */
+     
     protected void doMarkHwComponentAndItsCables(boolean marked, Markable component) {
         // if component is isntance of AbstractHwComponent
         if (component instanceof AbstractHwComponent) {
@@ -235,5 +235,5 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
             }
 
         }
-    }
+    }*/
 }

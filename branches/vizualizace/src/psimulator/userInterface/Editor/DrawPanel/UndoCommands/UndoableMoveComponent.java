@@ -34,7 +34,7 @@ public class UndoableMoveComponent extends AbstractUndoableEdit {
     public void undo() {
       super.undo();
       
-      graph.changePositionOfAbstractHwComponents(components, offsetInDefaultZoom, false);
+      graph.doChangePositionOfAbstractHwComponents(components, offsetInDefaultZoom, false);
       
       /*
       for(AbstractHwComponent component : components){
@@ -50,7 +50,7 @@ public class UndoableMoveComponent extends AbstractUndoableEdit {
     public void redo() {
       super.redo();
       
-      graph.changePositionOfAbstractHwComponents(components, offsetInDefaultZoom, true);
+      graph.doChangePositionOfAbstractHwComponents(components, offsetInDefaultZoom, true);
       
       /*
       for(AbstractHwComponent component : components){

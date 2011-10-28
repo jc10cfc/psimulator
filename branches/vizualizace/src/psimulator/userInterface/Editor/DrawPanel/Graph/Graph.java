@@ -15,6 +15,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
+import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelSizeChangeInnerInterface;
 import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
 
@@ -26,8 +27,10 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
     private List<AbstractHwComponent> components = new ArrayList<AbstractHwComponent>();
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
-    private List<AbstractComponent> markedCables = new ArrayList<AbstractComponent>();
-    private List<AbstractComponent> markedComponents = new ArrayList<AbstractComponent>();
+    
+    private List<Cable> markedCables = new ArrayList<Cable>();
+    private List<AbstractHwComponent> markedAbstractHwComponentsComponents = new ArrayList<AbstractHwComponent>();
+    
     private Grid grid;
     private int widthDefault;
     private int heightDefault;
@@ -63,6 +66,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         // DRAW cables
+        /*
         markedCables.clear();
         for (AbstractComponent c : getBundlesOfCables()) {
             if (!c.isMarked()) {
@@ -75,9 +79,8 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
         for (AbstractComponent c : markedCables) {
             c.paint(g2);
-        }
-
-
+        }*/
+        /*
         // DRAW HWcomponents
         markedComponents.clear();
         for (AbstractComponent c : getHwComponents()) {
@@ -87,8 +90,32 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
                 markedComponents.add(c);
             }
         }
+        
         for (AbstractComponent c : markedComponents) {
             c.paint(g2);
+        }*/
+        
+        // DRAW cables
+        for (AbstractComponent c : getBundlesOfCables()) {
+            if (!c.isMarked()) {
+                c.paint(g2);
+            }
+        }
+        
+        for (AbstractComponent c : markedCables) {
+            c.paint(g2); 
+        }
+        
+
+        // DRAW HWcomponents
+        for (AbstractComponent c : getHwComponents()) {
+            if (!c.isMarked()) {
+                c.paint(g2);
+            }
+        }
+        
+        for (AbstractComponent c : markedAbstractHwComponentsComponents) {
+            c.paint(g2); 
         }
 
 
@@ -271,8 +298,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
      * @param components to look in
      * @return LowerRight bound point
      */
-    @Override
-    public Point getLowerRightBound(List<AbstractHwComponent> components) {
+    private Point getLowerRightBound(List<AbstractHwComponent> components) {
         Point p = new Point(0, 0);
 
         for (AbstractHwComponent c : components) {
@@ -290,8 +316,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
      * Gets lower right bound point from all graph components
      * @return LowerRight bound point
      */
-    @Override
-    public Point getGraphLowerRightBound() {
+    private Point getGraphLowerRightBound() {
         return getLowerRightBound(components);
     }
 
@@ -352,7 +377,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
 
     @Override
-    public void changePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive) {
+    public void doChangePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive) {
         // get old position
         Point oldPosition = component.getLowerRightCornerLocation();
         // change position
@@ -364,7 +389,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     }
     
     @Override
-    public void changePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive) {
+    public void doChangePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive) {
         // get old lowerRightCorner of all components
         Point oldPosition = getLowerRightBound(components);
         // change position of all components
@@ -419,6 +444,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
                 || newPositionLowerRightCorner.y < oldPositionLowerRightCorner.y){
             // size could change and we dont know how
             updateSizeRemoveComponents();
+            return;
         }
         
         
@@ -462,5 +488,85 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         Dimension d = new Dimension(zoomManager.doScaleToActual(widthDefault), zoomManager.doScaleToActual(heightDefault));
         System.out.println("new size of graph = "+d.width+","+d.height);
         drawPanel.updateSize(d);
+    }
+
+    
+// ============= MARKING =========    
+    
+    /**
+     * If component is cable, then mark or unmark it and add/remove it to marked components.
+     * If component is AbstractHwComponent, than mark/unmark it and its all cables and add/remove
+     * it to marked components.
+     * @param marked True if mark, false if unmark.
+     * @param component Component that needs to be marked.
+     */
+    @Override
+    public void doMarkComponentWithCables(Markable component, boolean marked) {
+        // if component is isntance of AbstractHwComponent
+        if (component instanceof AbstractHwComponent) {
+            component.setMarked(marked);
+            if (marked) {
+                //markedComponents.add(component);
+                markedAbstractHwComponentsComponents.add((AbstractHwComponent)component);
+            } else {
+                //markedComponents.remove(component);
+                markedAbstractHwComponentsComponents.remove((AbstractHwComponent)component);
+            }
+
+            // set marked to all its cables
+            List<BundleOfCables> bundle = ((AbstractHwComponent) component).getBundleOfCableses();
+
+            for (BundleOfCables boc : bundle) {
+                for (Cable c : boc.getCables()) {
+                    if (marked) {
+                        c.setMarked(marked);
+                        //markedComponents.add(c);
+                        markedCables.add(c);
+                    } else {
+                        // if both ends of calbe not marked, than unmark cable
+                        if (!boc.getComponent1().isMarked() && !boc.getComponent2().isMarked()) {
+                            c.setMarked(marked);
+                            //markedComponents.remove(c);
+                            markedCables.remove(c);
+                        }
+                    }
+                }
+            }
+
+        } else { // component is cable
+            component.setMarked(marked);
+            if (marked) {
+                //markedComponents.add(component);
+                markedCables.add((Cable)component);
+            } else {
+                //markedComponents.remove(component);
+                markedCables.remove((Cable)component);
+            }
+
+        }
+    }
+
+    /**
+     * sets all Markable components in markedComponents to marked(false) and
+     * clears markedComponents list
+     */
+    @Override
+    public void doUnmarkAllComponents() {
+        for (Markable m : markedAbstractHwComponentsComponents) {
+            m.setMarked(false);
+        }
+        markedAbstractHwComponentsComponents.clear();
+    }
+
+    
+    @Override
+    public int getMarkedAbstractHWComponentsCount() {
+        int count = 0;
+        for (Markable m : markedAbstractHwComponentsComponents) {
+            if (m instanceof AbstractHwComponent) {
+                count++;
+            }
+        }
+        return count;
     }
 }
