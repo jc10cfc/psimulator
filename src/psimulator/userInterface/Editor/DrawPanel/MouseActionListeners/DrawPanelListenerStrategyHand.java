@@ -56,7 +56,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void deInitialize() {
-        setMarkedComponentsUnmarked();
+        graph.doUnmarkAllComponents();
         drawPanel.repaint();
     }
 
@@ -88,7 +88,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 // do nothing
             } else {
                 // unmark all marked components and clear marked components
-                setMarkedComponentsUnmarked();
+                graph.doUnmarkAllComponents();
                 drawPanel.repaint();
             }
             // end
@@ -102,10 +102,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // if component marked, remove from marked components
             if (clickedComponent.isMarked()) {
                 //markedComponents.remove(clickedComponent);
-                doMarkHwComponentAndItsCables(false, clickedComponent);
+                graph.doMarkComponentWithCables(clickedComponent, false);
             } else {
                 // if not marked, add to marked components
-                doMarkHwComponentAndItsCables(true, clickedComponent);
+                graph.doMarkComponentWithCables(clickedComponent, true);
             }
             //repaint
             drawPanel.repaint();
@@ -117,19 +117,20 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // if is clicked component marked 
         if (clickedComponent.isMarked()) {
             // if there are more marked components, mark only clicked one
-            if (getMarkedHwComponentsCount() > 1) {
-                setMarkedComponentsUnmarked();
-                doMarkHwComponentAndItsCables(true, clickedComponent);
+            if (graph.getMarkedAbstractHWComponentsCount() > 1) {
+                graph.doUnmarkAllComponents();
+                graph.doMarkComponentWithCables(clickedComponent, true);
             } else { // if only one marked component remove marking 
                 // remove from marked components and unmark it
-                doMarkHwComponentAndItsCables(false, clickedComponent);
+                graph.doMarkComponentWithCables(clickedComponent, false);
             }
         } else {
             // if clicked component not marked
             // unmark all components
-            setMarkedComponentsUnmarked();
+            graph.doUnmarkAllComponents();
             // set clicked component marked and add to marked components
-            doMarkHwComponentAndItsCables(true, clickedComponent);
+            graph.doMarkComponentWithCables(clickedComponent, true);
+            
         }
         //repaint
         drawPanel.repaint();
@@ -226,8 +227,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // --- DRAGGING components-----
         // if are marked other components than dragged, mark only the dragged component (if ctrl not down)
         if (!e.isControlDown() && draggedComponents.size() == 1 && !draggedComponents.get(0).isMarked()) {
-            setMarkedComponentsUnmarked();
-            doMarkHwComponentAndItsCables(true, draggedComponents.get(0));
+            graph.doUnmarkAllComponents();
+            graph.doMarkComponentWithCables(draggedComponents.get(0), true);
         }
 
 
@@ -256,9 +257,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         // change position of all components
-        for (AbstractHwComponent component : draggedComponents) {
-            component.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), true);
-        }
+        graph.doChangePositionOfAbstractHwComponents(draggedComponents, zoomManager.doScaleToDefault(differenceInActualZoom), true);
+                
 
         drawPanel.repaint();
     }
@@ -284,9 +284,6 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 undoManager.undoableEditHappened(new UndoableEditEvent(this,
                         new UndoableMoveComponent(graph, draggedComponents, dim)));
 
-                // inform drawPanel about position change
-                //drawPanel.updateSize(graph.getLowerRightBound(draggedComponents));
-
                 // update Undo and Redo buttons
                 mainWindow.updateUndoRedoButtons();
 
@@ -294,8 +291,6 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 System.out.println("Original default loc: x="+originalDefaultZoomLocation.x+", y="+originalDefaultZoomLocation.y+". "
                 + "New default loc: x="+newDefaultZoomLocation.x +", y="+newDefaultZoomLocation.y+".");*/
             }
-
-            //drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
 
             draggedComponents = null;
             return;
@@ -316,12 +311,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
-        /*for (Cable c : graph.getCables()) {
-        if (c.intersects(r)) {
-        drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return;
-        }
-        }*/
+        
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
             if (boc.intersects(r)) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -330,7 +320,6 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
     }
 
     /**
@@ -339,81 +328,14 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      */
     private void doMarkHwComponentsAndItsCablesInRectangle(Rectangle rectangle) {
         // set all components unmarked
-        setMarkedComponentsUnmarked();
+        graph.doUnmarkAllComponents();
 
         // mark only the intersecting components
         for (AbstractHwComponent component : graph.getHwComponents()) {
             if (component.intersects(rectangle)) {
-                doMarkHwComponentAndItsCables(true, component);
+                graph.doMarkComponentWithCables(component, true);
             }
         }
     }
 
-    /**
-     * If component is cable, then mark or unmark it and add/remove it to marked components.
-     * If component is AbstractHwComponent, than mark/unmark it and its all cables and add/remove
-     * it to marked components.
-     * @param marked True if mark, false if unmark.
-     * @param component Component that needs to be marked.
-     
-    private void doMarkHwComponentAndItsCables(boolean marked, Markable component) {
-        // if component is isntance of AbstractHwComponent
-        if (component instanceof AbstractHwComponent) {
-            component.setMarked(marked);
-            if (marked) {
-                markedComponents.add(component);
-            } else {
-                markedComponents.remove(component);
-            }
-
-            // set marked to all its cables
-            List<BundleOfCables> bundlesOfCables = ((AbstractHwComponent) component).getBundleOfCableses();
-
-            for (BundleOfCables boc : bundlesOfCables) {
-                for (Cable c : boc.getCables()) {
-                    if (marked) {
-                        c.setMarked(marked);
-                        markedComponents.add(c);
-                    } else {
-                        // if both ends of calbe not marked, than unmark cable
-                        if (!boc.getComponent1().isMarked() && !boc.getComponent2().isMarked()) {
-                            c.setMarked(marked);
-                            markedComponents.remove(c);
-                        }
-                    }
-                }
-            }
-
-        } else {
-            // component is cable
-            component.setMarked(marked);
-            if (marked) {
-                markedComponents.add(component);
-            } else {
-                markedComponents.remove(component);
-            }
-
-        }
-    }*/
-
-    /**
-     * sets all Markable components in markedComponents to marked(false) and
-     * clears markedComponents list
-     */
-    private void setMarkedComponentsUnmarked() {
-        for (Markable m : markedComponents) {
-            m.setMarked(false);
-        }
-        markedComponents.clear();
-    }
-
-    private int getMarkedHwComponentsCount() {
-        int count = 0;
-        for (Markable m : markedComponents) {
-            if (m instanceof AbstractHwComponent) {
-                count++;
-            }
-        }
-        return count;
-    }
 }

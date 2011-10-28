@@ -26,7 +26,7 @@ public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
 
    
         for (AbstractHwComponent component : map.keySet()) {
-            graph.changePositionOfAbstractHwComponent(component, map.get(component), true);
+            graph.doChangePositionOfAbstractHwComponent(component, map.get(component), true);
         }
         
         /*
@@ -43,7 +43,7 @@ public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
         super.redo();
 
         for (AbstractHwComponent component : map.keySet()) {
-            graph.changePositionOfAbstractHwComponent(component, map.get(component), false);
+            graph.doChangePositionOfAbstractHwComponent(component, map.get(component), false);
         }
         
         /*

@@ -6,6 +6,7 @@ import java.util.List;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
+import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 
 /**
  *
@@ -16,13 +17,20 @@ public interface GraphOuterInterface {
     public int getWidth();
     public int getHeight();
     
-    public void changePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive);
-    public void changePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive);
+    public void doChangePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive);
+    public void doChangePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive);
     
+    // marking
+    
+    public void doMarkComponentWithCables(Markable component, boolean marked);
+    public void doUnmarkAllComponents();
+    public int getMarkedAbstractHWComponentsCount();
+    // end marking
+   
     public List<AbstractHwComponent> getMarkedHwComponentsCopy();
     public List<Cable> getMarkedCablesCopy();
-    public Point getGraphLowerRightBound();
-    public Point getLowerRightBound(List<AbstractHwComponent> components);
+    //public Point getGraphLowerRightBound();
+    //public Point getLowerRightBound(List<AbstractHwComponent> components);
     public Point getUpperLeftBound(List<AbstractHwComponent> components);
     public List<AbstractHwComponent> getHwComponents();
     public List<BundleOfCables> getBundlesOfCables();
