@@ -356,7 +356,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     @Override
     public boolean canUndo() {
-        return undoManager.canRedo();
+        return undoManager.canUndo();
     }
 
     @Override
@@ -404,38 +404,18 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         zoomManager.addObserver(obsrvr);
     }
     
-// END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
-    
-}
-
-
-
-
-
-    /**
-     * Updates size of draw panel after graph change
-     
-    public void updateSizeToFitComponents() {
-        // find max X and max Y point in components
-        int maxX = 0;
-        int maxY = 0;
-
-        for (AbstractHwComponent c : graph.getHwComponents()) {
-            Point p = c.getLowerRightCornerLocation();
-            if (p.x > maxX) {
-                maxX = p.x;
-            }
-            if (p.y > maxY) {
-                maxY = p.y;
-            }
-            //System.out.println("maxx = "+maxX + ", maxy = "+maxY);
-        }
-
-        // validate if new size is not smaller than defaultZoomAreaMin
-        if (zoomManager.doScaleToDefault(maxX) < defaultZoomAreaMin.getWidth()
-                && zoomManager.doScaleToDefault(maxY) < defaultZoomAreaMin.getHeight()) {
+    @Override
+    public void doFitToGraphSize() {
+        
+        int graphWidthActual = graph.getWidth();
+        int graphHeightActual = graph.getHeight();
+                
+        
+        // validate if new size is smaller than defaultZoomAreaMin
+        if (zoomManager.doScaleToDefault(graphWidthActual) < defaultZoomAreaMin.getWidth()
+                && zoomManager.doScaleToDefault(graphHeightActual) < defaultZoomAreaMin.getHeight()) {
             // new size is smaller than defaultZoomAreaMin
-            // set default zoom to default zoom min
+            // set defaultZoomArea to defaultZoomAreaMin
             defaultZoomArea.setSize(defaultZoomAreaMin.width, defaultZoomAreaMin.height);
 
             // set area according to defaultZoomArea
@@ -443,7 +423,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                     zoomManager.doScaleToActual(defaultZoomArea.height));
         } else {
             // update area size
-            actualZoomArea.setSize(maxX, maxY);
+            actualZoomArea.setSize(graphWidthActual, graphHeightActual);
             // update default zoom size
             defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
                     zoomManager.doScaleToDefault(actualZoomArea.height));
@@ -454,4 +434,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         // let scrool pane in editor know about the change
         this.revalidate();
-    }*/
+    }
+    
+// END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+   
+}
+

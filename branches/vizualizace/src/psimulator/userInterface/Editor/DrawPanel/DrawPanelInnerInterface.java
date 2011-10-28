@@ -27,5 +27,5 @@ public interface DrawPanelInnerInterface {
     public void setLineInProgras(boolean lineInProgres, Point start, Point end);
     public void setTransparetnRectangleInProgress(boolean rectangleInProgress, Rectangle rectangle);
     
-   
+    public abstract void doFitToGraphSize();
 }
