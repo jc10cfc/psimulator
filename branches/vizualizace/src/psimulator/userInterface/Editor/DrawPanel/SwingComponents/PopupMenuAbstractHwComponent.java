@@ -6,7 +6,7 @@ import javax.swing.JPopupMenu;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Enums.ComponentAction;
+import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 
 /**
  *
@@ -32,7 +32,7 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu{
         jItemComponentProperties = new JMenuItem(dataLayer.getString("PROPERTIES"));
         jItemDeleteComponent = new JMenuItem(dataLayer.getString("DELETE"));
         
-        jItemDeleteComponent.addActionListener(drawPanel.getAbstractAction(ComponentAction.DELETE));
+        jItemDeleteComponent.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.DELETE));
         
         
         this.add(jItemComponentProperties);

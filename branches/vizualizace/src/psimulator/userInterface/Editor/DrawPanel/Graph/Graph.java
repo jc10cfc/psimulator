@@ -7,11 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JComponent;
+import psimulator.userInterface.Editor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
@@ -58,10 +60,10 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
 
         // GRID PAINT
-        /*
+        
         g2.setColor(Color.gray);
-        grid.paintComponent(g);
-        g2.setColor(Color.black);*/
+        grid.paintComponent(g2);
+        g2.setColor(Color.black);
         
         g2.setColor(Color.gray);
         g2.drawLine(getWidth(), 0, getWidth(), getHeight());
@@ -126,7 +128,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
      * Retruns new ArrayList with marked cables
      * @return 
      */
-    @Override
     public List<Cable> getMarkedCablesCopy() {
         List<Cable> temp = new ArrayList<Cable>();
 
@@ -356,157 +357,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     public int getY() {
         return 0;
     }
-
-
-    @Override
-    public void doChangePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive) {
-        // get old position
-        Point oldPosition = component.getLowerRightCornerLocation();
-        // change position
-        component.doChangePosition(offsetInDefaultZoom, positive);
-        // get new position
-        Point newPosition = component.getLowerRightCornerLocation();
-        // update size of graph
-        updateSizeMovePosition(oldPosition, newPosition);
-        System.out.println("tady1: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
-    }
-    
-    @Override
-    public void doChangePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive) {
-        // get old lowerRightCorner of all components
-        Point oldPosition = getLowerRightBound(components);
-        // change position of all components
-        for(AbstractHwComponent component : components){
-            // change position of component
-            component.doChangePosition(offsetInDefaultZoom, positive);
-        }
-        // get new lowerRightCorner of all components
-        Point newPosition = getLowerRightBound(components);
-        // update size of graph
-        updateSizeMovePosition(oldPosition, newPosition);
-        System.out.println("tady2: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
-    }
-    
-    /**
-     * Updates graph's dimension. Call after AbstractHwComponent move.
-     * @param oldPositionLowerRightCorner
-     * @param newPositionLowerRightCorner 
-     */
-    private void updateSizeMovePosition(Point oldPositionLowerRightCorner, 
-            Point newPositionLowerRightCorner){
-        
-        // 4. case - position not changed
-        // if nothing changed
-        if(oldPositionLowerRightCorner.x == newPositionLowerRightCorner.x
-                && oldPositionLowerRightCorner.y == newPositionLowerRightCorner.y){
-            // do nothing
-            System.out.println("update size move nothingto do, sizes the same, case 4");
-            return;
-        }
-        
-        // 3.case - moved out of graph dimension
-        // if x or y is out of current width or height
-        if((newPositionLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault))
-                && newPositionLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)){
-            // update like addComponent
-            System.out.println("update size move calling updateSizeAddComponent, case 3");
-            updateSizeAddComponent(newPositionLowerRightCorner);
-            return;
-        }
-        
-        
-        // 1.case - moved right or down in graph dimension (not out of them)
-        // if (oldX <= newX <=  width) and (oldY <= newY <= height)
-        if((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
-                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
-                && (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
-                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))){
-            // do nothing, graph size is not changed
-            System.out.println("update size move nothingto do, case 1");
-            return;
-        }
-        
-        // 2. case - moved left or up in graph dimension (not out of them)
-        if((newPositionLowerRightCorner.x < oldPositionLowerRightCorner.x)
-                || newPositionLowerRightCorner.y < oldPositionLowerRightCorner.y){
-            // size could change, the same asi in remove
-            System.out.println("update size move calling update size remove components, case 2");
-            //updateSizeRemoveComponents(oldPositionLowerRightCorner);
-            updateSizeByRecalculate();
-            return;
-        }
-        
-        // 5. case 
-        if((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
-                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
-                || (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
-                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))){
-            // update like addComponent
-            System.out.println("update size move nothingto do, case 5");
-            updateSizeAddComponent(newPositionLowerRightCorner);
-            return;
-        }
-        
-        System.out.println("dalsi moznost neni");
-    }
-    
-    /**
-     * call when need to go through all components to lower right bound
-     */
-    private void updateSizeByRecalculate(){
-        Point p = zoomManager.doScaleToDefault(getGraphLowerRightBound());
-        this.widthDefault = p.x;
-        this.heightDefault = p.y;
-        //System.out.println("update size recalculate");
-        doInformDrawPanelAboutSizeChange();
-    }
-    
-    /**
-     * Updates size of Graph after remove of AbstractHwComponent (s).
-     * If point lies on (or beyond) width or height of graph, we have to go through all 
-     * components to determine size of it.
-     * Otherwise nothing to do.
-     */
-    private void updateSizeRemoveComponents(Point removedComponentLowerRightCorner){
-        // if removed component touches width with x, or height with y
-        if(removedComponentLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault)
-                || removedComponentLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)){
-            //System.out.println("update size remove calling recalculate");
-            updateSizeByRecalculate();
-            return;
-        }
-        // if removed component do not touch width or height position, nothing to do
-        //System.out.println("update size remove nothingto do");
-    }
-    
-    /**
-     * Updates size of Graph. Call after AbstractHwComponent ADD only.
-     * @param lowerRightCorner LowerRightCorner in ActualZoom
-     */
-    private void updateSizeAddComponent(Point lowerRightCorner) {
-        // if width changed
-        if ( lowerRightCorner.x > zoomManager.doScaleToActual(widthDefault)){
-            // resize width
-            this.widthDefault = zoomManager.doScaleToDefault(lowerRightCorner.x);
-        }
-        // if height changed
-        if(lowerRightCorner.y > zoomManager.doScaleToActual(heightDefault)){
-            // resize height
-            this.heightDefault = zoomManager.doScaleToDefault(lowerRightCorner.y);
-        }
-        //System.out.println("update size add");
-        doInformDrawPanelAboutSizeChange();
-    }
-    
-    /**
-     * Informs drawPanel about change of graph size
-     */
-    private void doInformDrawPanelAboutSizeChange(){
-        Dimension d = new Dimension(zoomManager.doScaleToActual(widthDefault), zoomManager.doScaleToActual(heightDefault));
-        //System.out.println("new size of graph = "+d.width+","+d.height);
-        drawPanel.updateSize(d);
-    }
-
     
 // ============= MARKING =========    
     
@@ -591,4 +441,222 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         }
         return count;
     }
+    
+    
+// ============== CHANGE POSITION AND RESIZE =======================
+    
+    
+    @Override
+    public void doChangePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive) {
+        // get old position
+        Point oldPosition = component.getLowerRightCornerLocation();
+        // change position
+        component.doChangePosition(offsetInDefaultZoom, positive);
+        // get new position
+        Point newPosition = component.getLowerRightCornerLocation();
+        // update size of graph
+        updateSizeMovePosition(oldPosition, newPosition);
+        //System.out.println("tady1: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
+    }
+    
+    @Override
+    public void doChangePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive) {
+        // get old lowerRightCorner of all components
+        Point oldPosition = getLowerRightBound(components);
+        // change position of all components
+        for(AbstractHwComponent component : components){
+            // change position of component
+            component.doChangePosition(offsetInDefaultZoom, positive);
+        }
+        // get new lowerRightCorner of all components
+        Point newPosition = getLowerRightBound(components);
+        // update size of graph
+        updateSizeMovePosition(oldPosition, newPosition);
+        //System.out.println("tady2: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
+    }
+    
+    /**
+     * Updates graph's dimension. Call after AbstractHwComponent move.
+     * @param oldPositionLowerRightCorner
+     * @param newPositionLowerRightCorner 
+     */
+    private void updateSizeMovePosition(Point oldPositionLowerRightCorner, 
+            Point newPositionLowerRightCorner){
+        
+        // 4. case - position not changed
+        // if nothing changed
+        if(oldPositionLowerRightCorner.x == newPositionLowerRightCorner.x
+                && oldPositionLowerRightCorner.y == newPositionLowerRightCorner.y){
+            // do nothing
+            //System.out.println("update size move nothingto do, sizes the same, case 4");
+            return;
+        }
+        
+        // 3.case - moved out of graph dimension
+        // if x or y is out of current width or height
+        if((newPositionLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault))
+                && newPositionLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)){
+            // update like addComponent
+            //System.out.println("update size move calling updateSizeAddComponent, case 3");
+            updateSizeAddComponent(newPositionLowerRightCorner);
+            return;
+        }
+        
+        
+        // 1.case - moved right or down in graph dimension (not out of them)
+        // if (oldX <= newX <=  width) and (oldY <= newY <= height)
+        if((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
+                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
+                && (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
+                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))){
+            // do nothing, graph size is not changed
+            //System.out.println("update size move nothingto do, case 1");
+            return;
+        }
+        
+        // 2. case - moved left or up in graph dimension (not out of them)
+        if((newPositionLowerRightCorner.x < oldPositionLowerRightCorner.x)
+                || newPositionLowerRightCorner.y < oldPositionLowerRightCorner.y){
+            // size could change, the same asi in remove
+            //System.out.println("update size move calling update size remove components, case 2");
+            //updateSizeRemoveComponents(oldPositionLowerRightCorner);
+            updateSizeByRecalculate();
+            return;
+        }
+        
+        // 5. case 
+        if((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
+                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
+                || (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
+                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))){
+            // update like addComponent
+            //System.out.println("update size move nothingto do, case 5");
+            updateSizeAddComponent(newPositionLowerRightCorner);
+            return;
+        }
+        
+        //System.out.println("dalsi moznost neni");
+    }
+    
+    /**
+     * call when need to go through all components to lower right bound
+     */
+    private void updateSizeByRecalculate(){
+        Point p = zoomManager.doScaleToDefault(getGraphLowerRightBound());
+        this.widthDefault = p.x;
+        this.heightDefault = p.y;
+        //System.out.println("update size recalculate");
+        doInformDrawPanelAboutSizeChange();
+    }
+    
+    /**
+     * Updates size of Graph after remove of AbstractHwComponent (s).
+     * If point lies on (or beyond) width or height of graph, we have to go through all 
+     * components to determine size of it.
+     * Otherwise nothing to do.
+     
+    private void updateSizeRemoveComponents(Point removedComponentLowerRightCorner){
+        // if removed component touches width with x, or height with y
+        if(removedComponentLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault)
+                || removedComponentLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)){
+            //System.out.println("update size remove calling recalculate");
+            updateSizeByRecalculate();
+            return;
+        }
+        // if removed component do not touch width or height position, nothing to do
+        //System.out.println("update size remove nothingto do");
+    }*/
+    
+    /**
+     * Updates size of Graph. Call after AbstractHwComponent ADD only.
+     * @param lowerRightCorner LowerRightCorner in ActualZoom
+     */
+    private void updateSizeAddComponent(Point lowerRightCorner) {
+        // if width changed
+        if ( lowerRightCorner.x > zoomManager.doScaleToActual(widthDefault)){
+            // resize width
+            this.widthDefault = zoomManager.doScaleToDefault(lowerRightCorner.x);
+        }
+        // if height changed
+        if(lowerRightCorner.y > zoomManager.doScaleToActual(heightDefault)){
+            // resize height
+            this.heightDefault = zoomManager.doScaleToDefault(lowerRightCorner.y);
+        }
+        //System.out.println("update size add");
+        doInformDrawPanelAboutSizeChange();
+    }
+    
+    /**
+     * Informs drawPanel about change of graph size
+     */
+    private void doInformDrawPanelAboutSizeChange(){
+        Dimension d = new Dimension(zoomManager.doScaleToActual(widthDefault), zoomManager.doScaleToActual(heightDefault));
+        //System.out.println("new size of graph = "+d.width+","+d.height);
+        drawPanel.updateSize(d);
+    }
+
+    @Override
+    public HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid() {
+        HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
+
+        for (AbstractHwComponent c : this.getHwComponents()) {
+            Point originalLocation = c.getCenterLocation();
+            Point newLocation = grid.getNearestGridPoint(originalLocation);
+
+            Dimension differenceInActualZoom = new Dimension(originalLocation.x - newLocation.x,
+                    originalLocation.y - newLocation.y);
+            Dimension differenceInDefaultZoom = zoomManager.doScaleToDefault(differenceInActualZoom);
+
+            // if component moved, add to moved 
+            if (differenceInDefaultZoom.getWidth() != 0 || differenceInDefaultZoom.getHeight() != 0) {
+                //c.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), false);
+                this.doChangePositionOfAbstractHwComponent(c, differenceInDefaultZoom, false);
+
+                movedComponentsMap.put(c, differenceInDefaultZoom);
+            }
+
+        }
+        return movedComponentsMap;
+    }
+
+    @Override
+    public RemovedComponentsWrapper doRemoveMarkedComponents() {
+        // get all marked components
+        List<AbstractHwComponent> markedComponents = this.getMarkedHwComponentsCopy();
+
+        // put all marked cables to cables toRemove
+        List<Cable> cablesToRemove = this.getMarkedCablesCopy();
+        
+         // if there is no marked cable or component
+        if (markedComponents.isEmpty() && cablesToRemove.isEmpty()) {
+            return null;
+        }
+        
+        // for all removed components
+        for (AbstractHwComponent c : markedComponents) {
+            // all its cables add to cablesToRemove
+            for (BundleOfCables boc : c.getBundleOfCableses()) {
+                for (Cable cable : boc.getCables()) {
+                    // if collection doesnt contain, than add cable
+                    if (!cablesToRemove.contains(cable)) {
+                        cablesToRemove.add(cable);
+                    }
+                }
+            }
+            // unmark component
+            this.doMarkComponentWithCables(c, false);
+        }
+        
+        // remove cables from graph
+        this.removeCables(cablesToRemove);
+        
+        // remove marked components from graph
+        this.removeHwComponents(markedComponents);
+        
+        return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
+    }
+
+    
+    
+    
 }

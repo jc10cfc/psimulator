@@ -2,7 +2,9 @@
 package psimulator.userInterface.Editor.DrawPanel;
 
 import java.util.Observer;
+import javax.swing.AbstractAction;
 import javax.swing.JPanel;
+import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 
 /**
  *
@@ -22,5 +24,6 @@ public abstract class DrawPanelOuterInterface extends JPanel implements DrawPane
     public abstract void zoomReset();
     
     public abstract void addObserverToZoomManager(Observer obsrvr);
+    public abstract AbstractAction getAbstractAction(DrawPanelAction action);
     //public abstract void doFitToGraphSize();
 }

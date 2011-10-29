@@ -17,6 +17,7 @@ public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
     
     public UndoableAlignComponentsToGrid(GraphOuterInterface graph, HashMap<AbstractHwComponent, Dimension> map) {
         super();
+        this.graph = graph;
         this.map = map;
     }
 

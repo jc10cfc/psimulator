@@ -6,13 +6,12 @@ import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 import psimulator.userInterface.imageFactories.AwtImageFactory;
@@ -61,12 +60,7 @@ public class EditorPanel extends EditorOuterInterface implements Observer{
         // add tool bar to panel
         this.add(jToolBarEditor, BorderLayout.WEST);
 
-        // add listener for FitToSize button
-        jToolBarEditor.addToolActionFitToSizeListener(new JMenuToolFitToSizeActionListener());
-        
-        // add listener for AlignToGrid button
-        jToolBarEditor.addToolActionAlignToGridListener(new JMenuToolAlignToGridActionListener());
-        
+      
         // set default tool in ToolBar
         jToolBarEditor.setDefaultTool();
     }
@@ -75,6 +69,12 @@ public class EditorPanel extends EditorOuterInterface implements Observer{
     public void init(){
         //jPanelDraw.getZoomManager().addObserver(this);
         jPanelDraw.addObserverToZoomManager(this);
+        
+        // add listener for FitToSize button in tool bar
+        jToolBarEditor.addToolActionFitToSizeListener(jPanelDraw.getAbstractAction(DrawPanelAction.FIT_TO_SIZE));
+        
+        // add listener for AlignToGrid button in tool bar
+        jToolBarEditor.addToolActionAlignToGridListener(jPanelDraw.getAbstractAction(DrawPanelAction.ALIGN_COMPONENTS_TO_GRID));
     }
 
     /**
@@ -96,40 +96,6 @@ public class EditorPanel extends EditorOuterInterface implements Observer{
         this.revalidate();
         this.repaint();
     }
-   
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for FitToSize button
-     */
-    class JMenuToolFitToSizeActionListener implements ActionListener {
-
-        /**
-         * calls zoom operation on jPanelEditor according to actionCommand
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // update jPanelDraw size
-            //jPanelDraw.updateSizeToFitComponents();
-        }
-    }
-    
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for AlignToGrid button
-     */
-    class JMenuToolAlignToGridActionListener implements ActionListener {
-
-        /**
-         * calls zoom operation on jPanelEditor according to actionCommand
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // align components in DrawPanel
-            //jPanelDraw.alignComponentsToGrid();
-            
-        }
-    }
-    
 
     @Override
     public boolean canUndo() {

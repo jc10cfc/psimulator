@@ -4,8 +4,9 @@ package psimulator.userInterface.Editor.DrawPanel.Enums;
  *
  * @author Martin
  */
-public enum ComponentAction {
-    ALIGN_TO_GRID,
+public enum DrawPanelAction {
+    ALIGN_COMPONENTS_TO_GRID,
     DELETE,
-    PROPERTIES;
+    PROPERTIES,
+    FIT_TO_SIZE;
 }
