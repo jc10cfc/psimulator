@@ -76,9 +76,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         this.setVisible(true);
     }
 
-    /**
-     * Updates Undo and Redo APP buttons according to undo manager
-     */
     @Override
     public void updateUndoRedoButtons() {
         jMenuBar.setUndoEnabled(jEditor.canUndo());
@@ -89,9 +86,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
     }
 
-    /**
-     * Updates ZoomIn and ZoomOut APP buttons according to zoom manager
-     */
     @Override
     public void updateZoomButtons() {
         jMenuBar.setZoomInEnabled(jEditor.canZoomIn());

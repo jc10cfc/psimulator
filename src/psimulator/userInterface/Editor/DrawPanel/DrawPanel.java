@@ -94,6 +94,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         
         zoomManager.addObserver((Observer)this);
 
+        //((GraphOuterInterface)graph).doRemoveMarkedComponents()
     }
     
     /**
@@ -127,8 +128,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow, dataLayer);
         mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow, dataLayer);
     }
-    
-
 
     @Override
     public void paintComponent(Graphics g) {
@@ -157,55 +156,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
     }
 
-    /**
-     * aligns all AbstractHWcomponents in graph to grid
-     
-    public void alignComponentsToGrid() {
-
-        HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
-
-        for (AbstractHwComponent c : graph.getHwComponents()) {
-            Point originalLocation = c.getCenterLocation();
-            Point newLocation = grid.getNearestGridPoint(originalLocation);
-
-            Dimension differenceInActualZoom = new Dimension(originalLocation.x - newLocation.x,
-                    originalLocation.y - newLocation.y);
-
-            // if component moved, add to moved 
-            if (differenceInActualZoom.getWidth() != 0 || differenceInActualZoom.getHeight() != 0) {
-                c.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), false);
-
-                movedComponentsMap.put(c, differenceInActualZoom);
-            }
-
-        }
-
-        // if map not empty set undoable edit
-        if (!movedComponentsMap.isEmpty()) { 
-            // add to undo manager
-            undoManager.undoableEditHappened(new UndoableEditEvent(this,
-                    new UndoableAlignComponentsToGrid(movedComponentsMap, this)));
-            
-            // update Undo and Redo buttons
-            mainWindow.updateUndoRedoButtons();
-            
-            // update size of this
-            this.updateSize(this.getGraph().getGraphLowerRightBound());
-              
-            // repaint
-            this.repaint();
-        }else{
-            movedComponentsMap = null;
-        }
-    }*/
-
 // ========  IMPLEMENTATION OF DrawPanelSizeChangeInnerInterface ==========   
     
-    /**
-     * Updates size of panel according to parameter if dimension is bigger than actual
-     * size of drawPanel
-     * @param dimension of Graph
-     */
     @Override
     public void updateSize(Dimension dim) {
         // if nothing to resize
@@ -302,30 +254,17 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
   
 // ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
     
-    /**
-     * returns graph
-     * @return 
-     */
+    
     @Override
     public GraphOuterInterface getGraph() {
         return graph;
     }
     
-    /**
-     * Gets image factory
-     * @return 
-     */
     @Override
     public AbstractImageFactory getImageFactory() {
         return imageFactory;
     }
     
-    /**
-     * Sets that cable is being paint
-     * @param lineInProgres
-     * @param start
-     * @param end 
-     */
     @Override
     public void setLineInProgras(boolean lineInProgres, Point start, Point end) {
         this.lineInProgress = lineInProgres;
@@ -334,11 +273,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
     
     
-    /**
-     * Sets transparent rectangle that is being paint
-     * @param rectangleInProgress
-     * @param rectangle 
-     */
     @Override
     public void setTransparetnRectangleInProgress(boolean rectangleInProgress, Rectangle rectangle) {
         this.rectangleInProgress = rectangleInProgress;
@@ -350,11 +284,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
 // ============== IMPLEMENTATION OF DrawPanelOuterInterface ================
     
-    /**
-     * Gets AbstractAction corresponding to DrawPanelAction
-     * @param action
-     * @return 
-     */
     @Override
     public AbstractAction getAbstractAction(DrawPanelAction action){
         return actions.get(action);
@@ -434,9 +363,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
                     zoomManager.doScaleToDefault(actualZoomArea.height));
         }
-
-        //System.out.println("area update");
-
 
         // let scrool pane in editor know about the change
         this.revalidate();

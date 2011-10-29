@@ -103,10 +103,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         //System.out.println("marked comp="+markedAbstractHwComponentsComponents.size());
     }
 
-    /**
-     * Retruns new ArrayList with marked components
-     * @return 
-     */
     @Override
     public List<AbstractHwComponent> getMarkedHwComponentsCopy() {
         List<AbstractHwComponent> temp = new ArrayList<AbstractHwComponent>();
@@ -199,10 +195,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         bundleOfCables = null;
     }
 
-    /**
-     * adds cable to graph
-     * @param cable 
-     */
+    
     @Override
     public void addCable(Cable cable) {
         // get bundle of cables between c1 and c2
@@ -213,10 +206,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
     }
 
-    /**
-     * Adds all cables to graph
-     * @param cableList 
-     */
+    
     @Override
     public void addCables(List<Cable> cableList) {
         for (Cable c : cableList) {
@@ -243,10 +233,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         }
     }
 
-    /**
-     * Removes all cables from cableList in Graph
-     * @param cableList 
-     */
+    
     @Override
     public void removeCables(List<Cable> cableList) {
         for (Iterator<Cable> it = cableList.iterator(); it.hasNext();) {
@@ -254,11 +241,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         }
     }
 
-    /**
-     * Gets upper left bound point from all components
-     * @param components to look in
-     * @return UpperLeft bound point
-     */
     @Override
     public Point getUpperLeftBound(List<AbstractHwComponent> components) {
         Point p = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -360,13 +342,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     
 // ============= MARKING =========    
     
-    /**
-     * If component is cable, then mark or unmark it and add/remove it to marked components.
-     * If component is AbstractHwComponent, than mark/unmark it and its all cables and add/remove
-     * it to marked components.
-     * @param marked True if mark, false if unmark.
-     * @param component Component that needs to be marked.
-     */
+    
     @Override
     public void doMarkComponentWithCables(Markable component, boolean marked) {
         // if component is isntance of AbstractHwComponent
