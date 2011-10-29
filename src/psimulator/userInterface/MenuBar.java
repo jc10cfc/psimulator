@@ -48,7 +48,7 @@ public class MenuBar extends JMenuBar implements Observer {
         this.dataLayer = dataLayer;
 
         // add this MenuBar as observer to langage manager
-        dataLayer.addLanguageObserver(this);
+        dataLayer.addLanguageObserver((Observer)this);
         
         /* menu File */
         jMenuFile = new JMenu();

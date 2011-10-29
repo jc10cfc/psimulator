@@ -41,10 +41,10 @@ public final class ToolBar extends JToolBar implements Observer {
         
                 
         // add this ToolBar as observer to languageManager
-        dataLayer.addLanguageObserver(this);
+        dataLayer.addLanguageObserver((Observer)this);
         
         // add this as observer to preferences manager
-        dataLayer.addPreferencesObserver(this);
+        dataLayer.addPreferencesObserver((Observer)this);
        
         // tool bar is not possible to move
         this.setFloatable(false);

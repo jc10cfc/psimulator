@@ -4,7 +4,7 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
-import psimulator.userInterface.Editor.DrawPanel.Enums.ComponentAction;
+import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -17,7 +17,7 @@ public interface DrawPanelInnerInterface {
     // getters
     public GraphOuterInterface getGraph();
     public AbstractImageFactory getImageFactory();
-    public AbstractAction getAbstractAction(ComponentAction action);
+    public abstract AbstractAction getAbstractAction(DrawPanelAction action);
     
     // jPanel related methods
     public void setCursor(Cursor cursor);

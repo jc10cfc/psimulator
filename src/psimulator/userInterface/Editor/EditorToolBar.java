@@ -44,7 +44,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.imageFactory = imageFactory;
         
         // add this ToolBar as observer to languageManager
-        dataLayer.addLanguageObserver(this);
+        dataLayer.addLanguageObserver((Observer)this);
 
         // tool bar is not possible to move
         this.setFloatable(false);

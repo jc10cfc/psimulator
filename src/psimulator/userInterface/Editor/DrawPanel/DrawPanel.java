@@ -18,12 +18,14 @@ import javax.swing.KeyStroke;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.Editor.DrawPanel.Actions.ActionAlignComponentsToGrid;
+import psimulator.userInterface.Editor.DrawPanel.Actions.ActionFitToSize;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyAddCable;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyAddHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyHand;
 import psimulator.userInterface.Editor.DrawPanel.Actions.ActionOnDelete;
-import psimulator.userInterface.Editor.DrawPanel.Enums.ComponentAction;
+import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
@@ -61,7 +63,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     private DataLayerFacade dataLayer;
     
-    private EnumMap<ComponentAction, AbstractAction> actions;
+    private EnumMap<DrawPanelAction, AbstractAction> actions;
 
     public DrawPanel(MainWindowInnerInterface mainWindow, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
@@ -87,7 +89,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         // add key binding for delete
         mainWindow.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("DELETE"), "DELETE");
-        mainWindow.getRootPane().getActionMap().put("DELETE", getAbstractAction(ComponentAction.DELETE));
+        mainWindow.getRootPane().getActionMap().put("DELETE", getAbstractAction(DrawPanelAction.DELETE));
   
         
         zoomManager.addObserver((Observer)this);
@@ -95,19 +97,23 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
     
     /**
-     * creates all actions according to ComponentAction Enum
+     * creates all actions according to DrawPanelAction Enum
      */
     private void createAllActions(){
-        actions = new EnumMap<ComponentAction, AbstractAction>(ComponentAction.class);
+        actions = new EnumMap<DrawPanelAction, AbstractAction>(DrawPanelAction.class);
         
-        for(ComponentAction ca : ComponentAction.values()){
-            switch(ca){
-                case ALIGN_TO_GRID:
+        for(DrawPanelAction drawPanelAction : DrawPanelAction.values()){
+            switch(drawPanelAction){
+                case ALIGN_COMPONENTS_TO_GRID:
+                    actions.put(drawPanelAction, new ActionAlignComponentsToGrid(graph, undoManager, this, mainWindow));
                     break;
                 case DELETE:
-                    actions.put(ca, new ActionOnDelete(graph, undoManager, this, mainWindow));
+                    actions.put(drawPanelAction, new ActionOnDelete(graph, undoManager, this, mainWindow));
                     break;
                 case PROPERTIES:
+                    break;
+                case FIT_TO_SIZE:
+                    actions.put(drawPanelAction, new ActionFitToSize(graph, undoManager, this, mainWindow));
                     break;
             }
         }
@@ -297,16 +303,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 // ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
     
     /**
-     * Gets AbstractAction corresponding to ComponentAction
-     * @param action
-     * @return 
-     */
-    @Override
-    public AbstractAction getAbstractAction(ComponentAction action){
-        return actions.get(action);
-    }
-    
-    /**
      * returns graph
      * @return 
      */
@@ -353,6 +349,16 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     
 // ============== IMPLEMENTATION OF DrawPanelOuterInterface ================
+    
+    /**
+     * Gets AbstractAction corresponding to DrawPanelAction
+     * @param action
+     * @return 
+     */
+    @Override
+    public AbstractAction getAbstractAction(DrawPanelAction action){
+        return actions.get(action);
+    }
     
     @Override
     public boolean canUndo() {
