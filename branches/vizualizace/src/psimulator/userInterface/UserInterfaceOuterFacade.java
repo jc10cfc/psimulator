@@ -7,6 +7,9 @@ import psimulator.logicLayer.ControllerFacade;
  * @author Martin
  */
 public interface UserInterfaceOuterFacade {
-    // used by controller:
+    /**
+     * inits view and calls setVisible(true)
+     * @param controller 
+     */
     public void initView(ControllerFacade controller);
 }

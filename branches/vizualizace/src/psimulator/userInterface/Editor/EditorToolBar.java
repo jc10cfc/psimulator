@@ -55,7 +55,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-        /// new code
+        // BUTTONS
         jButtonFitToSize = new JButton();
         jButtonFitToSize.setFocusable(false);
         jButtonAlignToGrid = new JButton();
@@ -91,11 +91,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.add(jButtonAlignToGrid);
         
         
-        
-        //end new code
-
-        //toggleButtonHand.setSelected(true);
-        
+        // set texts
         setTextsToComponents();
 
         // apply background color
