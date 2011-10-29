@@ -41,12 +41,12 @@ public class LanguageLoader {
         }
         
         listOfFiles = getAllFilesInDirectory(folder);    // "./Languages"
-
+        
         Iterator<File> it = listOfFiles.iterator();
 
         while (it.hasNext()) {
             File file = it.next();
-
+            
             // load bundle from file
             ResourceBundle bundle = loadBundle(file);
             
@@ -138,7 +138,7 @@ public class LanguageLoader {
         while (it.hasNext()) {
             File file = it.next();
 
-            if (file.isFile() && file.canRead() && file.getName().endsWith(".properties") && file.length()<=1000L) {
+            if (file.isFile() && file.canRead() && file.getName().endsWith(".properties") && file.length()<=10000L) {
                 //System.out.println(file.length());
             } else {
                 it.remove();

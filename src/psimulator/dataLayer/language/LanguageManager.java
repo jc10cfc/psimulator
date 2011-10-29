@@ -47,8 +47,6 @@ public class LanguageManager extends Observable implements SaveableInterface {
         // load all resource bundles avaiable in Languages directory
         bundles = languageLoader.getAllResouceBundles("./Languages", currentResouceBundle);
 
-        System.out.println("bundles size"+ bundles.size());
-        
         // add english and czech to hashMap
         bundles.put(CZECH, czechBundle);
         bundles.put(ENGLISH, englishBundle);
