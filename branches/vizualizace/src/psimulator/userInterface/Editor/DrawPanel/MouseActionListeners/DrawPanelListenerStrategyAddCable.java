@@ -159,6 +159,11 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         }
     }
    
+    @Override
+    public void mousePressedRight(MouseEvent e) {
+        mousePressedLeft(e);
+    }
+    
     /**
      * sets chosen interface to component accornig to actual cable making progres.
      * @param ethInterface 

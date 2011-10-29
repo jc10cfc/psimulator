@@ -59,33 +59,34 @@ public class MenuToggleButton extends JToggleButton {
                     public void mousePressed(MouseEvent e) {
                         MenuToggleButton b = (MenuToggleButton) e.getSource();
 
+                        // uncomment next line for LEFT CLICK CHOOSE, RIGHT CLICK POPUP
                         if (SwingUtilities.isRightMouseButton(e)) {
                             if (pop != null) {
                                 // show popup menu
                                 pop.show(b, b.getWidth(), 0);
                             }
+                        // uncomment next line for LEFT CLICK CHOOSE, RIGHT CLICK POPUP   
                         }
                     }
                 });
-            }
+            }// else { // comment else for LEFT CLICK CHOOSE, RIGHT CLICK POPUP
+                // create and add action
+                Action a = new AbstractAction() {
 
-            // create and add action
-            Action a = new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
 
-                @Override
-                public void actionPerformed(ActionEvent ae) {
+                        MenuToggleButton b = (MenuToggleButton) ae.getSource();
 
-                    MenuToggleButton b = (MenuToggleButton) ae.getSource();
-
-                    // if tool enabled
-                    if (b.isSelected()) {
-                        // enable current tool
-                        setCurrentToolEnabled();
+                        // if tool enabled
+                        if (b.isSelected()) {
+                            // enable current tool
+                            setCurrentToolEnabled();
+                        }
                     }
-                }
-            };
-            //a.putValue(Action.SMALL_ICON, icon);
-            setAction(a);
+                };
+                setAction(a);
+            //}// comment for LEFT CLICK CHOOSE, RIGHT CLICK POPUP
 
             // set first tool as current tool
             setCurrentTool(tools.get(0));
@@ -118,12 +119,11 @@ public class MenuToggleButton extends JToggleButton {
     public void setCurrentToolEnabled() {
         currentTool.setEnabled();
     }
-    
-    public AbstractTool getSelectedTool(){
-       return currentTool;
+
+    public AbstractTool getSelectedTool() {
+        return currentTool;
     }
 
-    
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -154,10 +154,10 @@ class MenuArrowIcon implements Icon {
 
         int[] xPoints = {6, 2, 6};
         int[] yPoints = {2, 6, 6};
-        
+
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        
+
         g2.drawPolygon(xPoints, yPoints, 3);
         g2.fillPolygon(xPoints, yPoints, 3);
 

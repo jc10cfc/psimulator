@@ -88,13 +88,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         createAllActions();
 
         // add key binding for delete
-        mainWindow.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("DELETE"), "DELETE");
+        mainWindow.getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("Delete"), "DELETE");
         mainWindow.getRootPane().getActionMap().put("DELETE", getAbstractAction(DrawPanelAction.DELETE));
   
         
         zoomManager.addObserver((Observer)this);
 
-        //((GraphOuterInterface)graph).doRemoveMarkedComponents()
     }
     
     /**
