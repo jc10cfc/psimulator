@@ -653,6 +653,9 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         // remove marked components from graph
         this.removeHwComponents(markedComponents);
         
+        this.markedAbstractHwComponentsComponents.clear();
+        this.markedCables.clear();
+        
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
     }
 

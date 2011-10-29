@@ -43,5 +43,7 @@ public class ActionOnDelete extends AbstractDrawPanelAction {
        
         // reapaint draw panel
         drawPanel.repaint();
+        
+        //mainWindow.getRootPane().revalidate();
     }
 }
