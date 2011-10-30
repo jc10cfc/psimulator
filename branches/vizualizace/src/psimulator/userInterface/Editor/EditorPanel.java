@@ -20,7 +20,7 @@ import psimulator.userInterface.imageFactories.AwtImageFactory;
  *
  * @author Martin
  */
-public class EditorPanel extends EditorOuterInterface implements Observer{
+public class EditorPanel extends EditorOuterInterface implements EditorInnerInterface, Observer{
 
     private EditorToolBar jToolBarEditor;
     //private DrawPanel jPanelDraw;
@@ -42,7 +42,7 @@ public class EditorPanel extends EditorOuterInterface implements Observer{
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
         // create draw panel
-        jPanelDraw = new DrawPanel(mainWindow, imageFactory, dataLayer);
+        jPanelDraw = new DrawPanel(mainWindow, (EditorInnerInterface) this, imageFactory, dataLayer);
         
         //create scroll pane
         jScrollPane = new JScrollPane(jPanelDraw);
@@ -60,9 +60,10 @@ public class EditorPanel extends EditorOuterInterface implements Observer{
         // add tool bar to panel
         this.add(jToolBarEditor, BorderLayout.WEST);
 
-      
+        
         // set default tool in ToolBar
-        jToolBarEditor.setDefaultTool();
+        doSetDefaultToolInToolBar();
+        
     }
     
     @Override
@@ -143,6 +144,12 @@ public class EditorPanel extends EditorOuterInterface implements Observer{
     public void zoomReset() {
         // TODO: Point of zoom in parameter
         jPanelDraw.zoomReset();
+    }
+
+    @Override
+    public final void doSetDefaultToolInToolBar() {
+        // set default tool in ToolBar
+        jToolBarEditor.setDefaultTool();
     }
 
 }

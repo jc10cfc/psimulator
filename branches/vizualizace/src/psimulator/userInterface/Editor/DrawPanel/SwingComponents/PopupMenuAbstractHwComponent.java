@@ -1,5 +1,6 @@
 package psimulator.userInterface.Editor.DrawPanel.SwingComponents;
 
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -17,28 +18,35 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu{
     private DataLayerFacade dataLayer;
     private DrawPanelInnerInterface drawPanel;
     
-    private AbstractHwComponent hwComponent;
-    
     private JMenuItem jItemAlignToGrid;
     private JMenuItem jItemComponentProperties;
     private JMenuItem jItemDeleteComponent;
     
-    public PopupMenuAbstractHwComponent(AbstractHwComponent hwComponent, DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer){
+    public PopupMenuAbstractHwComponent(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer, int components){
         this.dataLayer = dataLayer;
         this.drawPanel = drawPanel;
-        this.hwComponent = hwComponent;
         
-        jItemAlignToGrid = new JMenuItem(dataLayer.getString("ALIGN_TO_GRID"));
         jItemComponentProperties = new JMenuItem(dataLayer.getString("PROPERTIES"));
+        jItemAlignToGrid = new JMenuItem(dataLayer.getString("ALIGN_TO_GRID"));
         jItemDeleteComponent = new JMenuItem(dataLayer.getString("DELETE"));
         
+        jItemAlignToGrid.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.ALIGN_COMPONENTS_TO_GRID));
         jItemDeleteComponent.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.DELETE));
         
         
-        this.add(jItemComponentProperties);
-        this.addSeparator();
+        // add buttons for operations on one component
+        if(components == 1){
+            this.add(jItemComponentProperties);
+            this.addSeparator();
+        }
+        
         this.add(jItemAlignToGrid);
-        this.add(jItemDeleteComponent);
+        
+        // if 0 components marked, do not add these buttons
+        if(components != 0){
+            this.add(jItemDeleteComponent);
+        }
+        
        
     }
     

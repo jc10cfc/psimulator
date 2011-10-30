@@ -52,4 +52,9 @@ public interface DrawPanelInnerInterface {
      * smaller according to Graph. There is minimum DrawPanel size.
      */
     public abstract void doFitToGraphSize();
+    
+    /**
+     * Sets default tool in EditorPanels toolBar
+     */
+    public void doSetDefaultToolInEditorToolBar();
 }
