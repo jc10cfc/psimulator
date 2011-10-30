@@ -33,12 +33,13 @@ public interface DrawPanelInnerInterface {
     public void setCursor(Cursor cursor);
     public void repaint();
     /**
-     * Sets that cable is being paint
+     * Sets that cable is being paint. Actual zoom in end poitn is used because when zooming, the end
+     * point has to be at the mouse position
      * @param lineInProgres
-     * @param start
-     * @param end 
+     * @param start - point in defaultZoom
+     * @param end - point in actualZoom
      */
-    public void setLineInProgras(boolean lineInProgres, Point start, Point end);
+    public void setLineInProgras(boolean lineInProgres, Point startInDefaultZoom, Point endInActualZoom);
     /**
      * Sets transparent rectangle that is being paint
      * @param rectangleInProgress

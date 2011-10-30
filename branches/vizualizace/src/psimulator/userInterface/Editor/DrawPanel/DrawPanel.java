@@ -2,6 +2,7 @@ package psimulator.userInterface.Editor.DrawPanel;
 
 import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
@@ -51,8 +53,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private MainWindowInnerInterface mainWindow;
     // variables for creating cables
     private boolean lineInProgress = false;
-    private Point lineStart;
-    private Point lineEnd;
+    private Point lineStartInDefaultZoom;
+    private Point lineEndInActualZoom;
     // variables for marking components with transparent rectangle
     private boolean rectangleInProgress = false;
     private Rectangle rectangle;
@@ -140,7 +142,16 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         // paint line that is being currently made
         if (lineInProgress) {
-            g2.drawLine(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
+            Stroke stroke = new BasicStroke(zoomManager.getStrokeWidth());
+            Stroke tmp = g2.getStroke();
+            g2.setStroke(stroke);
+            
+            g2.drawLine(zoomManager.doScaleToActual(lineStartInDefaultZoom.x), 
+                    zoomManager.doScaleToActual(lineStartInDefaultZoom.y),
+                    lineEndInActualZoom.x, 
+                    lineEndInActualZoom.y);
+            
+            g2.setStroke(tmp);
         }
 
         graph.paint(g2);
@@ -265,10 +276,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
     
     @Override
-    public void setLineInProgras(boolean lineInProgres, Point start, Point end) {
+    public void setLineInProgras(boolean lineInProgres, Point startInDefaultZoom, Point endInActualZoom) {
         this.lineInProgress = lineInProgres;
-        lineStart = start;
-        lineEnd = end;
+        lineStartInDefaultZoom = startInDefaultZoom;
+        lineEndInActualZoom = endInActualZoom;
     }
     
     
