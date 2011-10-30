@@ -67,16 +67,23 @@ public class Cable extends AbstractComponent {
         
         stroke = new BasicStroke(zoomManager.getStrokeWidth());
         
+        line.setLine(x1, y1, x2, y2);
+        
+        Color tmpC = g2.getColor();
+        Stroke tmpS = g2.getStroke();
+        
         if (isMarked()) {
-            Color color = g2.getColor();
             g2.setColor(Color.blue);
             g2.setStroke(stroke); 
             g2.drawLine(x1, y1, x2, y2);
-            g2.setColor(color);
         } else {
+            g2.setColor(Color.black);
             g2.setStroke(stroke); 
             g2.drawLine(x1, y1, x2, y2);
         }
+        
+        g2.setColor(tmpC);
+        g2.setStroke(tmpS);
     }
     /*
     @Override
@@ -137,7 +144,7 @@ public class Cable extends AbstractComponent {
 
     @Override
     public boolean intersects(Rectangle r) {
-        line.setLine(getP1(), getP2());
+        //line.setLine(getP1(), getP2());
         return line.intersects(r);
     }
 
