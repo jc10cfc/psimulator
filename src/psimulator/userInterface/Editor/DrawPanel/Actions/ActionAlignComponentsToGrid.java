@@ -25,8 +25,15 @@ public class ActionAlignComponentsToGrid extends AbstractDrawPanelAction {
     public void actionPerformed(ActionEvent ae) {
         // align components to grid
         HashMap<AbstractHwComponent, Dimension> movedComponentsMap;
-        movedComponentsMap = graph.doAlignComponentsToGrid();
-
+        
+        if(graph.getMarkedAbstractHWComponentsCount() > 0){
+            movedComponentsMap = graph.doAlignMarkedComponentsToGrid();
+        }else{
+            movedComponentsMap = graph.doAlignComponentsToGrid();
+        }
+        
+        graph.doUnmarkAllComponents();
+        
         // if map not empty set undoable edit
         if (!movedComponentsMap.isEmpty()) {
             // add to undo manager
@@ -39,5 +46,7 @@ public class ActionAlignComponentsToGrid extends AbstractDrawPanelAction {
             // repaint draw Panel
             drawPanel.repaint();
         }
+        
+        
     }
 }

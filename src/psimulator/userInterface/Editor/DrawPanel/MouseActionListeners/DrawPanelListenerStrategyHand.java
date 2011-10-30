@@ -14,6 +14,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.Editor.Tools.ManipulationTool;
 import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableMoveComponent;
@@ -322,6 +323,46 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
+    
+    @Override
+    public void mousePressedRight(MouseEvent e) {
+        // get clicked component
+        AbstractHwComponent clickedComponent = getClickedAbstractHwComponent(e.getPoint());
+        
+        
+        // if there are more marked components
+        if(graph.getMarkedAbstractHWComponentsCount() > 1){
+            // show popup for more components
+            PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, graph.getMarkedAbstractHWComponentsCount());
+        
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            return;
+        }
+
+        // if nothing right clicked and nothing marked and there are some components
+        if(clickedComponent == null && graph.getMarkedAbstractHWComponentsCount() == 0 && graph.getAbstractHwComponentsCount() > 0){
+            // show popup for all components
+            PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
+        
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            return;
+        }
+        
+        // if there is one marked component or no marked component and a component was clicked
+        if(clickedComponent != null){
+            // mark the component
+            graph.doMarkComponentWithCables(clickedComponent, true);
+            
+            drawPanel.repaint();
+            
+            // show popup for one component
+            PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 1);
+        
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            return;
+        }
+    }
+    
     /**
      * Marks only components and its cables that intersects with rectangle in parameter
      * @param rectangle 

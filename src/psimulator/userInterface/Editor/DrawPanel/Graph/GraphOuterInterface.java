@@ -47,6 +47,11 @@ public interface GraphOuterInterface {
      */
     public HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid();
     /**
+     * Aligns all components to grid
+     * @return HashMap - map of component+dimension pairs
+     */
+    public HashMap<AbstractHwComponent, Dimension> doAlignMarkedComponentsToGrid();
+    /**
      * Removes all marked AbstractHwComponents and Cables and returns them
      * wrapped.
      * @return  RemovedComponentsWrapper - list of AbstractHwComponents and Cables
@@ -97,6 +102,11 @@ public interface GraphOuterInterface {
      * @return 
      */
     public int getCablesCount();
+    /**
+     * Gets count of AbstractHwComponents in graph
+     * @return 
+     */
+    public int getAbstractHwComponentsCount();
     
     /**
      * Removes all cables from cableList in Graph

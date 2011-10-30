@@ -101,12 +101,15 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         // clicked component
         AbstractHwComponent tmp = null;
 
+        /*
         // find if any component clicked
         for (AbstractHwComponent c : graph.getHwComponents()) {
             if (c.intersects(e.getPoint())) {
                 tmp = c;
             }
-        }
+        }*/
+        
+        tmp = getClickedAbstractHwComponent(e.getPoint());
 
         // if nothing clicked
         if (tmp == null) {
@@ -165,7 +168,14 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
    
     @Override
     public void mousePressedRight(MouseEvent e) {
-        mousePressedLeft(e);
+        AbstractHwComponent tmp = getClickedAbstractHwComponent(e.getPoint());
+        // if something clicked, or has first component
+        if(tmp!= null || hasFirstComponent){
+            mousePressedLeft(e);
+        }else{ // if nothing clicked
+            drawPanel.doSetDefaultToolInEditorToolBar();
+        }
+        
     }
     
     /**

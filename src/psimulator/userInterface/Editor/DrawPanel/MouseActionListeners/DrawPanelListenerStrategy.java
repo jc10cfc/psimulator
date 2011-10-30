@@ -1,12 +1,9 @@
 package psimulator.userInterface.Editor.DrawPanel.MouseActionListeners;
 
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.undo.UndoManager;
@@ -14,8 +11,6 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
-import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
-import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
@@ -108,21 +103,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     }
     
     public void mousePressedRight(MouseEvent e) {
-        // get clicked component
-        AbstractHwComponent clickedComponent = getClickedAbstractHwComponent(e.getPoint());
-        
-        
-        // if nothing right clicked, return
-        if(clickedComponent == null){
-            return;
-        }
-        
-        //doMarkHwComponentAndItsCables(true,clickedComponent);
-        
-        
-        PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(clickedComponent, drawPanel, dataLayer);
-        
-        popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+        drawPanel.doSetDefaultToolInEditorToolBar();
     }
 
     public void mouseClickedLeft(MouseEvent e) {
@@ -191,49 +172,4 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         return clickedComponent;
     }
     
-    /**
-     * If component is cable, then mark or unmark it and add/remove it to marked components.
-     * If component is AbstractHwComponent, than mark/unmark it and its all cables and add/remove
-     * it to marked components.
-     * @param marked True if mark, false if unmark.
-     * @param component Component that needs to be marked.
-     
-    protected void doMarkHwComponentAndItsCables(boolean marked, Markable component) {
-        // if component is isntance of AbstractHwComponent
-        if (component instanceof AbstractHwComponent) {
-            component.setMarked(marked);
-            if (marked) {
-                markedComponents.add(component);
-            } else {
-                markedComponents.remove(component);
-            }
-
-            // set marked to all its cables
-            List<BundleOfCables> bundlesOfCables = ((AbstractHwComponent) component).getBundleOfCableses();
-
-            for (BundleOfCables boc : bundlesOfCables) {
-                for (Cable c : boc.getCables()) {
-                    if (marked) {
-                        c.setMarked(marked);
-                        markedComponents.add(c);
-                    } else {
-                        // if both ends of calbe not marked, than unmark cable
-                        if (!boc.getComponent1().isMarked() && !boc.getComponent2().isMarked()) {
-                            c.setMarked(marked);
-                            markedComponents.remove(c);
-                        }
-                    }
-                }
-            }
-        } else {
-            // component is cable
-            component.setMarked(marked);
-            if (marked) {
-                markedComponents.add(component);
-            } else {
-                markedComponents.remove(component);
-            }
-
-        }
-    }*/
 }

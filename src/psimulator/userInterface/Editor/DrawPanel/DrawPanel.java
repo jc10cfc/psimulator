@@ -30,6 +30,7 @@ import psimulator.userInterface.Editor.DrawPanel.Actions.ActionOnDelete;
 import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
+import psimulator.userInterface.Editor.EditorInnerInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -51,6 +52,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private ZoomManager zoomManager = new ZoomManager();
     private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
+    private EditorInnerInterface editorPanel;
     // variables for creating cables
     private boolean lineInProgress = false;
     private Point lineStartInDefaultZoom;
@@ -67,9 +69,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
-    public DrawPanel(MainWindowInnerInterface mainWindow, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
+    public DrawPanel(MainWindowInnerInterface mainWindow, EditorInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
 
+        this.editorPanel = editorPanel;
         this.mainWindow = mainWindow;
         this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
@@ -289,7 +292,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.rectangle = rectangle;
     }
     
-// END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+    @Override
+    public void doSetDefaultToolInEditorToolBar() {
+        editorPanel.doSetDefaultToolInToolBar();
+    }
+    
+// END ============ IMPLEMENTATION OF DrawPanelInnerInterface ==============
     
     
 // ============== IMPLEMENTATION OF DrawPanelOuterInterface ================
@@ -379,6 +387,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
     
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+
+    
    
 }
 

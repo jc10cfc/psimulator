@@ -32,7 +32,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
     
     private List<Cable> markedCables = new ArrayList<Cable>();
-    private List<AbstractHwComponent> markedAbstractHwComponentsComponents = new ArrayList<AbstractHwComponent>();
+    private List<AbstractHwComponent> markedAbstractHwComponents = new ArrayList<AbstractHwComponent>();
     
     private Grid grid;
     private int widthDefault;
@@ -95,7 +95,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             }
         }
         
-        for (AbstractComponent c : markedAbstractHwComponentsComponents) {
+        for (AbstractComponent c : markedAbstractHwComponents) {
             c.paint(g2); 
         }
         
@@ -151,6 +151,11 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             count += boc.getCables().size();
         }
         return count;
+    }
+    
+    @Override
+    public int getAbstractHwComponentsCount() {
+        return components.size();
     }
 
     /**
@@ -350,10 +355,10 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             component.setMarked(marked);
             if (marked) {
                 //markedComponents.add(component);
-                markedAbstractHwComponentsComponents.add((AbstractHwComponent)component);
+                markedAbstractHwComponents.add((AbstractHwComponent)component);
             } else {
                 //markedComponents.remove(component);
-                markedAbstractHwComponentsComponents.remove((AbstractHwComponent)component);
+                markedAbstractHwComponents.remove((AbstractHwComponent)component);
             }
 
             // set marked to all its cables
@@ -395,10 +400,10 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
      */
     @Override
     public void doUnmarkAllComponents() {
-        for (Markable m : markedAbstractHwComponentsComponents) {
+        for (Markable m : markedAbstractHwComponents) {
             m.setMarked(false);
         }
-        markedAbstractHwComponentsComponents.clear();
+        markedAbstractHwComponents.clear();
         
         for (Markable m : markedCables) {
             m.setMarked(false);
@@ -410,7 +415,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     @Override
     public int getMarkedAbstractHWComponentsCount() {
         int count = 0;
-        for (Markable m : markedAbstractHwComponentsComponents) {
+        for (Markable m : markedAbstractHwComponents) {
             if (m instanceof AbstractHwComponent) {
                 count++;
             }
@@ -573,9 +578,19 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
     @Override
     public HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid() {
+        return doAlignComponentsToGrid(components);
+    }
+    
+    
+    @Override
+    public HashMap<AbstractHwComponent, Dimension> doAlignMarkedComponentsToGrid() {
+        return doAlignComponentsToGrid(markedAbstractHwComponents);
+    }
+    
+    private HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid(List<AbstractHwComponent> componentsToAlign) {
         HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
 
-        for (AbstractHwComponent c : this.getHwComponents()) {
+        for (AbstractHwComponent c : componentsToAlign) {
             Point originalLocation = c.getCenterLocation();
             Point newLocation = grid.getNearestGridPoint(originalLocation);
 
@@ -594,7 +609,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         }
         return movedComponentsMap;
     }
-
+        
     @Override
     public RemovedComponentsWrapper doRemoveMarkedComponents() {
         // get all marked components
@@ -629,13 +644,13 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         // remove marked components from graph
         this.removeHwComponents(markedComponents);
         
-        this.markedAbstractHwComponentsComponents.clear();
+        this.markedAbstractHwComponents.clear();
         this.markedCables.clear();
         
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
     }
 
+
     
-    
-    
+
 }
