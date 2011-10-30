@@ -193,7 +193,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         // let scrool pane in editor know about the change
         this.revalidate();
-    }  
+    }
 // END ========  IMPLEMENTATION OF DrawPanelSizeChangeInnerInterface ==========  
 
     

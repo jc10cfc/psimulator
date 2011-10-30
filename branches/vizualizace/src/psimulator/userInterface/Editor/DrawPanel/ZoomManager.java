@@ -27,7 +27,7 @@ public class ZoomManager extends Observable {
     }
     
     public float getStrokeWidth(){
-        return Math.max((float)(basicStrokeWidth*getCurrentScale()), 1.0f);
+        return Math.max((float)(basicStrokeWidth*getCurrentScale()), 0.8f);
     }
 
     /**
