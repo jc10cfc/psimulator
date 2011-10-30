@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import psimulator.userInterface.Editor.DrawPanel.Enums.HwTypeEnum;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.Editor.DrawPanel.Enums.SecondaryTool;
 
 /**
  *
@@ -26,6 +27,9 @@ public abstract class AbstractImageFactory {
     public static final String CABLE_PATH = "/resources/toolbarIcons/editor/network-wired.png";
     public static final String END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor/desktop.png";
     public static final String REAL_PC_PATH = "/resources/toolbarIcons/editor/local_network.png";
+    public static final String ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor/grid.png";
+    public static final String FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor/fit_to_size.png";
+    
     
     protected ImageBuffer imageBuffer;
     protected BufferedImageLoader bufferedImageLoader;
@@ -182,6 +186,32 @@ public abstract class AbstractImageFactory {
         }
 
         return icon;
+    }
+    
+    public ImageIcon getImageIconForToolbar(SecondaryTool tool) {
+        String path ;
+
+        switch (tool) {
+            case ALIGN_TO_GRID:
+                path = ALIGN_TO_GRID_PATH;
+                break;
+            case FIT_TO_SIZE:
+            default:
+                path = FIT_TO_SIZE_PATH;
+                break;
+        }
+        
+        ImageIcon tmp = null;
+        
+        // load image
+        try {
+            tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+        } catch (IOException ex) {
+            // should never happen, all hwComponentType default icons are in .jar as a resource
+        }
+        
+        // return scaled image
+        return tmp;
     }
 
     /**

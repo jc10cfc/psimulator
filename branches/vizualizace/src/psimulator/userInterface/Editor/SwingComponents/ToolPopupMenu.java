@@ -8,6 +8,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
+import psimulator.userInterface.Editor.Tools.AddDeviceTool;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -29,8 +30,11 @@ public class ToolPopupMenu extends JPopupMenu{
         toolsButtonGroup = new ButtonGroup();
         
         for (final AbstractTool tool : tools) {
-            //JRadioButton mi = new JRadioButton(tool.getName(), tool.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
-            JMenuItem mi = new JMenuItem(tool.getName(), tool.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
+            AddDeviceTool tmp = (AddDeviceTool)tool;
+            // create menu item for tool
+            JMenuItem mi = new JMenuItem(tmp.getName()+" - Interfaces: "+tmp.getInterfaces(), 
+                    tmp.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
+            
             mi.addActionListener(new ActionListener() {
 
                 @Override

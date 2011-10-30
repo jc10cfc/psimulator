@@ -174,7 +174,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
         // if there is not a bundle between component1 and component2, we make the bundle
         if (bundle == null) {
-            bundle = new BundleOfCables(component1, component2);
+            bundle = new BundleOfCables(component1, component2, zoomManager);
             bundlesOfCables.add(bundle);
             component1.addBundleOfCables(bundle);
             component2.addBundleOfCables(bundle);
