@@ -160,10 +160,10 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         }
 
         // create small rectangle arround clicked point
-        Rectangle r = new Rectangle(point.x - 1, point.y - 1, 3, 3);
+        
         // search cables
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
-            clickedComponent = boc.getIntersectingCable(r);
+            clickedComponent = boc.getIntersectingCable(point);
             if(clickedComponent != null){
                return clickedComponent; 
             }

@@ -310,10 +310,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             }
         }
 
-        Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
+        //Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
         
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
-            if (boc.intersects(r)) {
+            if (boc.intersects(e.getPoint())) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 return;
             }

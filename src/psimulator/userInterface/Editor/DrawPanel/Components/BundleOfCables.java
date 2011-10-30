@@ -27,8 +27,6 @@ public class BundleOfCables extends AbstractComponent{
     
     private static final int LINE_WIDTH = 2;
     
-    Line2D line = new Line2D.Float();
-    
     
     public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2, ZoomManager zoomManager){
         cables = new ArrayList<Cable>();
@@ -45,8 +43,10 @@ public class BundleOfCables extends AbstractComponent{
         return component2;
     }
     
-    public Cable getIntersectingCable(Rectangle r){
+    public Cable getIntersectingCable(Point p){
         //throw new UnsupportedOperationException("Not supported yet.");
+        Rectangle r = doCreateRectangleAroundPoint(p);
+        
         for(Cable c : cables){
             if(c.intersects(r)){
                 return c;
@@ -148,14 +148,19 @@ public class BundleOfCables extends AbstractComponent{
     
     @Override
     public boolean intersects(Point p) {
-        Rectangle r = new Rectangle(p);
+        Rectangle r = doCreateRectangleAroundPoint(p);
         return intersects(r);
     }
-
+    
     @Override
     public boolean intersects(Rectangle r) {
-        line.setLine(getP1(), getP2());
-        return line.intersects(r);
+        for(Cable c : cables){
+            if(c.intersects(r)){
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public int getX1() {
@@ -180,5 +185,16 @@ public class BundleOfCables extends AbstractComponent{
 
     public Point2D getP2() {
         return getComponent2().getCenterLocation();
+    }
+    
+    
+    private Rectangle doCreateRectangleAroundPoint(Point p){
+        // count difference on both sides from p
+        int difference = Math.max((int) (zoomManager.getStrokeWidth() / 1.5), 1);
+        
+        // create rectangle around point
+        Rectangle r = new Rectangle(p.x - difference, p.y - difference,
+                2 * difference, 2 * difference);
+        return r;
     }
 }
