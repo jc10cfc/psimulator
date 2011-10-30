@@ -28,9 +28,9 @@ public class Cable extends AbstractComponent {
     
     private static final int LINE_WIDTH = 2;
     
-    Line2D line = new Line2D.Float();
+    private Line2D line = new Line2D.Float();
     
-    Stroke stroke = new BasicStroke(3.5f);
+    private Stroke stroke = new BasicStroke(3.5f);
     
     int x1, y1, x2, y2;
     Shape shape;
@@ -65,9 +65,7 @@ public class Cable extends AbstractComponent {
     public void paintComponent(Graphics g, int x1, int y1, int x2, int y2){
         Graphics2D g2 = (Graphics2D) g;
         
-        float strokeWidth = Math.max((float)(5f*zoomManager.getCurrentScale()), 1f);
-        
-        stroke = new BasicStroke(strokeWidth);
+        stroke = new BasicStroke(zoomManager.getStrokeWidth());
         
         if (isMarked()) {
             Color color = g2.getColor();

@@ -33,7 +33,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     private EthInterface eth2;
     boolean hasFirstComponent = false;
     boolean hasSecondComponent = false;
-    private Point startPoint;
+    private Point startPointInDefault;
     private CableConnectToInterfacePopupMenu popupMenu;
     
     private CreateCableTool createCableTool;
@@ -62,9 +62,13 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     @Override
     public void mouseMoved(MouseEvent e) {
         if (hasFirstComponent) {
+            /*
+            drawPanel.setLineInProgras(true, startPointInDefault, 
+                    zoomManager.doScaleToDefault(e.getPoint()));*/
 
-            drawPanel.setLineInProgras(true, startPoint, e.getPoint());
-
+            drawPanel.setLineInProgras(true, startPointInDefault, 
+                    e.getPoint());
+            
             drawPanel.repaint();
         }
 
@@ -117,7 +121,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
             component1 = tmp;
             hasFirstComponent = true;
             // set start point
-            startPoint = component1.getCenterLocation();
+            startPointInDefault = zoomManager.doScaleToDefault(component1.getCenterLocation());
         } else {
             // if we clicked second component
             component2 = tmp;
