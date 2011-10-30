@@ -30,7 +30,7 @@ public class ToolsFactory {
                 tools.add(new AddDeviceTool(tool, "Router Linux Generic", imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.LINUX_ROUTER, 4, path));
                 tools.add(new AddDeviceTool(tool, "Router Cisco Generic", imageFactory.getImageIconForToolbar(tool, path), 
-                        toolChangeInterface,HwTypeEnum.CISCO_ROUTER, 4, path));
+                        toolChangeInterface,HwTypeEnum.CISCO_ROUTER, 20, path));
                 break;
             case ADD_SWITCH:
                 path = AbstractImageFactory.SWITCH_PATH;

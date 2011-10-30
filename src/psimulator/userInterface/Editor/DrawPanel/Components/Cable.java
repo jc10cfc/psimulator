@@ -63,45 +63,32 @@ public class Cable extends AbstractComponent {
     }
 
     public void paintComponent(Graphics g, int x1, int y1, int x2, int y2){
-        this.x1 = x1;
-        this.x2 = x2;
-        this.y1 = y1;
-        this.y2 = y2;
+        Graphics2D g2 = (Graphics2D) g;
         
+        float strokeWidth = Math.max((float)(5f*zoomManager.getCurrentScale()), 1f);
         
-        XArray[0] = x1-2;
-        XArray[1] = x1+2;
+        stroke = new BasicStroke(strokeWidth);
         
-        XArray[2] = x2+2;
-        XArray[3] = x2-2;
-        
-        YArray[0] = y1-2;
-        YArray[1] = y1+2;
-        
-        YArray[2] = y2+2;
-        YArray[3] = y2-2;
-        
-        paintComponent(g);
+        if (isMarked()) {
+            Color color = g2.getColor();
+            g2.setColor(Color.blue);
+            g2.setStroke(stroke); 
+            g2.drawLine(x1, y1, x2, y2);
+            g2.setColor(color);
+        } else {
+            g2.setStroke(stroke); 
+            g2.drawLine(x1, y1, x2, y2);
+        }
     }
-    
+    /*
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-         
-        /*
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
         
-        g2.setColor(Color.black);
-        g2.drawPolygon (XArray, YArray, 4);
-          
-        GradientPaint gp = new GradientPaint(50.0f, 50.0f, Color.gray,
-         75.0f, 75.0f, Color.black, true);
-        g2.setPaint(gp);
         
-        g2.fillPolygon (XArray, YArray, 4);
-         */
+        float strokeWidth = Math.max((float)(5f*zoomManager.getCurrentScale()), 1f);
         
+        stroke = new BasicStroke(strokeWidth);
         
         if (isMarked()) {
             Color color = g2.getColor();
@@ -114,7 +101,7 @@ public class Cable extends AbstractComponent {
             g2.drawLine(getX1(), getY1(), getX2(), getY2());
         }
 
-    }
+    }*/
 
     @Override
     public int getWidth() {

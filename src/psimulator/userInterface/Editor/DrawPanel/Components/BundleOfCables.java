@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
 
 /**
  *
@@ -17,6 +18,8 @@ import java.awt.geom.Point2D;
  */
 public class BundleOfCables extends AbstractComponent{
 
+    private ZoomManager zoomManager;
+    
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
     
@@ -27,10 +30,11 @@ public class BundleOfCables extends AbstractComponent{
     Line2D line = new Line2D.Float();
     
     
-    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
+    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2, ZoomManager zoomManager){
         cables = new ArrayList<Cable>();
         this.component1 = component1;
         this.component2 = component2;
+        this.zoomManager = zoomManager;
     }
     
     public AbstractHwComponent getComponent1(){
@@ -77,47 +81,40 @@ public class BundleOfCables extends AbstractComponent{
      
     @Override
     public void paintComponent(Graphics g) {
-        /*
-        boolean horizontal;
         
-        int distance;
-        
-        int minDistanceBetweenCables = component1.getWidth() / cables.size();
-        int maxDistanceBetweenCables = component1.getWidth() / 3;
-        
-        if(minDistanceBetweenCables < maxDistanceBetweenCables){
-            distance = minDistanceBetweenCables;
-        }else{
-            distance = maxDistanceBetweenCables;
-        }
-        
+        // two points of line in the middle
         int x1 = component1.getCenterLocation().x;
-        int y1 = component1.getCenterLocation().y; 
-        
+        int y1 = component1.getCenterLocation().y;
         int x2 = component2.getCenterLocation().x;
-        int y2 = component2.getCenterLocation().y; 
-        
-        if(isHorizontalDistanceLonger()){
-            
-        }
-        
-        System.out.println("mindist=" +minDistanceBetweenCables);
-        */
+        int y2 = component2.getCenterLocation().y;
         
         
+        double L = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+        
+        // count difference between cables that will be applied
+        double maxDiffernce = (zoomManager.getIconSize()/1.5) / cables.size();
+        double optimalDifference = 12.0 * zoomManager.getCurrentScale();
+        double difference = Math.min(maxDiffernce, optimalDifference);
+        
+        // set offset to start with
+        double offsetPixels = -(difference * (cables.size()-1) /2.0);
+               
+        // for all cables
         for(Cable c : cables){
-            //c.paintComponent(g);
-            c.paintComponent(g, component1.getCenterLocation().x, component1.getCenterLocation().y,
-                    component2.getCenterLocation().x, component2.getCenterLocation().y);
+            // count starting point
+            int x1p = (int)(x1 + offsetPixels * (y2-y1) / L);
+            int y1p = (int)(y1 + offsetPixels * (x1-x2) / L);
+            
+            // count finishing point
+            int x2p = (int)(x2 + offsetPixels * (y2-y1) / L);
+            int y2p = (int)(y2 + offsetPixels * (x1-x2) / L);
+            
+            // paint cable
+            c.paintComponent(g, x1p, y1p, x2p, y2p);
+            
+            // change offset for next cable
+            offsetPixels += difference;
         }
-          
-    }
-    
-    private boolean isHorizontalDistanceLonger(){
-        if(Math.abs(getX1()-getX2()) >=  Math.abs(getY1()-getY2())){
-            return true;
-        }
-        return false;
     }
     
     @Override

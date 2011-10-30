@@ -13,6 +13,7 @@ import javax.swing.JToolBar;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.Editor.DrawPanel.Enums.SecondaryTool;
 import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
 import psimulator.userInterface.Editor.Tools.ToolsFactory;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -56,11 +57,12 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         // BUTTONS
-        jButtonFitToSize = new JButton();
-        jButtonFitToSize.setFocusable(false);
-        jButtonAlignToGrid = new JButton();
+        jButtonFitToSize = new JButton(imageFactory.getImageIconForToolbar(SecondaryTool.FIT_TO_SIZE));
+        jButtonFitToSize.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         
-
+        jButtonAlignToGrid = new JButton(imageFactory.getImageIconForToolbar(SecondaryTool.ALIGN_TO_GRID));
+        jButtonAlignToGrid.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        
         toolsButtonGroup = new ButtonGroup();
         
         toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, imageFactory, toolChangeInterface));
@@ -145,8 +147,8 @@ public class EditorToolBar extends JToolBar implements Observer {
         toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));
         jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
         
-        jButtonFitToSize.setText(dataLayer.getString("FIT_TO_SIZE"));
-        jButtonAlignToGrid.setText(dataLayer.getString("ALIGN_TO_GRID"));
+        jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
+        jButtonAlignToGrid.setToolTipText(dataLayer.getString("ALIGN_TO_GRID"));
         
         //toggleButtonRouters.setToolTipText(dataLayer.getString("ADD_ROUTER"));
         //toggleButtonSwitches.setToolTipText(dataLayer.getString("ADD_SWITCH"));
