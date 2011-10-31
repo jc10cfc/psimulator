@@ -393,6 +393,14 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
         }
     }
+    
+    @Override
+    public void doMarkCable(Cable cable) {
+        cable.setMarked(true);
+        markedCables.add(cable);
+    }
+
+
 
     /**
      * sets all Markable components in markedComponents to marked(false) and
@@ -618,7 +626,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         // put all marked cables to cables toRemove
         List<Cable> cablesToRemove = this.getMarkedCablesCopy();
         
-         // if there is no marked cable or component
+         // if there is no marked cable and no component
         if (markedComponents.isEmpty() && cablesToRemove.isEmpty()) {
             return null;
         }
@@ -635,8 +643,11 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
                 }
             }
             // unmark component
-            this.doMarkComponentWithCables(c, false);
+            //this.doMarkComponentWithCables(c, false);
         }
+        
+        // unmark all components
+        this.doUnmarkAllComponents();
         
         // remove cables from graph
         this.removeCables(cablesToRemove);
@@ -650,7 +661,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
     }
 
-
+    
     
 
 }
