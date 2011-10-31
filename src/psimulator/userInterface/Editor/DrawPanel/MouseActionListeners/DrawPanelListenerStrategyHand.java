@@ -330,15 +330,15 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         AbstractHwComponent clickedComponent = getClickedAbstractHwComponent(e.getPoint());
         
         
-        // if there are more marked components
-        if(graph.getMarkedAbstractHWComponentsCount() > 1){
+        // if there are more marked components and we clicked one
+        if(graph.getMarkedAbstractHWComponentsCount() > 1 && (clickedComponent!=null &&clickedComponent.isMarked())){
             // show popup for more components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, graph.getMarkedAbstractHWComponentsCount());
         
             popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
-
+        
         // if nothing right clicked and nothing marked and there are some components
         if(clickedComponent == null && graph.getMarkedAbstractHWComponentsCount() == 0 && graph.getAbstractHwComponentsCount() > 0){
             // show popup for all components
@@ -357,6 +357,19 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             
             // show popup for one component
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 1);
+        
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            return;
+        }
+        
+        // if there are more marked components and we clicked one
+        if(graph.getMarkedAbstractHWComponentsCount() > 1 ){
+            // unmark all components
+            graph.doUnmarkAllComponents();
+            
+            drawPanel.repaint();
+            
+            PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
         
             popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
