@@ -66,6 +66,14 @@ public interface GraphOuterInterface {
      * @param component Component that needs to be marked.
      */
     public void doMarkComponentWithCables(Markable component, boolean marked);
+    
+    
+    /**
+     * Marks cable as marked
+     * @param cable 
+     */
+    public void doMarkCable(Cable cable);
+    
     /**
      * unmarks all marked components
      */

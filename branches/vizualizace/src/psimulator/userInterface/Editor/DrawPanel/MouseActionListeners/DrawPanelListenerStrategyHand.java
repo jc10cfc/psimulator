@@ -12,6 +12,7 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
+import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
@@ -390,6 +391,19 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 graph.doMarkComponentWithCables(component, true);
             }
         }
+        
+        // if no abstract component marked, mark only cables in rectangle
+        if(graph.getMarkedAbstractHWComponentsCount() == 0){
+            for(BundleOfCables bundle : graph.getBundlesOfCables()){
+                for(Cable c : bundle.getCables()){
+                    if(c.intersects(rectangle)){
+                        graph.doMarkCable(c);
+                    }
+                }
+            }
+            
+        }
+        
     }
 
 }
