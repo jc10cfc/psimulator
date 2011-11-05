@@ -61,11 +61,11 @@ public abstract class AbstractHwComponent extends AbstractComponent {
 
     /**
      * Sets position with center of image in the middlePoint
-     * @param middlePoint Center of image
+     * @param middlePoint Center of image in actual zoom
      */
     public void setLocationByMiddlePoint(Point middlePoint) {
-        setLocation(zoomManager.doScaleToDefault(middlePoint.x - (bi.getWidth() / 2)), 
-                zoomManager.doScaleToDefault(middlePoint.y - (bi.getHeight() / 2)));
+        setLocation(zoomManager.doScaleToDefault(middlePoint.x) - (defaultZoomWidth / 2), 
+                zoomManager.doScaleToDefault(middlePoint.y) - (defaultZoomHeight / 2));
     }
 
     @Override
