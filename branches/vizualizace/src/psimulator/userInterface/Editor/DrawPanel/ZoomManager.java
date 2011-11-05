@@ -23,9 +23,20 @@ public class ZoomManager extends Observable {
      * @return 
      */
     public int getIconSize() {
-        return (int) (scale * hwIconSize);
+        return (int) (getCurrentScale() * hwIconSize);
     }
     
+    /**
+     * returns Icon size according to default zoom  scale
+     */
+    public int getIconSizeDefaultZoom(){
+        return (int) ( hwIconSize);
+    }
+    
+    /**
+     * returns stroke width according to current scale
+     * @return 
+     */
     public float getStrokeWidth(){
         return Math.max((float)(basicStrokeWidth*getCurrentScale()), 0.8f);
     }

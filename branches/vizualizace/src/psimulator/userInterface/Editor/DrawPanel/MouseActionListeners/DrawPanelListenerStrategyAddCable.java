@@ -124,7 +124,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
             component1 = tmp;
             hasFirstComponent = true;
             // set start point
-            startPointInDefault = zoomManager.doScaleToDefault(component1.getCenterLocation());
+            //startPointInDefault = zoomManager.doScaleToDefault(component1.getCenterLocation());
+            startPointInDefault = component1.getCenterLocationDefaultZoom();
         } else {
             // if we clicked second component
             component2 = tmp;
