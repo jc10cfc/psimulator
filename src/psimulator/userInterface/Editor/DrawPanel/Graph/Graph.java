@@ -599,6 +599,31 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
 
         for (AbstractHwComponent c : componentsToAlign) {
+            //Point originalLocation = c.getCenterLocation();
+            Point originalLocation = c.getCenterLocationDefaultZoom();
+            Point newLocation = grid.getNearestGridPointDefaultZoom(originalLocation);
+
+            Dimension differenceInDefaultZoom = new Dimension(originalLocation.x - newLocation.x,
+                    originalLocation.y - newLocation.y);
+            //Dimension differenceInDefaultZoom = zoomManager.doScaleToDefault(differenceInActualZoom);
+
+            // if component moved, add to moved 
+            if (differenceInDefaultZoom.getWidth() != 0 || differenceInDefaultZoom.getHeight() != 0) {
+                //c.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), false);
+                this.doChangePositionOfAbstractHwComponent(c, differenceInDefaultZoom, false);
+
+                movedComponentsMap.put(c, differenceInDefaultZoom);
+            }
+
+        }
+        return movedComponentsMap;
+    }
+    
+    /*
+    private HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid(List<AbstractHwComponent> componentsToAlign) {
+        HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
+
+        for (AbstractHwComponent c : componentsToAlign) {
             Point originalLocation = c.getCenterLocation();
             Point newLocation = grid.getNearestGridPoint(originalLocation);
 
@@ -616,7 +641,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
         }
         return movedComponentsMap;
-    }
+    }*/
         
     @Override
     public RemovedComponentsWrapper doRemoveMarkedComponents() {

@@ -165,6 +165,15 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     }
     
     /**
+     * gets center of this component
+     * @return 
+     */
+    public Point getCenterLocationDefaultZoom() {
+        return new Point(defaultZoomXPos + zoomManager.getIconSizeDefaultZoom() / 2, 
+                defaultZoomYPos + zoomManager.getIconSizeDefaultZoom() / 2);
+    }
+    
+    /**
      * Gets Point in actual scale of lower right corner of component
      * @return Actual-scale ponint
      */
