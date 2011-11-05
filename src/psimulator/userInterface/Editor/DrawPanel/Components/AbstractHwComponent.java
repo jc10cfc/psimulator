@@ -173,9 +173,6 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return 
      */
     public Point getCenterLocationDefaultZoom() {
-        /*
-        return new Point(defaultZoomXPos + zoomManager.getIconWidthDefaultZoom() / 2, 
-                defaultZoomYPos + zoomManager.getIconWidthDefaultZoom() / 2);*/
         return new Point(defaultZoomXPos + defaultZoomWidth / 2, 
                 defaultZoomYPos + defaultZoomHeight / 2);
     }
@@ -190,15 +187,11 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     
     @Override
     public int getWidth() {
-        //return zoomManager.getIconWidth();
-        //return bi.getWidth();
         return zoomManager.doScaleToActual(defaultZoomWidth);
     }
 
     @Override
     public int getHeight() {
-        //return zoomManager.getIconWidth();
-        //return bi.getHeight();
         return zoomManager.doScaleToActual(defaultZoomHeight);
     }
 
