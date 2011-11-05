@@ -27,8 +27,8 @@ public class Grid{
         int width = graph.getWidth();
         int height = graph.getHeight();
         
-        distance = zoomManager.getIconSize()/2;
-        //distance = zoomManager.getIconSizeDefaultZoom() /2;
+        distance = zoomManager.getIconWidth()/2;
+        //distance = zoomManager.getIconWidthDefaultZoom() /2;
      
         for(int i = distance;i<width; i= i + distance){
             g2.drawLine(i, 0, i, height-1);
@@ -41,7 +41,7 @@ public class Grid{
     }
     
     public Point getNearestGridPointDefaultZoom(Point centerPoint){
-        distance = (int) (zoomManager.getIconSizeDefaultZoom() / 2);
+        distance = (int) (zoomManager.getIconWidthDefaultZoom() / 2);
 
         
         return getNearestGridPoint(centerPoint.x, centerPoint.y, distance);

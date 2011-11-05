@@ -19,6 +19,9 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected int defaultZoomXPos;
     protected int defaultZoomYPos;
     
+    protected int defaultZoomWidth;
+    protected int defaultZoomHeight;
+    
     protected ZoomManager zoomManager;
     protected AbstractImageFactory imageFactory;
     
@@ -84,7 +87,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     
     @Override
     public boolean intersects(Point p) {
-        if ((p.x >= getX() && p.x <= getX() + bi.getWidth()) && (p.y >= getY() && p.y <= getY() + bi.getHeight())) {
+        if ((p.x >= getX() && p.x <= getX() + bi.getWidth()) 
+                && (p.y >= getY() && p.y <= getY() + bi.getHeight())) {
             return true;
         } else {
             return false;
@@ -161,7 +165,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return 
      */
     public Point getCenterLocation() {
-        return new Point(getX() + zoomManager.getIconSize() / 2, getY() + zoomManager.getIconSize() / 2);
+        return new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
     }
     
     /**
@@ -169,8 +173,11 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return 
      */
     public Point getCenterLocationDefaultZoom() {
-        return new Point(defaultZoomXPos + zoomManager.getIconSizeDefaultZoom() / 2, 
-                defaultZoomYPos + zoomManager.getIconSizeDefaultZoom() / 2);
+        /*
+        return new Point(defaultZoomXPos + zoomManager.getIconWidthDefaultZoom() / 2, 
+                defaultZoomYPos + zoomManager.getIconWidthDefaultZoom() / 2);*/
+        return new Point(defaultZoomXPos + defaultZoomWidth / 2, 
+                defaultZoomYPos + defaultZoomHeight / 2);
     }
     
     /**
@@ -178,17 +185,21 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return Actual-scale ponint
      */
     public Point getLowerRightCornerLocation(){
-        return new Point(getX() + zoomManager.getIconSize(), getY() + zoomManager.getIconSize());
+        return new Point(getX() + getWidth(), getY() + getHeight());
     }
     
     @Override
     public int getWidth() {
-        return zoomManager.getIconSize();
+        //return zoomManager.getIconWidth();
+        //return bi.getWidth();
+        return zoomManager.doScaleToActual(defaultZoomWidth);
     }
 
     @Override
     public int getHeight() {
-        return zoomManager.getIconSize();
+        //return zoomManager.getIconWidth();
+        //return bi.getHeight();
+        return zoomManager.doScaleToActual(defaultZoomHeight);
     }
 
     @Override

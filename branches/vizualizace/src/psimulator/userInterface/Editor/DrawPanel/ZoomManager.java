@@ -10,7 +10,7 @@ import java.util.Observable;
  */
 public class ZoomManager extends Observable {
 
-    private int hwIconSize = 140;
+    private int width = 140;
     private double defaultScale = 0.8;
     private double scale = defaultScale;
     private double zoomInc = 0.1;
@@ -22,23 +22,23 @@ public class ZoomManager extends Observable {
      * returns Icon size according to scale and default icon size
      * @return 
      */
-    public int getIconSize() {
-        return (int) (getCurrentScale() * hwIconSize);
+    public int getIconWidth() {
+        return (int) (getCurrentScale() * width);
     }
-    
+
     /**
      * returns Icon size according to default zoom  scale
      */
-    public int getIconSizeDefaultZoom(){
-        return (int) ( hwIconSize);
+    public int getIconWidthDefaultZoom() {
+        return (int) (width);
     }
-    
+
     /**
      * returns stroke width according to current scale
      * @return 
      */
-    public float getStrokeWidth(){
-        return Math.max((float)(basicStrokeWidth*getCurrentScale()), 0.8f);
+    public float getStrokeWidth() {
+        return Math.max((float) (basicStrokeWidth * getCurrentScale()), 0.8f);
     }
 
     /**
@@ -62,7 +62,7 @@ public class ZoomManager extends Observable {
             scale += 1 * zoomInc;
             tmp = tmp / scale;
             // notify all observers
-            notifyAllObservers(); 
+            notifyAllObservers();
         }
     }
 
@@ -82,7 +82,7 @@ public class ZoomManager extends Observable {
             scale += -1 * zoomInc;
             tmp = tmp / scale;
             // notify all observers
-            notifyAllObservers(); 
+            notifyAllObservers();
         }
     }
 
@@ -94,7 +94,7 @@ public class ZoomManager extends Observable {
         scale = defaultScale;
 
         // notify all observers
-        notifyAllObservers(); 
+        notifyAllObservers();
     }
 
     /**
@@ -176,7 +176,7 @@ public class ZoomManager extends Observable {
     public int doScaleToDefault(int actualScale) {
         return ((int) (actualScale / scale));
     }
-    
+
     /**
      * calls setChanged and notifyObservers
      */
