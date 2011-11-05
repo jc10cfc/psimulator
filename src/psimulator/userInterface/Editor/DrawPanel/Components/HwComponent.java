@@ -22,7 +22,12 @@ public class HwComponent extends AbstractHwComponent {
         this.hwComponentType = hwComponentType;
         this.imagePath = imagePath;
         
-        bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconSize(), false);
+        //create image in default zoom
+        bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconWidthDefaultZoom(), false);
+        
+        // set image width and height in default zoom
+        defaultZoomWidth = bi.getWidth();
+        defaultZoomHeight = bi.getHeight();
     }
     
 
@@ -31,9 +36,9 @@ public class HwComponent extends AbstractHwComponent {
         Graphics2D g2 = (Graphics2D) g;
      
         if (isMarked()) {
-            bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconSize(), true);
+            bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconWidth(), true);
         } else {
-            bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconSize(), false);
+            bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconWidth(), false);
         }
 
         g2.drawImage(bi, getX(), getY(), null);

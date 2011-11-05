@@ -19,17 +19,18 @@ public abstract class AbstractImageFactory {
 
     public static final int ICON_SIZE_MENU_BAR = 48;
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
-    public static final String HAND_PATH = "/resources/toolbarIcons/editor/cursor_arrow.png";
-    public static final String END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor/modern/PC.png";
-    public static final String END_DEVICE_NOTEBOOK_PATH = "/resources/toolbarIcons/editor/notebook.png";
-    public static final String ROUTER_PATH = "/resources/toolbarIcons/editor/router.png";
-    public static final String SWITCH_PATH = "/resources/toolbarIcons/editor/switch.png";
-    public static final String CABLE_PATH = "/resources/toolbarIcons/editor/network-wired.png";
-    public static final String END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor/desktop.png";
-    public static final String REAL_PC_PATH = "/resources/toolbarIcons/editor/local_network.png";
-    public static final String ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor/grid.png";
-    public static final String FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor/fit_to_size.png";
     
+    public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_arrow.png";
+    public static final String TOOL_CABLE_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
+    public static final String TOOL_END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor_toolbar/desktop.png";
+    public static final String TOOL_REAL_PC_PATH = "/resources/toolbarIcons/editor_toolbar/local_network.png";
+    public static final String TOOL_ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor_toolbar/grid.png";
+    public static final String TOOL_FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor_toolbar/fit_to_size.png";
+    
+    public static final String TOOL_END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor_toolbar/pc.png";
+    public static final String TOOL_END_DEVICE_NOTEBOOK_PATH = "/resources/toolbarIcons/editor_toolbar/notebook.png";
+    public static final String TOOL_ROUTER_PATH = "/resources/toolbarIcons/editor_toolbar/router.png";
+    public static final String TOOL_SWITCH_PATH = "/resources/toolbarIcons/editor_toolbar/switch.png";
     
     protected ImageBuffer imageBuffer;
     protected BufferedImageLoader bufferedImageLoader;
@@ -38,7 +39,6 @@ public abstract class AbstractImageFactory {
     private float[] scales = {1f, 1f, 1f, 1f};
     private float[] offsets = {50f, 50f, 50f, 1f};
 
-    //protected RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
     protected RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
 
 
@@ -52,20 +52,20 @@ public abstract class AbstractImageFactory {
      * the result image is brighter by 50%.
      * @param hwComponentType
      * @param path
-     * @param size
+     * @param width
      * @param marked
      * @return 
      */
-    public BufferedImage getImage(HwTypeEnum hwComponentType, String path, Integer size, boolean marked) {
+    public BufferedImage getImage(HwTypeEnum hwComponentType, String path, Integer width, boolean marked) {
         BufferedImage image;
 
-        image = imageBuffer.getBufferedImage(path, size, marked);
+        image = imageBuffer.getBufferedImage(path, width, marked);
 
         if (image == null) {
             // load image from file
-            image = createImage(hwComponentType, path, size, marked);
+            image = createImage(hwComponentType, path, width, marked);
             // put image into buffer
-            imageBuffer.putBufferedImage(path, size, image, marked);
+            imageBuffer.putBufferedImage(path, width, image, marked);
         }
 
         return image;
@@ -76,11 +76,11 @@ public abstract class AbstractImageFactory {
      * the result image is brighter by 50%.
      * @param hwComponentType
      * @param path
-     * @param size
+     * @param width
      * @param marked
      * @return 
      */
-    protected BufferedImage createImage(HwTypeEnum hwComponentType, String path, Integer size, boolean marked) {
+    protected BufferedImage createImage(HwTypeEnum hwComponentType, String path, Integer width, boolean marked) {
 
         BufferedImage bi = null;
     
@@ -88,18 +88,18 @@ public abstract class AbstractImageFactory {
         
         try {
             // loads image from path and scales it to desired size
-            tmp = getScaledImage(path, size);
+            tmp = getScaledImage(path, width);
         } catch (IOException ex) {
             try {
                 // load default image
-                tmp = getScaledImage(getPath(hwComponentType), size);
+                tmp = getScaledImage(getPath(hwComponentType), width);
             } catch (IOException ex1) {
                 // should never happen, all hwComponentType default icons are in .jar as a resource
             }
         }
         
         // create new buffered image to paint on
-        bi = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        bi = new BufferedImage(tmp.getWidth(null), tmp.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
         // create graphics and set hints
         Graphics2D graphics2D = bi.createGraphics();
@@ -131,23 +131,23 @@ public abstract class AbstractImageFactory {
 
         switch (tool) {
             case HAND:
-                path = HAND_PATH;
+                path = TOOL_HAND_PATH;
                 break;
             case ADD_END_DEVICE:
-                path = END_DEVICE_PC_PATH;
+                path = TOOL_END_DEVICE_PC_PATH;
                 break;
             case ADD_ROUTER:
-                path = ROUTER_PATH;
+                path = TOOL_ROUTER_PATH;
                 break;
             case ADD_SWITCH:
-                path = SWITCH_PATH;
+                path = TOOL_SWITCH_PATH;
                 break;
             case ADD_CABLE:
-                path = CABLE_PATH;
+                path = TOOL_CABLE_PATH;
                 break;
             case ADD_REAL_PC:
             default:
-                path = REAL_PC_PATH;
+                path = TOOL_REAL_PC_PATH;
                 break;
         }
         
@@ -155,7 +155,8 @@ public abstract class AbstractImageFactory {
         
         // load image
         try {
-            tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+            //tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+            tmp = createSquareImage(getScaledImage(path, ICON_SIZE_MENU_BAR));
         } catch (IOException ex) {
             // should never happen, all hwComponentType default icons are in .jar as a resource
         }
@@ -178,7 +179,8 @@ public abstract class AbstractImageFactory {
             icon = getImageIconForToolbar(tool);
         } else {
             try {
-                icon = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+                //icon = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+                icon = createSquareImage(getScaledImage(path, ICON_SIZE_MENU_BAR));
             } catch (Exception e) {
                 System.out.println("chyba pri nacitani obrazku");
                 icon = getImageIconForToolbar(tool);
@@ -193,11 +195,11 @@ public abstract class AbstractImageFactory {
 
         switch (tool) {
             case ALIGN_TO_GRID:
-                path = ALIGN_TO_GRID_PATH;
+                path = TOOL_ALIGN_TO_GRID_PATH;
                 break;
             case FIT_TO_SIZE:
             default:
-                path = FIT_TO_SIZE_PATH;
+                path = TOOL_FIT_TO_SIZE_PATH;
                 break;
         }
         
@@ -205,7 +207,8 @@ public abstract class AbstractImageFactory {
         
         // load image
         try {
-            tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+            //tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
+            tmp = createSquareImage(getScaledImage(path, ICON_SIZE_MENU_BAR));
         } catch (IOException ex) {
             // should never happen, all hwComponentType default icons are in .jar as a resource
         }
@@ -214,16 +217,39 @@ public abstract class AbstractImageFactory {
         return tmp;
     }
 
+    private ImageIcon createSquareImage(Image image){
+        int size = image.getWidth(null);
+        
+        int offsetHeight = (image.getWidth(null) - image.getHeight(null))/2;
+        
+        BufferedImage  bi = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        
+        // create graphics and set hints
+        Graphics2D graphics2D = bi.createGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        // draw image
+        graphics2D.drawImage(image, 0, offsetHeight, null);
+        
+        graphics2D.dispose();
+        
+        return new ImageIcon(bi);
+    }
+    
     /**
      * Creates scaled image of image at path. Size will be size x size.
      * @param path
-     * @param size
+     * @param width
      * @return scaled image
      * @throws IOException 
      */
-    private Image getScaledImage(String path, int size) throws IOException{
+    private Image getScaledImage(String path, int width) throws IOException{
         Image tmp = bufferedImageLoader.getImage(path);
-        tmp = tmp.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        int height = (int)((double)(tmp.getHeight(null) / (double)tmp.getWidth(null)) * width);
+        tmp = tmp.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return tmp;
     }
     
@@ -235,17 +261,17 @@ public abstract class AbstractImageFactory {
         switch(type){
             case CISCO_ROUTER:
             case LINUX_ROUTER:
-                return ROUTER_PATH;
+                return TOOL_ROUTER_PATH;
             case CISCO_SWITCH:
             case LINUX_SWITCH:
-                return SWITCH_PATH;
+                return TOOL_SWITCH_PATH;
             case END_DEVICE:
-                return END_DEVICE_PC_PATH;
+                return TOOL_END_DEVICE_PC_PATH;
             case CABLE:
-                return CABLE_PATH;
+                return TOOL_CABLE_PATH;
             case REAL_PC:
             default:
-                return REAL_PC_PATH;
+                return TOOL_REAL_PC_PATH;
         }
     }
 }

@@ -92,7 +92,7 @@ public class BundleOfCables extends AbstractComponent{
         double L = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
         
         // count difference between cables that will be applied
-        double maxDiffernce = (zoomManager.getIconSize()/1.5) / cables.size();
+        double maxDiffernce = (zoomManager.getIconWidth()/1.5) / cables.size();
         double optimalDifference = 12.0 * zoomManager.getCurrentScale();
         double difference = Math.min(maxDiffernce, optimalDifference);
         

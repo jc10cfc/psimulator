@@ -595,18 +595,24 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         return doAlignComponentsToGrid(markedAbstractHwComponents);
     }
     
+    /**
+     * Aligns all components in List to grid. Works with default zoom sizes.
+     * In returned HashMap are all components that has been moved and the dimension
+     * of position change in default zoom.
+     * @param componentsToAlign
+     * @return HashMap with all components that has been moved and the dimension
+     * of position change in default zoom.
+     */
     private HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid(List<AbstractHwComponent> componentsToAlign) {
         HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
 
         for (AbstractHwComponent c : componentsToAlign) {
-            //Point originalLocation = c.getCenterLocation();
             Point originalLocation = c.getCenterLocationDefaultZoom();
             Point newLocation = grid.getNearestGridPointDefaultZoom(originalLocation);
 
             Dimension differenceInDefaultZoom = new Dimension(originalLocation.x - newLocation.x,
                     originalLocation.y - newLocation.y);
-            //Dimension differenceInDefaultZoom = zoomManager.doScaleToDefault(differenceInActualZoom);
-
+            
             // if component moved, add to moved 
             if (differenceInDefaultZoom.getWidth() != 0 || differenceInDefaultZoom.getHeight() != 0) {
                 //c.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), false);
@@ -618,30 +624,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         }
         return movedComponentsMap;
     }
-    
-    /*
-    private HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid(List<AbstractHwComponent> componentsToAlign) {
-        HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
-
-        for (AbstractHwComponent c : componentsToAlign) {
-            Point originalLocation = c.getCenterLocation();
-            Point newLocation = grid.getNearestGridPoint(originalLocation);
-
-            Dimension differenceInActualZoom = new Dimension(originalLocation.x - newLocation.x,
-                    originalLocation.y - newLocation.y);
-            Dimension differenceInDefaultZoom = zoomManager.doScaleToDefault(differenceInActualZoom);
-
-            // if component moved, add to moved 
-            if (differenceInDefaultZoom.getWidth() != 0 || differenceInDefaultZoom.getHeight() != 0) {
-                //c.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), false);
-                this.doChangePositionOfAbstractHwComponent(c, differenceInDefaultZoom, false);
-
-                movedComponentsMap.put(c, differenceInDefaultZoom);
-            }
-
-        }
-        return movedComponentsMap;
-    }*/
         
     @Override
     public RemovedComponentsWrapper doRemoveMarkedComponents() {
