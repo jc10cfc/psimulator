@@ -615,7 +615,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             
             // if component moved, add to moved 
             if (differenceInDefaultZoom.getWidth() != 0 || differenceInDefaultZoom.getHeight() != 0) {
-                //c.doChangePosition(zoomManager.doScaleToDefault(differenceInActualZoom), false);
                 this.doChangePositionOfAbstractHwComponent(c, differenceInDefaultZoom, false);
 
                 movedComponentsMap.put(c, differenceInDefaultZoom);
