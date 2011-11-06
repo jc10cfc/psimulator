@@ -60,7 +60,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
 
         // GRID PAINT
-        
+        /*
         g2.setColor(Color.gray);
         grid.paintComponent(g2);
         g2.setColor(Color.black);
@@ -69,6 +69,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         g2.drawLine(getWidth(), 0, getWidth(), getHeight());
         g2.drawLine(0, getHeight(), getWidth(), getHeight());
         g2.setColor(Color.black);
+         */
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
