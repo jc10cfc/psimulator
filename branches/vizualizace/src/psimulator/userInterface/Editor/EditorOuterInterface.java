@@ -2,6 +2,7 @@ package psimulator.userInterface.Editor;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 
 /**
  *
@@ -53,8 +54,17 @@ public abstract class EditorOuterInterface extends JPanel{
      * Calls ZOOM RESET
      */
     public abstract void zoomReset();
+    
     /**
-     * Inits EditorPanel. Call after constructor before use.
+     * Removes graph and returns it in parameter
+     * @return 
      */
-    public abstract void init();
+    public abstract Graph removeGraph();
+    /**
+     * Sets graph 
+     * @param graph 
+     */
+    public abstract void setGraph(Graph graph);
+    
+    
 }

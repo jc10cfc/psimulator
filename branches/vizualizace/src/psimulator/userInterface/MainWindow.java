@@ -4,6 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Observable;
+import java.util.Observer;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
@@ -14,12 +18,13 @@ import psimulator.userInterface.actionListerners.PreferencesActionListener;
 import psimulator.userInterface.Editor.EditorOuterInterface;
 import psimulator.userInterface.Editor.EditorPanel;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
+import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 
 /**
  *
  * @author Martin
  */
-public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade {
+public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade, Observer {
 
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
@@ -29,42 +34,48 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private ToolBar jToolBar;
     private EditorOuterInterface jEditor;
     /* end of window components */
+    private JFrame parentForCompoents;
+    private JFileChooser fileChooser;
 
     public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
-        
-        try{
-          //if OS is Windows we set the windows look and feel
-          if(isWindows()){
-              UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-          }else{ // otherwise we set metal look and feel
-              //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-          }
-            
-        }catch(Exception e){
-            
+
+        try {
+            //if OS is Windows we set the windows look and feel
+            if (isWindows()) {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } else { // otherwise we set metal look and feel
+                //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            }
+
+        } catch (Exception e) {
         }
-                
+
+        fileChooser = new JFileChooser();
 
         jMenuBar = new MenuBar(dataLayer);
         jToolBar = new ToolBar(dataLayer);
-        jEditor = new EditorPanel(this, dataLayer);
-
+        
         this.setTitle(dataLayer.getString("WINDOW_TITLE"));
 
         this.setJMenuBar(jMenuBar);
         this.add(jToolBar, BorderLayout.PAGE_START);
 
+        this.parentForCompoents = (JFrame) this;
+
+        // set this as Observer to LanguageManager
+        dataLayer.addLanguageObserver((Observer) this);
     }
 
     @Override
     public void initView(ControllerFacade controller) {
         this.controller = controller;
 
-        jEditor.init();
+        // set translated texts to file chooser
+        setTextsToFileChooser();
 
-        updateUndoRedoButtons();
-        updateZoomButtons();
+        updateProjectRelatedButtons();
+        
         updateToolBarIconsSize(dataLayer.getToolbarIconSize());
 
         addActionListenersToViewComponents();
@@ -72,7 +83,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // set of window properties
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setMinimumSize(new Dimension(640, 480));
-        this.setSize(new Dimension(800,600));
+        this.setSize(new Dimension(800, 600));
         this.setVisible(true);
     }
 
@@ -93,12 +104,28 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         jMenuBar.setZoomOutEnabled(jEditor.canZoomOut());
         jToolBar.setZoomOutEnabled(jEditor.canZoomOut());
+        
+        jMenuBar.setZoomResetEnabled(true);
+        jToolBar.setZoomResetEnabled(true);
     }
-    
+
     @Override
-    public void updateToolBarIconsSize(ToolbarIconSizeEnum size){
+    public void updateToolBarIconsSize(ToolbarIconSizeEnum size) {
         jToolBar.updateIconSize(size);
     }
+
+    /**
+     * reaction to Language Observable update
+     * @param o
+     * @param o1 
+     */
+    @Override
+    public void update(Observable o, Object o1) {
+        setTextsToFileChooser();
+
+    }
+
+    
 
     /////////////////////-----------------------------------////////////////////
     /**
@@ -136,7 +163,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER New project");
-            createJPanelEditor();
+            createJPanelEditor(null);
+            
+            
         }
     }
 
@@ -168,7 +197,16 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Open");
+           
+            int returnVal = fileChooser.showOpenDialog(parentForCompoents);
 
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                //This is where a real application would open the file.
+                System.out.println("Opening file: " + file);
+                
+                createJPanelEditor(null);
+            }
         }
     }
 
@@ -184,6 +222,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Save");
+            
         }
     }
 
@@ -199,7 +238,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Save As");
-            //JOptionPane.showMessageDialog(null, "Nelze uložit jako \n\"H:\\Fotky\\2011\\dovolena\\...\\  \", protože", "Adobe Photoshop CS5", JOptionPane.ERROR_MESSAGE);
+            
+            int returnVal = fileChooser.showSaveDialog(parentForCompoents);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                //This is where a real application would open the file.
+                System.out.println("Saving file: " + file);
+            }
         }
     }
 
@@ -245,6 +291,33 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
 ////////------------ PRIVATE------------///////////
 
+    private void updateProjectRelatedButtons(){
+        if(jEditor == null){
+            jMenuBar.setProjectRelatedButtonsEnabled(false);
+            jToolBar.setProjectRelatedButtonsEnabled(false);
+            
+            jMenuBar.setUndoEnabled(false);
+            jToolBar.setUndoEnabled(false);
+
+            jMenuBar.setRedoEnabled(false);
+            jToolBar.setRedoEnabled(false);
+            
+            jMenuBar.setZoomInEnabled(false);
+            jToolBar.setZoomInEnabled(false);
+
+            jMenuBar.setZoomOutEnabled(false);
+            jToolBar.setZoomOutEnabled(false);
+
+            jMenuBar.setZoomResetEnabled(false);
+            jToolBar.setZoomResetEnabled(false);
+            return;
+        }
+        jMenuBar.setProjectRelatedButtonsEnabled(true);
+        jToolBar.setProjectRelatedButtonsEnabled(true);
+        
+        updateZoomButtons();
+    }
+    
     /**
      * Adds action listeners to View Components
      */
@@ -295,7 +368,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     /**
      * creates JPanelEditor and places it to CENTER of main window
      */
-    private void createJPanelEditor() {
+    private void createJPanelEditor(Graph graph) {
+        jEditor = new EditorPanel(this, dataLayer, graph);
+        
+        updateProjectRelatedButtons();
+        
         this.add(jEditor, BorderLayout.CENTER);
         this.setVisible(true);
         this.repaint();
@@ -306,6 +383,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     private void removeJPanelEditor() {
         this.remove(jEditor);
+        jEditor = null;
+        
+        updateProjectRelatedButtons();
+        
         this.setVisible(true);
         this.repaint();
     }
@@ -317,5 +398,43 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private static boolean isWindows() {
         String os = System.getProperty("os.name").toLowerCase();
         return (os.indexOf("win") >= 0);
+    }
+    
+    private void setTextsToFileChooser() {
+        UIManager.put("FileChooser.lookInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
+        UIManager.put("FileChooser.filesOfTypeLabelText", dataLayer.getString("FILE_CHOOSER_FILES_OF_TYPE"));
+        UIManager.put("FileChooser.upFolderToolTipText", dataLayer.getString("FILE_CHOOSER_UP_FOLDER"));
+        
+        UIManager.put("FileChooser.fileNameLabelText", dataLayer.getString("FILE_CHOOSER_FILE_NAME"));
+        UIManager.put("FileChooser.homeFolderToolTipText", dataLayer.getString("FILE_CHOOSER_HOME_FOLDER"));
+        UIManager.put("FileChooser.newFolderToolTipText", dataLayer.getString("FILE_CHOOSER_NEW_FOLDER"));
+        UIManager.put("FileChooser.listViewButtonToolTipTextlist", dataLayer.getString("FILE_CHOOSER_LIST_VIEW"));
+        UIManager.put("FileChooser.detailsViewButtonToolTipText", dataLayer.getString("FILE_CHOOSER_DETAILS_VIEW"));
+        UIManager.put("FileChooser.saveButtonText", dataLayer.getString("FILE_CHOOSER_SAVE"));
+        UIManager.put("FileChooser.openButtonText", dataLayer.getString("FILE_CHOOSER_OPEN"));
+        UIManager.put("FileChooser.cancelButtonText", dataLayer.getString("FILE_CHOOSER_CANCEL"));
+        UIManager.put("FileChooser.updateButtonText=", dataLayer.getString("FILE_CHOOSER_UPDATE"));
+        UIManager.put("FileChooser.helpButtonText", dataLayer.getString("FILE_CHOOSER_HELP"));
+        UIManager.put("FileChooser.saveButtonToolTipText", dataLayer.getString("FILE_CHOOSER_SAVE"));
+        UIManager.put("FileChooser.openButtonToolTipText", dataLayer.getString("FILE_CHOOSER_OPEN"));
+        UIManager.put("FileChooser.cancelButtonToolTipText", dataLayer.getString("FILE_CHOOSER_CANCEL"));
+        UIManager.put("FileChooser.updateButtonToolTipText", dataLayer.getString("FILE_CHOOSER_UPDATE"));
+        UIManager.put("FileChooser.helpButtonToolTipText", dataLayer.getString("FILE_CHOOSER_HELP"));
+        
+        
+        UIManager.put("FileChooser.openDialogTitleText", dataLayer.getString("FILE_CHOOSER_OPEN"));
+        UIManager.put("FileChooser.saveDialogTitleText", dataLayer.getString("FILE_CHOOSER_SAVE"));
+        UIManager.put("FileChooser.fileNameHeaderText", dataLayer.getString("FILE_CHOOSER_FILE_NAME"));
+        UIManager.put("FileChooser.newFolderButtonText", dataLayer.getString("FILE_CHOOSER_NEW_FOLDER"));
+        
+        UIManager.put("FileChooser.renameFileButtonText", dataLayer.getString("FILE_CHOOSER_RENAME_FILE"));
+        UIManager.put("FileChooser.deleteFileButtonText", dataLayer.getString("FILE_CHOOSER_DELETE_FILE"));
+        UIManager.put("FileChooser.filterLabelText", dataLayer.getString("FILE_CHOOSER_FILE_TYPES"));
+        UIManager.put("FileChooser.fileSizeHeaderText", dataLayer.getString("FILE_CHOOSER_SIZE"));
+        UIManager.put("FileChooser.fileDateHeaderText", dataLayer.getString("FILE_CHOOSER_DATE_MODIFIED"));
+        
+        UIManager.put("FileChooser.saveInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
+        UIManager.put("FileChooser.acceptAllFileFilterText", dataLayer.getString("FILE_CHOOSER_ACCEPT_FILES"));
+       
     }
 }

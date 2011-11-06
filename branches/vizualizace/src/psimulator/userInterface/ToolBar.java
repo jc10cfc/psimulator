@@ -167,6 +167,16 @@ public final class ToolBar extends JToolBar implements Observer {
     public void setZoomOutEnabled(boolean enabled){
         jButtonZoomOut.setEnabled(enabled);
     }
+    
+    public void setZoomResetEnabled(boolean enabled){
+        jButtonZoomReset.setEnabled(enabled);
+    }
+    
+    public void setProjectRelatedButtonsEnabled(boolean enabled){
+        jButtonClose.setEnabled(enabled);
+        jButtonSave.setEnabled(enabled);
+        jButtonSaveAs.setEnabled(enabled);
+    }
 
     /**
      * Adds action listener to jButtonNew

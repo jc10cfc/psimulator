@@ -198,6 +198,16 @@ public class MenuBar extends JMenuBar implements Observer {
     public void setZoomOutEnabled(boolean enabled){
         jMenuItemZoomOut.setEnabled(enabled);
     }
+    
+    public void setZoomResetEnabled(boolean enabled){
+        jMenuItemZoomReset.setEnabled(enabled);
+    }
+    
+    public void setProjectRelatedButtonsEnabled(boolean enabled){
+        jMenuItemClose.setEnabled(enabled);
+        jMenuItemSave.setEnabled(enabled);
+        jMenuItemSaveAs.setEnabled(enabled);
+    }
 
     /**
      * Adds action listener to jMenuItemNew

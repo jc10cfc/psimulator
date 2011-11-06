@@ -18,7 +18,6 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
@@ -72,7 +71,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
-    public DrawPanel(MainWindowInnerInterface mainWindow, EditorInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
+    public DrawPanel(MainWindowInnerInterface mainWindow, EditorInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer, Graph graph) {
         super();
 
         this.editorPanel = editorPanel;
@@ -80,8 +79,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
 
+        if(graph == null){
+            this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
+        }else{
+            this.graph = graph;
+        }
         
-        this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
         
         actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
         actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
@@ -99,7 +102,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         zoomManager.addObserver((Observer)this);
     }
-   
+    
     private void createKeyBindings(){
         InputMap inputMap = mainWindow.getRootPane().getInputMap();
         ActionMap actionMap = mainWindow.getRootPane().getActionMap();
@@ -167,7 +170,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
 
         graph.paint(g2);
-
+        
         // DRAW makring rectangle
         if (rectangleInProgress) {
             g2.setColor(Color.BLUE);
@@ -398,6 +401,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
 
     
-   
+    
 }
 
