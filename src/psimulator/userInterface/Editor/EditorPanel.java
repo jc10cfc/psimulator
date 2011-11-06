@@ -1,5 +1,6 @@
 package psimulator.userInterface.Editor;
 
+import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.Editor.DrawPanel.ZoomEventWrapper;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
@@ -30,7 +31,7 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
     private MainWindowInnerInterface mainWindow;
     private DataLayerFacade dataLayer;
 
-    public EditorPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+    public EditorPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer, Graph graph) {
         super(new BorderLayout());
         
         this.mainWindow = mainWindow;
@@ -42,7 +43,7 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
         // create draw panel
-        jPanelDraw = new DrawPanel(mainWindow, (EditorInnerInterface) this, imageFactory, dataLayer);
+        jPanelDraw = new DrawPanel(mainWindow, (EditorInnerInterface) this, imageFactory, dataLayer, graph);
         
         //create scroll pane
         jScrollPane = new JScrollPane(jPanelDraw);
@@ -64,12 +65,8 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         // set default tool in ToolBar
         doSetDefaultToolInToolBar();
         
-    }
-    
-    @Override
-    public void init(){
-        //jPanelDraw.getZoomManager().addObserver(this);
-        jPanelDraw.addObserverToZoomManager(this);
+        // add this to zoom Manager as Observer
+        jPanelDraw.addObserverToZoomManager((Observer)this);
         
         // add listener for FitToSize button in tool bar
         jToolBarEditor.addToolActionFitToSizeListener(jPanelDraw.getAbstractAction(DrawPanelAction.FIT_TO_SIZE));
@@ -98,6 +95,16 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         this.repaint();
     }
 
+    @Override
+    public Graph removeGraph() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setGraph(Graph graph) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
     @Override
     public boolean canUndo() {
         return jPanelDraw.canUndo();
@@ -151,5 +158,7 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         // set default tool in ToolBar
         jToolBarEditor.setDefaultTool();
     }
+
+    
 
 }
