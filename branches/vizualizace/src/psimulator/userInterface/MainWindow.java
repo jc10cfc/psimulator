@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
@@ -18,7 +19,6 @@ import psimulator.userInterface.actionListerners.PreferencesActionListener;
 import psimulator.userInterface.Editor.EditorOuterInterface;
 import psimulator.userInterface.Editor.EditorPanel;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 
 /**
  *
@@ -51,11 +51,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         } catch (Exception e) {
         }
 
-        fileChooser = new JFileChooser();
-
         jMenuBar = new MenuBar(dataLayer);
         jToolBar = new ToolBar(dataLayer);
-        
+
         this.setTitle(dataLayer.getString("WINDOW_TITLE"));
 
         this.setJMenuBar(jMenuBar);
@@ -71,11 +69,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     public void initView(ControllerFacade controller) {
         this.controller = controller;
 
+
+        fileChooser = new JFileChooser();
+
         // set translated texts to file chooser
         setTextsToFileChooser();
 
         updateProjectRelatedButtons();
-        
+
         updateToolBarIconsSize(dataLayer.getToolbarIconSize());
 
         addActionListenersToViewComponents();
@@ -104,7 +105,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         jMenuBar.setZoomOutEnabled(jEditor.canZoomOut());
         jToolBar.setZoomOutEnabled(jEditor.canZoomOut());
-        
+
         jMenuBar.setZoomResetEnabled(true);
         jToolBar.setZoomResetEnabled(true);
     }
@@ -122,10 +123,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     @Override
     public void update(Observable o, Object o1) {
         setTextsToFileChooser();
-
     }
-
-    
 
     /////////////////////-----------------------------------////////////////////
     /**
@@ -163,9 +161,27 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER New project");
-            createJPanelEditor(null);
-            
-            
+
+            if (jEditor == null) {
+                createJPanelEditor();
+            } else {
+                int i = showWarningYesNoDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CREATING_PROJECT_WITH_ONE_OPENED"));
+
+                // if YES
+                if (i == 0) {
+                    // save
+                    // if save not successfull
+                    if(!doSaveAsAction()){
+                        // do nothing
+                        System.out.println("ukladani se nepovedlo");
+                        return;
+                    }
+                }
+                
+                removeJPanelEditor();
+                
+                createJPanelEditor();
+            }
         }
     }
 
@@ -180,8 +196,22 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            //System.out.println("LISTENER Close");
-            removeJPanelEditor();
+            System.out.println("LISTENER Close");
+            
+            int i = showWarningYesNoDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
+
+                // if YES
+                if (i == 0) {
+                    // save
+                    // if save not successfull
+                    if(!doSaveAsAction()){
+                        // do nothing
+                        System.out.println("ukladani se nepovedlo");
+                        return;
+                    }
+                }
+                
+                removeJPanelEditor();
         }
     }
 
@@ -197,16 +227,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Open");
-           
-            int returnVal = fileChooser.showOpenDialog(parentForCompoents);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                //This is where a real application would open the file.
-                System.out.println("Opening file: " + file);
-                
-                createJPanelEditor(null);
-            }
+            doOpenAction();
         }
     }
 
@@ -222,7 +244,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Save");
-            
+
         }
     }
 
@@ -238,13 +260,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Save As");
-            
-            int returnVal = fileChooser.showSaveDialog(parentForCompoents);
 
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                //This is where a real application would open the file.
-                System.out.println("Saving file: " + file);
+            // if save successfull
+            if(doSaveAsAction()){
+                System.out.println("save ok");
+            }else{
+                System.out.println("save problem");
             }
         }
     }
@@ -291,17 +312,55 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
 ////////------------ PRIVATE------------///////////
 
-    private void updateProjectRelatedButtons(){
-        if(jEditor == null){
+    private boolean doSaveAsAction() {
+        int returnVal = fileChooser.showSaveDialog(parentForCompoents);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            //This is where a real application would open the file.
+            System.out.println("Saving file: " + file);
+            return true;
+        }
+        return false;
+    }
+
+    private void doOpenAction() {
+        int returnVal = fileChooser.showOpenDialog(parentForCompoents);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            //This is where a real application would open the file.
+            System.out.println("Opening file: " + file);
+
+            createJPanelEditor();
+        }
+    }
+
+    private int showWarningYesNoDialog(String title, String message) {
+        Object[] options = {dataLayer.getString("YES"), dataLayer.getString("NO")};
+        int n = JOptionPane.showOptionDialog(this,
+                message,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null, //do not use a custom Icon
+                options, //the titles of buttons
+                options[0]); //default button title
+
+        return n;
+    }
+
+    private void updateProjectRelatedButtons() {
+        if (jEditor == null) {
             jMenuBar.setProjectRelatedButtonsEnabled(false);
             jToolBar.setProjectRelatedButtonsEnabled(false);
-            
+
             jMenuBar.setUndoEnabled(false);
             jToolBar.setUndoEnabled(false);
 
             jMenuBar.setRedoEnabled(false);
             jToolBar.setRedoEnabled(false);
-            
+
             jMenuBar.setZoomInEnabled(false);
             jToolBar.setZoomInEnabled(false);
 
@@ -314,10 +373,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
         jMenuBar.setProjectRelatedButtonsEnabled(true);
         jToolBar.setProjectRelatedButtonsEnabled(true);
-        
+
         updateZoomButtons();
     }
-    
+
     /**
      * Adds action listeners to View Components
      */
@@ -368,11 +427,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     /**
      * creates JPanelEditor and places it to CENTER of main window
      */
-    private void createJPanelEditor(Graph graph) {
-        jEditor = new EditorPanel(this, dataLayer, graph);
-        
+    private void createJPanelEditor() {
+        jEditor = new EditorPanel(this, dataLayer);
+
         updateProjectRelatedButtons();
-        
+
         this.add(jEditor, BorderLayout.CENTER);
         this.setVisible(true);
         this.repaint();
@@ -384,9 +443,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private void removeJPanelEditor() {
         this.remove(jEditor);
         jEditor = null;
-        
+
         updateProjectRelatedButtons();
-        
+
         this.setVisible(true);
         this.repaint();
     }
@@ -399,12 +458,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         String os = System.getProperty("os.name").toLowerCase();
         return (os.indexOf("win") >= 0);
     }
-    
+
     private void setTextsToFileChooser() {
         UIManager.put("FileChooser.lookInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
         UIManager.put("FileChooser.filesOfTypeLabelText", dataLayer.getString("FILE_CHOOSER_FILES_OF_TYPE"));
         UIManager.put("FileChooser.upFolderToolTipText", dataLayer.getString("FILE_CHOOSER_UP_FOLDER"));
-        
+
         UIManager.put("FileChooser.fileNameLabelText", dataLayer.getString("FILE_CHOOSER_FILE_NAME"));
         UIManager.put("FileChooser.homeFolderToolTipText", dataLayer.getString("FILE_CHOOSER_HOME_FOLDER"));
         UIManager.put("FileChooser.newFolderToolTipText", dataLayer.getString("FILE_CHOOSER_NEW_FOLDER"));
@@ -420,21 +479,23 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         UIManager.put("FileChooser.cancelButtonToolTipText", dataLayer.getString("FILE_CHOOSER_CANCEL"));
         UIManager.put("FileChooser.updateButtonToolTipText", dataLayer.getString("FILE_CHOOSER_UPDATE"));
         UIManager.put("FileChooser.helpButtonToolTipText", dataLayer.getString("FILE_CHOOSER_HELP"));
-        
-        
+
+
         UIManager.put("FileChooser.openDialogTitleText", dataLayer.getString("FILE_CHOOSER_OPEN"));
         UIManager.put("FileChooser.saveDialogTitleText", dataLayer.getString("FILE_CHOOSER_SAVE"));
         UIManager.put("FileChooser.fileNameHeaderText", dataLayer.getString("FILE_CHOOSER_FILE_NAME"));
         UIManager.put("FileChooser.newFolderButtonText", dataLayer.getString("FILE_CHOOSER_NEW_FOLDER"));
-        
+
         UIManager.put("FileChooser.renameFileButtonText", dataLayer.getString("FILE_CHOOSER_RENAME_FILE"));
         UIManager.put("FileChooser.deleteFileButtonText", dataLayer.getString("FILE_CHOOSER_DELETE_FILE"));
         UIManager.put("FileChooser.filterLabelText", dataLayer.getString("FILE_CHOOSER_FILE_TYPES"));
         UIManager.put("FileChooser.fileSizeHeaderText", dataLayer.getString("FILE_CHOOSER_SIZE"));
         UIManager.put("FileChooser.fileDateHeaderText", dataLayer.getString("FILE_CHOOSER_DATE_MODIFIED"));
-        
+
         UIManager.put("FileChooser.saveInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
         UIManager.put("FileChooser.acceptAllFileFilterText", dataLayer.getString("FILE_CHOOSER_ACCEPT_FILES"));
-       
+
+        // let fileChooser to update according to current look and feel = it loads texts againt
+        fileChooser.updateUI();
     }
 }

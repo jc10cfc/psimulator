@@ -31,7 +31,7 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
     private MainWindowInnerInterface mainWindow;
     private DataLayerFacade dataLayer;
 
-    public EditorPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer, Graph graph) {
+    public EditorPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         super(new BorderLayout());
         
         this.mainWindow = mainWindow;
@@ -43,7 +43,7 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
         // create draw panel
-        jPanelDraw = new DrawPanel(mainWindow, (EditorInnerInterface) this, imageFactory, dataLayer, graph);
+        jPanelDraw = new DrawPanel(mainWindow, (EditorInnerInterface) this, imageFactory, dataLayer);
         
         //create scroll pane
         jScrollPane = new JScrollPane(jPanelDraw);

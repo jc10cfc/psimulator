@@ -71,7 +71,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
-    public DrawPanel(MainWindowInnerInterface mainWindow, EditorInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer, Graph graph) {
+    public DrawPanel(MainWindowInnerInterface mainWindow, EditorInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
 
         this.editorPanel = editorPanel;
@@ -79,11 +79,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
 
-        if(graph == null){
-            this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
-        }else{
-            this.graph = graph;
-        }
+        this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
+        
         
         
         actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
