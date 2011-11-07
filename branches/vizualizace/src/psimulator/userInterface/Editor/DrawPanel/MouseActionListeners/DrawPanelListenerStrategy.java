@@ -48,6 +48,8 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         this.dataLayer = dataLayer;
     }
 
+    public abstract void initialize();
+    
     public abstract void deInitialize();
 
     public abstract void setTool(AbstractTool tool);

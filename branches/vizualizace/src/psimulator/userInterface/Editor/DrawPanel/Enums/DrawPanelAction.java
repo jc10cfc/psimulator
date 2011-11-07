@@ -8,5 +8,6 @@ public enum DrawPanelAction {
     ALIGN_COMPONENTS_TO_GRID,
     DELETE,
     PROPERTIES,
-    FIT_TO_SIZE;
+    FIT_TO_SIZE,
+    SELECT_ALL;
 }
