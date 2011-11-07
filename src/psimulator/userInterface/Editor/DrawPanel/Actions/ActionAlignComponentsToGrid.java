@@ -43,10 +43,10 @@ public class ActionAlignComponentsToGrid extends AbstractDrawPanelAction {
             // update Undo and Redo buttons
             mainWindow.updateUndoRedoButtons();
 
-            // repaint draw Panel
-            drawPanel.repaint();
+            
         }
-        
+        // repaint draw Panel
+        drawPanel.repaint();
         
     }
 }
