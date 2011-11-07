@@ -133,49 +133,59 @@ public class MenuBar extends JMenuBar implements Observer {
         this.add(jMenuOptions);
 
         /* set texts to menu items */
+        setMnemonics();
         setTextsToComponents();
+    }
+    
+    private void setMnemonics(){
+        jMenuItemNew.setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_DOWN_MASK));
+        jMenuItemClose.setAccelerator(KeyStroke.getKeyStroke('W', ActionEvent.CTRL_MASK));
+        jMenuItemOpen.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK));
+        jMenuItemSave.setAccelerator(KeyStroke.getKeyStroke('S', ActionEvent.CTRL_MASK));
+        jMenuItemSaveAs.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
+        jMenuItemExit.setAccelerator(KeyStroke.getKeyStroke('Q', ActionEvent.CTRL_MASK));
+        
+        jMenuEdit.setMnemonic('E');
+        jMenuItemUndo.setAccelerator(KeyStroke.getKeyStroke('Z', InputEvent.CTRL_DOWN_MASK));
+        jMenuItemRedo.setAccelerator(KeyStroke.getKeyStroke('Y', InputEvent.CTRL_DOWN_MASK));
+        jMenuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke('A', InputEvent.CTRL_DOWN_MASK));
+        jMenuItemDelete.setAccelerator(KeyStroke.getKeyStroke("DELETE"));
+        
+        jMenuView.setMnemonic('V');
+        //jMenuItemZoomIn.setAccelerator(KeyStroke.getKeyStroke("PLUS"));
+        //jMenuItemZoomOut.setAccelerator(KeyStroke.getKeyStroke('-', InputEvent.CTRL_DOWN_MASK));
+        //jMenuItemZoomReset.setAccelerator(KeyStroke.getKeyStroke('0', InputEvent.CTRL_DOWN_MASK));
+        
+        jMenuOptions.setMnemonic('O');
+        jMenuItemPreferences.setAccelerator(KeyStroke.getKeyStroke('P', ActionEvent.CTRL_MASK));
+        
     }
 
     private void setTextsToComponents() {
         /* menu File */
         jMenuFile.setText(dataLayer.getString("FILE"));
         jMenuFile.setMnemonic(dataLayer.getString("FILE_mnemonic").charAt(0));
-
         jMenuItemNew.setText(dataLayer.getString("NEW_PROJECT"));
-        jMenuItemNew.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("NEW_PROJECT_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         jMenuItemClose.setText(dataLayer.getString("CLOSE"));
-        jMenuItemClose.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("CLOSE_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
         jMenuItemOpen.setText(dataLayer.getString("OPEN"));
-        jMenuItemOpen.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("OPEN_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         jMenuItemSave.setText(dataLayer.getString("SAVE"));
-        jMenuItemSave.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("SAVE_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
         jMenuItemSaveAs.setText(dataLayer.getString("SAVE_AS"));
-        jMenuItemSaveAs.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("SAVE_AS_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
-        
         jMenuItemExit.setText(dataLayer.getString("EXIT"));
-        jMenuItemExit.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("EXIT_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
         /* END menu File */
         
         /* menu Edit */
         jMenuEdit.setText(dataLayer.getString("EDIT"));
-        jMenuEdit.setMnemonic(dataLayer.getString("EDIT_mnemonic").charAt(0));
         
         jMenuItemUndo.setText(dataLayer.getString("UNDO"));
-        jMenuItemUndo.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("UNDO_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK));
-        
         jMenuItemRedo.setText(dataLayer.getString("REDO"));
-        jMenuItemRedo.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("REDO_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK));
         
         jMenuItemSelectAll.setText(dataLayer.getString("SELECT_ALL"));
-        jMenuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke('A', InputEvent.CTRL_DOWN_MASK));
         
         jMenuItemDelete.setText(dataLayer.getString("DELETE"));
-        jMenuItemDelete.setAccelerator(KeyStroke.getKeyStroke("DELETE"));
         /* END menu Edit */
         
         /* menu View */
         jMenuView.setText(dataLayer.getString("VIEW"));
-        jMenuView.setMnemonic(dataLayer.getString("VIEW_mnemonic").charAt(0));
         
         jMenuItemZoomIn.setText(dataLayer.getString("ZOOM_IN"));
         jMenuItemZoomOut.setText(dataLayer.getString("ZOOM_OUT"));
@@ -184,10 +194,8 @@ public class MenuBar extends JMenuBar implements Observer {
         
         /* menu Options */
         jMenuOptions.setText(dataLayer.getString("OPTIONS"));
-        jMenuOptions.setMnemonic(dataLayer.getString("OPTIONS_mnemonic").charAt(0));
         
         jMenuItemPreferences.setText(dataLayer.getString("PREFERENCES"));
-        jMenuItemPreferences.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("PREFERENCES_mnemonic").charAt(0), ActionEvent.CTRL_MASK));
         /* END menu Options */
 
         
