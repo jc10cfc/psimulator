@@ -44,12 +44,16 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         popupMenu = new CableConnectToInterfacePopupMenu(drawPanel, new PopupInterfaceChooseListener(), this);
     }
 
+    @Override
+    public void initialize() {
+    }
+    
     /**
      * sets cursor to default and inits cable making to start
      */
     @Override
     public void deInitialize() {
-        drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        //drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         initVariablesForCableMaking();
         drawPanel.repaint();
     }

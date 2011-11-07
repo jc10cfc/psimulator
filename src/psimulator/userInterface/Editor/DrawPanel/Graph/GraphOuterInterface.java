@@ -74,6 +74,8 @@ public interface GraphOuterInterface {
      */
     public void doMarkCable(Cable cable);
     
+    public void doMarkAllComponents();
+    
     /**
      * unmarks all marked components
      */
@@ -83,6 +85,12 @@ public interface GraphOuterInterface {
      * @return count of marked AbstractHWComponentsCount in graph
      */
     public int getMarkedAbstractHWComponentsCount();
+    
+    /**
+     * 
+     * @return marked cables count
+     */
+    public int getMarkedCablesCount();
     
     /**
      * Retruns new ArrayList with marked components

@@ -165,21 +165,26 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (jEditor == null) {
                 createJPanelEditor();
             } else {
-                int i = showWarningYesNoDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CREATING_PROJECT_WITH_ONE_OPENED"));
+                int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CREATING_PROJECT_WITH_ONE_OPENED"));
 
-                // if YES
+                // if canceled
+                if (i == 2 || i == -1) {
+                    // do nothing
+                    return;
+                }
+
+                // if YES -> save
                 if (i == 0) {
-                    // save
                     // if save not successfull
-                    if(!doSaveAsAction()){
+                    if (!doSaveAsAction()) {
                         // do nothing
                         System.out.println("ukladani se nepovedlo");
                         return;
                     }
                 }
-                
+
                 removeJPanelEditor();
-                
+
                 createJPanelEditor();
             }
         }
@@ -197,21 +202,28 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Close");
-            
-            int i = showWarningYesNoDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
 
-                // if YES
-                if (i == 0) {
-                    // save
-                    // if save not successfull
-                    if(!doSaveAsAction()){
-                        // do nothing
-                        System.out.println("ukladani se nepovedlo");
-                        return;
-                    }
+            int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
+
+            // if canceled
+            if (i == 2 || i == -1) {
+                // do nothing
+                return;
+            }
+
+            // if YES -> save
+            if (i == 0) {
+                // if save not successfull
+                if (!doSaveAsAction()) {
+                    // do nothing
+                    System.out.println("ukladani se nepovedlo");
+                    return;
                 }
-                
-                removeJPanelEditor();
+            }
+
+            // if NO or save succesfull
+
+            removeJPanelEditor();
         }
     }
 
@@ -262,9 +274,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             System.out.println("LISTENER Save As");
 
             // if save successfull
-            if(doSaveAsAction()){
+            if (doSaveAsAction()) {
                 System.out.println("save ok");
-            }else{
+            } else {
                 System.out.println("save problem");
             }
         }
@@ -336,13 +348,13 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
     }
 
-    private int showWarningYesNoDialog(String title, String message) {
-        Object[] options = {dataLayer.getString("YES"), dataLayer.getString("NO")};
+    private int showWarningPossibleDataLossDialog(String title, String message) {
+        Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE"), dataLayer.getString("CANCEL")};
         int n = JOptionPane.showOptionDialog(this,
                 message,
                 title,
                 JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE,
+                JOptionPane.INFORMATION_MESSAGE,
                 null, //do not use a custom Icon
                 options, //the titles of buttons
                 options[0]); //default button title
@@ -410,6 +422,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         ActionListener udnoListener = new JMenuItemUndoRedoListener();
         jMenuBar.addUndoRedoActionListener(udnoListener);
         jToolBar.addUndoRedoActionListener(udnoListener);
+        
+        //jMenuBar.addDeleteListener();
+        //jMenuBar.addSelectAllListener();
         // END add listeners to Menu Bar - EDIT
 
         // add listeners to Menu Bar - VIEW

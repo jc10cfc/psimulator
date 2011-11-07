@@ -10,12 +10,14 @@ import java.util.List;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
+import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuCable;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.Editor.Tools.ManipulationTool;
 import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableMoveComponent;
@@ -44,16 +46,23 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      * original position, left-upper point in default zoom of dragged components
      */
     protected Point draggedComponentsOriginalPoint;
-    
     /**
      * point in actual zoom where started components marking
      */
     protected Point startPointOfMarkingTransparentRectangle;
     
+    protected boolean transparentRectangleInProgress;
+            
     private ManipulationTool manipulationTool;
 
     public DrawPanelListenerStrategyHand(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
+    }
+
+    @Override
+    public void initialize() {
+        drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        transparentRectangleInProgress = false;
     }
 
     @Override
@@ -70,7 +79,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     public void setTool(AbstractTool tool) {
         this.manipulationTool = (ManipulationTool) tool;
     }
-    
+
     /**
      * Marks component at Point clicked if any
      * IF control pressed, than add component to marked components
@@ -132,7 +141,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             graph.doUnmarkAllComponents();
             // set clicked component marked and add to marked components
             graph.doMarkComponentWithCables(clickedComponent, true);
-            
+
         }
         //repaint
         drawPanel.repaint();
@@ -145,16 +154,18 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         if (draggedComponents == null) {
             draggedComponents = new ArrayList<AbstractHwComponent>();
         } else {
-            draggedComponents.clear();
+            // if control not down, clear selection
         }
-
-        // start painting transparent rectange for marking more components
-        startPointOfMarkingTransparentRectangle = e.getPoint();
 
         Markable clickedComponent = getClickedAbstractHwComponent(e.getPoint());
 
         if (clickedComponent == null) {
+            // start painting transparent rectange for marking more components
+            startPointOfMarkingTransparentRectangle = e.getPoint();
+            transparentRectangleInProgress = true;
             return;
+        }else{
+            transparentRectangleInProgress = false;
         }
 
         // try if start dragging of some component
@@ -197,12 +208,12 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseDraggedLeft(MouseEvent e) {
-        if (draggedComponents == null){
+        if (draggedComponents == null) {
             return;
         }
-        
+
         // painting transparent rectange for marking more components
-        if (draggedComponents.isEmpty()) {
+        if (draggedComponents.isEmpty() && transparentRectangleInProgress == true) {
             // calculate width an height
             int width = startPointOfMarkingTransparentRectangle.x - e.getPoint().x;
             int height = startPointOfMarkingTransparentRectangle.y - e.getPoint().y;
@@ -260,7 +271,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // change position of all components
         graph.doChangePositionOfAbstractHwComponents(draggedComponents, zoomManager.doScaleToDefault(differenceInActualZoom), true);
-                
+
 
         drawPanel.repaint();
     }
@@ -299,7 +310,9 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         // painting transparent rectange for marking more components
+        transparentRectangleInProgress = false;
         drawPanel.setTransparetnRectangleInProgress(false, null);
+        
         drawPanel.repaint();
     }
 
@@ -313,7 +326,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         //Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
-        
+
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
             if (boc.intersects(e.getPoint())) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -324,59 +337,77 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
-    
     @Override
     public void mousePressedRight(MouseEvent e) {
+        transparentRectangleInProgress = false;
+        
         // get clicked component
-        AbstractHwComponent clickedComponent = getClickedAbstractHwComponent(e.getPoint());
-        
-        
-        // if there are more marked components and we clicked one
-        if(graph.getMarkedAbstractHWComponentsCount() > 1 && (clickedComponent!=null &&clickedComponent.isMarked())){
+        AbstractComponent clickedComponent = getClickedItem(e.getPoint());
+
+        // if there are more marked AbstractHwComponent components and we clicked one
+        if (graph.getMarkedAbstractHWComponentsCount() > 1 && (clickedComponent != null && clickedComponent.isMarked())) {
             // show popup for more components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, graph.getMarkedAbstractHWComponentsCount());
-        
+
             popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
-        
+
         // if nothing right clicked and nothing marked and there are some components
-        if(clickedComponent == null && graph.getMarkedAbstractHWComponentsCount() == 0 && graph.getAbstractHwComponentsCount() > 0){
+        if (clickedComponent == null && graph.getMarkedAbstractHWComponentsCount() == 0 && graph.getAbstractHwComponentsCount() > 0) {
             // show popup for all components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
-        
+
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            
+            return;
+        }
+
+        // if clicled on cable
+        if(clickedComponent != null && clickedComponent instanceof Cable){
+            if(!clickedComponent.isMarked()){
+                graph.doUnmarkAllComponents();
+                graph.doMarkCable((Cable) clickedComponent);
+                drawPanel.repaint();
+            }
+            
+            PopupMenuCable popup = new PopupMenuCable(drawPanel, dataLayer, graph.getMarkedCablesCount());
+
             popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
         
         // if there is one marked component or no marked component and a component was clicked
-        if(clickedComponent != null){
-            // mark the component
+        if (clickedComponent != null) {
+            // unmark all components
+            graph.doUnmarkAllComponents();
+
+            // mark the clicked component
             graph.doMarkComponentWithCables(clickedComponent, true);
-            
+
             drawPanel.repaint();
-            
+
             // show popup for one component
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 1);
-        
+
             popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
-        
-        // if there are more marked components and we clicked one
-        if(graph.getMarkedAbstractHWComponentsCount() > 1 ){
+
+        // if there are more marked components 
+        if (graph.getMarkedAbstractHWComponentsCount() >= 1) {
             // unmark all components
             graph.doUnmarkAllComponents();
-            
+
             drawPanel.repaint();
-            
+
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
-        
+
             popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
     }
-    
+
     /**
      * Marks only components and its cables that intersects with rectangle in parameter
      * @param rectangle 
@@ -391,19 +422,18 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 graph.doMarkComponentWithCables(component, true);
             }
         }
-        
+
         // if no abstract component marked, mark only cables in rectangle
-        if(graph.getMarkedAbstractHWComponentsCount() == 0){
-            for(BundleOfCables bundle : graph.getBundlesOfCables()){
-                for(Cable c : bundle.getCables()){
-                    if(c.intersects(rectangle)){
+        if (graph.getMarkedAbstractHWComponentsCount() == 0) {
+            for (BundleOfCables bundle : graph.getBundlesOfCables()) {
+                for (Cable c : bundle.getCables()) {
+                    if (c.intersects(rectangle)) {
                         graph.doMarkCable(c);
                     }
                 }
             }
-            
-        }
-        
-    }
 
+        }
+
+    }
 }

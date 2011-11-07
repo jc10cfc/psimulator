@@ -423,14 +423,37 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     
     @Override
     public int getMarkedAbstractHWComponentsCount() {
-        int count = 0;
+        /*int count = 0;
         for (Markable m : markedAbstractHwComponents) {
             if (m instanceof AbstractHwComponent) {
                 count++;
             }
-        }
-        return count;
+        }*/
+        return markedAbstractHwComponents.size();
     }
+    
+    
+    @Override
+    public int getMarkedCablesCount(){
+        return markedCables.size();
+    }
+    
+    
+    @Override
+    public void doMarkAllComponents() {
+        for(AbstractHwComponent m: components){
+            m.setMarked(true);
+            markedAbstractHwComponents.add(m);
+        }
+        
+        for(BundleOfCables boc: bundlesOfCables){
+            for(Cable c : boc.getCables()){
+                c.setMarked(true);
+                markedCables.add(c);
+            }
+        }
+    }
+    
     
     
 // ============== CHANGE POSITION AND RESIZE =======================
@@ -667,6 +690,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
     }
+
 
     
     

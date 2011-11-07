@@ -34,6 +34,8 @@ public class MenuBar extends JMenuBar implements Observer {
     private JMenu jMenuEdit;
     private JMenuItem jMenuItemUndo;        
     private JMenuItem jMenuItemRedo;
+    private JMenuItem jMenuItemSelectAll;
+    private JMenuItem jMenuItemDelete;
     
     private JMenu jMenuView;
     private JMenuItem jMenuItemZoomIn;
@@ -86,8 +88,16 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuItemRedo.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/redo.png")));
         jMenuItemRedo.setActionCommand(UndoRedo.REDO.toString());
         
+        
+        jMenuItemSelectAll = new JMenuItem();
+        jMenuItemDelete = new JMenuItem();
+        
         jMenuEdit.add(jMenuItemUndo);
         jMenuEdit.add(jMenuItemRedo);
+        jMenuEdit.addSeparator();
+        jMenuEdit.add(jMenuItemSelectAll);
+        jMenuEdit.add(jMenuItemDelete);
+        
         /* END menu Edit */
         
         /* menu View */
@@ -155,6 +165,12 @@ public class MenuBar extends JMenuBar implements Observer {
         
         jMenuItemRedo.setText(dataLayer.getString("REDO"));
         jMenuItemRedo.setAccelerator(KeyStroke.getKeyStroke(dataLayer.getString("REDO_mnemonic").charAt(0), InputEvent.CTRL_DOWN_MASK));
+        
+        jMenuItemSelectAll.setText(dataLayer.getString("SELECT_ALL"));
+        jMenuItemSelectAll.setAccelerator(KeyStroke.getKeyStroke('A', InputEvent.CTRL_DOWN_MASK));
+        
+        jMenuItemDelete.setText(dataLayer.getString("DELETE"));
+        jMenuItemDelete.setAccelerator(KeyStroke.getKeyStroke("DELETE"));
         /* END menu Edit */
         
         /* menu View */
@@ -282,5 +298,13 @@ public class MenuBar extends JMenuBar implements Observer {
      */
     public void addPreferencesActionListener(ActionListener listener){
         jMenuItemPreferences.addActionListener(listener);
+    }
+    
+    public void addSelectAllListener(ActionListener listener){
+        jMenuItemSelectAll.addActionListener(listener);
+    }
+    
+    public void addDeleteListener(ActionListener listener){
+        jMenuItemDelete.addActionListener(listener);
     }
 }

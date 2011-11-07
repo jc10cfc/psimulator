@@ -29,6 +29,7 @@ import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelL
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyAddHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyHand;
 import psimulator.userInterface.Editor.DrawPanel.Actions.ActionOnDelete;
+import psimulator.userInterface.Editor.DrawPanel.Actions.ActionSelectAll;
 import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
@@ -128,6 +129,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                     break;
                 case FIT_TO_SIZE:
                     actions.put(drawPanelAction, new ActionFitToSize(graph, undoManager, this, mainWindow));
+                    break;
+                case SELECT_ALL:
+                    actions.put(drawPanelAction, new ActionSelectAll(graph, undoManager, this, mainWindow));
                     break;
             }
         }
@@ -266,6 +270,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     @Override
     public void setCurrentMouseListener(DrawPanelListenerStrategy mouseListener) {
         currentMouseListener = mouseListener;
+        
+        currentMouseListener.initialize();
+        
 
         this.addMouseListener(currentMouseListener);
         this.addMouseMotionListener(currentMouseListener);

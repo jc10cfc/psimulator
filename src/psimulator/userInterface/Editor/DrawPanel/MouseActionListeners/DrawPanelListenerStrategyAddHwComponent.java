@@ -27,8 +27,11 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     }
     
     @Override
+    public void initialize() {
+    }
+    
+    @Override
     public void deInitialize() {
-        
     }
     
     @Override
