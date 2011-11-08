@@ -8,7 +8,8 @@ import java.awt.Color;
  */
 public class ColorMixerSignleton {
 
-    public static Color mainToolbarColor = new Color(198, 83, 83);
+    //public static Color mainToolbarColor = new Color(198, 83, 83);
+    public static Color mainToolbarColor = new Color(164, 194, 245);
     //public static Color editToolbarColor = new Color(213, 129, 129);
     public static Color editToolbarColor = Color.LIGHT_GRAY;
     public static Color drawPanelColor = Color.WHITE;

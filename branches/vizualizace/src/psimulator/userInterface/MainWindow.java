@@ -14,12 +14,15 @@ import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.logicLayer.ControllerFacade;
+import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.actionListerners.PreferencesActionListener;
 import psimulator.userInterface.Editor.EditorOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.Editor.EditorPanel;
+import psimulator.userInterface.imageFactories.AbstractImageFactory;
+import psimulator.userInterface.imageFactories.AwtImageFactory;
 
 /**
  *
@@ -30,6 +33,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
 
+    private AbstractImageFactory imageFactory;
+    
     /* window componenets */
     private MenuBar jMenuBar;
     private ToolBar jToolBar;
@@ -62,10 +67,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         this.parentForCompoents = (JFrame) this;
 
-        jEditor = new EditorPanel(this, dataLayer);
+        this.imageFactory = new AwtImageFactory();
+        
+        jEditor = new EditorPanel(this, dataLayer, imageFactory);
 
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
+        
+        this.setIconImage(imageFactory.getImageIconForToolbar(MainTool.ADD_REAL_PC).getImage());
     }
 
     @Override
