@@ -81,9 +81,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.dataLayer = dataLayer;
 
         this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
-        
-        
-        
+ 
         actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
         actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
 
@@ -104,9 +102,15 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private void createKeyBindings(){
         InputMap inputMap = mainWindow.getRootPane().getInputMap();
         ActionMap actionMap = mainWindow.getRootPane().getActionMap();
+      
+        
         
         // add key binding for delete
         KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
+        
+        inputMap.put(key, null);
+        actionMap.put(DrawPanelAction.DELETE, null);
+        
         inputMap.put(key, DrawPanelAction.DELETE);
         actionMap.put(DrawPanelAction.DELETE, getAbstractAction(DrawPanelAction.DELETE));
     }
