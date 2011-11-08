@@ -31,13 +31,13 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
     private MainWindowInnerInterface mainWindow;
     private DataLayerFacade dataLayer;
 
-    public EditorPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+    public EditorPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer, AbstractImageFactory imageFactory) {
         super(new BorderLayout());
         
         this.mainWindow = mainWindow;
         this.dataLayer = dataLayer;
         
-        imageFactory = new AwtImageFactory();
+        this.imageFactory = imageFactory;
 
         // set border
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
