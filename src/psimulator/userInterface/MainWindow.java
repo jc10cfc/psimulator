@@ -63,7 +63,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         this.parentForCompoents = (JFrame) this;
 
         jEditor = new EditorPanel(this, dataLayer);
-        
+
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
     }
@@ -151,7 +151,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
     }
 
-
 /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for Zoom buttons
@@ -175,8 +174,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     break;
             }
         }
-    }    
-    
+    }
+
 /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for NewProject button
@@ -188,17 +187,17 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            //System.out.println("LISTENER New project");
-
-            if (jEditor.hasGraph() && doCheckPossibleDataLoss()) {
+            // if data can be lost
+            if (doCheckPossibleDataLoss()) {
                 return;
             }
-            
-            Graph graph = new Graph();
-            
-            jEditor.setGraph(graph);
-            
-            displayJPanelEditor();
+
+            // if has graph
+            if (jEditor.hasGraph()) {
+                removeJPanelEditor();
+            }
+
+            initJPanelEditor(new Graph());
         }
     }
 
@@ -213,16 +212,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("LISTENER Close");
-
+            // if data can be lost
             if (doCheckPossibleDataLoss()) {
                 return;
             }
-
-            // if NO or save succesfull
-
-            
-            
+           
             removeJPanelEditor();
         }
     }
@@ -238,8 +232,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("LISTENER Open");
-
+            // if data can be lost
             if (doCheckPossibleDataLoss()) {
                 return;
             }
@@ -275,7 +268,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("LISTENER Save As");
+            //System.out.println("LISTENER Save As");
 
             // if save successfull
             if (doSaveAsAction()) {
@@ -285,7 +278,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             }
         }
     }
-
 
 /////////////////////-----------------------------------////////////////////
     /**
@@ -302,8 +294,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (doCheckPossibleDataLoss()) {
                 return;
             }
-
-
             // exit
             System.exit(0);
         }
@@ -342,6 +332,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         return false;
     }
 
+    /**
+     * Shows save dialog.
+     * @return true if succesfully saved, false if not
+     */
     private boolean doSaveAsAction() {
         int returnVal = fileChooser.showSaveDialog(parentForCompoents);
 
@@ -349,14 +343,17 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             File file = fileChooser.getSelectedFile();
             //This is where a real application would open the file.
             System.out.println("Saving file: " + file);
-            
+
             Graph graph = jEditor.getGraph();
-            
+
             return true;
         }
         return false;
     }
 
+    /**
+     * Shows open dialog
+     */
     private void doOpenAction() {
         int returnVal = fileChooser.showOpenDialog(parentForCompoents);
 
@@ -366,10 +363,42 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             System.out.println("Opening file: " + file);
 
             Graph graph = new Graph();
-            
-            jEditor.setGraph(graph);
-            displayJPanelEditor();
+            initJPanelEditor(graph);
         }
+    }
+
+    /**
+     * creates JPanelEditor and places it to CENTER of main window
+     */
+    private void initJPanelEditor(Graph graph) {
+        // set graph to editor    
+        jEditor.setGraph(graph);
+
+        // update buttons
+        updateProjectRelatedButtons();
+
+        // add editor to framve
+        this.add(jEditor, BorderLayout.CENTER);
+        this.setVisible(true);
+        this.repaint();
+    }
+
+    /**
+     * removes JPanelEditor from main windows and deletes it
+     */
+    private void removeJPanelEditor() {
+        // remove graph from editor
+        jEditor.removeGraph();
+
+        // remove editor from frame
+        this.remove(jEditor);
+        
+        // update buttons
+        updateProjectRelatedButtons();
+
+        // update main frame
+        this.setVisible(true);
+        this.repaint();
     }
 
     private int showWarningPossibleDataLossDialog(String title, String message) {
@@ -461,35 +490,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jMenuBar.addPreferencesActionListener(new PreferencesActionListener(this, dataLayer));
 
         // END add listeners to Menu Bar - OPTIONS
-    }
-
-    
-    /**
-     * creates JPanelEditor and places it to CENTER of main window
-     */
-    private void displayJPanelEditor() {
-        // update buttons
-        updateProjectRelatedButtons();
-
-        // add editor to framve
-        this.add(jEditor, BorderLayout.CENTER);
-        this.setVisible(true);
-        this.repaint();
-    }
-
-    /**
-     * removes JPanelEditor from main windows and deletes it
-     */
-    private void removeJPanelEditor() {
-        jEditor.removeGraph();
-        
-        this.remove(jEditor);
-        //jEditor = null;
-
-        updateProjectRelatedButtons();
-
-        this.setVisible(true);
-        this.repaint();
     }
 
     /**
