@@ -12,8 +12,6 @@ import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
-import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
 import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
 import psimulator.userInterface.MainWindowInnerInterface;
@@ -24,7 +22,6 @@ import psimulator.userInterface.MainWindowInnerInterface;
  */
 public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implements MouseWheelListener {
 
-    protected GraphOuterInterface graph;
     protected DrawPanelInnerInterface drawPanel;
     protected MainWindowInnerInterface mainWindow;
     protected UndoManager undoManager;
@@ -43,7 +40,6 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         this.drawPanel = drawPanel;
         this.undoManager = undoManager;
         this.mainWindow = mainWindow;
-        this.graph = drawPanel.getGraph();
         this.zoomManager = zoomManager;
         this.dataLayer = dataLayer;
     }
@@ -145,7 +141,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         // create small rectangle arround clicked point
         
         // search cables
-        for (BundleOfCables boc : graph.getBundlesOfCables()) {
+        for (BundleOfCables boc : drawPanel.getGraphOuterInterface().getBundlesOfCables()) {
             clickedComponent = boc.getIntersectingCable(point);
             if(clickedComponent != null){
                return clickedComponent; 
@@ -164,7 +160,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         AbstractHwComponent clickedComponent = null;
 
         // search HwComponents
-        for (AbstractHwComponent c : graph.getHwComponents()) {
+        for (AbstractHwComponent c : drawPanel.getGraphOuterInterface().getHwComponents()) {
             if (c.intersects(point)) {
                 clickedComponent = c;
                 break;

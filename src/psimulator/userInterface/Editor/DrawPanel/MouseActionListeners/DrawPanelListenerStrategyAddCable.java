@@ -77,7 +77,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         }
 
         // if mouse over any HW component
-        for (AbstractHwComponent c : graph.getHwComponents()) {
+        for (AbstractHwComponent c : drawPanel.getGraphOuterInterface().getHwComponents()) {
             if (c.intersects(e.getPoint())) {
                 // change cursor
                 drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -247,11 +247,11 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         Cable cable = new Cable(c1, c2, eth1, eth2, zoomManager);
         
         // add cabel to graph
-        graph.addCable(cable);
+        drawPanel.getGraphOuterInterface().addCable(cable);
         
         // add to undo manager
         undoManager.undoableEditHappened(new UndoableEditEvent(this,
-                new UndoableAddCable(cable, graph)));
+                new UndoableAddCable(cable, drawPanel.getGraphOuterInterface())));
 
         initVariablesForCableMaking();
 

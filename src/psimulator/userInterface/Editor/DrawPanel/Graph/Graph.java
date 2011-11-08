@@ -40,6 +40,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     private DrawPanelSizeChangeInnerInterface drawPanel;
     private ZoomManager zoomManager;
 
+    /*
     public Graph(DrawPanelSizeChangeInnerInterface drawPanel, ZoomManager zoomManager) {
         this.zoomManager = zoomManager;
         this.drawPanel = drawPanel;
@@ -48,6 +49,27 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         grid = new Grid((GraphOuterInterface) this, zoomManager);
 
         zoomManager.addObserver((Observer) this);
+    }*/
+    
+    public Graph(){
+        
+    }
+    
+    public void initialize(DrawPanelSizeChangeInnerInterface drawPanel, ZoomManager zoomManager){
+        this.zoomManager = zoomManager;
+        this.drawPanel = drawPanel;
+
+        // init grid
+        grid = new Grid((GraphOuterInterface) this, zoomManager);
+
+        zoomManager.addObserver((Observer) this);
+    }
+    
+    public void deInitialize(){
+        zoomManager.deleteObserver(this);
+        drawPanel = null;
+        zoomManager = null;
+        grid = null;
     }
 
     @Override

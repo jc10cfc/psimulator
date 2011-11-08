@@ -16,6 +16,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuCable;
 import psimulator.userInterface.Editor.Tools.AbstractTool;
@@ -67,7 +68,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void deInitialize() {
-        graph.doUnmarkAllComponents();
+        if(drawPanel.getGraphOuterInterface()!=null){
+           drawPanel.getGraphOuterInterface().doUnmarkAllComponents(); 
+        }
+        
         drawPanel.repaint();
     }
 
@@ -91,6 +95,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // get clicked component
         Markable clickedComponent = getClickedItem(e.getPoint());
 
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         // if nothing clicked
         if (clickedComponent == null) {
             System.out.println("Graph - " + graph.getHwComponents().size() + " components, " + graph.getCablesCount()
@@ -150,6 +156,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mousePressedLeft(MouseEvent e) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         boolean addToDragAllMarkedComponents = false;
         if (draggedComponents == null) {
             draggedComponents = new ArrayList<AbstractHwComponent>();
@@ -208,6 +216,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseDraggedLeft(MouseEvent e) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         if (draggedComponents == null) {
             return;
         }
@@ -278,6 +288,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseReleasedLeft(MouseEvent e) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         // dragging all marked components
 
         // if we are dragging some components
@@ -318,6 +330,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         for (AbstractHwComponent c : graph.getHwComponents()) {
             if (c.intersects(e.getPoint())) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -339,6 +353,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mousePressedRight(MouseEvent e) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         transparentRectangleInProgress = false;
         
         // get clicked component
@@ -413,6 +428,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      * @param rectangle 
      */
     private void doMarkHwComponentsAndItsCablesInRectangle(Rectangle rectangle) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         // set all components unmarked
         graph.doUnmarkAllComponents();
 

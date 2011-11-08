@@ -64,4 +64,24 @@ public abstract class DrawPanelOuterInterface extends JPanel implements DrawPane
      * @return AbstractAction
      */
     public abstract AbstractAction getAbstractAction(DrawPanelAction action);
+    
+    
+    /**
+     * removes graph from draw panel a resets state of draw panel
+     * @return 
+     */
+    public abstract Graph removeGraph();
+    /**
+     * Sets graph 
+     * @param graph 
+     */
+    public abstract void setGraph(Graph graph);
+    
+    /**
+     * finds whether has graph
+     * @return 
+     */
+    public abstract boolean hasGraph();
+    
+    public abstract Graph getGraph();
 }

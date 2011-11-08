@@ -18,7 +18,7 @@ public interface DrawPanelInnerInterface {
      * returns graph
      * @return 
      */
-    public GraphOuterInterface getGraph();
+    public GraphOuterInterface getGraphOuterInterface();
     /**
      * Gets image factory
      * @return 

@@ -17,14 +17,16 @@ import psimulator.userInterface.MainWindowInnerInterface;
  */
 public class ActionAlignComponentsToGrid extends AbstractDrawPanelAction {
 
-    public ActionAlignComponentsToGrid(GraphOuterInterface graph, UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
-        super(graph, undoManager, drawPanel, mainWindow);
+    public ActionAlignComponentsToGrid(UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
+        super(undoManager, drawPanel, mainWindow);
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         // align components to grid
         HashMap<AbstractHwComponent, Dimension> movedComponentsMap;
+        
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         if(graph.getMarkedAbstractHWComponentsCount() > 0){
             movedComponentsMap = graph.doAlignMarkedComponentsToGrid();
