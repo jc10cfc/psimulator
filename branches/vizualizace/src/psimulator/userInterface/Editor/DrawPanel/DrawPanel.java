@@ -108,9 +108,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         // add key binding for delete
         KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
         
-        inputMap.put(key, null);
-        actionMap.put(DrawPanelAction.DELETE, null);
-        
         inputMap.put(key, DrawPanelAction.DELETE);
         actionMap.put(DrawPanelAction.DELETE, getAbstractAction(DrawPanelAction.DELETE));
     }
