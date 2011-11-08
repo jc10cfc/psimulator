@@ -165,22 +165,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (jEditor == null) {
                 createJPanelEditor();
             } else {
-                int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CREATING_PROJECT_WITH_ONE_OPENED"));
-
-                // if canceled
-                if (i == 2 || i == -1) {
-                    // do nothing
+                if (doCheckPossibleDataLoss()) {
                     return;
-                }
-
-                // if YES -> save
-                if (i == 0) {
-                    // if save not successfull
-                    if (!doSaveAsAction()) {
-                        // do nothing
-                        System.out.println("ukladani se nepovedlo");
-                        return;
-                    }
                 }
 
                 removeJPanelEditor();
@@ -203,22 +189,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Close");
 
-            int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
-
-            // if canceled
-            if (i == 2 || i == -1) {
-                // do nothing
+            if (doCheckPossibleDataLoss()) {
                 return;
-            }
-
-            // if YES -> save
-            if (i == 0) {
-                // if save not successfull
-                if (!doSaveAsAction()) {
-                    // do nothing
-                    System.out.println("ukladani se nepovedlo");
-                    return;
-                }
             }
 
             // if NO or save succesfull
@@ -239,6 +211,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("LISTENER Open");
+
+            if (doCheckPossibleDataLoss()) {
+                return;
+            }
 
             doOpenAction();
         }
@@ -318,11 +294,49 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            //save config data
+
+            if (doCheckPossibleDataLoss()) {
+                return;
+            }
+
+
+            // exit
             System.exit(0);
         }
     }
 ////////------------ PRIVATE------------///////////
+
+    /**
+     * 
+     * @return true if data can be lost, false if cant be lost
+     */
+    private boolean doCheckPossibleDataLoss() {
+        // if no mofifications made
+        if (!(jEditor != null && (jEditor.canUndo() || jEditor.canRedo()))) {
+            return false;
+        }
+
+        //save config data
+        int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
+
+        // if canceled
+        if (i == 2 || i == -1) {
+            // do nothing
+            return true;
+        }
+
+        // if YES -> save
+        if (i == 0) {
+            // if save not successfull
+            if (!doSaveAsAction()) {
+                // do nothing
+                System.out.println("ukladani se nepovedlo");
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private boolean doSaveAsAction() {
         int returnVal = fileChooser.showSaveDialog(parentForCompoents);
@@ -422,7 +436,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         ActionListener udnoListener = new JMenuItemUndoRedoListener();
         jMenuBar.addUndoRedoActionListener(udnoListener);
         jToolBar.addUndoRedoActionListener(udnoListener);
-        
+
         //jMenuBar.addDeleteListener();
         //jMenuBar.addSelectAllListener();
         // END add listeners to Menu Bar - EDIT
