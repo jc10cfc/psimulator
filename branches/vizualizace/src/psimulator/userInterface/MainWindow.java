@@ -237,6 +237,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 return;
             }
 
+            // if has graph
+            if (jEditor.hasGraph()) {
+                removeJPanelEditor();
+            }
+            
             doOpenAction();
         }
     }
