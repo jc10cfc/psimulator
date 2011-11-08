@@ -97,12 +97,22 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
 
     @Override
     public Graph removeGraph() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return jPanelDraw.removeGraph();
     }
 
     @Override
     public void setGraph(Graph graph) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        jPanelDraw.setGraph(graph);
+    }
+    
+    @Override
+    public Graph getGraph() {
+        return jPanelDraw.getGraph();
+    }
+    
+    @Override
+    public boolean hasGraph() {
+        return jPanelDraw.hasGraph();
     }
     
     @Override
@@ -158,6 +168,8 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         // set default tool in ToolBar
         jToolBarEditor.setDefaultTool();
     }
+
+
 
     
 

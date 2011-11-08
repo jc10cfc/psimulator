@@ -50,7 +50,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         component.setLocationByMiddlePoint(e.getPoint());
         
         // add component to graph
-        graph.addHwComponent(component);
+        drawPanel.getGraphOuterInterface().addHwComponent(component);
         
         // inform drawPanel about size change if component placed out of draw panel
         //drawPanel.updateSize(component.getLowerRightCornerLocation());
@@ -59,7 +59,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         
         // add to undo manager
         undoManager.undoableEditHappened(new UndoableEditEvent(this,
-                        new UndoableAddHwComponent(graph, component)));
+                        new UndoableAddHwComponent(drawPanel.getGraphOuterInterface(), component)));
         
         mainWindow.updateUndoRedoButtons();
     }

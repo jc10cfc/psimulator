@@ -80,7 +80,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
 
-        this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
+        //this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
  
         actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
         actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
@@ -124,18 +124,18 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         for(DrawPanelAction drawPanelAction : DrawPanelAction.values()){
             switch(drawPanelAction){
                 case ALIGN_COMPONENTS_TO_GRID:
-                    actions.put(drawPanelAction, new ActionAlignComponentsToGrid(graph, undoManager, this, mainWindow));
+                    actions.put(drawPanelAction, new ActionAlignComponentsToGrid(undoManager, this, mainWindow));
                     break;
                 case DELETE:
-                    actions.put(drawPanelAction, new ActionOnDelete(graph, undoManager, this, mainWindow));
+                    actions.put(drawPanelAction, new ActionOnDelete(undoManager, this, mainWindow));
                     break;
                 case PROPERTIES:
                     break;
                 case FIT_TO_SIZE:
-                    actions.put(drawPanelAction, new ActionFitToSize(graph, undoManager, this, mainWindow));
+                    actions.put(drawPanelAction, new ActionFitToSize(undoManager, this, mainWindow));
                     break;
                 case SELECT_ALL:
-                    actions.put(drawPanelAction, new ActionSelectAll(graph, undoManager, this, mainWindow));
+                    actions.put(drawPanelAction, new ActionSelectAll(undoManager, this, mainWindow));
                     break;
             }
         }
@@ -174,7 +174,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             g2.setStroke(tmp);
         }
 
-        graph.paint(g2);
+        if(graph!=null){
+            graph.paint(g2);
+        }
+        
         
         // DRAW makring rectangle
         if (rectangleInProgress) {
@@ -289,7 +292,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     
     @Override
-    public GraphOuterInterface getGraph() {
+    public GraphOuterInterface getGraphOuterInterface() {
         return graph;
     }
     
@@ -321,6 +324,39 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     
 // ============== IMPLEMENTATION OF DrawPanelOuterInterface ================
+    
+    @Override
+    public Graph removeGraph() {
+        Graph tmp = graph;
+        graph = null;
+        
+        undoManager.discardAllEdits();
+        zoomManager.zoomReset();
+        return tmp;
+    }
+
+    @Override
+    public void setGraph(Graph graph) {
+        if(this.graph != null){
+            removeGraph();
+        }
+        
+        this.graph = graph;
+        graph.initialize(this, zoomManager);
+    }
+    
+    @Override
+    public boolean hasGraph() {
+        if(graph == null){
+            return false;
+        }
+        return true;
+    }
+    
+    @Override
+    public Graph getGraph() {
+        return graph;
+    }
     
     @Override
     public AbstractAction getAbstractAction(DrawPanelAction action){
@@ -407,6 +443,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
     
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+
+    
 
     
     

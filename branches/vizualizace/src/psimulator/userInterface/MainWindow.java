@@ -17,8 +17,9 @@ import psimulator.logicLayer.ControllerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.actionListerners.PreferencesActionListener;
 import psimulator.userInterface.Editor.EditorOuterInterface;
-import psimulator.userInterface.Editor.EditorPanel;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
+import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.Editor.EditorPanel;
 
 /**
  *
@@ -61,6 +62,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         this.parentForCompoents = (JFrame) this;
 
+        jEditor = new EditorPanel(this, dataLayer);
+        
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
     }
@@ -68,7 +71,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     @Override
     public void initView(ControllerFacade controller) {
         this.controller = controller;
-
 
         fileChooser = new JFileChooser();
 
@@ -149,6 +151,32 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
     }
 
+
+/////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for Zoom buttons
+     */
+    class JMenuItemZoomListener implements ActionListener {
+
+        /**
+         * calls zoom operation on jPanelEditor according to actionCommand
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (Zoom.valueOf(e.getActionCommand())) {
+                case IN:
+                    jEditor.zoomIn();
+                    break;
+                case OUT:
+                    jEditor.zoomOut();
+                    break;
+                case RESET:
+                    jEditor.zoomReset();
+                    break;
+            }
+        }
+    }    
+    
 /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for NewProject button
@@ -162,17 +190,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER New project");
 
-            if (jEditor == null) {
-                createJPanelEditor();
-            } else {
-                if (doCheckPossibleDataLoss()) {
-                    return;
-                }
-
-                removeJPanelEditor();
-
-                createJPanelEditor();
+            if (jEditor.hasGraph() && doCheckPossibleDataLoss()) {
+                return;
             }
+            
+            Graph graph = new Graph();
+            
+            jEditor.setGraph(graph);
+            
+            displayJPanelEditor();
         }
     }
 
@@ -195,6 +221,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             // if NO or save succesfull
 
+            
+            
             removeJPanelEditor();
         }
     }
@@ -258,30 +286,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
     }
 
-/////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for Zoom buttons
-     */
-    class JMenuItemZoomListener implements ActionListener {
-
-        /**
-         * calls zoom operation on jPanelEditor according to actionCommand
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            switch (Zoom.valueOf(e.getActionCommand())) {
-                case IN:
-                    jEditor.zoomIn();
-                    break;
-                case OUT:
-                    jEditor.zoomOut();
-                    break;
-                case RESET:
-                    jEditor.zoomReset();
-                    break;
-            }
-        }
-    }
 
 /////////////////////-----------------------------------////////////////////
     /**
@@ -312,7 +316,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     private boolean doCheckPossibleDataLoss() {
         // if no mofifications made
-        if (!(jEditor != null && (jEditor.canUndo() || jEditor.canRedo()))) {
+        if (!(jEditor.hasGraph() && (jEditor.canUndo() || jEditor.canRedo()))) {
             return false;
         }
 
@@ -345,6 +349,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             File file = fileChooser.getSelectedFile();
             //This is where a real application would open the file.
             System.out.println("Saving file: " + file);
+            
+            Graph graph = jEditor.getGraph();
+            
             return true;
         }
         return false;
@@ -358,7 +365,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             //This is where a real application would open the file.
             System.out.println("Opening file: " + file);
 
-            createJPanelEditor();
+            Graph graph = new Graph();
+            
+            jEditor.setGraph(graph);
+            displayJPanelEditor();
         }
     }
 
@@ -377,7 +387,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
 
     private void updateProjectRelatedButtons() {
-        if (jEditor == null) {
+        if (!jEditor.hasGraph()) {
             jMenuBar.setProjectRelatedButtonsEnabled(false);
             jToolBar.setProjectRelatedButtonsEnabled(false);
 
@@ -453,14 +463,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // END add listeners to Menu Bar - OPTIONS
     }
 
+    
     /**
      * creates JPanelEditor and places it to CENTER of main window
      */
-    private void createJPanelEditor() {
-        jEditor = new EditorPanel(this, dataLayer);
-
+    private void displayJPanelEditor() {
+        // update buttons
         updateProjectRelatedButtons();
 
+        // add editor to framve
         this.add(jEditor, BorderLayout.CENTER);
         this.setVisible(true);
         this.repaint();
@@ -470,8 +481,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * removes JPanelEditor from main windows and deletes it
      */
     private void removeJPanelEditor() {
+        jEditor.removeGraph();
+        
         this.remove(jEditor);
-        jEditor = null;
+        //jEditor = null;
 
         updateProjectRelatedButtons();
 

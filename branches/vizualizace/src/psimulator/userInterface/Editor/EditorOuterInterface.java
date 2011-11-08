@@ -66,6 +66,8 @@ public abstract class EditorOuterInterface extends JPanel{
      */
     public abstract void setGraph(Graph graph);
     
-    
+    public abstract boolean hasGraph();
+  
+    public abstract Graph getGraph();
     
 }

@@ -14,8 +14,8 @@ import psimulator.userInterface.MainWindowInnerInterface;
  */
 public class ActionOnDelete extends AbstractDrawPanelAction {
 
-    public ActionOnDelete(GraphOuterInterface graph, UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
-        super(graph, undoManager, drawPanel, mainWindow);
+    public ActionOnDelete(UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
+        super(undoManager, drawPanel, mainWindow);
     }
 
     /**
@@ -24,6 +24,8 @@ public class ActionOnDelete extends AbstractDrawPanelAction {
      */
     @Override
     public void actionPerformed(ActionEvent ae) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         // remove marked components from graph
         RemovedComponentsWrapper removedComponents = graph.doRemoveMarkedComponents();
         
@@ -43,7 +45,5 @@ public class ActionOnDelete extends AbstractDrawPanelAction {
        
         // reapaint draw panel
         drawPanel.repaint();
-        
-        //mainWindow.getRootPane().revalidate();
     }
 }

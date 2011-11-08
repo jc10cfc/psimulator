@@ -12,12 +12,14 @@ import psimulator.userInterface.MainWindowInnerInterface;
  */
 public class ActionSelectAll extends AbstractDrawPanelAction {
 
-    public ActionSelectAll(GraphOuterInterface graph, UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
-        super(graph, undoManager, drawPanel, mainWindow);
+    public ActionSelectAll(UndoManager undoManager, DrawPanelInnerInterface drawPanel, MainWindowInnerInterface mainWindow) {
+        super(undoManager, drawPanel, mainWindow);
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
+        GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
+        
         // unmark all
         graph.doUnmarkAllComponents();
         // mark all
