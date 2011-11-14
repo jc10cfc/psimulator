@@ -23,6 +23,8 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
     private JMenuItem jItemSelectAll;
     private JMenuItem jItemDeleteComponent;
     private JMenuItem jItemFitToSize;
+    
+    private JMenuItem jItemAutomaticLayout;
 
     public PopupMenuAbstractHwComponent(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer, int components) {
         this.dataLayer = dataLayer;
@@ -33,11 +35,13 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
         jItemDeleteComponent = new JMenuItem(dataLayer.getString("DELETE"));
         jItemSelectAll = new JMenuItem(dataLayer.getString("SELECT_ALL"));
         jItemFitToSize = new JMenuItem(dataLayer.getString("FIT_TO_SIZE"));
+        jItemAutomaticLayout = new JMenuItem(dataLayer.getString("AUTOMATIC_LAYOUT"));
 
         jItemAlignToGrid.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.ALIGN_COMPONENTS_TO_GRID));
         jItemDeleteComponent.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.DELETE));
         jItemSelectAll.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.SELECT_ALL));
         jItemFitToSize.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.FIT_TO_SIZE));
+        jItemAutomaticLayout.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.AUTOMATIC_LAYOUT));
 
         if (components == 1) {
             createOneComponentMenu();
@@ -62,9 +66,12 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
     }
 
     private void createAllComponentsMenu() {
+        this.add(jItemAutomaticLayout);
         this.add(jItemAlignToGrid);
+        this.addSeparator();
         this.add(jItemSelectAll);
         this.add(jItemFitToSize);
+        
     }
 
     public void show(DrawPanelInnerInterface drawPanel, int x, int y) {

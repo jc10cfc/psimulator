@@ -23,6 +23,7 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Actions.ActionAlignComponentsToGrid;
+import psimulator.userInterface.Editor.DrawPanel.Actions.ActionAutomaticLayout;
 import psimulator.userInterface.Editor.DrawPanel.Actions.ActionFitToSize;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyAddCable;
@@ -133,6 +134,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                     break;
                 case SELECT_ALL:
                     actions.put(drawPanelAction, new ActionSelectAll(undoManager, this, mainWindow));
+                    break;
+                case AUTOMATIC_LAYOUT:
+                    actions.put(drawPanelAction, new ActionAutomaticLayout(undoManager, this, mainWindow));
                     break;
             }
         }

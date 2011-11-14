@@ -62,7 +62,7 @@ public class ZoomManager extends Observable {
             scale += 1 * zoomInc;
             tmp = tmp / scale;
             // notify all observers
-            notifyAllObservers();
+            notifyAllObservers(mousePostition);
         }
     }
 
@@ -82,7 +82,7 @@ public class ZoomManager extends Observable {
             scale += -1 * zoomInc;
             tmp = tmp / scale;
             // notify all observers
-            notifyAllObservers();
+            notifyAllObservers(mousePostition);
         }
     }
 
@@ -94,7 +94,7 @@ public class ZoomManager extends Observable {
         scale = defaultScale;
 
         // notify all observers
-        notifyAllObservers();
+        notifyAllObservers(new Point(0, 0));
     }
 
     /**
@@ -180,8 +180,8 @@ public class ZoomManager extends Observable {
     /**
      * calls setChanged and notifyObservers
      */
-    private void notifyAllObservers() {
+    private void notifyAllObservers(Point mousePostition) {
         setChanged();
-        notifyObservers(new ZoomEventWrapper(false, 0, 0, 0.0));
+        notifyObservers(new ZoomEventWrapper(false, mousePostition.x, mousePostition.y, 0.0));
     }
 }

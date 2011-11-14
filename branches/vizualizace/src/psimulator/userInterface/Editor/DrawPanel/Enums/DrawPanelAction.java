@@ -9,5 +9,6 @@ public enum DrawPanelAction {
     DELETE,
     PROPERTIES,
     FIT_TO_SIZE,
-    SELECT_ALL;
+    SELECT_ALL,
+    AUTOMATIC_LAYOUT;
 }
