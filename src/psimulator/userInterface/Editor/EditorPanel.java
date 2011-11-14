@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
@@ -86,6 +87,17 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         // set viewport
         Point newViewPos = new Point();
         Rectangle oldView = jScrollPane.getViewport().getViewRect();
+        
+        System.out.println("\nZoom changed");
+        System.out.println("Mouse pos x: "+zoomWrapper.getMouseX()+", y:"+zoomWrapper.getMouseY());
+        
+        System.out.println("Old view: "+oldView);
+        System.out.println("Draw panel width: "+jPanelDraw.getWidth());
+        
+        newViewPos.x = (jPanelDraw.getWidth() - jScrollPane.getWidth()) /2;
+        newViewPos.y = (jPanelDraw.getHeight() - jScrollPane.getHeight()) /2;
+        
+        //jScrollPane.getViewport().setViewPosition(newViewPos);
         
         
         // update zoom buttons in main window
