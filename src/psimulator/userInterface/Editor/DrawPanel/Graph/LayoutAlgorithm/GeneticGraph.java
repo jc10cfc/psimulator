@@ -51,7 +51,7 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
         }
 
         nodeWithMaxNeighbours = getNodeWithMostNeighbours();
-        System.out.println("Node with max neighbours = " + nodeWithMaxNeighbours);
+        //System.out.println("Node with max neighbours = " + nodeWithMaxNeighbours);
 
         // fill nodes randomly
         placeNodesRandomly();
@@ -119,7 +119,7 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
         
         
         if(((int)tmp)<0){
-            System.out.println("tmp = "+ tmp +", int tmp = "+(int)tmp+", edge lenght devi="+edgeLengthDeviation);
+            //System.out.println("tmp = "+ tmp +", int tmp = "+(int)tmp+", edge lenght devi="+edgeLengthDeviation);
         }
         
         double penalization = 2.0 * edgeLengthDeviation
@@ -350,7 +350,7 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
             double length = Math.sqrt(Math.pow(p1x - p2x, 2.0) + Math.pow(p1y - p2y, 2.0));
             
             if(length <= 0.0){
-                System.out.println("PRUSER, delka zaporna");
+                //System.out.println("PRUSER, delka zaporna");
             }
             
             if (length < minEdgeLength) {
@@ -388,11 +388,12 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
 
                 double distance = Math.sqrt(diffX + diffY);
 
+                /*
                 if (distance == 0.0) {
                     System.out.println("distance = " + distance + ", diff x =" + diffX + ", diff y =" + diffY);
                     System.out.println("I=" + i + ", J=" + j);
                     System.out.println(this);
-                }
+                }*/
 
                 if (distance < minDistanceActual) {
                     minDistanceActual = distance;
