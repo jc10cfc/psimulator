@@ -12,118 +12,109 @@ import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 public class GeneticAutomaticLayout {
 
     int populationSize;
-    int gridSize;
     int generationCount;
-    private Graph graph;
-    private GeneticGraph bestGeneticGraph;
     
     private GeneticGraph elitisticGraph;
-    
-    private JFrame visualizeFrame;
-    private VisualizePanel visualizePanel;
     private Random random = new Random();
-    
     private double lastFitnessRemembered = Integer.MIN_VALUE;
     private int lastFitnessRememberedGeneration = 0;
+    
+    private boolean countingFinished = false;
+    
+    private Generation oldGeneration;
 
-    public GeneticAutomaticLayout(Graph graph) {
-        this.graph = graph;
-
-        this.visualizeFrame = new JFrame("Vizualizace prubehu algoritmu");
-        this.visualizePanel = new VisualizePanel();
-        this.visualizeFrame.add(visualizePanel);
-
-        visualizeFrame.setSize(new Dimension(800, 600));
+    public GeneticAutomaticLayout() {
+ 
     }
 
-    public void runGenetic(int populationSize, int gridSize) {
+    public void initGenetic(GeneticGraph graph, int populationSize) {
         this.populationSize = populationSize;
-        this.gridSize = gridSize;
 
         generationCount = 0;
 
-        GeneticGraph initialGeneticGraph = new GeneticGraph(graph, gridSize);
+        //GeneticGraph initialGeneticGraph = new GeneticGraph(graph, gridSize);
+        GeneticGraph initialGeneticGraph = graph;
 
-        Generation oldGeneration = initPopulation(initialGeneticGraph);
+        oldGeneration = initPopulation(initialGeneticGraph);
         oldGeneration.evaluateFitness();
 
         //System.out.println("Best fitness = "+generation.getBestFitness()+", graph:");
         //System.out.println(generation.getBestFitnessGraph());
-
-        visualizeFrame.setVisible(true);
-
-        visualize(oldGeneration.getBestFitnessGraph());
+    }
+    
+    /**
+     * 
+     * @param numerOfGenerations how many generations compute in this part
+     */
+    public void runGenericPart(int numerOfGenerations) {
+ 
+        int counter = 0;
         
-        while (!termConditionSatisfied(oldGeneration)) {
+        while (!termConditionSatisfied(oldGeneration ) && counter < numerOfGenerations) {
             generationCount++;
-            /*
-            System.out.println("Before selection");
-            for(GeneticGraph gg : oldGeneration.getGraphList()){
-                System.out.println("Graph fitness="+gg.getFitness()+", score= "+ gg.getScore());
-            }*/
-            
+            counter ++;
+
             // DO SELECTION
             Generation newGeneration = doSelection(oldGeneration);
-            
-            /*System.out.println("After selection");
-            for(GeneticGraph gg : newGeneration.getGraphList()){
-                System.out.println("Graph fitness="+gg.getFitness()+", score= "+ gg.getScore());
-            }*/
-            
+
             // DO CROSSOVER
-            newGeneration = doCrossover2(newGeneration);
+            newGeneration = doCrossover(newGeneration);
 
             // DO MUTATE
             doMutate(newGeneration);
 
             newGeneration.addGeneticGraph(elitisticGraph);
-            
+
             // EVALUATE FITNESS
             newGeneration.evaluateFitness();
 
-            System.out.println("Best fitness in genereation " + generationCount + " is " + newGeneration.getBestFitness());
-            System.out.println("Generation size = " + newGeneration.getGraphList().size());
+            //System.out.println("Best fitness in genereation " + generationCount + " is " + newGeneration.getBestFitness());
+            //System.out.println("Generation size = " + newGeneration.getGraphList().size());
 
             oldGeneration = newGeneration;
         }
-
-
-        //visualize(oldGeneration.getBestFitnessGraph());
-        visualize(bestGeneticGraph);
-        System.out.println("best genetic graph from generation: "+lastFitnessRememberedGeneration+", fitness = "+ lastFitnessRemembered+
-                "fitness int:"+(int)lastFitnessRemembered);
         
-        /*
-        while(!termConditionSatisfied(generation)){
-        generationCount ++;
-        
-        doSelection();
-        
-        doCrossover();
-        
-        doMutate();
-        
-        generation.evaluateFitness();
-        }*/
-
-    }
-
-    private void visualize(GeneticGraph graph) {
-        visualizePanel.setGraph(graph);
-        visualizePanel.repaint();
-        visualizeFrame.revalidate();
     }
     
-    private Generation doCrossover2(Generation oldGeneration){
-        Generation generation = new Generation();
+    public void printResult(){
+  
+        //visualize(getBestGraph());
         
+        //System.out.println("best genetic graph from generation: " + lastFitnessRememberedGeneration + ", fitness = " + lastFitnessRemembered
+        //        + "fitness int:" + (int) lastFitnessRemembered);
+    }
+    
+    
+    public GeneticGraph getBestGraph(){
+        return oldGeneration.getBestFitnessGraph();
+    }
+    
+    public int getActualGeneration(){
+        return generationCount;
+    }
+    
+    public double getActualFitness(){
+        return lastFitnessRemembered;
+    }
+    
+    
+
+    
+    
+    public boolean isCountingFinished(){
+        return countingFinished;
+    }
+
+    private Generation doCrossover(Generation oldGeneration) {
+        Generation generation = new Generation();
+
         int listSize = oldGeneration.getGraphList().size();
-      
-        for(int i = 0; i < listSize-1; i= i+2){
-            GeneticGraph[] tmp = oldGeneration.getGraphList().get(i).crossoverRandomSinglePoint(oldGeneration.getGraphList().get(i+1));
+
+        for (int i = 0; i < listSize - 1; i = i + 2) {
+            GeneticGraph[] tmp = oldGeneration.getGraphList().get(i).crossoverRandomSinglePoint(oldGeneration.getGraphList().get(i + 1));
             generation.addGeneticGraph(tmp[0]);
             generation.addGeneticGraph(tmp[1]);
-             
+
         }
         return generation;
     }
@@ -133,83 +124,78 @@ public class GeneticAutomaticLayout {
         for (GeneticGraph gg : newGeneration.getGraphList()) {
             double rouletteRandom = random.nextDouble();
             if (rouletteRandom <= 0.1) { // 40% probabbility
-               randomMutateExecute(gg); 
+                randomMutateExecute(gg);
             }
         }
     }
- 
-    private void randomMutateExecute(GeneticGraph gg){
+
+    private void randomMutateExecute(GeneticGraph gg) {
         int number = random.nextInt(5);
-        if(number == 0){
+        if (number == 0) {
             gg.singleNodeMutate();
-        }else if(number == 1){
+        } else if (number == 1) {
             gg.singleEdgeMutate1();
-        }else if(number == 3){
+        } else if (number == 3) {
             gg.nodeWithMostNeighboursMutate();
-        }else if(number == 4){
+        } else if (number == 4) {
             gg.singleEdgeMutate2();
         }
-        
-        //gg.nodeWithMostNeighboursMutate();
     }
 
-    
     /**
      * roulette wheel selection
      * @param oldGeneration
      * @return 
      */
-    private Generation doSelection(Generation oldGeneration){
-        
+    private Generation doSelection(Generation oldGeneration) {
+
         Generation newGeneration = new Generation();
-        
-        int sum=0;
-        
-        for(int i=0;i<oldGeneration.getGraphList().size();i++){
-            sum+=oldGeneration.getGraphList().get(i).getScore();
+
+        int sum = 0;
+
+        for (int i = 0; i < oldGeneration.getGraphList().size(); i++) {
+            sum += oldGeneration.getGraphList().get(i).getScore();
         }
-        
+
         // elitisizm - preserve the best sollution
-        elitisticGraph = oldGeneration.getGraphList().get(oldGeneration.getGraphList().size()-1).clone();
-        
-        while(newGeneration.getGraphList().size() < populationSize){
+        elitisticGraph = oldGeneration.getGraphList().get(oldGeneration.getGraphList().size() - 1).clone();
+
+        while (newGeneration.getGraphList().size() < populationSize) {
             int counter = 0;
-            int randomNumber = random.nextInt(sum)+1;
-            
-            for(int i=0;i<oldGeneration.getGraphList().size();i++){
+            int randomNumber = random.nextInt(sum) + 1;
+
+            for (int i = 0; i < oldGeneration.getGraphList().size(); i++) {
                 counter += oldGeneration.getGraphList().get(i).getScore();
-                if(randomNumber < counter){
+                if (randomNumber < counter) {
                     GeneticGraph tmp = oldGeneration.getGraphList().get(i).clone();
                     newGeneration.addGeneticGraph(tmp);
                     break;
                 }
             }
-            
-            
+
+
         }
-        
-        
+
+
         return newGeneration;
     }
-    
-    
 
     private boolean termConditionSatisfied(Generation generation) {
         double bestFitness = generation.getBestFitness();
- 
-        if(bestFitness > lastFitnessRemembered){
+
+        if (bestFitness > lastFitnessRemembered) {
             lastFitnessRemembered = bestFitness;
             lastFitnessRememberedGeneration = generationCount;
-            bestGeneticGraph = generation.getBestFitnessGraph().clone();
         }
-        
-        
-        if(lastFitnessRememberedGeneration < generationCount - 3000 ){
+
+
+        if (lastFitnessRememberedGeneration < generationCount - 3000) {
+            countingFinished = true;
             return true;
         }
         /*
         if (generationCount > 2000) {
-            return true;
+        return true;
         }*/
         return false;
     }
