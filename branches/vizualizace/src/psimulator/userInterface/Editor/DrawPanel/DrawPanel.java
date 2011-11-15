@@ -136,7 +136,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                     actions.put(drawPanelAction, new ActionSelectAll(undoManager, this, mainWindow));
                     break;
                 case AUTOMATIC_LAYOUT:
-                    actions.put(drawPanelAction, new ActionAutomaticLayout(undoManager, this, mainWindow));
+                    actions.put(drawPanelAction, new ActionAutomaticLayout(undoManager, this, mainWindow, dataLayer));
                     break;
             }
         }
@@ -290,7 +290,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
   
 // ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
-    
+
     
     @Override
     public GraphOuterInterface getGraphOuterInterface() {
@@ -444,6 +444,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
     
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+
+    
 
     
 

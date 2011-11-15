@@ -18,9 +18,10 @@ public class AutomaticLayoutFacade {
     public void automaticLayout(Graph g){
         GeneticAutomaticLayout genetic = new GeneticAutomaticLayout(g);
         
+        
         //genetic.runGenetic(50, g.getHwComponents().size());
         
-        genetic.runGenetic(20, g.getHwComponents().size()*2);
+        genetic.runGenetic(30, (int)(g.getHwComponents().size()*2));
     }
     
 }
