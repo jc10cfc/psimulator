@@ -13,9 +13,7 @@ public class Generation {
     private List<GeneticGraph> graphList;
     private GeneticGraph bestFitnessGraph;
     private double bestFitness;
-    
-    private final int maxScore = 100;
-    
+
     public Generation(){
         graphList = new ArrayList<GeneticGraph>();
     }
@@ -30,7 +28,7 @@ public class Generation {
 
     public void evaluateFitness(){
         bestFitnessGraph = null;
-        bestFitness = 0.0;
+        bestFitness = Integer.MIN_VALUE;
         
         for(GeneticGraph gg : graphList){
             gg.evaluateFitness();
@@ -43,14 +41,12 @@ public class Generation {
         
         Collections.sort(graphList);
         
-        int score = maxScore;
-       
+        int score = 1;
+        
         for(GeneticGraph gg : graphList){
             gg.setScore(score);
-            score = score -2;
+            score ++;
         }
-
-        
     }
     
     public double getBestFitness(){
@@ -59,10 +55,6 @@ public class Generation {
     
     public GeneticGraph getBestFitnessGraph(){
         return bestFitnessGraph;
-    }
-
-    public int getMaxScore() {
-        return maxScore;
     }
     
     

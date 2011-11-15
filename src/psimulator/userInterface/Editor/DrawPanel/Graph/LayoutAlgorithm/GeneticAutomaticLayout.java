@@ -15,6 +15,10 @@ public class GeneticAutomaticLayout {
     int gridSize;
     int generationCount;
     private Graph graph;
+    private GeneticGraph bestGeneticGraph;
+    
+    private GeneticGraph elitisticGraph;
+    
     private JFrame visualizeFrame;
     private VisualizePanel visualizePanel;
     private Random random = new Random();
@@ -52,16 +56,28 @@ public class GeneticAutomaticLayout {
         
         while (!termConditionSatisfied(oldGeneration)) {
             generationCount++;
-
+            /*
+            System.out.println("Before selection");
+            for(GeneticGraph gg : oldGeneration.getGraphList()){
+                System.out.println("Graph fitness="+gg.getFitness()+", score= "+ gg.getScore());
+            }*/
+            
             // DO SELECTION
             Generation newGeneration = doSelection(oldGeneration);
-
+            
+            /*System.out.println("After selection");
+            for(GeneticGraph gg : newGeneration.getGraphList()){
+                System.out.println("Graph fitness="+gg.getFitness()+", score= "+ gg.getScore());
+            }*/
+            
             // DO CROSSOVER
-            //doCrossover(newGeneration);
+            newGeneration = doCrossover2(newGeneration);
 
             // DO MUTATE
             doMutate(newGeneration);
 
+            newGeneration.addGeneticGraph(elitisticGraph);
+            
             // EVALUATE FITNESS
             newGeneration.evaluateFitness();
 
@@ -72,8 +88,11 @@ public class GeneticAutomaticLayout {
         }
 
 
-        visualize(oldGeneration.getBestFitnessGraph());
-
+        //visualize(oldGeneration.getBestFitnessGraph());
+        visualize(bestGeneticGraph);
+        System.out.println("best genetic graph from generation: "+lastFitnessRememberedGeneration+", fitness = "+ lastFitnessRemembered+
+                "fitness int:"+(int)lastFitnessRemembered);
+        
         /*
         while(!termConditionSatisfied(generation)){
         generationCount ++;
@@ -94,46 +113,31 @@ public class GeneticAutomaticLayout {
         visualizePanel.repaint();
         visualizeFrame.revalidate();
     }
-
     
-    private void doCrossover(Generation oldGeneration) {
-        Generation newGeneration = new Generation();
-        for (GeneticGraph gg : oldGeneration.getGraphList()) {
-            double probability = gg.getScore() / 150.0;
-            double rouletteRandom = random.nextDouble();
-
-            if (rouletteRandom <= probability) {
-                if (oldGeneration.getGraphList().size() + newGeneration.getGraphList().size() <= populationSize) {
-                    newGeneration.addGeneticGraph(gg.clone());
-                }
-            }
+    private Generation doCrossover2(Generation oldGeneration){
+        Generation generation = new Generation();
+        
+        int listSize = oldGeneration.getGraphList().size();
+      
+        for(int i = 0; i < listSize-1; i= i+2){
+            GeneticGraph[] tmp = oldGeneration.getGraphList().get(i).crossoverRandomSinglePoint(oldGeneration.getGraphList().get(i+1));
+            generation.addGeneticGraph(tmp[0]);
+            generation.addGeneticGraph(tmp[1]);
+             
         }
-
-        newGeneration.getGraphList().addAll(oldGeneration.getGraphList());
-        oldGeneration = newGeneration;
+        return generation;
     }
 
     private void doMutate(Generation newGeneration) {
 
-        GeneticGraph best = newGeneration.getGraphList().get(0).clone();
-        
         for (GeneticGraph gg : newGeneration.getGraphList()) {
             double rouletteRandom = random.nextDouble();
-            if (rouletteRandom <= 40) { // 40% probabbility
+            if (rouletteRandom <= 0.1) { // 40% probabbility
                randomMutateExecute(gg); 
             }
         }
-
-        for (int i = newGeneration.getGraphList().size(); i < populationSize; i++) {
-            GeneticGraph tmp = newGeneration.getGraphList().get(0).clone();
-            tmp.placeNodesRandomly();
-            newGeneration.addGeneticGraph(tmp);
-        }
-        
-        newGeneration.addGeneticGraph(best);
     }
-    
-    
+ 
     private void randomMutateExecute(GeneticGraph gg){
         int number = random.nextInt(5);
         if(number == 0){
@@ -149,34 +153,58 @@ public class GeneticAutomaticLayout {
         //gg.nodeWithMostNeighboursMutate();
     }
 
-
-    private Generation doSelection(Generation oldGeneration) {
+    
+    /**
+     * roulette wheel selection
+     * @param oldGeneration
+     * @return 
+     */
+    private Generation doSelection(Generation oldGeneration){
+        
         Generation newGeneration = new Generation();
-        for (GeneticGraph gg : oldGeneration.getGraphList()) {
-            double probability = gg.getScore() / 100.0;
-            double rouletteRandom = random.nextDouble();
-
-            if (rouletteRandom <= probability) {
-                newGeneration.addGeneticGraph(gg);
-            }
-
+        
+        int sum=0;
+        
+        for(int i=0;i<oldGeneration.getGraphList().size();i++){
+            sum+=oldGeneration.getGraphList().get(i).getScore();
         }
-
+        
+        // elitisizm - preserve the best sollution
+        elitisticGraph = oldGeneration.getGraphList().get(oldGeneration.getGraphList().size()-1).clone();
+        
+        while(newGeneration.getGraphList().size() < populationSize){
+            int counter = 0;
+            int randomNumber = random.nextInt(sum)+1;
+            
+            for(int i=0;i<oldGeneration.getGraphList().size();i++){
+                counter += oldGeneration.getGraphList().get(i).getScore();
+                if(randomNumber < counter){
+                    GeneticGraph tmp = oldGeneration.getGraphList().get(i).clone();
+                    newGeneration.addGeneticGraph(tmp);
+                    break;
+                }
+            }
+            
+            
+        }
+        
+        
         return newGeneration;
     }
+    
+    
 
     private boolean termConditionSatisfied(Generation generation) {
         double bestFitness = generation.getBestFitness();
-
-        
-        
+ 
         if(bestFitness > lastFitnessRemembered){
             lastFitnessRemembered = bestFitness;
             lastFitnessRememberedGeneration = generationCount;
+            bestGeneticGraph = generation.getBestFitnessGraph().clone();
         }
         
         
-        if(lastFitnessRememberedGeneration < generationCount - 1000){
+        if(lastFitnessRememberedGeneration < generationCount - 3000 ){
             return true;
         }
         /*
@@ -207,19 +235,4 @@ public class GeneticAutomaticLayout {
 
         return generation;
     }
-    /*
-    
-    private void doSelection(){
-    throw new NotImplementedException();
-    }
-    
-    private void doCrossover(){
-    throw new NotImplementedException();
-    }
-    
-    private void doMutate(){
-    throw new NotImplementedException();
-    }
-    
-     */
 }
