@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
@@ -32,9 +34,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
-
     private AbstractImageFactory imageFactory;
-    
     /* window componenets */
     private MenuBar jMenuBar;
     private ToolBar jToolBar;
@@ -68,12 +68,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         this.parentForCompoents = (JFrame) this;
 
         this.imageFactory = new AwtImageFactory();
-        
+
         jEditor = new EditorPanel(this, dataLayer, imageFactory);
 
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
-        
+
         this.setIconImage(imageFactory.getImageIconForToolbar(MainTool.ADD_REAL_PC).getImage());
     }
 
@@ -92,8 +92,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         addActionListenersToViewComponents();
 
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                doCloseAction();
+            }
+        });    
+        
         // set of window properties
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setMinimumSize(new Dimension(640, 480));
         this.setSize(new Dimension(800, 600));
         this.setVisible(true);
@@ -225,7 +232,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (doCheckPossibleDataLoss()) {
                 return;
             }
-           
+
             removeJPanelEditor();
         }
     }
@@ -250,7 +257,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (jEditor.hasGraph()) {
                 removeJPanelEditor();
             }
-            
+
             doOpenAction();
         }
     }
@@ -304,15 +311,21 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            if (doCheckPossibleDataLoss()) {
-                return;
-            }
-            // exit
-            System.exit(0);
+            doCloseAction();
         }
     }
 ////////------------ PRIVATE------------///////////
+
+    /**
+     * checks possible data loss and closes window
+     */
+    private void doCloseAction() {
+        if (doCheckPossibleDataLoss()) {
+            return;
+        }
+        // exit
+        System.exit(0);
+    }
 
     /**
      * 
@@ -406,7 +419,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         // remove editor from frame
         this.remove(jEditor);
-        
+
         // update buttons
         updateProjectRelatedButtons();
 

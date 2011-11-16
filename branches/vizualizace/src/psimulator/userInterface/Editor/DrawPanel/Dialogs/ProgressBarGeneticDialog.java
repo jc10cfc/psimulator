@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.WindowConstants;
 import javax.swing.text.DefaultCaret;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
@@ -94,13 +95,11 @@ public class ProgressBarGeneticDialog extends JDialog implements ActionListener,
 
         this.setSize(new Dimension(400, 300));
         this.setResizable(false);
-
-
+        
+        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
-
             @Override
             public void windowClosing(WindowEvent e) {
-                //TODO = zavře se vždy
                 doCancelAction();
             }
         });
