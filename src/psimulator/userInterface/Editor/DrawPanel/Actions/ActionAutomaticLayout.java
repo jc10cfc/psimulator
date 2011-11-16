@@ -2,14 +2,18 @@ package psimulator.userInterface.Editor.DrawPanel.Actions;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 import javax.swing.JFrame;
+import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Dialogs.ProgressBarGeneticDialog;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.VisualizePanel;
+import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableChagePositionOfAllComponents;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
@@ -38,6 +42,19 @@ public class ActionAutomaticLayout extends AbstractDrawPanelAction {
         if (dialog.isSuccess()) {
             GeneticGraph graph = dialog.getGeneticGraph();
 
+            /*
+            HashMap<AbstractHwComponent, Dimension> movedComponentsMap = drawPanel.getGraphOuterInterface().doChangePositions(graph);
+            
+            undoManager.undoableEditHappened(new UndoableEditEvent(this,
+                    new UndoableChagePositionOfAllComponents(drawPanel.getGraphOuterInterface(), movedComponentsMap)));
+
+            // update Undo and Redo buttons
+            mainWindow.updateUndoRedoButtons();
+            
+            // repaint draw Panel
+            drawPanel.repaint();
+            */
+            
             JFrame visualizeFrame = new JFrame("Vizualizace prubehu algoritmu");
             VisualizePanel visualizePanel = new VisualizePanel();
             visualizeFrame.add(visualizePanel);

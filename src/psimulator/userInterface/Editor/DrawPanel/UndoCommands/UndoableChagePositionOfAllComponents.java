@@ -10,12 +10,12 @@ import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
  *
  * @author Martin
  */
-public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
+public class UndoableChagePositionOfAllComponents extends AbstractUndoableEdit {
 
     protected GraphOuterInterface graph;
     protected HashMap<AbstractHwComponent, Dimension> map;
     
-    public UndoableAlignComponentsToGrid(GraphOuterInterface graph, HashMap<AbstractHwComponent, Dimension> map) {
+    public UndoableChagePositionOfAllComponents(GraphOuterInterface graph, HashMap<AbstractHwComponent, Dimension> map) {
         super();
         this.graph = graph;
         this.map = map;
@@ -29,14 +29,7 @@ public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
         for (AbstractHwComponent component : map.keySet()) {
             graph.doChangePositionOfAbstractHwComponent(component, map.get(component), true);
         }
-        
-        /*
-        for (AbstractHwComponent component : map.keySet()) {
-            component.doChangePosition(map.get(component), true);
-        }
-        // panel could be resized before undo, so we need to update its size
-        drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
-        */
+
     }
 
     @Override
@@ -46,13 +39,6 @@ public class UndoableAlignComponentsToGrid extends AbstractUndoableEdit {
         for (AbstractHwComponent component : map.keySet()) {
             graph.doChangePositionOfAbstractHwComponent(component, map.get(component), false);
         }
-        
-        /*
-        for (AbstractHwComponent component : map.keySet()) {
-            component.doChangePosition(map.get(component), false);
-        }
-        // panel could be resized before redo, so we need to update its size
-        drawPanel.updateSize(drawPanel.getGraph().getGraphLowerRightBound());
-         */
+
     }
 }
