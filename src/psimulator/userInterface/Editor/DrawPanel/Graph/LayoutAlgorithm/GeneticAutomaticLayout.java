@@ -1,9 +1,6 @@
 package psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm;
 
-import java.awt.Dimension;
 import java.util.Random;
-import javax.swing.JFrame;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 
 /**
  *
@@ -11,8 +8,8 @@ import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
  */
 public class GeneticAutomaticLayout {
 
-    int populationSize;
-    int generationCount;
+    private int populationSize;
+    private int generationCount;
     
     private GeneticGraph elitisticGraph;
     private Random random = new Random();
@@ -24,15 +21,18 @@ public class GeneticAutomaticLayout {
     private Generation oldGeneration;
 
     public GeneticAutomaticLayout() {
- 
     }
 
+    /**
+     * Initalizes GA with graph.
+     * @param graph
+     * @param populationSize size of population in each generation
+     */
     public void initGenetic(GeneticGraph graph, int populationSize) {
         this.populationSize = populationSize;
 
         generationCount = 0;
 
-        //GeneticGraph initialGeneticGraph = new GeneticGraph(graph, gridSize);
         GeneticGraph initialGeneticGraph = graph;
 
         oldGeneration = initPopulation(initialGeneticGraph);
@@ -43,7 +43,7 @@ public class GeneticAutomaticLayout {
     }
     
     /**
-     * 
+     * Runs numberOGenerations iterations of genetic algorithm
      * @param numerOfGenerations how many generations compute in this part
      */
     public void runGenericPart(int numerOfGenerations) {
@@ -96,52 +96,40 @@ public class GeneticAutomaticLayout {
     public double getActualFitness(){
         return lastFitnessRemembered;
     }
-    
-    
 
-    
-    
     public boolean isCountingFinished(){
         return countingFinished;
     }
 
-    private Generation doCrossover(Generation oldGeneration) {
+ 
+    /**
+     * Inits initial Generation will be cloned from initialGeneticGraph populationSize times and nodes in
+     * the clones will be placed randomly
+     * @param initialGeneticGraph 
+     * @return Generation of populationSize size
+     */
+    private Generation initPopulation(GeneticGraph initialGeneticGraph) {
         Generation generation = new Generation();
 
-        int listSize = oldGeneration.getGraphList().size();
+        // add first geneticGraph
+        generation.addGeneticGraph(initialGeneticGraph);
 
-        for (int i = 0; i < listSize - 1; i = i + 2) {
-            GeneticGraph[] tmp = oldGeneration.getGraphList().get(i).crossoverRandomSinglePoint(oldGeneration.getGraphList().get(i + 1));
-            generation.addGeneticGraph(tmp[0]);
-            generation.addGeneticGraph(tmp[1]);
+        // clone 49 graphs
+        for (int i = 0; i < populationSize - 1; i++) {
+            // clone
+            GeneticGraph tmp = initialGeneticGraph.clone();
+            // random init
+            tmp.placeNodesRandomly();
 
+            // add to generation
+            generation.addGeneticGraph(tmp);
+            //System.out.println("tmp:");
+            //System.out.println(tmp.toString());
         }
+
         return generation;
     }
-
-    private void doMutate(Generation newGeneration) {
-
-        for (GeneticGraph gg : newGeneration.getGraphList()) {
-            double rouletteRandom = random.nextDouble();
-            if (rouletteRandom <= 0.1) { // 40% probabbility
-                randomMutateExecute(gg);
-            }
-        }
-    }
-
-    private void randomMutateExecute(GeneticGraph gg) {
-        int number = random.nextInt(5);
-        if (number == 0) {
-            gg.singleNodeMutate();
-        } else if (number == 1) {
-            gg.singleEdgeMutate1();
-        } else if (number == 3) {
-            gg.nodeWithMostNeighboursMutate();
-        } else if (number == 4) {
-            gg.singleEdgeMutate2();
-        }
-    }
-
+    
     /**
      * roulette wheel selection
      * @param oldGeneration
@@ -175,11 +163,63 @@ public class GeneticAutomaticLayout {
 
 
         }
-
-
         return newGeneration;
     }
+    
+    /**
+     * crossovers by pairs - two parents creates two offsprings and offsprings replace parents
+     * @param oldGeneration
+     * @return Generation with offsprings
+     */
+    private Generation doCrossover(Generation oldGeneration) {
+        Generation generation = new Generation();
 
+        int listSize = oldGeneration.getGraphList().size();
+
+        for (int i = 0; i < listSize - 1; i = i + 2) {
+            GeneticGraph[] tmp = oldGeneration.getGraphList().get(i).crossoverRandomSinglePoint(oldGeneration.getGraphList().get(i + 1));
+            generation.addGeneticGraph(tmp[0]);
+            generation.addGeneticGraph(tmp[1]);
+
+        }
+        return generation;
+    }
+    /**
+     * Goes through Graphs in generation and mutates with probability of 10%
+     * @param newGeneration 
+     */
+    private void doMutate(Generation newGeneration) {
+
+        for (GeneticGraph gg : newGeneration.getGraphList()) {
+            double rouletteRandom = random.nextDouble();
+            if (rouletteRandom <= 0.1) { // 40% probabbility
+                randomMutateExecute(gg);
+            }
+        }
+    }
+    
+    /**
+     * Chooses randomly one mutation type and executes it
+     * @param gg 
+     */ 
+    private void randomMutateExecute(GeneticGraph gg) {
+        int number = random.nextInt(5);
+        if (number == 0) {
+            gg.singleNodeMutate();
+        } else if (number == 1) {
+            gg.singleEdgeMutate1();
+        } else if (number == 3) {
+            gg.nodeWithMostNeighboursMutate();
+        } else if (number == 4) {
+            gg.singleEdgeMutate2();
+        }
+    }
+    
+    /**
+     * Checks if term condition satisfied
+     * @param generation
+     * @return true if satisfied, false if not
+     */
     private boolean termConditionSatisfied(Generation generation) {
         double bestFitness = generation.getBestFitness();
 
@@ -189,36 +229,10 @@ public class GeneticAutomaticLayout {
         }
 
 
-        if (lastFitnessRememberedGeneration < generationCount - 3000) {
+        if (lastFitnessRememberedGeneration < generationCount - 1500) {
             countingFinished = true;
             return true;
         }
-        /*
-        if (generationCount > 2000) {
-        return true;
-        }*/
         return false;
-    }
-
-    private Generation initPopulation(GeneticGraph initialGeneticGraph) {
-        Generation generation = new Generation();
-
-        // add first geneticGraph
-        generation.addGeneticGraph(initialGeneticGraph);
-
-        // clone 49 graphs
-        for (int i = 0; i < populationSize - 1; i++) {
-            // clone
-            GeneticGraph tmp = initialGeneticGraph.clone();
-            // random init
-            tmp.placeNodesRandomly();
-
-            // add to generation
-            generation.addGeneticGraph(tmp);
-            //System.out.println("tmp:");
-            //System.out.println(tmp.toString());
-        }
-
-        return generation;
     }
 }
