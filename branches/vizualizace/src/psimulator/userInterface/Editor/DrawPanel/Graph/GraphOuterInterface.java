@@ -9,6 +9,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
+import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 
 /**
  *
@@ -57,6 +58,14 @@ public interface GraphOuterInterface {
      * @return  RemovedComponentsWrapper - list of AbstractHwComponents and Cables
      */
     public RemovedComponentsWrapper doRemoveMarkedComponents();
+    
+    /**
+     * Changes position of all components according to genetic graph
+     * @param geneticGraph
+     * @return HashMap - map of component+dimension pairs
+     */
+    public HashMap<AbstractHwComponent, Dimension> doChangePositions(GeneticGraph geneticGraph);
+    
     
     /**
      * If component is cable, then mark or unmark it and add/remove it to marked components.

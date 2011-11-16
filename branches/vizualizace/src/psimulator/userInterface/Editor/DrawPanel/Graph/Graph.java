@@ -20,6 +20,7 @@ import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
 import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
 import psimulator.userInterface.Editor.DrawPanel.DrawPanelSizeChangeInnerInterface;
+import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
 
 /**
@@ -669,6 +670,29 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         }
         return movedComponentsMap;
     }
+    
+    
+    @Override
+    public HashMap<AbstractHwComponent, Dimension> doChangePositions(GeneticGraph geneticGraph) {
+        int maxX = 0;
+        int maxY = 0;
+        
+        for(int i = 0; i < geneticGraph.getNodes().length;i++){
+            if(maxX < geneticGraph.getNodes()[i][0]){
+                maxX = geneticGraph.getNodes()[i][0];
+            }
+            
+            if(maxY < geneticGraph.getNodes()[i][1]){
+                maxY = geneticGraph.getNodes()[i][1];
+            }
+        }
+        
+        
+        
+        
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+   
         
     @Override
     public RemovedComponentsWrapper doRemoveMarkedComponents() {
@@ -713,8 +737,8 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
     }
 
+    
 
-    
-    
+
 
 }

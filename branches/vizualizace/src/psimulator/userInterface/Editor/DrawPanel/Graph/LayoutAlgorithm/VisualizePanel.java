@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm;
 
 import java.awt.Graphics;
@@ -15,7 +11,7 @@ import javax.swing.JPanel;
 public class VisualizePanel extends JPanel {
 
     private GeneticGraph graph;
-    private int multiplier = 20;
+    private int multiplier = 5;
 
     @Override
     public void paintComponent(Graphics g) {
