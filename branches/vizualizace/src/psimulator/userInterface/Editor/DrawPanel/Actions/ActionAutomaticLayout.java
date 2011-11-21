@@ -42,7 +42,7 @@ public class ActionAutomaticLayout extends AbstractDrawPanelAction {
         if (dialog.isSuccess()) {
             GeneticGraph graph = dialog.getGeneticGraph();
 
-            /*
+            
             HashMap<AbstractHwComponent, Dimension> movedComponentsMap = drawPanel.getGraphOuterInterface().doChangePositions(graph);
             
             undoManager.undoableEditHappened(new UndoableEditEvent(this,
@@ -53,8 +53,9 @@ public class ActionAutomaticLayout extends AbstractDrawPanelAction {
             
             // repaint draw Panel
             drawPanel.repaint();
-            */
             
+            
+            /*
             JFrame visualizeFrame = new JFrame("Vizualizace prubehu algoritmu");
             VisualizePanel visualizePanel = new VisualizePanel();
             visualizeFrame.add(visualizePanel);
@@ -66,6 +67,7 @@ public class ActionAutomaticLayout extends AbstractDrawPanelAction {
             visualizePanel.setGraph(graph);
             visualizePanel.repaint();
             visualizeFrame.revalidate();
+            */
         }
     }
 }

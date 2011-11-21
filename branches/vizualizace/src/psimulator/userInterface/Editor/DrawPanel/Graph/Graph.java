@@ -687,10 +687,24 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             }
         }
         
+        HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
+        
+        for (int i = 0; i < components.size(); i++) {
+            AbstractHwComponent c = components.get(i);
+            
+            Point originalLocation = c.getCenterLocationDefaultZoom();
+            Point newLocation = new Point(geneticGraph.getNodes()[i][0]*30, geneticGraph.getNodes()[i][1]*30);
+            
+            Dimension differenceInDefaultZoom = new Dimension(originalLocation.x - newLocation.x,
+                    originalLocation.y - newLocation.y);
+            
+            this.doChangePositionOfAbstractHwComponent(c, differenceInDefaultZoom, false);
+            
+            movedComponentsMap.put(c, differenceInDefaultZoom);
+        }
         
         
-        
-        throw new UnsupportedOperationException("Not supported yet.");
+        return movedComponentsMap;
     }
    
         
