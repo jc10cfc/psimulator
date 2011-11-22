@@ -693,7 +693,8 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             AbstractHwComponent c = components.get(i);
             
             Point originalLocation = c.getCenterLocationDefaultZoom();
-            Point newLocation = new Point(geneticGraph.getNodes()[i][0]*30, geneticGraph.getNodes()[i][1]*30);
+            Point newLocation = new Point(geneticGraph.getNodes()[i][0]*30+zoomManager.getIconWidthDefaultZoom(), 
+                    geneticGraph.getNodes()[i][1]*30 + zoomManager.getIconWidthDefaultZoom());
             
             Dimension differenceInDefaultZoom = new Dimension(originalLocation.x - newLocation.x,
                     originalLocation.y - newLocation.y);
