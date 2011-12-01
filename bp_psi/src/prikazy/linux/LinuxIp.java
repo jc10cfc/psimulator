@@ -182,12 +182,12 @@ public class LinuxIp extends AbstraktniPrikaz {
             return;
         }
         podSlova=slova.subList(getUk()-1, slova.size());
+        // -> getUk-1, aby ty slova obsahovaly i nazev prikazu, napr link.
 
         if(ladeni)kon.posliRadek(toString());
         
         if(cisloPrikazu==1){
             pr=new LinuxIpLink(pc, kon, podSlova, this);
-            // -> getUk-1, aby ty slova obsahovaly i nazev prikazu, napr link.
         }
         if(cisloPrikazu==2){
             pr=new LinuxIpAddr(pc, kon, podSlova, this);
