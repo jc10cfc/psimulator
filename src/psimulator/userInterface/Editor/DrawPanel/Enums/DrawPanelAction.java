@@ -10,5 +10,6 @@ public enum DrawPanelAction {
     PROPERTIES,
     FIT_TO_SIZE,
     SELECT_ALL,
-    AUTOMATIC_LAYOUT;
+    AUTOMATIC_LAYOUT,
+    SWITCH_TO_HAND_TOOL;
 }
