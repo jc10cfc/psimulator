@@ -31,6 +31,7 @@ import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelL
 import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyHand;
 import psimulator.userInterface.Editor.DrawPanel.Actions.ActionOnDelete;
 import psimulator.userInterface.Editor.DrawPanel.Actions.ActionSelectAll;
+import psimulator.userInterface.Editor.DrawPanel.Actions.ActionSwitchToHandToolAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
@@ -107,10 +108,16 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         
         
         // add key binding for delete
-        KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
+        KeyStroke keyDel = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
         
-        inputMap.put(key, DrawPanelAction.DELETE);
+        inputMap.put(keyDel, DrawPanelAction.DELETE);
         actionMap.put(DrawPanelAction.DELETE, getAbstractAction(DrawPanelAction.DELETE));
+        
+        // add key binding for H
+        KeyStroke keyH = KeyStroke.getKeyStroke(KeyEvent.VK_H, 0);
+        
+        inputMap.put(keyH, DrawPanelAction.SWITCH_TO_HAND_TOOL);
+        actionMap.put(DrawPanelAction.SWITCH_TO_HAND_TOOL, getAbstractAction(DrawPanelAction.SWITCH_TO_HAND_TOOL)); 
     }
     
     /**
@@ -137,6 +144,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                     break;
                 case AUTOMATIC_LAYOUT:
                     actions.put(drawPanelAction, new ActionAutomaticLayout(undoManager, this, mainWindow, dataLayer));
+                    break;
+                case SWITCH_TO_HAND_TOOL:
+                    actions.put(drawPanelAction, new ActionSwitchToHandToolAction(undoManager, this, mainWindow));
                     break;
             }
         }
