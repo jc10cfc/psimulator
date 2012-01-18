@@ -4,15 +4,16 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JToolBar;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
+import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
+import psimulator.userInterface.Editor.Tools.ToolsFactory;
 
 /**
  *
@@ -32,8 +33,14 @@ public final class ToolBar extends JToolBar implements Observer {
     private JButton jButtonZoomIn;
     private JButton jButtonZoomOut;
     private JButton jButtonZoomReset;
+    //
+    private ButtonGroup modeButtonGroup;
+    private JToggleButton jToggleButtonEditor;
+    private JToggleButton jToggleButtonSimulator;
+    
     
     //private Color backgroundColor = new Color(198, 83, 83);
+    
     
     public ToolBar(DataLayerFacade dataLayer){
         super();
@@ -71,6 +78,13 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomReset = new JButton();
         jButtonZoomReset.setActionCommand(Zoom.RESET.toString());
                 
+        
+        modeButtonGroup = new ButtonGroup();
+        jToggleButtonEditor = new JToggleButton("Editor");
+        jToggleButtonSimulator = new JToggleButton("Simulator");
+        modeButtonGroup.add(jToggleButtonEditor);
+        modeButtonGroup.add(jToggleButtonSimulator);
+        
         this.add(jButtonNew);
         this.add(jButtonClose);
         this.addSeparator();
@@ -89,7 +103,11 @@ public final class ToolBar extends JToolBar implements Observer {
         this.add(jButtonZoomReset);
         this.addSeparator();
         
-        //jButtonSave.setEnabled(false);
+        
+        
+        this.add(Box.createHorizontalGlue());
+        this.add(jToggleButtonEditor);
+        this.add(jToggleButtonSimulator);
         
         setTextsToComponents();
         

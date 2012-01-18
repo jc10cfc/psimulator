@@ -9,10 +9,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.logicLayer.ControllerFacade;
@@ -23,6 +20,7 @@ import psimulator.userInterface.Editor.EditorOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.Editor.EditorPanel;
+import psimulator.userInterface.Simulator.SimulatorControlPanel;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 import psimulator.userInterface.imageFactories.AwtImageFactory;
 
@@ -70,7 +68,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         this.imageFactory = new AwtImageFactory();
 
         jEditor = new EditorPanel(this, dataLayer, imageFactory);
-
+        
+        //
+        BorderLayout layout = new BorderLayout();
+        this.setLayout(layout);
+        JPanel simulatorPanel = new SimulatorControlPanel();
+        this.add(simulatorPanel, BorderLayout.EAST);
+        //
+        
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
 
