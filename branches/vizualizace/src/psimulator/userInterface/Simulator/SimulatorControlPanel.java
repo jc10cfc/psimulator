@@ -37,6 +37,8 @@ public class SimulatorControlPanel extends JPanel {
     private JToggleButton jToggleButtonPlay;
     // Event list panel
     private JPanel jPanelEventList;
+    private JPanel jPanelEventListTable;
+    private JPanel jPanelEventListButtons;
     private JTable jTableEventList;
     private JScrollPane jScrollPaneTableEventList;
     private JButton jButtonDeleteEvents;
@@ -56,7 +58,6 @@ public class SimulatorControlPanel extends JPanel {
     }
 
     private void initComponents() {
-        this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         this.setLayout(new GridBagLayout());
         
         GridBagConstraints cons = new GridBagConstraints();
@@ -79,7 +80,13 @@ public class SimulatorControlPanel extends JPanel {
         this.add(Box.createRigidArea(new Dimension(0, 6)),cons);
         cons.gridx = 0;
 	cons.gridy = 5;
+        cons.weighty = 1.0;
+        cons.weightx = 1.0;
+        cons.fill = GridBagConstraints.BOTH; // both width and height max
         this.add(createEventListPanel(), cons);
+        cons.fill = GridBagConstraints.HORIZONTAL; // natural height maximum width
+        cons.weighty = 0.0;
+        cons.weightx = 0.0;
         cons.gridx = 0;
 	cons.gridy = 6;
         this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
@@ -88,7 +95,6 @@ public class SimulatorControlPanel extends JPanel {
         this.add(createDetailsPanel(),cons);
         cons.gridx = 0;
 	cons.gridy = 8;
-        cons.weighty = 1.0; // if set to 1, the content in panel is in the top, not in the middle
         this.add(Box.createRigidArea(new Dimension(0, 6)),cons);
         
         
@@ -139,6 +145,7 @@ public class SimulatorControlPanel extends JPanel {
         jPanelConnectSaveLoadStatus.add(jLabelConnectionStatusName);
         jPanelConnectSaveLoadStatus.add(Box.createRigidArea(new Dimension(7, 0)));
         jPanelConnectSaveLoadStatus.add(jLabelConnectionStatusValue);
+
         //
         jPanelConnectSaveLoad.add(jPanelConnectSaveLoadButtons);
         jPanelConnectSaveLoad.add(Box.createRigidArea(new Dimension(0, 7)));
@@ -194,6 +201,7 @@ public class SimulatorControlPanel extends JPanel {
         jLabelSliderFast = new JLabel();
         jSliderPlayerSpeed.setPaintLabels(true);
         //
+        jPanelPlayControlsSlider.add(Box.createRigidArea(new Dimension(7, 0)));
         jPanelPlayControlsSlider.add(jLabelSpeedName);
         jPanelPlayControlsSlider.add(Box.createRigidArea(new Dimension(7, 0)));
         jPanelPlayControlsSlider.add(jSliderPlayerSpeed);
@@ -221,27 +229,26 @@ public class SimulatorControlPanel extends JPanel {
 
     private JPanel createEventListPanel(){
         jPanelEventList = new JPanel();
-        //jPanelEventList.setLayout(new BoxLayout(jPanelEventList, BoxLayout.Y_AXIS));
-        jPanelEventList.setLayout(new BorderLayout());
-        //
+        jPanelEventList.setLayout(new BoxLayout(jPanelEventList, BoxLayout.Y_AXIS));
+
         jTableEventList = new JTable();
         jTableEventList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Time", "From", "To", "Type", "Other"
+                "Time", "From", "To"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -252,18 +259,37 @@ public class SimulatorControlPanel extends JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTableEventList.setFillsViewportHeight(true);
-        
-        jScrollPaneTableEventList = new JScrollPane();
-        
-        jScrollPaneTableEventList.setViewportView(jTableEventList);
         //
+        jPanelEventListTable = new JPanel();
+        jScrollPaneTableEventList = new JScrollPane();
+        jScrollPaneTableEventList.setViewportView(jTableEventList);
+        
+        GroupLayout jPanelEventListLayout = new GroupLayout(jPanelEventListTable);
+        jPanelEventListTable.setLayout(jPanelEventListLayout);
+        jPanelEventListLayout.setHorizontalGroup(
+            jPanelEventListLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPaneTableEventList, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanelEventListLayout.setVerticalGroup(
+            jPanelEventListLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPaneTableEventList, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)//200
+        );
+        //
+        //
+        jPanelEventListButtons = new JPanel();
+        jPanelEventListButtons.setLayout(new BoxLayout(jPanelEventListButtons, BoxLayout.X_AXIS));
         jButtonDeleteEvents = new JButton();
         jButtonDeleteEvents.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        //jPanelEventListButtons.add(Box.createRigidArea(new Dimension(0, 7)));
+        jPanelEventListButtons.add(jButtonDeleteEvents);
+        
         //
-        jPanelEventList.add(jScrollPaneTableEventList, BorderLayout.CENTER);
-        //jPanelEventList.add(jButtonDeleteEvents);
         //
+        jPanelEventList.add(jPanelEventListTable);
+        jPanelEventList.add(Box.createRigidArea(new Dimension(0, 7)));
+        jPanelEventList.add(jPanelEventListButtons);
+        
         return jPanelEventList;
     }
     
@@ -295,6 +321,7 @@ public class SimulatorControlPanel extends JPanel {
     private void setTextsToComponents() {
         jPanelConnectSaveLoad.setBorder(BorderFactory.createTitledBorder("Connect / Save / Load"));
         jButtonSaveListToFile.setText("Save list to file");
+        jButtonSaveListToFile.setToolTipText("");
         jButtonLoadListFromFile.setText("Load list from file");
         jButtonConnectToServer.setText("Connect to server");
         jLabelConnectionStatusName.setText("Connection status:");
