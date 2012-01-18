@@ -40,9 +40,9 @@ public class SimulatorControllPanel_Designer extends javax.swing.JPanel {
         jLabelSpeedName = new javax.swing.JLabel();
         jToggleButtonPlay = new javax.swing.JToggleButton();
         jPanelEventList = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTableEventList = new javax.swing.JTable();
-        jButtonDeleteEvents = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         jPanelConnectSaveLoad = new javax.swing.JPanel();
         jButtonSaveListToFile = new javax.swing.JButton();
         jButtonLoadListFromFile = new javax.swing.JButton();
@@ -158,61 +158,39 @@ public class SimulatorControllPanel_Designer extends javax.swing.JPanel {
 
         jPanelEventList.setBorder(javax.swing.BorderFactory.createTitledBorder("Event list"));
 
-        jTableEventList.setModel(new javax.swing.table.DefaultTableModel(
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Time", "From", "To", "Type", "Other"
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
+        ));
+        jScrollPane3.setViewportView(jTable2);
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(jTableEventList);
-
-        jButtonDeleteEvents.setText("Delete events");
-        jButtonDeleteEvents.setActionCommand("");
-        jButtonDeleteEvents.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDeleteEventsActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanelEventListLayout = new javax.swing.GroupLayout(jPanelEventList);
         jPanelEventList.setLayout(jPanelEventListLayout);
         jPanelEventListLayout.setHorizontalGroup(
             jPanelEventListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEventListLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanelEventListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jPanelEventListLayout.createSequentialGroup()
-                        .addComponent(jButtonDeleteEvents)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelEventListLayout.setVerticalGroup(
             jPanelEventListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEventListLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonDeleteEvents))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jPanelConnectSaveLoad.setBorder(javax.swing.BorderFactory.createTitledBorder("Connect / Save / Load "));
@@ -300,7 +278,7 @@ public class SimulatorControllPanel_Designer extends javax.swing.JPanel {
                 .addComponent(jCheckBoxPacketDetails)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBoxNamesOfDevices)
-                .addGap(0, 7, Short.MAX_VALUE))
+                .addGap(0, 42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -326,10 +304,6 @@ public class SimulatorControllPanel_Designer extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonDeleteEventsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteEventsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonDeleteEventsActionPerformed
-
     private void jToggleButtonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonPlayActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButtonPlayActionPerformed
@@ -340,7 +314,6 @@ public class SimulatorControllPanel_Designer extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonConnectToServer;
-    private javax.swing.JButton jButtonDeleteEvents;
     private javax.swing.JButton jButtonFirst;
     private javax.swing.JButton jButtonLast;
     private javax.swing.JButton jButtonLoadListFromFile;
@@ -353,16 +326,17 @@ public class SimulatorControllPanel_Designer extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelConnectionStatusName;
     private javax.swing.JLabel jLabelConnectionStatusValue;
     private javax.swing.JLabel jLabelSpeedName;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelConnectSaveLoad;
     private javax.swing.JPanel jPanelDetails;
     private javax.swing.JPanel jPanelEventList;
     private javax.swing.JPanel jPanelPlayControls;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JSlider jSliderPlayerSpeed;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTableEventList;
+    private javax.swing.JTable jTable2;
     private javax.swing.JToggleButton jToggleButtonCapture;
     private javax.swing.JToggleButton jToggleButtonPlay;
     // End of variables declaration//GEN-END:variables
