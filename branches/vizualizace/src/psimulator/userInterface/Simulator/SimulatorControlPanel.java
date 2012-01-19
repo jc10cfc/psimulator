@@ -2,13 +2,16 @@ package psimulator.userInterface.Simulator;
 
 import java.awt.*;
 import java.util.Hashtable;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.*;
+import psimulator.dataLayer.DataLayerFacade;
 
 /**
  *
  * @author Martin
  */
-public class SimulatorControlPanel extends JPanel {
+public class SimulatorControlPanel extends JPanel implements Observer{
 
     // Connect / Save / Load panel
     private JPanel jPanelConnectSaveLoad;
@@ -52,12 +55,26 @@ public class SimulatorControlPanel extends JPanel {
     static final int SPEED_MIN = 10;
     static final int SPEED_MAX = 100;
     static final int SPEED_INIT = 50;
+    //
+    //
+    private DataLayerFacade dataLayer;
+    
 
-    public SimulatorControlPanel() {
+    public SimulatorControlPanel(DataLayerFacade dataLayer) {
+        this.dataLayer = dataLayer;
+        
         initComponents();
     }
+    
+    
+    @Override
+    public void update(Observable o, Object o1) {
+        setTextsToComponents();
+    }
 
-    private void initComponents() {
+    
+    ////////------------ PRIVATE------------///////////
+     private void initComponents(){
         this.setLayout(new GridBagLayout());
         
         GridBagConstraints cons = new GridBagConstraints();
@@ -101,7 +118,7 @@ public class SimulatorControlPanel extends JPanel {
         // end Connect / Save / Load panel
         setTextsToComponents();
     }
-
+    
     private JPanel createConnectSaveLoadPanel() {
         // Connect / Save / Load panel
         jPanelConnectSaveLoad = new JPanel();
@@ -278,12 +295,13 @@ public class SimulatorControlPanel extends JPanel {
         //
         jPanelEventListButtons = new JPanel();
         jPanelEventListButtons.setLayout(new BoxLayout(jPanelEventListButtons, BoxLayout.X_AXIS));
+
         jButtonDeleteEvents = new JButton();
         jButtonDeleteEvents.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jButtonDeleteEvents.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/trashcan_full.png"))); // NOI18N
         
         //jPanelEventListButtons.add(Box.createRigidArea(new Dimension(0, 7)));
         jPanelEventListButtons.add(jButtonDeleteEvents);
-        
         //
         //
         jPanelEventList.add(jPanelEventListTable);
@@ -317,25 +335,30 @@ public class SimulatorControlPanel extends JPanel {
         return jPanelDetails;
     }
     
-    ////////------------ PRIVATE------------///////////
     private void setTextsToComponents() {
-        jPanelConnectSaveLoad.setBorder(BorderFactory.createTitledBorder("Connect / Save / Load"));
-        jButtonSaveListToFile.setText("Save list to file");
-        jButtonSaveListToFile.setToolTipText("");
-        jButtonLoadListFromFile.setText("Load list from file");
-        jButtonConnectToServer.setText("Connect to server");
-        jLabelConnectionStatusName.setText("Connection status:");
-        jLabelConnectionStatusValue.setText("Disconnected");
+        jPanelConnectSaveLoad.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("CONNECT_SAVE_LOAD")));
+        jButtonSaveListToFile.setText(dataLayer.getString("SAVE_LIST_TO_FILE"));
+        jButtonSaveListToFile.setToolTipText(dataLayer.getString("SAVE_LIST_TO_FILE_TOOL_TIP"));
+        jButtonLoadListFromFile.setText(dataLayer.getString("LOAD_LIST_FROM_FILE"));
+        jButtonLoadListFromFile.setToolTipText(dataLayer.getString("LOAD_LIST_FROM_FILE_TOOL_TIP"));
+        jButtonConnectToServer.setText(dataLayer.getString("CONNECT_TO_SERVER"));
+        jButtonConnectToServer.setToolTipText(dataLayer.getString("CONNECT_TO_SERVER_TOOL_TIP"));
+        jLabelConnectionStatusName.setText(dataLayer.getString("CONNECTION_STATUS"));
+        jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
         //
-        jPanelPlayControls.setBorder(BorderFactory.createTitledBorder("Play controls"));
-        jSliderPlayerSpeed.setToolTipText("Speed controll");
-        jLabelSpeedName.setText("Speed:");
-        jLabelSliderSlow.setText("Slow");
-        jLabelSliderMedium.setText("Medium");
-        jLabelSliderFast.setText("Fast");
-        //
-        jToggleButtonCapture.setText("Capture");
-        jToggleButtonCapture.setToolTipText("Capture packets from server");
+        jPanelPlayControls.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("PLAY_CONTROLS")));
+        jSliderPlayerSpeed.setToolTipText(dataLayer.getString("SPEED_CONTROL"));
+        jLabelSpeedName.setText(dataLayer.getString("SPEED_COLON"));
+        jLabelSliderSlow.setText(dataLayer.getString("SLOW"));
+        jLabelSliderMedium.setText(dataLayer.getString("MEDIUM"));
+        jLabelSliderFast.setText(dataLayer.getString("FAST"));
+        jButtonFirst.setToolTipText(dataLayer.getString("SKIP_TO_FIRST_EVENT"));
+        jButtonLast.setToolTipText(dataLayer.getString("SKIP_TO_LAST_EVENT"));
+        jButtonNext.setToolTipText(dataLayer.getString("SKIP_TO_NEXT_EVENT"));
+        jButtonPrevious.setToolTipText(dataLayer.getString("SKIP_TO_PREV_EVENT"));
+        jToggleButtonPlay.setToolTipText(dataLayer.getString("START_STOP_PLAYING"));
+        jToggleButtonCapture.setText(dataLayer.getString("CAPTURE"));
+        jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER"));
         //
         Hashtable labelTable = new Hashtable();
         labelTable.put(new Integer(SPEED_MIN), jLabelSliderSlow);
@@ -344,11 +367,12 @@ public class SimulatorControlPanel extends JPanel {
         jSliderPlayerSpeed.setLabelTable(labelTable);
         
         //
-        jPanelEventList.setBorder(BorderFactory.createTitledBorder("Event list"));
-        jButtonDeleteEvents.setText("Delete events");
+        jPanelEventList.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("EVENT_LIST")));
+        jButtonDeleteEvents.setText(dataLayer.getString("DELETE_EVENTS"));
+        jButtonDeleteEvents.setToolTipText(dataLayer.getString("DELETES_EVENTS_IN_LIST"));
         //
-        jPanelDetails.setBorder(BorderFactory.createTitledBorder("Details"));
-        jCheckBoxPacketDetails.setText("Packet details");
-        jCheckBoxNamesOfDevices.setText("Names of devices");
+        jPanelDetails.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("DETAILS")));
+        jCheckBoxPacketDetails.setText(dataLayer.getString("PACKET_DETAILS"));
+        jCheckBoxNamesOfDevices.setText(dataLayer.getString("NAMES_OF_DEVICES"));
     }
 }
