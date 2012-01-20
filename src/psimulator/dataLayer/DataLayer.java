@@ -2,9 +2,10 @@ package psimulator.dataLayer;
 
 import java.util.Observer;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.preferences.PreferencesManager;
+import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.dataLayer.language.LanguageManager;
-import psimulator.dataLayer.language.LanguageManagerSingleton;
+import psimulator.dataLayer.preferences.PreferencesManager;
 
 /**
  *
@@ -14,11 +15,14 @@ public class DataLayer extends DataLayerFacade{
     private LanguageManager languageManager;
     private PreferencesManager preferencesManager;
     private HardwareDevicesManager hwDeviceManager;
+    private SimulatorManager simulatorManager;
+    
     
     public DataLayer(){
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
         hwDeviceManager =  new HardwareDevicesManager();
+        simulatorManager = new SimulatorManager();
     }
 
     @Override
@@ -66,6 +70,18 @@ public class DataLayer extends DataLayerFacade{
     public void addPreferencesObserver(Observer observer) {
         preferencesManager.addObserver(observer);
     }
+    
+    @Override
+    public void addSimulatorObserver(Observer observer) {
+        simulatorManager.addObserver(observer);
+    }
+
+    @Override
+    public SimulatorManagerInterface getSimulatorInterface() {
+        return simulatorManager;
+    }
+    
+    
    
 
     
