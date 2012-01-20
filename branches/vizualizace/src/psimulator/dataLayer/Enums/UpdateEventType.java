@@ -6,5 +6,6 @@ package psimulator.dataLayer.Enums;
  */
 public enum UpdateEventType {
     LANGUAGE,
-    ICON_SIZE;
+    ICON_SIZE,
+    SIMULATOR;
 }

@@ -1,11 +1,19 @@
 package psimulator.userInterface.Simulator;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Simulator.SimulatorEvent;
+import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 
 /**
  *
@@ -52,28 +60,113 @@ public class SimulatorControlPanel extends JPanel implements Observer{
     private JCheckBox jCheckBoxPacketDetails;
     private JCheckBox jCheckBoxNamesOfDevices;
     //
-    static final int SPEED_MIN = 10;
-    static final int SPEED_MAX = 100;
-    static final int SPEED_INIT = 50;
     //
     //
     private DataLayerFacade dataLayer;
-    
+    private SimulatorManagerInterface simulatorInterface;
 
     public SimulatorControlPanel(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
+        this.simulatorInterface = dataLayer.getSimulatorInterface();
         
+        // create graphic layout with components
         initComponents();
+        
+        // add listeners to components
+        addListenersToComponents();
     }
     
     
     @Override
     public void update(Observable o, Object o1) {
-        setTextsToComponents();
+        switch((UpdateEventType)o1){
+            case LANGUAGE:
+                setTextsToComponents();
+                break;
+            case SIMULATOR:
+                updateComponentsAccordingToModel();
+                break;
+        }
     }
+    
+    
 
     
     ////////------------ PRIVATE------------///////////
+    private void addListenersToComponents(){
+        // jSliderPlayerSpeed state change listener
+        jSliderPlayerSpeed.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                // set the speed in model
+                simulatorInterface.setPlayerSpeed(jSliderPlayerSpeed.getValue());
+            }
+        });
+        
+        //
+        jButtonConnectToServer.addActionListener(new ActionListener() {
+            int tmpCounter = 0;
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                //simulatorInterface.pullTriggerTmp();
+                simulatorInterface.addSimulatorEvent(new SimulatorEvent(tmpCounter++,"Router1", "Router2", "PING", ""));
+            }
+        });
+        
+        //
+        jButtonDeleteEvents.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int i = showYesNoDialog(dataLayer.getString("WARNING"), dataLayer.getString("DELETING_EVENT_LIST_WARNING"));
+                // if YES
+                if(i==0){
+                    simulatorInterface.deleteAllSimulatorEvents();
+                }
+            }
+        });
+        
+        // -------------------- PLAY BUTTONS ACTIONS ---------------------
+        jButtonFirst.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+        
+        //
+        jButtonLast.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+        
+        //
+        jButtonNext.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+        
+        //
+        jButtonPrevious.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+        
+        //
+        jToggleButtonPlay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                
+            }
+        });
+    }
+    
+    
      private void initComponents(){
         this.setLayout(new GridBagLayout());
         
@@ -117,6 +210,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         
         // end Connect / Save / Load panel
         setTextsToComponents();
+        updateComponentsAccordingToModel();
     }
     
     private JPanel createConnectSaveLoadPanel() {
@@ -209,7 +303,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jPanelPlayControlsSlider.setLayout(new BoxLayout(jPanelPlayControlsSlider, BoxLayout.X_AXIS));
         //
         jLabelSpeedName = new JLabel();
-        jSliderPlayerSpeed = new JSlider(JSlider.HORIZONTAL, SPEED_MIN, SPEED_MAX, SPEED_INIT);
+        jSliderPlayerSpeed = new JSlider(JSlider.HORIZONTAL, SimulatorManager.SPEED_MIN, SimulatorManager.SPEED_MAX, SimulatorManager.SPEED_INIT);
         jSliderPlayerSpeed.setPaintTicks(true);
         jSliderPlayerSpeed.setMajorTickSpacing(10);
         //
@@ -248,34 +342,9 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jPanelEventList = new JPanel();
         jPanelEventList.setLayout(new BoxLayout(jPanelEventList, BoxLayout.Y_AXIS));
 
-        jTableEventList = new JTable();
-        jTableEventList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Time", "From", "To"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        //// link table with table model
+        jTableEventList = new JTable(simulatorInterface.getEventTableModel());
+        jTableEventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //
         jPanelEventListTable = new JPanel();
         jScrollPaneTableEventList = new JScrollPane();
@@ -344,7 +413,12 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jButtonConnectToServer.setText(dataLayer.getString("CONNECT_TO_SERVER"));
         jButtonConnectToServer.setToolTipText(dataLayer.getString("CONNECT_TO_SERVER_TOOL_TIP"));
         jLabelConnectionStatusName.setText(dataLayer.getString("CONNECTION_STATUS"));
-        jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
+        
+        if(simulatorInterface.isConnectedToServer()){
+            jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
+        }else{
+            jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
+        }
         //
         jPanelPlayControls.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("PLAY_CONTROLS")));
         jSliderPlayerSpeed.setToolTipText(dataLayer.getString("SPEED_CONTROL"));
@@ -361,9 +435,9 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER"));
         //
         Hashtable labelTable = new Hashtable();
-        labelTable.put(new Integer(SPEED_MIN), jLabelSliderSlow);
-        labelTable.put(new Integer(SPEED_MAX/2), jLabelSliderMedium);
-        labelTable.put(new Integer(SPEED_MAX), jLabelSliderFast);
+        labelTable.put(new Integer(SimulatorManager.SPEED_MIN), jLabelSliderSlow);
+        labelTable.put(new Integer(SimulatorManager.SPEED_MAX/2), jLabelSliderMedium);
+        labelTable.put(new Integer(SimulatorManager.SPEED_MAX), jLabelSliderFast);
         jSliderPlayerSpeed.setLabelTable(labelTable);
         
         //
@@ -374,5 +448,40 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jPanelDetails.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("DETAILS")));
         jCheckBoxPacketDetails.setText(dataLayer.getString("PACKET_DETAILS"));
         jCheckBoxNamesOfDevices.setText(dataLayer.getString("NAMES_OF_DEVICES"));
+        //
+        jTableEventList.getColumnModel().getColumn(0).setHeaderValue(dataLayer.getString("TIME"));
+        jTableEventList.getColumnModel().getColumn(1).setHeaderValue(dataLayer.getString("FROM"));
+        jTableEventList.getColumnModel().getColumn(2).setHeaderValue(dataLayer.getString("TO"));
+        jTableEventList.getColumnModel().getColumn(3).setHeaderValue(dataLayer.getString("TYPE"));
+        jTableEventList.getColumnModel().getColumn(4).setHeaderValue(dataLayer.getString("INFO"));
+        
+        
+    }
+    
+    private void updateComponentsAccordingToModel(){
+        if(simulatorInterface.isConnectedToServer()){
+            jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_ok.png"))); // NOI18N
+            jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
+        }else{
+            jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png"))); // NOI18N
+            jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
+        }
+        
+        
+    }
+    
+    
+    private int showYesNoDialog(String title, String message) {
+        Object[] options = {dataLayer.getString("YES"), dataLayer.getString("NO")};
+        int n = JOptionPane.showOptionDialog(this,
+                message,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null, //do not use a custom Icon
+                options, //the titles of buttons
+                options[0]); //default button title
+
+        return n;
     }
 }

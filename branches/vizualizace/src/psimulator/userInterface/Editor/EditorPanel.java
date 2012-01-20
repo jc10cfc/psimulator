@@ -85,6 +85,7 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
     public void update(Observable o, Object o1) {
         ZoomEventWrapper zoomWrapper = (ZoomEventWrapper) o1;
         // set viewport
+        /*
         Point newViewPos = new Point();
         Rectangle oldView = jScrollPane.getViewport().getViewRect();
         
@@ -96,7 +97,7 @@ public class EditorPanel extends EditorOuterInterface implements EditorInnerInte
         
         newViewPos.x = (jPanelDraw.getWidth() - jScrollPane.getWidth()) /2;
         newViewPos.y = (jPanelDraw.getHeight() - jScrollPane.getHeight()) /2;
-        
+        */
         //jScrollPane.getViewport().setViewPosition(newViewPos);
         
         
