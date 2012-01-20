@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.SimulatorPlayerState;
 import psimulator.dataLayer.Enums.UpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
@@ -129,7 +129,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jButtonFirst.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.FIRST);
             }
         });
         
@@ -137,7 +137,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jButtonLast.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.LAST);
             }
         });
         
@@ -145,7 +145,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jButtonNext.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.NEXT);
             }
         });
         
@@ -153,7 +153,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jButtonPrevious.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.PREVIOUS);
             }
         });
         
@@ -161,13 +161,52 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jToggleButtonPlay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+                if(jToggleButtonPlay.isSelected()){
+                    simulatorInterface.playerFunctionActivated(SimulatorPlayerState.PLAY);
+                }else{
+                    simulatorInterface.playerFunctionActivated(SimulatorPlayerState.STOP);
+                }
+            }
+        });
+        
+        // -------------------- CAPTURE ACTION ---------------------
+        jToggleButtonCapture.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if(jToggleButtonCapture.isSelected()){
+                    simulatorInterface.recordingActivated(true);
+                }else{
+                    simulatorInterface.recordingActivated(false);
+                }
+            }
+        });
+        
+        // -------------------- VIEW DETAILS ---------------------
+        jCheckBoxPacketDetails.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if(jCheckBoxPacketDetails.isSelected()){
+                    simulatorInterface.setPacketDetails(true);
+                }else{
+                    simulatorInterface.setPacketDetails(false);
+                }
+            }
+        });
+        
+        jCheckBoxNamesOfDevices.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if(jCheckBoxNamesOfDevices.isSelected()){
+                    simulatorInterface.setNamesOfDevices(true);
+                }else{
+                    simulatorInterface.setNamesOfDevices(false);
+                }
             }
         });
     }
     
     
-     private void initComponents(){
+    private void initComponents(){
         this.setLayout(new GridBagLayout());
         
         GridBagConstraints cons = new GridBagConstraints();
@@ -468,8 +507,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         }
         
         
-    }
-    
+    }  
     
     private int showYesNoDialog(String title, String message) {
         Object[] options = {dataLayer.getString("YES"), dataLayer.getString("NO")};

@@ -1,5 +1,6 @@
 package psimulator.dataLayer.interfaces;
 
+import psimulator.dataLayer.Enums.SimulatorPlayerState;
 import psimulator.dataLayer.Simulator.EventTableModel;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 
@@ -17,4 +18,10 @@ public interface SimulatorManagerInterface {
     
     
     public void pullTriggerTmp();
+    
+    public void playerFunctionActivated(SimulatorPlayerState simulatorPlayerState);
+    
+    public void recordingActivated(boolean activated);
+    public void setPacketDetails(boolean activated);
+    public void setNamesOfDevices(boolean activated);
 }
