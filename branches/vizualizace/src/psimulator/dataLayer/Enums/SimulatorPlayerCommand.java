@@ -4,9 +4,9 @@ package psimulator.dataLayer.Enums;
  *
  * @author Martin
  */
-public enum SimulatorPlayerState {
-    PLAY,
-    STOP,
+public enum SimulatorPlayerCommand {
+    //PLAY,
+    //STOP,
     FIRST,
     LAST,
     PREVIOUS,
