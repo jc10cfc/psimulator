@@ -2,6 +2,8 @@ package psimulator.userInterface.Simulator;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Hashtable;
 import java.util.Observable;
 import java.util.Observer;
@@ -9,7 +11,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Enums.SimulatorPlayerState;
+import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Enums.UpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
@@ -19,7 +21,7 @@ import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
  *
  * @author Martin
  */
-public class SimulatorControlPanel extends JPanel implements Observer{
+public class SimulatorControlPanel extends JPanel implements Observer {
 
     // Connect / Save / Load panel
     private JPanel jPanelConnectSaveLoad;
@@ -68,167 +70,193 @@ public class SimulatorControlPanel extends JPanel implements Observer{
     public SimulatorControlPanel(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
         this.simulatorInterface = dataLayer.getSimulatorInterface();
-        
+
         // create graphic layout with components
         initComponents();
-        
+
         // add listeners to components
         addListenersToComponents();
     }
-    
-    
+
     @Override
     public void update(Observable o, Object o1) {
-        switch((UpdateEventType)o1){
+        switch ((UpdateEventType) o1) {
             case LANGUAGE:
                 setTextsToComponents();
                 break;
-            case SIMULATOR:
-                updateComponentsAccordingToModel();
+            case SIMULATOR_CONNECTION:
+                updateConnectionInfoToModel();
                 break;
         }
     }
-    
-    
 
-    
     ////////------------ PRIVATE------------///////////
-    private void addListenersToComponents(){
+    private void addListenersToComponents() {
+
+        // jTableEventList listener for Double click
+        jTableEventList.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    JTable target = (JTable) e.getSource();
+                    int row = target.getSelectedRow();
+                    int column = target.getSelectedColumn();
+
+                    // set concrete row in model
+                    simulatorInterface.setConcreteRawSelected(row);
+                    //jTableEventList.getColumnModel().getColumn(row).set
+                }
+            }
+        });
+
+
         // jSliderPlayerSpeed state change listener
         jSliderPlayerSpeed.addChangeListener(new ChangeListener() {
+
             @Override
             public void stateChanged(ChangeEvent ce) {
                 // set the speed in model
                 simulatorInterface.setPlayerSpeed(jSliderPlayerSpeed.getValue());
             }
         });
-        
+
         //
         jButtonConnectToServer.addActionListener(new ActionListener() {
+
             int tmpCounter = 0;
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 //simulatorInterface.pullTriggerTmp();
-                simulatorInterface.addSimulatorEvent(new SimulatorEvent(tmpCounter++,"Router1", "Router2", "PING", ""));
+                simulatorInterface.addSimulatorEvent(new SimulatorEvent(tmpCounter++, "Router1", "Router2", "PING", ""));
             }
         });
-        
+
         //
         jButtonDeleteEvents.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 int i = showYesNoDialog(dataLayer.getString("WARNING"), dataLayer.getString("DELETING_EVENT_LIST_WARNING"));
                 // if YES
-                if(i==0){
+                if (i == 0) {
                     simulatorInterface.deleteAllSimulatorEvents();
                 }
             }
         });
-        
+
         // -------------------- PLAY BUTTONS ACTIONS ---------------------
         jButtonFirst.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.FIRST);
+                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.FIRST);
             }
         });
-        
+
         //
         jButtonLast.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.LAST);
+                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.LAST);
             }
         });
-        
+
         //
         jButtonNext.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.NEXT);
+                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.NEXT);
             }
         });
-        
+
         //
         jButtonPrevious.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.playerFunctionActivated(SimulatorPlayerState.PREVIOUS);
+                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.PREVIOUS);
             }
         });
-        
+
         //
         jToggleButtonPlay.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(jToggleButtonPlay.isSelected()){
-                    simulatorInterface.playerFunctionActivated(SimulatorPlayerState.PLAY);
-                }else{
-                    simulatorInterface.playerFunctionActivated(SimulatorPlayerState.STOP);
+                if (jToggleButtonPlay.isSelected()) {
+                    simulatorInterface.setPlayingActivated(true);
+                } else {
+                    simulatorInterface.setPlayingActivated(false);
                 }
             }
         });
-        
+
         // -------------------- CAPTURE ACTION ---------------------
         jToggleButtonCapture.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(jToggleButtonCapture.isSelected()){
-                    simulatorInterface.recordingActivated(true);
-                }else{
-                    simulatorInterface.recordingActivated(false);
+                if (jToggleButtonCapture.isSelected()) {
+                    simulatorInterface.setRecordingActivated(true);
+                } else {
+                    simulatorInterface.setRecordingActivated(false);
                 }
             }
         });
-        
+
         // -------------------- VIEW DETAILS ---------------------
         jCheckBoxPacketDetails.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(jCheckBoxPacketDetails.isSelected()){
+                if (jCheckBoxPacketDetails.isSelected()) {
                     simulatorInterface.setPacketDetails(true);
-                }else{
+                } else {
                     simulatorInterface.setPacketDetails(false);
                 }
             }
         });
-        
+
         jCheckBoxNamesOfDevices.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if(jCheckBoxNamesOfDevices.isSelected()){
+                if (jCheckBoxNamesOfDevices.isSelected()) {
                     simulatorInterface.setNamesOfDevices(true);
-                }else{
+                } else {
                     simulatorInterface.setNamesOfDevices(false);
                 }
             }
         });
     }
-    
-    
-    private void initComponents(){
+
+    private void initComponents() {
         this.setLayout(new GridBagLayout());
-        
+
         GridBagConstraints cons = new GridBagConstraints();
         cons.fill = GridBagConstraints.HORIZONTAL; // natural height maximum width
-        
+
         cons.gridx = 0;
-	cons.gridy = 0;
-        this.add(Box.createRigidArea(new Dimension(0, 6)),cons);
+        cons.gridy = 0;
+        this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
         cons.gridx = 0;
-	cons.gridy = 1;
-        this.add(createConnectSaveLoadPanel(),cons);
+        cons.gridy = 1;
+        this.add(createConnectSaveLoadPanel(), cons);
         cons.gridx = 0;
-	cons.gridy = 2;
-        this.add(Box.createRigidArea(new Dimension(0, 6)),cons);
+        cons.gridy = 2;
+        this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
         cons.gridx = 0;
-	cons.gridy = 3;
-        this.add(createPlayControlsPanel(),cons);
+        cons.gridy = 3;
+        this.add(createPlayControlsPanel(), cons);
         cons.gridx = 0;
-	cons.gridy = 4;
-        this.add(Box.createRigidArea(new Dimension(0, 6)),cons);
+        cons.gridy = 4;
+        this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
         cons.gridx = 0;
-	cons.gridy = 5;
+        cons.gridy = 5;
         cons.weighty = 1.0;
         cons.weightx = 1.0;
         cons.fill = GridBagConstraints.BOTH; // both width and height max
@@ -237,21 +265,21 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         cons.weighty = 0.0;
         cons.weightx = 0.0;
         cons.gridx = 0;
-	cons.gridy = 6;
+        cons.gridy = 6;
         this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
         cons.gridx = 0;
-	cons.gridy = 7;
-        this.add(createDetailsPanel(),cons);
+        cons.gridy = 7;
+        this.add(createDetailsPanel(), cons);
         cons.gridx = 0;
-	cons.gridy = 8;
-        this.add(Box.createRigidArea(new Dimension(0, 6)),cons);
-        
-        
+        cons.gridy = 8;
+        this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
+
+
         // end Connect / Save / Load panel
         setTextsToComponents();
-        updateComponentsAccordingToModel();
+        updateConnectionInfoToModel();
     }
-    
+
     private JPanel createConnectSaveLoadPanel() {
         // Connect / Save / Load panel
         jPanelConnectSaveLoad = new JPanel();
@@ -373,32 +401,30 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jPanelPlayControls.add(Box.createRigidArea(new Dimension(0, 7)));
         jPanelPlayControls.add(jPanelPlayControlsRecordButtons);
         //
-        
+
         return jPanelPlayControls;
     }
 
-    private JPanel createEventListPanel(){
+    private JPanel createEventListPanel() {
         jPanelEventList = new JPanel();
         jPanelEventList.setLayout(new BoxLayout(jPanelEventList, BoxLayout.Y_AXIS));
 
         //// link table with table model
         jTableEventList = new JTable(simulatorInterface.getEventTableModel());
         jTableEventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jTableEventList.setRowSelectionAllowed(false);
         //
         jPanelEventListTable = new JPanel();
         jScrollPaneTableEventList = new JScrollPane();
         jScrollPaneTableEventList.setViewportView(jTableEventList);
-        
+
         GroupLayout jPanelEventListLayout = new GroupLayout(jPanelEventListTable);
         jPanelEventListTable.setLayout(jPanelEventListLayout);
         jPanelEventListLayout.setHorizontalGroup(
-            jPanelEventListLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPaneTableEventList, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-        );
+                jPanelEventListLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPaneTableEventList, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE));
         jPanelEventListLayout.setVerticalGroup(
-            jPanelEventListLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPaneTableEventList, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)//200
-        );
+                jPanelEventListLayout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPaneTableEventList, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)//200
+                );
         //
         //
         jPanelEventListButtons = new JPanel();
@@ -407,7 +433,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jButtonDeleteEvents = new JButton();
         jButtonDeleteEvents.setAlignmentX(Component.LEFT_ALIGNMENT);
         jButtonDeleteEvents.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/trashcan_full.png"))); // NOI18N
-        
+
         //jPanelEventListButtons.add(Box.createRigidArea(new Dimension(0, 7)));
         jPanelEventListButtons.add(jButtonDeleteEvents);
         //
@@ -415,11 +441,11 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jPanelEventList.add(jPanelEventListTable);
         jPanelEventList.add(Box.createRigidArea(new Dimension(0, 7)));
         jPanelEventList.add(jPanelEventListButtons);
-        
+
         return jPanelEventList;
     }
-    
-    private JPanel createDetailsPanel(){
+
+    private JPanel createDetailsPanel() {
         jPanelDetails = new JPanel();
         jPanelDetails.setLayout(new BoxLayout(jPanelDetails, BoxLayout.LINE_AXIS));
         //
@@ -442,7 +468,7 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         //        
         return jPanelDetails;
     }
-    
+
     private void setTextsToComponents() {
         jPanelConnectSaveLoad.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("CONNECT_SAVE_LOAD")));
         jButtonSaveListToFile.setText(dataLayer.getString("SAVE_LIST_TO_FILE"));
@@ -452,10 +478,10 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jButtonConnectToServer.setText(dataLayer.getString("CONNECT_TO_SERVER"));
         jButtonConnectToServer.setToolTipText(dataLayer.getString("CONNECT_TO_SERVER_TOOL_TIP"));
         jLabelConnectionStatusName.setText(dataLayer.getString("CONNECTION_STATUS"));
-        
-        if(simulatorInterface.isConnectedToServer()){
+
+        if (simulatorInterface.isConnectedToServer()) {
             jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
-        }else{
+        } else {
             jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
         }
         //
@@ -475,10 +501,10 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         //
         Hashtable labelTable = new Hashtable();
         labelTable.put(new Integer(SimulatorManager.SPEED_MIN), jLabelSliderSlow);
-        labelTable.put(new Integer(SimulatorManager.SPEED_MAX/2), jLabelSliderMedium);
+        labelTable.put(new Integer(SimulatorManager.SPEED_MAX / 2), jLabelSliderMedium);
         labelTable.put(new Integer(SimulatorManager.SPEED_MAX), jLabelSliderFast);
         jSliderPlayerSpeed.setLabelTable(labelTable);
-        
+
         //
         jPanelEventList.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("EVENT_LIST")));
         jButtonDeleteEvents.setText(dataLayer.getString("DELETE_EVENTS"));
@@ -493,22 +519,22 @@ public class SimulatorControlPanel extends JPanel implements Observer{
         jTableEventList.getColumnModel().getColumn(2).setHeaderValue(dataLayer.getString("TO"));
         jTableEventList.getColumnModel().getColumn(3).setHeaderValue(dataLayer.getString("TYPE"));
         jTableEventList.getColumnModel().getColumn(4).setHeaderValue(dataLayer.getString("INFO"));
-        
-        
+
+
     }
-    
-    private void updateComponentsAccordingToModel(){
-        if(simulatorInterface.isConnectedToServer()){
+
+    private void updateConnectionInfoToModel() {
+        if (simulatorInterface.isConnectedToServer()) {
             jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_ok.png"))); // NOI18N
             jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
-        }else{
+        } else {
             jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png"))); // NOI18N
             jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
         }
-        
-        
-    }  
-    
+
+
+    }
+
     private int showYesNoDialog(String title, String message) {
         Object[] options = {dataLayer.getString("YES"), dataLayer.getString("NO")};
         int n = JOptionPane.showOptionDialog(this,
