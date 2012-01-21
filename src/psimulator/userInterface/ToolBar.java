@@ -8,7 +8,7 @@ import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
@@ -127,7 +127,7 @@ public final class ToolBar extends JToolBar implements Observer {
     @Override
     public void update(Observable o, Object o1) {
         // find out what event type occured
-        switch((UpdateEventType)o1){
+        switch((ObserverUpdateEventType)o1){
             case LANGUAGE:
                 this.setTextsToComponents();
                 break;

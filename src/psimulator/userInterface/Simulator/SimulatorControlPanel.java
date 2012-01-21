@@ -12,7 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
@@ -80,7 +80,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object o1) {
-        switch ((UpdateEventType) o1) {
+        switch ((ObserverUpdateEventType) o1) {
             case LANGUAGE:
                 setTextsToComponents();
                 break;

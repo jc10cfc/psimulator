@@ -3,7 +3,7 @@ package psimulator.logicLayer.Simulator;
 import java.util.Observable;
 import java.util.Observer;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 
@@ -44,7 +44,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
 
     @Override
     public void update(Observable o, Object o1) {
-        switch ((UpdateEventType) o1) {
+        switch ((ObserverUpdateEventType) o1) {
             case SIMULATOR_RECORDER:
                 this.isRecording = simulatorManagerInterface.isRecording();
                 break;
