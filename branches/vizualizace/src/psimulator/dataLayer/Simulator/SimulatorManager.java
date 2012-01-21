@@ -2,7 +2,7 @@ package psimulator.dataLayer.Simulator;
 
 import java.util.Observable;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 
 /**
@@ -47,7 +47,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR_SPEED);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_SPEED);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR_PLAYER_LIST_MOVE);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_LIST_MOVE);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR_RECORDER);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_RECORDER);
     }
     
     @Override
@@ -102,7 +102,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR_PLAYER_PLAY);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_PLAY);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR_DETAILS);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR_DETAILS);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.SIMULATOR_PLAYER_LIST_MOVE);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_LIST_MOVE);
     }
 
     @Override

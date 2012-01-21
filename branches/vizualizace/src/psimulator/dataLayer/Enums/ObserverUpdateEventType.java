@@ -4,7 +4,7 @@ package psimulator.dataLayer.Enums;
  *
  * @author Martin
  */
-public enum UpdateEventType {
+public enum ObserverUpdateEventType {
     LANGUAGE,
     ICON_SIZE,
     SIMULATOR,

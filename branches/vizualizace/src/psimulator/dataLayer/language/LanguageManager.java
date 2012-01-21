@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
-import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.interfaces.SaveableInterface;
 
 /**
@@ -87,7 +87,7 @@ public class LanguageManager extends Observable implements SaveableInterface {
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.LANGUAGE);
+        notifyObservers(ObserverUpdateEventType.LANGUAGE);
     }
 
     /**

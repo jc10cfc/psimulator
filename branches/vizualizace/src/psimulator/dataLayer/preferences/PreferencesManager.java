@@ -3,7 +3,7 @@ package psimulator.dataLayer.preferences;
 import java.util.Observable;
 import java.util.prefs.Preferences;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.interfaces.SaveableInterface;
 
 /**
@@ -50,6 +50,6 @@ public final class PreferencesManager extends Observable implements SaveableInte
         
         // notify all observers
         setChanged();
-        notifyObservers(UpdateEventType.ICON_SIZE);  
+        notifyObservers(ObserverUpdateEventType.ICON_SIZE);  
     }   
 }

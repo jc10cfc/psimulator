@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.Enums.UpdateEventType;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
@@ -45,7 +45,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
     @Override
     public void update(Observable o, Object o1) {
-        switch ((UpdateEventType) o1) {
+        switch ((ObserverUpdateEventType) o1) {
             case SIMULATOR_PLAYER_PLAY:
                 isPlaying = simulatorManagerInterface.isPlaying();
                 break;
