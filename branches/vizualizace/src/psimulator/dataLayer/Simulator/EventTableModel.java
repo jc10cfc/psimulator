@@ -30,6 +30,10 @@ public class EventTableModel extends AbstractTableModel {
         this.fireTableRowsDeleted(0, 0);
     }
     
+    public SimulatorEvent getSimulatorEvent(int i){
+        return eventList.get(i);
+    }
+    
     
     @Override
     public int getRowCount() {

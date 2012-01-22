@@ -22,6 +22,8 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
         this.isRecording = simulatorManagerInterface.isRecording();
     }
     
+    
+    
     @Override
     public void run() {
         
@@ -33,7 +35,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
             }
             
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException ex) {
                 System.out.println("Interrupted");
                 return;

@@ -13,7 +13,6 @@ import javax.swing.event.ChangeListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 
@@ -90,6 +89,15 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             case SIMULATOR_RECORDER:
                 updateRecordingInfoAccordingToModel();
                 break;
+            case SIMULATOR_PLAYER_STOP:
+                updatePlayingInfoAccordingToModel();
+                break;
+            case SIMULATOR_PLAYER_LIST_MOVE:
+            case SIMULATOR_PLAYER_NEXT:
+            case SIMULATOR_PLAYER_PLAY:
+                updatePositionInListAccordingToModel();
+                break;
+                
         }
     }
 
@@ -188,9 +196,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jToggleButtonPlay.isSelected()) {
-                    simulatorInterface.setPlayingActivated(true);
+                    simulatorInterface.setPlayingActivated();
                 } else {
-                    simulatorInterface.setPlayingActivated(false);
+                    simulatorInterface.setPlayingStopped();
                 }
             }
         });
@@ -411,7 +419,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //// link table with table model
         jTableEventList = new JTable(simulatorInterface.getEventTableModel());
         jTableEventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jTableEventList.setRowSelectionAllowed(false);
+        jTableEventList.setRowSelectionAllowed(true);
         //
         jPanelEventListTable = new JPanel();
         jScrollPaneTableEventList = new JScrollPane();
@@ -540,9 +548,25 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         if (simulatorInterface.isRecording()) {
             jToggleButtonCapture.setText(dataLayer.getString("CAPTURE_STOP"));
             jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER_STOP"));
+            jToggleButtonCapture.setSelected(true);
         } else {
             jToggleButtonCapture.setText(dataLayer.getString("CAPTURE"));
             jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER"));
+            jToggleButtonCapture.setSelected(false);
+        }
+    }
+    
+    private void updatePlayingInfoAccordingToModel(){
+        if(simulatorInterface.isPlaying()){
+            jToggleButtonPlay.setSelected(true);
+        }else{
+            jToggleButtonPlay.setSelected(false);
+        }
+    }
+    
+    private void updatePositionInListAccordingToModel(){
+        if(simulatorInterface.getListSize()>0){
+            jTableEventList.setRowSelectionInterval(simulatorInterface.getCurrentPositionInList(), simulatorInterface.getCurrentPositionInList());
         }
     }
 

@@ -22,11 +22,14 @@ public interface SimulatorManagerInterface {
     public void setConcreteRawSelected(int row);
     
     public void setRecordingActivated(boolean activated);
-    public void setPlayingActivated(boolean activated);
+    
+    public void setPlayingActivated();
+    public void setPlayingStopped();
     
     public void setPacketDetails(boolean activated);
     public void setNamesOfDevices(boolean activated);
     
+    public void setCurrentPositionInList(int position);
     
     // -------------------- GETTERS --------------------------
     public EventTableModel getEventTableModel();
@@ -35,6 +38,12 @@ public interface SimulatorManagerInterface {
     public int getSimulatorPlayerSpeed();
     public boolean isRecording();
     public boolean isPlaying();
-    public int getCurrentEventPosition();
+    
+    public int getCurrentPositionInList();
+    public int getListSize();
+    
+    //public SimulatorEvent getNextSimulatorEvent();
+    public void moveToNextEvent();
+    public SimulatorEvent getSimulatorEventAtCurrentPosition();
     
 }
