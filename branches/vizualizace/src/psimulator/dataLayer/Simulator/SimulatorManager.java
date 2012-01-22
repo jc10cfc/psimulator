@@ -47,7 +47,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         // notify all observers
         setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_CONNECTION);
     }
 
     @Override
