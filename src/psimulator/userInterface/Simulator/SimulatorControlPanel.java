@@ -97,7 +97,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             case SIMULATOR_PLAYER_PLAY:
                 updatePositionInListAccordingToModel();
                 break;
-                
+
         }
     }
 
@@ -420,6 +420,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jTableEventList = new JTable(simulatorInterface.getEventTableModel());
         jTableEventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jTableEventList.setRowSelectionAllowed(true);
+
         //
         jPanelEventListTable = new JPanel();
         jScrollPaneTableEventList = new JScrollPane();
@@ -521,7 +522,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //
         updateConnectionInfoAccordingToModel();
         updateRecordingInfoAccordingToModel();
-        
+
     }
 
     private void updateConnectionInfoAccordingToModel() {
@@ -555,18 +556,30 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jToggleButtonCapture.setSelected(false);
         }
     }
-    
-    private void updatePlayingInfoAccordingToModel(){
-        if(simulatorInterface.isPlaying()){
+
+    private void updatePlayingInfoAccordingToModel() {
+        if (simulatorInterface.isPlaying()) {
             jToggleButtonPlay.setSelected(true);
-        }else{
+        } else {
             jToggleButtonPlay.setSelected(false);
         }
     }
-    
-    private void updatePositionInListAccordingToModel(){
-        if(simulatorInterface.getListSize()>0){
-            jTableEventList.setRowSelectionInterval(simulatorInterface.getCurrentPositionInList(), simulatorInterface.getCurrentPositionInList());
+
+    private void updatePositionInListAccordingToModel() {
+        if (simulatorInterface.getListSize() > 0) {
+            int row = simulatorInterface.getCurrentPositionInList();
+            jTableEventList.setRowSelectionInterval(row, row);
+            
+            // need to do this in thread because withou thread it does not repaint correctly during playing
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    jTableEventList.scrollRectToVisible(jTableEventList.getCellRect(simulatorInterface.getCurrentPositionInList(), 0, false));
+                }
+            });
+
+
         }
     }
 
