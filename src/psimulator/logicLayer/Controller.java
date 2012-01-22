@@ -26,7 +26,8 @@ public class Controller implements ControllerFacade{
         new Thread(eventReciever).start();
         
         SimulatorPlayerThread simulatorPlayer = new SimulatorPlayerThread(model, view);
-        new Thread(simulatorPlayer).start();
+        //new Thread(simulatorPlayer).start();
+        simulatorPlayer.startThread(new Thread(simulatorPlayer));
         
         model.addSimulatorObserver(eventReciever);
         model.addSimulatorObserver(simulatorPlayer);

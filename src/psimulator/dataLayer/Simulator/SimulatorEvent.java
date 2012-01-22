@@ -30,4 +30,8 @@ public class SimulatorEvent {
         return list[i];
     }
     
+    @Override
+    public String toString(){
+        return "time="+time+", from="+from+", to="+to+", type="+type+", info="+info;
+    }
 }
