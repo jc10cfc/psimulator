@@ -3,7 +3,6 @@ package psimulator.logicLayer.Simulator;
 import java.util.Observable;
 import java.util.Observer;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.UserInterfaceOuterFacade;

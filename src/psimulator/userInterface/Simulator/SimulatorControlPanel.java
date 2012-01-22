@@ -85,7 +85,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 setTextsToComponents();
                 break;
             case SIMULATOR_CONNECTION:
-                updateConnectionInfoToModel();
+                updateConnectionInfoAccordingToModel();
+                break;
+            case SIMULATOR_RECORDER:
+                updateRecordingInfoAccordingToModel();
                 break;
         }
     }
@@ -124,12 +127,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //
         jButtonConnectToServer.addActionListener(new ActionListener() {
 
-            int tmpCounter = 0;
-
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                //simulatorInterface.pullTriggerTmp();
-                simulatorInterface.addSimulatorEvent(new SimulatorEvent(tmpCounter++, "Router1", "Router2", "PING", ""));
+                simulatorInterface.pullTriggerTmp();
             }
         });
 
@@ -277,7 +277,6 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
         // end Connect / Save / Load panel
         setTextsToComponents();
-        updateConnectionInfoToModel();
     }
 
     private JPanel createConnectSaveLoadPanel() {
@@ -475,15 +474,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonSaveListToFile.setToolTipText(dataLayer.getString("SAVE_LIST_TO_FILE_TOOL_TIP"));
         jButtonLoadListFromFile.setText(dataLayer.getString("LOAD_LIST_FROM_FILE"));
         jButtonLoadListFromFile.setToolTipText(dataLayer.getString("LOAD_LIST_FROM_FILE_TOOL_TIP"));
-        jButtonConnectToServer.setText(dataLayer.getString("CONNECT_TO_SERVER"));
-        jButtonConnectToServer.setToolTipText(dataLayer.getString("CONNECT_TO_SERVER_TOOL_TIP"));
         jLabelConnectionStatusName.setText(dataLayer.getString("CONNECTION_STATUS"));
-
-        if (simulatorInterface.isConnectedToServer()) {
-            jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
-        } else {
-            jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
-        }
         //
         jPanelPlayControls.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("PLAY_CONTROLS")));
         jSliderPlayerSpeed.setToolTipText(dataLayer.getString("SPEED_CONTROL"));
@@ -496,8 +487,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonNext.setToolTipText(dataLayer.getString("SKIP_TO_NEXT_EVENT"));
         jButtonPrevious.setToolTipText(dataLayer.getString("SKIP_TO_PREV_EVENT"));
         jToggleButtonPlay.setToolTipText(dataLayer.getString("START_STOP_PLAYING"));
-        jToggleButtonCapture.setText(dataLayer.getString("CAPTURE"));
-        jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER"));
+        //jToggleButtonCapture.setText(dataLayer.getString("CAPTURE"));
+        //jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER"));
         //
         Hashtable labelTable = new Hashtable();
         labelTable.put(new Integer(SimulatorManager.SPEED_MIN), jLabelSliderSlow);
@@ -519,20 +510,40 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jTableEventList.getColumnModel().getColumn(2).setHeaderValue(dataLayer.getString("TO"));
         jTableEventList.getColumnModel().getColumn(3).setHeaderValue(dataLayer.getString("TYPE"));
         jTableEventList.getColumnModel().getColumn(4).setHeaderValue(dataLayer.getString("INFO"));
-
-
+        //
+        updateConnectionInfoAccordingToModel();
+        updateRecordingInfoAccordingToModel();
+        
     }
 
-    private void updateConnectionInfoToModel() {
+    private void updateConnectionInfoAccordingToModel() {
         if (simulatorInterface.isConnectedToServer()) {
             jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_ok.png"))); // NOI18N
             jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
+            //
+            jToggleButtonCapture.setEnabled(true);
+            //
+            jButtonConnectToServer.setText(dataLayer.getString("DISCONNECT_FROM_SERVER"));
+            jButtonConnectToServer.setToolTipText(dataLayer.getString("DISCONNECT_FROM_SERVER_TOOL_TIP"));
         } else {
             jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png"))); // NOI18N
             jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
+            //
+            jToggleButtonCapture.setEnabled(false);
+            //
+            jButtonConnectToServer.setText(dataLayer.getString("CONNECT_TO_SERVER"));
+            jButtonConnectToServer.setToolTipText(dataLayer.getString("CONNECT_TO_SERVER_TOOL_TIP"));
         }
+    }
 
-
+    private void updateRecordingInfoAccordingToModel() {
+        if (simulatorInterface.isRecording()) {
+            jToggleButtonCapture.setText(dataLayer.getString("CAPTURE_STOP"));
+            jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER_STOP"));
+        } else {
+            jToggleButtonCapture.setText(dataLayer.getString("CAPTURE"));
+            jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER"));
+        }
     }
 
     private int showYesNoDialog(String title, String message) {
