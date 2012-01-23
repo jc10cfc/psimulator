@@ -15,6 +15,7 @@ public enum ObserverUpdateEventType {
     SIMULATOR_SPEED,            // when speed is changed
     SIMULATOR_RECORDER,         // when recorder is turned on / off
     SIMULATOR_CONNECTION,       // when connected / disconnected
+    SIMULATOR_REALTIME,         // when realtime enabled / disabled
     SIMULATOR_DETAILS;          
     
 }

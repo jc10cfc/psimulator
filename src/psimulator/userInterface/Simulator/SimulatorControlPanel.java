@@ -47,6 +47,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private JButton jButtonPrevious;
     private JToggleButton jToggleButtonCapture;
     private JToggleButton jToggleButtonPlay;
+    private JToggleButton jToggleButtonRealtime;
     // Event list panel
     private JPanel jPanelEventList;
     private JPanel jPanelEventListTable;
@@ -92,6 +93,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             case SIMULATOR_PLAYER_STOP:
                 updatePlayingInfoAccordingToModel();
                 break;
+            case SIMULATOR_REALTIME:
+                updateRealtimeAccordingToModel();
             case SIMULATOR_PLAYER_LIST_MOVE:
             case SIMULATOR_PLAYER_NEXT:
             case SIMULATOR_PLAYER_PLAY:
@@ -212,6 +215,19 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                     simulatorInterface.setRecordingActivated(true);
                 } else {
                     simulatorInterface.setRecordingActivated(false);
+                }
+            }
+        });
+
+        // -------------------- REALTIME ACTION ---------------------
+        jToggleButtonRealtime.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if (jToggleButtonRealtime.isSelected()) {
+                    simulatorInterface.setRealtimeActivated(true);
+                } else {
+                    simulatorInterface.setRealtimeActivated(false);
                 }
             }
         });
@@ -399,7 +415,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jToggleButtonCapture = new JToggleButton();
         jToggleButtonCapture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/Record Button.png"))); // NOI18N
         //
+        jToggleButtonRealtime = new JToggleButton();
+        //
         jPanelPlayControlsRecordButtons.add(jToggleButtonCapture);
+        jPanelPlayControlsRecordButtons.add(jToggleButtonRealtime);
         //
         //Add to main panel
         jPanelPlayControls.add(jPanelPlayControlsPlayButtons);
@@ -418,13 +437,14 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
         //// link table with table model
         jTableEventList = new JTable(simulatorInterface.getEventTableModel());
-        jTableEventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jTableEventList.setRowSelectionAllowed(true);
-
+        jTableEventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // only single selection
+        jTableEventList.setRowSelectionAllowed(true);                           // row selection enabled
+        jTableEventList.setFocusable(false);                                    // dont display focus on cells
+        jTableEventList.getTableHeader().setReorderingAllowed(false);           // disable reordering columns
         //
         jPanelEventListTable = new JPanel();
         jScrollPaneTableEventList = new JScrollPane();
-        jScrollPaneTableEventList.setViewportView(jTableEventList);
+        jScrollPaneTableEventList.setViewportView(jTableEventList);             // add table to scroll pane
 
         GroupLayout jPanelEventListLayout = new GroupLayout(jPanelEventListTable);
         jPanelEventListTable.setLayout(jPanelEventListLayout);
@@ -496,15 +516,14 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonNext.setToolTipText(dataLayer.getString("SKIP_TO_NEXT_EVENT"));
         jButtonPrevious.setToolTipText(dataLayer.getString("SKIP_TO_PREV_EVENT"));
         jToggleButtonPlay.setToolTipText(dataLayer.getString("START_STOP_PLAYING"));
-        //jToggleButtonCapture.setText(dataLayer.getString("CAPTURE"));
-        //jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER"));
+        //
+
         //
         Hashtable labelTable = new Hashtable();
         labelTable.put(new Integer(SimulatorManager.SPEED_MIN), jLabelSliderSlow);
         labelTable.put(new Integer(SimulatorManager.SPEED_MAX / 2), jLabelSliderMedium);
         labelTable.put(new Integer(SimulatorManager.SPEED_MAX), jLabelSliderFast);
         jSliderPlayerSpeed.setLabelTable(labelTable);
-
         //
         jPanelEventList.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("EVENT_LIST")));
         jButtonDeleteEvents.setText(dataLayer.getString("DELETE_EVENTS"));
@@ -522,6 +541,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //
         updateConnectionInfoAccordingToModel();
         updateRecordingInfoAccordingToModel();
+        updateRealtimeAccordingToModel();
 
     }
 
@@ -531,6 +551,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
             //
             jToggleButtonCapture.setEnabled(true);
+            jToggleButtonRealtime.setEnabled(true);
             //
             jButtonConnectToServer.setText(dataLayer.getString("DISCONNECT_FROM_SERVER"));
             jButtonConnectToServer.setToolTipText(dataLayer.getString("DISCONNECT_FROM_SERVER_TOOL_TIP"));
@@ -539,6 +560,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
             //
             jToggleButtonCapture.setEnabled(false);
+            jToggleButtonRealtime.setEnabled(false);
             //
             jButtonConnectToServer.setText(dataLayer.getString("CONNECT_TO_SERVER"));
             jButtonConnectToServer.setToolTipText(dataLayer.getString("CONNECT_TO_SERVER_TOOL_TIP"));
@@ -569,17 +591,53 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         if (simulatorInterface.getListSize() > 0) {
             int row = simulatorInterface.getCurrentPositionInList();
             jTableEventList.setRowSelectionInterval(row, row);
-            
-            // need to do this in thread because withou thread it does not repaint correctly during playing
+
+            // need to do this in thread because without thread it does not repaint correctly during playing
             SwingUtilities.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
+                    // scrolls table to selected row position
                     jTableEventList.scrollRectToVisible(jTableEventList.getCellRect(simulatorInterface.getCurrentPositionInList(), 0, false));
                 }
             });
 
 
+        }
+    }
+
+    private void updateRealtimeAccordingToModel() {
+        if (simulatorInterface.isRealtime()) {
+            jToggleButtonRealtime.setText(dataLayer.getString("REALTIME_STOP"));
+            jToggleButtonRealtime.setToolTipText(dataLayer.getString("REALTIME_STOP_TOOLTIP"));
+            jToggleButtonRealtime.setSelected(true);
+
+            // deactivate play buttons
+            setPlayerButtonsEnabled(false);
+            
+        } else {
+            jToggleButtonRealtime.setText(dataLayer.getString("REALTIME"));
+            jToggleButtonRealtime.setToolTipText(dataLayer.getString("REALTIME_START_TOOLTIP"));
+            jToggleButtonRealtime.setSelected(false);
+
+            // activate player buttons
+            setPlayerButtonsEnabled(true);
+        }
+    }
+
+    private void setPlayerButtonsEnabled(boolean enabled) {
+        jButtonFirst.setEnabled(enabled);
+        jButtonPrevious.setEnabled(enabled);
+        jButtonNext.setEnabled(enabled);
+        jButtonLast.setEnabled(enabled);
+        jToggleButtonPlay.setEnabled(enabled);
+        jSliderPlayerSpeed.setEnabled(enabled);
+        
+        // capture button could be enabled when not connected to server, we have to check this
+        if(simulatorInterface.isConnectedToServer() && enabled){
+            jToggleButtonCapture.setEnabled(enabled);
+        }else{
+            jToggleButtonCapture.setEnabled(false);
         }
     }
 

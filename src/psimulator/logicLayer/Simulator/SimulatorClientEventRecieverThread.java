@@ -35,7 +35,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
             }
             
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 System.out.println("Interrupted");
                 return;
