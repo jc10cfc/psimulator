@@ -590,19 +590,23 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private void updatePositionInListAccordingToModel() {
         if (simulatorInterface.getListSize() > 0) {
             int row = simulatorInterface.getCurrentPositionInList();
-            jTableEventList.setRowSelectionInterval(row, row);
+            // if some row selected
+            if (row >= 0) {
+                jTableEventList.setRowSelectionInterval(row, row);
 
-            // need to do this in thread because without thread it does not repaint correctly during playing
-            SwingUtilities.invokeLater(new Runnable() {
+                // need to do this in thread because without thread it does not repaint correctly during playing
+                SwingUtilities.invokeLater(new Runnable() {
 
-                @Override
-                public void run() {
-                    // scrolls table to selected row position
-                    jTableEventList.scrollRectToVisible(jTableEventList.getCellRect(simulatorInterface.getCurrentPositionInList(), 0, false));
-                }
-            });
-
-
+                    @Override
+                    public void run() {
+                        // scrolls table to selected row position
+                        jTableEventList.scrollRectToVisible(jTableEventList.getCellRect(simulatorInterface.getCurrentPositionInList(), 0, false));
+                    }
+                });
+            }
+        } else {
+            // if no content, remove selection
+            jTableEventList.getSelectionModel().clearSelection();
         }
     }
 
@@ -614,7 +618,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             // deactivate play buttons
             setPlayerButtonsEnabled(false);
-            
+
         } else {
             jToggleButtonRealtime.setText(dataLayer.getString("REALTIME"));
             jToggleButtonRealtime.setToolTipText(dataLayer.getString("REALTIME_START_TOOLTIP"));
@@ -632,11 +636,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonLast.setEnabled(enabled);
         jToggleButtonPlay.setEnabled(enabled);
         jSliderPlayerSpeed.setEnabled(enabled);
-        
+
         // capture button could be enabled when not connected to server, we have to check this
-        if(simulatorInterface.isConnectedToServer() && enabled){
+        if (simulatorInterface.isConnectedToServer() && enabled) {
             jToggleButtonCapture.setEnabled(enabled);
-        }else{
+        } else {
             jToggleButtonCapture.setEnabled(false);
         }
     }

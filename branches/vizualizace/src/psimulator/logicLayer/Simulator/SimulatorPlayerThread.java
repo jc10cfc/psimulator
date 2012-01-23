@@ -46,7 +46,9 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     // in while check if new packet came
                     while(true){
                         // check if new packet - if simulatorManagerInterface hasNextEvent
-                        if(simulatorManagerInterface.hasNextEvent()){
+                        if(simulatorManagerInterface.hasEventAtCurrentPosition()){
+                            
+                            //SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                             
                             // get next event and move to next event
                             SimulatorEvent event =simulatorManagerInterface.getNextSimulatorEvent();

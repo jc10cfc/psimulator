@@ -49,6 +49,8 @@ public interface SimulatorManagerInterface {
     public void moveToNextEvent();
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
     public boolean hasNextEvent();
+    public boolean hasEventAtCurrentPosition();
+    
     public SimulatorEvent getNextSimulatorEvent();
     
 }
