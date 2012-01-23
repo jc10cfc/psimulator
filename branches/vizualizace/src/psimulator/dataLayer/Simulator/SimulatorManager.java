@@ -20,6 +20,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private boolean isDeviceNames = false;
     private boolean isConnectedToServer = false;
     private boolean isRecording = false;
+    private boolean isRealtime = false;
     private boolean isPlaying = false;
     private int currentSpeed = SPEED_INIT;
     //private SimulatorPlayerCommand simulatorPlayerState;
@@ -37,8 +38,10 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public void pullTriggerTmp() {
         if (isConnectedToServer) {
             isConnectedToServer = false;
-            // turn recording off
+
+            // turn off recording and realtime
             setRecordingActivated(false);
+            setRealtimeActivated(false);
         } else {
             isConnectedToServer = true;
         }
@@ -105,13 +108,30 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
+    public void setRealtimeActivated(boolean activated) {
+        // if playing active and realtime activated, turn playing off
+        if (isPlaying && activated) {
+            setPlayingStopped();
+        }
+
+        setRecordingActivated(activated);
+
+        this.isRealtime = activated;
+        System.out.println("Realtime " + activated);
+
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_REALTIME);
+    }
+
+    @Override
     public void setPlayingActivated() {
-        if(eventTableModel.getRowCount()<=0){
+        if (eventTableModel.getRowCount() <= 0) {
             // if nothing to play - stop playing (the toggle button is deselected )
             setPlayingStopped();
             return;
         }
-        
+
         this.isPlaying = true;
         System.out.println("START Playing ");
 
@@ -119,7 +139,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_PLAY);
     }
-    
+
     @Override
     public void setPlayingStopped() {
         this.isPlaying = false;
@@ -160,12 +180,12 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_LIST_MOVE);
     }
-    
+
     @Override
     public void deleteAllSimulatorEvents() {
         // stop playing and notify all observers
         setPlayingStopped();
-        
+
         // delete items
         eventTableModel.deleteAllSimulatorEvents();
         currentPositionInList = 0;
@@ -217,11 +237,8 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         return eventTableModel.getRowCount();
     }
 
-    /*
-     * @Override public SimulatorEvent getNextSimulatorEvent() { if
-     * (eventTableModel.getRowCount() == currentPositionInList) { return null; }
-     * else { return eventTableModel.getSimulatorEvent(currentPositionInList); }
-     * }
+    /**
+     * ONLY FOR SIMULATION
      */
     @Override
     public void moveToNextEvent() {
@@ -240,12 +257,50 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             setChanged();
             notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
         }
+    }
+
+    /**
+     * USE ONLY FOR REALTIME
+     *
+     * @return
+     */
+    @Override
+    public boolean hasNextEvent() {
+        if ((currentPositionInList + 1 == eventTableModel.getRowCount() - 1) || (currentPositionInList == 0 && eventTableModel.getRowCount() == 1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * USE ONLY FOR REALTIME
+     *
+     * @return
+     */
+    @Override
+    public SimulatorEvent getNextSimulatorEvent() {
+        currentPositionInList++;
+        
+        SimulatorEvent event = eventTableModel.getSimulatorEvent(currentPositionInList);
+
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
 
 
+
+        // return event
+        return event;
     }
 
     @Override
     public SimulatorEvent getSimulatorEventAtCurrentPosition() {
         return eventTableModel.getSimulatorEvent(currentPositionInList);
+    }
+
+    @Override
+    public boolean isRealtime() {
+        return isRealtime;
     }
 }

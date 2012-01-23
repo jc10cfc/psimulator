@@ -23,6 +23,8 @@ public interface SimulatorManagerInterface {
     
     public void setRecordingActivated(boolean activated);
     
+    public void setRealtimeActivated(boolean activated);
+    
     public void setPlayingActivated();
     public void setPlayingStopped();
     
@@ -38,6 +40,7 @@ public interface SimulatorManagerInterface {
     public int getSimulatorPlayerSpeed();
     public boolean isRecording();
     public boolean isPlaying();
+    public boolean isRealtime();
     
     public int getCurrentPositionInList();
     public int getListSize();
@@ -45,5 +48,7 @@ public interface SimulatorManagerInterface {
     //public SimulatorEvent getNextSimulatorEvent();
     public void moveToNextEvent();
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
+    public boolean hasNextEvent();
+    public SimulatorEvent getNextSimulatorEvent();
     
 }
