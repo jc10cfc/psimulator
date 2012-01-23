@@ -24,7 +24,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private boolean isPlaying = false;
     private int currentSpeed = SPEED_INIT;
     //private SimulatorPlayerCommand simulatorPlayerState;
-    private int currentPositionInList = 0;
+    private int currentPositionInList = 0; 
     //
     private EventTableModel eventTableModel;
 
@@ -68,7 +68,9 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         switch (simulatorPlayerState) {
             case FIRST:
-                currentPositionInList = 0;
+                if (eventTableModel.getRowCount() >= 1) {
+                    currentPositionInList = 0;
+                }
                 break;
             case PREVIOUS:
                 // if not at the beginning of the list
@@ -86,10 +88,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
                 if (eventTableModel.getRowCount() > 0) {
                     currentPositionInList = eventTableModel.getRowCount() - 1;
                 }
-
-
                 break;
-
         }
 
         // notify all observers
@@ -258,6 +257,20 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
         }
     }
+    
+    /**
+     * USE ONLY FOR REALTIME
+     *
+     * @return
+     */
+    @Override
+    public boolean hasEventAtCurrentPosition() {
+        if(eventTableModel.getRowCount() - 1 >= currentPositionInList){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * USE ONLY FOR REALTIME
@@ -303,4 +316,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isRealtime() {
         return isRealtime;
     }
+
+    
 }
