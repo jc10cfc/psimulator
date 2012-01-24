@@ -69,7 +69,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
     public SimulatorControlPanel(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
-        this.simulatorInterface = dataLayer.getSimulatorInterface();
+        this.simulatorInterface = dataLayer.getSimulatorManager();
 
         // create graphic layout with components
         initComponents();

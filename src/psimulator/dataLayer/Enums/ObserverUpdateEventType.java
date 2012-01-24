@@ -16,6 +16,7 @@ public enum ObserverUpdateEventType {
     SIMULATOR_RECORDER,         // when recorder is turned on / off
     SIMULATOR_CONNECTION,       // when connected / disconnected
     SIMULATOR_REALTIME,         // when realtime enabled / disabled
-    SIMULATOR_DETAILS;          
+    SIMULATOR_NEW_PACKET,       // when new packet recieved
+    SIMULATOR_DETAILS;      
     
 }

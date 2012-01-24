@@ -24,7 +24,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private boolean isPlaying = false;
     private int currentSpeed = SPEED_INIT;
     //private SimulatorPlayerCommand simulatorPlayerState;
-    private int currentPositionInList = -1; 
+    private int currentPositionInList = 0;
     //
     private EventTableModel eventTableModel;
 
@@ -113,6 +113,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             setPlayingStopped();
         }
 
+        // start recording
         setRecordingActivated(activated);
 
         this.isRealtime = activated;
@@ -187,7 +188,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         // delete items
         eventTableModel.deleteAllSimulatorEvents();
-        currentPositionInList = -1;
+        currentPositionInList = 0;
     }
 
     // ----- GETTERS and SETTERS
@@ -222,11 +223,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public void setCurrentPositionInList(int position) {
-        this.currentPositionInList = position;
-    }
-
-    @Override
     public int getCurrentPositionInList() {
         return currentPositionInList;
     }
@@ -256,6 +252,15 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
+    public void moveToEvent(int index) {
+        currentPositionInList = index;
+
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+    }
+
+    @Override
     public SimulatorEvent getSimulatorEventAtCurrentPosition() {
         return eventTableModel.getSimulatorEvent(currentPositionInList);
     }
@@ -266,13 +271,10 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public boolean hasSimulatorEvent(int index) {
-        if(eventTableModel.getRowCount()-1 >= index){
-            return true;
-        }else{
-            return false;
-        }
-    }
+    public void setNewPacketRecieved() {
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_NEW_PACKET);
 
-    
+    }
 }

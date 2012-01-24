@@ -23,10 +23,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     private boolean isPlaying;
     private boolean isRealtime;
     //
-    private int realtimePosition;
-   
+    private boolean isNewPacket;
+
     public SimulatorPlayerThread(DataLayerFacade model, UserInterfaceOuterFacade view) {
-        this.simulatorManagerInterface = model.getSimulatorInterface();
+        this.simulatorManagerInterface = model.getSimulatorManager();
         //simulatorPlayerState = simulatorManagerInterface.getSimulatorPlayerState();
         currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
 
@@ -40,58 +40,51 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     @Override
     public void run() {
         int tmpCounter = 0;
-        
-        
 
         while (true) {
             try {
-                if(isRealtime){
-                    // in while check if new packet came
-                    while(true){
-                        
-                        // check if new packet - if simulatorManagerInterface hasNextEvent
-                        if(simulatorManagerInterface.hasSimulatorEvent(simulatorManagerInterface.getCurrentPositionInList()+1)){
-                            
-                            // move to next event in the list
-                            simulatorManagerInterface.moveToNextEvent();
-                            
-                            // get next event
-                            SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
-                            
-                            System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);  
-                            
-                            // play packet
-                            Thread.sleep(500);
+                // interrupted in realtime and isNewPacket set to true = new packet came
+                if (isRealtime && isNewPacket) {
+                    // set isNewPacket to false
+                    isNewPacket = false;
 
-                        }else{  // if no packet, slleep before next check
-                            // short sleep - will not load the CPU
-                            Thread.sleep(10);
-                        }
-                    }
-                } else if (isPlaying) {
+                    // get last event
+                    int index = simulatorManagerInterface.getListSize()-1;
+                    
+                    // move to the last event
+                    simulatorManagerInterface.moveToEvent(index);
+                    
+                    // get event
+                    SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+
+                    // play event
+                    System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
+                    Thread.sleep(1000);
+                
+                } else if (isPlaying) { // if in playing mode
                     // if current position -1 = initial value of position after list is cleared or at start
-                    if(simulatorManagerInterface.getCurrentPositionInList() == -1){
+                    /*if (simulatorManagerInterface.getCurrentPositionInList() == -1) {
                         simulatorManagerInterface.moveToNextEvent();
-                    }
-                    
-                    
+                    }*/
+
+
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                     System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
-                    
-                    System.out.println("Event: "+event+"."); 
-                    int i = (int)(((double)SimulatorManager.SPEED_MAX) /(double) currentSpeed); // 1-10
-                    
-                    int time = i*500-4;
+
+                    System.out.println("Event: " + event + ".");
+                    int i = (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
+
+                    int time = i * 500 - 4;
                     Thread.sleep(time);
-                    
+
                     simulatorManagerInterface.moveToNextEvent();
-                    
-                }else{
+
+                } else {
                     System.out.println("Player going to sleep " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
                     Thread.sleep(Long.MAX_VALUE);
                 }
-                
-                
+
+
             } catch (InterruptedException ex) {
                 System.out.println("Interrupted");
             }
@@ -105,22 +98,37 @@ public class SimulatorPlayerThread implements Runnable, Observer {
         switch ((ObserverUpdateEventType) o1) {
             case SIMULATOR_PLAYER_PLAY:
                 isPlaying = simulatorManagerInterface.isPlaying();
+                // interrupt
                 break;
             case SIMULATOR_PLAYER_STOP:
                 isPlaying = simulatorManagerInterface.isPlaying();
+                // interrupt
                 break;
             case SIMULATOR_PLAYER_LIST_MOVE:
+                // interrupt
                 break;
             case SIMULATOR_REALTIME:
                 isRealtime = simulatorManagerInterface.isRealtime();
+                isNewPacket = false;
+                // interrupt
                 break;
             case SIMULATOR_SPEED:
                 currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
+                // do not interrupt
                 return;
+            case SIMULATOR_NEW_PACKET:
+                if (isRealtime) {
+                    isNewPacket = true;
+                    // interrupt
+                    break;
+                } else {
+                    // do not interrupt
+                    return;
+                }
             default:
                 return;
         }
-        
+
         thread.interrupt();
     }
 }
