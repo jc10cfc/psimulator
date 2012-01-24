@@ -45,12 +45,8 @@ public interface SimulatorManagerInterface {
     public int getCurrentPositionInList();
     public int getListSize();
     
-    //public SimulatorEvent getNextSimulatorEvent();
     public void moveToNextEvent();
+    
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
-    public boolean hasNextEvent();
-    public boolean hasEventAtCurrentPosition();
-    
-    public SimulatorEvent getNextSimulatorEvent();
-    
+    public boolean hasSimulatorEvent(int index);
 }
