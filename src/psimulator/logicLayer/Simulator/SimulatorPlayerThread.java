@@ -59,15 +59,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
                     // play event
                     System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
                 
                 } else if (isPlaying) { // if in playing mode
-                    // if current position -1 = initial value of position after list is cleared or at start
-                    /*if (simulatorManagerInterface.getCurrentPositionInList() == -1) {
-                        simulatorManagerInterface.moveToNextEvent();
-                    }*/
-
-
+                    
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                     System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
 
@@ -105,6 +100,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                 // interrupt
                 break;
             case SIMULATOR_PLAYER_LIST_MOVE:
+                if(isRealtime){
+                    // do not interrupt
+                    return;
+                }
                 // interrupt
                 break;
             case SIMULATOR_REALTIME:
