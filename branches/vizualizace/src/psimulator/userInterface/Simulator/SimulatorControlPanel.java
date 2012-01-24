@@ -107,20 +107,19 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     ////////------------ PRIVATE------------///////////
     private void addListenersToComponents() {
 
-        // jTableEventList listener for Double click
+        // jTableEventList listener for single click
         jTableEventList.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    JTable target = (JTable) e.getSource();
-                    int row = target.getSelectedRow();
-                    int column = target.getSelectedColumn();
+                // get the coordinates of the mouse click
+                Point p = e.getPoint();
 
-                    // set concrete row in model
-                    simulatorInterface.setConcreteRawSelected(row);
-                    //jTableEventList.getColumnModel().getColumn(row).set
-                }
+                // get the row index that contains that coordinate
+                int rowNumber = jTableEventList.rowAtPoint(p);
+
+                // set concrete row in model
+                simulatorInterface.setConcreteRawSelected(rowNumber);
             }
         });
 
@@ -413,9 +412,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelPlayControlsRecordButtons.setLayout(new BoxLayout(jPanelPlayControlsRecordButtons, BoxLayout.X_AXIS));
         //
         jToggleButtonCapture = new JToggleButton();
-        jToggleButtonCapture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/Record Button.png"))); // NOI18N
+        jToggleButtonCapture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/record_button.png"))); // NOI18N
         //
         jToggleButtonRealtime = new JToggleButton();
+        jToggleButtonRealtime.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/realtime_play.png"))); // NOI18N
+        jToggleButtonRealtime.setSelectedIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/realtime_stop.png"))); // NOI18N
         //
         jPanelPlayControlsRecordButtons.add(jToggleButtonCapture);
         jPanelPlayControlsRecordButtons.add(jToggleButtonRealtime);

@@ -42,6 +42,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
                 int time = tmpRandom.nextInt(1000)+100;
                 
                 Thread.sleep(time);
+                //Thread.sleep(1);
             } catch (InterruptedException ex) {
                 System.out.println("Recorder Interrupted");
                 return;

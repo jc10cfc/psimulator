@@ -23,7 +23,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private boolean isRealtime = false;
     private boolean isPlaying = false;
     private int currentSpeed = SPEED_INIT;
-    //private SimulatorPlayerCommand simulatorPlayerState;
+    //
     private int currentPositionInList = 0;
     //
     private EventTableModel eventTableModel;
@@ -175,6 +175,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void setConcreteRawSelected(int row) {
         System.out.println("Row " + row + " double clicked");
+        currentPositionInList = row;
 
         // notify all observers
         setChanged();
