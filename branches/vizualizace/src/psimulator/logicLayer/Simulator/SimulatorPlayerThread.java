@@ -23,6 +23,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     private boolean isPlaying;
     private boolean isRealtime;
     //
+    private int realtimePosition;
    
     public SimulatorPlayerThread(DataLayerFacade model, UserInterfaceOuterFacade view) {
         this.simulatorManagerInterface = model.getSimulatorInterface();
@@ -39,43 +40,41 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     @Override
     public void run() {
         int tmpCounter = 0;
+        
+        
 
         while (true) {
             try {
                 if(isRealtime){
                     // in while check if new packet came
                     while(true){
+                        
                         // check if new packet - if simulatorManagerInterface hasNextEvent
-                        if(simulatorManagerInterface.hasEventAtCurrentPosition()){
+                        if(simulatorManagerInterface.hasSimulatorEvent(simulatorManagerInterface.getCurrentPositionInList()+1)){
                             
-                            //SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
-                            
-                            // get next event and move to next event
-                            SimulatorEvent event =simulatorManagerInterface.getNextSimulatorEvent();
-                            
-                            System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);  
-                            
-                            // play packet
-                            Thread.sleep(500);
-                            
-                            
-                            
-                            /*
-                            // move to next event
+                            // move to next event in the list
                             simulatorManagerInterface.moveToNextEvent();
+                            
                             // get next event
                             SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                             
                             System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);  
                             
                             // play packet
-                            Thread.sleep(500);*/
+                            Thread.sleep(500);
+
                         }else{  // if no packet, slleep before next check
                             // short sleep - will not load the CPU
                             Thread.sleep(10);
                         }
                     }
                 } else if (isPlaying) {
+                    // if current position -1 = initial value of position after list is cleared or at start
+                    if(simulatorManagerInterface.getCurrentPositionInList() == -1){
+                        simulatorManagerInterface.moveToNextEvent();
+                    }
+                    
+                    
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                     System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
                     
