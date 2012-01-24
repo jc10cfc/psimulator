@@ -2,6 +2,7 @@ package psimulator.logicLayer.Simulator;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
@@ -17,8 +18,10 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
     
     private boolean isRecording;
     
+    private Random tmpRandom = new Random();
+    
     public SimulatorClientEventRecieverThread(DataLayerFacade model){
-        this.simulatorManagerInterface = model.getSimulatorInterface();
+        this.simulatorManagerInterface = model.getSimulatorManager();
         this.isRecording = simulatorManagerInterface.isRecording();
     }
     
@@ -32,12 +35,15 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
         while(true){
             if(isRecording){
                 simulatorManagerInterface.addSimulatorEvent(new SimulatorEvent(tmpCounter++,"Router1", "Router2", "PING", ""));
+                simulatorManagerInterface.setNewPacketRecieved();
             }
             
             try {
-                Thread.sleep(1000);
+                int time = tmpRandom.nextInt(1000)+100;
+                
+                Thread.sleep(time);
             } catch (InterruptedException ex) {
-                System.out.println("Interrupted");
+                System.out.println("Recorder Interrupted");
                 return;
             }
         }

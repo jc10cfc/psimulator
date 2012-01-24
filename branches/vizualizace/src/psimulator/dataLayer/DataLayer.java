@@ -77,7 +77,7 @@ public class DataLayer extends DataLayerFacade{
     }
 
     @Override
-    public SimulatorManagerInterface getSimulatorInterface() {
+    public SimulatorManagerInterface getSimulatorManager() {
         return simulatorManager;
     }
     

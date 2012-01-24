@@ -31,7 +31,7 @@ public interface SimulatorManagerInterface {
     public void setPacketDetails(boolean activated);
     public void setNamesOfDevices(boolean activated);
     
-    public void setCurrentPositionInList(int position);
+    public void setNewPacketRecieved();
     
     // -------------------- GETTERS --------------------------
     public EventTableModel getEventTableModel();
@@ -46,7 +46,9 @@ public interface SimulatorManagerInterface {
     public int getListSize();
     
     public void moveToNextEvent();
+    public void moveToEvent(int index);
     
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
-    public boolean hasSimulatorEvent(int index);
+     
+    
 }
