@@ -152,6 +152,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         setTextsToFileChooser();
     }
 
+    
+
     /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for Undo and Redo button
@@ -204,6 +206,42 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
 /////////////////////-----------------------------------////////////////////
     /**
+     * Action Listener for Zoom buttons
+     */
+    class JMenuItemSimulatorEditorListener implements ActionListener {
+
+        /**
+         * calls zoom operation on jPanelEditor according to actionCommand
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            switch (UserInterfaceMainPanelState.valueOf(e.getActionCommand())) {
+                case EDITOR:
+                    // if nothing changed, do nothing
+                    if(jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.EDITOR){
+                        return;
+                    }
+                    
+                    // change state to editor without changing or removing the graph
+                    refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.EDITOR, true);
+                    
+                    break;
+                case SIMULATOR:
+                    // if nothing changed, do nothing
+                    if(jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.SIMULATOR){
+                        return;
+                    }
+                    
+                    // change state to editor without changing or removing the graph
+                    refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.SIMULATOR, true);
+                    
+                    break;
+            }
+        }
+    }
+    
+/////////////////////-----------------------------------////////////////////
+    /**
      * Action Listener for NewProject button
      */
     class JMenuItemNewListener implements ActionListener {
@@ -218,7 +256,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 return;
             }
                         
-            refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR);
+            refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR, false);
         }
     }
 
@@ -238,7 +276,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 return;
             }
             
-            refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.WELCOME);
+            refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.WELCOME, false);
         }
     }
 
@@ -394,7 +432,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             Graph graph = new Graph();
             //initJPanelEditor(graph);
             
-            refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR);
+            refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
         }
     }
 
@@ -402,17 +440,38 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * Updates jPanelUserInterfaceMain according to userInterfaceState. If changing to SIMULATOR or EDITOR state, graph cannot be null.
      * @param graph Graph to set into jPanelUserInterfaceMain, can be null if userInterfaceState will be WELCOME
      * @param userInterfaceState State to change to.
+     * @param chaginSimulatorEditor if true, the graph is kept untouched
      */
-    private void refreshUserInterfaceMainPanel(Graph graph, UserInterfaceMainPanelState userInterfaceState){
+    private void refreshUserInterfaceMainPanel(Graph graph, UserInterfaceMainPanelState userInterfaceState, boolean chaginSimulatorEditor){
         switch(userInterfaceState){
             case WELCOME:
+                // remove graph
                 jPanelUserInterfaceMain.removeGraph();
                 break;
             case EDITOR:
-                jPanelUserInterfaceMain.removeGraph();
-                jPanelUserInterfaceMain.setGraph(graph);
+                // if not changing from simulator to editor or back
+                if(!chaginSimulatorEditor){
+                   // remove graph
+                    jPanelUserInterfaceMain.removeGraph();
+                    // set another graph
+                    jPanelUserInterfaceMain.setGraph(graph); 
+                }
+                
+                // set Editor selected in tool bar
+                jToolBar.setEditorSelected(true);
                 break;
             case SIMULATOR:
+                // if not changing from simulator to editor or back
+                if(!chaginSimulatorEditor){
+                   // remove graph
+                    jPanelUserInterfaceMain.removeGraph();
+                    // set another graph
+                    jPanelUserInterfaceMain.setGraph(graph); 
+                }
+                
+                // set Simulator selected in tool bar
+                jToolBar.setSimulatorSelected(true);
+                
                 System.out.println("Tohle zatim neumim");
                 break;
         }
@@ -457,8 +516,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             jMenuBar.setZoomResetEnabled(false);
             jToolBar.setZoomResetEnabled(false);
+           
             return;
         }
+        
         jMenuBar.setProjectRelatedButtonsEnabled(true);
         jToolBar.setProjectRelatedButtonsEnabled(true);
 
@@ -475,6 +536,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         ActionListener newListener = new JMenuItemNewListener();
         jMenuBar.addNewProjectActionListener(newListener);
         jToolBar.addNewProjectActionListener(newListener);
+        jPanelUserInterfaceMain.addNewProjectActionListener(newListener);
 
         ActionListener closeListener = new JMenuItemCloseListener();
         jMenuBar.addCloseActionListener(closeListener);
@@ -483,6 +545,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         ActionListener openListener = new JMenuItemOpenListener();
         jMenuBar.addOpenActionListener(openListener);
         jToolBar.addOpenActionListener(openListener);
+        jPanelUserInterfaceMain.addOpenProjectActionListener(openListener);
 
         ActionListener saveListener = new JMenuItemSaveListener();
         jMenuBar.addSaveActionListener(saveListener);
@@ -514,6 +577,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jMenuBar.addPreferencesActionListener(new PreferencesActionListener(this, dataLayer));
 
         // END add listeners to Menu Bar - OPTIONS
+        
+        // add listeners to ToolBar editor and simulator toggle buttons
+        jToolBar.addSimulatorEditorActionListener(new JMenuItemSimulatorEditorListener());
+        // END add listeners to ToolBar editor and simulator toggle buttons
     }
 
     /**
@@ -526,6 +593,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         return (os.indexOf("win") >= 0);
     }
 
+    /**
+     * Sets internationalized texts to file chooser
+     */
     private void setTextsToFileChooser() {
         UIManager.put("FileChooser.lookInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
         UIManager.put("FileChooser.filesOfTypeLabelText", dataLayer.getString("FILE_CHOOSER_FILES_OF_TYPE"));
@@ -565,43 +635,5 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // let fileChooser to update according to current look and feel = it loads texts againt
         fileChooser.updateUI();
     }
-    
-    
-                
-    
-    /**
-     * creates JPanelEditor and places it to CENTER of main window
-     */
-    private void initJPanelEditor(Graph graph) {
-        // set graph to editor    
-        jPanelUserInterfaceMain.setGraph(graph);
 
-        // update buttons
-        updateProjectRelatedButtons();
-
-        // add editor to framve
-        this.add(jPanelUserInterfaceMain, BorderLayout.CENTER);
-        this.setVisible(true);
-        this.repaint();
-    }
-    
-    
-
-    /**
-     * removes JPanelEditor from main windows and deletes it
-     */
-    private void removeJPanelEditor() {
-        // remove graph from editor
-        jPanelUserInterfaceMain.removeGraph();
-
-        // remove editor from frame
-        this.remove(jPanelUserInterfaceMain);
-
-        // update buttons
-        updateProjectRelatedButtons();
-
-        // update main frame
-        this.setVisible(true);
-        this.repaint();
-    }
 }

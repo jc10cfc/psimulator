@@ -47,7 +47,7 @@ public class WelcomePanel extends JPanel implements Observer{
      * Adds action listener to jMenuItemOpen
      * @param listener Action listener
      */
-    public void addOpenActionListener(ActionListener listener){
+    public void addOpenProjectActionListener(ActionListener listener){
         jButtonOpenProject.addActionListener(listener);
     }
     

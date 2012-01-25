@@ -5,14 +5,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.ImageIcon;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 
 /**
  *
@@ -21,8 +17,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 public class MenuBar extends JMenuBar implements Observer {
 
     private DataLayerFacade dataLayer;
-    
-    
+
     private JMenu jMenuFile;
     private JMenuItem jMenuItemNew;
     private JMenuItem jMenuItemClose;

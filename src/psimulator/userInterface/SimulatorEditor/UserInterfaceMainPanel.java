@@ -1,6 +1,7 @@
 package psimulator.userInterface.SimulatorEditor;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
@@ -21,6 +22,10 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface implements UserInterfaceMainPanelInnerInterface, Observer{
 
+    private AbstractImageFactory imageFactory;
+    private MainWindowInnerInterface mainWindow;
+    private DataLayerFacade dataLayer;
+    //
     //
     private UserInterfaceMainPanelState userInterfaceState;
     //
@@ -31,34 +36,8 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     //
     private JPanel jPanelSimulator;
     //
-    private JPanel jPanelWelcome;
-    
-    
-    //
-    private AbstractImageFactory imageFactory;
-    private MainWindowInnerInterface mainWindow;
-    private DataLayerFacade dataLayer;
-    
-    
-    /*
-        BorderLayout layout = new BorderLayout();
-        this.setLayout(layout);
-        JPanel simulatorPanel = new SimulatorControlPanel(dataLayer);
-        dataLayer.addLanguageObserver((Observer)simulatorPanel);
-        dataLayer.addSimulatorObserver((Observer)simulatorPanel);
-        this.add(simulatorPanel, BorderLayout.EAST);
-        */
-        //
-        /*
-        BorderLayout layout = new BorderLayout();
-        this.setLayout(layout);
-        JPanel welcomeJPanel = new WelcomePanel(dataLayer);
-        dataLayer.addLanguageObserver((Observer)welcomeJPanel);
-        this.add(welcomeJPanel, BorderLayout.CENTER);
-        */
-    
-    
-    
+    private WelcomePanel jPanelWelcome;
+   
 
     public UserInterfaceMainPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer, AbstractImageFactory imageFactory,
             UserInterfaceMainPanelState userInterfaceState) {
@@ -142,6 +121,9 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
             case SIMULATOR:
                 this.add(jScrollPane, BorderLayout.CENTER);
                 this.add(jPanelSimulator, BorderLayout.EAST);
+                
+                // TODO: set some tool for simulator
+                
                 break;
         }
         
@@ -255,6 +237,23 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         // set default tool in ToolBar
         jToolBarEditor.setDefaultTool();
     }
+    
+    @Override
+    public UserInterfaceMainPanelState getUserInterfaceState() {
+        return userInterfaceState;
+    }
+
+    @Override
+    public void addNewProjectActionListener(ActionListener listener) {
+        jPanelWelcome.addNewProjectActionListener(listener);
+    }
+
+    @Override
+    public void addOpenProjectActionListener(ActionListener listener) {
+        jPanelWelcome.addOpenProjectActionListener(listener);
+    }
+
+    
 
     
 

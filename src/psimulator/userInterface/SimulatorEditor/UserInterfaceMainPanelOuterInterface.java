@@ -1,6 +1,7 @@
 package psimulator.userInterface.SimulatorEditor;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
@@ -72,4 +73,10 @@ public abstract class UserInterfaceMainPanelOuterInterface extends JPanel{
     
     
     public abstract void doChangeMode(UserInterfaceMainPanelState userInterfaceState);
+    
+    public abstract UserInterfaceMainPanelState getUserInterfaceState();
+    
+    public abstract void addNewProjectActionListener(ActionListener listener);
+    
+    public abstract void addOpenProjectActionListener(ActionListener listener);
 }

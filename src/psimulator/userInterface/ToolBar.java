@@ -5,15 +5,13 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
-import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
-import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
-import psimulator.userInterface.SimulatorEditor.SwingComponents.MenuToggleButton;
-import psimulator.userInterface.SimulatorEditor.Tools.ToolsFactory;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
+import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
 
 /**
  *
@@ -80,8 +78,12 @@ public final class ToolBar extends JToolBar implements Observer {
                 
         
         modeButtonGroup = new ButtonGroup();
-        jToggleButtonEditor = new JToggleButton("Editor");
-        jToggleButtonSimulator = new JToggleButton("Simulator");
+        
+        jToggleButtonEditor = new JToggleButton();
+        jToggleButtonEditor.setActionCommand(UserInterfaceMainPanelState.EDITOR.toString());
+        jToggleButtonSimulator = new JToggleButton();
+        jToggleButtonSimulator.setActionCommand(UserInterfaceMainPanelState.SIMULATOR.toString());
+                
         modeButtonGroup.add(jToggleButtonEditor);
         modeButtonGroup.add(jToggleButtonSimulator);
         
@@ -190,10 +192,22 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomReset.setEnabled(enabled);
     }
     
+    public void setSimulatorSelected(boolean selected){
+        jToggleButtonSimulator.setSelected(selected);
+    }
+    
+    public void setEditorSelected(boolean selected){
+        jToggleButtonEditor.setSelected(selected);
+    }
+    
+    
     public void setProjectRelatedButtonsEnabled(boolean enabled){
         jButtonClose.setEnabled(enabled);
         jButtonSave.setEnabled(enabled);
         jButtonSaveAs.setEnabled(enabled);
+        
+        jToggleButtonEditor.setVisible(enabled);
+        jToggleButtonSimulator.setVisible(enabled);
     }
 
     /**
@@ -255,6 +269,14 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomReset.addActionListener(listener);
     }
 
+    /**
+     * Adds action listener to editor and simulator toggle buttons
+     * @param listener 
+     */
+    public void addSimulatorEditorActionListener(ActionListener listener){
+        jToggleButtonEditor.addActionListener(listener);
+        jToggleButtonSimulator.addActionListener(listener);
+    }
 
     
     ////////------------ PRIVATE------------///////////
@@ -270,6 +292,11 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomIn.setToolTipText(dataLayer.getString("ZOOM_IN"));
         jButtonZoomOut.setToolTipText(dataLayer.getString("ZOOM_OUT"));
         jButtonZoomReset.setToolTipText(dataLayer.getString("ZOOM_RESET"));
+        //
+        jToggleButtonEditor.setText(dataLayer.getString("EDITOR"));
+        jToggleButtonSimulator.setText(dataLayer.getString("SIMULATOR"));
+        jToggleButtonEditor.setToolTipText(dataLayer.getString("SWITCHES_TO_EDITOR"));
+        jToggleButtonSimulator.setToolTipText(dataLayer.getString("SWITCHES_TO_SIMULATOR"));
     }
     
 }
