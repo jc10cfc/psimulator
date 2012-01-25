@@ -70,13 +70,22 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jEditor = new EditorPanel(this, dataLayer, imageFactory);
         
         //
+        /*
         BorderLayout layout = new BorderLayout();
         this.setLayout(layout);
         JPanel simulatorPanel = new SimulatorControlPanel(dataLayer);
         dataLayer.addLanguageObserver((Observer)simulatorPanel);
         dataLayer.addSimulatorObserver((Observer)simulatorPanel);
         this.add(simulatorPanel, BorderLayout.EAST);
+        */
         //
+        /*
+        BorderLayout layout = new BorderLayout();
+        this.setLayout(layout);
+        JPanel welcomeJPanel = new WelcomePanel(dataLayer);
+        dataLayer.addLanguageObserver((Observer)welcomeJPanel);
+        this.add(welcomeJPanel, BorderLayout.CENTER);
+        */
         
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
