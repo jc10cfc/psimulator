@@ -11,8 +11,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
-import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 
 /**
  *

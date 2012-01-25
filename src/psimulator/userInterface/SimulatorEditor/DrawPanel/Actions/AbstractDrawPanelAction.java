@@ -1,8 +1,8 @@
-package psimulator.userInterface.Editor.DrawPanel.Actions;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Actions;
 
 import javax.swing.AbstractAction;
 import javax.swing.undo.UndoManager;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**

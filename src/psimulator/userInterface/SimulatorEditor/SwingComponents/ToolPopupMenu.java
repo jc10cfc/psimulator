@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.SwingComponents;
+package psimulator.userInterface.SimulatorEditor.SwingComponents;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -7,8 +7,8 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import psimulator.userInterface.Editor.Tools.AbstractTool;
-import psimulator.userInterface.Editor.Tools.AddDeviceTool;
+import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
+import psimulator.userInterface.SimulatorEditor.Tools.AddDeviceTool;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**

@@ -1,12 +1,12 @@
-package psimulator.userInterface.Editor.DrawPanel;
+package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**

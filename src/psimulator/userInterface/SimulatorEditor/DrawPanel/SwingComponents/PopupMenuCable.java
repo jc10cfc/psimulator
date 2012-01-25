@@ -1,11 +1,11 @@
-package psimulator.userInterface.Editor.DrawPanel.SwingComponents;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 
 /**
  *

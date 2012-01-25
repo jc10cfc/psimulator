@@ -1,8 +1,8 @@
-package psimulator.userInterface.Editor.DrawPanel.Actions;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Actions;
 
 import java.util.List;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 
 /**
  *

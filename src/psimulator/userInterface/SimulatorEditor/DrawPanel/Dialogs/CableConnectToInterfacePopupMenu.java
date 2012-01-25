@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Dialogs;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,10 +7,10 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.event.PopupMenuListener;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.EthInterface;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.MouseActionListeners.ChooseEthInterfaceInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.ChooseEthInterfaceInterface;
 
 /**
  *

@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Enums;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Enums;
 
 /**
  *

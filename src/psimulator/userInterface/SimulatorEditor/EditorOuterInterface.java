@@ -1,8 +1,8 @@
-package psimulator.userInterface.Editor;
+package psimulator.userInterface.SimulatorEditor;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
  *

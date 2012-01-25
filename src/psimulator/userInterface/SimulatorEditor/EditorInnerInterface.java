@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor;
+package psimulator.userInterface.SimulatorEditor;
 
 /**
  *

@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Dialogs;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -20,9 +20,9 @@ import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 import javax.swing.text.DefaultCaret;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
-import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticLayoutTask;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticLayoutTask;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**

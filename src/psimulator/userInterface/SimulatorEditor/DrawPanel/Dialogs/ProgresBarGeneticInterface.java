@@ -1,7 +1,7 @@
 
-package psimulator.userInterface.Editor.DrawPanel.Dialogs;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs;
 
-import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 
 /**
  *

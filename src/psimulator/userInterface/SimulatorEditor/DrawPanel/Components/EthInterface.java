@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Components;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 /**
  *

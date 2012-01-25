@@ -1,11 +1,11 @@
 
-package psimulator.userInterface.Editor.DrawPanel;
+package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
 import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
-import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
  *

@@ -1,10 +1,10 @@
-package psimulator.userInterface.Editor.DrawPanel.UndoCommands;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands;
 
 import java.awt.Dimension;
 import java.util.List;
 import javax.swing.undo.AbstractUndoableEdit;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
  *

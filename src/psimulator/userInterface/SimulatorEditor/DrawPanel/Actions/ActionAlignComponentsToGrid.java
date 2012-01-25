@@ -1,14 +1,14 @@
-package psimulator.userInterface.Editor.DrawPanel.Actions;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Actions;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
-import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableChagePositionOfAllComponents;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableChagePositionOfAllComponents;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**

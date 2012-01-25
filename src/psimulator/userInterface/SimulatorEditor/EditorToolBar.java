@@ -1,6 +1,6 @@
-package psimulator.userInterface.Editor;
+package psimulator.userInterface.SimulatorEditor;
 
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelToolChangeOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
@@ -12,10 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
-import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.Editor.DrawPanel.Enums.SecondaryTool;
-import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
-import psimulator.userInterface.Editor.Tools.ToolsFactory;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
+import psimulator.userInterface.SimulatorEditor.SwingComponents.MenuToggleButton;
+import psimulator.userInterface.SimulatorEditor.Tools.ToolsFactory;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**

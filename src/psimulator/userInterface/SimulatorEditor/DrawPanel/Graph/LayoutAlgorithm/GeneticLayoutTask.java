@@ -1,7 +1,7 @@
-package psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm;
 
 import javax.swing.SwingWorker;
-import psimulator.userInterface.Editor.DrawPanel.Dialogs.ProgresBarGeneticInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs.ProgresBarGeneticInterface;
 
 /**
  *

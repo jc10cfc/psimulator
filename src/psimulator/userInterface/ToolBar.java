@@ -9,11 +9,11 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.userInterface.Editor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.Editor.DrawPanel.Enums.Zoom;
-import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
-import psimulator.userInterface.Editor.SwingComponents.MenuToggleButton;
-import psimulator.userInterface.Editor.Tools.ToolsFactory;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
+import psimulator.userInterface.SimulatorEditor.SwingComponents.MenuToggleButton;
+import psimulator.userInterface.SimulatorEditor.Tools.ToolsFactory;
 
 /**
  *

@@ -1,12 +1,12 @@
-package psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm;
 
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
  *

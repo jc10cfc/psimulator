@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Actions;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Actions;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -7,13 +7,13 @@ import javax.swing.JFrame;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.Dialogs.ProgressBarGeneticDialog;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
-import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.VisualizePanel;
-import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableChagePositionOfAllComponents;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs.ProgressBarGeneticDialog;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.VisualizePanel;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableChagePositionOfAllComponents;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**

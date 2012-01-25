@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Components;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
