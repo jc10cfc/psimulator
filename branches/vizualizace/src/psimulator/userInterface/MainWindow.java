@@ -20,7 +20,7 @@ import psimulator.userInterface.Editor.EditorOuterInterface;
 import psimulator.userInterface.Editor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.Editor.EditorPanel;
-import psimulator.userInterface.Simulator.SimulatorControlPanel;
+import psimulator.userInterface.SimulatorEditor.SimulatorControlPanel;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 import psimulator.userInterface.imageFactories.AwtImageFactory;
 
