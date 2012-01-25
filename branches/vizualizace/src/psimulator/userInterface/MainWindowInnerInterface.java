@@ -24,5 +24,5 @@ public interface MainWindowInnerInterface {
     public void updateToolBarIconsSize(ToolbarIconSizeEnum size);
     
     public JRootPane getRootPane();
-   
+
 }
