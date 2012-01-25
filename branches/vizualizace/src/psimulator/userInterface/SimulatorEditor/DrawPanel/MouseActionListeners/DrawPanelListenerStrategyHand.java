@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.MouseActionListeners;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -10,19 +10,19 @@ import java.util.List;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
-import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
-import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.GraphOuterInterface;
-import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.SwingComponents.PopupMenuCable;
-import psimulator.userInterface.Editor.Tools.AbstractTool;
-import psimulator.userInterface.Editor.Tools.ManipulationTool;
-import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableMoveComponent;
-import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Markable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuCable;
+import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
+import psimulator.userInterface.SimulatorEditor.Tools.ManipulationTool;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableMoveComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**

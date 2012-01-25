@@ -1,17 +1,17 @@
-package psimulator.userInterface.Editor.DrawPanel.MouseActionListeners;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.HwComponent;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.Editor.Tools.AbstractTool;
-import psimulator.userInterface.Editor.Tools.AddDeviceTool;
-import psimulator.userInterface.Editor.DrawPanel.UndoCommands.UndoableAddHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
+import psimulator.userInterface.SimulatorEditor.Tools.AddDeviceTool;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableAddHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**

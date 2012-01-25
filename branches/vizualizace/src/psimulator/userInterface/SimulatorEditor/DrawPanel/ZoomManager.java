@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel;
+package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
 import java.awt.Dimension;
 import java.awt.Point;

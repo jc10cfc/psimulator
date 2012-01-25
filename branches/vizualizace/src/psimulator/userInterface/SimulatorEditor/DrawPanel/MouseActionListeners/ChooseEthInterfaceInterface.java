@@ -1,6 +1,6 @@
-package psimulator.userInterface.Editor.DrawPanel.MouseActionListeners;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
-import psimulator.userInterface.Editor.DrawPanel.Components.EthInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 
 /**
  *

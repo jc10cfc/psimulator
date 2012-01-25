@@ -1,24 +1,12 @@
-package psimulator.userInterface.Editor.SwingComponents;
+package psimulator.userInterface.SimulatorEditor.SwingComponents;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Insets;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JPopupMenu;
-import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
-import psimulator.userInterface.Editor.Tools.AbstractTool;
+import javax.swing.*;
+import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
  *

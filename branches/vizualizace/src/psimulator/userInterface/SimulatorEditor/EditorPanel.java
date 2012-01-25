@@ -1,9 +1,9 @@
-package psimulator.userInterface.Editor;
+package psimulator.userInterface.SimulatorEditor;
 
-import psimulator.userInterface.Editor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.Editor.DrawPanel.ZoomEventWrapper;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelOuterInterface;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanel;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -13,7 +13,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Editor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 import psimulator.userInterface.imageFactories.AwtImageFactory;

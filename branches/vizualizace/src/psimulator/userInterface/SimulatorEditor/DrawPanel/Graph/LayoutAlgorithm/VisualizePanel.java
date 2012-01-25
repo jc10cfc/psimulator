@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

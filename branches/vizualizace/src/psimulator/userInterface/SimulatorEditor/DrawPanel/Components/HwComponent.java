@@ -1,9 +1,9 @@
-package psimulator.userInterface.Editor.DrawPanel.Components;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import psimulator.userInterface.Editor.DrawPanel.Enums.HwTypeEnum;
-import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.HwTypeEnum;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**

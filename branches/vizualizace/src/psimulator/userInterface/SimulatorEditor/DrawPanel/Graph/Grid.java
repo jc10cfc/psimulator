@@ -1,9 +1,9 @@
-package psimulator.userInterface.Editor.DrawPanel.Graph;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 
 /**
  *

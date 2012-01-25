@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Graph;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,15 +13,15 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JComponent;
-import psimulator.userInterface.Editor.DrawPanel.Actions.RemovedComponentsWrapper;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.Editor.DrawPanel.Components.BundleOfCables;
-import psimulator.userInterface.Editor.DrawPanel.Components.Cable;
-import psimulator.userInterface.Editor.DrawPanel.Components.Markable;
-import psimulator.userInterface.Editor.DrawPanel.DrawPanelSizeChangeInnerInterface;
-import psimulator.userInterface.Editor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
-import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Markable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelSizeChangeInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 
 /**
  *

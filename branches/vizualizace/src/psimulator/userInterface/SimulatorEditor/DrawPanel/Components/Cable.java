@@ -1,4 +1,4 @@
-package psimulator.userInterface.Editor.DrawPanel.Components;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -12,7 +12,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import psimulator.userInterface.Editor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 
 /**
  *
