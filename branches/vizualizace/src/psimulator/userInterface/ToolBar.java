@@ -96,16 +96,14 @@ public final class ToolBar extends JToolBar implements Observer {
         this.add(jButtonSaveAs);
         this.addSeparator();
         
-        this.add(jButtonUndo);
-        this.add(jButtonRedo);
-        this.addSeparator();
-        
         this.add(jButtonZoomIn);
         this.add(jButtonZoomOut);
         this.add(jButtonZoomReset);
         this.addSeparator();
         
-        
+        this.add(jButtonUndo);
+        this.add(jButtonRedo);
+        //this.addSeparator();
         
         this.add(Box.createHorizontalGlue());
         this.add(jToggleButtonEditor);
@@ -169,6 +167,8 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomIn.setIcon(new ImageIcon(getClass().getResource(path+"viewmag+.png")));
         jButtonZoomOut.setIcon(new ImageIcon(getClass().getResource(path+"viewmag-.png")));
         jButtonZoomReset.setIcon(new ImageIcon(getClass().getResource(path+"viewmag1.png")));
+        jToggleButtonEditor.setIcon(new ImageIcon(getClass().getResource(path+"editor.png")));
+        jToggleButtonSimulator.setIcon(new ImageIcon(getClass().getResource(path+"exec.png")));
     }
     
     
@@ -201,13 +201,22 @@ public final class ToolBar extends JToolBar implements Observer {
     }
     
     
-    public void setProjectRelatedButtonsEnabled(boolean enabled){
+    public void setProjectRelatedButtonsEnabled(boolean enabled, UserInterfaceMainPanelState userInterfaceState){
         jButtonClose.setEnabled(enabled);
         jButtonSave.setEnabled(enabled);
         jButtonSaveAs.setEnabled(enabled);
         
         jToggleButtonEditor.setVisible(enabled);
         jToggleButtonSimulator.setVisible(enabled);
+        
+        if(userInterfaceState == UserInterfaceMainPanelState.EDITOR){
+            jButtonUndo.setVisible(enabled);
+            jButtonRedo.setVisible(enabled);
+        }else{
+            jButtonUndo.setVisible(false);
+            jButtonRedo.setVisible(false);
+        }
+        
     }
 
     /**

@@ -9,6 +9,7 @@ import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
+import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
 
 /**
  *

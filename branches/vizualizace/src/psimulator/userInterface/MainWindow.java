@@ -2,6 +2,7 @@ package psimulator.userInterface;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -76,7 +77,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         jPanelUserInterfaceMain = new UserInterfaceMainPanel(this, dataLayer, imageFactory, UserInterfaceMainPanelState.WELCOME);
         this.add(jPanelUserInterfaceMain, BorderLayout.CENTER);
-        
+
 
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
@@ -112,16 +113,38 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         this.setMinimumSize(new Dimension(800, 600));
         this.setSize(new Dimension(800, 600));
         this.setVisible(true);
+
+        // Get the size of the screen
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Determine the new location of the window
+        int w = this.getSize().width;
+        int h = this.getSize().height;
+        int x = (dim.width - w) / 2;
+        int y = (dim.height - h) / 2;
+
+        // Move the window
+        this.setLocation(x, y);
+
+        this.setVisible(true);
     }
 
     @Override
     public void updateUndoRedoButtons() {
-        jMenuBar.setUndoEnabled(jPanelUserInterfaceMain.canUndo());
-        jToolBar.setUndoEnabled(jPanelUserInterfaceMain.canUndo());
+        // if in simulator mode
+        if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.EDITOR) {
+            jMenuBar.setUndoEnabled(jPanelUserInterfaceMain.canUndo());
+            jToolBar.setUndoEnabled(jPanelUserInterfaceMain.canUndo());
 
-        jMenuBar.setRedoEnabled(jPanelUserInterfaceMain.canRedo());
-        jToolBar.setRedoEnabled(jPanelUserInterfaceMain.canRedo());
+            jMenuBar.setRedoEnabled(jPanelUserInterfaceMain.canRedo());
+            jToolBar.setRedoEnabled(jPanelUserInterfaceMain.canRedo());
+        } else {
+            jMenuBar.setUndoEnabled(false);
+            jToolBar.setUndoEnabled(false);
 
+            jMenuBar.setRedoEnabled(false);
+            jToolBar.setRedoEnabled(false);
+        }
     }
 
     @Override
@@ -151,8 +174,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     public void update(Observable o, Object o1) {
         setTextsToFileChooser();
     }
-
-    
 
     /////////////////////-----------------------------------////////////////////
     /**
@@ -218,28 +239,28 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             switch (UserInterfaceMainPanelState.valueOf(e.getActionCommand())) {
                 case EDITOR:
                     // if nothing changed, do nothing
-                    if(jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.EDITOR){
+                    if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.EDITOR) {
                         return;
                     }
-                    
+
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.EDITOR, true);
-                    
+
                     break;
                 case SIMULATOR:
                     // if nothing changed, do nothing
-                    if(jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.SIMULATOR){
+                    if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.SIMULATOR) {
                         return;
                     }
-                    
+
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.SIMULATOR, true);
-                    
+
                     break;
             }
         }
     }
-    
+
 /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for NewProject button
@@ -255,7 +276,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (doCheckPossibleDataLoss()) {
                 return;
             }
-                        
+
             refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR, false);
         }
     }
@@ -275,7 +296,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (doCheckPossibleDataLoss()) {
                 return;
             }
-            
+
             refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.WELCOME, false);
         }
     }
@@ -431,57 +452,57 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             Graph graph = new Graph();
             //initJPanelEditor(graph);
-            
+
             refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
         }
     }
 
     /**
-     * Updates jPanelUserInterfaceMain according to userInterfaceState. If changing to SIMULATOR or EDITOR state, graph cannot be null.
-     * @param graph Graph to set into jPanelUserInterfaceMain, can be null if userInterfaceState will be WELCOME
+     * Updates jPanelUserInterfaceMain according to userInterfaceState. If
+     * changing to SIMULATOR or EDITOR state, graph cannot be null.
+     *
+     * @param graph Graph to set into jPanelUserInterfaceMain, can be null if
+     * userInterfaceState will be WELCOME
      * @param userInterfaceState State to change to.
      * @param chaginSimulatorEditor if true, the graph is kept untouched
      */
-    private void refreshUserInterfaceMainPanel(Graph graph, UserInterfaceMainPanelState userInterfaceState, boolean chaginSimulatorEditor){
-        switch(userInterfaceState){
+    private void refreshUserInterfaceMainPanel(Graph graph, UserInterfaceMainPanelState userInterfaceState, boolean chaginSimulatorEditor) {
+        switch (userInterfaceState) {
             case WELCOME:
                 // remove graph
                 jPanelUserInterfaceMain.removeGraph();
                 break;
             case EDITOR:
                 // if not changing from simulator to editor or back
-                if(!chaginSimulatorEditor){
-                   // remove graph
+                if (!chaginSimulatorEditor) {
+                    // remove graph
                     jPanelUserInterfaceMain.removeGraph();
                     // set another graph
-                    jPanelUserInterfaceMain.setGraph(graph); 
+                    jPanelUserInterfaceMain.setGraph(graph);
                 }
-                
+
                 // set Editor selected in tool bar
                 jToolBar.setEditorSelected(true);
                 break;
             case SIMULATOR:
                 // if not changing from simulator to editor or back
-                if(!chaginSimulatorEditor){
-                   // remove graph
+                if (!chaginSimulatorEditor) {
+                    // remove graph
                     jPanelUserInterfaceMain.removeGraph();
                     // set another graph
-                    jPanelUserInterfaceMain.setGraph(graph); 
+                    jPanelUserInterfaceMain.setGraph(graph);
                 }
-                
+
                 // set Simulator selected in tool bar
                 jToolBar.setSimulatorSelected(true);
-                
-                System.out.println("Tohle zatim neumim");
                 break;
         }
-        
+
         jPanelUserInterfaceMain.doChangeMode(userInterfaceState);
-        
+
         // update buttons
         updateProjectRelatedButtons();
     }
-
 
     private int showWarningPossibleDataLossDialog(String title, String message) {
         Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE"), dataLayer.getString("CANCEL")};
@@ -498,9 +519,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
 
     private void updateProjectRelatedButtons() {
+
+
         if (!jPanelUserInterfaceMain.hasGraph()) {
             jMenuBar.setProjectRelatedButtonsEnabled(false);
-            jToolBar.setProjectRelatedButtonsEnabled(false);
+            jToolBar.setProjectRelatedButtonsEnabled(false, jPanelUserInterfaceMain.getUserInterfaceState());
 
             jMenuBar.setUndoEnabled(false);
             jToolBar.setUndoEnabled(false);
@@ -516,12 +539,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             jMenuBar.setZoomResetEnabled(false);
             jToolBar.setZoomResetEnabled(false);
-           
+
             return;
         }
-        
+
         jMenuBar.setProjectRelatedButtonsEnabled(true);
-        jToolBar.setProjectRelatedButtonsEnabled(true);
+        jToolBar.setProjectRelatedButtonsEnabled(true, jPanelUserInterfaceMain.getUserInterfaceState());
 
         updateZoomButtons();
         updateUndoRedoButtons();
@@ -577,7 +600,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jMenuBar.addPreferencesActionListener(new PreferencesActionListener(this, dataLayer));
 
         // END add listeners to Menu Bar - OPTIONS
-        
+
         // add listeners to ToolBar editor and simulator toggle buttons
         jToolBar.addSimulatorEditorActionListener(new JMenuItemSimulatorEditorListener());
         // END add listeners to ToolBar editor and simulator toggle buttons
@@ -635,5 +658,4 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // let fileChooser to update according to current look and feel = it loads texts againt
         fileChooser.updateUI();
     }
-
 }
