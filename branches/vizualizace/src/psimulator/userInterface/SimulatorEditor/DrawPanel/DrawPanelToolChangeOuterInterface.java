@@ -26,4 +26,9 @@ public interface DrawPanelToolChangeOuterInterface {
      * @param mouseListener 
      */
     public void setCurrentMouseListener(DrawPanelListenerStrategy mouseListener);
+    
+    /**
+     * Sets active mouse listener to simulator mouse listener
+     */
+    public void setCurrentMouseListenerSimulator();
 }
