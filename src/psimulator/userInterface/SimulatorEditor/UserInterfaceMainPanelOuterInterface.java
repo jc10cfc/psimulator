@@ -8,9 +8,9 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
  *
  * @author Martin
  */
-public abstract class EditorOuterInterface extends JPanel{
+public abstract class UserInterfaceMainPanelOuterInterface extends JPanel{
     
-    public EditorOuterInterface(BorderLayout borderLayout){
+    public UserInterfaceMainPanelOuterInterface(BorderLayout borderLayout){
         super(borderLayout);
     }
     
@@ -70,4 +70,6 @@ public abstract class EditorOuterInterface extends JPanel{
   
     public abstract Graph getGraph();
     
+    
+    public abstract void doChangeMode(UserInterfaceMainPanelState userInterfaceState);
 }

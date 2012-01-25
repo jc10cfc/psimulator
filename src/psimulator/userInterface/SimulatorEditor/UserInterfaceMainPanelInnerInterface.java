@@ -4,7 +4,7 @@ package psimulator.userInterface.SimulatorEditor;
  *
  * @author Martin
  */
-public interface EditorInnerInterface {
+public interface UserInterfaceMainPanelInnerInterface {
     /**
      * Sets default tool in EditorPanels toolBar
      */

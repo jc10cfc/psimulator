@@ -35,7 +35,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.ActionSwitchTo
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
-import psimulator.userInterface.SimulatorEditor.EditorInnerInterface;
+import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -57,7 +57,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private ZoomManager zoomManager = new ZoomManager();
     private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
-    private EditorInnerInterface editorPanel;
+    private UserInterfaceMainPanelInnerInterface editorPanel;
     // variables for creating cables
     private boolean lineInProgress = false;
     private Point lineStartInDefaultZoom;
@@ -74,7 +74,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
-    public DrawPanel(MainWindowInnerInterface mainWindow, EditorInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
+    public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
 
         this.editorPanel = editorPanel;

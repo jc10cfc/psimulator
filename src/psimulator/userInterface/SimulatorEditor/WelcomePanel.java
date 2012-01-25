@@ -1,4 +1,4 @@
-package psimulator.userInterface;
+package psimulator.userInterface.SimulatorEditor;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
