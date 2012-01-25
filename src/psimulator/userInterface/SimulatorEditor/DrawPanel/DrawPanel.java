@@ -1,16 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.EnumMap;
 import java.util.Observable;
@@ -22,21 +12,14 @@ import javax.swing.KeyStroke;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.ActionAlignComponentsToGrid;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.ActionAutomaticLayout;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.ActionFitToSize;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyAddCable;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyAddHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategyHand;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.ActionOnDelete;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.ActionSelectAll;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.ActionSwitchToHandToolAction;
+import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.*;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
-import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -50,6 +33,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private DrawPanelListenerStrategy mouseListenerHand;
     private DrawPanelListenerStrategy mouseListenerAddHwComponent;
     private DrawPanelListenerStrategy mouseListenerCable;
+    private DrawPanelListenerStrategy mouseListenerSimulator;
     private DrawPanelListenerStrategy currentMouseListener;
     // END mouse listenrs
     private Graph graph;
@@ -159,6 +143,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         mouseListenerHand = new DrawPanelListenerStrategyHand(this, undoManager, zoomManager, mainWindow, dataLayer);
         mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow, dataLayer);
         mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow, dataLayer);
+        mouseListenerSimulator = new DrawPanelListenerStrategySimulator(this, undoManager, zoomManager, mainWindow, dataLayer);
     }
 
     @Override
@@ -255,6 +240,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 // ================  IMPLEMENTATION OF ToolChangeInterface =================
     
     @Override
+    public void setCurrentMouseListenerSimulator() {
+        removeCurrentMouseListener();
+        setCurrentMouseListener(mouseListenerSimulator);
+    }
+    
+    @Override
     public void removeCurrentMouseListener() {
         if (currentMouseListener != null) {
             currentMouseListener.deInitialize();
@@ -277,11 +268,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             case ADD_SWITCH:
             case ADD_ROUTER:
                 return mouseListenerAddHwComponent;
-
+            case SIMULATOR:
+                return mouseListenerSimulator;
         }
 
         // this should never happen
-        System.out.println("chyba v DrawPanel metoda getMouseListener(MainTool tool)");
+        System.err.println("chyba v DrawPanel metoda getMouseListener(MainTool tool)");
         return mouseListenerHand;
     }
 
@@ -454,6 +446,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
     
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+
+    
 
     
 

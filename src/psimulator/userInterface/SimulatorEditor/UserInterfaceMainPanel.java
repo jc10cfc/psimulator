@@ -11,7 +11,9 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -116,14 +118,16 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
                 this.add(jToolBarEditor, BorderLayout.WEST);
                 
                 // set default tool in ToolBar
+                jPanelDraw.removeCurrentMouseListener();
                 doSetDefaultToolInToolBar();
                 break;
             case SIMULATOR:
                 this.add(jScrollPane, BorderLayout.CENTER);
                 this.add(jPanelSimulator, BorderLayout.EAST);
                 
-                // TODO: set some tool for simulator
-                
+                // set SIMULATOR mouse listener in draw panel
+                jPanelDraw.removeCurrentMouseListener();
+                jPanelDraw.setCurrentMouseListenerSimulator();
                 break;
         }
         
