@@ -31,12 +31,13 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
         this.drawPanel = drawPanel;
 
         jItemComponentProperties = new JMenuItem(dataLayer.getString("PROPERTIES"));
-        jItemAlignToGrid = new JMenuItem(dataLayer.getString("ALIGN_TO_GRID"));
-        jItemDeleteComponent = new JMenuItem(dataLayer.getString("DELETE"));
         jItemSelectAll = new JMenuItem(dataLayer.getString("SELECT_ALL"));
         jItemFitToSize = new JMenuItem(dataLayer.getString("FIT_TO_SIZE"));
         jItemAutomaticLayout = new JMenuItem(dataLayer.getString("AUTOMATIC_LAYOUT"));
-
+        
+        jItemAlignToGrid = new JMenuItem();
+        jItemDeleteComponent = new JMenuItem();
+        
         jItemAlignToGrid.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.ALIGN_COMPONENTS_TO_GRID));
         jItemDeleteComponent.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.DELETE));
         jItemSelectAll.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.SELECT_ALL));
@@ -54,6 +55,9 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
     }
 
     private void createOneComponentMenu() {
+        jItemAlignToGrid.setText(dataLayer.getString("ALIGN_TO_GRID_ONE"));
+        jItemDeleteComponent.setText(dataLayer.getString("DELETE_ONE"));
+        //
         this.add(jItemComponentProperties);
         this.addSeparator();
         this.add(jItemAlignToGrid);
@@ -61,11 +65,17 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
     }
 
     private void createMoreComponentsMenu() {
+        jItemAlignToGrid.setText(dataLayer.getString("ALIGN_TO_GRID_SELECTED"));
+        jItemDeleteComponent.setText(dataLayer.getString("DELETE_SELECTED"));
+        //
         this.add(jItemAlignToGrid);
         this.add(jItemDeleteComponent);
     }
 
     private void createAllComponentsMenu() {
+        jItemAlignToGrid.setText(dataLayer.getString("ALIGN_TO_GRID_ALL"));
+        jItemDeleteComponent.setText(dataLayer.getString("DELETE_ALL"));
+        //
         this.add(jItemAutomaticLayout);
         this.add(jItemAlignToGrid);
         this.addSeparator();

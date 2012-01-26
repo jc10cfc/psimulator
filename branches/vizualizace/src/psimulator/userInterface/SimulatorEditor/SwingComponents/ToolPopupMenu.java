@@ -60,24 +60,3 @@ public class ToolPopupMenu extends JPopupMenu{
 
     
 }
-
-
-
-
-
-/*
-        popup.addPopupMenuListener(new PopupMenuListener() {
-        
-        @Override
-        public void popupMenuCanceled(PopupMenuEvent e) {
-        }
-        
-        @Override
-        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-        }
-        
-        @Override
-        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-        //setSelected(false);
-        }
-        });*/
