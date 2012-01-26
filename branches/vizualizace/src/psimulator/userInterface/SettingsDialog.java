@@ -38,6 +38,7 @@ public class SettingsDialog extends JDialog {
     private JComboBox languageList;
     private ButtonGroup iconSizeGroup;
     private JLabel iconSizePicture;
+    private JRadioButton tinyToolbarIconButton;
     private JRadioButton smallToolbarIconButton;
     private JRadioButton mediumToolbarIconButton;
     private JRadioButton largeToolbarIconButton;
@@ -167,6 +168,10 @@ public class SettingsDialog extends JDialog {
         ButtonGroup buttonGroup = new ButtonGroup();
         ActionListener toolbarIconSizeListener = new IconSizeListener();
         
+        tinyToolbarIconButton = new JRadioButton(dataLayer.getString("TINY"));
+        tinyToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.TINY.toString());
+        tinyToolbarIconButton.addActionListener(toolbarIconSizeListener);
+        
         smallToolbarIconButton = new JRadioButton(dataLayer.getString("SMALL"));
         smallToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.SMALL.toString());
         smallToolbarIconButton.addActionListener(toolbarIconSizeListener);
@@ -179,11 +184,13 @@ public class SettingsDialog extends JDialog {
         largeToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.LARGE.toString());
         largeToolbarIconButton.addActionListener(toolbarIconSizeListener);
 
+        buttonGroup.add(tinyToolbarIconButton);
         buttonGroup.add(smallToolbarIconButton);
         buttonGroup.add(mediumToolbarIconButton);
         buttonGroup.add(largeToolbarIconButton);
 
         JPanel buttonPanel = new JPanel(new GridLayout(0, 1));
+        buttonPanel.add(tinyToolbarIconButton);
         buttonPanel.add(smallToolbarIconButton);
         buttonPanel.add(mediumToolbarIconButton);
         buttonPanel.add(largeToolbarIconButton);
@@ -232,9 +239,14 @@ public class SettingsDialog extends JDialog {
     private void setIconSize(ToolbarIconSizeEnum iconSize) {
         // set icon size
         switch (iconSize) {
+            case TINY:
+                tinyToolbarIconButton.setSelected(true);
+                iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/home.png")));
+                toolbarIconSizeSelected = ToolbarIconSizeEnum.TINY;
+                break;
             case SMALL:
                 smallToolbarIconButton.setSelected(true);
-                iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/home.png")));
+                iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/22/home.png")));
                 toolbarIconSizeSelected = ToolbarIconSizeEnum.SMALL;
                 break;
             case MEDIUM:
@@ -262,8 +274,12 @@ public class SettingsDialog extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             switch (ToolbarIconSizeEnum.valueOf(e.getActionCommand())) {
-                case SMALL:
+                case TINY:
                     iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/home.png")));
+                    toolbarIconSizeSelected = ToolbarIconSizeEnum.TINY;
+                    break;
+                case SMALL:
+                    iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/22/home.png")));
                     toolbarIconSizeSelected = ToolbarIconSizeEnum.SMALL;
                     break;
                 case MEDIUM:
