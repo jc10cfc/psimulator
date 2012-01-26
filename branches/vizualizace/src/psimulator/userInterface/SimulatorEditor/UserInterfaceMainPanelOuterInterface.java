@@ -71,6 +71,8 @@ public abstract class UserInterfaceMainPanelOuterInterface extends JPanel{
   
     public abstract Graph getGraph();
     
+    public abstract void init();
+    
     
     public abstract void doChangeMode(UserInterfaceMainPanelState userInterfaceState);
     

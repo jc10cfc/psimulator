@@ -278,4 +278,9 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         notifyObservers(ObserverUpdateEventType.SIMULATOR_NEW_PACKET);
 
     }
+
+    @Override
+    public boolean hasEvents() {
+        return eventTableModel.hasEvents();
+    }
 }

@@ -78,6 +78,20 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         addListenersToComponents();
     }
 
+    /**
+     * Turns of playing, realtime and recording.
+     */
+    public void setTurnedOff() {
+        simulatorInterface.setPlayingStopped();
+        simulatorInterface.setRealtimeActivated(false);
+        simulatorInterface.setRecordingActivated(false);
+        // can stay connected
+    }
+
+    public void clearEvents() {
+        simulatorInterface.deleteAllSimulatorEvents();
+    }
+
     @Override
     public void update(Observable o, Object o1) {
         switch ((ObserverUpdateEventType) o1) {
@@ -148,10 +162,15 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                int i = showYesNoDialog(dataLayer.getString("WARNING"), dataLayer.getString("DELETING_EVENT_LIST_WARNING"));
-                // if YES
-                if (i == 0) {
-                    simulatorInterface.deleteAllSimulatorEvents();
+                // if table empty
+                if (!simulatorInterface.hasEvents()) {
+                    showWarningDialog(dataLayer.getString("WARNING"), dataLayer.getString("LIST_IS_EMPTY_WARNING"));
+                } else { // if has content
+                    int i = showYesNoDialog(dataLayer.getString("WARNING"), dataLayer.getString("DELETING_EVENT_LIST_WARNING"));
+                    // if YES
+                    if (i == 0) {
+                        simulatorInterface.deleteAllSimulatorEvents();
+                    }
                 }
             }
         });
@@ -658,5 +677,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 options[0]); //default button title
 
         return n;
+    }
+
+    private void showWarningDialog(String title, String message) {
+        //custom title, warning icon
+        JOptionPane.showMessageDialog(this,
+                message, title, JOptionPane.WARNING_MESSAGE);
     }
 }

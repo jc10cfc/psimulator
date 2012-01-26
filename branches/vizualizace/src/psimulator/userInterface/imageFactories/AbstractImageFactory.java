@@ -20,7 +20,8 @@ public abstract class AbstractImageFactory {
     public static final int ICON_SIZE_MENU_BAR = 48;
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
     
-    public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_arrow.png";
+    //public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_arrow.png";
+    public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";
     public static final String TOOL_CABLE_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
     public static final String TOOL_END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor_toolbar/desktop.png";
     public static final String TOOL_REAL_PC_PATH = "/resources/toolbarIcons/editor_toolbar/local_network.png";

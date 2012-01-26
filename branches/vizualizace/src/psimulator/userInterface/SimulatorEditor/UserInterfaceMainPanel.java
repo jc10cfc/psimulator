@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
@@ -34,7 +33,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     private DrawPanelOuterInterface jPanelDraw; // draw panel
     private JScrollPane jScrollPane;            // scroll pane with draw panel
     //
-    private JPanel jPanelSimulator;
+    private SimulatorControlPanel jPanelSimulator;
     //
     private WelcomePanel jPanelWelcome;
    
@@ -107,6 +106,9 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         
         this.removeAll();
         
+       // turn of activities in simulator
+        jPanelSimulator.setTurnedOff();
+        
         switch(userInterfaceState){
             case WELCOME:
                 this.add(jPanelWelcome, BorderLayout.CENTER);
@@ -164,6 +166,11 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         // repaint
         this.revalidate();
         this.repaint();
+    }
+    
+    @Override
+    public void init() {
+        jPanelSimulator.clearEvents();
     }
 
     @Override
@@ -254,6 +261,8 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     public void addOpenProjectActionListener(ActionListener listener) {
         jPanelWelcome.addOpenProjectActionListener(listener);
     }
+
+    
 
     
 
