@@ -34,6 +34,9 @@ public class EventTableModel extends AbstractTableModel {
         return eventList.get(i);
     }
     
+    public boolean hasEvents(){
+        return !eventList.isEmpty();
+    }
     
     @Override
     public int getRowCount() {

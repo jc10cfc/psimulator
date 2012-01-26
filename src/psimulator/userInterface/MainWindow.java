@@ -475,6 +475,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             case EDITOR:
                 // if not changing from simulator to editor or back
                 if (!chaginSimulatorEditor) {
+                    // delete events from simulator
+                    jPanelUserInterfaceMain.init();
                     // remove graph
                     jPanelUserInterfaceMain.removeGraph();
                     // set another graph
@@ -487,6 +489,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             case SIMULATOR:
                 // if not changing from simulator to editor or back
                 if (!chaginSimulatorEditor) {
+                    // delete events from simulator
+                    jPanelUserInterfaceMain.init();
                     // remove graph
                     jPanelUserInterfaceMain.removeGraph();
                     // set another graph

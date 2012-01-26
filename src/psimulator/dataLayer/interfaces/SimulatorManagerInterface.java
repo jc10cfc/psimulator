@@ -45,6 +45,8 @@ public interface SimulatorManagerInterface {
     public int getCurrentPositionInList();
     public int getListSize();
     
+    public boolean hasEvents();
+    
     public void moveToNextEvent();
     public void moveToEvent(int index);
     
