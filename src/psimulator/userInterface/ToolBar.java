@@ -1,6 +1,7 @@
 package psimulator.userInterface;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
@@ -35,7 +36,8 @@ public final class ToolBar extends JToolBar implements Observer {
     private ButtonGroup modeButtonGroup;
     private JToggleButton jToggleButtonEditor;
     private JToggleButton jToggleButtonSimulator;
-    
+    //
+    private Font font;
     
     //private Color backgroundColor = new Color(198, 83, 83);
     
@@ -145,14 +147,21 @@ public final class ToolBar extends JToolBar implements Observer {
         String path = "/resources/toolbarIcons/";
         
         switch(size){
-            case SMALL:
+            case TINY:
                 path += "16";
+                font = new Font("Tahoma", 0, 10);
+                break;
+            case SMALL:
+                path += "22";
+                font = new Font("Tahoma", 0, 12);
                 break;
             case MEDIUM:
                 path += "32";
+                font = new Font("Tahoma", 0, 14);
                 break;
             case LARGE:
                 path += "48";
+                font = new Font("Tahoma", 0, 18);
                 break;
         }
         path += "/";
@@ -169,6 +178,9 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomReset.setIcon(new ImageIcon(getClass().getResource(path+"viewmag1.png")));
         jToggleButtonEditor.setIcon(new ImageIcon(getClass().getResource(path+"editor.png")));
         jToggleButtonSimulator.setIcon(new ImageIcon(getClass().getResource(path+"exec.png")));
+        
+        jToggleButtonEditor.setFont(font);
+        jToggleButtonSimulator.setFont(font);
     }
     
     
