@@ -146,14 +146,6 @@ public class EditorToolBar extends JToolBar implements Observer {
         toggleButtonRealPC.setToolTipText(dataLayer.getString("REAL_PC"));
         toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));
         jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
-        
-        jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
         jButtonAlignToGrid.setToolTipText(dataLayer.getString("ALIGN_TO_GRID"));
-        
-        //toggleButtonRouters.setToolTipText(dataLayer.getString("ADD_ROUTER"));
-        //toggleButtonSwitches.setToolTipText(dataLayer.getString("ADD_SWITCH"));
-        //toggleButtonEndDevices.setToolTipText(dataLayer.getString("ADD_END_DEVICE"));
-        
-        
     }
 }
