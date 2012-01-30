@@ -5,10 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
@@ -57,17 +54,21 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private DataLayerFacade dataLayer;
     
     private EnumMap<DrawPanelAction, AbstractAction> actions;
+    
+    //
+    private JPanel glassPanel;
 
     public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
 
+        
+        
         this.editorPanel = editorPanel;
         this.mainWindow = mainWindow;
         this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
 
-        //this.graph = new Graph((DrawPanelSizeChangeInnerInterface)this, zoomManager);
- 
+        
         actualZoomArea.width = zoomManager.doScaleToActual(defaultZoomArea.width);
         actualZoomArea.height = zoomManager.doScaleToActual(defaultZoomArea.height);
 

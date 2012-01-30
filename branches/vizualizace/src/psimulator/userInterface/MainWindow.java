@@ -10,10 +10,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.logicLayer.ControllerFacade;
@@ -43,11 +40,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private MenuBar jMenuBar;
     private ToolBar jToolBar;
     private UserInterfaceMainPanelOuterInterface jPanelUserInterfaceMain;
+    private JPanel glassPanel;
     /*
      * end of window components
      */
     private JFrame parentForCompoents;
     private JFileChooser fileChooser;
+    
+    private GlassPanelPainter glassPanelPainter;
 
     public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
@@ -83,6 +83,16 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         dataLayer.addLanguageObserver((Observer) this);
 
         this.setIconImage(imageFactory.getImageIconForToolbar(MainTool.ADD_REAL_PC).getImage());
+        
+        
+        // create glass pane and glass pane painter
+        MainWindowGlassPane glassPane = new MainWindowGlassPane();
+        
+        glassPanelPainter = new GlassPanelPainter(glassPane, jPanelUserInterfaceMain);
+        this.setGlassPane(glassPane);
+        glassPane.setOpaque(false);
+        getGlassPane().setVisible(true);
+        
     }
 
     @Override
@@ -107,7 +117,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 doCloseAction();
             }
         });
-
+        
         // set of window properties
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setMinimumSize(new Dimension(800, 600));
@@ -174,6 +184,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     public void update(Observable o, Object o1) {
         setTextsToFileChooser();
     }
+
+    @Override
+    public GlassPanelPainter getGlassPanelPainter() {
+        return glassPanelPainter;
+    }
+
 
     /////////////////////-----------------------------------////////////////////
     /**

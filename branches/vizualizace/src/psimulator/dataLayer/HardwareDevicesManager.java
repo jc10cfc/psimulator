@@ -3,7 +3,7 @@ package psimulator.dataLayer;
 import psimulator.dataLayer.devices.HwDevice;
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.HwTypeEnum;
+import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.devices.AbstractDevice;
 import psimulator.dataLayer.devices.CableDevice;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;

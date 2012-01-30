@@ -12,4 +12,9 @@ public interface UserInterfaceOuterFacade {
      * @param controller 
      */
     public void initView(ControllerFacade controller);
+    
+        
+    
+    public GlassPanelPainter getGlassPanelPainter();
+
 }
