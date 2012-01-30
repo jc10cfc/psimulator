@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
 import javax.swing.ImageIcon;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.HwTypeEnum;
+import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
 

@@ -2,11 +2,13 @@ package psimulator.logicLayer.Simulator;
 
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JPanel;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
+import psimulator.userInterface.GlassPanelPainter;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**
@@ -24,12 +26,17 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     private boolean isRealtime;
     //
     private boolean isNewPacket;
+    //
+    private GlassPanelPainter glassPanelPainter;
 
     public SimulatorPlayerThread(DataLayerFacade model, UserInterfaceOuterFacade view) {
         this.simulatorManagerInterface = model.getSimulatorManager();
-        //simulatorPlayerState = simulatorManagerInterface.getSimulatorPlayerState();
+        
+        // set speed according to model
         currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
-
+        
+        // get glass panel
+        glassPanelPainter = view.getGlassPanelPainter();
     }
 
     public void startThread(Thread t) {
@@ -62,6 +69,8 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     Thread.sleep(200);
                 
                 } else if (isPlaying) { // if in playing mode
+                    glassPanelPainter.doPaintRedDots(true);
+                    
                     
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                     System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
@@ -75,6 +84,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     simulatorManagerInterface.moveToNextEvent();
 
                 } else {
+                    glassPanelPainter.doPaintRedDots(false);
                     System.out.println("Player going to sleep " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
                     Thread.sleep(Long.MAX_VALUE);
                 }

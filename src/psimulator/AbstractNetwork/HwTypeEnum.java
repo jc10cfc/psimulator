@@ -1,4 +1,4 @@
-package psimulator.userInterface.SimulatorEditor.DrawPanel.Enums;
+package psimulator.AbstractNetwork;
 
 /**
  *
