@@ -2,6 +2,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
@@ -116,7 +117,7 @@ public interface GraphOuterInterface {
      * Gets all AbstractHwComponent in list. It is NOT a copy
      * @return List of AbstractHwComponent
      */
-    public List<AbstractHwComponent> getHwComponents();
+    public Collection<AbstractHwComponent> getHwComponents();
     /**
      * Gets all BundleOfCables in list. It is NOT a copy
      * @return 

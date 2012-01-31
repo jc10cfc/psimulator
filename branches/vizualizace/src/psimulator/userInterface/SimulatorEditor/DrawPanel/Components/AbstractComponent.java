@@ -10,7 +10,13 @@ import javax.swing.JComponent;
  */
 public abstract class AbstractComponent extends JComponent implements Markable{
 
+    private Integer id;
+    
     private boolean marked = false;
+    
+    public AbstractComponent(){
+        id = new Integer(IdGeneratorSingleton.getInstance().getNextId());
+    }
     
     @Override
     public boolean isMarked() {
@@ -24,4 +30,8 @@ public abstract class AbstractComponent extends JComponent implements Markable{
     
     public abstract boolean intersects(Point p);
     public abstract boolean intersects(Rectangle r);
+    
+    public Integer getId(){
+        return id;
+    }
 }
