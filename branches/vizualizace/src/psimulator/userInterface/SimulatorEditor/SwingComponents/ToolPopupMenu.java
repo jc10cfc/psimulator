@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import psimulator.userInterface.SimulatorEditor.Tools.AbstractCreationTool;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 import psimulator.userInterface.SimulatorEditor.Tools.AddDeviceTool;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -30,9 +31,11 @@ public class ToolPopupMenu extends JPopupMenu{
         toolsButtonGroup = new ButtonGroup();
         
         for (final AbstractTool tool : tools) {
-            AddDeviceTool tmp = (AddDeviceTool)tool;
+            //AddDeviceTool tmp = (AddDeviceTool)tool;
+            AbstractCreationTool tmp = (AbstractCreationTool)tool;
+
             // create menu item for tool
-            JMenuItem mi = new JMenuItem(tmp.getName()+" - Interfaces: "+tmp.getInterfaces(), 
+            JMenuItem mi = new JMenuItem(tmp.getName() + tmp.getParameterLabel() + tmp.getParameter(), 
                     tmp.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
             
             mi.addActionListener(new ActionListener() {

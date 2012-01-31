@@ -23,9 +23,9 @@ public class Network implements Serializable{
         return idCounter++;
     }*/
 
-    public Network(int ID, String name) {
-        this.ID = ID;
-        this.name = name;
+    public Network(/*int ID, String name*/) {
+        //this.ID = ID;
+        //this.name = name;
         
         this.cables = new ArrayList<Cable>();
         this.devices = new ArrayList<Device>();
