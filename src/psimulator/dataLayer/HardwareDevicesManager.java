@@ -14,6 +14,8 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
  */
 public class HardwareDevicesManager {
     
+    /*
+    
     public List<AbstractDevice> getDevices(MainTool tool) {
         List<AbstractDevice> devices = new ArrayList<AbstractDevice> ();
         
@@ -41,5 +43,5 @@ public class HardwareDevicesManager {
         
         return devices;
     }
-    
+    */
 }

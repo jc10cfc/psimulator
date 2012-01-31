@@ -23,11 +23,13 @@ public abstract class AbstractImageFactory {
     //public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_arrow.png";
     public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";
     public static final String TOOL_CABLE_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
-    public static final String TOOL_END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor_toolbar/desktop.png";
+   
     public static final String TOOL_REAL_PC_PATH = "/resources/toolbarIcons/editor_toolbar/local_network.png";
     public static final String TOOL_ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor_toolbar/grid.png";
     public static final String TOOL_FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor_toolbar/fit_to_size.png";
     
+    //
+    public static final String TOOL_END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor_toolbar/desktop.png";
     public static final String TOOL_END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor_toolbar/pc.png";
     public static final String TOOL_END_DEVICE_NOTEBOOK_PATH = "/resources/toolbarIcons/editor_toolbar/notebook.png";
     public static final String TOOL_ROUTER_PATH = "/resources/toolbarIcons/editor_toolbar/router.png";
@@ -52,11 +54,36 @@ public abstract class AbstractImageFactory {
      * Returns BufferedImage  for hwComponentType at path of size. If marked,
      * the result image is brighter by 50%.
      * @param hwComponentType
-     * @param path
      * @param width
      * @param marked
      * @return 
      */
+    public BufferedImage getImage(HwTypeEnum hwComponentType, Integer width, boolean marked) {
+        BufferedImage image;
+        String path = getPath(hwComponentType);
+ 
+        image = imageBuffer.getBufferedImage(path, width, marked);
+
+        if (image == null) {
+            // load image from file
+            image = createImage(hwComponentType, path, width, marked);
+            // put image into buffer
+            imageBuffer.putBufferedImage(path, width, image, marked);
+        }
+
+        return image;
+    }
+    
+    
+    /**
+     * Returns BufferedImage  for hwComponentType at path of size. If marked,
+     * the result image is brighter by 50%.
+     * @param hwComponentType
+     * @param path
+     * @param width
+     * @param marked
+     * @return 
+    */
     public BufferedImage getImage(HwTypeEnum hwComponentType, String path, Integer width, boolean marked) {
         BufferedImage image;
 
@@ -70,7 +97,7 @@ public abstract class AbstractImageFactory {
         }
 
         return image;
-    }
+    } 
 
     /**
      * Creates BufferedImage  for hwComponentType at path of size. If marked,
@@ -266,9 +293,14 @@ public abstract class AbstractImageFactory {
             case CISCO_SWITCH:
             case LINUX_SWITCH:
                 return TOOL_SWITCH_PATH;
-            case END_DEVICE:
+            case END_DEVICE_PC:
                 return TOOL_END_DEVICE_PC_PATH;
-            case CABLE:
+            case END_DEVICE_NOTEBOOK:
+                return TOOL_END_DEVICE_NOTEBOOK_PATH;
+            case END_DEVICE_WORKSTATION:
+                return TOOL_END_DEVICE_WORKSTATION_PATH;
+            case CABLE_ETHERNET:
+            case CABLE_OPTIC:
                 return TOOL_CABLE_PATH;
             case REAL_PC:
             default:
