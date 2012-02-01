@@ -38,6 +38,7 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
         jItemAlignToGrid = new JMenuItem();
         jItemDeleteComponent = new JMenuItem();
         
+        jItemComponentProperties.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.PROPERTIES));
         jItemAlignToGrid.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.ALIGN_COMPONENTS_TO_GRID));
         jItemDeleteComponent.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.DELETE));
         jItemSelectAll.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.SELECT_ALL));

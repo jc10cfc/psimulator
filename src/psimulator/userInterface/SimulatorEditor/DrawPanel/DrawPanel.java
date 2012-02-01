@@ -120,6 +120,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                     actions.put(drawPanelAction, new ActionOnDelete(undoManager, this, mainWindow));
                     break;
                 case PROPERTIES:
+                    actions.put(drawPanelAction, new ActionOpenProperties(undoManager, this, mainWindow, dataLayer));
                     break;
                 case FIT_TO_SIZE:
                     actions.put(drawPanelAction, new ActionFitToSize(undoManager, this, mainWindow));

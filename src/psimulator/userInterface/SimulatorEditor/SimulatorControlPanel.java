@@ -11,8 +11,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 
