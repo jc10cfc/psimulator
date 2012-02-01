@@ -1,15 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
@@ -26,17 +17,11 @@ public class Cable extends AbstractComponent {
     private EthInterface eth1;
     private EthInterface eth2;
     
-    private static final int LINE_WIDTH = 2;
-    
+    private int delay;
+     
     private Line2D line = new Line2D.Float();
-    
     private Stroke stroke = new BasicStroke(3.5f);
-    
     int x1, y1, x2, y2;
-    Shape shape;
-    
-    int[] XArray = {0, 0, 0, 0};
-    int[] YArray = {0, 0, 0, 0};
 
     public Cable(AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2, ZoomManager zoomManager) {
         this.component1 = component1;
@@ -85,39 +70,19 @@ public class Cable extends AbstractComponent {
         g2.setColor(tmpC);
         g2.setStroke(tmpS);
     }
-    /*
-    @Override
-    public void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        
-        
-        float strokeWidth = Math.max((float)(5f*zoomManager.getCurrentScale()), 1f);
-        
-        stroke = new BasicStroke(strokeWidth);
-        
-        if (isMarked()) {
-            Color color = g2.getColor();
-            g2.setColor(Color.blue);
-            g2.setStroke(stroke); 
-            g2.drawLine(getX1(), getY1(), getX2(), getY2());
-            g2.setColor(color);
-        } else {
-            g2.setStroke(stroke); 
-            g2.drawLine(getX1(), getY1(), getX2(), getY2());
-        }
-
-    }*/
 
     @Override
     public int getWidth() {
         //return Math.abs(getX1()-getX2());
-        return LINE_WIDTH;
+        //return LINE_WIDTH;
+        return (int) zoomManager.getStrokeWidth();
     }
 
     @Override
     public int getHeight() {
         //return Math.abs(getY1()-getY2());
-        return LINE_WIDTH;
+        //return LINE_WIDTH;
+        return (int) zoomManager.getStrokeWidth();
     }
 
     @Override
@@ -170,5 +135,13 @@ public class Cable extends AbstractComponent {
 
     public Point2D getP2() {
         return component2.getCenterLocation();
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
     }
 }

@@ -1,7 +1,9 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -12,15 +14,30 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class HwComponent extends AbstractHwComponent {
 
-    private HwTypeEnum hwComponentType;
-    private String imagePath;
-
+    //private HwTypeEnum hwComponentType;
+    //private String imagePath;
+    
+    /*
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, 
             HwTypeEnum hwComponentType, int interfacesCount, String imagePath, String name) {
+    */
+    public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, 
+            HwTypeEnum hwComponentType, int interfacesCount) {
         super(imageFactory, zoomManager, interfacesCount);
 
         this.hwComponentType = hwComponentType;
-        this.imagePath = imagePath;
+        //this.imagePath = imagePath;
+        
+        // generate device name for HwComponent
+        deviceName = GeneratorSingleton.getInstance().getNextDeviceName(hwComponentType);
+        
+        // generate names for interface
+        List<String> ethInterfaceNames = GeneratorSingleton.getInstance().getInterfaceNames(hwComponentType, interfacesCount);
+        
+        // create interfaces
+        for(int i =0;i<interfacesCount;i++){
+            interfaces.add(new EthInterface(ethInterfaceNames.get(i), null));
+        }
         
         // if custom image needed, imagePath is required
         //bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconWidthDefaultZoom(), true);

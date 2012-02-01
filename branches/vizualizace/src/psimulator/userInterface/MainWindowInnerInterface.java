@@ -1,5 +1,6 @@
 package psimulator.userInterface;
 
+import java.awt.Component;
 import javax.swing.JRootPane;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 
@@ -25,4 +26,5 @@ public interface MainWindowInnerInterface {
     
     public JRootPane getRootPane();
 
+    public Component getMainWindowComponent();
 }

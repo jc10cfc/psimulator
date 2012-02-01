@@ -1,6 +1,7 @@
 package psimulator.userInterface;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -188,6 +189,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     @Override
     public GlassPanelPainter getGlassPanelPainter() {
         return glassPanelPainter;
+    }
+
+    @Override
+    public Component getMainWindowComponent() {
+        return this;
     }
 
 
