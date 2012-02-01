@@ -6,10 +6,17 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.JFormattedTextField.AbstractFormatter;
+import javax.swing.text.DefaultFormatter;
+import javax.swing.text.MaskFormatter;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 
 /**
  *
@@ -30,14 +37,15 @@ public class HwComponentProperties extends JDialog {
     private JLabel jLabelInterfaceNameValue;
     private JLabel jLabelConnectedValue;
     private JLabel jLabelConnectedToValue;
-    private JTextField jTextFieldIpAddress;
-    private JTextField jTextFieldMacAddress;
+    private JFormattedTextField jTextFieldIpAddress;
+    private JFormattedTextField jTextFieldMacAddress;
     /*
      * END of window components
      */
     private Font fontBold;
     private boolean showAddresses;
     private boolean showInterfaces;
+    private boolean viewUniqueId = true;
 
     public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, AbstractHwComponent abstractHwComponent) {
         this.dataLayer = dataLayer;
@@ -84,15 +92,15 @@ public class HwComponentProperties extends JDialog {
                 System.err.println("HwComponentProperties error1");
                 break;
         }
-        
+
         // add Content
         this.getContentPane().add(createMainPanel());
-        
+
         // update
         if (showInterfaces) {
             upadteInterfaceRelatedItems();
         }
-        
+
         this.pack();
         this.setVisible(true);
     }
@@ -144,11 +152,11 @@ public class HwComponentProperties extends JDialog {
 
         mainPanel.add(createDevicePanel());
         mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
-        
+
         if (showInterfaces) {
             mainPanel.add(createInterfacesPanel());
-        }else{
-            
+        } else {
+            mainPanel.add(createRealPcPanel());
         }
 
         mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
@@ -171,7 +179,7 @@ public class HwComponentProperties extends JDialog {
         jLabelName.setFont(fontBold);
         devicePanel.add(jLabelName);
 
-        jTextFieldDeviceName = new JTextField();
+        jTextFieldDeviceName = new JTextField(abstractHwComponent.getDeviceName());
         devicePanel.add(jTextFieldDeviceName);
         //
         JLabel typeName = new JLabel(dataLayer.getString("TYPE") + ":");
@@ -180,6 +188,22 @@ public class HwComponentProperties extends JDialog {
 
         JLabel typeValue = new JLabel(abstractHwComponent.getHwComponentType().toString());
         devicePanel.add(typeValue);
+        //
+        JLabel interfaceCountName = new JLabel(dataLayer.getString("INTERFACE_COUNT"));
+        interfaceCountName.setFont(fontBold);
+        devicePanel.add(interfaceCountName);
+
+        JLabel interfaceCountValue = new JLabel("" + abstractHwComponent.getInterfaceCount());
+        devicePanel.add(interfaceCountValue);
+        //
+        if (viewUniqueId) {
+            JLabel deviceIdName = new JLabel(dataLayer.getString("DEVICE_UNIQUE_ID"));
+            deviceIdName.setFont(fontBold);
+            devicePanel.add(deviceIdName);
+
+            JLabel deviceIdValue = new JLabel("" + abstractHwComponent.getId().toString());
+            devicePanel.add(deviceIdValue);
+        }
 
         return devicePanel;
     }
@@ -230,27 +254,38 @@ public class HwComponentProperties extends JDialog {
             ipAddressName.setFont(fontBold);
             interfacesPanel.add(ipAddressName);
 
-            jTextFieldIpAddress = new JTextField();
+            RegexFormatter ipMaskFormatter = new RegexFormatter(Validator.IP_WITH_MASK_PATTERN);
+            jTextFieldIpAddress = new JFormattedTextField(ipMaskFormatter);
             interfacesPanel.add(jTextFieldIpAddress);
             //
             JLabel macAddressName = new JLabel(dataLayer.getString("MAC_ADDRESS"));
             macAddressName.setFont(fontBold);
             interfacesPanel.add(macAddressName);
 
-            jTextFieldMacAddress = new JTextField();
-            interfacesPanel.add(jTextFieldMacAddress);
+            try {
+                MaskFormatter macMask = new MaskFormatter("HH-HH-HH-HH-HH-HH"); // mask for MAC address
+                jTextFieldMacAddress = new JFormattedTextField(macMask);
+                interfacesPanel.add(jTextFieldMacAddress);
+            } catch (ParseException ex) {
+                //should never happen
+            }
+
             //
         }
 
 
         return interfacesPanel;
     }
-    
-    private JPanel createRealPcPanel(){
+
+    private JPanel createRealPcPanel() {
         JPanel realPcPanel = new JPanel();
         realPcPanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("REAL_PC")));
-        
-        
+
+        JLabel realPcLabel = new JLabel(dataLayer.getString("THIS_IS_REAL_PC"));
+        realPcLabel.setFont(fontBold);
+
+        realPcPanel.add(realPcLabel);
+
         return realPcPanel;
     }
 
