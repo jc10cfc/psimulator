@@ -2,8 +2,9 @@ package psimulator.userInterface.SimulatorEditor.Tools;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
 
 /**
@@ -12,21 +13,19 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.D
  */
 public abstract class AbstractTool {
     
-    protected String name;
     protected MainTool tool;
     protected ImageIcon imageIcon;
     protected DrawPanelToolChangeOuterInterface toolChangeInterface;
     
-    public AbstractTool(MainTool tool, String name, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface) {
+    public AbstractTool(MainTool tool, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface) {
         this.tool = tool;
-        this.name = name;
         this.imageIcon = imageIcon;
         this.toolChangeInterface = toolChangeInterface;
     }
 
-    public String getName() {
-        return name;
-    }
+     public abstract String getTranslatedName(DataLayerFacade dataLayer);
+    
+    public abstract String getToolTip(DataLayerFacade dataLayer);
 
     public MainTool getTool() {
         return tool;
