@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.*;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
@@ -13,7 +14,7 @@ import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
  * @author Martin
  */
 public class MenuToggleButton extends JToggleButton {
-
+    private DataLayerFacade dataLayer;
     /**
      * arrow icon for lower right corner
      */
@@ -21,15 +22,16 @@ public class MenuToggleButton extends JToggleButton {
     /**
      * popup menu for this menu tohhle button
      */
-    protected JPopupMenu pop;
+    protected ToolPopupMenu pop;
     /**
      * current selected tool
      */
     private AbstractTool currentTool;
 
-    public MenuToggleButton(List<AbstractTool> tools) {
+    public MenuToggleButton(List<AbstractTool> tools, DataLayerFacade dataLayer) {
         super();
-
+        
+        this.dataLayer = dataLayer;
 
         if (tools == null || tools.isEmpty()) {
             this.setToolTipText("no tool avaiable");
@@ -91,14 +93,25 @@ public class MenuToggleButton extends JToggleButton {
     public final void setCurrentTool(AbstractTool tool) {
         // set current tool to tool
         currentTool = tool;
+        //AbstractCreationTool abstractCreationTool = (AbstractCreationTool) tool;
         // set tool tip text of this MenuToggleButton
-        this.setToolTipText(tool.getName());
+        //this.setToolTipText(tool.getName());
+        updateToolTip();
         // set Image icon of this MenuToggleButton
         this.setIcon(currentTool.getImageIcon());
         // enable current tool in 
         setCurrentToolEnabled();
         // set toggle button selected
         this.setSelected(true);
+    }
+    
+    public final void updateToolTip(){
+        // update tool tip of jToggleButton
+        this.setToolTipText(currentTool.getToolTip(dataLayer));
+        // upadte tool tips in popup menu that belongs to this jToggleButton
+        if (pop != null) {
+            pop.updateToolNames(dataLayer);
+        }
     }
 
     /**

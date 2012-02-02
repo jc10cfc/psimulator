@@ -1,7 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 
 /**
  *

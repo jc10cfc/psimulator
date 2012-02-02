@@ -65,12 +65,12 @@ public class EditorToolBar extends JToolBar implements Observer {
         
         toolsButtonGroup = new ButtonGroup();
         
-        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, imageFactory, toolChangeInterface));
-        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_ROUTER, imageFactory, toolChangeInterface));
-        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_SWITCH, imageFactory, toolChangeInterface));
-        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_END_DEVICE, imageFactory, toolChangeInterface));
-        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_REAL_PC, imageFactory, toolChangeInterface));
-        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_CABLE, imageFactory, toolChangeInterface));
+        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, imageFactory, toolChangeInterface), dataLayer);
+        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_ROUTER, imageFactory, toolChangeInterface), dataLayer);
+        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_SWITCH, imageFactory, toolChangeInterface), dataLayer);
+        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_END_DEVICE, imageFactory, toolChangeInterface), dataLayer);
+        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_REAL_PC, imageFactory, toolChangeInterface), dataLayer);
+        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_CABLE, imageFactory, toolChangeInterface), dataLayer);
                 
         toolsButtonGroup.add(toggleButtonHand);
         toolsButtonGroup.add(toggleButtonEndDevices);
@@ -144,8 +144,14 @@ public class EditorToolBar extends JToolBar implements Observer {
         // set text only to Tools that cant be changed
         toggleButtonHand.setToolTipText(dataLayer.getString("HAND"));
         toggleButtonRealPC.setToolTipText(dataLayer.getString("REAL_PC"));
-        toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));
+        //toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));
         jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));
         jButtonAlignToGrid.setToolTipText(dataLayer.getString("ALIGN_TO_GRID"));
+        //
+        toggleButtonRouters.updateToolTip();
+        toggleButtonSwitches.updateToolTip();
+        toggleButtonEndDevices.updateToolTip();
+        toggleButtonRealPC.updateToolTip();
+        toggleButtonCable.updateToolTip();
     }
 }

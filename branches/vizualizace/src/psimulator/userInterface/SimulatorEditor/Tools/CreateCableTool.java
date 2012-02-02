@@ -2,6 +2,7 @@ package psimulator.userInterface.SimulatorEditor.Tools;
 
 import javax.swing.ImageIcon;
 import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 
@@ -13,8 +14,8 @@ public class CreateCableTool extends AbstractCreationTool{
 
     protected int delay;
     
-    public CreateCableTool(MainTool tool, String name, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, String imagePath, int delay) {
-        super(tool, name, imageIcon, toolChangeInterface, hwType, imagePath);
+    public CreateCableTool(MainTool tool, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, String imagePath, int delay) {
+        super(tool, imageIcon, toolChangeInterface, hwType, imagePath);
         
         this.delay = delay;
     }
@@ -31,6 +32,11 @@ public class CreateCableTool extends AbstractCreationTool{
     @Override
     public int getParameter() {
         return delay;
+    }
+
+    @Override
+    public String getToolTip(DataLayerFacade dataLayer) {
+        return getTranslatedName(dataLayer) + " - "+dataLayer.getString("DELAY") +": " + getParameter();
     }
     
 }
