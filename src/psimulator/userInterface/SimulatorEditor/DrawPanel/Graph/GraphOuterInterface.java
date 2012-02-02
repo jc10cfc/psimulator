@@ -102,6 +102,12 @@ public interface GraphOuterInterface {
      */
     public int getMarkedCablesCount();
     
+    
+    /**
+     * Retruns new ArrayList with marked cables
+     * @return 
+     */
+    public List<Cable> getMarkedCablesCopy();
     /**
      * Retruns new ArrayList with marked components
      * @return 

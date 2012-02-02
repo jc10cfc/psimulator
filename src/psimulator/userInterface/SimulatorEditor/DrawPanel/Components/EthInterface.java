@@ -23,10 +23,9 @@ public class EthInterface implements Identifiable{
         this.name = name;
         this.cable = cable;
         
+        this.id = new Integer(GeneratorSingleton.getInstance().getNextId());
         this.macAddress = GeneratorSingleton.getInstance().getNextMacAddress();
         this.ipAddress = "";
-        
-        Validator.validateIpAddress("192.168.22.1/1");
     }
 
     public boolean hasCable(){

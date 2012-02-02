@@ -3,6 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 
 /**
@@ -11,6 +12,8 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
  */
 public class Cable extends AbstractComponent {
 
+    private HwTypeEnum hwType;
+    
     private ZoomManager zoomManager;
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
@@ -23,7 +26,8 @@ public class Cable extends AbstractComponent {
     private Stroke stroke = new BasicStroke(3.5f);
     int x1, y1, x2, y2;
 
-    public Cable(AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2, ZoomManager zoomManager) {
+    public Cable(HwTypeEnum hwType, AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2, ZoomManager zoomManager) {
+        this.hwType = hwType;
         this.component1 = component1;
         this.component2 = component2;
         this.eth1 = eth1;
@@ -144,4 +148,10 @@ public class Cable extends AbstractComponent {
     public void setDelay(int delay) {
         this.delay = delay;
     }
+
+    public HwTypeEnum getHwType() {
+        return hwType;
+    }
+  
+    
 }
