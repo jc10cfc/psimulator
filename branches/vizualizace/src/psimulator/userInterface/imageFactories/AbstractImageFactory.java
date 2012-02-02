@@ -22,8 +22,9 @@ public abstract class AbstractImageFactory {
     
     //public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_arrow.png";
     public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";
-    public static final String TOOL_CABLE_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
-   
+    public static final String TOOL_CABLE_ETHERNET_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
+    public static final String TOOL_CABLE_OPTICS_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired_gray.png";
+    
     public static final String TOOL_REAL_PC_PATH = "/resources/toolbarIcons/editor_toolbar/local_network.png";
     public static final String TOOL_ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor_toolbar/grid.png";
     public static final String TOOL_FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor_toolbar/fit_to_size.png";
@@ -171,7 +172,7 @@ public abstract class AbstractImageFactory {
                 path = TOOL_SWITCH_PATH;
                 break;
             case ADD_CABLE:
-                path = TOOL_CABLE_PATH;
+                path = TOOL_CABLE_ETHERNET_PATH;
                 break;
             case ADD_REAL_PC:
             default:
@@ -300,8 +301,9 @@ public abstract class AbstractImageFactory {
             case END_DEVICE_WORKSTATION:
                 return TOOL_END_DEVICE_WORKSTATION_PATH;
             case CABLE_ETHERNET:
+                return TOOL_CABLE_ETHERNET_PATH;
             case CABLE_OPTIC:
-                return TOOL_CABLE_PATH;
+                return TOOL_CABLE_OPTICS_PATH;
             case REAL_PC:
             default:
                 return TOOL_REAL_PC_PATH;
