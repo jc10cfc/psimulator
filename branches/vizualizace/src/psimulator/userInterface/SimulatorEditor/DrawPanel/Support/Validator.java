@@ -21,6 +21,9 @@ public class Validator {
     
     public static final String MAC_PATTERN = 
             "^([0-9A-F][0-9A-F]-){5}([0-9A-F][0-9A-F])$";
+    
+    public static final String DELAY_PATTERN = 
+            "^((0)|([1-9]{1}[0-9]{0,4}))$";
 
     public static boolean validateIpAddress(String address) {
 

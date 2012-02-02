@@ -16,19 +16,24 @@ public class PopupMenuCable extends JPopupMenu{
     private DataLayerFacade dataLayer;
     private DrawPanelInnerInterface drawPanel;
     
+    private JMenuItem jItemCableProperties;
     private JMenuItem jItemDeleteCable;
     
     public PopupMenuCable(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer, int cables){
         this.dataLayer = dataLayer;
         this.drawPanel = drawPanel;
         
+        jItemCableProperties = new JMenuItem(dataLayer.getString("PROPERTIES"));
         jItemDeleteCable = new JMenuItem();
+        
         if(cables == 1){
+            this.add(jItemCableProperties);
             jItemDeleteCable.setText(dataLayer.getString("DELETE_CABLE"));
         }else{
             jItemDeleteCable.setText(dataLayer.getString("DELETE_CABLES"));
         }
         
+        jItemCableProperties.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.PROPERTIES));
         jItemDeleteCable.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.DELETE));
         
         // add buttons for operations 

@@ -36,6 +36,7 @@ public class HwComponentProperties extends JDialog {
     private JLabel jLabelInterfaceNameValue;
     private JLabel jLabelConnectedValue;
     private JLabel jLabelConnectedToValue;
+    private JLabel jLabelUniqueIdValue;
     private JFormattedTextField jTextFieldIpAddress;
     private JFormattedTextField jTextFieldMacAddress;
     /*
@@ -117,10 +118,9 @@ public class HwComponentProperties extends JDialog {
                 //checkUserCloseWithoutSaving();
 
                 /*
-                saveFromFieldsLocally();
-                if (changesMade()) {
-                    checkUserAndSave();
-                }*/
+                 * saveFromFieldsLocally(); if (changesMade()) {
+                 * checkUserAndSave(); }
+                 */
 
                 closeAction();
 
@@ -198,7 +198,7 @@ public class HwComponentProperties extends JDialog {
             ipMap.put(ethName, ipAddress);
             macMap.put(ethName, macAddress);
 
-            System.out.println("Eth name = " + ethName + ", IP=" + ipAddress + ", MAC=" + macAddress + ".");
+            //System.out.println("Eth name = " + ethName + ", IP=" + ipAddress + ", MAC=" + macAddress + ".");
         }
     }
 
@@ -254,6 +254,10 @@ public class HwComponentProperties extends JDialog {
             }
         } else { // set empty
             jLabelConnectedToValue.setText("");
+        }
+
+        if (viewUniqueId) {
+            jLabelUniqueIdValue.setText("" + ethInterface.getId());
         }
 
         if (showAddresses) {
@@ -378,6 +382,16 @@ public class HwComponentProperties extends JDialog {
         jLabelConnectedToValue = new JLabel();
         interfacesAboutPanel.add(jLabelConnectedToValue);
         //
+        if (viewUniqueId) {
+            JLabel uniqueIdName = new JLabel(dataLayer.getString("DEVICE_UNIQUE_ID"));
+            uniqueIdName.setFont(fontBold);
+            interfacesAboutPanel.add(uniqueIdName);
+
+            jLabelUniqueIdValue = new JLabel();
+            interfacesAboutPanel.add(jLabelUniqueIdValue);
+        }
+
+        //
         interfacesPanel.add(interfacesAboutPanel);
 
 
@@ -449,7 +463,7 @@ public class HwComponentProperties extends JDialog {
     private JPanel createOkCancelPanel() {
         JPanel buttonPane = new JPanel();
 
-        jButtonOk = new JButton(dataLayer.getString("OK"));
+        jButtonOk = new JButton(dataLayer.getString("SAVE"));
         jButtonOk.addActionListener(new JButtonOkListener());
 
         jButtonCancel = new JButton(dataLayer.getString("CANCEL"));

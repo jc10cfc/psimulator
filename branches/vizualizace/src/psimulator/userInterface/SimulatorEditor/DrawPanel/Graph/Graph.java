@@ -143,6 +143,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
      * Retruns new ArrayList with marked cables
      * @return 
      */
+    @Override
     public List<Cable> getMarkedCablesCopy() {
         List<Cable> temp = new ArrayList<Cable>();
 
@@ -818,9 +819,4 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
     }
-
-    
-
-
-
 }
