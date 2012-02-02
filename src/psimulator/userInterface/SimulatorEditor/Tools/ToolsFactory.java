@@ -72,10 +72,11 @@ public class ToolsFactory {
                         toolChangeInterface, HwTypeEnum.REAL_PC, path, 1));
                 break;
             case ADD_CABLE:
-                path = AbstractImageFactory.TOOL_CABLE_PATH;
-                
+                path = AbstractImageFactory.TOOL_CABLE_ETHERNET_PATH;
                 tools.add(new CreateCableTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.CABLE_ETHERNET, path, 10));
+                
+                path = AbstractImageFactory.TOOL_CABLE_OPTICS_PATH;
                 tools.add(new CreateCableTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.CABLE_OPTIC, path, 5));
                 break;

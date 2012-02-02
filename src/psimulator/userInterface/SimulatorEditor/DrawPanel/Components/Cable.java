@@ -13,15 +13,12 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 public class Cable extends AbstractComponent {
 
     private HwTypeEnum hwType;
-    
     private ZoomManager zoomManager;
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
     private EthInterface eth1;
     private EthInterface eth2;
-    
     private int delay;
-     
     private Line2D line = new Line2D.Float();
     private Stroke stroke = new BasicStroke(3.5f);
     int x1, y1, x2, y2;
@@ -33,6 +30,17 @@ public class Cable extends AbstractComponent {
         this.eth1 = eth1;
         this.eth2 = eth2;
         this.zoomManager = zoomManager;
+
+        // set delay according to type
+        switch (hwType) {
+            case CABLE_ETHERNET:
+                delay = 10;
+                break;
+            case CABLE_OPTIC:
+            default:
+                delay = 2;
+                break;
+        }
     }
 
     public AbstractHwComponent getComponent1() {
@@ -51,26 +59,37 @@ public class Cable extends AbstractComponent {
         return eth2;
     }
 
-    public void paintComponent(Graphics g, int x1, int y1, int x2, int y2){
+    public void paintComponent(Graphics g, int x1, int y1, int x2, int y2) {
         Graphics2D g2 = (Graphics2D) g;
-        
+
         stroke = new BasicStroke(zoomManager.getStrokeWidth());
-        
+
         line.setLine(x1, y1, x2, y2);
-        
+
         Color tmpC = g2.getColor();
         Stroke tmpS = g2.getStroke();
-        
+
         if (isMarked()) {
             g2.setColor(Color.blue);
-            g2.setStroke(stroke); 
+            g2.setStroke(stroke);
             g2.drawLine(x1, y1, x2, y2);
         } else {
-            g2.setColor(Color.black);
-            g2.setStroke(stroke); 
+            // set cable color
+            switch (hwType) {
+                case CABLE_ETHERNET:
+                    g2.setColor(Color.black);
+                    break;
+                case CABLE_OPTIC:
+                default:
+                    g2.setColor(Color.gray);
+                    break;
+            }
+
+            //g2.setColor(Color.black);
+            g2.setStroke(stroke);
             g2.drawLine(x1, y1, x2, y2);
         }
-        
+
         g2.setColor(tmpC);
         g2.setStroke(tmpS);
     }
@@ -152,6 +171,4 @@ public class Cable extends AbstractComponent {
     public HwTypeEnum getHwType() {
         return hwType;
     }
-  
-    
 }
