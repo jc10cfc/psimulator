@@ -43,7 +43,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     public void mousePressedLeft(MouseEvent e) {
         // create new component
 
-        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager,
+        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, dataLayer,
                 addDeviceTool.getHwType(), addDeviceTool.getInterfaces());
 
         // set position of new component

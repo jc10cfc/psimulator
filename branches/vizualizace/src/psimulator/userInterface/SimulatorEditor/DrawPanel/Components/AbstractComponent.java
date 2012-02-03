@@ -1,9 +1,10 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JComponent;
+import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 
 /**
  *

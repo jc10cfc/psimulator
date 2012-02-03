@@ -17,6 +17,8 @@ public class ZoomManager extends Observable {
     private double minScale = 0.1;
     private double maxScale = 1.0;
     private float basicStrokeWidth = 5f;
+    
+    private int defaultFontSize = 24;
 
     /**
      * returns Icon size according to scale and default icon size
@@ -183,5 +185,9 @@ public class ZoomManager extends Observable {
     private void notifyAllObservers(Point mousePostition) {
         setChanged();
         notifyObservers(new ZoomEventWrapper(false, mousePostition.x, mousePostition.y, 0.0));
+    }
+    
+    public int getActualFontSize(){
+        return (int) (defaultFontSize * scale);
     }
 }
