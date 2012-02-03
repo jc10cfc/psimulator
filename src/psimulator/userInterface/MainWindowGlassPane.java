@@ -17,10 +17,10 @@ public class MainWindowGlassPane extends JPanel {
     public MainWindowGlassPane() {
     }
 
-    public void setPaintEnabled(boolean enabled){
+    public void setPaintEnabled(boolean enabled) {
         this.paintEnabled = enabled;
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);//
@@ -31,6 +31,11 @@ public class MainWindowGlassPane extends JPanel {
             g.setColor(Color.red);
             g.fillOval(point.x - 10, point.y - 10, 20, 20);
         }
-        
+
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        return false;
     }
 }

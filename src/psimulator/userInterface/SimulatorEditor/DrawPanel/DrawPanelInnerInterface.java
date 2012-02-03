@@ -31,7 +31,7 @@ public interface DrawPanelInnerInterface {
      * @return 
      */
     public abstract AbstractAction getAbstractAction(DrawPanelAction action);
-    public void setCursor(Cursor cursor);
+    public abstract void setCursor(Cursor cursor);
     public void repaint();
     /**
      * Sets that cable is being paint. Actual zoom in end poitn is used because when zooming, the end
