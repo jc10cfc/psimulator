@@ -1,15 +1,11 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.Color;
-import java.awt.GradientPaint;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 
 /**

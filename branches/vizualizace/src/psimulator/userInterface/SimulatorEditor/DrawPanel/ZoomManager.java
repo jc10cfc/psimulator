@@ -3,6 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Observable;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 
 /**
  *
@@ -184,7 +185,8 @@ public class ZoomManager extends Observable {
      */
     private void notifyAllObservers(Point mousePostition) {
         setChanged();
-        notifyObservers(new ZoomEventWrapper(false, mousePostition.x, mousePostition.y, 0.0));
+        //notifyObservers(new ZoomEventWrapper(false, mousePostition.x, mousePostition.y, 0.0));
+        notifyObservers(ObserverUpdateEventType.ZOOM_CHANGE);
     }
     
     public int getActualFontSize(){
