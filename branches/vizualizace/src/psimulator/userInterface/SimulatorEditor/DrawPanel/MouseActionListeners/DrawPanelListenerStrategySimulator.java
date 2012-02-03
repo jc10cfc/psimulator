@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
@@ -21,7 +22,8 @@ public class DrawPanelListenerStrategySimulator extends DrawPanelListenerStrateg
     
     @Override
     public void initialize() {
-        System.out.println("Simulator mouse listener init");
+        //System.out.println("Simulator mouse listener init");
+        drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override

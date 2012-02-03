@@ -41,14 +41,16 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private MenuBar jMenuBar;
     private ToolBar jToolBar;
     private UserInterfaceMainPanelOuterInterface jPanelUserInterfaceMain;
-    private JPanel glassPanel;
+    //private JPanel glassPanel;
     /*
      * end of window components
      */
-    private JFrame parentForCompoents;
+    private JFrame mainWindow;
     private JFileChooser fileChooser;
     
     private GlassPanelPainter glassPanelPainter;
+    private MainWindowGlassPane glassPane;
+    //private Component originalGlassPane;
 
     public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
@@ -72,7 +74,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         this.setJMenuBar(jMenuBar);
         this.add(jToolBar, BorderLayout.PAGE_START);
 
-        this.parentForCompoents = (JFrame) this;
+        this.mainWindow = (JFrame) this;
 
         this.imageFactory = new AwtImageFactory();
 
@@ -87,9 +89,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         
         
         // create glass pane and glass pane painter
-        MainWindowGlassPane glassPane = new MainWindowGlassPane();
+        glassPane = new MainWindowGlassPane();
         
         glassPanelPainter = new GlassPanelPainter(glassPane, jPanelUserInterfaceMain);
+        //originalGlassPane = this.getGlassPane();
+        
         this.setGlassPane(glassPane);
         glassPane.setOpaque(false);
         getGlassPane().setVisible(true);
@@ -264,6 +268,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.EDITOR) {
                         return;
                     }
+                    
+                    // set original glass pane
+                    //mainWindow.setGlassPane(originalGlassPane);
+                    //mainWindow.remove(glassPane);
 
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.EDITOR, true);
@@ -274,6 +282,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.SIMULATOR) {
                         return;
                     }
+                    
+                    // add glass pane
+                    //mainWindow.setGlassPane(glassPane);
+                    //glassPane.setOpaque(false);
+                    //getGlassPane().setVisible(true);
 
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.SIMULATOR, true);
@@ -446,7 +459,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * @return true if succesfully saved, false if not
      */
     private boolean doSaveAsAction() {
-        int returnVal = fileChooser.showSaveDialog(parentForCompoents);
+        int returnVal = fileChooser.showSaveDialog(mainWindow);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
@@ -465,7 +478,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * Shows open dialog
      */
     private void doOpenAction() {
-        int returnVal = fileChooser.showOpenDialog(parentForCompoents);
+        int returnVal = fileChooser.showOpenDialog(mainWindow);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
