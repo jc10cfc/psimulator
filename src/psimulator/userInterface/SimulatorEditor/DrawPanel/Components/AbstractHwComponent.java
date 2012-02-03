@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -28,9 +29,12 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected BufferedImage bi;
     protected String deviceName;
     protected HwTypeEnum hwComponentType;
+    //
+    DataLayerFacade dataLayer;
 
-    public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, int interfacesCount) {
+    public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer, int interfacesCount) {
         super();
+        this.dataLayer = dataLayer;
         this.zoomManager = zoomManager;
         this.imageFactory = imageFactory;
 
@@ -90,7 +94,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
 
     @Override
     public boolean intersects(Point p) {
-        if ((p.x >= getX() && p.x <= getX() + bi.getWidth())
+         if ((p.x >= getX() && p.x <= getX() +bi.getWidth())
                 && (p.y >= getY() && p.y <= getY() + bi.getHeight())) {
             return true;
         } else {
@@ -101,6 +105,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     @Override
     public boolean intersects(Rectangle r) {
         Rectangle rect = new Rectangle(getX(), getY(), bi.getWidth(), bi.getHeight());
+        //Rectangle rect = new Rectangle(getX(), getY(), getWidth(), getHeight());
         return r.intersects(rect);
     }
 
@@ -226,7 +231,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
 
     @Override
     public int getHeight() {
-        return zoomManager.doScaleToActual(defaultZoomHeight);
+        return zoomManager.doScaleToActual(defaultZoomHeight);// + getTextHeight();
     }
 
     @Override
@@ -238,6 +243,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     public int getY() {
         return zoomManager.doScaleToActual(defaultZoomYPos);
     }
+
+    public abstract int getTextHeight();
 
     public String getDeviceName() {
         return deviceName;
