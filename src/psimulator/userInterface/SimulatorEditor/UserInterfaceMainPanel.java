@@ -19,7 +19,8 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface implements UserInterfaceMainPanelInnerInterface, Observer{
+public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface implements UserInterfaceMainPanelInnerInterface, 
+        Observer{
 
     private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
@@ -143,7 +144,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
      */
     @Override
     public void update(Observable o, Object o1) {
-        ZoomEventWrapper zoomWrapper = (ZoomEventWrapper) o1;
+        //ZoomEventWrapper zoomWrapper = (ZoomEventWrapper) o1;
         // set viewport
         /*
         Point newViewPos = new Point();
