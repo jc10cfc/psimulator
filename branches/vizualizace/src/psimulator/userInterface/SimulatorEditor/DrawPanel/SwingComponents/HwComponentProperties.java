@@ -4,10 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.text.ParseException;
 import java.util.HashMap;
 import javax.swing.*;
@@ -15,6 +12,7 @@ import javax.swing.text.MaskFormatter;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 
 /**
@@ -26,6 +24,7 @@ public class HwComponentProperties extends JDialog {
     private DataLayerFacade dataLayer;
     private AbstractHwComponent abstractHwComponent;
     private JDialog hwComponentsProperties;
+    private DrawPanelInnerInterface drawPanel;
     /*
      * window componenets
      */
@@ -52,9 +51,10 @@ public class HwComponentProperties extends JDialog {
     private HashMap<String, String> macMap;
     // 
 
-    public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, AbstractHwComponent abstractHwComponent) {
+    public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, AbstractHwComponent abstractHwComponent) {
         this.dataLayer = dataLayer;
         this.abstractHwComponent = abstractHwComponent;
+        this.drawPanel = drawPanel;
 
         // copy values to local
         saveValuesLocally();
@@ -114,23 +114,29 @@ public class HwComponentProperties extends JDialog {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                //saveFromFieldsLocally();
-                //checkUserCloseWithoutSaving();
-
-                /*
-                 * saveFromFieldsLocally(); if (changesMade()) {
-                 * checkUserAndSave(); }
-                 */
-
                 closeAction();
-
             }
         });
+
+        // set OK button as default button
+        this.getRootPane().setDefaultButton(jButtonOk);
 
         hwComponentsProperties = this;
 
         this.pack();
         this.setVisible(true);
+    }
+
+    /**
+     * Add key events reactions to root pane
+     * @return 
+     */
+    @Override
+    protected JRootPane createRootPane() {
+        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        JRootPane rootPane = new JRootPane();
+        rootPane.registerKeyboardAction(new JButtonCancelListener(), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        return rootPane;
     }
 
     /**
@@ -167,13 +173,16 @@ public class HwComponentProperties extends JDialog {
                 ethInterface.setMacAddress(macMap.get(ethInterface.getName()));
             }
         }
+
+        // repaint draw panel
+        drawPanel.repaint();
     }
 
     /**
      * Saves device Name, IP and MAC addresses from text fields to local maps
      */
     private void saveFromFieldsLocally() {
-        deviceName = jTextFieldDeviceName.getText();
+        deviceName = jTextFieldDeviceName.getText().trim();
 
         if (showAddresses) {
             String ethName = jLabelInterfaceNameValue.getText();

@@ -4,10 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
@@ -75,11 +72,27 @@ public class CableProperties extends JDialog {
                 closeAction();
             }
         });
+        
+        // set OK button as default button
+        this.getRootPane().setDefaultButton(jButtonOk);
 
         cableProperties = this;
 
         this.pack();
         this.setVisible(true);
+    }
+
+    /**
+     * Add key events reactions to root pane
+     *
+     * @return
+     */
+    @Override
+    protected JRootPane createRootPane() {
+        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        JRootPane rootPane = new JRootPane();
+        rootPane.registerKeyboardAction(new JButtonCancelListener(), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        return rootPane;
     }
 
     private void saveValuesLocally() {
@@ -97,7 +110,6 @@ public class CableProperties extends JDialog {
         try {
             this.delay = Integer.parseInt(jTextFieldDelay.getText());
         } catch (NumberFormatException ex) {
-            
         }
     }
 
@@ -204,15 +216,15 @@ public class CableProperties extends JDialog {
         delayFormatter.setAllowsInvalid(true);        // allow to enter invalid value for short time
         delayFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
         delayFormatter.setOverwriteMode(false);        // do not overwrite charracters
-        
+
         jTextFieldDelay = new JFormattedTextField(delayFormatter);
-        jTextFieldDelay.setText(""+cable.getDelay());
+        jTextFieldDelay.setText("" + cable.getDelay());
         jTextFieldDelay.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 0-99999");
         parametersPanel.add(jTextFieldDelay);
 
         JLabel delayTip = new JLabel("0-99999");
         parametersPanel.add(delayTip);
-        
+
         // --  ------------------------------------------------------------
         return parametersPanel;
     }
@@ -221,27 +233,10 @@ public class CableProperties extends JDialog {
         JPanel buttonPane = new JPanel();
 
         jButtonOk = new JButton(dataLayer.getString("SAVE"));
-        jButtonOk.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                saveFromFieldsLocally();
-                if (changesMade()) {
-                    saveChangesGlobally();
-                }
-                cableProperties.setVisible(false);
-                cableProperties.dispose();    //closes the window
-            }
-        });
+        jButtonOk.addActionListener(new JButtonOkListener());
 
         jButtonCancel = new JButton(dataLayer.getString("CANCEL"));
-        jButtonCancel.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                closeAction();
-            }
-        });
+        jButtonCancel.addActionListener(new JButtonCancelListener());
 
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
         buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
@@ -300,5 +295,40 @@ public class CableProperties extends JDialog {
                 options[0]); //default button title
 
         return n;
+    }
+
+    /////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for JComboBoxInterface
+     */
+    class JButtonOkListener implements ActionListener {
+
+        /**
+         *
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            saveFromFieldsLocally();
+            if (changesMade()) {
+                saveChangesGlobally();
+            }
+            cableProperties.setVisible(false);
+            cableProperties.dispose();    //closes the window
+        }
+    }
+
+    /////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for JComboBoxInterface
+     */
+    class JButtonCancelListener implements ActionListener {
+
+        /**
+         *
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            closeAction();
+        }
     }
 }

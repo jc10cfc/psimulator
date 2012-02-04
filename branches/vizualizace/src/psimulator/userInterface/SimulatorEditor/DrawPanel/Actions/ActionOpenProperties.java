@@ -43,7 +43,7 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
             drawPanel.repaint();
 
             // open properties window
-            HwComponentProperties hwComponentProperties = new HwComponentProperties(mainWindow.getMainWindowComponent(), dataLayer, abstractHwComponent);
+            HwComponentProperties hwComponentProperties = new HwComponentProperties(mainWindow.getMainWindowComponent(), dataLayer, drawPanel, abstractHwComponent);
             
             return;
         }else if(graph.getMarkedCablesCount() == 1){

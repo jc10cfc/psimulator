@@ -17,7 +17,8 @@ public class Validator {
             + "([0-9]|[1-2][0-9]|3[0-2]))|)$";
     
     public static final String NAME_PATTERN =
-            "^(\\w{0,15})$";
+            "^(((\\w)|(\\W)){0,15})$";
+            //"^(\\w{0,15})$";
     
     public static final String MAC_PATTERN = 
             "^([0-9A-F][0-9A-F]-){5}([0-9A-F][0-9A-F])$";
