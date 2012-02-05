@@ -1,9 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
@@ -49,12 +47,11 @@ public class HwComponent extends AbstractHwComponent {
 
 
         //create image in default zoom
-        bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidthDefaultZoom(), true);
-        //bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidthDefaultZoom(), false);
-
+        bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
+        
         // set image width and height in default zoom
-        defaultZoomWidth = bi.getWidth();
-        defaultZoomHeight = bi.getHeight();
+        defaultZoomWidth = zoomManager.doScaleToDefault(bi.getWidth());
+        defaultZoomHeight = zoomManager.doScaleToDefault(bi.getHeight());
     }
 
     @Override
@@ -73,81 +70,95 @@ public class HwComponent extends AbstractHwComponent {
     }
 
     private void paintTexts(Graphics2D g2) {
-        boolean paintType = true;
-        boolean paintName = true;
+        boolean paintType = false;
+        boolean paintName = false;
+
+        switch (zoomManager.getCurrentLevelOfDetails()) {
+            case LEVEL_1:
+                break;
+            case LEVEL_2:
+                paintName = true;
+                break;
+            case LEVEL_3:
+            default:
+                paintType = true;
+                paintName = true;
+                break;
+        }
 
         if (paintName == false && paintType == false) {
             return;
         }
 
         // create font
-        Font smallerFont = new Font("SanSerif", Font.PLAIN, zoomManager.getActualFontSize());
+        Font smallerFont = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
 
         // set font and get font metrics
         g2.setFont(smallerFont);
         FontMetrics fm = g2.getFontMetrics();
 
-        // CREATE CLEVER FOR CYCLE HERE!!
+        // list for texts
+        List<String> texts = new ArrayList<String>();
 
-        String tmpDeviceType = dataLayer.getString(getHwComponentType().toString());
-        String tmpDeviceName = getDeviceName();
-        String [] texts = {tmpDeviceType, tmpDeviceName};
-        
-        String text;
+        if (paintType) {
+            texts.add(dataLayer.getString(getHwComponentType().toString()));
+        }
+
+        if (paintName) {
+            texts.add(getDeviceName());
+        }
+
         int textWidth, textHeight;
         int margin = (int) (5 * zoomManager.getCurrentScale());
-        
-        int x;// = (int) (getX() - ((textWidth - getWidth()) / 2.0));
+
+        int x;
         int y = getY() + getHeight() + margin;// + textHeight;
-        
-        for (int i = 0; i < texts.length; i++) {
-            text = texts[i];
+
+        for (String text : texts) {
             textWidth = fm.stringWidth(text);
             textHeight = fm.getAscent();
-            
+
             x = (int) (getX() - ((textWidth - getWidth()) / 2.0));
             y = y + textHeight;
+
+            // paint white border
+            g2.setColor(Color.WHITE);
+            g2.drawString(text, x+1, y+1);
+            g2.drawString(text, x+1, y-1);
+            g2.drawString(text, x-1, y+1);
+            g2.drawString(text, x-1, y-1);
+            g2.setColor(Color.BLACK);
             
             g2.drawString(text, x, y);
-            
+
             y += margin;
         }
         
-        /*
-        // get text
-        String text = dataLayer.getString(getHwComponentType().toString());
-
-        // get text size
-        int textWidth = fm.stringWidth(text);
-        int textHeight = fm.getAscent();
-
-        // count margin from icon
-        int margin = (int) (5 * zoomManager.getCurrentScale());
-
-        // get x and y
-        int x = (int) (getX() - ((textWidth - getWidth()) / 2.0));
-        int y = getY() + getHeight() + margin + textHeight;
-
-        // draw text
-        g2.drawString(text, x, y);
-
-        // get text
-        text = getDeviceName();
-
-        textWidth = fm.stringWidth(text);
-        textHeight = fm.getAscent();
-
-        // get x and y
-        x = (int) (getX() - ((textWidth - getWidth()) / 2.0));
-        y = y + margin + textHeight;
-
-        // draw text
-        g2.drawString(text, x, y);
-        */
     }
 
     @Override
     public int getTextHeight() {
-        return 20;
+        return 30;
     }
 }
+
+/*
+Graphics2D g;                     // Initialized elsewhere
+Font f;                           // Initialized elsewhere
+String message = "Hello World!";  // The text to measure and display
+Rectangle2D box;                  // The display box: initialized elsewhere
+
+// Measure the font and the message
+FontRenderContext frc = g.getFontRenderContext();
+Rectangle2D bounds = f.getStringBounds(message, frc);
+LineMetrics metrics = f.getLineMetrics(message, frc);
+float width = (float) bounds.getWidth();     // The width of our text
+float lineheight = metrics.getHeight();      // Total line height
+float ascent = metrics.getAscent();          // Top of text to baseline
+
+// Now display the message centered horizontally and vertically in box
+float x0 = (float) (box.getX() + (box.getWidth() - width)/2);
+float y0 = (float) (box.getY() + (box.getHeight() - lineheight)/2 + ascent);
+g.setFont(f);
+g.drawString(message, x0, y0);
+ */

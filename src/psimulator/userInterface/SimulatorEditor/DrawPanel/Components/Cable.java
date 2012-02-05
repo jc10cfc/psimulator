@@ -132,7 +132,6 @@ public class Cable extends AbstractComponent {
 
     @Override
     public boolean intersects(Rectangle r) {
-        //line.setLine(getP1(), getP2());
         return line.intersects(r);
     }
 

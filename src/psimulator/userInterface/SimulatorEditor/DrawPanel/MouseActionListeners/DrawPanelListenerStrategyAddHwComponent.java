@@ -2,9 +2,14 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
+import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
+import psimulator.dataLayer.DataLayer;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.logicLayer.Controller;
+import psimulator.logicLayer.ControllerFacade;
+import psimulator.userInterface.MainWindow;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponent;
@@ -42,7 +47,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     @Override
     public void mousePressedLeft(MouseEvent e) {
         // create new component
-
+        System.out.println("Time = "+System.currentTimeMillis());
         AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, dataLayer,
                 addDeviceTool.getHwType(), addDeviceTool.getInterfaces());
 
@@ -54,14 +59,23 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
 
         // inform drawPanel about size change if component placed out of draw panel
         //drawPanel.updateSize(component.getLowerRightCornerLocation());
-
+        /*
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                drawPanel.repaint();
+            }
+        });*/
+        System.out.println("Time = "+System.currentTimeMillis());
+        
         drawPanel.repaint();
-
+        
         // add to undo manager
         undoManager.undoableEditHappened(new UndoableEditEvent(this,
                 new UndoableAddHwComponent(drawPanel.getGraphOuterInterface(), component)));
 
         mainWindow.updateUndoRedoButtons();
+        System.out.println("Time = "+System.currentTimeMillis());
     }
 
     @Override

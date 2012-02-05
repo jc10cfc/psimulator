@@ -6,6 +6,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
@@ -34,7 +36,11 @@ public abstract class AbstractImageFactory {
     public static final String TOOL_END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor_toolbar/pc.png";
     public static final String TOOL_END_DEVICE_NOTEBOOK_PATH = "/resources/toolbarIcons/editor_toolbar/notebook.png";
     public static final String TOOL_ROUTER_PATH = "/resources/toolbarIcons/editor_toolbar/router.png";
+    public static final String TOOL_ROUTER_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/router_linux.png";
+    public static final String TOOL_ROUTER_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/router_cisco.png";
     public static final String TOOL_SWITCH_PATH = "/resources/toolbarIcons/editor_toolbar/switch.png";
+    public static final String TOOL_SWITCH_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/switch_linux.png";
+    public static final String TOOL_SWITCH_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/switch_cisco.png";
     
     protected ImageBuffer imageBuffer;
     protected BufferedImageLoader bufferedImageLoader;
@@ -49,6 +55,20 @@ public abstract class AbstractImageFactory {
     public AbstractImageFactory() {
         this.imageBuffer = new ImageBuffer();
         this.bufferedImageLoader = new BufferedImageLoader();
+        
+        preLoadAllImagesFromFiles();
+    }
+    
+    private void preLoadAllImagesFromFiles(){
+        HwTypeEnum hwTypes[] = HwTypeEnum.values(); 
+        for(HwTypeEnum hwType : hwTypes){
+            String path = getPath(hwType);
+            try {
+                bufferedImageLoader.getImage(path);
+            } catch (IOException ex) {
+                // should never happen
+            }
+        }
     }
 
     /**
@@ -71,7 +91,7 @@ public abstract class AbstractImageFactory {
             // put image into buffer
             imageBuffer.putBufferedImage(path, width, image, marked);
         }
-
+        
         return image;
     }
     
@@ -289,11 +309,13 @@ public abstract class AbstractImageFactory {
     private String getPath(HwTypeEnum type){
         switch(type){
             case CISCO_ROUTER:
+                return TOOL_ROUTER_CISCO_PATH;
             case LINUX_ROUTER:
-                return TOOL_ROUTER_PATH;
+                return TOOL_ROUTER_LINUX_PATH;
             case CISCO_SWITCH:
+                return TOOL_SWITCH_CISCO_PATH;
             case LINUX_SWITCH:
-                return TOOL_SWITCH_PATH;
+                return TOOL_SWITCH_LINUX_PATH;
             case END_DEVICE_PC:
                 return TOOL_END_DEVICE_PC_PATH;
             case END_DEVICE_NOTEBOOK:
