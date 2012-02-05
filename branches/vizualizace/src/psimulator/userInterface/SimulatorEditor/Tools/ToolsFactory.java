@@ -25,19 +25,24 @@ public class ToolsFactory {
                 tools.add(new ManipulationTool(tool, imageFactory.getImageIconForToolbar(tool, path), toolChangeInterface));
                 break;
             case ADD_ROUTER:
-                path = AbstractImageFactory.TOOL_ROUTER_PATH;
+                //path = AbstractImageFactory.TOOL_ROUTER_PATH;
+                path = AbstractImageFactory.TOOL_ROUTER_LINUX_PATH;
                 
                 tools.add(new AddDeviceTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.LINUX_ROUTER, path, 2));
                 tools.add(new AddDeviceTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.LINUX_ROUTER, path, 4));
+                
+                path = AbstractImageFactory.TOOL_ROUTER_CISCO_PATH;
+                
                 tools.add(new AddDeviceTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface,HwTypeEnum.CISCO_ROUTER, path, 2));
                 tools.add(new AddDeviceTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface,HwTypeEnum.CISCO_ROUTER, path, 4));
                 break;
             case ADD_SWITCH:
-                path = AbstractImageFactory.TOOL_SWITCH_PATH;
+                //path = AbstractImageFactory.TOOL_SWITCH_PATH;
+                path = AbstractImageFactory.TOOL_SWITCH_LINUX_PATH;
                 
                 tools.add(new AddDeviceTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.LINUX_SWITCH, path, 4));
@@ -45,6 +50,9 @@ public class ToolsFactory {
                         toolChangeInterface, HwTypeEnum.LINUX_SWITCH, path, 8));
                 tools.add(new AddDeviceTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.LINUX_SWITCH, path, 16));
+                
+                path = AbstractImageFactory.TOOL_SWITCH_CISCO_PATH;
+                
                 tools.add(new AddDeviceTool(tool, imageFactory.getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.CISCO_SWITCH, path, 4));
                 tools.add(new AddDeviceTool(tool,  imageFactory.getImageIconForToolbar(tool, path), 

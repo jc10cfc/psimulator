@@ -12,7 +12,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**

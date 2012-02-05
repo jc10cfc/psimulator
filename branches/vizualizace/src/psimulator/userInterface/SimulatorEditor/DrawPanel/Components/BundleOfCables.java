@@ -186,7 +186,8 @@ public class BundleOfCables extends AbstractComponent{
     
     private Rectangle doCreateRectangleAroundPoint(Point p){
         // count difference on both sides from p
-        int difference = Math.max((int) (zoomManager.getStrokeWidth() / 1.5), 1);
+        //int difference = Math.max((int) (zoomManager.getStrokeWidth() / 1.5), 1);
+        int difference = Math.max((int) (zoomManager.getStrokeWidth()), 1);
         
         // create rectangle around point
         Rectangle r = new Rectangle(p.x - difference, p.y - difference,

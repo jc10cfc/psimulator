@@ -30,18 +30,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     private int heightDefault;
     private DrawPanelSizeChangeInnerInterface drawPanel;
     private ZoomManager zoomManager;
-
-    /*
-    public Graph(DrawPanelSizeChangeInnerInterface drawPanel, ZoomManager zoomManager) {
-        this.zoomManager = zoomManager;
-        this.drawPanel = drawPanel;
-
-        // init grid
-        grid = new Grid((GraphOuterInterface) this, zoomManager);
-
-        zoomManager.addObserver((Observer) this);
-    }*/
-    
+   
     public Graph(){
         
     }
@@ -98,7 +87,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         for (AbstractComponent c : markedCables) {
             c.paint(g2); 
         }
-        
         
         
         

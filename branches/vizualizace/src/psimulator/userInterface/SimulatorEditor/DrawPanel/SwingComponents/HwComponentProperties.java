@@ -129,7 +129,8 @@ public class HwComponentProperties extends JDialog {
 
     /**
      * Add key events reactions to root pane
-     * @return 
+     *
+     * @return
      */
     @Override
     protected JRootPane createRootPane() {
@@ -433,18 +434,29 @@ public class HwComponentProperties extends JDialog {
             macAddressName.setFont(fontBold);
             addressesPanel.add(macAddressName);
 
-            try {
-                MaskFormatter macMask = new MaskFormatter("HH-HH-HH-HH-HH-HH"); // mask for MAC address
-                macMask.setAllowsInvalid(false);         // allow to enter invalid value for short time
-                macMask.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
-                macMask.setOverwriteMode(true);         // do overwrite charracters
+            RegexFormatter macMaskFormatter = new RegexFormatter(Validator.MAC_PATTERN);
+            macMaskFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
+            macMaskFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
+            macMaskFormatter.setOverwriteMode(false);         // do notoverwrite charracters
 
-                jTextFieldMacAddress = new JFormattedTextField(macMask);
-                jTextFieldMacAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)");
-                addressesPanel.add(jTextFieldMacAddress);
-            } catch (ParseException ex) {
-                //should never happen
+            jTextFieldMacAddress = new JFormattedTextField(macMaskFormatter);
+            jTextFieldMacAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)");
+            addressesPanel.add(jTextFieldMacAddress);
+            /*
+             * try { MaskFormatter macMask = new
+             * MaskFormatter("HH-HH-HH-HH-HH-HH"); // mask for MAC address
+             * macMask.setAllowsInvalid(false); // allow to enter invalid value
+             * for short time macMask.setCommitsOnValidEdit(true); // value is
+             * immedeatly published to textField macMask.setOverwriteMode(true);
+             * // do overwrite charracters
+             *
+             * jTextFieldMacAddress = new JFormattedTextField(macMask);
+             * jTextFieldMacAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS")
+             * + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)");
+             * addressesPanel.add(jTextFieldMacAddress); } catch (ParseException
+             * ex) { //should never happen
             }
+             */
 
             JLabel macAddressTip = new JLabel("HH-HH-HH-HH-HH-HH");
             addressesPanel.add(macAddressTip);

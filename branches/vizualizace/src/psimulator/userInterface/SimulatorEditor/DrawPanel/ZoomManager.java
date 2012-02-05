@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Observable;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.LevelOfDetail;
 
 /**
  *
@@ -189,7 +190,25 @@ public class ZoomManager extends Observable {
         notifyObservers(ObserverUpdateEventType.ZOOM_CHANGE);
     }
     
-    public int getActualFontSize(){
+    /**
+     * Returns font size to use in current zoom.
+     * @return Size of font in int.
+     */
+    public int getCurrentFontSize(){
         return (int) (defaultFontSize * scale);
+    }
+    
+    /**
+     * Gets Level of detail according to current zoom.
+     * @return 
+     */
+    public LevelOfDetail getCurrentLevelOfDetails(){
+        if(scale <=0.3){
+            return LevelOfDetail.LEVEL_1;
+        }else if(scale < 0.6){
+            return LevelOfDetail.LEVEL_2;
+        }else{
+            return LevelOfDetail.LEVEL_3;   
+        }
     }
 }
