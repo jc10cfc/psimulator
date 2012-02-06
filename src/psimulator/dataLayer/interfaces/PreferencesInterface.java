@@ -1,6 +1,7 @@
 package psimulator.dataLayer.interfaces;
 
 import java.util.Observer;
+import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 
 /**
@@ -9,7 +10,16 @@ import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
  */
 public interface PreferencesInterface {
     public ToolbarIconSizeEnum getToolbarIconSize();
-    public void setToolbarIconSize(ToolbarIconSizeEnum size);   
+    public void setToolbarIconSize(ToolbarIconSizeEnum size); 
+    public LevelOfDetailsMode getLevelOfDetails();
+    public void setLevelOfDetails(LevelOfDetailsMode levelOfDetails);
+    
+    public boolean isViewDeviceNames();
+    public void setViewDeviceNames(boolean viewDeviceNames);
+    public boolean isViewDeviceTypes();
+    public void setViewDeviceTypes(boolean viewDeviceTypes);
+    public boolean isViewInterfaceNames();
+    public void setViewInterfaceNames(boolean viewInterfaceNames);
     
     public void savePreferences();
     

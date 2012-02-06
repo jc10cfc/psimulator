@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 
 /**
@@ -13,23 +14,41 @@ import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
  */
 public final class SettingsDialog extends AbstractPropertiesDialog {
 
-    /* window componenets */
+    /*
+     * window componenets
+     */
     private JComboBox languageList;
     private JLabel iconSizePicture;
     private JRadioButton tinyToolbarIconButton;
     private JRadioButton smallToolbarIconButton;
     private JRadioButton mediumToolbarIconButton;
     private JRadioButton largeToolbarIconButton;
-    /* END of window components */
-    
-    /* variables for local store */
+    private JCheckBox jCheckBoxDeviceType;
+    private JCheckBox jCheckBoxDeviceName;
+    private JCheckBox jCheckBoxInterfaceName;
+    private JRadioButton jRadioButtonManualLOD;
+    private JRadioButton jRadioButtonAutoLOD;
+    /*
+     * END of window components
+     */
+    /*
+     * variables for local store
+     */
     private ToolbarIconSizeEnum toolbarIconSize;
     private int currentLanguagePosition;
-    /* END variables for local store */
+    //
+    private boolean viewDeviceNames;
+    private boolean viewDeviceTypes;
+    private boolean viewInterfaceNames;
+    //
+    private LevelOfDetailsMode levelOfDetails;
+    /*
+     * END variables for local store
+     */
 
     public SettingsDialog(Component mainWindow, DataLayerFacade dataLayer) {
         super(mainWindow, dataLayer);
-        
+
         // copy values to local
         copyValuesFromGlobalToLocal();
 
@@ -41,62 +60,89 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
 
         // add content to panel
         addContent();
-        
+
         setElementsAccordingToLocal();
-        
+
         // initialize
         initialize();
     }
-    
+
     @Override
     protected void copyValuesFromGlobalToLocal() {
         currentLanguagePosition = dataLayer.getCurrentLanguagePosition();
         toolbarIconSize = dataLayer.getToolbarIconSize();
+        //
+        viewDeviceNames = dataLayer.isViewDeviceNames();
+        viewDeviceTypes = dataLayer.isViewDeviceTypes();
+        viewInterfaceNames = dataLayer.isViewInterfaceNames();
+        levelOfDetails = dataLayer.getLevelOfDetails();
     }
 
     @Override
     protected void copyValuesFromFieldsToLocal() {
         currentLanguagePosition = languageList.getSelectedIndex();
+        //
+        viewDeviceNames = jCheckBoxDeviceName.isSelected();
+        viewDeviceTypes = jCheckBoxDeviceType.isSelected();
+        viewInterfaceNames = jCheckBoxInterfaceName.isSelected();
     }
 
     @Override
     protected void copyValuesFromLocalToGlobal() {
         dataLayer.setCurrentLanguage(currentLanguagePosition);
         dataLayer.setToolbarIconSize(toolbarIconSize);
+        //
+        dataLayer.setViewDeviceNames(viewDeviceNames);
+        dataLayer.setViewDeviceTypes(viewDeviceTypes);
+        dataLayer.setViewInterfaceNames(viewInterfaceNames);
+        dataLayer.setLevelOfDetails(levelOfDetails);
+
+        // save preferences 
+        dataLayer.savePreferences();
     }
 
     @Override
     protected boolean hasChangesMade() {
-        if(currentLanguagePosition != dataLayer.getCurrentLanguagePosition()){
+        if (currentLanguagePosition != dataLayer.getCurrentLanguagePosition()) {
             return true;
         }
-        
-        if(toolbarIconSize!=dataLayer.getToolbarIconSize()){
-            return true;
-        }
-        
-        return false;
-    }
-   
 
-    public int getSelectedLanguagePosition() {
-        if (languageList != null) {
-            return languageList.getSelectedIndex();
+        if (toolbarIconSize != dataLayer.getToolbarIconSize()) {
+            return true;
         }
-        return -1;
+
+        if (viewDeviceNames != dataLayer.isViewDeviceNames()) {
+            return true;
+        }
+
+        if (viewDeviceTypes != dataLayer.isViewDeviceTypes()) {
+            return true;
+        }
+
+        if (viewInterfaceNames != dataLayer.isViewInterfaceNames()) {
+            return true;
+        }
+
+        if (levelOfDetails != dataLayer.getLevelOfDetails()) {
+            return true;
+        }
+
+        return false;
     }
 
     private void setElementsAccordingToLocal() {
         // set selected language
         languageList.setSelectedIndex(currentLanguagePosition);
         // set image like in preferences
-        setIconSize(toolbarIconSize);
+        setIconSize();
+        //
+        setLevelOfDetails();
     }
 
     @Override
-    protected JPanel createContentPanel()  {
+    protected JPanel createContentPanel() {
         JPanel mainPanel = new JPanel();
-        
+
         JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab(dataLayer.getString("GENERAL"), new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/home.png")), createCardGeneral());
@@ -104,18 +150,88 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         tabbedPane.addTab("Second", new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/exec.png")), createCard2());
 
         mainPanel.add(tabbedPane);
-        
+
         return mainPanel;
     }
 
     private JPanel createCardGeneral() {
         JPanel card = new JPanel();
 
-        card.setLayout(new BorderLayout());
+        //card.setLayout(new BorderLayout());
+        card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
 
-        card.add(createApplicationPanel(), BorderLayout.PAGE_START);
+        card.add(createApplicationPanel());//, BorderLayout.PAGE_START);
+
+        card.add(Box.createRigidArea(new Dimension(0, 6)));
+
+        card.add(createViewedDetailsPanel());
 
         return card;
+    }
+
+    private JPanel createViewedDetailsPanel() {
+        JPanel detailsPanel = new JPanel();
+        detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
+        detailsPanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("VIEWED_DETAILS")));
+        //
+        JPanel autoManualPanel = new JPanel();
+        autoManualPanel.setLayout(new GridLayout(0, 2));
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+
+        ActionListener lodListener = new LevelOfDetailsListener();
+
+
+
+        jRadioButtonManualLOD = new JRadioButton(dataLayer.getString("MANUAL_LEVEL_OF_DETAILS"));
+        jRadioButtonManualLOD.setActionCommand(LevelOfDetailsMode.MANUAL.toString());
+        jRadioButtonManualLOD.addActionListener(lodListener);
+        buttonGroup.add(jRadioButtonManualLOD);
+        autoManualPanel.add(jRadioButtonManualLOD);
+
+        jRadioButtonAutoLOD = new JRadioButton(dataLayer.getString("AUTO_LEVEL_OF_DETAILS"));
+        jRadioButtonAutoLOD.setActionCommand(LevelOfDetailsMode.AUTO.toString());
+        jRadioButtonAutoLOD.addActionListener(lodListener);
+        buttonGroup.add(jRadioButtonAutoLOD);
+        autoManualPanel.add(jRadioButtonAutoLOD);
+
+        switch (levelOfDetails) {
+            case AUTO:
+                jRadioButtonAutoLOD.setSelected(true);
+                break;
+            case MANUAL:
+                jRadioButtonManualLOD.setSelected(true);
+                break;
+        }
+
+        //
+        JPanel checkBoxesPanel = new JPanel();
+        checkBoxesPanel.setLayout(new GridLayout(0, 2));
+
+        jCheckBoxDeviceType = new JCheckBox(dataLayer.getString("TYPES_OF_DEVICES"));
+        jCheckBoxDeviceType.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jCheckBoxDeviceType.setSelected(viewDeviceTypes);
+        checkBoxesPanel.add(jCheckBoxDeviceType);
+
+        jCheckBoxDeviceName = new JCheckBox(dataLayer.getString("NAMES_OF_DEVICES"));
+        jCheckBoxDeviceName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jCheckBoxDeviceName.setSelected(viewDeviceNames);
+        checkBoxesPanel.add(jCheckBoxDeviceName);
+
+        jCheckBoxInterfaceName = new JCheckBox(dataLayer.getString("INTERFACE_NAMES"));
+        jCheckBoxInterfaceName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jCheckBoxInterfaceName.setSelected(viewInterfaceNames);
+        checkBoxesPanel.add(jCheckBoxInterfaceName);
+
+        //
+        detailsPanel.add(autoManualPanel);
+        detailsPanel.add(Box.createRigidArea(new Dimension(0, 3)));
+        detailsPanel.add(new JSeparator());
+        detailsPanel.add(Box.createRigidArea(new Dimension(0, 3)));
+        detailsPanel.add(checkBoxesPanel);
+
+
+        return detailsPanel;
     }
 
     private JPanel createApplicationPanel() {
@@ -174,11 +290,11 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
 
         ButtonGroup buttonGroup = new ButtonGroup();
         ActionListener toolbarIconSizeListener = new IconSizeListener();
-        
+
         tinyToolbarIconButton = new JRadioButton(dataLayer.getString("TINY"));
         tinyToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.TINY.toString());
         tinyToolbarIconButton.addActionListener(toolbarIconSizeListener);
-        
+
         smallToolbarIconButton = new JRadioButton(dataLayer.getString("SMALL"));
         smallToolbarIconButton.setActionCommand(ToolbarIconSizeEnum.SMALL.toString());
         smallToolbarIconButton.addActionListener(toolbarIconSizeListener);
@@ -220,35 +336,58 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         return card;
     }
 
-    
-
-    private void setIconSize(ToolbarIconSizeEnum iconSize) {
+    private void setIconSize() {
         // set icon size
-        switch (iconSize) {
+        switch (toolbarIconSize) {
             case TINY:
                 tinyToolbarIconButton.setSelected(true);
                 iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/home.png")));
-                toolbarIconSize = ToolbarIconSizeEnum.TINY;
                 break;
             case SMALL:
                 smallToolbarIconButton.setSelected(true);
                 iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/22/home.png")));
-                toolbarIconSize = ToolbarIconSizeEnum.SMALL;
                 break;
             case MEDIUM:
                 mediumToolbarIconButton.setSelected(true);
                 iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/home.png")));
-                toolbarIconSize = ToolbarIconSizeEnum.MEDIUM;
                 break;
             case LARGE:
                 largeToolbarIconButton.setSelected(true);
                 iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/48/home.png")));
-                toolbarIconSize = ToolbarIconSizeEnum.LARGE;
                 break;
         }
     }
 
-    
+    private void setLevelOfDetails() {
+        switch (levelOfDetails) {
+            case MANUAL:
+                jCheckBoxDeviceName.setEnabled(true);
+                jCheckBoxDeviceType.setEnabled(true);
+                jCheckBoxInterfaceName.setEnabled(true);
+                break;
+            case AUTO:
+                jCheckBoxDeviceName.setEnabled(false);
+                jCheckBoxDeviceType.setEnabled(false);
+                jCheckBoxInterfaceName.setEnabled(false);
+                break;
+        }
+    }
+
+    /////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for ToolbarIconSize
+     */
+    class LevelOfDetailsListener implements ActionListener {
+
+        /**
+         *
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            levelOfDetails = LevelOfDetailsMode.valueOf(e.getActionCommand());
+            setLevelOfDetails();
+        }
+    }
 
     /////////////////////-----------------------------------////////////////////
     /**
@@ -257,28 +396,12 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     class IconSizeListener implements ActionListener {
 
         /**
-         * 
+         *
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            switch (ToolbarIconSizeEnum.valueOf(e.getActionCommand())) {
-                case TINY:
-                    iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/home.png")));
-                    toolbarIconSize = ToolbarIconSizeEnum.TINY;
-                    break;
-                case SMALL:
-                    iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/22/home.png")));
-                    toolbarIconSize = ToolbarIconSizeEnum.SMALL;
-                    break;
-                case MEDIUM:
-                    iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/home.png")));
-                    toolbarIconSize = ToolbarIconSizeEnum.MEDIUM;
-                    break;
-                case LARGE:
-                    iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/48/home.png")));
-                    toolbarIconSize = ToolbarIconSizeEnum.LARGE;
-                    break;
-            }
-        }
+            toolbarIconSize = ToolbarIconSizeEnum.valueOf(e.getActionCommand());
+            setIconSize();
+         }
     }
 }
