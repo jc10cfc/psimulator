@@ -31,6 +31,10 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected HwTypeEnum hwComponentType;
     //
     DataLayerFacade dataLayer;
+    
+    //
+    protected int actualTextImageWidth;
+    protected int actualTextImageHeight;
 
     public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer, int interfacesCount) {
         super();
@@ -227,24 +231,51 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     @Override
     public int getWidth() {
         return zoomManager.doScaleToActual(defaultZoomWidth);
+        /*
+        if(zoomManager.doScaleToActual(defaultZoomWidth)< actualTextImageWidth){
+            return actualTextImageWidth;
+        }else{
+            return zoomManager.doScaleToActual(defaultZoomWidth);
+        }*/
     }
 
     @Override
     public int getHeight() {
         return zoomManager.doScaleToActual(defaultZoomHeight);// + getTextHeight();
+        //return zoomManager.doScaleToActual(defaultZoomHeight) + actualTextImageHeight+1;
     }
 
     @Override
     public int getX() {
         return zoomManager.doScaleToActual(defaultZoomXPos);
+        /*
+        if(zoomManager.doScaleToActual(defaultZoomWidth)< actualTextImageWidth){
+            return zoomManager.doScaleToActual(defaultZoomWidth) - (actualTextImageWidth/2);
+        }else{
+            return zoomManager.doScaleToActual(defaultZoomWidth);
+        }*/
     }
 
     @Override
     public int getY() {
         return zoomManager.doScaleToActual(defaultZoomYPos);
     }
-
-    public abstract int getTextHeight();
+    
+    public int getImageWidth(){
+        return zoomManager.doScaleToActual(defaultZoomWidth);
+    }
+    
+    public int getImageHeight(){
+        return zoomManager.doScaleToActual(defaultZoomHeight);
+    }
+    
+    public int getImageX(){
+        return zoomManager.doScaleToActual(defaultZoomXPos);
+    }
+    
+    public int getImageY(){
+        return zoomManager.doScaleToActual(defaultZoomYPos);
+    }
 
     public String getDeviceName() {
         return deviceName;

@@ -59,32 +59,27 @@ public abstract class AbstractImageFactory {
             }
         }
     }
-
-    /*
-     * public BufferedImage getImageWithTexts(String [] lines, int fontSize){
-     *
-     * }
-     */
-    
+   
     /**
      * Gets image with desired text with Font size fontSize and desired width and height. It is buffered.
      * @param text
      * @param fontSize
      * @param textWidth
      * @param textHeigh
+     * @param ascent
      * @return 
      */
-    public BufferedImage getImageWithText(String text, int fontSize,  int textWidth, int textHeigh) {
+    public BufferedImage getImageWithText(String text, Font font,  int textWidth, int textHeigh, int ascent) {
         BufferedImage image;
 
-        image = imageBuffer.getBufferedImageWithText(text, fontSize);
+        image = imageBuffer.getBufferedImageWithText(text, font.getSize());
 
         if (image == null) {
             System.out.println("MISS");
             // load image from file
-            image = createImageWithText(text, fontSize, textWidth, textHeigh);
+            image = createImageWithText(text, font, textWidth, textHeigh, ascent);
             // put image into buffer
-            imageBuffer.putBufferedImageWithText(text, fontSize, image);
+            imageBuffer.putBufferedImageWithText(text, font.getSize(), image);
         } else {
             System.out.println("HIT");
         }
@@ -95,15 +90,13 @@ public abstract class AbstractImageFactory {
     /**
      * Creates BufferImage with text painted in black with white edge of sizes in parameters.
      * @param text
-     * @param fontSize
+     * @param font
      * @param textWidth
      * @param textHeight
+     * @param ascent
      * @return 
      */
-    protected BufferedImage createImageWithText(String text, int fontSize, int textWidth, int textHeight) {
-        // create font
-        Font smallerFont = new Font("SanSerif", Font.PLAIN, fontSize);
-
+    protected BufferedImage createImageWithText(String text, Font font, int textWidth, int textHeight, int ascent) {
         textWidth = textWidth + 2;
         textHeight = textHeight + 2;
 
@@ -115,9 +108,10 @@ public abstract class AbstractImageFactory {
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         int x = 1;
-        int y = textHeight;
+        //int y = textHeight;
+        int y = ascent;
         
-        g2.setFont(smallerFont);
+        g2.setFont(font);
 
         // paint white border
         g2.setColor(Color.WHITE);
