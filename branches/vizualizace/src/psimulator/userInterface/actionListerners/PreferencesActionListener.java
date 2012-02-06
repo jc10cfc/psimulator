@@ -12,7 +12,7 @@ import psimulator.userInterface.SettingsDialog;
  */
 public class PreferencesActionListener implements ActionListener {
 
-    private SettingsDialog dialog;
+    //private SettingsDialog dialog;
     private Component parentComponent;
     private DataLayerFacade dataLayer;
 
@@ -25,10 +25,10 @@ public class PreferencesActionListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        dialog = new SettingsDialog(parentComponent, dataLayer, new OkButtonListener(), new CancelButtonListener());
-        dialog.setVisible(true);
+        SettingsDialog dialog = new SettingsDialog(parentComponent, dataLayer);
     }
 
+    /*
     class OkButtonListener implements ActionListener {
 
         @Override
@@ -58,5 +58,5 @@ public class PreferencesActionListener implements ActionListener {
         dialog.setVisible(false);
         dialog.dispose();    //closes the window
         dialog = null;
-    }
+    }*/
 }

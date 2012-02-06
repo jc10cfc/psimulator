@@ -4,12 +4,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.*;
-import java.text.ParseException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.*;
-import javax.swing.text.MaskFormatter;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
@@ -19,17 +19,13 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
  *
  * @author Martin
  */
-public class HwComponentProperties extends JDialog {
+public final class HwComponentProperties extends AbstractPropertiesDialog {
 
-    private DataLayerFacade dataLayer;
     private AbstractHwComponent abstractHwComponent;
-    private JDialog hwComponentsProperties;
     private DrawPanelInnerInterface drawPanel;
     /*
      * window componenets
      */
-    private JButton jButtonOk;
-    private JButton jButtonCancel;
     private JFormattedTextField jTextFieldDeviceName;
     private JComboBox jComboBoxInterface;
     private JLabel jLabelInterfaceNameValue;
@@ -52,33 +48,21 @@ public class HwComponentProperties extends JDialog {
     // 
 
     public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, AbstractHwComponent abstractHwComponent) {
-        this.dataLayer = dataLayer;
+        super(mainWindow, dataLayer);
+        
         this.abstractHwComponent = abstractHwComponent;
         this.drawPanel = drawPanel;
 
         // copy values to local
-        saveValuesLocally();
+        copyValuesFromGlobalToLocal();
 
+        // set title
         this.setTitle(abstractHwComponent.getDeviceName());
 
-        // set of JDialog parameters
-        this.setModalityType(ModalityType.APPLICATION_MODAL);
-        this.setResizable(false);
+        // set minimum size
         this.setMinimumSize(new Dimension(250, 100));
-        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        Component parentComponent = (Component) mainWindow;
-
-        // place in middle of parent window
-        int y = parentComponent.getY() + (parentComponent.getHeight() / 2) - (this.getHeight() / 2);
-        int x = parentComponent.getX() + (parentComponent.getWidth() / 2) - (this.getWidth() / 2);
-        this.setLocation(x, y);
-        // end of set of JDialog parameters
-
-        initialize();
-    }
-
-    private void initialize() {
+        
         switch (abstractHwComponent.getHwComponentType()) {
             case END_DEVICE_NOTEBOOK:
             case END_DEVICE_WORKSTATION:
@@ -101,49 +85,24 @@ public class HwComponentProperties extends JDialog {
                 System.err.println("HwComponentProperties error1");
                 break;
         }
-
-        // add Content
-        this.getContentPane().add(createMainPanel());
-
-        // update
+        
+        //add content
+        addContent();
+        
+        // update according to first interface
         if (showInterfaces) {
             upadteInterfaceRelatedItems();
         }
-
-        this.addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-                closeAction();
-            }
-        });
-
-        // set OK button as default button
-        this.getRootPane().setDefaultButton(jButtonOk);
-
-        hwComponentsProperties = this;
-
-        this.pack();
-        this.setVisible(true);
-    }
-
-    /**
-     * Add key events reactions to root pane
-     *
-     * @return
-     */
-    @Override
-    protected JRootPane createRootPane() {
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        JRootPane rootPane = new JRootPane();
-        rootPane.registerKeyboardAction(new JButtonCancelListener(), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        return rootPane;
+        
+        //
+        initialize();
     }
 
     /**
      * Copies values that can be modified to local variables.
      */
-    private void saveValuesLocally() {
+    @Override
+    protected void copyValuesFromGlobalToLocal() {
         // save name
         deviceName = abstractHwComponent.getDeviceName();
 
@@ -163,7 +122,8 @@ public class HwComponentProperties extends JDialog {
     /**
      * Propagates changes in name and eth interfaces addresses to the component.
      */
-    private void saveChangesGlobally() {
+    @Override
+    protected void copyValuesFromLocalToGlobal() {
         // save name
         abstractHwComponent.setDeviceName(deviceName);
 
@@ -182,7 +142,8 @@ public class HwComponentProperties extends JDialog {
     /**
      * Saves device Name, IP and MAC addresses from text fields to local maps
      */
-    private void saveFromFieldsLocally() {
+    @Override
+    protected void copyValuesFromFieldsToLocal(){
         deviceName = jTextFieldDeviceName.getText().trim();
 
         if (showAddresses) {
@@ -217,7 +178,8 @@ public class HwComponentProperties extends JDialog {
      *
      * @return True if changes made, false if not.
      */
-    private boolean changesMade() {
+    @Override
+    protected boolean hasChangesMade() {
         if (!deviceName.equals(abstractHwComponent.getDeviceName())) {
             return true;
         }
@@ -278,7 +240,8 @@ public class HwComponentProperties extends JDialog {
         }
     }
 
-    private JPanel createMainPanel() {
+    @Override
+    protected JPanel createContentPanel(){
         JPanel mainPanel = new JPanel();
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -292,9 +255,9 @@ public class HwComponentProperties extends JDialog {
         } else {
             mainPanel.add(createRealPcPanel());
         }
-
+        /*
         mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
-        mainPanel.add(createOkCancelPanel());
+        mainPanel.add(createOkCancelPanel());*/
 
         return mainPanel;
     }
@@ -481,123 +444,6 @@ public class HwComponentProperties extends JDialog {
         return realPcPanel;
     }
 
-    private JPanel createOkCancelPanel() {
-        JPanel buttonPane = new JPanel();
-
-        jButtonOk = new JButton(dataLayer.getString("SAVE"));
-        jButtonOk.addActionListener(new JButtonOkListener());
-
-        jButtonCancel = new JButton(dataLayer.getString("CANCEL"));
-        jButtonCancel.addActionListener(new JButtonCancelListener());
-
-        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-        buttonPane.add(Box.createHorizontalGlue());
-        buttonPane.add(jButtonOk);
-        buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
-        buttonPane.add(jButtonCancel);
-
-        return buttonPane;
-    }
-
-    private void closeAction() {
-        boolean close = true;
-
-        saveFromFieldsLocally();
-        if (changesMade()) {
-            if (checkUserAndSave() == false) {
-                close = false;
-            }
-        }
-
-        if (close) {
-            hwComponentsProperties.setVisible(false);
-            hwComponentsProperties.dispose();    //closes the window
-        }
-    }
-
-    /**
-     * Checks user if he wants to save changes and saves it.
-     */
-    private boolean checkUserAndSave() {
-        // want to save?
-        int i = showWarningSave(dataLayer.getString("WARNING"), dataLayer.getString("DO_YOU_WANT_TO_SAVE_CHANGES"));
-
-        // if YES
-        if (i == 0) {
-            saveChangesGlobally();
-        }
-
-        if (i == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private int showWarningSave(String title, String message) {
-        Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE")};
-        int n = JOptionPane.showOptionDialog(this,
-                message,
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null, //do not use a custom Icon
-                options, //the titles of buttons
-                options[0]); //default button title
-
-        return n;
-    }
-
-    private int showWarningClose(String title, String message) {
-        Object[] options = {dataLayer.getString("YES"), dataLayer.getString("NO")};
-        int n = JOptionPane.showOptionDialog(this,
-                message,
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null, //do not use a custom Icon
-                options, //the titles of buttons
-                options[0]); //default button title
-
-        return n;
-    }
-
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for JComboBoxInterface
-     */
-    class JButtonOkListener implements ActionListener {
-
-        /**
-         *
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            saveFromFieldsLocally();
-            if (changesMade()) {
-                saveChangesGlobally();
-            }
-            hwComponentsProperties.setVisible(false);
-            hwComponentsProperties.dispose();    //closes the window
-        }
-    }
-
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for JComboBoxInterface
-     */
-    class JButtonCancelListener implements ActionListener {
-
-        /**
-         *
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            closeAction();
-        }
-    }
-
     /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for JComboBoxInterface
@@ -609,7 +455,7 @@ public class HwComponentProperties extends JDialog {
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            saveFromFieldsLocally();
+            copyValuesFromFieldsToLocal();
             upadteInterfaceRelatedItems();
         }
     }

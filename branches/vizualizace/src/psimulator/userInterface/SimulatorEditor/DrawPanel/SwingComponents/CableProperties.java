@@ -4,9 +4,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.*;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 
@@ -14,16 +14,12 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
  *
  * @author Martin
  */
-public class CableProperties extends JDialog {
+public final class CableProperties extends AbstractPropertiesDialog {
 
-    private DataLayerFacade dataLayer;
     private Cable cable;
-    private JDialog cableProperties;
     /*
      * window componenets
      */
-    private JButton jButtonOk;
-    private JButton jButtonCancel;
     private JFormattedTextField jTextFieldDelay;
     /*
      * END of window components
@@ -34,78 +30,40 @@ public class CableProperties extends JDialog {
     private int delay;
 
     public CableProperties(Component mainWindow, DataLayerFacade dataLayer, Cable cable) {
-        this.dataLayer = dataLayer;
+        super(mainWindow, dataLayer);
+        
         this.cable = cable;
 
         // copy values to local
-        saveValuesLocally();
+        copyValuesFromGlobalToLocal();
 
+        // set title
         this.setTitle(dataLayer.getString("CABLE_PROPERTIES"));
 
-        // set of JDialog parameters
-        this.setModalityType(ModalityType.APPLICATION_MODAL);
-        this.setResizable(false);
+        // set minimum size
         this.setMinimumSize(new Dimension(300, 100));
-        this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        Component parentComponent = (Component) mainWindow;
-
-        // place in middle of parent window
-        int y = parentComponent.getY() + (parentComponent.getHeight() / 2) - (this.getHeight() / 2);
-        int x = parentComponent.getX() + (parentComponent.getWidth() / 2) - (this.getWidth() / 2);
-        this.setLocation(x, y);
-        // end of set of JDialog parameters
-
+        // add content to panel
+        addContent();
+        
+        // initialize
         initialize();
     }
 
-    private void initialize() {
-        this.cableProperties = this;
-
-        // add Content
-        this.getContentPane().add(createMainPanel());
-
-        this.addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowClosing(WindowEvent e) {
-                closeAction();
-            }
-        });
-        
-        // set OK button as default button
-        this.getRootPane().setDefaultButton(jButtonOk);
-
-        cableProperties = this;
-
-        this.pack();
-        this.setVisible(true);
-    }
-
-    /**
-     * Add key events reactions to root pane
-     *
-     * @return
-     */
     @Override
-    protected JRootPane createRootPane() {
-        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        JRootPane rootPane = new JRootPane();
-        rootPane.registerKeyboardAction(new JButtonCancelListener(), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        return rootPane;
-    }
-
-    private void saveValuesLocally() {
+    protected void copyValuesFromGlobalToLocal() {
         // save delay
         this.delay = cable.getDelay();
     }
 
-    private void saveChangesGlobally() {
-        // save delay
+    @Override
+    protected void copyValuesFromLocalToGlobal() {
+        // save delay to global
         cable.setDelay(delay);
     }
 
-    private void saveFromFieldsLocally() {
+    @Override
+    protected void copyValuesFromFieldsToLocal() {
         // get delay from text field
         try {
             this.delay = Integer.parseInt(jTextFieldDelay.getText());
@@ -113,7 +71,8 @@ public class CableProperties extends JDialog {
         }
     }
 
-    private boolean changesMade() {
+    @Override
+    protected boolean hasChangesMade() {
         if (this.delay != cable.getDelay()) {
             return true;
         }
@@ -121,7 +80,8 @@ public class CableProperties extends JDialog {
         return false;
     }
 
-    private JPanel createMainPanel() {
+    @Override
+    protected JPanel createContentPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -130,8 +90,6 @@ public class CableProperties extends JDialog {
         mainPanel.add(createInfoPanel());
         mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
         mainPanel.add(createParametersPanel());
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
-        mainPanel.add(createOkCancelPanel());
 
         return mainPanel;
     }
@@ -229,106 +187,5 @@ public class CableProperties extends JDialog {
         return parametersPanel;
     }
 
-    private JPanel createOkCancelPanel() {
-        JPanel buttonPane = new JPanel();
 
-        jButtonOk = new JButton(dataLayer.getString("SAVE"));
-        jButtonOk.addActionListener(new JButtonOkListener());
-
-        jButtonCancel = new JButton(dataLayer.getString("CANCEL"));
-        jButtonCancel.addActionListener(new JButtonCancelListener());
-
-        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-        buttonPane.add(Box.createHorizontalGlue());
-        buttonPane.add(jButtonOk);
-        buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
-        buttonPane.add(jButtonCancel);
-
-        return buttonPane;
-    }
-
-    private void closeAction() {
-        boolean close = true;
-
-        saveFromFieldsLocally();
-        if (changesMade()) {
-            if (checkUserAndSave() == false) {
-                close = false;
-            }
-        }
-
-        if (close) {
-            this.setVisible(false);
-            this.dispose();    //closes the window
-        }
-    }
-
-    /**
-     * Checks user if he wants to save changes and saves it.
-     */
-    private boolean checkUserAndSave() {
-        // want to save?
-        int i = showWarningSave(dataLayer.getString("WARNING"), dataLayer.getString("DO_YOU_WANT_TO_SAVE_CHANGES"));
-
-        // if YES
-        if (i == 0) {
-            saveChangesGlobally();
-        }
-
-        if (i == -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private int showWarningSave(String title, String message) {
-        Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE")};
-        int n = JOptionPane.showOptionDialog(this,
-                message,
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null, //do not use a custom Icon
-                options, //the titles of buttons
-                options[0]); //default button title
-
-        return n;
-    }
-
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for JComboBoxInterface
-     */
-    class JButtonOkListener implements ActionListener {
-
-        /**
-         *
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            saveFromFieldsLocally();
-            if (changesMade()) {
-                saveChangesGlobally();
-            }
-            cableProperties.setVisible(false);
-            cableProperties.dispose();    //closes the window
-        }
-    }
-
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for JComboBoxInterface
-     */
-    class JButtonCancelListener implements ActionListener {
-
-        /**
-         *
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            closeAction();
-        }
-    }
 }
