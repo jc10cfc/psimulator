@@ -3,6 +3,7 @@ package psimulator.dataLayer;
 import java.io.File;
 import java.util.Observer;
 import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapter;
+import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
@@ -17,14 +18,12 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 public class DataLayer extends DataLayerFacade{
     private LanguageManager languageManager;
     private PreferencesManager preferencesManager;
-    //private HardwareDevicesManager hwDeviceManager;
     private SimulatorManager simulatorManager;
     private AbstractNetworkAdapter abstractNetworkAdapter;
     
     public DataLayer(){
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
-        //hwDeviceManager =  new HardwareDevicesManager();
         simulatorManager = new SimulatorManager();
         abstractNetworkAdapter = new AbstractNetworkAdapter();
     }
@@ -37,7 +36,6 @@ public class DataLayer extends DataLayerFacade{
     @Override
     public void setToolbarIconSize(ToolbarIconSizeEnum size) {
         preferencesManager.setToolbarIconSize(size);
-        savePreferences();
     }
     
     @Override
@@ -94,5 +92,44 @@ public class DataLayer extends DataLayerFacade{
     public Graph loadGraphFromFile(File file) {
         return abstractNetworkAdapter.loadGraphFromFile(file);
     }
-   
+
+    @Override
+    public boolean isViewDeviceNames() {
+        return preferencesManager.isViewDeviceNames();
+    }
+
+    @Override
+    public void setViewDeviceNames(boolean viewDeviceNames) {
+        preferencesManager.setViewDeviceNames(viewDeviceNames);
+    }
+
+    @Override
+    public boolean isViewDeviceTypes() {
+        return preferencesManager.isViewDeviceTypes();
+    }
+
+    @Override
+    public void setViewDeviceTypes(boolean viewDeviceTypes) {
+        preferencesManager.setViewDeviceTypes(viewDeviceTypes);
+    }
+
+    @Override
+    public boolean isViewInterfaceNames() {
+        return preferencesManager.isViewInterfaceNames();
+    }
+
+    @Override
+    public void setViewInterfaceNames(boolean viewInterfaceNames) {
+        preferencesManager.setViewInterfaceNames(viewInterfaceNames);
+    }
+
+    @Override
+    public LevelOfDetailsMode getLevelOfDetails() {
+        return preferencesManager.getLevelOfDetails();
+    }
+
+    @Override
+    public void setLevelOfDetails(LevelOfDetailsMode levelOfDetails) {
+        preferencesManager.setLevelOfDetails(levelOfDetails);
+    }
 }

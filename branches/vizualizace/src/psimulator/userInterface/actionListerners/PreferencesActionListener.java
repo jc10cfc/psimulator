@@ -12,7 +12,6 @@ import psimulator.userInterface.SettingsDialog;
  */
 public class PreferencesActionListener implements ActionListener {
 
-    //private SettingsDialog dialog;
     private Component parentComponent;
     private DataLayerFacade dataLayer;
 
@@ -27,36 +26,4 @@ public class PreferencesActionListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         SettingsDialog dialog = new SettingsDialog(parentComponent, dataLayer);
     }
-
-    /*
-    class OkButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // get index of selected language
-            int index = dialog.getSelectedLanguagePosition();
-
-            // set current language to language at index
-            dataLayer.setCurrentLanguage(index);
-            
-            // get icon size selected and set it to preferences manager
-            dataLayer.setToolbarIconSize(dialog.getSelectedToolbarIconSize());
-            
-            closeDialog();
-        }
-    }
-
-    class CancelButtonListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            closeDialog();
-        }
-    }
-
-    protected void closeDialog() {
-        dialog.setVisible(false);
-        dialog.dispose();    //closes the window
-        dialog = null;
-    }*/
 }
