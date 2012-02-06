@@ -14,12 +14,15 @@ public class ImageBuffer {
     // String is path to image = the identificator
     private HashMap<String,HashMap<Integer, Image>> hwComponentBuffer;
     private HashMap<String,HashMap<Integer, Image>> hwMarkedComponentBuffer;
+    //
+    private HashMap<String,HashMap<Integer, Image>> textLabelsBuffer;
     
     public ImageBuffer(){
         // create EnumMap with all HW components
         hwComponentBuffer = new HashMap<String,HashMap<Integer, Image>>();
         hwMarkedComponentBuffer = new HashMap<String,HashMap<Integer, Image>>();
-        
+        //
+        textLabelsBuffer = new HashMap<String,HashMap<Integer, Image>>();
     }
     
     /**
@@ -33,6 +36,47 @@ public class ImageBuffer {
         
         for(Entry<String,HashMap<Integer, Image>> e : hwMarkedComponentBuffer.entrySet()){
             e.getValue().clear();
+        }
+        
+        for(Entry<String,HashMap<Integer, Image>> e : textLabelsBuffer.entrySet()){
+            e.getValue().clear();
+        }
+    }
+    
+    /**
+     * Puts Image into buffer
+     * @param text Text of string
+     * @param size Font size
+     * @param image 
+     */
+    public void putBufferedImageWithText(String text, Integer fontSize, Image image){
+        // if map does not contains path
+        if(!textLabelsBuffer .containsKey(text)){
+            textLabelsBuffer .put(text, new HashMap<Integer, Image>());
+        }
+        
+        textLabelsBuffer .get(text).put(fontSize, image);
+    }
+    
+        
+    /**
+     * Gets specified Image
+     * @param text Text of string
+     * @param size Font size
+     * @return Image if found, otherwise null
+     */
+    public BufferedImage getBufferedImageWithText(String text, Integer fontSize){
+        // if map does not contains path
+        if(!textLabelsBuffer.containsKey(text)){
+            return null;
+        }
+        
+        // if is specified BufferedImage in buffer
+        if(textLabelsBuffer.get(text).containsKey(fontSize)){
+            return (BufferedImage) textLabelsBuffer.get(text).get(fontSize);
+        }else{
+            // if isn't
+            return null;
         }
     }
     

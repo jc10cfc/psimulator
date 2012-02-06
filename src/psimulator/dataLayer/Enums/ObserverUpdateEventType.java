@@ -5,6 +5,7 @@ package psimulator.dataLayer.Enums;
  * @author Martin
  */
 public enum ObserverUpdateEventType {
+    VIEW_DETAILS,   // when view details changed
     LANGUAGE,       // when language changed
     ICON_SIZE,      // when icon size changed
     ZOOM_CHANGE,    // when zoom changed

@@ -1,13 +1,9 @@
 package psimulator.userInterface.imageFactories;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
@@ -21,16 +17,13 @@ public abstract class AbstractImageFactory {
 
     public static final int ICON_SIZE_MENU_BAR = 48;
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
-    
     //public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_arrow.png";
     public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";
     public static final String TOOL_CABLE_ETHERNET_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
     public static final String TOOL_CABLE_OPTICS_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired_gray.png";
-    
     public static final String TOOL_REAL_PC_PATH = "/resources/toolbarIcons/editor_toolbar/local_network.png";
     public static final String TOOL_ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor_toolbar/grid.png";
     public static final String TOOL_FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor_toolbar/fit_to_size.png";
-    
     //
     public static final String TOOL_END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor_toolbar/desktop.png";
     public static final String TOOL_END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor_toolbar/pc.png";
@@ -41,27 +34,23 @@ public abstract class AbstractImageFactory {
     public static final String TOOL_SWITCH_PATH = "/resources/toolbarIcons/editor_toolbar/switch.png";
     public static final String TOOL_SWITCH_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/switch_linux.png";
     public static final String TOOL_SWITCH_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/switch_cisco.png";
-    
     protected ImageBuffer imageBuffer;
     protected BufferedImageLoader bufferedImageLoader;
-    
     // scales 3 je alpha
     private float[] scales = {1f, 1f, 1f, 1f};
     private float[] offsets = {50f, 50f, 50f, 1f};
-
     protected RescaleOp rescaleOp = new RescaleOp(scales, offsets, null);
-
 
     public AbstractImageFactory() {
         this.imageBuffer = new ImageBuffer();
         this.bufferedImageLoader = new BufferedImageLoader();
-        
+
         preLoadAllImagesFromFiles();
     }
-    
-    private void preLoadAllImagesFromFiles(){
-        HwTypeEnum hwTypes[] = HwTypeEnum.values(); 
-        for(HwTypeEnum hwType : hwTypes){
+
+    private void preLoadAllImagesFromFiles() {
+        HwTypeEnum hwTypes[] = HwTypeEnum.values();
+        for (HwTypeEnum hwType : hwTypes) {
             String path = getPath(hwType);
             try {
                 bufferedImageLoader.getImage(path);
@@ -71,18 +60,94 @@ public abstract class AbstractImageFactory {
         }
     }
 
+    /*
+     * public BufferedImage getImageWithTexts(String [] lines, int fontSize){
+     *
+     * }
+     */
+    
     /**
-     * Returns BufferedImage  for hwComponentType at path of size. If marked,
-     * the result image is brighter by 50%.
+     * Gets image with desired text with Font size fontSize and desired width and height. It is buffered.
+     * @param text
+     * @param fontSize
+     * @param textWidth
+     * @param textHeigh
+     * @return 
+     */
+    public BufferedImage getImageWithText(String text, int fontSize,  int textWidth, int textHeigh) {
+        BufferedImage image;
+
+        image = imageBuffer.getBufferedImageWithText(text, fontSize);
+
+        if (image == null) {
+            System.out.println("MISS");
+            // load image from file
+            image = createImageWithText(text, fontSize, textWidth, textHeigh);
+            // put image into buffer
+            imageBuffer.putBufferedImageWithText(text, fontSize, image);
+        } else {
+            System.out.println("HIT");
+        }
+
+        return image;
+    }
+
+    /**
+     * Creates BufferImage with text painted in black with white edge of sizes in parameters.
+     * @param text
+     * @param fontSize
+     * @param textWidth
+     * @param textHeight
+     * @return 
+     */
+    protected BufferedImage createImageWithText(String text, int fontSize, int textWidth, int textHeight) {
+        // create font
+        Font smallerFont = new Font("SanSerif", Font.PLAIN, fontSize);
+
+        textWidth = textWidth + 2;
+        textHeight = textHeight + 2;
+
+        BufferedImage bi = new BufferedImage(textWidth, textHeight, BufferedImage.TYPE_INT_ARGB);
+        
+        Graphics2D g2 = bi.createGraphics();
+        
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+
+        int x = 1;
+        int y = textHeight;
+        
+        g2.setFont(smallerFont);
+
+        // paint white border
+        g2.setColor(Color.WHITE);
+        g2.drawString(text, x + 1, y + 1);
+        g2.drawString(text, x + 1, y - 1);
+        g2.drawString(text, x - 1, y + 1);
+        g2.drawString(text, x - 1, y - 1);
+
+        // paint the black text
+        g2.setColor(Color.BLACK);
+        g2.drawString(text, x, y);
+
+        g2.dispose();
+        
+        return bi;
+    }
+
+    /**
+     * Returns BufferedImage for hwComponentType at path of size. If marked, the
+     * result image is brighter by 50%.
+     *
      * @param hwComponentType
      * @param width
      * @param marked
-     * @return 
+     * @return
      */
     public BufferedImage getImage(HwTypeEnum hwComponentType, Integer width, boolean marked) {
         BufferedImage image;
         String path = getPath(hwComponentType);
- 
+
         image = imageBuffer.getBufferedImage(path, width, marked);
 
         if (image == null) {
@@ -91,20 +156,20 @@ public abstract class AbstractImageFactory {
             // put image into buffer
             imageBuffer.putBufferedImage(path, width, image, marked);
         }
-        
+
         return image;
     }
-    
-    
+
     /**
-     * Returns BufferedImage  for hwComponentType at path of size. If marked,
-     * the result image is brighter by 50%.
+     * Returns BufferedImage for hwComponentType at path of size. If marked, the
+     * result image is brighter by 50%.
+     *
      * @param hwComponentType
      * @param path
      * @param width
      * @param marked
-     * @return 
-    */
+     * @return
+     */
     public BufferedImage getImage(HwTypeEnum hwComponentType, String path, Integer width, boolean marked) {
         BufferedImage image;
 
@@ -118,23 +183,24 @@ public abstract class AbstractImageFactory {
         }
 
         return image;
-    } 
+    }
 
     /**
-     * Creates BufferedImage  for hwComponentType at path of size. If marked,
-     * the result image is brighter by 50%.
+     * Creates BufferedImage for hwComponentType at path of size. If marked, the
+     * result image is brighter by 50%.
+     *
      * @param hwComponentType
      * @param path
      * @param width
      * @param marked
-     * @return 
+     * @return
      */
     protected BufferedImage createImage(HwTypeEnum hwComponentType, String path, Integer width, boolean marked) {
 
         BufferedImage bi = null;
-    
+
         Image tmp = null;
-        
+
         try {
             // loads image from path and scales it to desired size
             tmp = getScaledImage(path, width);
@@ -146,7 +212,7 @@ public abstract class AbstractImageFactory {
                 // should never happen, all hwComponentType default icons are in .jar as a resource
             }
         }
-        
+
         // create new buffered image to paint on
         bi = new BufferedImage(tmp.getWidth(null), tmp.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
@@ -172,11 +238,12 @@ public abstract class AbstractImageFactory {
 
     /**
      * Returns default image for MainTool tool.
+     *
      * @param tool
      * @return ImageIcon with ICON_SIZE_MENU_BAR size
      */
     public ImageIcon getImageIconForToolbar(MainTool tool) {
-        String path ;
+        String path;
 
         switch (tool) {
             case HAND:
@@ -199,9 +266,9 @@ public abstract class AbstractImageFactory {
                 path = TOOL_REAL_PC_PATH;
                 break;
         }
-        
+
         ImageIcon tmp = null;
-        
+
         // load image
         try {
             //tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
@@ -209,15 +276,15 @@ public abstract class AbstractImageFactory {
         } catch (IOException ex) {
             // should never happen, all hwComponentType default icons are in .jar as a resource
         }
-        
+
         // return scaled image
         return tmp;
     }
- 
 
     /**
-     * Returns image for MainTool tool at path. If image at path could
-     * not be loaded, the default image for tool is returned.
+     * Returns image for MainTool tool at path. If image at path could not be
+     * loaded, the default image for tool is returned.
+     *
      * @param tool
      * @param path
      * @return ImageIcon with ICON_SIZE_MENU_BAR size.
@@ -238,9 +305,9 @@ public abstract class AbstractImageFactory {
 
         return icon;
     }
-    
+
     public ImageIcon getImageIconForToolbar(SecondaryTool tool) {
-        String path ;
+        String path;
 
         switch (tool) {
             case ALIGN_TO_GRID:
@@ -251,9 +318,9 @@ public abstract class AbstractImageFactory {
                 path = TOOL_FIT_TO_SIZE_PATH;
                 break;
         }
-        
+
         ImageIcon tmp = null;
-        
+
         // load image
         try {
             //tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
@@ -261,18 +328,18 @@ public abstract class AbstractImageFactory {
         } catch (IOException ex) {
             // should never happen, all hwComponentType default icons are in .jar as a resource
         }
-        
+
         // return scaled image
         return tmp;
     }
 
-    private ImageIcon createSquareImage(Image image){
+    private ImageIcon createSquareImage(Image image) {
         int size = image.getWidth(null);
-        
-        int offsetHeight = (image.getWidth(null) - image.getHeight(null))/2;
-        
-        BufferedImage  bi = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-        
+
+        int offsetHeight = (image.getWidth(null) - image.getHeight(null)) / 2;
+
+        BufferedImage bi = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+
         // create graphics and set hints
         Graphics2D graphics2D = bi.createGraphics();
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -282,32 +349,33 @@ public abstract class AbstractImageFactory {
 
         // draw image
         graphics2D.drawImage(image, 0, offsetHeight, null);
-        
+
         graphics2D.dispose();
-        
+
         return new ImageIcon(bi);
     }
-    
+
     /**
      * Creates scaled image of image at path. Size will be size x size.
+     *
      * @param path
      * @param width
      * @return scaled image
-     * @throws IOException 
+     * @throws IOException
      */
-    private Image getScaledImage(String path, int width) throws IOException{
+    private Image getScaledImage(String path, int width) throws IOException {
         Image tmp = bufferedImageLoader.getImage(path);
-        int height = (int)((double)(tmp.getHeight(null) / (double)tmp.getWidth(null)) * width);
+        int height = (int) ((double) (tmp.getHeight(null) / (double) tmp.getWidth(null)) * width);
         tmp = tmp.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return tmp;
     }
-    
+
     public void clearBuffer() {
         imageBuffer.clearBuffer();
     }
-    
-    private String getPath(HwTypeEnum type){
-        switch(type){
+
+    private String getPath(HwTypeEnum type) {
+        switch (type) {
             case CISCO_ROUTER:
                 return TOOL_ROUTER_CISCO_PATH;
             case LINUX_ROUTER:

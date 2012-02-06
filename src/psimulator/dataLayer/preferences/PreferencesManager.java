@@ -80,6 +80,10 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
     public void setViewDeviceNames(boolean viewDeviceNames) {
         this.viewDeviceNames = viewDeviceNames;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
     }
 
     public boolean isViewDeviceTypes() {
@@ -88,6 +92,10 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
     public void setViewDeviceTypes(boolean viewDeviceTypes) {
         this.viewDeviceTypes = viewDeviceTypes;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
     }
 
     public boolean isViewInterfaceNames() {
@@ -96,6 +104,10 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
     public void setViewInterfaceNames(boolean viewInterfaceNames) {
         this.viewInterfaceNames = viewInterfaceNames;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
     }
 
     public LevelOfDetailsMode getLevelOfDetails() {
@@ -104,6 +116,10 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
     public void setLevelOfDetails(LevelOfDetailsMode levelOfDetails) {
         this.levelOfDetails = levelOfDetails;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
     }
     
     
