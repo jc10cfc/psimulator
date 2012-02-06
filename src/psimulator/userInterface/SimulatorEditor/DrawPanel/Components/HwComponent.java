@@ -24,7 +24,10 @@ public class HwComponent extends AbstractHwComponent {
      * zoomManager, HwTypeEnum hwComponentType, int interfacesCount, String
      * imagePath, String name) {
      */
-    private static Font sanSerifFont = new Font("SanSerif", Font.PLAIN, 12);
+    int textX;
+    int textY;
+    int textW;
+    int textH;
 
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer,
             HwTypeEnum hwComponentType, int interfacesCount) {
@@ -66,38 +69,114 @@ public class HwComponent extends AbstractHwComponent {
             bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
         }
 
-        g2.drawImage(bi, getX(), getY(), null);
+        //g2.drawImage(bi, getX(), getY(), null);
+        g2.drawImage(bi, getImageX(), getImageY(), null);
 
-        //paintTexts(g2);
-        brutalPaint(g2);
+        paintTextsUnderImage(g2);
     }
-    
-    private void brutalPaint(Graphics2D g2){
-        String text = getDeviceName();
+
+    private void paintTextsUnderImage(Graphics2D g2) {
+        // get texts that have to be painted
+        List<String> texts = getTexts();
+        // create images from texts
+        List<BufferedImage> images = getTextsImages(texts, g2);
+        // paint images
+        paintTexts(g2, images);
         
+        //
+        /*
+        g2.setColor(Color.yellow);
+        
+        g2.drawRect(textX, textY, textW, textH);
+        
+        g2.setColor(Color.BLACK);
+        */
+    }
+
+    /**
+     * Paint imagess of texts centered in Y_axes under component image
+     * @param g2
+     * @param images 
+     */
+    private void paintTexts(Graphics2D g2, List<BufferedImage> images) {
+        int x;
+        //int y = getY() + getHeight()+1;
+        int y = getImageY() + getImageHeight()+1;
+
+        textX = Integer.MAX_VALUE;
+        textY = y;
+        textW = 0;
+        textH = 0;
+
+        for (BufferedImage image : images) {
+            //x = (int) (getX() - ((image.getWidth() - getWidth()) / 2.0));
+            x = (int) (getImageX() - ((image.getWidth() - getImageWidth()) / 2.0));
+            
+            g2.drawImage(image, x, y, null);
+
+            y = y + image.getHeight();// + margin;
+
+            // update sizes
+            if (x<textX) {
+                textX = x;
+            }
+            
+            if(image.getWidth()> textW){
+                textW = image.getWidth();
+            }
+            
+            textH = textH + image.getHeight();
+        }
+        
+        actualTextImageWidth = textW;
+        actualTextImageHeight = textH;
+    }
+
+    /**
+     * Creates images for givent texts
+     *
+     * @param texts
+     * @param g2
+     * @return
+     */
+    private List<BufferedImage> getTextsImages(List<String> texts, Graphics2D g2) {
         // create font
-        Font smallerFont = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
+        Font font = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
 
-        // set font and get font metrics
-        g2.setFont(smallerFont);
+        //
+        g2.setFont(font);
         FontMetrics fm = g2.getFontMetrics();
-        
-        int textWidth = fm.stringWidth(text);
-        int textHeight = fm.getAscent();
-        
-        BufferedImage textImage = imageFactory.getImageWithText(text, zoomManager.getCurrentFontSize(),
-                textWidth, textHeight);
-        
-        int margin = (int) (5 * zoomManager.getCurrentScale());
-        
-        int x = (int) (getX() - ((textImage.getWidth() - getWidth()) / 2.0));
-        int y = getY() + getHeight() + margin;// + textHeight;
-        
-        g2.drawImage(textImage, x, y, null);
-        
+
+        List<BufferedImage> images = new ArrayList<BufferedImage>();
+
+        for (String text : texts) {
+            images.add(getImageForText(fm, text, font));
+        }
+
+        return images;
     }
 
-    private void paintTexts(Graphics2D g2) {
+    /**
+     * Creates image for text in font with given FontMetrics
+     *
+     * @param fm
+     * @param text
+     * @param font
+     * @return
+     */
+    private BufferedImage getImageForText(FontMetrics fm, String text, Font font) {
+        int textWidth = fm.stringWidth(text);
+        int textHeight = fm.getAscent() + fm.getDescent();
+
+        return imageFactory.getImageWithText(text, font, textWidth, textHeight, fm.getMaxAscent());
+    }
+
+    /**
+     * Gets text that have to be displayed with this component.
+     *
+     * @return
+     */
+    private List<String> getTexts() {
         boolean paintType = false;
         boolean paintName = false;
 
@@ -115,23 +194,14 @@ public class HwComponent extends AbstractHwComponent {
                     paintName = true;
                     break;
             }
-        }else{ // if LOD not active
+        } else { // if LOD not active
             paintName = dataLayer.isViewDeviceNames();
             paintType = dataLayer.isViewDeviceTypes();
         }
 
-
-
-        if (paintName == false && paintType == false) {
-            return;
-        }
-
-        // create font
-        Font smallerFont = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
-
-        // set font and get font metrics
-        g2.setFont(smallerFont);
-        FontMetrics fm = g2.getFontMetrics();
+        /*
+         * if (paintName == false && paintType == false) { return null; }
+         */
 
         // list for texts
         List<String> texts = new ArrayList<String>();
@@ -144,57 +214,8 @@ public class HwComponent extends AbstractHwComponent {
             texts.add(getDeviceName());
         }
 
-        int textWidth, textHeight;
-        int margin = (int) (5 * zoomManager.getCurrentScale());
 
-        int x;
-        int y = getY() + getHeight() + margin;// + textHeight;
-
-        for (String text : texts) {
-            textWidth = fm.stringWidth(text);
-            textHeight = fm.getAscent();
-
-            x = (int) (getX() - ((textWidth - getWidth()) / 2.0));
-            y = y + textHeight;
-
-            // paint white border
-            g2.setColor(Color.WHITE);
-            g2.drawString(text, x + 1, y + 1);
-            g2.drawString(text, x + 1, y - 1);
-            g2.drawString(text, x - 1, y + 1);
-            g2.drawString(text, x - 1, y - 1);
-            g2.setColor(Color.BLACK);
-
-            g2.drawString(text, x, y);
-
-            y += margin;
-        }
-
+        return texts;
     }
 
-    @Override
-    public int getTextHeight() {
-        return 30;
-    }
 }
-
-/*
-Graphics2D g;                     // Initialized elsewhere
-Font f;                           // Initialized elsewhere
-String message = "Hello World!";  // The text to measure and display
-Rectangle2D box;                  // The display box: initialized elsewhere
-
-// Measure the font and the message
-FontRenderContext frc = g.getFontRenderContext();
-Rectangle2D bounds = f.getStringBounds(message, frc);
-LineMetrics metrics = f.getLineMetrics(message, frc);
-float width = (float) bounds.getWidth();     // The width of our text
-float lineheight = metrics.getHeight();      // Total line height
-float ascent = metrics.getAscent();          // Top of text to baseline
-
-// Now display the message centered horizontally and vertically in box
-float x0 = (float) (box.getX() + (box.getWidth() - width)/2);
-float y0 = (float) (box.getY() + (box.getHeight() - lineheight)/2 + ascent);
-g.setFont(f);
-g.drawString(message, x0, y0);
- */
