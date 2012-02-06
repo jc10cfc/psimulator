@@ -1,10 +1,12 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -48,7 +50,7 @@ public class HwComponent extends AbstractHwComponent {
 
         //create image in default zoom
         bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
-        
+
         // set image width and height in default zoom
         defaultZoomWidth = zoomManager.doScaleToDefault(bi.getWidth());
         defaultZoomHeight = zoomManager.doScaleToDefault(bi.getHeight());
@@ -66,25 +68,59 @@ public class HwComponent extends AbstractHwComponent {
 
         g2.drawImage(bi, getX(), getY(), null);
 
-        paintTexts(g2);
+        //paintTexts(g2);
+        brutalPaint(g2);
+    }
+    
+    private void brutalPaint(Graphics2D g2){
+        String text = getDeviceName();
+        
+        // create font
+        Font smallerFont = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
+
+        // set font and get font metrics
+        g2.setFont(smallerFont);
+        FontMetrics fm = g2.getFontMetrics();
+        
+        int textWidth = fm.stringWidth(text);
+        int textHeight = fm.getAscent();
+        
+        BufferedImage textImage = imageFactory.getImageWithText(text, zoomManager.getCurrentFontSize(),
+                textWidth, textHeight);
+        
+        int margin = (int) (5 * zoomManager.getCurrentScale());
+        
+        int x = (int) (getX() - ((textImage.getWidth() - getWidth()) / 2.0));
+        int y = getY() + getHeight() + margin;// + textHeight;
+        
+        g2.drawImage(textImage, x, y, null);
+        
     }
 
     private void paintTexts(Graphics2D g2) {
         boolean paintType = false;
         boolean paintName = false;
 
-        switch (zoomManager.getCurrentLevelOfDetails()) {
-            case LEVEL_1:
-                break;
-            case LEVEL_2:
-                paintName = true;
-                break;
-            case LEVEL_3:
-            default:
-                paintType = true;
-                paintName = true;
-                break;
+        // if LOD active
+        if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
+            switch (zoomManager.getCurrentLevelOfDetails()) {
+                case LEVEL_1:
+                    break;
+                case LEVEL_2:
+                    paintName = true;
+                    break;
+                case LEVEL_3:
+                default:
+                    paintType = true;
+                    paintName = true;
+                    break;
+            }
+        }else{ // if LOD not active
+            paintName = dataLayer.isViewDeviceNames();
+            paintType = dataLayer.isViewDeviceTypes();
         }
+
+
 
         if (paintName == false && paintType == false) {
             return;
@@ -123,17 +159,17 @@ public class HwComponent extends AbstractHwComponent {
 
             // paint white border
             g2.setColor(Color.WHITE);
-            g2.drawString(text, x+1, y+1);
-            g2.drawString(text, x+1, y-1);
-            g2.drawString(text, x-1, y+1);
-            g2.drawString(text, x-1, y-1);
+            g2.drawString(text, x + 1, y + 1);
+            g2.drawString(text, x + 1, y - 1);
+            g2.drawString(text, x - 1, y + 1);
+            g2.drawString(text, x - 1, y - 1);
             g2.setColor(Color.BLACK);
-            
+
             g2.drawString(text, x, y);
 
             y += margin;
         }
-        
+
     }
 
     @Override

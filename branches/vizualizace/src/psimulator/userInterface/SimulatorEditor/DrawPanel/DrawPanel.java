@@ -228,6 +228,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     public void update(Observable o, Object o1) {
 
         switch ((ObserverUpdateEventType) o1) {
+            case VIEW_DETAILS:
             case LANGUAGE:
                 // repaint
                 this.revalidate();
