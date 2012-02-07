@@ -3,11 +3,13 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -22,6 +24,12 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected int defaultZoomYPos;
     protected int defaultZoomWidth;
     protected int defaultZoomHeight;
+    // position of textRectangle in 1:1 zoom
+    //protected int defaultZoomTextXPos;
+    //protected int defaultZoomTextYPos;
+    protected int defaultZoomTextWidth;
+    protected int defaultZoomTextHeight;
+    //
     protected ZoomManager zoomManager;
     protected AbstractImageFactory imageFactory;
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
@@ -30,25 +38,14 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected String deviceName;
     protected HwTypeEnum hwComponentType;
     //
-    DataLayerFacade dataLayer;
-    
+    protected DataLayerFacade dataLayer;
     //
-    protected int actualTextImageWidth;
-    protected int actualTextImageHeight;
-
+    
     public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer, int interfacesCount) {
         super();
         this.dataLayer = dataLayer;
         this.zoomManager = zoomManager;
         this.imageFactory = imageFactory;
-
-        /*
-         * for(int i =0;i<interfacesCount;i++){ interfaces.add(new
-         * EthInterface("Eth"+i, null));
-        }
-         */
-
-
     }
 
     /**
@@ -98,7 +95,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
 
     @Override
     public boolean intersects(Point p) {
-         if ((p.x >= getX() && p.x <= getX() +bi.getWidth())
+        if ((p.x >= getX() && p.x <= getX() + bi.getWidth())
                 && (p.y >= getY() && p.y <= getY() + bi.getHeight())) {
             return true;
         } else {
@@ -111,6 +108,51 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         Rectangle rect = new Rectangle(getX(), getY(), bi.getWidth(), bi.getHeight());
         //Rectangle rect = new Rectangle(getX(), getY(), getWidth(), getHeight());
         return r.intersects(rect);
+    }
+    
+    /**
+     * Calculates intersecting point of this component and line made from inside and outside point.
+     * Inside point is in this component. Outside point is out of the component
+     * 
+     * @param insidePoint Point in actual zoom
+     * @param outsidePoint Point in actual zoom
+     * @return Point in actual zoom
+     */
+    public Point getIntersectingPoint(Point insidePoint, Point outsidePoint) {
+        // convert points to default zoom
+        insidePoint = zoomManager.doScaleToDefault(insidePoint);
+        outsidePoint = zoomManager.doScaleToDefault(outsidePoint);
+        
+        // rectangle around component image
+        Rectangle imageRectangle = new Rectangle(defaultZoomXPos, defaultZoomYPos, defaultZoomWidth, defaultZoomHeight);
+        
+        
+        int x = (int) (defaultZoomXPos - ((defaultZoomTextWidth - defaultZoomWidth )/2.0));
+        int y = defaultZoomYPos + defaultZoomHeight;
+        
+        // rectangle around component text labels
+        Rectangle textRectangle = new Rectangle(x, y,
+                defaultZoomTextWidth, defaultZoomTextHeight);
+        
+        Point intersection;
+        
+        Line2D line = new Line2D.Float();
+        line.setLine(insidePoint, outsidePoint);
+        
+        
+        // if line intersects text rectangle, set intersection as intersecting point with text rectangle
+        if(line.intersects(textRectangle)){
+            intersection = GraphicUtils.getIntersectingPoint(textRectangle, insidePoint, outsidePoint);
+        }else{ // set intersection as intersecting point with image rectangle
+            intersection = GraphicUtils.getIntersectingPoint(imageRectangle, insidePoint, outsidePoint);
+        }
+        
+        //intersection = GraphicUtils.getIntersectingPoint(imageRectangle, insidePoint, outsidePoint);
+        
+        intersection = zoomManager.doScaleToActual(intersection);
+        
+        
+        return intersection;
     }
 
     //----------- GETTERS AND SETTERS
@@ -140,8 +182,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         }
         return null;
     }
-    
-    public EthInterface getEthInterface(int index){
+
+    public EthInterface getEthInterface(int index) {
         return interfaces.get(index);
     }
 
@@ -208,6 +250,15 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     public Point getCenterLocation() {
         return new Point(getX() + getWidth() / 2, getY() + getHeight() / 2);
     }
+    
+    /**
+     * gets center of this component
+     *
+     * @return
+     */
+    public Point getCenterLocationDefault() {
+        return new Point(defaultZoomXPos + defaultZoomWidth / 2, defaultZoomYPos + defaultZoomTextHeight / 2);
+    }
 
     /**
      * gets center of this component
@@ -231,49 +282,20 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     @Override
     public int getWidth() {
         return zoomManager.doScaleToActual(defaultZoomWidth);
-        /*
-        if(zoomManager.doScaleToActual(defaultZoomWidth)< actualTextImageWidth){
-            return actualTextImageWidth;
-        }else{
-            return zoomManager.doScaleToActual(defaultZoomWidth);
-        }*/
     }
 
     @Override
     public int getHeight() {
         return zoomManager.doScaleToActual(defaultZoomHeight);// + getTextHeight();
-        //return zoomManager.doScaleToActual(defaultZoomHeight) + actualTextImageHeight+1;
     }
 
     @Override
     public int getX() {
         return zoomManager.doScaleToActual(defaultZoomXPos);
-        /*
-        if(zoomManager.doScaleToActual(defaultZoomWidth)< actualTextImageWidth){
-            return zoomManager.doScaleToActual(defaultZoomWidth) - (actualTextImageWidth/2);
-        }else{
-            return zoomManager.doScaleToActual(defaultZoomWidth);
-        }*/
     }
 
     @Override
     public int getY() {
-        return zoomManager.doScaleToActual(defaultZoomYPos);
-    }
-    
-    public int getImageWidth(){
-        return zoomManager.doScaleToActual(defaultZoomWidth);
-    }
-    
-    public int getImageHeight(){
-        return zoomManager.doScaleToActual(defaultZoomHeight);
-    }
-    
-    public int getImageX(){
-        return zoomManager.doScaleToActual(defaultZoomXPos);
-    }
-    
-    public int getImageY(){
         return zoomManager.doScaleToActual(defaultZoomYPos);
     }
 

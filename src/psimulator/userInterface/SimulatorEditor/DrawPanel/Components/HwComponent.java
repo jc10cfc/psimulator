@@ -1,6 +1,9 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +20,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class HwComponent extends AbstractHwComponent {
 
-    //private HwTypeEnum hwComponentType;
-    //private String imagePath;
-    /*
-     * public HwComponent(AbstractImageFactory imageFactory, ZoomManager
-     * zoomManager, HwTypeEnum hwComponentType, int interfacesCount, String
-     * imagePath, String name) {
-     */
-    int textX;
-    int textY;
-    int textW;
-    int textH;
-
+    
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer,
             HwTypeEnum hwComponentType, int interfacesCount) {
         super(imageFactory, zoomManager, dataLayer, interfacesCount);
@@ -69,9 +61,10 @@ public class HwComponent extends AbstractHwComponent {
             bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
         }
 
-        //g2.drawImage(bi, getX(), getY(), null);
-        g2.drawImage(bi, getImageX(), getImageY(), null);
-
+        // paint image
+        g2.drawImage(bi, getX(), getY(), null);
+        
+        // paint texts
         paintTextsUnderImage(g2);
     }
 
@@ -82,15 +75,6 @@ public class HwComponent extends AbstractHwComponent {
         List<BufferedImage> images = getTextsImages(texts, g2);
         // paint images
         paintTexts(g2, images);
-        
-        //
-        /*
-        g2.setColor(Color.yellow);
-        
-        g2.drawRect(textX, textY, textW, textH);
-        
-        g2.setColor(Color.BLACK);
-        */
     }
 
     /**
@@ -100,17 +84,16 @@ public class HwComponent extends AbstractHwComponent {
      */
     private void paintTexts(Graphics2D g2, List<BufferedImage> images) {
         int x;
-        //int y = getY() + getHeight()+1;
-        int y = getImageY() + getImageHeight()+1;
-
-        textX = Integer.MAX_VALUE;
-        textY = y;
-        textW = 0;
-        textH = 0;
+        int y = getY() + getHeight()+1;
+        
+        
+        int textX = Integer.MAX_VALUE;
+        int textY = y;
+        int textW = 0;
+        int textH = 0;
 
         for (BufferedImage image : images) {
-            //x = (int) (getX() - ((image.getWidth() - getWidth()) / 2.0));
-            x = (int) (getImageX() - ((image.getWidth() - getImageWidth()) / 2.0));
+            x = (int) (getX() - ((image.getWidth() - getWidth()) / 2.0));
             
             g2.drawImage(image, x, y, null);
 
@@ -128,8 +111,15 @@ public class HwComponent extends AbstractHwComponent {
             textH = textH + image.getHeight();
         }
         
-        actualTextImageWidth = textW;
-        actualTextImageHeight = textH;
+        //
+        //if(textX == Integer.MAX_VALUE){
+        //    textX = 0;
+        //}
+        
+        //defaultZoomTextXPos = zoomManager.doScaleToDefault(textX);
+        //defaultZoomTextYPos = zoomManager.doScaleToDefault(textY);
+        defaultZoomTextWidth = zoomManager.doScaleToDefault(textW);
+        defaultZoomTextHeight = zoomManager.doScaleToDefault(textH);
     }
 
     /**

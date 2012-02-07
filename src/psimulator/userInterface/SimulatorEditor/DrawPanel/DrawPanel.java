@@ -335,6 +335,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     public Graph removeGraph() {
         Graph tmp = graph;
         graph = null;
+        
+        imageFactory.clearTextBuffers();
 
         undoManager.discardAllEdits();
         zoomManager.zoomReset();
@@ -346,7 +348,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         if (this.graph != null) {
             removeGraph();
         }
-
+        
         this.graph = graph;
         graph.initialize(this, zoomManager);
     }

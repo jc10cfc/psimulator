@@ -44,6 +44,15 @@ public class ImageBuffer {
     }
     
     /**
+     * Clears Text image buffer
+     */
+    public void clearTextBuffers(){
+        for(Entry<String,HashMap<Integer, Image>> e : textLabelsBuffer.entrySet()){
+            e.getValue().clear();
+        }
+    }
+    
+    /**
      * Puts Image into buffer
      * @param text Text of string
      * @param size Font size

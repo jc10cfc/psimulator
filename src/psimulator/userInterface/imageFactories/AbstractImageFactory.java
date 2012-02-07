@@ -75,13 +75,13 @@ public abstract class AbstractImageFactory {
         image = imageBuffer.getBufferedImageWithText(text, font.getSize());
 
         if (image == null) {
-            System.out.println("MISS");
+            //System.out.println("MISS");
             // load image from file
             image = createImageWithText(text, font, textWidth, textHeigh, ascent);
             // put image into buffer
             imageBuffer.putBufferedImageWithText(text, font.getSize(), image);
         } else {
-            System.out.println("HIT");
+            //System.out.println("HIT");
         }
 
         return image;
@@ -367,7 +367,11 @@ public abstract class AbstractImageFactory {
     public void clearBuffer() {
         imageBuffer.clearBuffer();
     }
-
+    
+    public void clearTextBuffers(){
+        imageBuffer.clearTextBuffers();
+    }
+    
     private String getPath(HwTypeEnum type) {
         switch (type) {
             case CISCO_ROUTER:
