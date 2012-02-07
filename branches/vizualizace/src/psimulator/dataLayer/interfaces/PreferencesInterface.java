@@ -24,4 +24,5 @@ public interface PreferencesInterface {
     public void savePreferences();
     
     public void addPreferencesObserver(Observer observer);
+    public void deletePreferencesObserver(Observer observer);
 }

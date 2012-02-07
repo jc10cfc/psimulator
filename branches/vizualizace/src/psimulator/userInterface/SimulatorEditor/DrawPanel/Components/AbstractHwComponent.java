@@ -34,7 +34,9 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected AbstractImageFactory imageFactory;
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
     protected List<EthInterface> interfaces = new ArrayList<EthInterface>();
-    protected BufferedImage bi;
+    protected BufferedImage imageUnmarked;
+    protected BufferedImage imageMarked;
+    protected List<BufferedImage> textImages;
     protected String deviceName;
     protected HwTypeEnum hwComponentType;
     //
@@ -95,8 +97,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
 
     @Override
     public boolean intersects(Point p) {
-        if ((p.x >= getX() && p.x <= getX() + bi.getWidth())
-                && (p.y >= getY() && p.y <= getY() + bi.getHeight())) {
+        if ((p.x >= getX() && p.x <= getX() + imageUnmarked.getWidth())
+                && (p.y >= getY() && p.y <= getY() + imageUnmarked.getHeight())) {
             return true;
         } else {
             return false;
@@ -105,7 +107,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
 
     @Override
     public boolean intersects(Rectangle r) {
-        Rectangle rect = new Rectangle(getX(), getY(), bi.getWidth(), bi.getHeight());
+        Rectangle rect = new Rectangle(getX(), getY(), imageUnmarked.getWidth(), imageUnmarked.getHeight());
         //Rectangle rect = new Rectangle(getX(), getY(), getWidth(), getHeight());
         return r.intersects(rect);
     }

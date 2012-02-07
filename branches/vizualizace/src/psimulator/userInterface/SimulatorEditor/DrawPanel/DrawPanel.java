@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -84,6 +86,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         // add as a language observer
         dataLayer.addLanguageObserver((Observer) this);
+        dataLayer.addPreferencesObserver((Observer) this);
 
     }
 
@@ -227,6 +230,14 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     @Override
     public void update(Observable o, Object o1) {
 
+        // has to be here to perform before repaint
+        if(graph!=null){
+            graph.doUpdateImages();
+            
+            this.revalidate();
+            this.repaint();
+        }
+        
         switch ((ObserverUpdateEventType) o1) {
             case VIEW_DETAILS:
             case LANGUAGE:
@@ -336,6 +347,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         Graph tmp = graph;
         graph = null;
         
+        if(tmp!=null){
+            tmp.deInitialize(dataLayer);
+        }
+        
         imageFactory.clearTextBuffers();
 
         undoManager.discardAllEdits();
@@ -350,7 +365,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
         
         this.graph = graph;
-        graph.initialize(this, zoomManager);
+      
+        graph.initialize(this, zoomManager, dataLayer);
     }
 
     @Override

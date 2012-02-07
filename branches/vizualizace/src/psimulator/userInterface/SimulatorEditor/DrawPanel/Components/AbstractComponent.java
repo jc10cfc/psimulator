@@ -33,6 +33,9 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
     public abstract boolean intersects(Point p);
     public abstract boolean intersects(Rectangle r);
     
+    public abstract void doUpdateImages();
+    public abstract void initialize();
+    
     @Override
     public Integer getId(){
         return id;

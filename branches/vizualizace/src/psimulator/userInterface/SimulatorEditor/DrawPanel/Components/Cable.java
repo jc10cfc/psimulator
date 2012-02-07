@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
@@ -16,7 +15,8 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  * @author Martin
  */
 public class Cable extends AbstractComponent {
-
+    BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    //
     private DataLayerFacade dataLayer;
     private AbstractImageFactory imageFactory;
     private HwTypeEnum hwType;
@@ -25,10 +25,14 @@ public class Cable extends AbstractComponent {
     private AbstractHwComponent component2;
     private EthInterface eth1;
     private EthInterface eth2;
+    private BufferedImage eth1Image;
+    private BufferedImage eth2Image;
+    //
     private int delay;
     private Line2D line = new Line2D.Float();
     private Stroke stroke = new BasicStroke(3.5f);
-    int x1, y1, x2, y2;
+    //int x1, y1, x2, y2;
+    private boolean paintLabels;
 
     public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType, AbstractHwComponent component1,
             AbstractHwComponent component2, EthInterface eth1, EthInterface eth2, ZoomManager zoomManager) {
@@ -52,22 +56,38 @@ public class Cable extends AbstractComponent {
                 break;
         }
     }
-
-    public AbstractHwComponent getComponent1() {
-        return component1;
+    
+    @Override
+    public void initialize() {
+        doUpdateImages();
+    }
+    
+    @Override
+    public void doUpdateImages() {
+        
+        if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
+            switch (zoomManager.getCurrentLevelOfDetails()) {
+                case LEVEL_4:
+                    paintLabels = true;
+                    break;
+                default:
+                    paintLabels = false;
+                    break;
+            }
+        } else {
+            if (dataLayer.isViewInterfaceNames()) {
+                paintLabels = true;
+            } else {
+                paintLabels = false;
+            }
+        }
+        
+        // get images
+        eth1Image = getTextImage(eth1.getName());
+        eth2Image = getTextImage(eth2.getName());
     }
 
-    public AbstractHwComponent getComponent2() {
-        return component2;
-    }
-
-    public EthInterface getEth1() {
-        return eth1;
-    }
-
-    public EthInterface getEth2() {
-        return eth2;
-    }
+    
 
     public void paintComponent(Graphics g, int x1, int y1, int x2, int y2) {
         Graphics2D g2 = (Graphics2D) g;
@@ -103,43 +123,19 @@ public class Cable extends AbstractComponent {
         g2.setColor(tmpC);
         g2.setStroke(tmpS);
 
-        // paint labels
-        paintCableLabels(g2);
-
+        if(paintLabels){
+            // paint labels
+            paintCableLabels(g2);
+        }
     }
 
     private void paintCableLabels(Graphics2D g2) {
-        boolean paintLabels = false;
-
-        if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
-            switch (zoomManager.getCurrentLevelOfDetails()) {
-                case LEVEL_3:
-                    paintLabels = true;
-                    break;
-                default:
-                    paintLabels = false;
-                    break;
-            }
-        } else {
-            if (dataLayer.isViewInterfaceNames()) {
-                paintLabels = true;
-            } else {
-                paintLabels = false;
-            }
-        }
-
-        if (paintLabels) {
-            paintInterfaceName(g2, eth1, component1, true);
-            paintInterfaceName(g2, eth2, component2, false);
-        }
+        paintInterfaceName(g2, eth1Image, eth1, component1, true);
+        paintInterfaceName(g2, eth2Image, eth2, component2, false);
     }
 
-    private void paintInterfaceName(Graphics2D g2, EthInterface ethInterface, AbstractHwComponent component, boolean first) {
-        // get text to be painted
-        String text = ethInterface.getName();
-        // create images from texts
-        BufferedImage image = getTextImage(text, g2);
- 
+    private void paintInterfaceName(Graphics2D g2, BufferedImage image, EthInterface ethInterface, AbstractHwComponent component, boolean first) {
+        // get edpoints of line
         Point lineP1 = new Point((int)line.getP1().getX(), (int)line.getP1().getY());
         Point lineP2 = new Point((int)line.getP2().getX(), (int)line.getP2().getY());
 
@@ -200,7 +196,9 @@ public class Cable extends AbstractComponent {
      * @param g2
      * @return
      */
-    private BufferedImage getTextImage(String text, Graphics2D g2) {
+    private BufferedImage getTextImage(String text){//, Graphics2D g2) {
+        Graphics2D g2 = (Graphics2D)bufferedImage.getGraphics();
+    
         // create font
         Font font = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
 
@@ -224,6 +222,23 @@ public class Cable extends AbstractComponent {
         int textHeight = fm.getAscent() + fm.getDescent();
 
         return imageFactory.getImageWithText(text, font, textWidth, textHeight, fm.getMaxAscent());
+    }
+    
+    
+    public AbstractHwComponent getComponent1() {
+        return component1;
+    }
+
+    public AbstractHwComponent getComponent2() {
+        return component2;
+    }
+
+    public EthInterface getEth1() {
+        return eth1;
+    }
+
+    public EthInterface getEth2() {
+        return eth2;
     }
 
     @Override
@@ -302,4 +317,6 @@ public class Cable extends AbstractComponent {
     public HwTypeEnum getHwType() {
         return hwType;
     }
+
+    
 }

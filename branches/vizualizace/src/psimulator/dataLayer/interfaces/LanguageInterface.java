@@ -13,4 +13,5 @@ public interface LanguageInterface {
     public String getString(String string);
     
     public void addLanguageObserver(Observer observer);
+    public void deleteLanguageObserver(Observer observer);
 }
