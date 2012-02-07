@@ -244,7 +244,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      */
     private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterface eth1, EthInterface eth2) {
         // create new cabel
-        Cable cable = new Cable(createCableTool.getHwType(), c1, c2, eth1, eth2, zoomManager);
+        Cable cable = new Cable(dataLayer, drawPanel.getImageFactory(), createCableTool.getHwType(), c1, c2, eth1, eth2, zoomManager);
         
         // add cabel to graph
         drawPanel.getGraphOuterInterface().addCable(cable);
