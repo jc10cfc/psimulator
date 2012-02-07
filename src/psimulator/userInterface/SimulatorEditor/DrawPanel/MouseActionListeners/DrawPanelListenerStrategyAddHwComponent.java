@@ -50,6 +50,8 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         System.out.println("Time = "+System.currentTimeMillis());
         AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, dataLayer,
                 addDeviceTool.getHwType(), addDeviceTool.getInterfaces());
+        
+        component.initialize();
 
         // set position of new component
         component.setLocationByMiddlePoint(e.getPoint());

@@ -74,6 +74,16 @@ public class DataLayer extends DataLayerFacade{
     }
     
     @Override
+    public void deletePreferencesObserver(Observer observer) {
+        preferencesManager.deleteObserver(observer);
+    }
+
+    @Override
+    public void deleteLanguageObserver(Observer observer) {
+        languageManager.deleteObserver(observer);
+    }
+    
+    @Override
     public void addSimulatorObserver(Observer observer) {
         simulatorManager.addObserver(observer);
     }
@@ -132,4 +142,6 @@ public class DataLayer extends DataLayerFacade{
     public void setLevelOfDetails(LevelOfDetailsMode levelOfDetails) {
         preferencesManager.setLevelOfDetails(levelOfDetails);
     }
+
+    
 }

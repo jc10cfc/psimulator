@@ -31,6 +31,13 @@ public class BundleOfCables extends AbstractComponent{
         this.zoomManager = zoomManager;
     }
     
+    @Override
+    public void doUpdateImages() {
+        for (Cable c : cables) {
+            c.doUpdateImages();
+        }
+    }
+    
     public AbstractHwComponent getComponent1(){
         return component1;
     }
@@ -193,5 +200,10 @@ public class BundleOfCables extends AbstractComponent{
         Rectangle r = new Rectangle(p.x - difference, p.y - difference,
                 2 * difference, 2 * difference);
         return r;
+    }
+
+    @Override
+    public void initialize() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

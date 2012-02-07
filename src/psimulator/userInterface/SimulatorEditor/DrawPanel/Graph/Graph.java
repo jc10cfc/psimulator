@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 import javax.swing.JComponent;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelSizeChangeInnerInterface;
@@ -35,7 +36,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         
     }
     
-    public void initialize(DrawPanelSizeChangeInnerInterface drawPanel, ZoomManager zoomManager){
+    public void initialize(DrawPanelSizeChangeInnerInterface drawPanel, ZoomManager zoomManager, DataLayerFacade dataLayer){
         this.zoomManager = zoomManager;
         this.drawPanel = drawPanel;
 
@@ -43,10 +44,14 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         grid = new Grid((GraphOuterInterface) this, zoomManager);
 
         zoomManager.addObserver((Observer) this);
+        dataLayer.addPreferencesObserver((Observer) this);
+        dataLayer.addLanguageObserver((Observer) this);
     }
     
-    public void deInitialize(){
+    public void deInitialize(DataLayerFacade dataLayer){
         zoomManager.deleteObserver(this);
+        dataLayer.deleteLanguageObserver(this);
+        dataLayer.deleteLanguageObserver(this);
         drawPanel = null;
         zoomManager = null;
         grid = null;
@@ -54,6 +59,38 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
     @Override
     public void update(Observable o, Object o1) {
+        //System.out.println("Updatuju Graph");
+ 
+        /*
+        // get Collection of values contained in LinkedHashMap
+        Collection<AbstractHwComponent> colection = componentsMap.values();
+        // obtain an Iterator for Collection
+        Iterator<AbstractHwComponent> it = colection.iterator();
+        
+        // get all marked components
+        while (it.hasNext()) {
+            it.next().doUpdateImages();
+        }
+        
+        for(BundleOfCables boc : bundlesOfCables){
+            boc.doUpdateImages();
+        }*/
+    }
+    
+    public void doUpdateImages(){
+        // get Collection of values contained in LinkedHashMap
+        Collection<AbstractHwComponent> colection = componentsMap.values();
+        // obtain an Iterator for Collection
+        Iterator<AbstractHwComponent> it = colection.iterator();
+        
+        // get all marked components
+        while (it.hasNext()) {
+            it.next().doUpdateImages();
+        }
+        
+        for(BundleOfCables boc : bundlesOfCables){
+            boc.doUpdateImages();
+        }
     }
 
     @Override

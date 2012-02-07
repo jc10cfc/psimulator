@@ -19,7 +19,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  * @author Martin
  */
 public class HwComponent extends AbstractHwComponent {
-
+    BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer,
             HwTypeEnum hwComponentType, int interfacesCount) {
@@ -39,16 +39,28 @@ public class HwComponent extends AbstractHwComponent {
             interfaces.add(new EthInterface(ethInterfaceNames.get(i), null));
         }
 
-        // if custom image needed, imagePath is required
-        //bi = imageFactory.getImage(hwComponentType, imagePath, zoomManager.getIconWidthDefaultZoom(), true);
-
-
-        //create image in default zoom
-        bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
-
+    }
+    
+    @Override
+    public void initialize() {
+        doUpdateImages();
+ 
         // set image width and height in default zoom
-        defaultZoomWidth = zoomManager.doScaleToDefault(bi.getWidth());
-        defaultZoomHeight = zoomManager.doScaleToDefault(bi.getHeight());
+        defaultZoomWidth = zoomManager.doScaleToDefault(imageUnmarked.getWidth());
+        defaultZoomHeight = zoomManager.doScaleToDefault(imageUnmarked.getHeight());
+    }
+    
+    @Override
+    public final void doUpdateImages() {
+        // get new images of icons
+        imageUnmarked = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
+        imageMarked = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), true);
+        
+        // get texts that have to be painted
+        List<String> texts = getTexts();
+        System.out.println("Texts ="+texts);
+        //textImages = getTextsImages(texts, (Graphics2D) this.getGraphics());
+        textImages = getTextsImages(texts);
     }
 
     @Override
@@ -56,25 +68,19 @@ public class HwComponent extends AbstractHwComponent {
         Graphics2D g2 = (Graphics2D) g;
 
         if (isMarked()) {
-            bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), true);
+            // paint image
+            g2.drawImage(imageMarked, getX(), getY(), null);
         } else {
-            bi = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
+            // paint image
+            g2.drawImage(imageUnmarked, getX(), getY(), null);
         }
 
-        // paint image
-        g2.drawImage(bi, getX(), getY(), null);
-        
         // paint texts
         paintTextsUnderImage(g2);
     }
 
     private void paintTextsUnderImage(Graphics2D g2) {
-        // get texts that have to be painted
-        List<String> texts = getTexts();
-        // create images from texts
-        List<BufferedImage> images = getTextsImages(texts, g2);
-        // paint images
-        paintTexts(g2, images);
+        paintTexts(g2, textImages);
     }
 
     /**
@@ -129,7 +135,10 @@ public class HwComponent extends AbstractHwComponent {
      * @param g2
      * @return
      */
-    private List<BufferedImage> getTextsImages(List<String> texts, Graphics2D g2) {
+    //private List<BufferedImage> getTextsImages(List<String> texts, Graphics2D g2) {
+    private List<BufferedImage> getTextsImages(List<String> texts) {
+        Graphics2D g2 = (Graphics2D)bufferedImage.getGraphics();
+        
         // create font
         Font font = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
 
@@ -179,6 +188,7 @@ public class HwComponent extends AbstractHwComponent {
                     paintName = true;
                     break;
                 case LEVEL_3:
+                case LEVEL_4:
                 default:
                     paintType = true;
                     paintName = true;

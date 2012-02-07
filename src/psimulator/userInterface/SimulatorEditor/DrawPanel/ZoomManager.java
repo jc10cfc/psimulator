@@ -207,8 +207,10 @@ public class ZoomManager extends Observable {
             return LevelOfDetail.LEVEL_1;
         }else if(scale < 0.6){
             return LevelOfDetail.LEVEL_2;
-        }else{
+        }else if(scale < 0.8){
             return LevelOfDetail.LEVEL_3;   
+        }else{
+            return LevelOfDetail.LEVEL_4;   
         }
     }
 }
