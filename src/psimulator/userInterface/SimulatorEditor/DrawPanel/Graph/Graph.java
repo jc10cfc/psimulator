@@ -249,8 +249,16 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     
     @Override
     public void addCable(Cable cable) {
+        
+        
         // get bundle of cables between c1 and c2
         BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
+        
+        // set component1 and component2 in calbe and bundle of cables the same
+        if(cable.getComponent1() != boc.getComponent1()){
+            cable.swapComponentsAndEthInterfaces();
+        }
+        
         boc.addCable(cable);
         cable.getEth1().setCable(cable);
         cable.getEth2().setCable(cable);

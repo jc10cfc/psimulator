@@ -27,6 +27,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private JCheckBox jCheckBoxDeviceName;
     private JCheckBox jCheckBoxInterfaceName;
     private JCheckBox jCheckBoxCableDelay;
+    private JCheckBox jCheckBoxIpAddresses;
+    private JCheckBox jCheckBoxMacAddresses;
     private JRadioButton jRadioButtonManualLOD;
     private JRadioButton jRadioButtonAutoLOD;
     /*
@@ -42,6 +44,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private boolean viewDeviceTypes;
     private boolean viewInterfaceNames;
     private boolean viewCableDelay;
+    private boolean viewIpAddresses;
+    private boolean viewMacAddresses;
     //
     private LevelOfDetailsMode levelOfDetails;
     /*
@@ -78,6 +82,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         viewDeviceTypes = dataLayer.isViewDeviceTypes();
         viewInterfaceNames = dataLayer.isViewInterfaceNames();
         viewCableDelay = dataLayer.isViewCableDelay();
+        viewIpAddresses = dataLayer.isViewIpAddresses();
+        viewMacAddresses = dataLayer.isViewMacAddresses();
         levelOfDetails = dataLayer.getLevelOfDetails();
     }
 
@@ -89,6 +95,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         viewDeviceTypes = jCheckBoxDeviceType.isSelected();
         viewInterfaceNames = jCheckBoxInterfaceName.isSelected();
         viewCableDelay = jCheckBoxCableDelay.isSelected();
+        viewIpAddresses = jCheckBoxIpAddresses.isSelected();
+        viewMacAddresses = jCheckBoxMacAddresses.isSelected();
     }
 
     @Override
@@ -100,8 +108,10 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         dataLayer.setViewDeviceTypes(viewDeviceTypes);
         dataLayer.setViewInterfaceNames(viewInterfaceNames);
         dataLayer.setViewCableDelay(viewCableDelay);
+        dataLayer.setViewIpAddresses(viewIpAddresses);
+        dataLayer.setViewMacAddresses(viewMacAddresses);
         dataLayer.setLevelOfDetails(levelOfDetails);
-
+        
         // save preferences 
         dataLayer.savePreferences();
     }
@@ -131,11 +141,19 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         if(viewCableDelay != dataLayer.isViewCableDelay()){
             return true;
         }
+        
+        if(viewIpAddresses != dataLayer.isViewIpAddresses()){
+            return true;
+        }
+        
+        if(viewMacAddresses != dataLayer.isViewMacAddresses()){
+            return true;
+        }
 
         if (levelOfDetails != dataLayer.getLevelOfDetails()) {
             return true;
         }
-
+        
         return false;
     }
 
@@ -236,6 +254,16 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         jCheckBoxCableDelay.setAlignmentX(Component.LEFT_ALIGNMENT);
         jCheckBoxCableDelay.setSelected(viewCableDelay);
         checkBoxesPanel.add(jCheckBoxCableDelay);
+        
+        jCheckBoxIpAddresses = new JCheckBox(dataLayer.getString("IP_ADDRESSES"));
+        jCheckBoxIpAddresses.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jCheckBoxIpAddresses.setSelected(viewIpAddresses);
+        checkBoxesPanel.add(jCheckBoxIpAddresses);
+        
+        jCheckBoxMacAddresses = new JCheckBox(dataLayer.getString("MAC_ADDRESSES"));
+        jCheckBoxMacAddresses.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jCheckBoxMacAddresses.setSelected(viewMacAddresses);
+        checkBoxesPanel.add(jCheckBoxMacAddresses);
         
         //
         detailsPanel.add(autoManualPanel);
@@ -379,12 +407,16 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
                 jCheckBoxDeviceType.setEnabled(true);
                 jCheckBoxInterfaceName.setEnabled(true);
                 jCheckBoxCableDelay.setEnabled(true);
+                jCheckBoxIpAddresses.setEnabled(true);
+                jCheckBoxMacAddresses.setEnabled(true);
                 break;
             case AUTO:
                 jCheckBoxDeviceName.setEnabled(false);
                 jCheckBoxDeviceType.setEnabled(false);
                 jCheckBoxInterfaceName.setEnabled(false);
                 jCheckBoxCableDelay.setEnabled(false);
+                jCheckBoxIpAddresses.setEnabled(false);
+                jCheckBoxMacAddresses.setEnabled(false);
                 break;
         }
     }

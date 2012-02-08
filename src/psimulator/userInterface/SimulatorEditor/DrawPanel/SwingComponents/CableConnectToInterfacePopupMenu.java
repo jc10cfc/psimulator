@@ -1,11 +1,8 @@
-package psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs;
+package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.*;
 import javax.swing.event.PopupMenuListener;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
@@ -51,10 +48,12 @@ public class CableConnectToInterfacePopupMenu extends JPopupMenu {
         
         int i = 0;
         
+        Icon icon = new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/eth_interface_image.png"));
+        
         // create menu items
         for(EthInterface ei : component.getInterfaces()){
             // new menu item
-            items[i] = new JMenuItem(ei.getName());
+            items[i] = new JMenuItem(ei.getName(), icon);
             // if EthInterface in use, marked as disabled
             if(ei.hasCable()){
                 items[i].setEnabled(false);
@@ -65,6 +64,7 @@ public class CableConnectToInterfacePopupMenu extends JPopupMenu {
             interfaceGroup.add(items[ i]);
             // add action listener to item
             items[i].addActionListener(handler);
+            
             // increase counter
             i++;
         }

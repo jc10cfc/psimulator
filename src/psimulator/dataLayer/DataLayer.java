@@ -153,5 +153,25 @@ public class DataLayer extends DataLayerFacade{
         preferencesManager.setViewCableDelay(viewCableDelay);
     }
 
+    @Override
+    public boolean isViewIpAddresses() {
+        return preferencesManager.isViewIpAddresses();
+    }
+
+    @Override
+    public void setViewIpAddresses(boolean viewIpAddresses) {
+        preferencesManager.setViewIpAddresses(viewIpAddresses);
+    }
+
+    @Override
+    public boolean isViewMacAddresses() {
+        return preferencesManager.isViewMacAddresses();
+    }
+
+    @Override
+    public void setViewMacAddresses(boolean viewMacAddresses) {
+        preferencesManager.setViewMacAddresses(viewMacAddresses);
+    }
+
     
 }

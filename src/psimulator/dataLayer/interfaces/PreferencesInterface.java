@@ -22,6 +22,11 @@ public interface PreferencesInterface {
     public void setViewInterfaceNames(boolean viewInterfaceNames);
     public boolean isViewCableDelay();
     public void setViewCableDelay(boolean viewCableDelay);
+    public boolean isViewIpAddresses();
+    public void setViewIpAddresses(boolean viewIpAddresses);
+    public boolean isViewMacAddresses();
+    public void setViewMacAddresses(boolean viewMacAddresses);
+    
     
     public void savePreferences();
     

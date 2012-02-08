@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
@@ -16,38 +18,38 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  * @author Martin
  */
 public class Cable extends AbstractComponent {
-    BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-    //
+
     private DataLayerFacade dataLayer;
-    private AbstractImageFactory imageFactory;
     private HwTypeEnum hwType;
-    private ZoomManager zoomManager;
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
     private EthInterface eth1;
     private EthInterface eth2;
-    private BufferedImage eth1Image;
-    private BufferedImage eth2Image;
+    //
     private BufferedImage delayImage;
+    //
+    protected List<BufferedImage> eth1TextImages;
+    protected List<BufferedImage> eth2TextImages;
     //
     private int delay;
     private Line2D line = new Line2D.Float();
     private Stroke stroke = new BasicStroke(3.5f);
     //int x1, y1, x2, y2;
-    private boolean paintLabels;
-    private boolean paintDelay;
+    private boolean paintInterfaceNames = false;
+    private boolean paintIpAddress = false;
+    private boolean paintMacAddress = false;
+    private boolean paintDelay = false;
 
     public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType, AbstractHwComponent component1,
             AbstractHwComponent component2, EthInterface eth1, EthInterface eth2, ZoomManager zoomManager) {
+        super(imageFactory, zoomManager);
         this.dataLayer = dataLayer;
-        this.imageFactory = imageFactory;
         this.hwType = hwType;
         this.component1 = component1;
         this.component2 = component2;
         this.eth1 = eth1;
         this.eth2 = eth2;
-        this.zoomManager = zoomManager;
-
+        
         // set delay according to type
         switch (hwType) {
             case CABLE_ETHERNET:
@@ -59,47 +61,31 @@ public class Cable extends AbstractComponent {
                 break;
         }
     }
-    
+
     @Override
     public void initialize() {
         doUpdateImages();
     }
-    
+
     @Override
     public void doUpdateImages() {
-        
-        if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
-            switch (zoomManager.getCurrentLevelOfDetails()) {
-                case LEVEL_4:
-                    paintDelay = true;
-                    paintLabels = true;
-                    break;
-                default:
-                    paintDelay = false;
-                    paintLabels = false;
-                    break;
-            }
-        } else {
-            if (dataLayer.isViewInterfaceNames()) {
-                paintLabels = true;
-            } else {
-                paintLabels = false;
-            }
-            if(dataLayer.isViewCableDelay()){
-                paintDelay = true;
-            }else{
-                paintDelay = false;
-            }
-        }
-        
-        // get images
-        eth1Image = getTextImage(eth1.getName());
-        eth2Image = getTextImage(eth2.getName());
-        
-        delayImage = getTextImage(""+delay);
-    }
+        // get delay image
+        delayImage = getTextImage("" + delay, zoomManager.getCurrentFontSize() - 2);
 
-    
+        // set what needs to be painted
+        setWhatToPaint();
+
+        // get texts that have to be painted
+        List<String> texts = getInterfaceTexts(eth1);
+        
+        // get images that have to be painted
+        eth1TextImages = getTextsImages(texts, zoomManager.getCurrentFontSize() - 2);
+        
+        texts = getInterfaceTexts(eth2);
+        
+        // get images that have to be painted
+        eth2TextImages = getTextsImages(texts, zoomManager.getCurrentFontSize() - 2);
+    }
 
     public void paintComponent(Graphics g, int x1, int y1, int x2, int y2) {
         Graphics2D g2 = (Graphics2D) g;
@@ -135,45 +121,47 @@ public class Cable extends AbstractComponent {
         g2.setColor(tmpC);
         g2.setStroke(tmpS);
 
-        if(paintLabels){
-            // paint labels
-            paintCableLabels(g2);
-        }
         
-        if(paintDelay){
+        paintCableLabels(g2);
+
+        if (paintDelay) {
             // paint delay
             paintDelayLabel(g2);
         }
     }
-    
-    private void paintDelayLabel(Graphics2D g2){
+
+    private void paintDelayLabel(Graphics2D g2) {
         Point middlePoint = GraphicUtils.getMiddlePoint(line.getX1(), line.getY1(), line.getX2(), line.getY2());
-        
+
         g2.drawImage(delayImage, middlePoint.x, middlePoint.y, null);
     }
 
     private void paintCableLabels(Graphics2D g2) {
-        paintInterfaceName(g2, eth1Image, component1, true);
-        paintInterfaceName(g2, eth2Image, component2, false);
+        if(eth1TextImages!=null && !eth1TextImages.isEmpty()){
+            paintInterfaceLabels(g2, eth1TextImages, component1, true);
+        }
+        if(eth2TextImages!=null && !eth2TextImages.isEmpty()){
+            paintInterfaceLabels(g2, eth2TextImages, component2, false);
+        }
     }
 
-    private void paintInterfaceName(Graphics2D g2, BufferedImage image, AbstractHwComponent component, boolean first) {
+    private void paintInterfaceLabels(Graphics2D g2, List<BufferedImage> images, AbstractHwComponent component, boolean first) {
         // get edpoints of line
-        Point lineP1 = new Point((int)line.getP1().getX(), (int)line.getP1().getY());
-        Point lineP2 = new Point((int)line.getP2().getX(), (int)line.getP2().getY());
+        Point lineP1 = new Point((int) line.getP1().getX(), (int) line.getP1().getY());
+        Point lineP2 = new Point((int) line.getP2().getX(), (int) line.getP2().getY());
 
         Point intersection;
-        
-        if(first){
+
+        if (first) {
             // P1 inside
             intersection = component.getIntersectingPoint(lineP1, lineP2);
-        }else{
+        } else {
             // P2 inside
             intersection = component.getIntersectingPoint(lineP2, lineP1);
         }
-  
+
         // paint images
-        paintText(g2, image, component, intersection);
+        paintTexts(g2, images, component, intersection);
     }
 
     /**
@@ -182,72 +170,120 @@ public class Cable extends AbstractComponent {
      * @param g2
      * @param images
      */
-    private void paintText(Graphics2D g2, BufferedImage image, AbstractHwComponent component, Point intersectingPoint) {
+    private void paintTexts(Graphics2D g2, List<BufferedImage> images, AbstractHwComponent component, Point intersectingPoint) {
         int x;
         int y;
         
+        int width = 0;
+        int height = 0;
+        
+        boolean leftAlign;
+        
+        
+        for (BufferedImage image : images) {
+            if(image.getWidth() > width){
+                width = image.getWidth();
+            }
+            height += image.getHeight();
+        }
+
         // left
-        if( intersectingPoint.x <= component.getCenterLocation().x){
-            if(intersectingPoint.y <= component.getCenterLocation().y){
+        if (intersectingPoint.x <= component.getCenterLocation().x) {
+            if (intersectingPoint.y <= component.getCenterLocation().y) {
                 // upper left
-                x = intersectingPoint.x - image.getWidth();
-                y = intersectingPoint.y - image.getHeight();
-            }else{
+                x = intersectingPoint.x - width;
+                y = intersectingPoint.y - height;
+            } else {
                 // lower left
-                x = intersectingPoint.x - image.getWidth();
+                x = intersectingPoint.x - width;
                 y = intersectingPoint.y;
             }
-        }else{  // right
-            if(intersectingPoint.y <= component.getCenterLocation().y){
+            leftAlign = false;
+        } else {  // right
+            if (intersectingPoint.y <= component.getCenterLocation().y) {
                 // upper right
                 x = intersectingPoint.x;
-                y = intersectingPoint.y - image.getHeight();
-            }else{
+                y = intersectingPoint.y - height;
+            } else {
                 // lower right
                 x = intersectingPoint.x;
                 y = intersectingPoint.y;
             }
+            leftAlign = true;
         }
         
-        g2.drawImage(image, x, y, null);
+        int tmpX;
+        int tmpY;
+        
+        tmpX = x;
+        tmpY = y;
+        
+        
+        for (BufferedImage image : images) {
+            //x = (int) (getX() - ((image.getWidth() - getWidth()) / 2.0));
+            if(!leftAlign){ // right align
+                tmpX = x + width - image.getWidth();
+            }
+            
+            g2.drawImage(image, tmpX, tmpY, null);
+
+            tmpY = tmpY + image.getHeight();// + margin;
+        }
+    }
+
+
+    private void setWhatToPaint() {
+        if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
+            switch (zoomManager.getCurrentLevelOfDetails()) {
+                case LEVEL_4:
+                    paintDelay = true;
+                    paintInterfaceNames = true;
+                    paintIpAddress = true;
+                    paintMacAddress = true;
+                    break;
+                default:
+                    paintDelay = false;
+                    paintInterfaceNames = false;
+                    paintIpAddress = false;
+                    paintMacAddress = false;
+                    break;
+            }
+        } else { // if LOD not active
+            paintDelay = dataLayer.isViewCableDelay();
+            paintInterfaceNames = dataLayer.isViewInterfaceNames();
+            paintIpAddress = dataLayer.isViewIpAddresses();
+            paintMacAddress = dataLayer.isViewMacAddresses();
+        }
     }
 
     /**
-     * Creates images for givent texts
+     * Gets text that have to be displayed with this component.
      *
-     * @param texts
-     * @param g2
      * @return
      */
-    private BufferedImage getTextImage(String text){//, Graphics2D g2) {
-        Graphics2D g2 = (Graphics2D)bufferedImage.getGraphics();
-    
-        // create font
-        Font font = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
+    private List<String> getInterfaceTexts(EthInterface ethInterface) {
+        // list for texts
+        List<String> texts = new ArrayList<String>();
 
-        //
-        g2.setFont(font);
-        FontMetrics fm = g2.getFontMetrics();
+        if (paintInterfaceNames) {
+            texts.add(ethInterface.getName());
+        }
 
-        return getImageForText(fm, text, font);
+        if (paintIpAddress) {
+            if (!ethInterface.getIpAddress().isEmpty()) {
+                texts.add(ethInterface.getIpAddress());
+            }
+        }
+
+        if (paintMacAddress) {
+            if (!ethInterface.getMacAddress().isEmpty()) {
+                texts.add(ethInterface.getMacAddress());
+            }
+        }
+
+        return texts;
     }
 
-    /**
-     * Creates image for text in font with given FontMetrics
-     *
-     * @param fm
-     * @param text
-     * @param font
-     * @return
-     */
-    private BufferedImage getImageForText(FontMetrics fm, String text, Font font) {
-        int textWidth = fm.stringWidth(text);
-        int textHeight = fm.getAscent() + fm.getDescent();
-
-        return imageFactory.getImageWithText(text, font, textWidth, textHeight, fm.getMaxAscent());
-    }
-    
-    
     public AbstractHwComponent getComponent1() {
         return component1;
     }
@@ -340,6 +376,14 @@ public class Cable extends AbstractComponent {
     public HwTypeEnum getHwType() {
         return hwType;
     }
-
     
+    public void swapComponentsAndEthInterfaces(){
+        AbstractHwComponent tmpComponent = component1;
+        component1 = component2;
+        component2 = tmpComponent;
+        
+        EthInterface tmpImterface = eth1;
+        eth1 = eth2;
+        eth2 = tmpImterface;
+    }
 }

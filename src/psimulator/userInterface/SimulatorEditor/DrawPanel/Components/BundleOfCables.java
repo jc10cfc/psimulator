@@ -14,7 +14,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
  */
 public class BundleOfCables extends AbstractComponent{
 
-    private ZoomManager zoomManager;
+    //private ZoomManager zoomManager;
     
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
@@ -25,6 +25,8 @@ public class BundleOfCables extends AbstractComponent{
     
     
     public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2, ZoomManager zoomManager){
+        super(null, zoomManager);
+        
         cables = new ArrayList<Cable>();
         this.component1 = component1;
         this.component2 = component2;

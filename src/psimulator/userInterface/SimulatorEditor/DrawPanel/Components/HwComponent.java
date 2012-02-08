@@ -1,7 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -19,8 +17,6 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  * @author Martin
  */
 public class HwComponent extends AbstractHwComponent {
-    BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-    
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer,
             HwTypeEnum hwComponentType, int interfacesCount) {
         super(imageFactory, zoomManager, dataLayer, interfacesCount);
@@ -36,7 +32,7 @@ public class HwComponent extends AbstractHwComponent {
 
         // create interfaces
         for (int i = 0; i < interfacesCount; i++) {
-            interfaces.add(new EthInterface(ethInterfaceNames.get(i), null));
+            interfaces.add(new EthInterface(ethInterfaceNames.get(i), null, hwComponentType));
         }
 
     }
@@ -58,7 +54,7 @@ public class HwComponent extends AbstractHwComponent {
         
         // get texts that have to be painted
         List<String> texts = getTexts();
-        textImages = getTextsImages(texts);
+        textImages = getTextsImages(texts, zoomManager.getCurrentFontSize());
     }
 
     @Override
@@ -115,57 +111,8 @@ public class HwComponent extends AbstractHwComponent {
             textH = textH + image.getHeight();
         }
         
-        //
-        //if(textX == Integer.MAX_VALUE){
-        //    textX = 0;
-        //}
-        
-        //defaultZoomTextXPos = zoomManager.doScaleToDefault(textX);
-        //defaultZoomTextYPos = zoomManager.doScaleToDefault(textY);
         defaultZoomTextWidth = zoomManager.doScaleToDefault(textW);
         defaultZoomTextHeight = zoomManager.doScaleToDefault(textH);
-    }
-
-    /**
-     * Creates images for givent texts
-     *
-     * @param texts
-     * @param g2
-     * @return
-     */
-    //private List<BufferedImage> getTextsImages(List<String> texts, Graphics2D g2) {
-    private List<BufferedImage> getTextsImages(List<String> texts) {
-        Graphics2D g2 = (Graphics2D)bufferedImage.getGraphics();
-        
-        // create font
-        Font font = new Font("SanSerif", Font.PLAIN, zoomManager.getCurrentFontSize());
-
-        //
-        g2.setFont(font);
-        FontMetrics fm = g2.getFontMetrics();
-
-        List<BufferedImage> images = new ArrayList<BufferedImage>();
-
-        for (String text : texts) {
-            images.add(getImageForText(fm, text, font));
-        }
-
-        return images;
-    }
-
-    /**
-     * Creates image for text in font with given FontMetrics
-     *
-     * @param fm
-     * @param text
-     * @param font
-     * @return
-     */
-    private BufferedImage getImageForText(FontMetrics fm, String text, Font font) {
-        int textWidth = fm.stringWidth(text);
-        int textHeight = fm.getAscent() + fm.getDescent();
-
-        return imageFactory.getImageWithText(text, font, textWidth, textHeight, fm.getMaxAscent());
     }
 
     /**
