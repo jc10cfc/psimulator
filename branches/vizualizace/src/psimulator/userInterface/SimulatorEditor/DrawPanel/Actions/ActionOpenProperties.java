@@ -45,6 +45,9 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
             // open properties window
             HwComponentProperties hwComponentProperties = new HwComponentProperties(mainWindow.getMainWindowComponent(), dataLayer, drawPanel, abstractHwComponent);
             
+            // 
+            drawPanel.doUpdateImages();
+            
             return;
         }else if(graph.getMarkedCablesCount() == 1){
             // get calbe
@@ -58,6 +61,9 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
             
             // open properties window
             CableProperties cableProperties = new CableProperties(mainWindow.getMainWindowComponent(), dataLayer, cable);
+       
+            // 
+            drawPanel.doUpdateImages();
             
             return;
         }

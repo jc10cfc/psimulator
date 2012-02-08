@@ -130,11 +130,11 @@ public class Cable extends AbstractComponent {
     }
 
     private void paintCableLabels(Graphics2D g2) {
-        paintInterfaceName(g2, eth1Image, eth1, component1, true);
-        paintInterfaceName(g2, eth2Image, eth2, component2, false);
+        paintInterfaceName(g2, eth1Image, component1, true);
+        paintInterfaceName(g2, eth2Image, component2, false);
     }
 
-    private void paintInterfaceName(Graphics2D g2, BufferedImage image, EthInterface ethInterface, AbstractHwComponent component, boolean first) {
+    private void paintInterfaceName(Graphics2D g2, BufferedImage image, AbstractHwComponent component, boolean first) {
         // get edpoints of line
         Point lineP1 = new Point((int)line.getP1().getX(), (int)line.getP1().getY());
         Point lineP2 = new Point((int)line.getP2().getX(), (int)line.getP2().getY());

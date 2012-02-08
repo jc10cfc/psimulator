@@ -1,6 +1,8 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
@@ -121,38 +123,35 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return Point in actual zoom
      */
     public Point getIntersectingPoint(Point insidePoint, Point outsidePoint) {
-        // convert points to default zoom
-        insidePoint = zoomManager.doScaleToDefault(insidePoint);
-        outsidePoint = zoomManager.doScaleToDefault(outsidePoint);
-        
-        // rectangle around component image
-        Rectangle imageRectangle = new Rectangle(defaultZoomXPos, defaultZoomYPos, defaultZoomWidth, defaultZoomHeight);
-        
-        
-        int x = (int) (defaultZoomXPos - ((defaultZoomTextWidth - defaultZoomWidth )/2.0));
-        int y = defaultZoomYPos + defaultZoomHeight;
-        
-        // rectangle around component text labels
-        Rectangle textRectangle = new Rectangle(x, y,
-                defaultZoomTextWidth, defaultZoomTextHeight);
-        
         Point intersection;
         
+        Rectangle rectangle;
         Line2D line = new Line2D.Float();
-        line.setLine(insidePoint, outsidePoint);
         
-        
-        // if line intersects text rectangle, set intersection as intersecting point with text rectangle
-        if(line.intersects(textRectangle)){
-            intersection = GraphicUtils.getIntersectingPoint(textRectangle, insidePoint, outsidePoint);
-        }else{ // set intersection as intersecting point with image rectangle
-            intersection = GraphicUtils.getIntersectingPoint(imageRectangle, insidePoint, outsidePoint);
+        for(int i = textImages.size()-1;i>=0;i--){
+            BufferedImage image = textImages.get(i);
+            
+            int x,y,w,h;
+            
+            x=(int) (zoomManager.doScaleToActual(defaultZoomXPos) - ((image.getWidth() - zoomManager.doScaleToActual(defaultZoomWidth))/2.0));
+            y= zoomManager.doScaleToActual(defaultZoomYPos) + zoomManager.doScaleToActual(defaultZoomHeight) + i*image.getHeight();
+            w = image.getWidth();
+            h = image.getHeight();
+            
+            rectangle = new Rectangle(x,y,w,h);
+            
+            line.setLine(insidePoint, outsidePoint);
+ 
+            if(line.intersects(rectangle)){
+                intersection = GraphicUtils.getIntersectingPoint(rectangle, insidePoint, outsidePoint);
+                return intersection;
+            }
         }
         
-        //intersection = GraphicUtils.getIntersectingPoint(imageRectangle, insidePoint, outsidePoint);
+        // no text rectangle intersects line
         
-        intersection = zoomManager.doScaleToActual(intersection);
-        
+        rectangle = new Rectangle(getX(), getY(), getWidth(), getHeight());
+        intersection = GraphicUtils.getIntersectingPoint(rectangle, insidePoint, outsidePoint);
         
         return intersection;
     }

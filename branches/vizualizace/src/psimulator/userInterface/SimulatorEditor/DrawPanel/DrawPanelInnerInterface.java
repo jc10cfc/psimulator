@@ -58,4 +58,6 @@ public interface DrawPanelInnerInterface {
      * Sets default tool in EditorPanels toolBar
      */
     public void doSetDefaultToolInEditorToolBar();
+    
+    public void doUpdateImages();
 }
