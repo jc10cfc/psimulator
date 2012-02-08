@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
+import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 
 /**
@@ -18,13 +19,28 @@ public class EthInterface implements Identifiable{
     // MAC address
     private String macAddress;
 
-    public EthInterface(String name, Cable cable){
+    public EthInterface(String name, Cable cable, HwTypeEnum hwComponentType){
         this.name = name;
         this.cable = cable;
         
         this.id = new Integer(GeneratorSingleton.getInstance().getNextId());
-        this.macAddress = GeneratorSingleton.getInstance().getNextMacAddress();
-        this.ipAddress = "";
+        
+        // do not generate MAC for switches and real pc
+        switch(hwComponentType){
+            case LINUX_SWITCH:
+            case CISCO_SWITCH:
+            case REAL_PC:
+                this.macAddress = "";
+                this.ipAddress = "";
+                break;
+            default:
+                this.macAddress = GeneratorSingleton.getInstance().getNextMacAddress();
+                this.ipAddress = "";
+                break;
+        }
+        
+        //this.macAddress = GeneratorSingleton.getInstance().getNextMacAddress();
+        //this.ipAddress = "";
     }
 
     public boolean hasCable(){

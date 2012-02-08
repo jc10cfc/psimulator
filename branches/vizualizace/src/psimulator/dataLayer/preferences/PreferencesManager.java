@@ -19,6 +19,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private static final String VIEW_DEVICE_TYPES = "VIEW_DEVICE_TYPES";
     private static final String VIEW_INTERFACE_NAMES = "VIEW_INTERFACE_NAMES";
     private static final String VIEW_CABLE_DELAY = "VIEW_CABLE_DELAY";
+    private static final String VIEW_IP_ADDRESSES = "VIEW_IP_ADDRESSES";
+    private static final String VIEW_MAC_ADDRESSES = "VIEW_MAC_ADDRESSES";
     private static final String AUTO_LEVEL_OF_DETAILS = "AUTO_LEVEL_OF_DETAILS";
     // 
     private Preferences prefs;
@@ -29,6 +31,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private boolean viewDeviceTypes = false;
     private boolean viewInterfaceNames = false;
     private boolean viewCableDelay = false;
+    private boolean viewIpAddresses = false;
+    private boolean viewMacAddresses = false;
     
     private LevelOfDetailsMode levelOfDetails = LevelOfDetailsMode.MANUAL;
             
@@ -49,6 +53,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
         prefs.putBoolean(VIEW_DEVICE_TYPES, viewDeviceTypes);
         prefs.putBoolean(VIEW_INTERFACE_NAMES, viewInterfaceNames);
         prefs.putBoolean(VIEW_CABLE_DELAY, viewCableDelay);
+        prefs.putBoolean(VIEW_IP_ADDRESSES, viewIpAddresses);
+        prefs.putBoolean(VIEW_MAC_ADDRESSES, viewMacAddresses);
         
         prefs.put(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString());
     }
@@ -62,7 +68,9 @@ public final class PreferencesManager extends Observable implements SaveableInte
         viewDeviceTypes = prefs.getBoolean(VIEW_DEVICE_TYPES, viewDeviceTypes);
         viewInterfaceNames = prefs.getBoolean(VIEW_INTERFACE_NAMES, viewInterfaceNames);
         viewCableDelay = prefs.getBoolean(VIEW_CABLE_DELAY, viewCableDelay);
-        
+        viewIpAddresses = prefs.getBoolean(VIEW_IP_ADDRESSES, viewIpAddresses);
+        viewMacAddresses = prefs.getBoolean(VIEW_MAC_ADDRESSES, viewMacAddresses);
+       
         levelOfDetails = LevelOfDetailsMode.valueOf(prefs.get(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString()));
     }
     
@@ -138,4 +146,30 @@ public final class PreferencesManager extends Observable implements SaveableInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
     }
+
+    public boolean isViewIpAddresses() {
+        return viewIpAddresses;
+    }
+
+    public void setViewIpAddresses(boolean viewIpAddresses) {
+        this.viewIpAddresses = viewIpAddresses;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
+    }
+
+    public boolean isViewMacAddresses() {
+        return viewMacAddresses;
+    }
+
+    public void setViewMacAddresses(boolean viewMacAddresses) {
+        this.viewMacAddresses = viewMacAddresses;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
+    }
+    
+    
 }

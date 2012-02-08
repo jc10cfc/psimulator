@@ -13,7 +13,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs.CableConnectToInterfacePopupMenu;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableConnectToInterfacePopupMenu;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableAddCable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;

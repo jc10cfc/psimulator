@@ -30,8 +30,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected int defaultZoomTextWidth;
     protected int defaultZoomTextHeight;
     //
-    protected ZoomManager zoomManager;
-    protected AbstractImageFactory imageFactory;
+    //protected ZoomManager zoomManager;
+    //protected AbstractImageFactory imageFactory;
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
     protected List<EthInterface> interfaces = new ArrayList<EthInterface>();
     protected BufferedImage imageUnmarked;
@@ -44,10 +44,10 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     //
     
     public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer, int interfacesCount) {
-        super();
+        super(imageFactory, zoomManager);
         this.dataLayer = dataLayer;
-        this.zoomManager = zoomManager;
-        this.imageFactory = imageFactory;
+        //this.zoomManager = zoomManager;
+        //this.imageFactory = imageFactory;
     }
 
     /**
