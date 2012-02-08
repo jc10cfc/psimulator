@@ -58,8 +58,6 @@ public class HwComponent extends AbstractHwComponent {
         
         // get texts that have to be painted
         List<String> texts = getTexts();
-        System.out.println("Texts ="+texts);
-        //textImages = getTextsImages(texts, (Graphics2D) this.getGraphics());
         textImages = getTextsImages(texts);
     }
 

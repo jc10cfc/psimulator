@@ -230,13 +230,16 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     @Override
     public void update(Observable o, Object o1) {
 
+        doUpdateImages();
+        
+        /*
         // has to be here to perform before repaint
         if(graph!=null){
             graph.doUpdateImages();
             
             this.revalidate();
             this.repaint();
-        }
+        }*/
         
         switch ((ObserverUpdateEventType) o1) {
             case VIEW_DETAILS:
@@ -312,6 +315,18 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 // END ==============  IMPLEMENTATION OF ToolChangeInterface ===============
 
 // ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
+    @Override
+    public void doUpdateImages(){
+        // has to be here to perform before repaint
+        if(graph!=null){
+            graph.doUpdateImages();
+            
+            this.revalidate();
+            this.repaint();
+        }
+    }
+    
+    
     @Override
     public GraphOuterInterface getGraphOuterInterface() {
         return graph;
