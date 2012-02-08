@@ -20,6 +20,8 @@ public interface PreferencesInterface {
     public void setViewDeviceTypes(boolean viewDeviceTypes);
     public boolean isViewInterfaceNames();
     public void setViewInterfaceNames(boolean viewInterfaceNames);
+    public boolean isViewCableDelay();
+    public void setViewCableDelay(boolean viewCableDelay);
     
     public void savePreferences();
     

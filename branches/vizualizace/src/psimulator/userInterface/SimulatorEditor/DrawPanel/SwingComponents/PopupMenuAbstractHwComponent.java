@@ -1,10 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
 import java.util.List;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
@@ -44,6 +41,14 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
         jItemSelectAll.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.SELECT_ALL));
         jItemFitToSize.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.FIT_TO_SIZE));
         jItemAutomaticLayout.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.AUTOMATIC_LAYOUT));
+        
+        // add images
+        jItemComponentProperties.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/configure.png")));
+        jItemAlignToGrid.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/grid.png")));
+        jItemDeleteComponent.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png")));
+        jItemSelectAll.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/select_all.png")));
+        jItemFitToSize.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/fit_to_size.png")));
+        jItemAutomaticLayout.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/stock_alignment.png")));
 
         if (components == 1) {
             createOneComponentMenu();

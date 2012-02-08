@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -27,12 +28,14 @@ public class Cable extends AbstractComponent {
     private EthInterface eth2;
     private BufferedImage eth1Image;
     private BufferedImage eth2Image;
+    private BufferedImage delayImage;
     //
     private int delay;
     private Line2D line = new Line2D.Float();
     private Stroke stroke = new BasicStroke(3.5f);
     //int x1, y1, x2, y2;
     private boolean paintLabels;
+    private boolean paintDelay;
 
     public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType, AbstractHwComponent component1,
             AbstractHwComponent component2, EthInterface eth1, EthInterface eth2, ZoomManager zoomManager) {
@@ -68,9 +71,11 @@ public class Cable extends AbstractComponent {
         if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
             switch (zoomManager.getCurrentLevelOfDetails()) {
                 case LEVEL_4:
+                    paintDelay = true;
                     paintLabels = true;
                     break;
                 default:
+                    paintDelay = false;
                     paintLabels = false;
                     break;
             }
@@ -80,11 +85,18 @@ public class Cable extends AbstractComponent {
             } else {
                 paintLabels = false;
             }
+            if(dataLayer.isViewCableDelay()){
+                paintDelay = true;
+            }else{
+                paintDelay = false;
+            }
         }
         
         // get images
         eth1Image = getTextImage(eth1.getName());
         eth2Image = getTextImage(eth2.getName());
+        
+        delayImage = getTextImage(""+delay);
     }
 
     
@@ -127,6 +139,17 @@ public class Cable extends AbstractComponent {
             // paint labels
             paintCableLabels(g2);
         }
+        
+        if(paintDelay){
+            // paint delay
+            paintDelayLabel(g2);
+        }
+    }
+    
+    private void paintDelayLabel(Graphics2D g2){
+        Point middlePoint = GraphicUtils.getMiddlePoint(line.getX1(), line.getY1(), line.getX2(), line.getY2());
+        
+        g2.drawImage(delayImage, middlePoint.x, middlePoint.y, null);
     }
 
     private void paintCableLabels(Graphics2D g2) {

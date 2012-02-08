@@ -2,13 +2,20 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Support;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Line2D;
 
 /**
  *
  * @author Martin
  */
 public class GraphicUtils {
+    
+    public static Point getMiddlePoint(double x1, double y1, double x2, double y2){
+        int x,y;
+        x = (int)((Math.abs(x2 + x1)) / 2.0);
+        y = (int)((Math.abs(y2 + y1)) / 2.0);
+        
+        return new Point(x,y);
+    }
     
     public static Point getIntersectingPoint(Rectangle r, Point insidePoint, Point outsidePoint) {
         //Rectangle r = new Rectangle(getX(), getY(), bi.getWidth(), bi.getHeight());

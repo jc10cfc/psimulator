@@ -18,6 +18,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private static final String VIEW_DEVICE_NAMES = "VIEW_DEVICE_NAMES";
     private static final String VIEW_DEVICE_TYPES = "VIEW_DEVICE_TYPES";
     private static final String VIEW_INTERFACE_NAMES = "VIEW_INTERFACE_NAMES";
+    private static final String VIEW_CABLE_DELAY = "VIEW_CABLE_DELAY";
     private static final String AUTO_LEVEL_OF_DETAILS = "AUTO_LEVEL_OF_DETAILS";
     // 
     private Preferences prefs;
@@ -27,6 +28,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private boolean viewDeviceNames = true;
     private boolean viewDeviceTypes = false;
     private boolean viewInterfaceNames = false;
+    private boolean viewCableDelay = false;
+    
     private LevelOfDetailsMode levelOfDetails = LevelOfDetailsMode.MANUAL;
             
     public PreferencesManager(){
@@ -45,6 +48,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
         prefs.putBoolean(VIEW_DEVICE_NAMES, viewDeviceNames);
         prefs.putBoolean(VIEW_DEVICE_TYPES, viewDeviceTypes);
         prefs.putBoolean(VIEW_INTERFACE_NAMES, viewInterfaceNames);
+        prefs.putBoolean(VIEW_CABLE_DELAY, viewCableDelay);
         
         prefs.put(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString());
     }
@@ -57,6 +61,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
         viewDeviceNames = prefs.getBoolean(VIEW_DEVICE_NAMES, viewDeviceNames);
         viewDeviceTypes = prefs.getBoolean(VIEW_DEVICE_TYPES, viewDeviceTypes);
         viewInterfaceNames = prefs.getBoolean(VIEW_INTERFACE_NAMES, viewInterfaceNames);
+        viewCableDelay = prefs.getBoolean(VIEW_CABLE_DELAY, viewCableDelay);
         
         levelOfDetails = LevelOfDetailsMode.valueOf(prefs.get(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString()));
     }
@@ -121,6 +126,16 @@ public final class PreferencesManager extends Observable implements SaveableInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
     }
-    
-    
+
+    public boolean isViewCableDelay() {
+        return viewCableDelay;
+    }
+
+    public void setViewCableDelay(boolean viewCableDelay) {
+        this.viewCableDelay = viewCableDelay;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);  
+    }
 }

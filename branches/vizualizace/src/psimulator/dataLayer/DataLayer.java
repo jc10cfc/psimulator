@@ -143,5 +143,15 @@ public class DataLayer extends DataLayerFacade{
         preferencesManager.setLevelOfDetails(levelOfDetails);
     }
 
+    @Override
+    public boolean isViewCableDelay() {
+        return preferencesManager.isViewCableDelay();
+    }
+
+    @Override
+    public void setViewCableDelay(boolean viewCableDelay) {
+        preferencesManager.setViewCableDelay(viewCableDelay);
+    }
+
     
 }
