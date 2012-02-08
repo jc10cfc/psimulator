@@ -26,6 +26,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private JCheckBox jCheckBoxDeviceType;
     private JCheckBox jCheckBoxDeviceName;
     private JCheckBox jCheckBoxInterfaceName;
+    private JCheckBox jCheckBoxCableDelay;
     private JRadioButton jRadioButtonManualLOD;
     private JRadioButton jRadioButtonAutoLOD;
     /*
@@ -40,6 +41,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private boolean viewDeviceNames;
     private boolean viewDeviceTypes;
     private boolean viewInterfaceNames;
+    private boolean viewCableDelay;
     //
     private LevelOfDetailsMode levelOfDetails;
     /*
@@ -75,6 +77,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         viewDeviceNames = dataLayer.isViewDeviceNames();
         viewDeviceTypes = dataLayer.isViewDeviceTypes();
         viewInterfaceNames = dataLayer.isViewInterfaceNames();
+        viewCableDelay = dataLayer.isViewCableDelay();
         levelOfDetails = dataLayer.getLevelOfDetails();
     }
 
@@ -85,6 +88,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         viewDeviceNames = jCheckBoxDeviceName.isSelected();
         viewDeviceTypes = jCheckBoxDeviceType.isSelected();
         viewInterfaceNames = jCheckBoxInterfaceName.isSelected();
+        viewCableDelay = jCheckBoxCableDelay.isSelected();
     }
 
     @Override
@@ -95,6 +99,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         dataLayer.setViewDeviceNames(viewDeviceNames);
         dataLayer.setViewDeviceTypes(viewDeviceTypes);
         dataLayer.setViewInterfaceNames(viewInterfaceNames);
+        dataLayer.setViewCableDelay(viewCableDelay);
         dataLayer.setLevelOfDetails(levelOfDetails);
 
         // save preferences 
@@ -120,6 +125,10 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         }
 
         if (viewInterfaceNames != dataLayer.isViewInterfaceNames()) {
+            return true;
+        }
+        
+        if(viewCableDelay != dataLayer.isViewCableDelay()){
             return true;
         }
 
@@ -223,6 +232,11 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         jCheckBoxInterfaceName.setSelected(viewInterfaceNames);
         checkBoxesPanel.add(jCheckBoxInterfaceName);
 
+        jCheckBoxCableDelay = new JCheckBox(dataLayer.getString("CABLE_DELAY"));
+        jCheckBoxCableDelay.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jCheckBoxCableDelay.setSelected(viewCableDelay);
+        checkBoxesPanel.add(jCheckBoxCableDelay);
+        
         //
         detailsPanel.add(autoManualPanel);
         detailsPanel.add(Box.createRigidArea(new Dimension(0, 3)));
@@ -364,11 +378,13 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
                 jCheckBoxDeviceName.setEnabled(true);
                 jCheckBoxDeviceType.setEnabled(true);
                 jCheckBoxInterfaceName.setEnabled(true);
+                jCheckBoxCableDelay.setEnabled(true);
                 break;
             case AUTO:
                 jCheckBoxDeviceName.setEnabled(false);
                 jCheckBoxDeviceType.setEnabled(false);
                 jCheckBoxInterfaceName.setEnabled(false);
+                jCheckBoxCableDelay.setEnabled(false);
                 break;
         }
     }

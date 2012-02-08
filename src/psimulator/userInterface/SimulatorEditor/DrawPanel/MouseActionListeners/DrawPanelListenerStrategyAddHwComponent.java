@@ -2,14 +2,9 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
-import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
-import psimulator.dataLayer.DataLayer;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.logicLayer.Controller;
-import psimulator.logicLayer.ControllerFacade;
-import psimulator.userInterface.MainWindow;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponent;

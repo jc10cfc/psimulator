@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -35,6 +36,11 @@ public class PopupMenuCable extends JPopupMenu{
         
         jItemCableProperties.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.PROPERTIES));
         jItemDeleteCable.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.DELETE));
+        
+        
+        // add icons 
+        jItemCableProperties.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/configure.png")));
+        jItemDeleteCable.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png")));
         
         // add buttons for operations 
         this.add(jItemDeleteCable);
