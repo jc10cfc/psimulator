@@ -66,15 +66,16 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
 
         //
         g2.setFont(font);
-        FontMetrics fm = g2.getFontMetrics();
+
+        //FontMetrics fm = g2.getFontMetrics();
+        FontMetrics fm = imageFactory.getFontMetrics(font);
 
         List<BufferedImage> images = new ArrayList<BufferedImage>();
 
         for (String text : texts) {
             images.add(getImageForText(fm, text, font));
         }
-
-        return images;
+    return images;
     }
 
     /**

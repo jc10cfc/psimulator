@@ -32,6 +32,7 @@ public final class ToolBar extends JToolBar implements Observer {
     private JButton jButtonZoomIn;
     private JButton jButtonZoomOut;
     private JButton jButtonZoomReset;
+    private JButton jButtonPreferences;
     //
     private ButtonGroup modeButtonGroup;
     private JToggleButton jToggleButtonEditor;
@@ -62,6 +63,8 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonOpen = new JButton();
         jButtonSave = new JButton();
         jButtonSaveAs = new JButton();
+        
+        jButtonPreferences = new JButton();
         
         jButtonUndo = new JButton();
         jButtonUndo.setActionCommand(UndoRedo.UNDO.toString());
@@ -96,6 +99,9 @@ public final class ToolBar extends JToolBar implements Observer {
         this.add(jButtonOpen);
         this.add(jButtonSave);
         this.add(jButtonSaveAs);
+        this.addSeparator();
+        
+        this.add(jButtonPreferences);
         this.addSeparator();
         
         this.add(jButtonZoomIn);
@@ -176,6 +182,7 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomIn.setIcon(new ImageIcon(getClass().getResource(path+"viewmag+.png")));
         jButtonZoomOut.setIcon(new ImageIcon(getClass().getResource(path+"viewmag-.png")));
         jButtonZoomReset.setIcon(new ImageIcon(getClass().getResource(path+"viewmag1.png")));
+        jButtonPreferences.setIcon(new ImageIcon(getClass().getResource(path+"configure.png")));
         jToggleButtonEditor.setIcon(new ImageIcon(getClass().getResource(path+"editor.png")));
         jToggleButtonSimulator.setIcon(new ImageIcon(getClass().getResource(path+"exec.png")));
         
@@ -272,6 +279,14 @@ public final class ToolBar extends JToolBar implements Observer {
     }
     
     /**
+     * Adds action listener to jButton preferences
+     * @param listener Action listener
+     */
+    public void addPreferencesActionListener(ActionListener listener){
+        jButtonPreferences.addActionListener(listener);
+    }
+    
+    /**
      * Adds action listener to jButtonUndo and jButtonRedo
      * @param listener Action listener
      */
@@ -313,6 +328,7 @@ public final class ToolBar extends JToolBar implements Observer {
         jButtonZoomIn.setToolTipText(dataLayer.getString("ZOOM_IN"));
         jButtonZoomOut.setToolTipText(dataLayer.getString("ZOOM_OUT"));
         jButtonZoomReset.setToolTipText(dataLayer.getString("ZOOM_RESET"));
+        jButtonPreferences.setToolTipText(dataLayer.getString("PREFERENCES"));
         //
         jToggleButtonEditor.setText(dataLayer.getString("EDITOR"));
         jToggleButtonSimulator.setText(dataLayer.getString("SIMULATOR"));

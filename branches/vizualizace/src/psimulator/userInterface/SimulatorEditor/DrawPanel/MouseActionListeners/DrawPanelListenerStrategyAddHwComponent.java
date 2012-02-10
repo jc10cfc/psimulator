@@ -42,10 +42,9 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     @Override
     public void mousePressedLeft(MouseEvent e) {
         // create new component
-        System.out.println("Time = "+System.currentTimeMillis());
         AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, dataLayer,
                 addDeviceTool.getHwType(), addDeviceTool.getInterfaces());
-        
+
         component.initialize();
 
         // set position of new component
@@ -53,18 +52,8 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
 
         // add component to graph
         drawPanel.getGraphOuterInterface().addHwComponent(component);
-
-        // inform drawPanel about size change if component placed out of draw panel
-        //drawPanel.updateSize(component.getLowerRightCornerLocation());
-        /*
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                drawPanel.repaint();
-            }
-        });*/
-        System.out.println("Time = "+System.currentTimeMillis());
         
+        // inform drawPanel about size change if component placed out of draw panel
         drawPanel.repaint();
         
         // add to undo manager
@@ -72,7 +61,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
                 new UndoableAddHwComponent(drawPanel.getGraphOuterInterface(), component)));
 
         mainWindow.updateUndoRedoButtons();
-        System.out.println("Time = "+System.currentTimeMillis());
+
     }
 
     @Override
