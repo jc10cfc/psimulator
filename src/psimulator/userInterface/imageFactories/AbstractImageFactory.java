@@ -14,6 +14,11 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
  * @author Martin
  */
 public abstract class AbstractImageFactory {
+    //
+    BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
+    //
+    
 
     public static final int ICON_SIZE_MENU_BAR = 48;
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
@@ -46,7 +51,19 @@ public abstract class AbstractImageFactory {
         this.bufferedImageLoader = new BufferedImageLoader();
 
         preLoadAllImagesFromFiles();
+        
+        // get some font metrics to avoid long time when first component is placed into draw panel
+        Font font = new Font("SanSerif", Font.PLAIN, 12);
+        getFontMetrics(font);
     }
+    
+    public final FontMetrics getFontMetrics(Font font){
+        g2.setFont(font);
+        FontMetrics fm = g2.getFontMetrics();
+        return fm;
+    }
+    
+    
 
     private void preLoadAllImagesFromFiles() {
         HwTypeEnum hwTypes[] = HwTypeEnum.values();
