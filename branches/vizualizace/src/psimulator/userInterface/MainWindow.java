@@ -479,8 +479,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             // only get, not remove, we want to keep the graph inside editor
             Graph graph = jPanelUserInterfaceMain.getGraph();
             
-            NetworkBuilderFacade networkBuilderFacade = new NetworkBuilderFacade();
-            tmpNetwork = networkBuilderFacade.buildNetwork(graph);
+            // save graph
+            dataLayer.saveGraphToFile(graph, file);
             
             return true;
         }
@@ -498,14 +498,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             //This is where a real application would open the file.
             System.out.println("Opening file: " + file);
 
-            Graph graph = new Graph();
-            //initJPanelEditor(graph);
+            //Graph graph = new Graph();
+            // load graph
+            Graph graph = dataLayer.loadGraphFromFile(file);
             
-            if(tmpNetwork!=null){
-                GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
-                graph = graphBuilderFacade.buildGraph(tmpNetwork);
-            }
-
             refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
         }
     }
