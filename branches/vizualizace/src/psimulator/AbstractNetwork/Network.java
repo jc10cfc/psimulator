@@ -10,14 +10,15 @@ import java.util.List;
  * @author Martin
  */
 public class Network implements Serializable{
-    private int ID;
-    private String name;
+    //private int ID;
+    //private String name;
     
     private NetworkCounter counter;
     
     private List<NetworkCable> cables;
     private List<NetworkDevice> devices;
     
+    // needed for Graph restore from Network - fast lookup
     private LinkedHashMap<Integer, NetworkInterface> interfacesMap;
 
     public Network(/*int ID, String name*/) {
@@ -28,14 +29,6 @@ public class Network implements Serializable{
         this.devices = new ArrayList<NetworkDevice>();
         
         this.interfacesMap = new LinkedHashMap<Integer, NetworkInterface>();
-    }
- 
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
     
     public void addDevice(NetworkDevice device){
@@ -58,24 +51,8 @@ public class Network implements Serializable{
         return cables;
     }
 
-    public void setCables(List<NetworkCable> cables) {
-        this.cables = cables;
-    }
-
     public List<NetworkDevice> getDevices() {
         return devices;
-    }
-
-    public void setDevices(List<NetworkDevice> devices) {
-        this.devices = devices;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public NetworkCounter getCounter() {
@@ -86,5 +63,32 @@ public class Network implements Serializable{
         this.counter = counter;
     }
     
+    // ---------------------------------------------------------------
+    // Martin Svihlik tyto metody nepotrebuje:
+    public void setCables(List<NetworkCable> cables) {
+        this.cables = cables;
+    }
+    
+    public void setDevices(List<NetworkDevice> devices) {
+        this.devices = devices;
+    }
+    
+    /*
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    */
     
 }

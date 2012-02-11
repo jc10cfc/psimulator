@@ -29,26 +29,9 @@ public class NetworkDevice implements Serializable{
         return ID;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
     public HwTypeEnum getHwType() {
         return hwType;
     }
-
-    public void setHwType(HwTypeEnum hwType) {
-        this.hwType = hwType;
-    }
-
-    /*
-    public int getInterfaceCount() {
-        return interfaceCount;
-    }
-
-    public void setInterfaceCount(int interfaceCount) {
-        this.interfaceCount = interfaceCount;
-    }*/
 
     public List<NetworkInterface> getInterfaces() {
         return interfaces;
@@ -62,26 +45,35 @@ public class NetworkDevice implements Serializable{
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getX() {
         return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
     }
 
     public int getY() {
         return y;
     }
 
+
+    // ---------------------------------------------------------------
+    // Martin Svihlik nasledujici metody nepotrebuje
+    
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+    
+    public void setHwType(HwTypeEnum hwType) {
+        this.hwType = hwType;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setX(int x) {
+        this.x = x;
+    }
+    
     public void setY(int y) {
         this.y = y;
     }
-    
-    
-    
 }
