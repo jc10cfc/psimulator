@@ -1,12 +1,13 @@
 package psimulator.AbstractNetwork;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 
 /**
  *
  * @author Martin
  */
-public class NetworkCounter {
+public class NetworkCounter implements Serializable{
     private int nextId;
     private int nextMacAddress;
     private EnumMap<HwTypeEnum, Integer> nextNumberMap;
