@@ -18,7 +18,7 @@ public class GeneratorSingleton {
     //
     private EnumMap<HwTypeEnum, Integer> nextNumberMap;
     //
-    private int macAddressCounter = 0;
+    private int nextMacAddress = 0;
 
     private GeneratorSingleton() {
 
@@ -37,6 +37,39 @@ public class GeneratorSingleton {
 
         private static final GeneratorSingleton INSTANCE = new GeneratorSingleton();
     }
+    
+    /**
+     * Sets all counters to zero
+     */
+    public void initialize(){
+        // init nextId
+        nextId = 0;
+        
+        // init next mac address
+        nextMacAddress = 0;
+        
+        // init next number map
+        for (HwTypeEnum hwTypeEnum : HwTypeEnum.values()) {
+            nextNumberMap.put(hwTypeEnum, new Integer(0));
+        }
+    }
+    
+    
+    public void setNextId(int nextId){
+        this.nextId = nextId;
+    }
+    
+    public void setNextMacAddress(int nextMacAddress){
+        this.nextMacAddress = nextMacAddress;
+    }
+    
+    public void putIntoNextNumberMap(HwTypeEnum hwType, Integer value){
+        this.nextNumberMap.put(hwType, value);
+    }
+    
+    public Integer getFromNextNumberMap(HwTypeEnum hwType){
+        return nextNumberMap.get(hwType);
+    }  
 
     /**
      * Returns free id and incremets id by 1.
@@ -45,6 +78,14 @@ public class GeneratorSingleton {
      */
     public int getNextId() {
         return nextId++;
+    }
+    
+    public int getCurrentId(){
+        return nextId;
+    }
+    
+    public int getCurrentMacAddress(){
+        return nextMacAddress;
     }
 
     /**
@@ -169,7 +210,7 @@ public class GeneratorSingleton {
         String macAddressManufacturerPrefix = "AA-11-E0-";
         String macAddressDeviceSuffix = "";
 
-        String tmp = Integer.toHexString(macAddressCounter).toUpperCase();
+        String tmp = Integer.toHexString(nextMacAddress).toUpperCase();
 
         // fill the rest of address
         for (int i = 0; i < 6; i++) {
@@ -187,7 +228,7 @@ public class GeneratorSingleton {
         }
 
         // increase counter
-        macAddressCounter++;
+        nextMacAddress++;
 
         // glue two parts together
         macAddress = macAddressManufacturerPrefix + macAddressDeviceSuffix;

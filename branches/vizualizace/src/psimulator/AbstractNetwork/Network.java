@@ -13,6 +13,8 @@ public class Network implements Serializable{
     private int ID;
     private String name;
     
+    private NetworkCounter counter;
+    
     private List<NetworkCable> cables;
     private List<NetworkDevice> devices;
     
@@ -25,7 +27,7 @@ public class Network implements Serializable{
         this.cables = new ArrayList<NetworkCable>();
         this.devices = new ArrayList<NetworkDevice>();
         
-        interfacesMap = new LinkedHashMap<Integer, NetworkInterface>();
+        this.interfacesMap = new LinkedHashMap<Integer, NetworkInterface>();
     }
  
     public int getID() {
@@ -51,7 +53,6 @@ public class Network implements Serializable{
     public NetworkInterface getNetworkInterface(int id){
         return interfacesMap.get(id);
     }
-    
 
     public List<NetworkCable> getCables() {
         return cables;
@@ -75,6 +76,14 @@ public class Network implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public NetworkCounter getCounter() {
+        return counter;
+    }
+
+    public void setCounter(NetworkCounter counter) {
+        this.counter = counter;
     }
     
     

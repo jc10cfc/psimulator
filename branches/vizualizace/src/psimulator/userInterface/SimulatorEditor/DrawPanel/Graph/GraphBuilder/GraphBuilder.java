@@ -2,14 +2,13 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.AbstractNetwork.NetworkCable;
-import psimulator.AbstractNetwork.NetworkDevice;
-import psimulator.AbstractNetwork.NetworkInterface;
+import psimulator.AbstractNetwork.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 
 /**
  *
@@ -73,6 +72,23 @@ public class GraphBuilder extends AbstractGraphBuilder {
         // add cable to graph
         graph.addCable(cable);
         
+    }
+    
+    @Override
+    public void buildCounter(NetworkCounter networkCounter) {
+        GeneratorSingleton generatorSingleton = GeneratorSingleton.getInstance();
+        
+        // set next id for unique ID generation
+        generatorSingleton.setNextId(networkCounter.getNextID());
+        
+        // set next mac for unique MAC address generation
+        generatorSingleton.setNextMacAddress(networkCounter.getNextMacAddress());
+        
+        // for all possible HwTypes
+        for (HwTypeEnum hwType : HwTypeEnum.values()) {
+            // put into Generator value for hwType from counter
+            generatorSingleton.putIntoNextNumberMap(hwType, networkCounter.getFromNextNumberMap(hwType));
+        }
     }
 
     @Override

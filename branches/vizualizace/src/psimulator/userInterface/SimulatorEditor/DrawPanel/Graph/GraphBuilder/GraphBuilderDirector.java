@@ -22,15 +22,20 @@ public class GraphBuilderDirector {
     public void construct() {
         List<NetworkDevice> devices = network.getDevices();
 
+        // build all devices
         for (NetworkDevice device : devices) {
             abstractGraphBuilder.buildDevice(device);
         }
 
         List<NetworkCable> cables = network.getCables();
 
+        // build all cables
         for(NetworkCable cable : cables){
             abstractGraphBuilder.buildCable(cable);
         }
+        
+        // build counter
+        abstractGraphBuilder.buildCounter(network.getCounter());
     }
 }
 

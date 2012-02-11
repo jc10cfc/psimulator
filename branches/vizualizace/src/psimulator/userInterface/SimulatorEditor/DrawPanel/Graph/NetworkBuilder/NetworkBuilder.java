@@ -2,13 +2,11 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.NetworkBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.AbstractNetwork.Network;
-import psimulator.AbstractNetwork.NetworkCable;
-import psimulator.AbstractNetwork.NetworkDevice;
-import psimulator.AbstractNetwork.NetworkInterface;
+import psimulator.AbstractNetwork.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 
 /**
  *
@@ -65,9 +63,31 @@ public class NetworkBuilder extends AbstractNetworkBuilder {
         // add cable to network
         network.addCable(networkCable);
     }
+    
+    @Override
+    public void buildCounter(GeneratorSingleton singletonCounter) {
+        // get current id counter value
+        int id = singletonCounter.getCurrentId();
+        // get current mac address counter value
+        int macAddress = singletonCounter.getCurrentMacAddress();
+        
+        // create network counter
+        NetworkCounter networkCounter = new NetworkCounter(id, macAddress);
+        
+        // for all possible HwTypes
+        for (HwTypeEnum hwType : HwTypeEnum.values()) {
+            // put into networkCounter value for hwType from singletonCounter
+            networkCounter.putIntoNextNumberMap(hwType, singletonCounter.getFromNextNumberMap(hwType));
+        }
+        
+        // set network counter to network
+        network.setCounter(networkCounter);
+    }
 
     @Override
     public Network getResult() {
         return network;
     }
+
+    
 }
