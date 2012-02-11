@@ -20,6 +20,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.*;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -381,6 +382,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
         
         this.graph = graph;
+        
+        // if graph is empty - new project is created
+        if(graph.getAbstractHwComponentsCount() == 0){
+            // initialize generator singleton
+            GeneratorSingleton.getInstance().initialize();
+        }
       
         graph.initialize(this, zoomManager, dataLayer, imageFactory);
     }

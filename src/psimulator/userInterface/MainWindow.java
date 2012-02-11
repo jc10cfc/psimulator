@@ -517,9 +517,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * @param graph Graph to set into jPanelUserInterfaceMain, can be null if
      * userInterfaceState will be WELCOME
      * @param userInterfaceState State to change to.
-     * @param chaginSimulatorEditor if true, the graph is kept untouched
+     * @param changingSimulatorEditor if true, the graph is kept untouched
      */
-    private void refreshUserInterfaceMainPanel(Graph graph, UserInterfaceMainPanelState userInterfaceState, boolean chaginSimulatorEditor) {
+    private void refreshUserInterfaceMainPanel(Graph graph, UserInterfaceMainPanelState userInterfaceState, boolean changingSimulatorEditor) {
         switch (userInterfaceState) {
             case WELCOME:
                 // remove graph
@@ -527,7 +527,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 break;
             case EDITOR:
                 // if not changing from simulator to editor or back
-                if (!chaginSimulatorEditor) {
+                if (!changingSimulatorEditor) {
                     // delete events from simulator
                     jPanelUserInterfaceMain.init();
                     // remove graph
@@ -541,7 +541,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 break;
             case SIMULATOR:
                 // if not changing from simulator to editor or back
-                if (!chaginSimulatorEditor) {
+                if (!changingSimulatorEditor) {
                     // delete events from simulator
                     jPanelUserInterfaceMain.init();
                     // remove graph

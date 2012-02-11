@@ -5,6 +5,7 @@ import java.util.Iterator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 
 /**
  *
@@ -46,5 +47,8 @@ public class NetworkBuilderDirector {
             // build network device
             abstractNetworkBuilder.buildNetworkCable(cable);
         }
+        
+        // build counter
+        abstractNetworkBuilder.buildCounter(GeneratorSingleton.getInstance());
     }
 }
