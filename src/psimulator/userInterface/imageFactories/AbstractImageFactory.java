@@ -50,6 +50,7 @@ public abstract class AbstractImageFactory {
         this.imageBuffer = new ImageBuffer();
         this.bufferedImageLoader = new BufferedImageLoader();
 
+        // preload images from file
         preLoadAllImagesFromFiles();
         
         // get some font metrics to avoid long time when first component is placed into draw panel

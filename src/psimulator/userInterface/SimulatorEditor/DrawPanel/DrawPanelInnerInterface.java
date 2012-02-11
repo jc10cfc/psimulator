@@ -1,6 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
@@ -13,7 +14,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public interface DrawPanelInnerInterface {
+public interface DrawPanelInnerInterface{
     
     /**
      * returns graph
@@ -25,6 +26,12 @@ public interface DrawPanelInnerInterface {
      * @return 
      */
     public AbstractImageFactory getImageFactory();
+    
+    /**
+     * Gets dataLayerFacade;
+     * @return 
+     */
+    public DataLayerFacade getDataLayerFacade();
     /**
      * Gets AbstractAction corresponding to DrawPanelAction
      * @param action
@@ -60,4 +67,12 @@ public interface DrawPanelInnerInterface {
     public void doSetDefaultToolInEditorToolBar();
     
     public void doUpdateImages();
+    
+    /**
+     * Updates size of panel according to parameter. If dimension is bigger than actual
+     * size of drawPanel, than size is changed.
+     * @param dimension of Graph
+     */
+    
+    public void updateSize(Dimension dim);
 }

@@ -1,10 +1,15 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
+import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -15,18 +20,70 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public abstract class AbstractComponent extends JComponent implements Markable, Identifiable {
 
-    BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     //
     protected AbstractImageFactory imageFactory;
     protected ZoomManager zoomManager;
+    protected DataLayerFacade dataLayer;
     //
-    private Integer id;
+    protected HwTypeEnum hwType;
+    protected Integer id;
+    //
     private boolean marked = false;
-
-    public AbstractComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager) {
+    //
+    
+    
+    
+    /**
+     * Use when creating graph by user actions.
+     * @param dataLayer
+     * @param imageFactory
+     * @param zoomManager
+     * @param hwType 
+     */
+    public AbstractComponent(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager, HwTypeEnum hwType){
+        this.id = new Integer(GeneratorSingleton.getInstance().getNextId());
+        //
+        this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
         this.zoomManager = zoomManager;
-        id = new Integer(GeneratorSingleton.getInstance().getNextId());
+    }
+    
+    /**
+     * Use when building graph from Network.
+     * 
+     * @param id
+     * @param hwType 
+     */
+    public AbstractComponent(Integer id, HwTypeEnum hwType){
+        this.id = id;
+    }
+    
+    /**
+     * Use when building graph from Network.
+     * @param dataLayer
+     * @param imageFactory
+     * @param zoomManager 
+     */
+    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager){
+        this.dataLayer = dataLayer;
+        this.imageFactory = imageFactory;
+        this.zoomManager = zoomManager;
+    }
+    
+    /**
+     * Need to call it after constructor to properly setup component.
+     * @param imageFactory 
+     */
+    public void setImageFactory(AbstractImageFactory imageFactory){
+        this.imageFactory = imageFactory;
+    }
+    
+    /**
+     * Need to call it after constructor to properly setup component.
+     * @param zoomManager 
+     */
+    public void setZoomManager(ZoomManager zoomManager){
+        this.zoomManager = zoomManager;
     }
 
     @Override
@@ -38,6 +95,15 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
     public void setMarked(boolean marked) {
         this.marked = marked;
     }
+    
+    @Override
+    public Integer getId() {
+        return id;
+    }
+    
+    public HwTypeEnum getHwType() {
+        return hwType;
+    }
 
     public abstract boolean intersects(Point p);
 
@@ -47,10 +113,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
 
     public abstract void initialize();
 
-    @Override
-    public Integer getId() {
-        return id;
-    }
+    
 
     /**
      * Creates images for givent texts
@@ -59,15 +122,10 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      * @return
      */
     protected List<BufferedImage> getTextsImages(List<String> texts, int fontSize) {
-        Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
-
         // create font
         Font font = new Font("SanSerif", Font.PLAIN, fontSize); //zoomManager.getCurrentFontSize()
 
-        //
-        g2.setFont(font);
-
-        //FontMetrics fm = g2.getFontMetrics();
+        // get font metrics
         FontMetrics fm = imageFactory.getFontMetrics(font);
 
         List<BufferedImage> images = new ArrayList<BufferedImage>();
@@ -101,14 +159,11 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      * @return
      */
     protected BufferedImage getTextImage(String text, int fontSize) {
-        Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
-
         // create font
         Font font = new Font("SanSerif", Font.PLAIN, fontSize); //zoomManager.getCurrentFontSize()
 
-        //
-        g2.setFont(font);
-        FontMetrics fm = g2.getFontMetrics();
+        // get font metrics
+        FontMetrics fm = imageFactory.getFontMetrics(font);
 
         return getImageForText(fm, text, font);
     }

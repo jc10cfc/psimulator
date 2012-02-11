@@ -19,8 +19,6 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class Cable extends AbstractComponent {
 
-    private DataLayerFacade dataLayer;
-    private HwTypeEnum hwType;
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
     private EthInterface eth1;
@@ -40,15 +38,28 @@ public class Cable extends AbstractComponent {
     private boolean paintMacAddress = false;
     private boolean paintDelay = false;
 
-    public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType, AbstractHwComponent component1,
-            AbstractHwComponent component2, EthInterface eth1, EthInterface eth2, ZoomManager zoomManager) {
-        super(imageFactory, zoomManager);
-        this.dataLayer = dataLayer;
-        this.hwType = hwType;
+    /**
+     * Use when creating graph by user actions.
+     * @param dataLayer
+     * @param imageFactory
+     * @param zoomManager
+     * @param hwType
+     * @param component1
+     * @param component2
+     * @param eth1
+     * @param eth2 
+     */
+    public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager,HwTypeEnum hwType, 
+            AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2){
+        super(dataLayer, imageFactory, zoomManager, hwType);
+        
         this.component1 = component1;
         this.component2 = component2;
+        
         this.eth1 = eth1;
         this.eth2 = eth2;
+        
+        this.hwType = hwType;
         
         // set delay according to type
         switch (hwType) {
@@ -60,6 +71,31 @@ public class Cable extends AbstractComponent {
                 delay = 2;
                 break;
         }
+    }
+     
+    /**
+     * Use when building graph from Network.
+     * @param id
+     * @param hwType
+     * @param component1
+     * @param component2
+     * @param eth1
+     * @param eth2
+     * @param delay 
+     */
+    public Cable(int id, HwTypeEnum hwType, AbstractHwComponent component1, AbstractHwComponent component2, 
+            EthInterface eth1, EthInterface eth2, int delay){
+        super(id, hwType);
+        
+        this.component1 = component1;
+        this.component2 = component2;
+        
+        this.eth1 = eth1;
+        this.eth2 = eth2;
+        
+        this.hwType = hwType;
+        
+        this.delay = delay;
     }
 
     @Override
@@ -371,10 +407,6 @@ public class Cable extends AbstractComponent {
 
     public void setDelay(int delay) {
         this.delay = delay;
-    }
-
-    public HwTypeEnum getHwType() {
-        return hwType;
     }
     
     public void swapComponentsAndEthInterfaces(){

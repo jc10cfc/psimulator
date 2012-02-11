@@ -7,7 +7,7 @@ import javax.swing.JComponent;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelSizeChangeInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 
@@ -29,14 +29,15 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     private Grid grid;
     private int widthDefault;
     private int heightDefault;
-    private DrawPanelSizeChangeInnerInterface drawPanel;
+    //private DrawPanelSizeChangeInnerInterface drawPanel;
+    private DrawPanelInnerInterface  drawPanel;
     private ZoomManager zoomManager;
    
     public Graph(){
         
     }
     
-    public void initialize(DrawPanelSizeChangeInnerInterface drawPanel, ZoomManager zoomManager, DataLayerFacade dataLayer){
+    public void initialize(DrawPanelInnerInterface drawPanel, ZoomManager zoomManager, DataLayerFacade dataLayer){
         this.zoomManager = zoomManager;
         this.drawPanel = drawPanel;
 
@@ -225,7 +226,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
         // if there is not a bundle between component1 and component2, we make the bundle
         if (bundle == null) {
-            bundle = new BundleOfCables(component1, component2, zoomManager);
+            bundle = new BundleOfCables(component1, component2);
             bundlesOfCables.add(bundle);
             component1.addBundleOfCables(bundle);
             component2.addBundleOfCables(bundle);
@@ -851,5 +852,9 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         this.markedCables.clear();
         
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
+    }
+    
+    public AbstractHwComponent getAbstractHwComponent(int id){
+        return componentsMap.get(id);
     }
 }

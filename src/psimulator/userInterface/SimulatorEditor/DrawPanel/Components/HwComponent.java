@@ -19,24 +19,49 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class HwComponent extends AbstractHwComponent {
 
+    /**
+     * Use when creating graph by user actions.
+     * @param imageFactory
+     * @param zoomManager
+     * @param dataLayer
+     * @param hwType
+     * @param interfacesCount 
+     */
     public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer,
-            HwTypeEnum hwComponentType, int interfacesCount) {
-        super(imageFactory, zoomManager, dataLayer, interfacesCount);
-
-        this.hwComponentType = hwComponentType;
-        //this.imagePath = imagePath;
+            HwTypeEnum hwType, int interfacesCount) {
+        super(imageFactory, zoomManager, dataLayer, hwType);
 
         // generate device name for HwComponent
-        deviceName = GeneratorSingleton.getInstance().getNextDeviceName(hwComponentType);
+        deviceName = GeneratorSingleton.getInstance().getNextDeviceName(hwType);
 
         // generate names for interface
-        List<String> ethInterfaceNames = GeneratorSingleton.getInstance().getInterfaceNames(hwComponentType, interfacesCount);
+        List<String> ethInterfaceNames = GeneratorSingleton.getInstance().getInterfaceNames(hwType, interfacesCount);
 
         // create interfaces
         for (int i = 0; i < interfacesCount; i++) {
-            interfaces.add(new EthInterface(ethInterfaceNames.get(i), null, hwComponentType));
+            interfaces.add(new EthInterface(ethInterfaceNames.get(i), hwType));
         }
-
+    }
+    
+    /**
+     * Use when building graph from Network.
+     * @param id
+     * @param hwComponentType
+     * @param deviceName
+     * @param ethInterfaces
+     * @param x
+     * @param y 
+     */
+    public HwComponent(int id, HwTypeEnum hwComponentType, String deviceName, List<EthInterface> ethInterfaces, int x, int y){
+        super(id, hwComponentType);
+        
+        this.deviceName = deviceName;
+        
+        this.interfaces = ethInterfaces;
+        
+        // set x,y coordinates
+        this.setDefaultZoomXPos(x);
+        this.setDefaultZoomYPos(y);
     }
 
     @Override
@@ -51,8 +76,8 @@ public class HwComponent extends AbstractHwComponent {
     @Override
     public final void doUpdateImages() {
         // get new images of icons
-        imageUnmarked = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), false);
-        imageMarked = imageFactory.getImage(hwComponentType, zoomManager.getIconWidth(), true);
+        imageUnmarked = imageFactory.getImage(hwType, zoomManager.getIconWidth(), false);
+        imageMarked = imageFactory.getImage(hwType, zoomManager.getIconWidth(), true);
         
         // get texts that have to be painted
         List<String> texts = getTexts();
@@ -157,7 +182,7 @@ public class HwComponent extends AbstractHwComponent {
         List<String> texts = new ArrayList<String>();
 
         if (paintType) {
-            texts.add(dataLayer.getString(getHwComponentType().toString()));
+            texts.add(dataLayer.getString(getHwType().toString()));
         }
 
         if (paintName) {

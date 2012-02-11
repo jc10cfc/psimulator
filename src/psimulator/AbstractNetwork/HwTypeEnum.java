@@ -14,5 +14,6 @@ public enum HwTypeEnum {
     END_DEVICE_WORKSTATION,
     REAL_PC,
     CABLE_ETHERNET,
-    CABLE_OPTIC;
+    CABLE_OPTIC,
+    BUNDLE_OF_CABLES;
 }

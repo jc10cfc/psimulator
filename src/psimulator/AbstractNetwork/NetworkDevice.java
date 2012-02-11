@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Martin
  */
-public class Device implements Serializable{
+public class NetworkDevice implements Serializable{
     private int ID;
     private HwTypeEnum hwType;
     private String name;
@@ -16,9 +16,9 @@ public class Device implements Serializable{
     private int x;
     private int y;
     
-    private List<Interface> interfaces;
+    private List<NetworkInterface> interfaces;
 
-    public Device(int ID, HwTypeEnum hwType, String name, int interfaceCount, int x, int y) {
+    public NetworkDevice(int ID, HwTypeEnum hwType, String name, int interfaceCount, int x, int y) {
         this.ID = ID;
         this.hwType = hwType;
         this.name = name;
@@ -51,11 +51,11 @@ public class Device implements Serializable{
         this.interfaceCount = interfaceCount;
     }
 
-    public List<Interface> getInterfaces() {
+    public List<NetworkInterface> getInterfaces() {
         return interfaces;
     }
 
-    public void setInterfaces(List<Interface> interfaces) {
+    public void setInterfaces(List<NetworkInterface> interfaces) {
         this.interfaces = interfaces;
     }
 

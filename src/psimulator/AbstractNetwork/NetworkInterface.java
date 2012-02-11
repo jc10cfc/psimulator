@@ -6,16 +6,18 @@ import java.io.Serializable;
  *
  * @author Martin
  */
-public class Interface implements Serializable{
+public class NetworkInterface implements Serializable{
     private int ID;
     
-    private Device device;
+    private NetworkDevice device;
     
+    private String interfaceName;
     private String ipAddress;
     private String macAddress;
 
-    public Interface(int ID, Device device, String ipAddress, String macAddress) {
+    public NetworkInterface(int ID, NetworkDevice device, String interfaceName, String ipAddress, String macAddress) {
         this.ID = ID;
+        this.interfaceName = interfaceName;
         this.device = device;
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
@@ -29,11 +31,11 @@ public class Interface implements Serializable{
         this.ID = ID;
     }
 
-    public Device getDevice() {
+    public NetworkDevice getDevice() {
         return device;
     }
 
-    public void setDevice(Device device) {
+    public void setDevice(NetworkDevice device) {
         this.device = device;
     }
 
@@ -52,6 +54,15 @@ public class Interface implements Serializable{
     public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
     }
+
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
+    }
+    
     
     
 }
