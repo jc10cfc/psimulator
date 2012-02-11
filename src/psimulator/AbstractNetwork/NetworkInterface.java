@@ -22,48 +22,47 @@ public class NetworkInterface implements Serializable{
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
     }
-    
 
     public int getID() {
         return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
     }
 
     public NetworkDevice getDevice() {
         return device;
     }
 
-    public void setDevice(NetworkDevice device) {
-        this.device = device;
-    }
-
     public String getIpAddress() {
         return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
     }
 
     public String getMacAddress() {
         return macAddress;
     }
 
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
-    }
-
     public String getInterfaceName() {
         return interfaceName;
     }
 
+    // ---------------------------------------------------------------
+    // Martin Svihlik nasledujici metody nepotrebuje
+    
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+    
+    public void setDevice(NetworkDevice device) {
+        this.device = device;
+    }
+    
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+    
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+    
     public void setInterfaceName(String interfaceName) {
         this.interfaceName = interfaceName;
     }
-    
-    
-    
 }

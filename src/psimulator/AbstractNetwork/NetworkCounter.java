@@ -32,4 +32,8 @@ public class NetworkCounter {
     public Integer getFromNextNumberMap(HwTypeEnum hwType){
         return nextNumberMap.get(hwType);
     }  
+    
+    
+    // ---------------------------------------------------------------
+    // Martin Svihlik nasledujici metody nepotrebuje
 }
