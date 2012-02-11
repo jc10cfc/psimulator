@@ -63,7 +63,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         this.setMinimumSize(new Dimension(250, 100));
 
         
-        switch (abstractHwComponent.getHwComponentType()) {
+        switch (abstractHwComponent.getHwType()) {
             case END_DEVICE_NOTEBOOK:
             case END_DEVICE_WORKSTATION:
             case END_DEVICE_PC:
@@ -202,7 +202,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         // get selected row
         int index = jComboBoxInterface.getSelectedIndex();
 
-        EthInterface ethInterface = abstractHwComponent.getEthInterface(index);
+        EthInterface ethInterface = abstractHwComponent.getEthInterfaceAtIndex(index);
 
         // set name
         jLabelInterfaceNameValue.setText(ethInterface.getName());
@@ -292,7 +292,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         typeName.setFont(fontBold);
         devicePanel.add(typeName);
 
-        JLabel typeValue = new JLabel(abstractHwComponent.getHwComponentType().toString());
+        JLabel typeValue = new JLabel(abstractHwComponent.getHwType().toString());
         devicePanel.add(typeValue);
         //
         JLabel interfaceCountName = new JLabel(dataLayer.getString("INTERFACE_COUNT"));

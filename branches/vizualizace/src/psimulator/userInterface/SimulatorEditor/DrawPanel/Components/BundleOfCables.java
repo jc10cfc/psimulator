@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.AbstractNetwork.HwTypeEnum;
 
 /**
  *
@@ -14,8 +14,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
  */
 public class BundleOfCables extends AbstractComponent{
 
-    //private ZoomManager zoomManager;
-    
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
     
@@ -24,13 +22,13 @@ public class BundleOfCables extends AbstractComponent{
     private static final int LINE_WIDTH = 2;
     
     
-    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2, ZoomManager zoomManager){
-        super(null, zoomManager);
+    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
+        super(null, HwTypeEnum.BUNDLE_OF_CABLES);
         
         cables = new ArrayList<Cable>();
+        
         this.component1 = component1;
         this.component2 = component2;
-        this.zoomManager = zoomManager;
     }
     
     @Override

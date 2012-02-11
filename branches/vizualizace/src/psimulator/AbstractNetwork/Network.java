@@ -1,7 +1,6 @@
 package psimulator.AbstractNetwork;
 
 import java.io.Serializable;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,22 +12,15 @@ public class Network implements Serializable{
     private int ID;
     private String name;
     
-    private List<Cable> cables;
-    private List<Device> devices;
-
-    /*
-    private int idCounter = 0;
-    
-    public int getNewId(){
-        return idCounter++;
-    }*/
+    private List<NetworkCable> cables;
+    private List<NetworkDevice> devices;
 
     public Network(/*int ID, String name*/) {
         //this.ID = ID;
         //this.name = name;
         
-        this.cables = new ArrayList<Cable>();
-        this.devices = new ArrayList<Device>();
+        this.cables = new ArrayList<NetworkCable>();
+        this.devices = new ArrayList<NetworkDevice>();
     }
  
     public int getID() {
@@ -39,19 +31,19 @@ public class Network implements Serializable{
         this.ID = ID;
     }
 
-    public List<Cable> getCables() {
+    public List<NetworkCable> getCables() {
         return cables;
     }
 
-    public void setCables(List<Cable> cables) {
+    public void setCables(List<NetworkCable> cables) {
         this.cables = cables;
     }
 
-    public List<Device> getDevices() {
+    public List<NetworkDevice> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<Device> devices) {
+    public void setDevices(List<NetworkDevice> devices) {
         this.devices = devices;
     }
 

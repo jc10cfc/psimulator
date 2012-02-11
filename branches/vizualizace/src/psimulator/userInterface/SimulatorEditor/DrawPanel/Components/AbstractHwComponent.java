@@ -25,29 +25,36 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     protected int defaultZoomWidth;
     protected int defaultZoomHeight;
     // position of textRectangle in 1:1 zoom
-    //protected int defaultZoomTextXPos;
-    //protected int defaultZoomTextYPos;
     protected int defaultZoomTextWidth;
     protected int defaultZoomTextHeight;
     //
-    //protected ZoomManager zoomManager;
-    //protected AbstractImageFactory imageFactory;
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
+    
     protected List<EthInterface> interfaces = new ArrayList<EthInterface>();
     protected BufferedImage imageUnmarked;
     protected BufferedImage imageMarked;
     protected List<BufferedImage> textImages;
     protected String deviceName;
-    protected HwTypeEnum hwComponentType;
-    //
-    protected DataLayerFacade dataLayer;
     //
     
-    public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer, int interfacesCount) {
-        super(imageFactory, zoomManager);
-        this.dataLayer = dataLayer;
-        //this.zoomManager = zoomManager;
-        //this.imageFactory = imageFactory;
+    /**
+     * Use when creating graph by user actions.
+     * @param imageFactory
+     * @param zoomManager
+     * @param dataLayer
+     * @param hwType 
+     */
+    public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer, HwTypeEnum hwType){//, int interfacesCount) {
+        super(dataLayer, imageFactory, zoomManager,  hwType);
+    }
+    
+    /**
+     * Use when building graph from Network.
+     * @param id
+     * @param hwType 
+     */
+    public AbstractHwComponent(int id, HwTypeEnum hwType){
+        super(id, hwType);
     }
 
     /**
@@ -182,7 +189,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         return null;
     }
 
-    public EthInterface getEthInterface(int index) {
+    public EthInterface getEthInterfaceAtIndex(int index) {
         return interfaces.get(index);
     }
 
@@ -306,11 +313,17 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         this.deviceName = deviceName;
     }
 
-    public HwTypeEnum getHwComponentType() {
-        return hwComponentType;
-    }
-
     public int getInterfaceCount() {
         return interfaces.size();
     }
+
+    public void setDefaultZoomXPos(int defaultZoomXPos) {
+        this.defaultZoomXPos = defaultZoomXPos;
+    }
+
+    public void setDefaultZoomYPos(int defaultZoomYPos) {
+        this.defaultZoomYPos = defaultZoomYPos;
+    }
+    
+    
 }

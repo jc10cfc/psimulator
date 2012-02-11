@@ -10,16 +10,16 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableConnectToInterfacePopupMenu;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableConnectToInterfacePopupMenu;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableAddCable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 import psimulator.userInterface.SimulatorEditor.Tools.CreateCableTool;
-import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
  *
@@ -244,7 +244,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      */
     private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterface eth1, EthInterface eth2) {
         // create new cabel
-        Cable cable = new Cable(dataLayer, drawPanel.getImageFactory(), createCableTool.getHwType(), c1, c2, eth1, eth2, zoomManager);
+        Cable cable = new Cable(dataLayer, drawPanel.getImageFactory(), zoomManager, createCableTool.getHwType(), c1, c2, eth1, eth2);
         
         // initialize cable
         cable.initialize();

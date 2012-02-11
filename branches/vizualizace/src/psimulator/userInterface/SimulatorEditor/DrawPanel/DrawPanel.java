@@ -5,8 +5,6 @@ import java.awt.event.KeyEvent;
 import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -30,7 +28,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  * @author Martin
  */
 public final class DrawPanel extends DrawPanelOuterInterface implements
-        DrawPanelInnerInterface, Observer, DrawPanelSizeChangeInnerInterface {
+        DrawPanelInnerInterface, Observer{
     // mouse listeners
 
     private DrawPanelListenerStrategy mouseListenerHand;
@@ -191,34 +189,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
     }
 
-// ========  IMPLEMENTATION OF DrawPanelSizeChangeInnerInterface ==========   
-    @Override
-    public void updateSize(Dimension dim) {
-        // if nothing to resize
-        if (!(dim.width > actualZoomArea.width || dim.height > actualZoomArea.height)) {
-            return;
-        }
-
-        // if lowerRightCorner.x is out of area
-        if (dim.width > actualZoomArea.width) {
-            // update area width
-            actualZoomArea.width = dim.width;
-        }
-
-        // if lowerRightCorner.y is out of area
-        if (dim.height > actualZoomArea.height) {
-            // update area height
-            actualZoomArea.height = dim.height;
-        }
-
-        // update default zoom size
-        defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
-                zoomManager.doScaleToDefault(actualZoomArea.height));
-
-        // let scrool pane in editor know about the change
-        this.revalidate();
-    }
-// END ========  IMPLEMENTATION OF DrawPanelSizeChangeInnerInterface ==========  
 
 // ====================  IMPLEMENTATION OF Observer ======================   
     /**
@@ -316,6 +286,33 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
 // ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
     @Override
+    public void updateSize(Dimension dim) {
+        // if nothing to resize
+        if (!(dim.width > actualZoomArea.width || dim.height > actualZoomArea.height)) {
+            return;
+        }
+
+        // if lowerRightCorner.x is out of area
+        if (dim.width > actualZoomArea.width) {
+            // update area width
+            actualZoomArea.width = dim.width;
+        }
+
+        // if lowerRightCorner.y is out of area
+        if (dim.height > actualZoomArea.height) {
+            // update area height
+            actualZoomArea.height = dim.height;
+        }
+
+        // update default zoom size
+        defaultZoomArea.setSize(zoomManager.doScaleToDefault(actualZoomArea.width),
+                zoomManager.doScaleToDefault(actualZoomArea.height));
+
+        // let scrool pane in editor know about the change
+        this.revalidate();
+    }
+    
+    @Override
     public void doUpdateImages(){
         // has to be here to perform before repaint
         if(graph!=null){
@@ -326,6 +323,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
     }
     
+    @Override
+    public DataLayerFacade getDataLayerFacade() {
+        return dataLayer;
+    }
     
     @Override
     public GraphOuterInterface getGraphOuterInterface() {
@@ -481,4 +482,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.revalidate();
     }
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+
+    
 }
