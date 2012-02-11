@@ -1,9 +1,9 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
 import java.util.List;
+import psimulator.AbstractNetwork.Network;
 import psimulator.AbstractNetwork.NetworkCable;
 import psimulator.AbstractNetwork.NetworkDevice;
-import psimulator.AbstractNetwork.Network;
 
 /**
  *

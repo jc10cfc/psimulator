@@ -16,10 +16,11 @@ public class NetworkCable implements Serializable{
     
     private int delay;
 
-    public NetworkCable(int ID, NetworkInterface interface1, NetworkInterface interface2, int delay) {
+    public NetworkCable(int ID, NetworkInterface interface1, NetworkInterface interface2, HwTypeEnum hwType, int delay) {
         this.ID = ID;
         this.interface1 = interface1;
         this.interface2 = interface2;
+        this.hwType = hwType;
         this.delay = delay;
     }
 

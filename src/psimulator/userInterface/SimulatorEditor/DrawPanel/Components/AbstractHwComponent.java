@@ -324,6 +324,16 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     public void setDefaultZoomYPos(int defaultZoomYPos) {
         this.defaultZoomYPos = defaultZoomYPos;
     }
+
+    public int getDefaultZoomXPos() {
+        return defaultZoomXPos;
+    }
+
+    public int getDefaultZoomYPos() {
+        return defaultZoomYPos;
+    }
+    
+    
     
     
 }

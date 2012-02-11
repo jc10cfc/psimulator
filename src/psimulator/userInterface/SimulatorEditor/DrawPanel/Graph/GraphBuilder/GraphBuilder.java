@@ -45,7 +45,7 @@ public class GraphBuilder extends AbstractGraphBuilder {
                 ethInterfaces, device.getX(), device.getY());
 
         // add component to graph
-        graph.addHwComponent(hwComponent);
+        graph.addHwComponentWithoutGraphSizeChange(hwComponent);
     }
 
     @Override

@@ -12,17 +12,15 @@ public class NetworkDevice implements Serializable{
     private HwTypeEnum hwType;
     private String name;
 
-    private int interfaceCount;
     private int x;
     private int y;
     
     private List<NetworkInterface> interfaces;
 
-    public NetworkDevice(int ID, HwTypeEnum hwType, String name, int interfaceCount, int x, int y) {
+    public NetworkDevice(int ID, HwTypeEnum hwType, String name,int x, int y) {
         this.ID = ID;
         this.hwType = hwType;
         this.name = name;
-        this.interfaceCount = interfaceCount;
         this.x = x;
         this.y = y;
     }
@@ -43,13 +41,14 @@ public class NetworkDevice implements Serializable{
         this.hwType = hwType;
     }
 
+    /*
     public int getInterfaceCount() {
         return interfaceCount;
     }
 
     public void setInterfaceCount(int interfaceCount) {
         this.interfaceCount = interfaceCount;
-    }
+    }*/
 
     public List<NetworkInterface> getInterfaces() {
         return interfaces;

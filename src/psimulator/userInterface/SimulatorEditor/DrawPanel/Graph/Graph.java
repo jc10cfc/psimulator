@@ -10,6 +10,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -18,9 +19,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
     private LinkedHashMap<Integer, AbstractHwComponent> componentsMap = new LinkedHashMap<Integer, AbstractHwComponent>();
-    //private LinkedHashMap<Integer, Cable> cablesMap = new LinkedHashMap<Integer, AbstractHwComponent>();
-    
-    //private List<AbstractHwComponent> components = new ArrayList<AbstractHwComponent>();
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
     
     private List<Cable> markedCables = new ArrayList<Cable>();
@@ -29,7 +27,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     private Grid grid;
     private int widthDefault;
     private int heightDefault;
-    //private DrawPanelSizeChangeInnerInterface drawPanel;
+    //
     private DrawPanelInnerInterface  drawPanel;
     private ZoomManager zoomManager;
    
@@ -37,9 +35,16 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         
     }
     
-    public void initialize(DrawPanelInnerInterface drawPanel, ZoomManager zoomManager, DataLayerFacade dataLayer){
+    public void initialize(DrawPanelInnerInterface drawPanel, ZoomManager zoomManager, DataLayerFacade dataLayer,
+            AbstractImageFactory imageFactory){
+        
+        setInitReferencesToComponents(zoomManager, dataLayer, imageFactory);
+        
         this.zoomManager = zoomManager;
         this.drawPanel = drawPanel;
+        
+        // update size of graph with all components
+        updateSizeWithAllComponents();
 
         // init grid
         grid = new Grid((GraphOuterInterface) this, zoomManager);
@@ -49,10 +54,59 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         dataLayer.addLanguageObserver((Observer) this);
     }
     
+    /**
+     * Use in initialize to put references of parameters to all components in graph.
+     * @param zoomManager
+     * @param dataLayer
+     * @param imageFactory 
+     */
+    private void setInitReferencesToComponents(ZoomManager zoomManager, DataLayerFacade dataLayer, AbstractImageFactory imageFactory){
+        // get Collection of values contained in LinkedHashMap
+        Collection<AbstractHwComponent> colection = componentsMap.values();
+        // obtain an Iterator for Collection
+        Iterator<AbstractHwComponent> it = colection.iterator();
+        
+        // get all marked components
+        while (it.hasNext()) {
+            AbstractHwComponent component = it.next();
+            // set references
+            component.setInitReferences(dataLayer, imageFactory, zoomManager);
+            // initialize
+            component.initialize();
+        }
+        
+        // set references to all BundleOfCables and Cables
+        for(BundleOfCables boc : bundlesOfCables){
+            // boc performs the same operation on its cables
+            boc.setInitReferences(dataLayer, imageFactory, zoomManager);
+        }
+        
+        // initialize cables
+        for(Cable cable : getCables()){
+            cable.initialize();
+        }
+    }
+    
+    /**
+     * Use in initialize to make the graph size according to all components
+     */
+    private void updateSizeWithAllComponents(){
+        // get Collection of values contained in LinkedHashMap
+        Collection<AbstractHwComponent> colection = componentsMap.values();
+        // obtain an Iterator for Collection
+        Iterator<AbstractHwComponent> it = colection.iterator();
+        
+        // update graph with all components
+        while (it.hasNext()) {
+            AbstractHwComponent component  = it.next();
+            updateSizeAddComponent(component.getLowerRightCornerLocation());
+        }
+    }
+    
     public void deInitialize(DataLayerFacade dataLayer){
         zoomManager.deleteObserver(this);
         dataLayer.deleteLanguageObserver(this);
-        dataLayer.deleteLanguageObserver(this);
+        dataLayer.deletePreferencesObserver(this);
         drawPanel = null;
         zoomManager = null;
         grid = null;
@@ -189,6 +243,21 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
         return temp;
     }
+    
+    public List<Cable> getCables(){
+        List<Cable> temp = new ArrayList<Cable>();
+
+        Iterator<BundleOfCables> it = bundlesOfCables.iterator();
+
+        // get all marked components
+        while (it.hasNext()) {
+            BundleOfCables b = it.next();
+            // add all cables to temp
+            temp.addAll(b.getCables());
+        }
+
+        return temp;
+    }
 
     @Override
     public int getCablesCount() {
@@ -226,7 +295,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
         // if there is not a bundle between component1 and component2, we make the bundle
         if (bundle == null) {
-            bundle = new BundleOfCables(component1, component2);
+            bundle = new BundleOfCables(component1, component2, zoomManager);
             bundlesOfCables.add(bundle);
             component1.addBundleOfCables(bundle);
             component2.addBundleOfCables(bundle);
@@ -355,6 +424,13 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         //components.add(component);
         componentsMap.put(component.getId(), component);
         updateSizeAddComponent(component.getLowerRightCornerLocation());
+    }
+    
+    /**
+     * Use when components not initialized (do not have references on zoom manager and etc.)
+     */
+    public void addHwComponentWithoutGraphSizeChange(AbstractHwComponent component){
+        componentsMap.put(component.getId(), component);
     }
 
     @Override
