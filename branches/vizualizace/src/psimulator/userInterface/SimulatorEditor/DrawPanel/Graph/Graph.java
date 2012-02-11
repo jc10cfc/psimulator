@@ -394,12 +394,23 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         Point p = new Point(0, 0);
 
         for (AbstractHwComponent c : components) {
+            Point tmp = c.getLowerRightCornerLocation();
+            
+            if(tmp.x > p.x){
+                p.x = tmp.x;
+            }
+            if(tmp.y > p.y){
+                p.y = tmp.y;
+            }
+            
+            
+            /*
             if (c.getX() + c.getWidth() > p.x) {
                 p.x = c.getX() + c.getWidth();
             }
             if (c.getY() + c.getHeight() > p.y) {
                 p.y = c.getY() + c.getHeight();
-            }
+            }*/
         }
         return p;
     }

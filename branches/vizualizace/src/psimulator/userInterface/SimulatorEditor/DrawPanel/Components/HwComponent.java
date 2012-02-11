@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -82,6 +81,21 @@ public class HwComponent extends AbstractHwComponent {
         // get texts that have to be painted
         List<String> texts = getTexts();
         textImages = getTextsImages(texts, zoomManager.getCurrentFontSize());
+        
+        // set text images width and height
+        int textW = 0;
+        int textH = 0;
+
+        for (BufferedImage image : textImages) {
+            if (image.getWidth() > textW) {
+                textW = image.getWidth();
+            }
+
+            textH = textH + image.getHeight();
+        }
+
+        defaultZoomTextWidth = zoomManager.doScaleToDefault(textW);
+        defaultZoomTextHeight = zoomManager.doScaleToDefault(textH);
     }
 
     @Override
@@ -116,33 +130,13 @@ public class HwComponent extends AbstractHwComponent {
         int x;
         int y = getY() + getHeight() + 1;
 
-
-        int textX = Integer.MAX_VALUE;
-        int textY = y;
-        int textW = 0;
-        int textH = 0;
-
         for (BufferedImage image : images) {
             x = (int) (getX() - ((image.getWidth() - getWidth()) / 2.0));
 
             g2.drawImage(image, x, y, null);
-
-            y = y + image.getHeight();// + margin;
-
-            // update sizes
-            if (x < textX) {
-                textX = x;
-            }
-
-            if (image.getWidth() > textW) {
-                textW = image.getWidth();
-            }
-
-            textH = textH + image.getHeight();
+            
+            y = y + image.getHeight();
         }
-
-        defaultZoomTextWidth = zoomManager.doScaleToDefault(textW);
-        defaultZoomTextHeight = zoomManager.doScaleToDefault(textH);
     }
 
     /**
