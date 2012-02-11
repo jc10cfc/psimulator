@@ -280,9 +280,25 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * Gets Point in actual scale of lower right corner of component
      *
      * @return Actual-scale ponint
+     
+    public Point getLowerRightCornerLocation1() {
+        return new Point(getX() + getWidth(), getY() + getHeight());
+    }*/
+    
+    /**
+     * Gets Point in actual scale of lower right corner of component including text labels
+     *
+     * @return Actual-scale ponint
      */
     public Point getLowerRightCornerLocation() {
-        return new Point(getX() + getWidth(), getY() + getHeight());
+        int x = getDefaultZoomXPos() + getDefaultZoomWidth();
+        if(getDefaultZoomTextWidth()> getDefaultZoomWidth()){
+            x += ((getDefaultZoomTextWidth() - getDefaultZoomWidth())/2.0);
+        }
+        
+        int y = getDefaultZoomYPos() + getDefaultZoomHeight() + getDefaultZoomTextHeight();
+        
+        return new Point(zoomManager.doScaleToActual(x), zoomManager.doScaleToActual(y));
     }
 
     @Override
@@ -332,8 +348,30 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     public int getDefaultZoomYPos() {
         return defaultZoomYPos;
     }
+
+    public int getDefaultZoomHeight() {
+        return defaultZoomHeight;
+    }
+
+    public int getDefaultZoomWidth() {
+        return defaultZoomWidth;
+    }
     
+    public int getTextsWidth(){
+        return zoomManager.doScaleToActual(defaultZoomTextWidth);
+    }
     
+    public int getTextsHeight(){
+        return zoomManager.doScaleToActual(defaultZoomTextHeight);
+    }
+
+    public int getDefaultZoomTextHeight() {
+        return defaultZoomTextHeight;
+    }
+
+    public int getDefaultZoomTextWidth() {
+        return defaultZoomTextWidth;
+    }
     
     
 }
