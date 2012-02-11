@@ -382,7 +382,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         
         this.graph = graph;
       
-        graph.initialize(this, zoomManager, dataLayer);
+        graph.initialize(this, zoomManager, dataLayer, imageFactory);
     }
 
     @Override

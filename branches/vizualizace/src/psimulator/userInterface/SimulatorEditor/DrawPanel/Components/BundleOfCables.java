@@ -7,6 +7,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -22,13 +25,32 @@ public class BundleOfCables extends AbstractComponent{
     private static final int LINE_WIDTH = 2;
     
     
-    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
+    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2, ZoomManager zoomManager){
         super(null, HwTypeEnum.BUNDLE_OF_CABLES);
         
         cables = new ArrayList<Cable>();
         
         this.component1 = component1;
         this.component2 = component2;
+        
+        this.zoomManager = zoomManager;
+    }
+    
+    /**
+     * Use when building graph from Network.
+     * @param dataLayer
+     * @param imageFactory
+     * @param zoomManager 
+     */
+    @Override
+    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager){
+        this.dataLayer = dataLayer;
+        this.imageFactory = imageFactory;
+        this.zoomManager = zoomManager;
+        
+        for(Cable c : cables){
+            c.setInitReferences(dataLayer, imageFactory, zoomManager);
+        }
     }
     
     @Override

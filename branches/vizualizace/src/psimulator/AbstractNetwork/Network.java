@@ -2,6 +2,7 @@ package psimulator.AbstractNetwork;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -14,6 +15,8 @@ public class Network implements Serializable{
     
     private List<NetworkCable> cables;
     private List<NetworkDevice> devices;
+    
+    private LinkedHashMap<Integer, NetworkInterface> interfacesMap;
 
     public Network(/*int ID, String name*/) {
         //this.ID = ID;
@@ -21,6 +24,8 @@ public class Network implements Serializable{
         
         this.cables = new ArrayList<NetworkCable>();
         this.devices = new ArrayList<NetworkDevice>();
+        
+        interfacesMap = new LinkedHashMap<Integer, NetworkInterface>();
     }
  
     public int getID() {
@@ -30,6 +35,23 @@ public class Network implements Serializable{
     public void setID(int ID) {
         this.ID = ID;
     }
+    
+    public void addDevice(NetworkDevice device){
+        devices.add(device);
+    }
+    
+    public void addCable(NetworkCable cable){
+        cables.add(cable);
+    }
+    
+    public void addNetworkInterface(NetworkInterface networkInterface){
+        interfacesMap.put(networkInterface.getID(), networkInterface);
+    }
+    
+    public NetworkInterface getNetworkInterface(int id){
+        return interfacesMap.get(id);
+    }
+    
 
     public List<NetworkCable> getCables() {
         return cables;

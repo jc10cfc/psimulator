@@ -22,6 +22,7 @@ public class NetworkInterface implements Serializable{
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
     }
+    
 
     public int getID() {
         return ID;

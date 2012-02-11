@@ -46,6 +46,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
         this.zoomManager = zoomManager;
+        this.hwType = hwType;
     }
     
     /**
@@ -56,6 +57,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      */
     public AbstractComponent(Integer id, HwTypeEnum hwType){
         this.id = id;
+        this.hwType = hwType;
     }
     
     /**
