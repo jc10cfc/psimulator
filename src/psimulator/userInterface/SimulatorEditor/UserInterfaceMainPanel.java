@@ -8,6 +8,7 @@ import java.util.Observer;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
@@ -146,8 +147,21 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
      */
     @Override
     public void update(Observable o, Object o1) {
-        ZoomEventWrapper zoomEventWrapper = ((ZoomManager)o).getZoomEventWrapper();     
+        switch ((ObserverUpdateEventType) o1) {
+            case ZOOM_CHANGE:
+                ZoomEventWrapper zoomEventWrapper = ((ZoomManager)o).getZoomEventWrapper();  
+                zoomChangeUpdate(zoomEventWrapper);
+                break;
+            default:
+                break;
+        }
         
+          
+        
+        
+    }
+    
+    private void zoomChangeUpdate(ZoomEventWrapper zoomEventWrapper){
         switch(zoomEventWrapper.getZoomType()){
             case MOUSE:
                 //System.out.println("Mouse");
