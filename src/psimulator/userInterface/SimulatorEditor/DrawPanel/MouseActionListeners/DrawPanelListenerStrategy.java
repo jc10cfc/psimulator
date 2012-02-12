@@ -8,13 +8,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
-import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
  *
@@ -56,10 +57,10 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
             //System.out.println("Point:"+e.getPoint());
             // scroll down
             if (e.getWheelRotation() == 1) {
-                zoomManager.zoomIn(e.getPoint());
+                zoomManager.zoomIn(e.getPoint(), ZoomType.MOUSE);
                 //scroll up    
             } else if (e.getWheelRotation() == -1) {
-                zoomManager.zoomOut(e.getPoint());
+                zoomManager.zoomOut(e.getPoint(), ZoomType.MOUSE);
             }
         }
     }
