@@ -1,6 +1,7 @@
 package psimulator.userInterface.SimulatorEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
@@ -12,6 +13,8 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -143,23 +146,97 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
      */
     @Override
     public void update(Observable o, Object o1) {
-        //ZoomEventWrapper zoomWrapper = (ZoomEventWrapper) o1;
-        // set viewport
+        ZoomEventWrapper zoomEventWrapper = ((ZoomManager)o).getZoomEventWrapper();
+ 
         /*
-        Point newViewPos = new Point();
-        Rectangle oldView = jScrollPane.getViewport().getViewRect();
+        Point oldPosition = jScrollPane.getViewport().getViewPosition();
         
-        System.out.println("\nZoom changed");
-        System.out.println("Mouse pos x: "+zoomWrapper.getMouseX()+", y:"+zoomWrapper.getMouseY());
+        int mouseXOldZoom = zoomEventWrapper.getMouseXInOldZoom();
+        int mouseYOldZoom = zoomEventWrapper.getMouseXInOldZoom();
         
-        System.out.println("Old view: "+oldView);
-        System.out.println("Draw panel width: "+jPanelDraw.getWidth());
         
-        newViewPos.x = (jPanelDraw.getWidth() - jScrollPane.getWidth()) /2;
-        newViewPos.y = (jPanelDraw.getHeight() - jScrollPane.getHeight()) /2;
+        int mouseXNewZoom;
+        int mouseYNewZoom;
+        
+        int differenceWidth;
+        int differenceHeight;
+        
+        mouseXNewZoom = (int)((mouseXOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        mouseYNewZoom = (int)((mouseYOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        
+        if(zoomEventWrapper.getOldScale() < zoomEventWrapper.getNewScale()){
+            //mouseXNewZoom = (int)((mouseXOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+            //mouseYNewZoom = (int)((mouseYOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+            
+            differenceWidth = mouseXNewZoom - mouseXOldZoom;
+            differenceHeight = mouseYNewZoom - mouseYOldZoom;
+        }else{
+            //mouseXNewZoom = (int)((mouseXOldZoom / zoomEventWrapper.getNewScale()) * zoomEventWrapper.getOldScale());
+            //mouseYNewZoom = (int)((mouseYOldZoom / zoomEventWrapper.getNewScale()) * zoomEventWrapper.getOldScale());
+            
+            //differenceWidth = mouseXOldZoom - mouseXNewZoom;
+            //differenceHeight = mouseYOldZoom - mouseYNewZoom;
+            differenceWidth = mouseXNewZoom - mouseXOldZoom;
+            differenceHeight = mouseYNewZoom - mouseYOldZoom;
+        }
+        
+        System.out.println("Old mouse x = "+mouseXOldZoom+", y= "+mouseYOldZoom+". New zoom x="+mouseXNewZoom+", y="+mouseYNewZoom);
+        System.out.println("Difference w="+differenceWidth+", h="+differenceHeight);
+        
+        //oldPosition.x = (int)((oldPosition.x / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        //oldPosition.y = (int)((oldPosition.y / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        
+        Point newPosition = new Point();
+        //newPosition.x = oldPosition.x + differenceWidth;
+        //newPosition.y = oldPosition.y + differenceHeight;
+        
+        
+        // preskaluju stary bod viewportu do defaultu a do noveho zoomu
+        newPosition.x = (int)((oldPosition.x / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        newPosition.y = (int)((oldPosition.y / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        
+        
+        
+        //newPosition.x = newPosition.x - (newPosition.x-differenceWidth);
+        //newPosition.y = newPosition.y - (newPosition.y-differenceHeight);
+        //newViewPos.x = (int)(oldPosition.x * zoomEventWrapper.getNewZoomDivOld());
+        //newViewPos.y = (int)(oldPosition.y * zoomEventWrapper.getNewZoomDivOld());
+        
+        // Move the viewport to the new position to keep the area our mouse was in the same spot
+        jScrollPane.getViewport().setViewPosition(newPosition);
         */
-        //jScrollPane.getViewport().setViewPosition(newViewPos);
         
+        
+        // -------------- ZOOM ACCORDING TO MOUSE POSITION  ---------------------
+        Point oldPosition = jScrollPane.getViewport().getViewPosition();
+        
+        // get old mouse position
+        int mouseXOldZoom = zoomEventWrapper.getMouseXInOldZoom();
+        int mouseYOldZoom = zoomEventWrapper.getMouseYInOldZoom();
+        
+        // count distance of old mouse from old viewport
+        int width = mouseXOldZoom - oldPosition.x;
+        int height = mouseYOldZoom - oldPosition.y;
+        
+        // count new mouse coordinates
+        int mouseXNewZoom = (int)((mouseXOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        int mouseYNewZoom = (int)((mouseYOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        
+        
+        Point newPosition = new Point();
+        // new viewport position has to be in same distance from mouse as before
+        newPosition.x = mouseXNewZoom - width;
+        newPosition.y = mouseYNewZoom - height;
+        
+        /*
+        System.out.println("Old viewport x="+oldPosition.x+", y="+oldPosition.y);
+        System.out.println("Old mouse x = "+mouseXOldZoom+", y= "+mouseYOldZoom+". New zoom x="+mouseXNewZoom+", y="+mouseYNewZoom);
+        
+        System.out.println("New viewport x="+newPosition.x+", y="+newPosition.y);
+        */
+        jScrollPane.getViewport().setViewPosition(newPosition);
+        
+        // END -------------- ZOOM ACCORDING TO MOUSE POSITION  ---------------------
         
         // update zoom buttons in main window
         mainWindow.updateZoomButtons();
