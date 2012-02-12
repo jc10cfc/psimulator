@@ -21,6 +21,9 @@ public class ZoomManager extends Observable {
     private float basicStrokeWidth = 5f;
     
     private int defaultFontSize = 24;
+    
+    //
+    private ZoomEventWrapper zoomEventWrapper;
 
     /**
      * returns Icon size according to scale and default icon size
@@ -62,11 +65,13 @@ public class ZoomManager extends Observable {
 
     public void zoomIn(Point mousePostition) {
         if (canZoomIn()) {
-            double tmp = scale;
+            double oldZoom = scale;
+            
             scale += 1 * zoomInc;
-            tmp = tmp / scale;
+            
+            double newZoom = scale;
             // notify all observers
-            notifyAllObservers(mousePostition);
+            notifyAllObservers(mousePostition, oldZoom, newZoom);
         }
     }
 
@@ -82,11 +87,13 @@ public class ZoomManager extends Observable {
      */
     public void zoomOut(Point mousePostition) {
         if (canZoomOut()) {
-            double tmp = scale;
+            double oldZoom = scale;
+            
             scale += -1 * zoomInc;
-            tmp = tmp / scale;
+            
+            double newZoom = scale;
             // notify all observers
-            notifyAllObservers(mousePostition);
+            notifyAllObservers(mousePostition, oldZoom, newZoom);
         }
     }
 
@@ -94,11 +101,15 @@ public class ZoomManager extends Observable {
      * Resets zoom to default and notifies all observers
      */
     public void zoomReset() {
+        double oldZoom = scale;
+        
         // scale set to default
         scale = defaultScale;
+        
+        double newZoom = scale;
 
         // notify all observers
-        notifyAllObservers(new Point(0, 0));
+        notifyAllObservers(new Point(0, 0), oldZoom, newZoom);
     }
 
     /**
@@ -184,7 +195,9 @@ public class ZoomManager extends Observable {
     /**
      * calls setChanged and notifyObservers
      */
-    private void notifyAllObservers(Point mousePostition) {
+    private void notifyAllObservers(Point mousePostition, double odlScale, double newScale) {
+        this.zoomEventWrapper = new ZoomEventWrapper(odlScale, newScale, mousePostition.x, mousePostition.y);
+        
         setChanged();
         //notifyObservers(new ZoomEventWrapper(false, mousePostition.x, mousePostition.y, 0.0));
         notifyObservers(ObserverUpdateEventType.ZOOM_CHANGE);
@@ -213,4 +226,11 @@ public class ZoomManager extends Observable {
             return LevelOfDetail.LEVEL_4;   
         }
     }
+
+    public ZoomEventWrapper getZoomEventWrapper() {
+        return zoomEventWrapper;
+    }
+    
+    
+    
 }
