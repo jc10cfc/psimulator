@@ -1,5 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
+
 /**
  *
  * @author Martin
@@ -11,12 +13,15 @@ public class ZoomEventWrapper {
     
     private int mouseXInOldZoom;
     private int mouseYInOldZoom;
+    
+    private ZoomType zoomType;
 
-    public ZoomEventWrapper(double oldScale, double newScale, int mouseXInOldZoom, int mouseYInOldZoom) {
+    public ZoomEventWrapper(double oldScale, double newScale, int mouseXInOldZoom, int mouseYInOldZoom, ZoomType zoomType) {
         this.oldScale = oldScale;
         this.newScale = newScale;
         this.mouseXInOldZoom = mouseXInOldZoom;
         this.mouseYInOldZoom = mouseYInOldZoom;
+        this.zoomType = zoomType;
     }
 
     public int getMouseXInOldZoom() {
@@ -34,48 +39,8 @@ public class ZoomEventWrapper {
     public double getOldScale() {
         return oldScale;
     }
-    
-    
-    
-            
-    
-    
-    
-    
-    /*
-    private boolean scaleToMousePosition;
-    private int mouseX;
-    private int mouseY;
-    private double newZoomDivOld;
-    private boolean zoomIn;
-    
-    
-    
 
-    public ZoomEventWrapper(boolean scaleToMousePosition, int mouseX, int mouseY, double newZoomDivOld) {
-        this.scaleToMousePosition = scaleToMousePosition;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
-        this.newZoomDivOld = newZoomDivOld;
-        //this.zoomIn = zoomIn;
+    public ZoomType getZoomType() {
+        return zoomType;
     }
-
-    public int getMouseX() {
-        return mouseX;
-    }
-
-    public int getMouseY() {
-        return mouseY;
-    }
-
-    public boolean isScaleToMousePosition() {
-        return scaleToMousePosition;
-    }
-
-    public double getNewZoomDivOld() {
-        return newZoomDivOld;
-    }
-    
-    */
-
 }

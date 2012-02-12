@@ -148,6 +148,73 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     public void update(Observable o, Object o1) {
         ZoomEventWrapper zoomEventWrapper = ((ZoomManager)o).getZoomEventWrapper();     
         
+        switch(zoomEventWrapper.getZoomType()){
+            case MOUSE:
+                //System.out.println("Mouse");
+                doZoomAccordingToMouse(zoomEventWrapper);
+                break;
+            case CENTER:
+                //System.out.println("Center");
+                doZoomAccordingToCenter(zoomEventWrapper);
+                break;
+        }
+
+        // update zoom buttons in main window
+        mainWindow.updateZoomButtons();
+        // repaint
+        this.revalidate();
+        this.repaint();
+    }
+    
+    private void doZoomAccordingToCenter(ZoomEventWrapper zoomEventWrapper){
+        Point oldPosition = jScrollPane.getViewport().getViewPosition();
+        
+        //System.out.println("width " +jScrollPane.getViewport().getWidth() + ", heigth " +jScrollPane.getViewport().getHeight() );
+        
+        int viewportWidth = jScrollPane.getViewport().getWidth();
+        int viewportHeight = jScrollPane.getViewport().getHeight();
+        
+        if(jPanelDraw.hasGraph() && jPanelDraw.getGraph().getWidth() < viewportWidth){
+            viewportWidth = jPanelDraw.getGraph().getWidth();
+        }
+        
+        if(jPanelDraw.hasGraph() && jPanelDraw.getGraph().getHeight() < viewportHeight){
+            viewportHeight = jPanelDraw.getGraph().getHeight();
+        }
+        
+        // calculate center position 
+        int centerXOldZoom = (int) (jScrollPane.getViewport().getViewPosition().x + ((viewportWidth / 2.0)));
+        int centerYOldZoom = (int) (jScrollPane.getViewport().getViewPosition().y + ((viewportHeight / 2.0)));
+        
+        // count distance of old mouse from old viewport
+        int width = centerXOldZoom - oldPosition.x;
+        int height = centerYOldZoom - oldPosition.y;
+        
+        // count new mouse coordinates
+        int centerXNewZoom = (int)((centerXOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        int centerYNewZoom = (int)((centerYOldZoom / zoomEventWrapper.getOldScale()) * zoomEventWrapper.getNewScale());
+        
+        Point newPosition = new Point();
+        // new viewport position has to be in same distance from mouse as before
+        newPosition.x = centerXNewZoom - width;
+        newPosition.y = centerYNewZoom - height;
+        
+        //System.out.println("New viewport x="+newPosition.x+", y="+newPosition.y);
+        
+        // do not allow position below 0,0
+        if(newPosition.x < 0){
+            newPosition.x = 0;
+        }
+        
+        if(newPosition.y < 0){
+            newPosition.y = 0;
+        }
+        
+        // set new viewport
+        jScrollPane.getViewport().setViewPosition(newPosition);
+    }
+    
+    private void doZoomAccordingToMouse(ZoomEventWrapper zoomEventWrapper){
         // -------------- ZOOM ACCORDING TO MOUSE POSITION  ---------------------
         Point oldPosition = jScrollPane.getViewport().getViewPosition();
         
@@ -189,13 +256,8 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         jScrollPane.getViewport().setViewPosition(newPosition);
         
         // END -------------- ZOOM ACCORDING TO MOUSE POSITION  ---------------------
-        
-        // update zoom buttons in main window
-        mainWindow.updateZoomButtons();
-        // repaint
-        this.revalidate();
-        this.repaint();
     }
+    
     
     @Override
     public void init() {

@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.util.Observable;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.LevelOfDetail;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
 
 /**
  *
@@ -13,13 +14,15 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.LevelOfDetail;
 public class ZoomManager extends Observable {
 
     private int width = 140;
-    private double defaultScale = 0.8;
-    private double scale = defaultScale;
-    private double zoomInc = 0.1;
-    private double minScale = 0.1;
-    private double maxScale = 1.0;
+    //
+    private int defaultScale = 8;
+    private int scale = defaultScale;
+    private int zoomInc = 1;
+    private int minScale = 1;
+    private int maxScale = 10;
+    //
     private float basicStrokeWidth = 5f;
-    
+    //
     private int defaultFontSize = 24;
     
     //
@@ -53,25 +56,26 @@ public class ZoomManager extends Observable {
      * @return Current scale
      */
     public double getCurrentScale() {
-        return scale;
+        return getScale(scale);
     }
 
     /**
      * Zooms in if possible and notifies all observers
      */
     public void zoomIn() {
-        zoomIn(new Point(0, 0));
+        zoomIn(new Point(0, 0), ZoomType.CENTER);
     }
 
-    public void zoomIn(Point mousePostition) {
+    public void zoomIn(Point mousePostition, ZoomType zoomType) {
         if (canZoomIn()) {
-            double oldZoom = scale;
+            double oldZoom = getScale(scale);
             
-            scale += 1 * zoomInc;
+            scale += zoomInc;
             
-            double newZoom = scale;
+            double newZoom = getScale(scale);
+            
             // notify all observers
-            notifyAllObservers(mousePostition, oldZoom, newZoom);
+            notifyAllObservers(mousePostition, oldZoom, newZoom, zoomType);
         }
     }
 
@@ -79,21 +83,22 @@ public class ZoomManager extends Observable {
      * Zooms out if possible and notifies all observers
      */
     public void zoomOut() {
-        zoomOut(new Point(0, 0));
+        zoomOut(new Point(0, 0), ZoomType.CENTER);
     }
 
     /**
      * Zooms out if possible and notifies all observers
      */
-    public void zoomOut(Point mousePostition) {
+    public void zoomOut(Point mousePostition, ZoomType zoomType) {
         if (canZoomOut()) {
-            double oldZoom = scale;
+            double oldZoom = getScale(scale);
             
-            scale += -1 * zoomInc;
+            scale -= zoomInc;
             
-            double newZoom = scale;
+            double newZoom = getScale(scale);
+            
             // notify all observers
-            notifyAllObservers(mousePostition, oldZoom, newZoom);
+            notifyAllObservers(mousePostition, oldZoom, newZoom, zoomType);
         }
     }
 
@@ -101,15 +106,15 @@ public class ZoomManager extends Observable {
      * Resets zoom to default and notifies all observers
      */
     public void zoomReset() {
-        double oldZoom = scale;
+        double oldZoom = getScale(scale);
         
         // scale set to default
         scale = defaultScale;
         
-        double newZoom = scale;
-
+        double newZoom = getScale(scale);
+        
         // notify all observers
-        notifyAllObservers(new Point(0, 0), oldZoom, newZoom);
+        notifyAllObservers(new Point(0, 0), oldZoom, newZoom, ZoomType.CENTER);
     }
 
     /**
@@ -118,7 +123,7 @@ public class ZoomManager extends Observable {
      */
     public boolean canZoomOut() {
         // if maximum zoom not reached
-        if (scale > minScale + zoomInc) {
+        if (scale >= minScale + zoomInc) {
             return true;
         } else {
             return false;
@@ -131,7 +136,7 @@ public class ZoomManager extends Observable {
      */
     public boolean canZoomIn() {
         // if maximum zoom reached
-        if (scale < maxScale - zoomInc) {
+        if (scale <= maxScale - zoomInc) {
             return true;
         } else {
             return false;
@@ -144,7 +149,7 @@ public class ZoomManager extends Observable {
      * @return Scaled point in actualScale
      */
     public Point doScaleToActual(Point defaultScalePoint) {
-        return new Point((int) (defaultScalePoint.x * scale), (int) (defaultScalePoint.y * scale));
+        return new Point((int) (defaultScalePoint.x * getScale(scale)), (int) (defaultScalePoint.y * getScale(scale)));
     }
 
     /**
@@ -153,7 +158,7 @@ public class ZoomManager extends Observable {
      * @return Scaled dimension in actual scale
      */
     public Dimension doScaleToActual(Dimension defaultScaleDimension) {
-        return new Dimension((int) (defaultScaleDimension.width * scale), (int) (defaultScaleDimension.height * scale));
+        return new Dimension((int) (defaultScaleDimension.width * getScale(scale)), (int) (defaultScaleDimension.height * getScale(scale)));
     }
 
     /**
@@ -162,7 +167,7 @@ public class ZoomManager extends Observable {
      * @return Number in actual scale
      */
     public int doScaleToActual(int defaultScale) {
-        return ((int) (defaultScale * scale));
+        return ((int) (defaultScale * getScale(scale)));
     }
 
     /**
@@ -171,7 +176,7 @@ public class ZoomManager extends Observable {
      * @return Scaled point in default scale
      */
     public Point doScaleToDefault(Point actualScalePoint) {
-        return new Point((int) (actualScalePoint.x / scale), (int) (actualScalePoint.y / scale));
+        return new Point((int) (actualScalePoint.x / getScale(scale)), (int) (actualScalePoint.y / getScale(scale)));
     }
 
     /**
@@ -180,7 +185,7 @@ public class ZoomManager extends Observable {
      * @return Scaled dimension in default scale
      */
     public Dimension doScaleToDefault(Dimension actualScaleDimension) {
-        return new Dimension((int) (actualScaleDimension.width / scale), (int) (actualScaleDimension.height / scale));
+        return new Dimension((int) (actualScaleDimension.width / getScale(scale)), (int) (actualScaleDimension.height / getScale(scale)));
     }
 
     /**
@@ -189,14 +194,14 @@ public class ZoomManager extends Observable {
      * @return Number in default scale
      */
     public int doScaleToDefault(int actualScale) {
-        return ((int) (actualScale / scale));
+        return ((int) (actualScale / getScale(scale)));
     }
 
     /**
      * calls setChanged and notifyObservers
      */
-    private void notifyAllObservers(Point mousePostition, double odlScale, double newScale) {
-        this.zoomEventWrapper = new ZoomEventWrapper(odlScale, newScale, mousePostition.x, mousePostition.y);
+    private void notifyAllObservers(Point mousePostition, double odlScale, double newScale, ZoomType zoomType) {
+        this.zoomEventWrapper = new ZoomEventWrapper(odlScale, newScale, mousePostition.x, mousePostition.y, zoomType);
         
         setChanged();
         //notifyObservers(new ZoomEventWrapper(false, mousePostition.x, mousePostition.y, 0.0));
@@ -208,7 +213,7 @@ public class ZoomManager extends Observable {
      * @return Size of font in int.
      */
     public int getCurrentFontSize(){
-        return (int) (defaultFontSize * scale);
+        return (int) (defaultFontSize * getScale(scale));
     }
     
     /**
@@ -216,11 +221,11 @@ public class ZoomManager extends Observable {
      * @return 
      */
     public LevelOfDetail getCurrentLevelOfDetails(){
-        if(scale <=0.3){
+        if(getScale(scale) <=0.3){
             return LevelOfDetail.LEVEL_1;
-        }else if(scale < 0.6){
+        }else if(getScale(scale) < 0.6){
             return LevelOfDetail.LEVEL_2;
-        }else if(scale < 0.8){
+        }else if(getScale(scale) < 0.8){
             return LevelOfDetail.LEVEL_3;   
         }else{
             return LevelOfDetail.LEVEL_4;   
@@ -232,5 +237,7 @@ public class ZoomManager extends Observable {
     }
     
     
-    
+    private double getScale(int scale){
+        return (double)(scale / 10.0);
+    }
 }
