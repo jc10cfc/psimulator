@@ -178,7 +178,8 @@ public final class CableProperties extends AbstractPropertiesDialog {
         jTextFieldDelay = new JFormattedTextField(delayFormatter);
         jTextFieldDelay.setText("" + cable.getDelay());
         jTextFieldDelay.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 0-99999");
-        parametersPanel.add(jTextFieldDelay);
+        // add decorator that paints wrong input icon
+        parametersPanel.add(new JLayer<JFormattedTextField>(jTextFieldDelay, layerUI));
 
         JLabel delayTip = new JLabel("0-99999");
         parametersPanel.add(delayTip);

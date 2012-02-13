@@ -6,8 +6,11 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import javax.swing.*;
+import javax.swing.plaf.LayerUI;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
@@ -49,7 +52,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
     public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, AbstractHwComponent abstractHwComponent) {
         super(mainWindow, dataLayer);
-        
+
         this.abstractHwComponent = abstractHwComponent;
         this.drawPanel = drawPanel;
 
@@ -62,7 +65,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         // set minimum size
         this.setMinimumSize(new Dimension(250, 100));
 
-        
+
         switch (abstractHwComponent.getHwType()) {
             case END_DEVICE_NOTEBOOK:
             case END_DEVICE_WORKSTATION:
@@ -85,15 +88,27 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
                 System.err.println("HwComponentProperties error1");
                 break;
         }
-        
+
         //add content
         addContent();
-        
+
         // update according to first interface
         if (showInterfaces) {
             upadteInterfaceRelatedItems();
         }
-        
+
+        //Make textField get the focus whenever frame is activated.
+        this.addWindowFocusListener(new WindowAdapter() {
+
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                if(showAddresses){
+                    jTextFieldIpAddress.requestFocusInWindow();
+                }
+                
+            }
+        });
+
         //
         initialize();
     }
@@ -143,7 +158,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
      * Saves device Name, IP and MAC addresses from text fields to local maps
      */
     @Override
-    protected void copyValuesFromFieldsToLocal(){
+    protected void copyValuesFromFieldsToLocal() {
         deviceName = jTextFieldDeviceName.getText().trim();
 
         if (showAddresses) {
@@ -241,7 +256,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
     }
 
     @Override
-    protected JPanel createContentPanel(){
+    protected JPanel createContentPanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -256,8 +271,9 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
             mainPanel.add(createRealPcPanel());
         }
         /*
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
-        mainPanel.add(createOkCancelPanel());*/
+         * mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
+        mainPanel.add(createOkCancelPanel());
+         */
 
         return mainPanel;
     }
@@ -285,8 +301,8 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         jTextFieldDeviceName = new JFormattedTextField(deviceNameFormatter);
         jTextFieldDeviceName.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 0-15 " + dataLayer.getString("CHARACTERS"));
         jTextFieldDeviceName.setText(abstractHwComponent.getDeviceName());
-
-        devicePanel.add(jTextFieldDeviceName);
+        // add decorator that paints wrong input icon
+        devicePanel.add(new JLayer<JFormattedTextField>(jTextFieldDeviceName, layerUI));
         //
         JLabel typeName = new JLabel(dataLayer.getString("TYPE") + ":");
         typeName.setFont(fontBold);
@@ -387,7 +403,8 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
             jTextFieldIpAddress = new JFormattedTextField(ipMaskFormatter);
             jTextFieldIpAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 192.168.1.1/24 (IP/mask)");
-            addressesPanel.add(jTextFieldIpAddress);
+            // add decorator that paints wrong input icon
+            addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldIpAddress, layerUI));
 
             JLabel ipAddressTip = new JLabel("10.0.0.1/24 (IP/mask)");
             addressesPanel.add(ipAddressTip);
@@ -404,22 +421,8 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
             jTextFieldMacAddress = new JFormattedTextField(macMaskFormatter);
             jTextFieldMacAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)");
-            addressesPanel.add(jTextFieldMacAddress);
-            /*
-             * try { MaskFormatter macMask = new
-             * MaskFormatter("HH-HH-HH-HH-HH-HH"); // mask for MAC address
-             * macMask.setAllowsInvalid(false); // allow to enter invalid value
-             * for short time macMask.setCommitsOnValidEdit(true); // value is
-             * immedeatly published to textField macMask.setOverwriteMode(true);
-             * // do overwrite charracters
-             *
-             * jTextFieldMacAddress = new JFormattedTextField(macMask);
-             * jTextFieldMacAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS")
-             * + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)");
-             * addressesPanel.add(jTextFieldMacAddress); } catch (ParseException
-             * ex) { //should never happen
-            }
-             */
+            // add decorator that paints wrong input icon
+            addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldMacAddress, layerUI));
 
             JLabel macAddressTip = new JLabel("HH-HH-HH-HH-HH-HH");
             addressesPanel.add(macAddressTip);
