@@ -4,7 +4,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.plaf.LayerUI;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.ValidationLayerUI;
 
 /**
  *
@@ -12,6 +14,9 @@ import psimulator.dataLayer.DataLayerFacade;
  */
 public abstract class AbstractPropertiesDialog extends JDialog {
 
+    // A single LayerUI for all the fields.
+    protected LayerUI<JFormattedTextField> layerUI = new ValidationLayerUI();
+    //
     protected DataLayerFacade dataLayer;
     protected JDialog thisDialog;
     protected Component parentComponent;
