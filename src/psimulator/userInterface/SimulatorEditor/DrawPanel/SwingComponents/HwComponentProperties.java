@@ -10,13 +10,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import javax.swing.*;
-import javax.swing.plaf.LayerUI;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.InterfacesTable.InterfacesTableModel;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.InterfacesTable.JInterfacesTable;
 
 /**
  *
@@ -48,6 +49,8 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
     private String deviceName;
     private HashMap<String, String> ipMap;
     private HashMap<String, String> macMap;
+    //
+    private InterfacesTableModel tableInterfacesModel;
     // 
 
     public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, AbstractHwComponent abstractHwComponent) {
@@ -63,7 +66,9 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         this.setTitle(abstractHwComponent.getDeviceName());
 
         // set minimum size
-        this.setMinimumSize(new Dimension(250, 100));
+        this.setMinimumSize(new Dimension(200, 100));
+
+        //this.setMaximumSize(new Dimension(400, 250));
 
 
         switch (abstractHwComponent.getHwType()) {
@@ -102,10 +107,11 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
             @Override
             public void windowGainedFocus(WindowEvent e) {
-                if(showAddresses){
+                /*
+                if (showAddresses) {
                     jTextFieldIpAddress.requestFocusInWindow();
-                }
-                
+                }*/
+
             }
         });
 
@@ -148,6 +154,8 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
                 ethInterface.setIpAddress(ipMap.get(ethInterface.getName()));
                 ethInterface.setMacAddress(macMap.get(ethInterface.getName()));
             }
+            
+            tableInterfacesModel.copyValuesFromLocalToGlobal();
         }
 
         // repaint draw panel
@@ -200,6 +208,10 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         }
 
         if (showAddresses) {
+            if(tableInterfacesModel.hasChangesMade()){
+                return true;
+            }
+            
             for (EthInterface ethInterface : abstractHwComponent.getInterfaces()) {
                 if (!ethInterface.getIpAddress().equals(ipMap.get(ethInterface.getName()))) {
                     return true;
@@ -267,12 +279,14 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
         if (showInterfaces) {
             mainPanel.add(createInterfacesPanel());
+            
+            mainPanel.add(createInterfaceTablePanel());
         } else {
             mainPanel.add(createRealPcPanel());
         }
         /*
          * mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
-        mainPanel.add(createOkCancelPanel());
+         * mainPanel.add(createOkCancelPanel());
          */
 
         return mainPanel;
@@ -433,6 +447,41 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
 
         return interfacesPanel;
+    }
+
+    private JPanel createInterfaceTablePanel() {
+        JPanel interfacesTablePanel = new JPanel();
+        // create border
+        interfacesTablePanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("INTERFACES")));
+
+        // create table model
+        tableInterfacesModel = new InterfacesTableModel(abstractHwComponent, dataLayer, showAddresses);
+        
+        // create table
+        JInterfacesTable table = new JInterfacesTable(tableInterfacesModel, abstractHwComponent, dataLayer);
+        
+        // create scroll pane
+        JScrollPane jScrollPane = new JScrollPane();
+        jScrollPane.setViewportView(table);
+
+        if(showAddresses){
+            jScrollPane.setMaximumSize(new Dimension(470,150));
+            jScrollPane.setPreferredSize(new Dimension(470,150));
+        }else{
+            jScrollPane.setMaximumSize(new Dimension(300,150));
+            jScrollPane.setPreferredSize(new Dimension(300,150));
+            
+        }
+            
+        // set scrollbar policies
+        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        
+        
+        // add scroll pane to panel
+        interfacesTablePanel.add(jScrollPane);
+
+        return interfacesTablePanel;
     }
 
     private JPanel createRealPcPanel() {
