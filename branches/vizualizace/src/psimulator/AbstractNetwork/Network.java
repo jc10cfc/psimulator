@@ -9,17 +9,22 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Martin
  */
+@XmlRootElement
 public class Network implements Serializable {
     //private int ID;
     //private String name;
 
     private NetworkCounter counter;
+    
     private List<NetworkCable> cables;
+    
     private List<NetworkDevice> devices;
     // needed for Graph restore from Network - fast lookup
     private LinkedHashMap<Integer, NetworkInterface> interfacesMap;
@@ -37,12 +42,14 @@ public class Network implements Serializable {
     }
 
     public void save(String fileName) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance("psimulator.AbstractNetwork");
+        JAXBContext context = JAXBContext.newInstance(Network.class);
 
         File file = new File(fileName);
 
         Marshaller marsh = context.createMarshaller();
 
+        System.out.println(this.counter.getNextID());
+        
         // nastavení formátování
         marsh.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
@@ -56,7 +63,7 @@ public class Network implements Serializable {
 
         Network network = null;
 
-        JAXBContext context = JAXBContext.newInstance("psimulator.AbstractNetwork");
+        JAXBContext context = JAXBContext.newInstance(Network.class);
 
         Unmarshaller unmarsh = context.createUnmarshaller();
 
@@ -83,14 +90,17 @@ public class Network implements Serializable {
         return interfacesMap.get(id);
     }
 
+    @XmlElement(name="cable")
     public List<NetworkCable> getCables() {
         return cables;
     }
 
+    @XmlElement(name="device")
     public List<NetworkDevice> getDevices() {
         return devices;
     }
 
+    @XmlElement(name="counter")
     public NetworkCounter getCounter() {
         return counter;
     }
