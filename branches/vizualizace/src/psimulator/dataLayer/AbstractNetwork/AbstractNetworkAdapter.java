@@ -3,7 +3,6 @@ package psimulator.dataLayer.AbstractNetwork;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
 import psimulator.AbstractNetwork.Network;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder.GraphBuilderFacade;
@@ -26,76 +25,43 @@ public class AbstractNetworkAdapter {
 
     public Graph loadGraphFromFile(File file) {
 
-        // START XML TEST LOAD
-        
-        String fileName = file.getPath();
-        Network network  = null;
-        
-        try {
-            network = Network.load(fileName);
-        } catch (JAXBException ex) {
-            Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
+        // load network from file
+        Network network = loadNetwork(file);
+        // create Graph builder
         GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
+        // build Graph
         Graph graph = graphBuilderFacade.buildGraph(network);
-        
+
         return graph;
-
-        // END XML TEST LOAD
-
-
-//        // load network from file
-//        Network network = loadNetwork(file);
-//        // create Graph builder
-//        GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
-//        // build Graph
-//        Graph graph = graphBuilderFacade.buildGraph(network);
-//
-//        return graph;
     }
 
     private void saveNetwork(Network network, File file) {
 
 
-        // START XML TEST SAVE
-        String fileName = file.getPath();
+        FileOutputStream fileOuptutStream = null;
+        ObjectOutputStream objectOutputStream = null;
         try {
-            network.save(fileName);
-        } catch (JAXBException ex) {
+            fileOuptutStream = new FileOutputStream(file);
+            objectOutputStream = new ObjectOutputStream(fileOuptutStream);
+            objectOutputStream.writeObject(network);
+
+        } catch (FileNotFoundException ex) {
             Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
+
+        } finally {
+            try {
+                fileOuptutStream.close();
+            } catch (IOException ex) {
+                // nothing to do
+            }
+            try {
+                objectOutputStream.close();
+            } catch (IOException ex) {
+                // nothing to do
+            }
         }
-
-        // END XML TEST SAVE
-        
-
-//
-//
-//        FileOutputStream fileOuptutStream = null;
-//        ObjectOutputStream objectOutputStream = null;
-//        try {
-//            fileOuptutStream = new FileOutputStream(file);
-//            objectOutputStream = new ObjectOutputStream(fileOuptutStream);
-//            objectOutputStream.writeObject(network);
-//
-//        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
-//
-//        } finally {
-//            try {
-//                fileOuptutStream.close();
-//            } catch (IOException ex) {
-//                // nothing to do
-//            }
-//            try {
-//                objectOutputStream.close();
-//            } catch (IOException ex) {
-//                // nothing to do
-//            }
-//        }
     }
 
     private Network loadNetwork(File file) {
