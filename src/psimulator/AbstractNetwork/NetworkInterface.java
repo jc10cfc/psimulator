@@ -1,13 +1,19 @@
 package psimulator.AbstractNetwork;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 
 /**
  *
  * @author Martin
  */
 public class NetworkInterface implements Serializable{
+    
+    
     private int ID;
+    
     
     private NetworkDevice device;
     
@@ -23,10 +29,23 @@ public class NetworkInterface implements Serializable{
         this.macAddress = macAddress;
     }
 
+    public NetworkInterface() {
+    }
+    
+    @XmlAttribute @XmlID
+    public String getIDAsString(){
+        return String.valueOf(ID);
+    }
+    
+    public void setIDAsString(String id){
+        ID = Integer.valueOf(id);
+    }
+
     public int getID() {
         return ID;
     }
 
+    @XmlAttribute @XmlIDREF
     public NetworkDevice getDevice() {
         return device;
     }

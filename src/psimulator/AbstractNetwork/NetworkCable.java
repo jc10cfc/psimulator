@@ -1,6 +1,8 @@
 package psimulator.AbstractNetwork;
 
 import java.io.Serializable;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlIDREF;
 
 /**
  *
@@ -24,6 +26,11 @@ public class NetworkCable implements Serializable{
         this.delay = delay;
     }
 
+    public NetworkCable() {
+    }
+    
+    
+
     public int getID() {
         return ID;
     }
@@ -32,10 +39,12 @@ public class NetworkCable implements Serializable{
         return delay;
     }
 
+    @XmlAttribute @XmlIDREF
     public NetworkInterface getInterface1() {
         return interface1;
     }
 
+    @XmlAttribute @XmlIDREF
     public NetworkInterface getInterface2() {
         return interface2;
     }

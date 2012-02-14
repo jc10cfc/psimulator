@@ -1,9 +1,12 @@
 package psimulator.AbstractNetwork;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  *
  * @author Martin
  */
+@XmlEnum
 public enum HwTypeEnum {
     LINUX_ROUTER,
     CISCO_ROUTER,

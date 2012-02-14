@@ -2,18 +2,25 @@ package psimulator.AbstractNetwork;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 
 /**
  *
  * @author Martin
  */
+
 public class NetworkDevice implements Serializable{
+    
+    
     private int ID;
     private HwTypeEnum hwType;
     private String name;
 
     private int x;
     private int y;
+    
     
     private List<NetworkInterface> interfaces;
 
@@ -25,6 +32,19 @@ public class NetworkDevice implements Serializable{
         this.y = y;
     }
 
+    public NetworkDevice() {
+    }
+    
+    @XmlAttribute @XmlID
+    public String getIDAsString(){
+        return String.valueOf(ID);
+    }
+    
+    public void setIDAsString(String id){
+        ID = Integer.valueOf(id);
+    }
+    
+
     public int getID() {
         return ID;
     }
@@ -33,6 +53,7 @@ public class NetworkDevice implements Serializable{
         return hwType;
     }
 
+    @XmlElement(name="interface")
     public List<NetworkInterface> getInterfaces() {
         return interfaces;
     }
