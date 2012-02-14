@@ -13,8 +13,10 @@ import javax.swing.plaf.LayerUI;
  *
  * @author Martin
  */
-public class ValidationLayerUI
-    extends LayerUI<JFormattedTextField> {
+public class ValidationLayerUI extends LayerUI<JFormattedTextField> {
+    
+  
+    
   @Override
   public void paint (Graphics g, JComponent c) {
     super.paint (g, c);

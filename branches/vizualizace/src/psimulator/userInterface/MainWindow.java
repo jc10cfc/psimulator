@@ -15,7 +15,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import psimulator.AbstractNetwork.Network;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.logicLayer.ControllerFacade;
@@ -23,8 +22,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder.GraphBuilderFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.NetworkBuilder.NetworkBuilderFacade;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
@@ -57,10 +54,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private GlassPanelPainter glassPanelPainter;
     private MainWindowGlassPane glassPane;
     //private Component originalGlassPane;
-    
-    //
-    private Network tmpNetwork;
-    //
 
     public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
@@ -99,7 +92,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         
         
         // create glass pane and glass pane painter
-        glassPane = new MainWindowGlassPane();
+        glassPane = new MainWindowGlassPane((UserInterfaceMainPanel)jPanelUserInterfaceMain);
         
         glassPanelPainter = new GlassPanelPainter(glassPane, jPanelUserInterfaceMain);
         //originalGlassPane = this.getGlassPane();
