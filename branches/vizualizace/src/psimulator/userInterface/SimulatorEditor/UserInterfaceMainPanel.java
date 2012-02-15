@@ -313,6 +313,8 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     @Override
     public void setGraph(Graph graph) {
         jPanelDraw.setGraph(graph);
+        // initialize viewport to beginning
+        jViewPort.setViewPosition(new Point(0,0));
     }
 
     @Override
