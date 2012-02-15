@@ -10,20 +10,16 @@ import java.util.List;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Markable;
+import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuCable;
-import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
-import psimulator.userInterface.SimulatorEditor.Tools.ManipulationTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableMoveComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
-import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
+import psimulator.userInterface.SimulatorEditor.Tools.ManipulationTool;
 
 /**
  *
@@ -62,6 +58,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void initialize() {
+        super.initialize();
+        
         drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         transparentRectangleInProgress = false;
     }
@@ -93,8 +91,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     @Override
     public void mouseClickedLeft(MouseEvent e) {
         // get clicked component
-        Markable clickedComponent = getClickedItem(e.getPoint());
-
+        Markable clickedComponent = getClickedItem(convertPoint(e.getPoint()));
+        
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         // if nothing clicked
@@ -165,11 +163,11 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // if control not down, clear selection
         }
 
-        Markable clickedComponent = getClickedAbstractHwComponent(e.getPoint());
+        Markable clickedComponent = getClickedAbstractHwComponent(convertPoint(e.getPoint()));
 
         if (clickedComponent == null) {
             // start painting transparent rectange for marking more components
-            startPointOfMarkingTransparentRectangle = e.getPoint();
+            startPointOfMarkingTransparentRectangle = convertPoint(e.getPoint());
             transparentRectangleInProgress = true;
             return;
         }else{
@@ -178,7 +176,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // try if start dragging of some component
         for (AbstractHwComponent c : graph.getHwComponents()) {
-            if (c.intersects(e.getPoint())) {
+            if (c.intersects(convertPoint(e.getPoint()))) {
                 // if c is marked, we will drag all marked components
                 if (c.isMarked()) {
                     addToDragAllMarkedComponents = true;
@@ -225,12 +223,12 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // painting transparent rectange for marking more components
         if (draggedComponents.isEmpty() && transparentRectangleInProgress == true) {
             // calculate width an height
-            int width = startPointOfMarkingTransparentRectangle.x - e.getPoint().x;
-            int height = startPointOfMarkingTransparentRectangle.y - e.getPoint().y;
+            int width = startPointOfMarkingTransparentRectangle.x - convertPoint(e.getPoint()).x;
+            int height = startPointOfMarkingTransparentRectangle.y - convertPoint(e.getPoint()).y;
 
             // calculate x and y position
-            int x = width < 0 ? startPointOfMarkingTransparentRectangle.x : e.getPoint().x;
-            int y = height < 0 ? startPointOfMarkingTransparentRectangle.y : e.getPoint().y;
+            int x = width < 0 ? startPointOfMarkingTransparentRectangle.x : convertPoint(e.getPoint()).x;
+            int y = height < 0 ? startPointOfMarkingTransparentRectangle.y : convertPoint(e.getPoint()).y;
 
             // create rectangle
             Rectangle rect = new Rectangle(x, y, Math.abs(width), Math.abs(height));
@@ -333,7 +331,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         for (AbstractHwComponent c : graph.getHwComponents()) {
-            if (c.intersects(e.getPoint())) {
+            if (c.intersects(convertPoint(e.getPoint()))) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 return;
             }
@@ -342,7 +340,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         //Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
 
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
-            if (boc.intersects(e.getPoint())) {
+            if (boc.intersects(convertPoint(e.getPoint()))) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 return;
             }
@@ -357,14 +355,14 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         transparentRectangleInProgress = false;
         
         // get clicked component
-        AbstractComponent clickedComponent = getClickedItem(e.getPoint());
+        AbstractComponent clickedComponent = getClickedItem(convertPoint(e.getPoint()));
 
         // if there are more marked AbstractHwComponent components and we clicked one
         if (graph.getMarkedAbstractHWComponentsCount() > 1 && (clickedComponent != null && clickedComponent.isMarked())) {
             // show popup for more components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, graph.getMarkedAbstractHWComponentsCount());
 
-            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
             return;
         }
 
@@ -373,7 +371,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // show popup for all components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
 
-            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
             
             return;
         }
@@ -388,7 +386,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             
             PopupMenuCable popup = new PopupMenuCable(drawPanel, dataLayer, graph.getMarkedCablesCount());
 
-            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
             return;
         }
         
@@ -405,7 +403,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // show popup for one component
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 1);
 
-            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
             return;
         }
 
@@ -418,7 +416,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
 
-            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
             return;
         }
     }

@@ -32,6 +32,7 @@ public class EditorToolBar extends JToolBar implements Observer {
     
     private ButtonGroup toolsButtonGroup;
     
+    private MenuToggleButton toggleButtonDragMove;
     private MenuToggleButton toggleButtonHand;
     private MenuToggleButton toggleButtonRouters;
     private MenuToggleButton toggleButtonSwitches;
@@ -65,6 +66,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         
         toolsButtonGroup = new ButtonGroup();
         
+        toggleButtonDragMove = new MenuToggleButton(ToolsFactory.getTools(MainTool.DRAG_MOVE, imageFactory, toolChangeInterface), dataLayer);
         toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, imageFactory, toolChangeInterface), dataLayer);
         toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_ROUTER, imageFactory, toolChangeInterface), dataLayer);
         toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_SWITCH, imageFactory, toolChangeInterface), dataLayer);
@@ -72,6 +74,7 @@ public class EditorToolBar extends JToolBar implements Observer {
         toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_REAL_PC, imageFactory, toolChangeInterface), dataLayer);
         toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_CABLE, imageFactory, toolChangeInterface), dataLayer);
                 
+        toolsButtonGroup.add(toggleButtonDragMove);
         toolsButtonGroup.add(toggleButtonHand);
         toolsButtonGroup.add(toggleButtonEndDevices);
         toolsButtonGroup.add(toggleButtonRouters);
@@ -81,6 +84,7 @@ public class EditorToolBar extends JToolBar implements Observer {
  
         
         this.add(toggleButtonHand);
+        this.add(toggleButtonDragMove);
         this.addSeparator();
         this.add(toggleButtonEndDevices);
         this.add(toggleButtonRouters);
@@ -142,6 +146,7 @@ public class EditorToolBar extends JToolBar implements Observer {
     ////////------------ PRIVATE------------///////////
     private void setTextsToComponents() {
         // set text only to Tools that cant be changed
+        toggleButtonDragMove.setToolTipText(dataLayer.getString("DRAG_MOVE"));
         toggleButtonHand.setToolTipText(dataLayer.getString("HAND"));
         toggleButtonRealPC.setToolTipText(dataLayer.getString("REAL_PC"));
         //toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));

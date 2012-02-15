@@ -3,6 +3,7 @@ package psimulator.dataLayer;
 import java.io.File;
 import java.util.Observer;
 import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapter;
+import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapterXML;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Simulator.SimulatorManager;
@@ -20,12 +21,14 @@ public class DataLayer extends DataLayerFacade{
     private PreferencesManager preferencesManager;
     private SimulatorManager simulatorManager;
     private AbstractNetworkAdapter abstractNetworkAdapter;
+    private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
     
     public DataLayer(){
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
         simulatorManager = new SimulatorManager();
         abstractNetworkAdapter = new AbstractNetworkAdapter();
+        abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
     }
 
     @Override
@@ -95,12 +98,14 @@ public class DataLayer extends DataLayerFacade{
 
     @Override
     public void saveGraphToFile(Graph graph, File file) {
-        abstractNetworkAdapter.saveGraphToFile(graph, file);
+        //abstractNetworkAdapter.saveGraphToFile(graph, file);
+        abstractNetworkAdapterXML.saveGraphToFile(graph, file);
     }
 
     @Override
     public Graph loadGraphFromFile(File file) {
-        return abstractNetworkAdapter.loadGraphFromFile(file);
+        //return abstractNetworkAdapter.loadGraphFromFile(file);
+        return abstractNetworkAdapterXML.loadGraphFromFile(file);
     }
 
     @Override

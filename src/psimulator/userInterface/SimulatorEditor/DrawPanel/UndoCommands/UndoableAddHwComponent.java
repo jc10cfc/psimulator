@@ -34,6 +34,8 @@ public class UndoableAddHwComponent extends AbstractUndoableEdit {
       super.redo();
       graph.addHwComponent(component);
       
+      graph.getDrawPanelInnerInterface().doUpdateImages();
+      
       // panel could be resized before undo, so we need to update its size
       //drawPanel.updateSize(component.getLowerRightCornerLocation());
     }

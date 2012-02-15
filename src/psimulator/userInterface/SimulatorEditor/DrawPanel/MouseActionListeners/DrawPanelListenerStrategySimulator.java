@@ -22,6 +22,7 @@ public class DrawPanelListenerStrategySimulator extends DrawPanelListenerStrateg
     
     @Override
     public void initialize() {
+        super.initialize();
         //System.out.println("Simulator mouse listener init");
         drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }

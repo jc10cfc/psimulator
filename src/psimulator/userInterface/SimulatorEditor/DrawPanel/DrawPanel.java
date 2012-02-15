@@ -5,10 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.EnumMap;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
@@ -33,6 +30,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     // mouse listeners
 
     private DrawPanelListenerStrategy mouseListenerHand;
+    private DrawPanelListenerStrategy mouseListenerDragMove;
     private DrawPanelListenerStrategy mouseListenerAddHwComponent;
     private DrawPanelListenerStrategy mouseListenerCable;
     private DrawPanelListenerStrategy mouseListenerSimulator;
@@ -146,6 +144,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
      */
     private void createDrawPaneMouseListeners() {
         mouseListenerHand = new DrawPanelListenerStrategyHand(this, undoManager, zoomManager, mainWindow, dataLayer);
+        mouseListenerDragMove = new DrawPanelListenerStrategyDragMove(this, undoManager, zoomManager, mainWindow, dataLayer);
         mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, zoomManager, mainWindow, dataLayer);
         mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, zoomManager, mainWindow, dataLayer);
         mouseListenerSimulator = new DrawPanelListenerStrategySimulator(this, undoManager, zoomManager, mainWindow, dataLayer);
@@ -200,7 +199,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
      */
     @Override
     public void update(Observable o, Object o1) {
-
         doUpdateImages();
         
         /*
@@ -246,14 +244,24 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             currentMouseListener.deInitialize();
         }
 
+        /*
         this.removeMouseListener(currentMouseListener);
         this.removeMouseMotionListener(currentMouseListener);
         this.removeMouseWheelListener(currentMouseListener);
+        */
+        
+        JViewport jViewport = editorPanel.getJViewport();
+        
+        jViewport.removeMouseListener(currentMouseListener);
+        jViewport.removeMouseMotionListener(currentMouseListener);
+        jViewport.removeMouseWheelListener(currentMouseListener);
     }
 
     @Override
     public DrawPanelListenerStrategy getMouseListener(MainTool tool) {
         switch (tool) {
+            case DRAG_MOVE:
+                return mouseListenerDragMove;
             case HAND:
                 return mouseListenerHand;
             case ADD_CABLE:
@@ -278,10 +286,16 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         currentMouseListener.initialize();
 
-
+        /*
         this.addMouseListener(currentMouseListener);
         this.addMouseMotionListener(currentMouseListener);
-        this.addMouseWheelListener(currentMouseListener);
+        this.addMouseWheelListener(currentMouseListener);*/
+        
+        JViewport jViewport = editorPanel.getJViewport();
+        
+        jViewport.addMouseListener(currentMouseListener);
+        jViewport.addMouseMotionListener(currentMouseListener);
+        jViewport.addMouseWheelListener(currentMouseListener);
     }
 // END ==============  IMPLEMENTATION OF ToolChangeInterface ===============
 
@@ -355,6 +369,11 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     @Override
     public void doSetDefaultToolInEditorToolBar() {
         editorPanel.doSetDefaultToolInToolBar();
+    }
+    
+    @Override
+    public JScrollPane getJScrollPane() {
+        return editorPanel.getJScrollPane();
     }
 
 // END ============ IMPLEMENTATION OF DrawPanelInnerInterface ==============
@@ -489,6 +508,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.revalidate();
     }
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
+
+    
 
     
 }

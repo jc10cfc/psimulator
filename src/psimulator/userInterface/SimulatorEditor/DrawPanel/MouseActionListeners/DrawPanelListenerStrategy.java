@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import javax.swing.JComponent;
+import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.undo.UndoManager;
@@ -12,6 +14,7 @@ import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
@@ -29,6 +32,10 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     protected ZoomManager zoomManager;
     protected DataLayerFacade dataLayer;
     
+    protected JComponent comp;
+    protected JViewport vport;
+    
+    
     /**
      * list for all marked components
      */
@@ -45,7 +52,10 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         this.dataLayer = dataLayer;
     }
 
-    public abstract void initialize();
+    public void initialize(){
+        comp = (DrawPanel) drawPanel;
+        vport = drawPanel.getJScrollPane().getViewport();
+    }
     
     public abstract void deInitialize();
 
@@ -126,6 +136,10 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     public void mouseDraggedRight(MouseEvent e) {
     }
 
+    protected Point convertPoint(Point point){
+        return SwingUtilities.convertPoint(vport,point,comp);
+    }
+    
     /**
      * Return component at point
      * @param point
