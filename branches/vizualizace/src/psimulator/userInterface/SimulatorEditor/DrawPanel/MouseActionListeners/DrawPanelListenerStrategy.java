@@ -64,13 +64,13 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-            //System.out.println("Point:"+e.getPoint());
+            //System.out.println("Point:"+convertPoint(e.getPoint());
             // scroll down
             if (e.getWheelRotation() == 1) {
-                zoomManager.zoomIn(e.getPoint(), ZoomType.MOUSE);
+                zoomManager.zoomIn(convertPoint(e.getPoint()), ZoomType.MOUSE);
                 //scroll up    
             } else if (e.getWheelRotation() == -1) {
-                zoomManager.zoomOut(e.getPoint(), ZoomType.MOUSE);
+                zoomManager.zoomOut(convertPoint(e.getPoint()), ZoomType.MOUSE);
             }
         }
     }
