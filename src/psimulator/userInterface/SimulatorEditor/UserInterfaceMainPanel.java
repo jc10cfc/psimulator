@@ -67,7 +67,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
             @Override
             public void revalidate() {
                 if (flag) {
-                    //return;
+                    return;
                 }
                 super.revalidate();
             }
@@ -80,20 +80,14 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
             }
         };
+        // add panel to viewport
         jViewPort.add(jPanelDraw);
-        //
-        
 
-        //create scroll pane
-        //jScrollPane = new JScrollPane(jPanelDraw);
-
+        // create scrollpane
         jScrollPane = new JScrollPane();
+        // add viewport to scroll pane
         jScrollPane.setViewport(jViewPort);
-        
-        /*
-        DragMoveMouseAdapter listener = new DragMoveMouseAdapter(jPanelDraw, jViewPort);
-        jViewPort.addMouseMotionListener(listener);
-        jViewPort.addMouseListener(listener);*/
+
         
         // add scroll bars
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -190,10 +184,6 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
             default:
                 break;
         }
-
-
-
-
     }
 
     private void zoomChangeUpdate(ZoomEventWrapper zoomEventWrapper) {
