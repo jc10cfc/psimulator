@@ -16,7 +16,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public class Graph extends JComponent implements GraphOuterInterface, Observer {
+public class Graph extends JComponent implements GraphOuterInterface{
 
     private LinkedHashMap<Integer, AbstractHwComponent> componentsMap = new LinkedHashMap<Integer, AbstractHwComponent>();
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
@@ -49,9 +49,10 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
         // init grid
         grid = new Grid((GraphOuterInterface) this, zoomManager);
 
+        /*
         zoomManager.addObserver((Observer) this);
         dataLayer.addPreferencesObserver((Observer) this);
-        dataLayer.addLanguageObserver((Observer) this);
+        dataLayer.addLanguageObserver((Observer) this);*/
     }
     
     /**
@@ -104,33 +105,33 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     }
     
     public void deInitialize(DataLayerFacade dataLayer){
-        zoomManager.deleteObserver(this);
-        dataLayer.deleteLanguageObserver(this);
-        dataLayer.deletePreferencesObserver(this);
+        //zoomManager.deleteObserver(this);
+        //dataLayer.deleteLanguageObserver(this);
+        //dataLayer.deletePreferencesObserver(this);
         drawPanel = null;
         zoomManager = null;
         grid = null;
     }
 
-    @Override
-    public void update(Observable o, Object o1) {
-        //System.out.println("Updatuju Graph");
- 
-        /*
-        // get Collection of values contained in LinkedHashMap
-        Collection<AbstractHwComponent> colection = componentsMap.values();
-        // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = colection.iterator();
-        
-        // get all marked components
-        while (it.hasNext()) {
-            it.next().doUpdateImages();
-        }
-        
-        for(BundleOfCables boc : bundlesOfCables){
-            boc.doUpdateImages();
-        }*/
-    }
+//    @Override
+//    public void update(Observable o, Object o1) {
+//        //System.out.println("Updatuju Graph");
+// 
+//        /*
+//        // get Collection of values contained in LinkedHashMap
+//        Collection<AbstractHwComponent> colection = componentsMap.values();
+//        // obtain an Iterator for Collection
+//        Iterator<AbstractHwComponent> it = colection.iterator();
+//        
+//        // get all marked components
+//        while (it.hasNext()) {
+//            it.next().doUpdateImages();
+//        }
+//        
+//        for(BundleOfCables boc : bundlesOfCables){
+//            boc.doUpdateImages();
+//        }*/
+//    }
     
     public void doUpdateImages(){
         // get Collection of values contained in LinkedHashMap
@@ -270,7 +271,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     
     @Override
     public int getAbstractHwComponentsCount() {
-        //return components.size();
         return componentsMap.size();
     }
 
@@ -402,15 +402,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             if(tmp.y > p.y){
                 p.y = tmp.y;
             }
-            
-            
-            /*
-            if (c.getX() + c.getWidth() > p.x) {
-                p.x = c.getX() + c.getWidth();
-            }
-            if (c.getY() + c.getHeight() > p.y) {
-                p.y = c.getY() + c.getHeight();
-            }*/
+
         }
         return p;
     }
@@ -575,12 +567,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     
     @Override
     public int getMarkedAbstractHWComponentsCount() {
-        /*int count = 0;
-        for (Markable m : markedAbstractHwComponents) {
-            if (m instanceof AbstractHwComponent) {
-                count++;
-            }
-        }*/
         return markedAbstractHwComponents.size();
     }
     
@@ -604,11 +590,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             m.setMarked(true);
             markedAbstractHwComponents.add(m);
         }
-        /*
-        for(AbstractHwComponent m: components){
-            m.setMarked(true);
-            markedAbstractHwComponents.add(m);
-        }*/
         
         for(BundleOfCables boc: bundlesOfCables){
             for(Cable c : boc.getCables()){
@@ -727,24 +708,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     }
     
     /**
-     * Updates size of Graph after remove of AbstractHwComponent (s).
-     * If point lies on (or beyond) width or height of graph, we have to go through all 
-     * components to determine size of it.
-     * Otherwise nothing to do.
-     
-    private void updateSizeRemoveComponents(Point removedComponentLowerRightCorner){
-        // if removed component touches width with x, or height with y
-        if(removedComponentLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault)
-                || removedComponentLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)){
-            //System.out.println("update size remove calling recalculate");
-            updateSizeByRecalculate();
-            return;
-        }
-        // if removed component do not touch width or height position, nothing to do
-        //System.out.println("update size remove nothingto do");
-    }*/
-    
-    /**
      * Updates size of Graph. Call after AbstractHwComponent ADD only.
      * @param lowerRightCorner LowerRightCorner in ActualZoom
      */
@@ -774,7 +737,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
 
     @Override
     public HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid() {
-        //return doAlignComponentsToGrid(components);
         return doAlignComponentsToGrid(componentsMap.values());
     }
     
@@ -815,23 +777,6 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
                 movedComponentsMap.put(c, differenceInDefaultZoom);
             }
         }
-        
-        /*
-        for (AbstractHwComponent c : componentsToAlign) {
-            Point originalLocation = c.getCenterLocationDefaultZoom();
-            Point newLocation = grid.getNearestGridPointDefaultZoom(originalLocation);
-
-            Dimension differenceInDefaultZoom = new Dimension(originalLocation.x - newLocation.x,
-                    originalLocation.y - newLocation.y);
-            
-            // if component moved, add to moved 
-            if (differenceInDefaultZoom.getWidth() != 0 || differenceInDefaultZoom.getHeight() != 0) {
-                this.doChangePositionOfAbstractHwComponent(c, differenceInDefaultZoom, false);
-
-                movedComponentsMap.put(c, differenceInDefaultZoom);
-            }
-
-        }*/
         return movedComponentsMap;
     }
     
@@ -876,24 +821,7 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
             
             i++;
         }
-        
-        /*
-        for (int i = 0; i < components.size(); i++) {
-            AbstractHwComponent c = components.get(i);
-            
-            Point originalLocation = c.getCenterLocationDefaultZoom();
-            Point newLocation = new Point(geneticGraph.getNodes()[i][0]*30+zoomManager.getIconWidthDefaultZoom(), 
-                    geneticGraph.getNodes()[i][1]*30 + zoomManager.getIconWidthDefaultZoom());
-            
-            Dimension differenceInDefaultZoom = new Dimension(originalLocation.x - newLocation.x,
-                    originalLocation.y - newLocation.y);
-            
-            this.doChangePositionOfAbstractHwComponent(c, differenceInDefaultZoom, false);
-            
-            movedComponentsMap.put(c, differenceInDefaultZoom);
-        }*/
-        
-        
+
         return movedComponentsMap;
     }
    
@@ -943,5 +871,9 @@ public class Graph extends JComponent implements GraphOuterInterface, Observer {
     
     public AbstractHwComponent getAbstractHwComponent(int id){
         return componentsMap.get(id);
+    }
+    
+    public DrawPanelInnerInterface getDrawPanelInnerInterface(){
+        return drawPanel;
     }
 }

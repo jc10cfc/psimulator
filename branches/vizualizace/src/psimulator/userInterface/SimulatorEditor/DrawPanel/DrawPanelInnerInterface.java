@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
+import javax.swing.JScrollPane;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
@@ -75,4 +76,6 @@ public interface DrawPanelInnerInterface{
      */
     
     public void updateSize(Dimension dim);
+    
+    public JScrollPane getJScrollPane();
 }

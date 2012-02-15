@@ -22,6 +22,14 @@ public class ManipulationTool extends AbstractTool{
 
     @Override
     public String getTranslatedName(DataLayerFacade dataLayer) {
-        return dataLayer.getString("HAND");
+        switch(tool){
+            case HAND:
+                return dataLayer.getString("HAND");
+            case DRAG_MOVE:
+                return dataLayer.getString("DRAG_MOVE");
+        }
+        return "";
     }
+    
+    
 }

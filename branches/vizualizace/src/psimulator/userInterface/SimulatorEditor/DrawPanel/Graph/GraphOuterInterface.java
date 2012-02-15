@@ -10,6 +10,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwC
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Markable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 
 /**
@@ -182,5 +183,7 @@ public interface GraphOuterInterface {
      */
     public void addHwComponents(List<AbstractHwComponent> componentList);
     
+    //public void doUpdateImages();
     
+    public DrawPanelInnerInterface getDrawPanelInnerInterface();
 }

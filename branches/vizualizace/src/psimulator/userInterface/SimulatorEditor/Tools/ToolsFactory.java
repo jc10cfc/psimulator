@@ -19,6 +19,11 @@ public class ToolsFactory {
         String path;
         
         switch(tool){
+            case DRAG_MOVE:
+                path = AbstractImageFactory.TOOL_DRAG_MOVE_PATH;
+                
+                tools.add(new ManipulationTool(tool, imageFactory.getImageIconForToolbar(tool, path), toolChangeInterface));
+                break;
             case HAND:
                 path = AbstractImageFactory.TOOL_HAND_PATH;
                 

@@ -27,10 +27,6 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     }
 
     @Override
-    public void initialize() {
-    }
-
-    @Override
     public void deInitialize() {
     }
 
@@ -48,7 +44,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         component.initialize();
 
         // set position of new component
-        component.setLocationByMiddlePoint(e.getPoint());
+        component.setLocationByMiddlePoint(convertPoint(e.getPoint()));
 
         // add component to graph
         drawPanel.getGraphOuterInterface().addHwComponent(component);

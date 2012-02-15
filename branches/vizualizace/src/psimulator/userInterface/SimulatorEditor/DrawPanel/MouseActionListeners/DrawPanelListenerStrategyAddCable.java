@@ -43,10 +43,6 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
 
         popupMenu = new CableConnectToInterfacePopupMenu(drawPanel, new PopupInterfaceChooseListener(), this);
     }
-
-    @Override
-    public void initialize() {
-    }
     
     /**
      * sets cursor to default and inits cable making to start
@@ -68,17 +64,17 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         if (hasFirstComponent) {
             /*
             drawPanel.setLineInProgras(true, startPointInDefault, 
-                    zoomManager.doScaleToDefault(e.getPoint()));*/
+                    zoomManager.doScaleToDefault(convertPoint(e.getPoint())));*/
 
             drawPanel.setLineInProgras(true, startPointInDefault, 
-                    e.getPoint());
+                    convertPoint(e.getPoint()));
             
             drawPanel.repaint();
         }
 
         // if mouse over any HW component
         for (AbstractHwComponent c : drawPanel.getGraphOuterInterface().getHwComponents()) {
-            if (c.intersects(e.getPoint())) {
+            if (c.intersects(convertPoint(e.getPoint()))) {
                 // change cursor
                 drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
                 return;
@@ -95,25 +91,10 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     @Override
     public void mousePressedLeft(MouseEvent e) {
 
-        // if popup shown, no pressing on other components
-        /*
-        if (popupMenu.isVisible()) {
-            System.out.println("No pressing");
-            return;
-        }*/
-
         // clicked component
         AbstractHwComponent tmp = null;
-
-        /*
-        // find if any component clicked
-        for (AbstractHwComponent c : graph.getHwComponents()) {
-            if (c.intersects(e.getPoint())) {
-                tmp = c;
-            }
-        }*/
         
-        tmp = getClickedAbstractHwComponent(e.getPoint());
+        tmp = getClickedAbstractHwComponent(convertPoint(e.getPoint()));
 
         // if nothing clicked
         if (tmp == null) {
@@ -173,7 +154,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
    
     @Override
     public void mousePressedRight(MouseEvent e) {
-        AbstractHwComponent tmp = getClickedAbstractHwComponent(e.getPoint());
+        AbstractHwComponent tmp = getClickedAbstractHwComponent(convertPoint(e.getPoint()));
         // if something clicked, or has first component
         if(tmp!= null || hasFirstComponent){
             mousePressedLeft(e);

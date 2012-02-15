@@ -2,6 +2,7 @@ package psimulator.userInterface;
 
 import java.awt.Component;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 
 /**
