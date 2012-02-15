@@ -9,6 +9,7 @@ public enum ObserverUpdateEventType {
     LANGUAGE,       // when language changed
     ICON_SIZE,      // when icon size changed
     ZOOM_CHANGE,    // when zoom changed
+    UNDO_REDO,      // when undo/redo
     
     SIMULATOR_PLAYER_LIST_MOVE, // when manually changed current event(NEXT, PREV, FIRST, LAST or DOUBLE CLICK on some event)
     SIMULATOR_PLAYER_PLAY,      // when playing starts

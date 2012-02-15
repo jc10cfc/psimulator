@@ -13,7 +13,7 @@ import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
  *
  * @author Martin
  */
-public class DrawPanelListenerStrategySimulator extends DrawPanelListenerStrategy{
+public class DrawPanelListenerStrategySimulator extends DrawPanelListenerStrategyDragMove{
 
     
     public DrawPanelListenerStrategySimulator(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
@@ -40,7 +40,7 @@ public class DrawPanelListenerStrategySimulator extends DrawPanelListenerStrateg
     
     @Override
     public void mousePressedRight(MouseEvent e) {
-        // do nothink = do not change to HAND tool after right button pressed
+        // do nothing = do not change to HAND tool after right button pressed
     }
     
 }

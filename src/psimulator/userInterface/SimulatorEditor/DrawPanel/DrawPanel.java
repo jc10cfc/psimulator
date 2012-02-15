@@ -442,11 +442,13 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     @Override
     public void undo() {
         undoManager.undo();
+        update(zoomManager, ObserverUpdateEventType.UNDO_REDO);
     }
 
     @Override
     public void redo() {
         undoManager.redo();
+        update(zoomManager, ObserverUpdateEventType.UNDO_REDO);
     }
 
     @Override
