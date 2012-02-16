@@ -1,8 +1,12 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
 import java.awt.Image;
+import java.awt.Point;
 import java.util.Random;
 import javax.swing.ImageIcon;
+import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -10,46 +14,69 @@ import javax.swing.ImageIcon;
  */
 public class Animation{
     
+    //
+    private ZoomManager zoomManager;
+    private AbstractImageFactory imageFactory;
+    //
+    
     private int defaultZoomStartX;
     private int defaultZoomStartY;
     
+    private int defaultZoomEndX;
+    private int defaultZoomEndY;
+    
     private Image image;
     
-    private int x;
-    private int y;
+    private int defaultZoomX;
+    private int defaultZoomY;
     
-    private int maxX;
-    private int maxY;
+    private int defaultZoomMaxX;
+    private int defaultZoomMaxY;
     
     private boolean visible;
     
     private final int ANIMATION_SPEED = 2;
     
     
-    public Animation(){
-        ImageIcon ii = new ImageIcon(this.getClass().getResource("/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png"));
-        image = ii.getImage();
+    public Animation(AbstractImageFactory imageFactory, ZoomManager zoomManager, 
+            Point defaultZoomSource, Point defaultZoomDest){
+        this.zoomManager = zoomManager;
+        this.imageFactory = imageFactory;
+        
+        //ImageIcon ii = new ImageIcon(this.getClass().getResource("/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png"));
+        //image = ii.getImage();
+        image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
         
         Random r = new Random();
         
-        x = r.nextInt(300);
-        y = x;
+        defaultZoomStartX = defaultZoomSource.x;
+        defaultZoomStartY = defaultZoomSource.y;
+    
+        defaultZoomEndX = defaultZoomDest.x;
+        defaultZoomEndY = defaultZoomDest.y;
         
-        maxX = r.nextInt(200)+300;
-        maxY = maxX;
+        
+        defaultZoomX = r.nextInt(300);
+        defaultZoomY = defaultZoomX;
+        
+        defaultZoomMaxX = r.nextInt(500)+300;
+        defaultZoomMaxY = defaultZoomMaxX;
     }
     
     
     public Image getImage() {
+        image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
         return image;
     }
 
     public int getX() {
-        return x;
+        return zoomManager.doScaleToActual(defaultZoomX);
+        //return x;
     }
 
     public int getY() {
-        return y;
+        return zoomManager.doScaleToActual(defaultZoomY);
+        //return y;
     }
 
     public boolean isVisible() {
@@ -57,12 +84,12 @@ public class Animation{
     }
 
     public void move() {
-        x += ANIMATION_SPEED;
-        y += ANIMATION_SPEED;
+        defaultZoomX += ANIMATION_SPEED;
+        defaultZoomY += ANIMATION_SPEED;
 
-        if (y > maxY) {
-            y = -45;
-            x = -45;
+        if (defaultZoomY > defaultZoomMaxY) {
+            defaultZoomY = -45;
+            defaultZoomX = -45;
         }
     }
     
