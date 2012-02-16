@@ -2,9 +2,7 @@ package psimulator.AbstractNetwork;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -62,7 +60,7 @@ public class Network implements Serializable {
         Network network = null;
 
         JAXBContext context = JAXBContext.newInstance(Network.class);
-
+        
         Unmarshaller unmarsh = context.createUnmarshaller();
 
         network = (Network) unmarsh.unmarshal(file);
