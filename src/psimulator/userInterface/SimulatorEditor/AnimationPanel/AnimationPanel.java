@@ -5,12 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import javax.swing.Timer;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
@@ -22,7 +20,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public class AnimationPanel extends AnimationPanelOuterInterface implements ActionListener {
+public class AnimationPanel extends AnimationPanelOuterInterface implements ActionListener{
 
     private Graph graph;
     //
@@ -47,24 +45,14 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Acti
         timer = new Timer(DELAY, this);
         
         setDoubleBuffered(true);
-        /*
-         * Dimension dimension = new Dimension(200,200);
-         * this.setPreferredSize(dimension); this.setMinimumSize(dimension);
-         * this.setMaximumSize(dimension);
-         */
 
-
-        //this.setBounds(0, 0, 200,200);
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        //System.out.println("KreslimAnimPanel");
-
         Graphics2D g2d = (Graphics2D) g;
-        //g2d.drawImage(star, x, y, this);
         
         Iterator<Animation> it= animations.iterator();
         
@@ -74,9 +62,25 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Acti
             g2d.drawImage(animation.getImage(), animation.getX(), animation.getY(), this);
         }
  
+        g2d.drawRect(0, 0, getWidth(), getHeight());
+        
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
     }
+    
+        
+    
+    @Override
+    public void update(Observable o, Object o1) {
+        switch ((ObserverUpdateEventType) o1) {
+            case VIEW_DETAILS:
+                break;
+            case ZOOM_CHANGE:
+                System.out.println("Aniamtion panel zoom changed");
+                break;
+        }
+    }
+    
 
     @Override
     public Graph removeGraph() {
@@ -90,24 +94,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Acti
     @Override
     public void setGraph(Graph graph) {
         this.graph = graph;
-        this.setBounds(0, 0, graph.getPreferredSize().width, graph.getPreferredSize().height);
+        this.setBounds(0, 0, graph.getPreferredSize().width-1, graph.getPreferredSize().height-1);
 
         timer.start();
-
-        /*
-         * this.setPreferredSize(graph.getPreferredSize());
-         * this.setMinimumSize(graph.getPreferredSize());
-         * this.setMaximumSize(graph.getPreferredSize());
-         */
     }
-
-    /*
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        animator = new Thread(this);
-        animator.start();
-    }*/
 
     public void cycle() {
         Iterator<Animation> it= animations.iterator();
@@ -117,37 +107,6 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Acti
         }
     }
 
-    /*
-     * @Override public Dimension getPreferredSize() {
-     * System.out.println("Zde1"); return graph.getPreferredSize(); }
-     */
-    /*
-    @Override
-    public void run() {
-        long beforeTime, timeDiff, sleep;
-
-        beforeTime = System.currentTimeMillis();
-
-        while (true) {
-
-            cycle();
-            repaint();
-
-            timeDiff = System.currentTimeMillis() - beforeTime;
-            sleep = DELAY - timeDiff;
-
-            if (sleep < 0) {
-                sleep = 2;
-            }
-            try {
-                Thread.sleep(sleep);
-            } catch (InterruptedException e) {
-                System.out.println("interrupted");
-            }
-
-            beforeTime = System.currentTimeMillis();
-        }
-    }*/
 
     @Override
     public void actionPerformed(ActionEvent ae) {

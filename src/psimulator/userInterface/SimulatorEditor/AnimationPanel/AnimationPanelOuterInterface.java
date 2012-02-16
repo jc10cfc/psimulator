@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
+import java.util.Observer;
 import javax.swing.JComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
@@ -7,7 +8,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
  *
  * @author Martin
  */
-public abstract class AnimationPanelOuterInterface extends JComponent{
+public abstract class AnimationPanelOuterInterface extends JComponent implements Observer{
     
     
     

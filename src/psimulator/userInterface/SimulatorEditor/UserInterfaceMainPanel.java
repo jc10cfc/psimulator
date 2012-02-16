@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor;
 
+import psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane.UserInterfaceLayeredPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,12 +41,12 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     //
     private EditorToolBar jToolBarEditor;   // certical tool bar with hand, computer, switches
     //
-    private DrawPanelOuterInterface jPanelDraw; // draw panel
-    private AnimationPanelOuterInterface jPanelAnimation; // animation panel
+    //private DrawPanelOuterInterface jPanelDraw; // draw panel
+    //private AnimationPanelOuterInterface jPanelAnimation; // animation panel
     private JScrollPane jScrollPane;            // scroll pane with draw panel
     private JViewport jViewPort;
     //
-    private JLayeredPane jLayeredPane;
+    private UserInterfaceLayeredPane jLayeredPane;
     //
     private SimulatorControlPanel jPanelSimulator;
     //
@@ -61,41 +62,6 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
         // set border
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
-
-
-
-
-
-        // ----------- DRAW PANEL CREATION -----------------------
-        // create draw panel
-        jPanelDraw = new DrawPanel(mainWindow, (UserInterfaceMainPanelInnerInterface) this, imageFactory, dataLayer);
-
-        //
-        //jLayeredPane = new JLayeredPane();
-        jLayeredPane = new JLayeredPane() {
-
-            @Override
-            public Dimension getPreferredSize() {
-                //System.out.println("GetPrefSize");
-                return jPanelDraw.getPreferredSize();
-            }
-
-            @Override
-            public void setSize(int width, int height) {
-                super.setSize(width, height);
-                //System.out.println("SetSize2");
-                jPanelDraw.setSize(width, height);
-            }
-
-            @Override
-            public void setSize(Dimension d) {
-                super.setSize(d);
-                //System.out.println("SetSize1");
-                jPanelDraw.setSize(d);
-            }
-        };
-
-        //jLayeredPane.setBackground(Color.white);
 
         //
         jViewPort = new JViewport() {
@@ -119,15 +85,9 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
             }
         };
-
-        // add panel to layered pane
-        jLayeredPane.add(jPanelDraw, 1, 0);
-
+        // create layered pane
+        jLayeredPane = new UserInterfaceLayeredPane(mainWindow, this, imageFactory, dataLayer);
         
-        //
-        jPanelAnimation = new AnimationPanel(mainWindow, this, imageFactory, dataLayer, null, jPanelDraw);
-        jLayeredPane.add(jPanelAnimation, 2, 0);
-
         // add layered pane to viewport
         jViewPort.add(jLayeredPane);
         //jViewPort.add(jPanelAnimation);
@@ -145,13 +105,13 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
         // ----------- EDITOR STUFF CREATION -----------------------
         // create tool bar
-        jToolBarEditor = new EditorToolBar(dataLayer, imageFactory, jPanelDraw);
+        jToolBarEditor = new EditorToolBar(dataLayer, imageFactory, jLayeredPane);
 
         // add listener for FitToSize button in tool bar
-        jToolBarEditor.addToolActionFitToSizeListener(jPanelDraw.getAbstractAction(DrawPanelAction.FIT_TO_SIZE));
+        jToolBarEditor.addToolActionFitToSizeListener(jLayeredPane.getAbstractAction(DrawPanelAction.FIT_TO_SIZE));
 
         // add listener for AlignToGrid button in tool bar
-        jToolBarEditor.addToolActionAlignToGridListener(jPanelDraw.getAbstractAction(DrawPanelAction.ALIGN_COMPONENTS_TO_GRID));
+        jToolBarEditor.addToolActionAlignToGridListener(jLayeredPane.getAbstractAction(DrawPanelAction.ALIGN_COMPONENTS_TO_GRID));
 
 
         // ----------- SIMULATOR STUFF CREATION -----------------------
@@ -175,7 +135,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
         // ----------- rest of constructor -----------------------
         // add this to zoom Manager as Observer
-        jPanelDraw.addObserverToZoomManager((Observer) this);
+        jLayeredPane.addObserverToZoomManager((Observer) this);
 
 
         doChangeMode(userInterfaceState);
@@ -199,7 +159,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
                 this.add(jToolBarEditor, BorderLayout.WEST);
 
                 // set default tool in ToolBar
-                jPanelDraw.removeCurrentMouseListener();
+                jLayeredPane.removeCurrentMouseListener();
                 doSetDefaultToolInToolBar();
                 break;
             case SIMULATOR:
@@ -207,8 +167,8 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
                 this.add(jPanelSimulator, BorderLayout.EAST);
 
                 // set SIMULATOR mouse listener in draw panel
-                jPanelDraw.removeCurrentMouseListener();
-                jPanelDraw.setCurrentMouseListenerSimulator();
+                jLayeredPane.removeCurrentMouseListener();
+                jLayeredPane.setCurrentMouseListenerSimulator();
                 break;
         }
 
@@ -225,9 +185,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
      */
     @Override
     public void update(Observable o, Object o1) {
-        jPanelAnimation.repaint();
-        
-        switch ((ObserverUpdateEventType) o1) {
+       switch ((ObserverUpdateEventType) o1) {
             case ZOOM_CHANGE:
                 ZoomEventWrapper zoomEventWrapper = ((ZoomManager) o).getZoomEventWrapper();
                 zoomChangeUpdate(zoomEventWrapper);
@@ -264,12 +222,12 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         int viewportWidth = jScrollPane.getViewport().getWidth();
         int viewportHeight = jScrollPane.getViewport().getHeight();
 
-        if (jPanelDraw.hasGraph() && jPanelDraw.getGraph().getWidth() < viewportWidth) {
-            viewportWidth = jPanelDraw.getGraph().getWidth();
+        if (jLayeredPane.hasGraph() && jLayeredPane.getGraph().getWidth() < viewportWidth) {
+            viewportWidth = jLayeredPane.getGraph().getWidth();
         }
 
-        if (jPanelDraw.hasGraph() && jPanelDraw.getGraph().getHeight() < viewportHeight) {
-            viewportHeight = jPanelDraw.getGraph().getHeight();
+        if (jLayeredPane.hasGraph() && jLayeredPane.getGraph().getHeight() < viewportHeight) {
+            viewportHeight = jLayeredPane.getGraph().getHeight();
         }
 
         // calculate center position 
@@ -358,15 +316,15 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
     @Override
     public Graph removeGraph() {
-        jPanelAnimation.removeGraph();
-        return jPanelDraw.removeGraph();
+        //jPanelAnimation.removeGraph();
+        return jLayeredPane.removeGraph();
     }
 
     @Override
     public void setGraph(Graph graph) {
-        jPanelDraw.setGraph(graph);
-        jPanelAnimation.setGraph(graph);
-        jPanelAnimation.repaint();
+        jLayeredPane.setGraph(graph);
+        //jPanelAnimation.setGraph(graph);
+        //jPanelAnimation.repaint();
         //jLayeredPane.repaint();
 
         // initialize viewport to beginning
@@ -375,60 +333,57 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
     @Override
     public Graph getGraph() {
-        return jPanelDraw.getGraph();
+        return jLayeredPane.getGraph();
     }
 
     @Override
     public boolean hasGraph() {
-        return jPanelDraw.hasGraph();
+        return jLayeredPane.hasGraph();
     }
 
     @Override
     public boolean canUndo() {
-        return jPanelDraw.canUndo();
+        return jLayeredPane.canUndo();
     }
 
     @Override
     public boolean canRedo() {
-        return jPanelDraw.canRedo();
+        return jLayeredPane.canRedo();
     }
 
     @Override
     public void undo() {
-        jPanelDraw.undo();
+        jLayeredPane.undo();
     }
 
     @Override
     public void redo() {
-        jPanelDraw.redo();
+        jLayeredPane.redo();
     }
 
     @Override
     public boolean canZoomIn() {
-        return jPanelDraw.canZoomIn();
+        return jLayeredPane.canZoomIn();
     }
 
     @Override
     public boolean canZoomOut() {
-        return jPanelDraw.canZoomOut();
+        return jLayeredPane.canZoomOut();
     }
 
     @Override
     public void zoomIn() {
-        // TODO: Point of zoom in parameter
-        jPanelDraw.zoomIn();
+        jLayeredPane.zoomIn();
     }
 
     @Override
     public void zoomOut() {
-        // TODO: Point of zoom in parameter
-        jPanelDraw.zoomOut();
+        jLayeredPane.zoomOut();
     }
 
     @Override
     public void zoomReset() {
-        // TODO: Point of zoom in parameter
-        jPanelDraw.zoomReset();
+        jLayeredPane.zoomReset();
     }
 
     @Override

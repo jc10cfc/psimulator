@@ -38,7 +38,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     // END mouse listenrs
     private Graph graph;
     private UndoManager undoManager = new UndoManager();
-    private ZoomManager zoomManager = new ZoomManager();
+    private ZoomManager zoomManager;// = new ZoomManager();
     private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
     private UserInterfaceMainPanelInnerInterface editorPanel;
@@ -56,9 +56,11 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private DataLayerFacade dataLayer;
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
-    public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel, AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
+    public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel, 
+            AbstractImageFactory imageFactory, DataLayerFacade dataLayer, ZoomManager zoomManager) {
         super();
 
+        this.zoomManager = zoomManager;
         this.editorPanel = editorPanel;
         this.mainWindow = mainWindow;
         this.imageFactory = imageFactory;
@@ -202,15 +204,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     @Override
     public void update(Observable o, Object o1) {
         doUpdateImages();
-        
-        /*
-        // has to be here to perform before repaint
-        if(graph!=null){
-            graph.doUpdateImages();
-            
-            this.revalidate();
-            this.repaint();
-        }*/
+
         
         switch ((ObserverUpdateEventType) o1) {
             case VIEW_DETAILS:
@@ -451,36 +445,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     public void redo() {
         undoManager.redo();
         update(zoomManager, ObserverUpdateEventType.UNDO_REDO);
-    }
-
-    @Override
-    public boolean canZoomIn() {
-        return zoomManager.canZoomIn();
-    }
-
-    @Override
-    public boolean canZoomOut() {
-        return zoomManager.canZoomOut();
-    }
-
-    @Override
-    public void zoomIn() {
-        zoomManager.zoomIn();
-    }
-
-    @Override
-    public void zoomOut() {
-        zoomManager.zoomOut();
-    }
-
-    @Override
-    public void zoomReset() {
-        zoomManager.zoomReset();
-    }
-
-    @Override
-    public void addObserverToZoomManager(Observer obsrvr) {
-        zoomManager.addObserver(obsrvr);
     }
 
     @Override
