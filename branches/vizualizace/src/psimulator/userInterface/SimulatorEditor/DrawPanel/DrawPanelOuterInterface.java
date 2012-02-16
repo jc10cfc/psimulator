@@ -32,40 +32,14 @@ public abstract class DrawPanelOuterInterface extends JPanel implements DrawPane
      * Calls REDO operation
      */
     public abstract void redo();
-    /**
-     * Finds if ZOOM IN can be performed
-     * @return true if yes, false if no
-     */
-    public abstract boolean canZoomIn();
-    /**
-     * Finds if ZOOM OUT can be performed
-     * @return true if yes, false if no
-     */
-    public abstract boolean canZoomOut();
-    /**
-     * Calls ZOOM IN
-     */
-    public abstract void zoomIn();
-    /**
-     * Calls ZOOM OUT
-     */
-    public abstract void zoomOut();
-    /**
-     * Calls ZOOM RESET
-     */
-    public abstract void zoomReset();
-    /*
-     * Adds Observer to ZoomManager.
-     */
-    public abstract void addObserverToZoomManager(Observer obsrvr);
+
     /**
      * Gets Action corresponding to DrawPanelAction in parameter
      * @param action
      * @return AbstractAction
      */
     public abstract AbstractAction getAbstractAction(DrawPanelAction action);
-    
-    
+
     /**
      * removes graph from draw panel a resets state of draw panel
      * @return 
