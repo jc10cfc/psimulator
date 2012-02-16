@@ -17,7 +17,8 @@ public class NetworkDevice implements Serializable{
     private int ID;
     private HwTypeEnum hwType;
     private String name;
-
+    
+    
     private int x;
     private int y;
     
