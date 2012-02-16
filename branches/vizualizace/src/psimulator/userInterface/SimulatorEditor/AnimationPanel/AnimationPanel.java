@@ -2,6 +2,7 @@ package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import javax.swing.Timer;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
@@ -22,6 +24,9 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  */
 public class AnimationPanel extends AnimationPanelOuterInterface implements ActionListener{
 
+    private AbstractImageFactory imageFactory;
+    private ZoomManager zoomManager;
+    
     private Graph graph;
     //
     //private Thread animator;
@@ -29,18 +34,19 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Acti
     private final int DELAY = 25;
     //
     private List<Animation> animations;
+    //
+    private Random random = new Random();
 
     public AnimationPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel,
             AbstractImageFactory imageFactory, DataLayerFacade dataLayer, ZoomManager zoomManager,
             DrawPanelOuterInterface drawPanel) {
 
+        this.imageFactory = imageFactory;
+        this.zoomManager = zoomManager;
+        
         this.setOpaque(false);
         
         animations = Collections.synchronizedList(new ArrayList<Animation>());
-
-        for (int i = 0; i < 100; i++) {
-            animations.add(new Animation());          
-        }
 
         timer = new Timer(DELAY, this);
         
@@ -76,7 +82,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Acti
             case VIEW_DETAILS:
                 break;
             case ZOOM_CHANGE:
-                System.out.println("Aniamtion panel zoom changed");
+                //System.out.println("Aniamtion panel zoom changed");
                 break;
         }
     }
@@ -96,6 +102,20 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Acti
         this.graph = graph;
         this.setBounds(0, 0, graph.getPreferredSize().width-1, graph.getPreferredSize().height-1);
 
+        List<AbstractHwComponent> list = new ArrayList<AbstractHwComponent>(graph.getHwComponents());
+        
+        for (int i = 0; i < 10; i++) {
+            
+            int componentCount = graph.getAbstractHwComponentsCount();
+            int i1 = random.nextInt(componentCount);
+            int i2 = random.nextInt(componentCount);
+            
+            Point p1 = list.get(i1).getCenterLocationDefaultZoom();
+            Point p2 = list.get(i2).getCenterLocationDefaultZoom();
+            
+            animations.add(new Animation(imageFactory, zoomManager, p1, p2));          
+        }
+        
         timer.start();
     }
 

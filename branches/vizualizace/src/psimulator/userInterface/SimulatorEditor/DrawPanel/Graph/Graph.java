@@ -869,6 +869,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         return componentsMap.get(id);
     }
 
+    @Override
     public DrawPanelInnerInterface getDrawPanelInnerInterface() {
         return drawPanel;
     }
