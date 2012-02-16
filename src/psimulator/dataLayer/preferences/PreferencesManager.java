@@ -28,11 +28,11 @@ public final class PreferencesManager extends Observable implements SaveableInte
     // set to default
     private ToolbarIconSizeEnum toolbarIconSize = ToolbarIconSizeEnum.MEDIUM;
     private boolean viewDeviceNames = true;
-    private boolean viewDeviceTypes = false;
-    private boolean viewInterfaceNames = false;
+    private boolean viewDeviceTypes = true;
+    private boolean viewInterfaceNames = true;
     private boolean viewCableDelay = false;
-    private boolean viewIpAddresses = false;
-    private boolean viewMacAddresses = false;
+    private boolean viewIpAddresses = true;
+    private boolean viewMacAddresses = true;
     
     private LevelOfDetailsMode levelOfDetails = LevelOfDetailsMode.MANUAL;
             

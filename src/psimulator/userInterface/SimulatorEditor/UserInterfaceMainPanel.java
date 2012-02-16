@@ -1,16 +1,21 @@
 package psimulator.userInterface.SimulatorEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanel;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
@@ -36,8 +41,11 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     private EditorToolBar jToolBarEditor;   // certical tool bar with hand, computer, switches
     //
     private DrawPanelOuterInterface jPanelDraw; // draw panel
+    private AnimationPanelOuterInterface jPanelAnimation; // animation panel
     private JScrollPane jScrollPane;            // scroll pane with draw panel
     private JViewport jViewPort;
+    //
+    private JLayeredPane jLayeredPane;
     //
     private SimulatorControlPanel jPanelSimulator;
     //
@@ -55,12 +63,42 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
 
+
+
+
         // ----------- DRAW PANEL CREATION -----------------------
         // create draw panel
         jPanelDraw = new DrawPanel(mainWindow, (UserInterfaceMainPanelInnerInterface) this, imageFactory, dataLayer);
 
         //
-        jViewPort= new JViewport() {
+        //jLayeredPane = new JLayeredPane();
+        jLayeredPane = new JLayeredPane() {
+
+            @Override
+            public Dimension getPreferredSize() {
+                //System.out.println("GetPrefSize");
+                return jPanelDraw.getPreferredSize();
+            }
+
+            @Override
+            public void setSize(int width, int height) {
+                super.setSize(width, height);
+                //System.out.println("SetSize2");
+                jPanelDraw.setSize(width, height);
+            }
+
+            @Override
+            public void setSize(Dimension d) {
+                super.setSize(d);
+                //System.out.println("SetSize1");
+                jPanelDraw.setSize(d);
+            }
+        };
+
+        //jLayeredPane.setBackground(Color.white);
+
+        //
+        jViewPort = new JViewport() {
 
             private boolean flag = false;
 
@@ -69,6 +107,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
                 if (flag) {
                     return;
                 }
+                
                 super.revalidate();
             }
 
@@ -80,15 +119,25 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
             }
         };
-        // add panel to viewport
-        jViewPort.add(jPanelDraw);
+
+        // add panel to layered pane
+        jLayeredPane.add(jPanelDraw, 1, 0);
+
+        
+        //
+        jPanelAnimation = new AnimationPanel(mainWindow, this, imageFactory, dataLayer, null, jPanelDraw);
+        jLayeredPane.add(jPanelAnimation, 2, 0);
+
+        // add layered pane to viewport
+        jViewPort.add(jLayeredPane);
+        //jViewPort.add(jPanelAnimation);
 
         // create scrollpane
         jScrollPane = new JScrollPane();
         // add viewport to scroll pane
         jScrollPane.setViewport(jViewPort);
 
-        
+
         // add scroll bars
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -176,6 +225,8 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
      */
     @Override
     public void update(Observable o, Object o1) {
+        jPanelAnimation.repaint();
+        
         switch ((ObserverUpdateEventType) o1) {
             case ZOOM_CHANGE:
                 ZoomEventWrapper zoomEventWrapper = ((ZoomManager) o).getZoomEventWrapper();
@@ -307,14 +358,19 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
     @Override
     public Graph removeGraph() {
+        jPanelAnimation.removeGraph();
         return jPanelDraw.removeGraph();
     }
 
     @Override
     public void setGraph(Graph graph) {
         jPanelDraw.setGraph(graph);
+        jPanelAnimation.setGraph(graph);
+        jPanelAnimation.repaint();
+        //jLayeredPane.repaint();
+
         // initialize viewport to beginning
-        jViewPort.setViewPosition(new Point(0,0));
+        jViewPort.setViewPosition(new Point(0, 0));
     }
 
     @Override
@@ -405,5 +461,4 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     public JViewport getJViewport() {
         return jViewPort;
     }
-    
 }
