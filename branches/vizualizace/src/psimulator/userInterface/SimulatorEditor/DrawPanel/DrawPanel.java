@@ -154,6 +154,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        //System.out.println("ReapintDrawPanel");
+        
         Graphics2D g2 = (Graphics2D) g;
 
         // set antialiasing

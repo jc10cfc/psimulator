@@ -28,6 +28,9 @@ public interface GraphOuterInterface {
      * @return 
      */
     public int getHeight();
+    
+    public Dimension getPreferredSize();
+    
     /**
      * Changes position of AbstractHwComponent component by Dimension offsetInDefaultZoom
      * according to boolean positive.
