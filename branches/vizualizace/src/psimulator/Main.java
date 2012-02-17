@@ -1,8 +1,8 @@
 package psimulator;
 
 import javax.swing.SwingUtilities;
-import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.DataLayer;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.logicLayer.Controller;
 import psimulator.logicLayer.ControllerFacade;
 import psimulator.userInterface.MainWindow;

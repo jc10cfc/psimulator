@@ -88,9 +88,11 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         // create layered pane
         jLayeredPane = new UserInterfaceLayeredPane(mainWindow, this, imageFactory, dataLayer);
         
+        //AnimationPanel panel  = new AnimationPanel(mainWindow, this, imageFactory, dataLayer, null, null);
+        
         // add layered pane to viewport
         jViewPort.add(jLayeredPane);
-        //jViewPort.add(jPanelAnimation);
+        //jViewPort.add(panel);
 
         // create scrollpane
         jScrollPane = new JScrollPane();
