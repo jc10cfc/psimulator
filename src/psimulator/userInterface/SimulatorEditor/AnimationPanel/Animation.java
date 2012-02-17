@@ -3,10 +3,9 @@ package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.Random;
-import javax.swing.ImageIcon;
+import java.util.concurrent.TimeUnit;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
-import org.jdesktop.core.animation.timing.TimingTargetAdapter;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -15,10 +14,12 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public class Animation {
+public class Animation implements TimingTarget {
 
+    //
     private Animator animator;
     //
+    private AnimationPanelInnerInterface animationPanelInnerInterface;
     private ZoomManager zoomManager;
     private AbstractImageFactory imageFactory;
     //
@@ -33,9 +34,15 @@ public class Animation {
     private int defaultZoomMaxY;
     private boolean visible;
     private final int ANIMATION_SPEED = 2;
+    
+    private double defautlZoomWidthDifference =0.0;
+    private double defautlZoomHeightDifference =0.0;
 
-    public Animation(AbstractImageFactory imageFactory, ZoomManager zoomManager,
+    public Animation(final AnimationPanelInnerInterface animationPanelInnerInterface,
+            AbstractImageFactory imageFactory, ZoomManager zoomManager,
             Point defaultZoomSource, Point defaultZoomDest) {
+
+        this.animationPanelInnerInterface = animationPanelInnerInterface;
         this.zoomManager = zoomManager;
         this.imageFactory = imageFactory;
 
@@ -58,49 +65,63 @@ public class Animation {
         defaultZoomMaxX = r.nextInt(500) + 300;
         defaultZoomMaxY = defaultZoomMaxX;
 
-        final TimingTarget movement = new TimingTargetAdapter() {
-
-            @Override
-            public void timingEvent(Animator source, double fraction) {
-                move();
-            }
-        };
-        
-        animator = new Animator.Builder().setRepeatCount(Animator.INFINITE).setStartDirection(Animator.Direction.BACKWARD).addTarget(movement).build();
+        // single
+        animator = new Animator.Builder().setDuration(2000, TimeUnit.MILLISECONDS).setStartDirection(Animator.Direction.FORWARD).addTarget((TimingTarget)this).build();
+        // loop
+        //animator = new Animator.Builder().setDuration(2000, TimeUnit.MILLISECONDS).setRepeatCount(Animator.INFINITE).setStartDirection(Animator.Direction.FORWARD).addTarget((TimingTarget)this).build();
         animator.start();
     }
 
-    public void stopAnimator(){
+    public void stopAnimator() {
         animator.stop();
-        
+
     }
-    
+
     public Image getImage() {
         image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
         return image;
     }
 
     public int getX() {
-        return zoomManager.doScaleToActual(defaultZoomX);
-        //return x;
+        return (int)zoomManager.doScaleToActual(defaultZoomStartX + defautlZoomWidthDifference);
     }
 
     public int getY() {
-        return zoomManager.doScaleToActual(defaultZoomY);
-        //return y;
+        return (int)zoomManager.doScaleToActual(defaultZoomStartY + defautlZoomHeightDifference);
     }
 
     public boolean isVisible() {
         return visible;
     }
 
-    public void move() {
-        defaultZoomX += ANIMATION_SPEED;
-        defaultZoomY += ANIMATION_SPEED;
+    private void move(double fraction) {
+        defautlZoomWidthDifference = (defaultZoomEndX - defaultZoomStartX) * fraction;
+        defautlZoomHeightDifference = (defaultZoomEndY - defaultZoomStartY) * fraction;
+    }
 
-        if (defaultZoomY > defaultZoomMaxY) {
-            defaultZoomY = -45;
-            defaultZoomX = -45;
-        }
+    @Override
+    public void begin(Animator source) {
+        //
+    }
+
+    @Override
+    public void end(Animator source) {
+        animationPanelInnerInterface.removeAnimation(this);
+    }
+
+    @Override
+    public void repeat(Animator source) {
+        //
+    }
+
+    @Override
+    public void reverse(Animator source) {
+        //
+    }
+
+    @Override
+    public void timingEvent(Animator source, double fraction) {
+        move(fraction);
+        //System.out.println("Fraction" + fraction);
     }
 }
