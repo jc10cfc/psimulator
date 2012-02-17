@@ -1,15 +1,12 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.*;
-import java.util.List;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.*;
-import javax.swing.JComponent;
-import org.jdesktop.core.animation.rendering.JRenderer;
-import org.jdesktop.core.animation.rendering.JRendererTarget;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingSource;
-import org.jdesktop.swing.animation.rendering.JRendererFactory;
-import org.jdesktop.swing.animation.rendering.JRendererPanel;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
@@ -25,7 +22,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public class AnimationPanel extends AnimationPanelOuterInterface {
+public class AnimationPanel extends AnimationPanelOuterInterface implements AnimationPanelInnerInterface{
     //
     private static final TimingSource f_repaintTimer = new SwingTimerTimingSource();
     //
@@ -73,6 +70,8 @@ public class AnimationPanel extends AnimationPanelOuterInterface {
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
         }
+        Toolkit.getDefaultToolkit().sync();
+        g.dispose();
     }
 
     @Override
@@ -98,6 +97,11 @@ public class AnimationPanel extends AnimationPanelOuterInterface {
     }
     
     @Override
+    public void removeAnimation(Animation animation){
+        animations.remove(animation);
+    }
+    
+    @Override
     public Graph removeGraph() {
         removeAllAnimations();
         
@@ -113,7 +117,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface {
 
         List<AbstractHwComponent> list = new ArrayList<AbstractHwComponent>(graph.getHwComponents());
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
 
             int componentCount = graph.getAbstractHwComponentsCount();
             int i1 = random.nextInt(componentCount);
@@ -122,7 +126,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface {
             Point p1 = list.get(i1).getCenterLocationDefaultZoom();
             Point p2 = list.get(i2).getCenterLocationDefaultZoom();
 
-            animations.add(new Animation(imageFactory, zoomManager, p1, p2));
+            animations.add(new Animation(this, imageFactory, zoomManager, p1, p2));
         }
     }
 }

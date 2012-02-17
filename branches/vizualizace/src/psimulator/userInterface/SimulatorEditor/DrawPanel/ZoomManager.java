@@ -169,6 +169,15 @@ public class ZoomManager extends Observable {
     public int doScaleToActual(int defaultScale) {
         return ((int) (defaultScale * getScale(scale)));
     }
+    
+    /**
+     * Scales defaultScale number to actualScale number
+     * @param defaultScale Number in default scale
+     * @return Number in actual scale
+     */
+    public double doScaleToActual(double defaultScale) {
+        return (defaultScale * getScale(scale));
+    }
 
     /**
      * Scales point in actual scale to default scale point
