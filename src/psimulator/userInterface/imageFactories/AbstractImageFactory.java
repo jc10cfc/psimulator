@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.Simulator.PacketType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PackageImageType;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
 
 /**
@@ -187,7 +187,7 @@ public abstract class AbstractImageFactory {
      * @param width
      * @return 
      */
-    public BufferedImage getPacketImage(PacketType packetType, PackageImageType packageImageType, int width) {
+    public BufferedImage getPacketImage(PacketType packetType, PacketImageType packageImageType, int width) {
         BufferedImage image;
 
         String path = getImagePath(packetType, packageImageType);
@@ -464,7 +464,7 @@ public abstract class AbstractImageFactory {
         imageBuffer.clearTextBuffers();
     }
 
-    private String getImagePath(PacketType packetType, PackageImageType packageImageType) {
+    private String getImagePath(PacketType packetType, PacketImageType packageImageType) {
         String middle;
         String suffix;
         

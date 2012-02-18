@@ -16,6 +16,7 @@ import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.PacketType;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
@@ -97,9 +98,12 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             case ZOOM_CHANGE:
                 //System.out.println("Aniamtion panel zoom changed");
                 break;
+            case PACKET_IMAGE_TYPE_CHANGE:
+                // no need to react
+                break;
         }
     }
-
+    
     /**
      * Removes all animations from list
      */
@@ -121,6 +125,11 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     @Override
     public void removeAnimation(Animation animation) {
         animations.remove(animation);
+    }
+    
+    @Override
+    public PacketImageType getPacketImageType() {
+        return dataLayer.getPackageImageType();
     }
 
     /**
@@ -171,4 +180,6 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         // add animation to animations list
         animations.add(anim);
     }
+
+    
 }

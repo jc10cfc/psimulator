@@ -7,7 +7,6 @@ import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Simulator.PacketType;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PackageImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -52,7 +51,8 @@ public class Animation implements TimingTarget {
         
         
         // get image
-        image = imageFactory.getPacketImage(packetType, PackageImageType.CLASSIC, zoomManager.getPackageIconWidth());
+        image = imageFactory.getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
+                zoomManager.getPackageIconWidth());
 
         // get start coordinates in default zoom
         defaultZoomStartX = defaultZoomSource.x;
@@ -91,7 +91,8 @@ public class Animation implements TimingTarget {
      * @return 
      */
     public Image getImage() {
-        image = imageFactory.getPacketImage(packetType, PackageImageType.CLASSIC, zoomManager.getPackageIconWidth());
+        image = imageFactory.getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
+                zoomManager.getPackageIconWidth());
         return image;
     }
 

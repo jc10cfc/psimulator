@@ -5,11 +5,12 @@ package psimulator.dataLayer.Enums;
  * @author Martin
  */
 public enum ObserverUpdateEventType {
-    VIEW_DETAILS,   // when view details changed
-    LANGUAGE,       // when language changed
-    ICON_SIZE,      // when icon size changed
-    ZOOM_CHANGE,    // when zoom changed
-    UNDO_REDO,      // when undo/redo
+    VIEW_DETAILS,               // when view details changed
+    LANGUAGE,                   // when language changed
+    ICON_SIZE,                  // when icon size changed
+    ZOOM_CHANGE,                // when zoom changed
+    UNDO_REDO,                  // when undo/redo
+    PACKET_IMAGE_TYPE_CHANGE,   // when packet icon changed
     
     SIMULATOR_PLAYER_LIST_MOVE, // when manually changed current event(NEXT, PREV, FIRST, LAST or DOUBLE CLICK on some event)
     SIMULATOR_PLAYER_PLAY,      // when playing starts
