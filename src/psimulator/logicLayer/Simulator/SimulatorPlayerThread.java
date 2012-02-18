@@ -26,8 +26,6 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     //
     private boolean isNewPacket;
     //
-    //private GlassPanelPainter glassPanelPainter;
-    //
     private AnimationPanelOuterInterface animationPanelOuterInterface;
 
     public SimulatorPlayerThread(DataLayerFacade model, UserInterfaceOuterFacade view) {
@@ -35,10 +33,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
         
         // set speed according to model
         currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
-        
-        // get glass panel
-        //glassPanelPainter = view.getGlassPanelPainter();
-        
+
         // getn animation panel
         animationPanelOuterInterface = view.getAnimationPanelOuterInterface();
     }

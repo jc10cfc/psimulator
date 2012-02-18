@@ -67,7 +67,11 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         System.out.println("Event reciever: recording=" + isRecording);
     }
     
-    
+    /**
+     * Generates simulator event from real graph. It tries to create event with random 
+     * components connected with cable.
+     * @return 
+     */
     private SimulatorEvent generateSimulatorEvent() {
         Graph graph = userInterfaceOuterFacade.getAnimationPanelOuterInterface().getGraph();
         

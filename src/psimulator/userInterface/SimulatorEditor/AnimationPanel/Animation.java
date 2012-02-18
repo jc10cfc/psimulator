@@ -2,7 +2,6 @@ package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
 import java.awt.Image;
 import java.awt.Point;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
@@ -43,17 +42,18 @@ public class Animation implements TimingTarget {
         this.zoomManager = zoomManager;
         this.imageFactory = imageFactory;
 
-        //ImageIcon ii = new ImageIcon(this.getClass().getResource("/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png"));
-        //image = ii.getImage();
+        // get image
         image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
 
+        // get start coordinates in default zoom
         defaultZoomStartX = defaultZoomSource.x;
         defaultZoomStartY = defaultZoomSource.y;
 
+        // get end coordinates in default zoom
         defaultZoomEndX = defaultZoomDest.x;
         defaultZoomEndY = defaultZoomDest.y;
 
-        // single        
+        // create animator      
         animator = new Animator.Builder().
                 setDuration(durationInMilliseconds, TimeUnit.MILLISECONDS).
                 setStartDirection(Animator.Direction.FORWARD).
@@ -66,59 +66,83 @@ public class Animation implements TimingTarget {
 //                setStartDirection(Animator.Direction.FORWARD).
 //                addTarget((TimingTarget)this).build();
         
+        // start animation
         animator.start();
     }
 
+    /**
+     * Stops the animation
+     */
     public void stopAnimator() {
         animator.stop();
-
     }
 
+    /**
+     * Returns image of animation in actual zoom sizes
+     * @return 
+     */
     public Image getImage() {
         image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
         return image;
     }
 
+    /**
+     * Gets X position of animated image in actual zoom.
+     * @return 
+     */
     public int getX() {
         return (int)zoomManager.doScaleToActual(defaultZoomStartX + defautlZoomWidthDifference - (zoomManager.getIconWidthDefaultZoom()/2.0));
     }
 
+    /**
+     * Gets Y position of animated image in actual zoom.
+     * @return 
+     */
     public int getY() {
         return (int)zoomManager.doScaleToActual(defaultZoomStartY + defautlZoomHeightDifference - (zoomManager.getIconWidthDefaultZoom()/2.0));
     }
 
+    /**
+     * Finds if visible
+     * @return 
+     */
     public boolean isVisible() {
         return visible;
     }
 
+    /**
+     * Moves image coordinates according to elapsed fraction of time.
+     * @param fraction 
+     */
     private void move(double fraction) {
         defautlZoomWidthDifference = (defaultZoomEndX - defaultZoomStartX) * fraction;
         defautlZoomHeightDifference = (defaultZoomEndY - defaultZoomStartY) * fraction;
     }
 
+    // ---------- TimingTarget implementation ------------------- //
     @Override
     public void begin(Animator source) {
-        //
+        // nothing to do
     }
 
     @Override
     public void end(Animator source) {
+        // at the end of animation remove itself from animation pane
         animationPanelInnerInterface.removeAnimation(this);
     }
 
     @Override
     public void repeat(Animator source) {
-        //
+        // nothing to do
     }
 
     @Override
     public void reverse(Animator source) {
-        //
+        // nothing to do
     }
 
     @Override
     public void timingEvent(Animator source, double fraction) {
         move(fraction);
-        //System.out.println("Fraction" + fraction);
     }
 }
