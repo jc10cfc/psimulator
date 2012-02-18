@@ -54,17 +54,17 @@ public class Animation implements TimingTarget {
         defaultZoomEndY = defaultZoomDest.y;
 
         // single        
-//        animator = new Animator.Builder().
-//                setDuration(2000, TimeUnit.MILLISECONDS).
-//                setStartDirection(Animator.Direction.FORWARD).
-//                addTarget((TimingTarget)this).build();
-        
-        // loop
         animator = new Animator.Builder().
                 setDuration(durationInMilliseconds, TimeUnit.MILLISECONDS).
-                setRepeatCount(Animator.INFINITE).
                 setStartDirection(Animator.Direction.FORWARD).
                 addTarget((TimingTarget)this).build();
+        
+        // loop
+//        animator = new Animator.Builder().
+//                setDuration(durationInMilliseconds, TimeUnit.MILLISECONDS).
+//                setRepeatCount(Animator.INFINITE).
+//                setStartDirection(Animator.Direction.FORWARD).
+//                addTarget((TimingTarget)this).build();
         
         animator.start();
     }
@@ -80,11 +80,11 @@ public class Animation implements TimingTarget {
     }
 
     public int getX() {
-        return (int)zoomManager.doScaleToActual(defaultZoomStartX + defautlZoomWidthDifference);
+        return (int)zoomManager.doScaleToActual(defaultZoomStartX + defautlZoomWidthDifference - (zoomManager.getIconWidthDefaultZoom()/2.0));
     }
 
     public int getY() {
-        return (int)zoomManager.doScaleToActual(defaultZoomStartY + defautlZoomHeightDifference);
+        return (int)zoomManager.doScaleToActual(defaultZoomStartY + defautlZoomHeightDifference - (zoomManager.getIconWidthDefaultZoom()/2.0));
     }
 
     public boolean isVisible() {

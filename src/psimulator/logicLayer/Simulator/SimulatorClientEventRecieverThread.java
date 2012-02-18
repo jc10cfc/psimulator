@@ -1,46 +1,49 @@
 package psimulator.logicLayer.Simulator;
 
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
+import java.util.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Simulator.PacketType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**
  *
  * @author Martin
  */
-public class SimulatorClientEventRecieverThread implements Runnable, Observer{
+public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
     private SimulatorManagerInterface simulatorManagerInterface;
-    
     private boolean isRecording;
-    
     private Random tmpRandom = new Random();
-    
-    public SimulatorClientEventRecieverThread(DataLayerFacade model){
+    private UserInterfaceOuterFacade userInterfaceOuterFacade;
+
+    public SimulatorClientEventRecieverThread(DataLayerFacade model, UserInterfaceOuterFacade userInterfaceOuterFacade) {
         this.simulatorManagerInterface = model.getSimulatorManager();
         this.isRecording = simulatorManagerInterface.isRecording();
+
+        this.userInterfaceOuterFacade = userInterfaceOuterFacade;
     }
-    
-    
-    
     @Override
     public void run() {
-        
+
         int tmpCounter = 0;
-        
-        while(true){
-            if(isRecording){
-                simulatorManagerInterface.addSimulatorEvent(new SimulatorEvent(tmpCounter++,"Router1", "Router2", "PING", ""));
+
+        while (true) {
+            if (isRecording) {
+
+                simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
                 simulatorManagerInterface.setNewPacketRecieved();
             }
-            
+
             try {
-                int time = tmpRandom.nextInt(1000)+100;
-                
+                int time = tmpRandom.nextInt(100) + 100; // 1000 + 100
+
                 Thread.sleep(time);
                 //Thread.sleep(1);
             } catch (InterruptedException ex) {
@@ -48,7 +51,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
                 return;
             }
         }
-  
+
     }
 
     @Override
@@ -61,7 +64,81 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer{
                 return;
         }
 
-        System.out.println("Event reciever: recording=" + isRecording );
+        System.out.println("Event reciever: recording=" + isRecording);
     }
     
+    
+    private SimulatorEvent generateSimulatorEvent() {
+        Graph graph = userInterfaceOuterFacade.getAnimationPanelOuterInterface().getGraph();
+        
+        // for now it is Random, the ids in parameter not valid
+        List<AbstractHwComponent> list = new ArrayList<AbstractHwComponent>(graph.getHwComponents());
+        int componentCount = graph.getAbstractHwComponentsCount();
+
+
+        AbstractHwComponent c1 = null;
+        AbstractHwComponent c2 = null;
+
+        Cable cable = null;
+
+        int i1;
+        int i2;
+
+        // find connected components
+        int counter = 0;
+        while (counter < 50) {
+            i1 = tmpRandom.nextInt(componentCount);
+            i2 = tmpRandom.nextInt(componentCount);
+
+            if (i1 == i2) {
+                continue;
+            }
+
+            c1 = list.get(i1);
+            c2 = list.get(i2);
+
+            for (EthInterface eth1 : c1.getInterfaces()) {
+                if (!eth1.hasCable()) {
+                    continue;
+                }
+                for (EthInterface eth2 : c2.getInterfaces()) {
+                    if (!eth2.hasCable()) {
+                        continue;
+                    }
+                    if (eth1.getCable().getId().intValue() == eth2.getCable().getId().intValue()) {
+                        cable = eth1.getCable();
+                        break;
+                    }
+                }
+                if (cable != null) {
+                    break;
+                }
+            }
+            if (cable != null) {
+                break;
+            }
+        }
+
+
+
+        // generate packet type
+        int index = tmpRandom.nextInt(PacketType.values().length);
+        PacketType packetType = PacketType.values()[index];
+
+        // generate time
+        int time = (int) (System.currentTimeMillis() % (86400000));
+        
+        //
+        int cableId;
+        if(cable != null){
+            cableId = cable.getId().intValue();
+        }else{
+            cableId = -1;
+        }
+
+        SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1.getId(), c2.getId(), 
+                cableId, c1.getDeviceName(), c2.getDeviceName(), packetType, "");
+        
+        return simulatorEvent;
+    }
 }

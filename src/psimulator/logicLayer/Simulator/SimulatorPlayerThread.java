@@ -7,7 +7,6 @@ import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
-import psimulator.userInterface.GlassPanelPainter;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
@@ -66,11 +65,12 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     // move to the last event
                     simulatorManagerInterface.moveToEvent(index);
                     
-                    animationPanelOuterInterface.createAnimation(2000, 0, 0);
-                    
                     // get event
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
 
+                    // start animation
+                    animationPanelOuterInterface.createAnimation(2000, event.getSourcceId(), event.getDestId());
+                    
                     // play event
                     System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
                     Thread.sleep(200);
@@ -87,7 +87,8 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
                     int time = i * 500 - 4;
                     
-                    animationPanelOuterInterface.createAnimation(time, 0, 0);
+                    // start animation
+                    animationPanelOuterInterface.createAnimation(time, event.getSourcceId(), event.getDestId());
                     
                     Thread.sleep(time);
 
