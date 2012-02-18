@@ -11,10 +11,14 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.logicLayer.ControllerFacade;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
@@ -195,6 +199,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         return glassPanelPainter;
     }
 
+    @Override
+    public AnimationPanelOuterInterface getAnimationPanelOuterInterface(){
+        return jPanelUserInterfaceMain.getAnimationPanelOuterInterface();
+    }
+    
     @Override
     public Component getMainWindowComponent() {
         return this;

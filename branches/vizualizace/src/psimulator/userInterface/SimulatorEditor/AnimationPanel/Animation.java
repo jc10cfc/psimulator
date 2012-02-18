@@ -27,20 +27,17 @@ public class Animation implements TimingTarget {
     private int defaultZoomStartY;
     private int defaultZoomEndX;
     private int defaultZoomEndY;
+    //
     private Image image;
-    private int defaultZoomX;
-    private int defaultZoomY;
-    private int defaultZoomMaxX;
-    private int defaultZoomMaxY;
+    //
     private boolean visible;
-    private final int ANIMATION_SPEED = 2;
-    
+    //
     private double defautlZoomWidthDifference =0.0;
     private double defautlZoomHeightDifference =0.0;
 
     public Animation(final AnimationPanelInnerInterface animationPanelInnerInterface,
             AbstractImageFactory imageFactory, ZoomManager zoomManager,
-            Point defaultZoomSource, Point defaultZoomDest) {
+            Point defaultZoomSource, Point defaultZoomDest, int durationInMilliseconds) {
 
         this.animationPanelInnerInterface = animationPanelInnerInterface;
         this.zoomManager = zoomManager;
@@ -50,25 +47,25 @@ public class Animation implements TimingTarget {
         //image = ii.getImage();
         image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
 
-        Random r = new Random();
-
         defaultZoomStartX = defaultZoomSource.x;
         defaultZoomStartY = defaultZoomSource.y;
 
         defaultZoomEndX = defaultZoomDest.x;
         defaultZoomEndY = defaultZoomDest.y;
 
-
-        defaultZoomX = r.nextInt(300);
-        defaultZoomY = defaultZoomX;
-
-        defaultZoomMaxX = r.nextInt(500) + 300;
-        defaultZoomMaxY = defaultZoomMaxX;
-
-        // single
-        animator = new Animator.Builder().setDuration(2000, TimeUnit.MILLISECONDS).setStartDirection(Animator.Direction.FORWARD).addTarget((TimingTarget)this).build();
+        // single        
+//        animator = new Animator.Builder().
+//                setDuration(2000, TimeUnit.MILLISECONDS).
+//                setStartDirection(Animator.Direction.FORWARD).
+//                addTarget((TimingTarget)this).build();
+        
         // loop
-        //animator = new Animator.Builder().setDuration(2000, TimeUnit.MILLISECONDS).setRepeatCount(Animator.INFINITE).setStartDirection(Animator.Direction.FORWARD).addTarget((TimingTarget)this).build();
+        animator = new Animator.Builder().
+                setDuration(durationInMilliseconds, TimeUnit.MILLISECONDS).
+                setRepeatCount(Animator.INFINITE).
+                setStartDirection(Animator.Direction.FORWARD).
+                addTarget((TimingTarget)this).build();
+        
         animator.start();
     }
 

@@ -26,4 +26,6 @@ public abstract class AnimationPanelOuterInterface extends JComponent implements
     
     //@Override
     //public abstract Dimension getPreferredSize();
+    
+    public abstract void createAnimation(int timeInMiliseconds, int idSource, int idDestination);
 }

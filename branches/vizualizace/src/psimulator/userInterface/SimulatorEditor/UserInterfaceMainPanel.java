@@ -1,28 +1,22 @@
 package psimulator.userInterface.SimulatorEditor;
 
-import psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane.UserInterfaceLayeredPane;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JLayeredPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.MainWindowInnerInterface;
-import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanel;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane.UserInterfaceLayeredPane;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -417,5 +411,10 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     @Override
     public JViewport getJViewport() {
         return jViewPort;
+    }
+
+    @Override
+    public AnimationPanelOuterInterface getAnimationPanelOuterInterface() {
+        return jLayeredPane.getAnimationPanelOuterInterface();
     }
 }
