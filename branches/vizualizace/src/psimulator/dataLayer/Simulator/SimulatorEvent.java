@@ -1,5 +1,9 @@
 package psimulator.dataLayer.Simulator;
 
+import java.awt.Color;
+import javax.swing.JLabel;
+import psimulator.dataLayer.ColorMixerSignleton;
+
 /**
  *
  * @author Martin
@@ -16,22 +20,28 @@ public class SimulatorEvent {
     private int cableId;
     
     private PacketType packetType;
-    private String info;
+    private Color color;
     
     private Object [] list;
 
-    public SimulatorEvent(double timeStamp, int sourcceId, int destId, int cableId, String from, String to, PacketType packetType, String info) {
+    public SimulatorEvent(double timeStamp, int sourcceId, int destId, int cableId, 
+            String from, String to, PacketType packetType) {
         this.timeStamp = timeStamp;
         this.from = from;
         this.to = to;
         this.packetType = packetType;
-        this.info = info;
         this.sourcceId = sourcceId;
         this.destId = destId;
         this.cableId = cableId;
         
-        Object [] tmp = {timeStamp, from, to, packetType, info};
+        this.color =  ColorMixerSignleton.getColorAccodringToPacketType(packetType);
+        
+        Object [] tmp = {timeStamp, from, to, packetType, color};
         list = tmp;
+    }
+
+    public PacketType getPacketType() {
+        return packetType;
     }
 
     public int getCableId() {
@@ -52,6 +62,6 @@ public class SimulatorEvent {
     
     @Override
     public String toString(){
-        return "time="+timeStamp+", sourceId"+sourcceId+", destId"+destId+", from="+from+", to="+to+", type="+packetType+", info="+info;
+        return "time="+timeStamp+", sourceId"+sourcceId+", destId"+destId+", from="+from+", to="+to+", type="+packetType+", color="+color;
     }
 }

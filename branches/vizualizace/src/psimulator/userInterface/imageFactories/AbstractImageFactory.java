@@ -6,7 +6,9 @@ import java.awt.image.RescaleOp;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.Simulator.PacketType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PackageImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
 
 /**
@@ -15,11 +17,10 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
  */
 public abstract class AbstractImageFactory {
     //
+
     BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
     //
-    
-
     public static final int ICON_SIZE_MENU_BAR = 48;
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
     //public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_arrow.png";
@@ -41,6 +42,8 @@ public abstract class AbstractImageFactory {
     public static final String TOOL_SWITCH_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/switch_linux.png";
     public static final String TOOL_SWITCH_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/switch_cisco.png";
     //
+    public static final String PACKAGE_PREFIX_PATH ="/resources/toolbarIcons/simulator/packages/";
+    //
     protected ImageBuffer imageBuffer;
     protected BufferedImageLoader bufferedImageLoader;
     // scales 3 je alpha
@@ -54,24 +57,22 @@ public abstract class AbstractImageFactory {
 
         // preload images from file
         preLoadAllImagesFromFiles();
-        
+
         // get some font metrics to avoid long time when first component is placed into draw panel
         Font font = new Font("SanSerif", Font.PLAIN, 12);
         getFontMetrics(font);
     }
-    
-    public final FontMetrics getFontMetrics(Font font){
+
+    public final FontMetrics getFontMetrics(Font font) {
         g2.setFont(font);
         FontMetrics fm = g2.getFontMetrics();
         return fm;
     }
-    
-    
 
     private void preLoadAllImagesFromFiles() {
         HwTypeEnum hwTypes[] = HwTypeEnum.values();
         for (HwTypeEnum hwType : hwTypes) {
-            String path = getPath(hwType);
+            String path = getImagePath(hwType);
             try {
                 bufferedImageLoader.getImage(path);
             } catch (IOException ex) {
@@ -79,17 +80,19 @@ public abstract class AbstractImageFactory {
             }
         }
     }
-   
+
     /**
-     * Gets image with desired text with Font size fontSize and desired width and height. It is buffered.
+     * Gets image with desired text with Font size fontSize and desired width
+     * and height. It is buffered.
+     *
      * @param text
      * @param fontSize
      * @param textWidth
      * @param textHeigh
      * @param ascent
-     * @return 
+     * @return
      */
-    public BufferedImage getImageWithText(String text, Font font,  int textWidth, int textHeigh, int ascent) {
+    public BufferedImage getImageWithText(String text, Font font, int textWidth, int textHeigh, int ascent) {
         BufferedImage image;
 
         image = imageBuffer.getBufferedImageWithText(text, font.getSize());
@@ -108,29 +111,31 @@ public abstract class AbstractImageFactory {
     }
 
     /**
-     * Creates BufferImage with text painted in black with white edge of sizes in parameters.
+     * Creates BufferImage with text painted in black with white edge of sizes
+     * in parameters.
+     *
      * @param text
      * @param font
      * @param textWidth
      * @param textHeight
      * @param ascent
-     * @return 
+     * @return
      */
     protected BufferedImage createImageWithText(String text, Font font, int textWidth, int textHeight, int ascent) {
         textWidth = textWidth + 2;
         textHeight = textHeight + 2;
 
         BufferedImage bi = new BufferedImage(textWidth, textHeight, BufferedImage.TYPE_INT_ARGB);
-        
+
         Graphics2D g2 = bi.createGraphics();
-        
+
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
 
         int x = 1;
         //int y = textHeight;
         int y = ascent;
-        
+
         g2.setFont(font);
 
         // paint white border
@@ -145,7 +150,7 @@ public abstract class AbstractImageFactory {
         g2.drawString(text, x, y);
 
         g2.dispose();
-        
+
         return bi;
     }
 
@@ -160,7 +165,7 @@ public abstract class AbstractImageFactory {
      */
     public BufferedImage getImage(HwTypeEnum hwComponentType, Integer width, boolean marked) {
         BufferedImage image;
-        String path = getPath(hwComponentType);
+        String path = getImagePath(hwComponentType);
 
         image = imageBuffer.getBufferedImage(path, width, marked);
 
@@ -169,6 +174,31 @@ public abstract class AbstractImageFactory {
             image = createImage(hwComponentType, path, width, marked);
             // put image into buffer
             imageBuffer.putBufferedImage(path, width, image, marked);
+        }
+
+        return image;
+    }
+
+    /**
+     * Returns BufferedImage for packetType and packetImageType with width.
+     * 
+     * @param packetType
+     * @param packageImageType
+     * @param width
+     * @return 
+     */
+    public BufferedImage getPacketImage(PacketType packetType, PackageImageType packageImageType, int width) {
+        BufferedImage image;
+
+        String path = getImagePath(packetType, packageImageType);
+
+        image = imageBuffer.getBufferedImage(path, width, false);
+
+        if (image == null) {
+            // load image from file
+            image = getScaledBufferedImage(path, width);
+            // put image into buffer
+            imageBuffer.putBufferedImage(path, width, image, false);
         }
 
         return image;
@@ -221,7 +251,7 @@ public abstract class AbstractImageFactory {
         } catch (IOException ex) {
             try {
                 // load default image
-                tmp = getScaledImage(getPath(hwComponentType), width);
+                tmp = getScaledImage(getImagePath(hwComponentType), width);
             } catch (IOException ex1) {
                 // should never happen, all hwComponentType default icons are in .jar as a resource
             }
@@ -347,6 +377,11 @@ public abstract class AbstractImageFactory {
         return tmp;
     }
 
+    /**
+     * Creates square image of given image
+     * @param image
+     * @return 
+     */
     private ImageIcon createSquareImage(Image image) {
         int size = image.getWidth(null);
 
@@ -370,6 +405,43 @@ public abstract class AbstractImageFactory {
     }
 
     /**
+     * Creates buffered image from path of width.
+     * @param path
+     * @param width
+     * @return
+     * @throws IOException 
+     */
+    private BufferedImage getScaledBufferedImage(String path, int width){
+        BufferedImage bi;
+
+        Image tmp = null;
+
+        try {
+            // loads image from path and scales it to desired size
+            tmp = getScaledImage(path, width);
+        } catch (IOException ex) {
+            // should never happen, all hwComponentType default icons are in .jar as a resource
+        }
+
+        // create new buffered image to paint on
+        bi = new BufferedImage(tmp.getWidth(null), tmp.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+        // create graphics and set hints
+        Graphics2D graphics2D = bi.createGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        // draw image
+        graphics2D.drawImage(tmp, 0, 0, null);
+
+        graphics2D.dispose();
+
+        return bi;
+    }
+    
+    /**
      * Creates scaled image of image at path. Size will be size x size.
      *
      * @param path
@@ -387,12 +459,49 @@ public abstract class AbstractImageFactory {
     public void clearBuffer() {
         imageBuffer.clearBuffer();
     }
-    
-    public void clearTextBuffers(){
+
+    public void clearTextBuffers() {
         imageBuffer.clearTextBuffers();
     }
-    
-    private String getPath(HwTypeEnum type) {
+
+    private String getImagePath(PacketType packetType, PackageImageType packageImageType) {
+        String middle;
+        String suffix;
+        
+        switch (packetType) {
+            case ARP:
+                suffix = "yellow.png";
+                break;
+            case ICMP:
+                suffix = "gray.png";
+                break;
+            case TCP:
+                suffix = "green.png";
+                break;
+            case UDP:
+                suffix = "blue.png";
+                break;
+            case GENERIC:
+            default:
+                suffix = "pink.png";
+                break;
+        }
+        
+        switch(packageImageType){
+            case CAR:
+                middle = "delivery_truck";
+                break;
+            case CLASSIC:
+            default:
+                middle = "package";
+                break;
+        }
+        
+        return PACKAGE_PREFIX_PATH + middle + "_" + suffix;
+        //return PACKAGE_PREFIX_PATH + middle + ".png";
+    }
+
+    private String getImagePath(HwTypeEnum type) {
         switch (type) {
             case CISCO_ROUTER:
                 return TOOL_ROUTER_CISCO_PATH;

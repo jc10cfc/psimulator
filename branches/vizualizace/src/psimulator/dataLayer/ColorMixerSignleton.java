@@ -1,6 +1,7 @@
 package psimulator.dataLayer;
 
 import java.awt.Color;
+import psimulator.dataLayer.Simulator.PacketType;
 
 /**
  *
@@ -31,5 +32,21 @@ public class ColorMixerSignleton {
     @Override
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
+    }
+    
+    public static Color getColorAccodringToPacketType(PacketType packetType){
+        switch(packetType){
+            case TCP:
+                return Color.GREEN;
+            case UDP:
+                return Color.BLUE;
+            case ICMP:
+                return Color.GRAY;
+            case ARP:
+                return Color.YELLOW;
+            case GENERIC:
+            default:
+                return Color.PINK;
+        }
     }
 }

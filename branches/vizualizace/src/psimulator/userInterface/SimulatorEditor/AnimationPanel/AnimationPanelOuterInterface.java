@@ -2,6 +2,7 @@ package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
 import java.util.Observer;
 import javax.swing.JComponent;
+import psimulator.dataLayer.Simulator.PacketType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
@@ -30,5 +31,5 @@ public abstract class AnimationPanelOuterInterface extends JComponent implements
     //@Override
     //public abstract Dimension getPreferredSize();
     
-    public abstract void createAnimation(int timeInMiliseconds, int idSource, int idDestination);
+    public abstract void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination);
 }

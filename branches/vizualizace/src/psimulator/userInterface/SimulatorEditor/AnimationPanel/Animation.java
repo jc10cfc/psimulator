@@ -5,7 +5,9 @@ import java.awt.Point;
 import java.util.concurrent.TimeUnit;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
-import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Simulator.PacketType;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PackageImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -19,6 +21,7 @@ public class Animation implements TimingTarget {
     private Animator animator;
     //
     private AnimationPanelInnerInterface animationPanelInnerInterface;
+    private DataLayerFacade dataLayer;
     private ZoomManager zoomManager;
     private AbstractImageFactory imageFactory;
     //
@@ -28,6 +31,7 @@ public class Animation implements TimingTarget {
     private int defaultZoomEndY;
     //
     private Image image;
+    private PacketType packetType;
     //
     private boolean visible;
     //
@@ -35,15 +39,20 @@ public class Animation implements TimingTarget {
     private double defautlZoomHeightDifference =0.0;
 
     public Animation(final AnimationPanelInnerInterface animationPanelInnerInterface,
-            AbstractImageFactory imageFactory, ZoomManager zoomManager,
-            Point defaultZoomSource, Point defaultZoomDest, int durationInMilliseconds) {
+            DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager,
+            PacketType packetType, Point defaultZoomSource, Point defaultZoomDest, 
+            int durationInMilliseconds) {
 
+        this.dataLayer = dataLayer;
         this.animationPanelInnerInterface = animationPanelInnerInterface;
         this.zoomManager = zoomManager;
         this.imageFactory = imageFactory;
-
+        //
+        this.packetType = packetType;
+        
+        
         // get image
-        image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
+        image = imageFactory.getPacketImage(packetType, PackageImageType.CLASSIC, zoomManager.getPackageIconWidth());
 
         // get start coordinates in default zoom
         defaultZoomStartX = defaultZoomSource.x;
@@ -82,7 +91,7 @@ public class Animation implements TimingTarget {
      * @return 
      */
     public Image getImage() {
-        image = imageFactory.getImage(HwTypeEnum.END_DEVICE_PC, zoomManager.getIconWidth(), false);
+        image = imageFactory.getPacketImage(packetType, PackageImageType.CLASSIC, zoomManager.getPackageIconWidth());
         return image;
     }
 
@@ -91,7 +100,7 @@ public class Animation implements TimingTarget {
      * @return 
      */
     public int getX() {
-        return (int)zoomManager.doScaleToActual(defaultZoomStartX + defautlZoomWidthDifference - (zoomManager.getIconWidthDefaultZoom()/2.0));
+        return (int)zoomManager.doScaleToActual(defaultZoomStartX + defautlZoomWidthDifference - (zoomManager.getPackageIconWidthDefaultZoom()/2.0));
     }
 
     /**
@@ -99,7 +108,7 @@ public class Animation implements TimingTarget {
      * @return 
      */
     public int getY() {
-        return (int)zoomManager.doScaleToActual(defaultZoomStartY + defautlZoomHeightDifference - (zoomManager.getIconWidthDefaultZoom()/2.0));
+        return (int)zoomManager.doScaleToActual(defaultZoomStartY + defautlZoomHeightDifference - (zoomManager.getPackageIconWidthDefaultZoom()/2.0));
     }
 
     /**
