@@ -64,7 +64,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
 
                     // start animation
-                    animationPanelOuterInterface.createAnimation(2000, event.getSourcceId(), event.getDestId());
+                    animationPanelOuterInterface.createAnimation(event.getPacketType(), 2000, event.getSourcceId(), event.getDestId());
                     
                     // play event
                     System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
@@ -83,7 +83,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     int time = i * 500 - 4;
                     
                     // start animation
-                    animationPanelOuterInterface.createAnimation(time, event.getSourcceId(), event.getDestId());
+                    animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId());
                     
                     Thread.sleep(time);
 

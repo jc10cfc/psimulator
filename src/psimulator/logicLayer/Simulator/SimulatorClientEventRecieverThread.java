@@ -1,6 +1,7 @@
 package psimulator.logicLayer.Simulator;
 
 import java.util.*;
+import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.PacketType;
@@ -141,7 +142,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         }
 
         SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1.getId(), c2.getId(), 
-                cableId, c1.getDeviceName(), c2.getDeviceName(), packetType, "");
+                cableId, c1.getDeviceName(), c2.getDeviceName(), packetType);
         
         return simulatorEvent;
     }

@@ -7,13 +7,13 @@ import java.awt.Toolkit;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
-import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingSource;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Simulator.PacketType;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
@@ -30,6 +30,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
     private static final TimingSource f_repaintTimer = new SwingTimerTimingSource();
     //
+    private DataLayerFacade dataLayer;
     private AbstractImageFactory imageFactory;
     private ZoomManager zoomManager;
     private Graph graph;
@@ -45,6 +46,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         // set timing sourcce to Animator
         Animator.setDefaultTimingSource(f_repaintTimer);
 
+        this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
         this.zoomManager = zoomManager;
 
@@ -157,15 +159,16 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      * @param idDestination 
      */
     @Override
-    public void createAnimation(int timeInMiliseconds, int idSource, int idDestination) {
+    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination) {
         // points in Default zoom
         Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
         Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
 
         // create new animation
-        Animation animation = new Animation(this, imageFactory, zoomManager, src, dest, timeInMiliseconds);
+        Animation anim = new Animation(this, dataLayer, imageFactory, zoomManager, 
+                packetType, src, dest, timeInMiliseconds);
         
         // add animation to animations list
-        animations.add(animation);
+        animations.add(anim);
     }
 }

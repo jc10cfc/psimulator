@@ -5,9 +5,9 @@ package psimulator.dataLayer.Simulator;
  * @author Martin
  */
 public enum PacketType {
-    TCP,
-    UDP,
-    ICMP,
-    ARP,
-    GENERIC;
+    TCP,        // green
+    UDP,        // blue
+    ICMP,       // gray
+    ARP,        // yellow
+    GENERIC;    // pink
 }

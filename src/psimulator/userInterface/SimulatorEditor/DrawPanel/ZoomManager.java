@@ -13,7 +13,8 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
  */
 public class ZoomManager extends Observable {
 
-    private int width = 140;
+    private int hwIconWidth = 140;
+    private int packageIconWidth = 120;
     //
     private int defaultScale = 8;
     private int scale = defaultScale;
@@ -33,14 +34,29 @@ public class ZoomManager extends Observable {
      * @return 
      */
     public int getIconWidth() {
-        return (int) (getCurrentScale() * width);
+        return (int) (getCurrentScale() * hwIconWidth);
     }
 
     /**
      * returns Icon size according to default zoom  scale
      */
     public int getIconWidthDefaultZoom() {
-        return (int) (width);
+        return (int) (hwIconWidth);
+    }
+    
+    /**
+     * returns Icon size according to scale and default icon size
+     * @return 
+     */
+    public int getPackageIconWidth() {
+        return (int) (getCurrentScale() * packageIconWidth);
+    }
+
+    /**
+     * returns Icon size according to default zoom  scale
+     */
+    public int getPackageIconWidthDefaultZoom() {
+        return (int) (packageIconWidth);
     }
 
     /**

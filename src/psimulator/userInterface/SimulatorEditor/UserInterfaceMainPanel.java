@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor;
 
+import psimulator.userInterface.SimulatorEditor.SimulatorControllPanel.SimulatorControlPanel;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.ActionListener;

@@ -1,4 +1,4 @@
-package psimulator.userInterface.SimulatorEditor;
+package psimulator.userInterface.SimulatorEditor.SimulatorControllPanel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -52,7 +52,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private JPanel jPanelEventList;
     private JPanel jPanelEventListTable;
     private JPanel jPanelEventListButtons;
-    private JTable jTableEventList;
+    private JTableEventList jTableEventList;
     private JScrollPane jScrollPaneTableEventList;
     private JButton jButtonDeleteEvents;
     // Details panel
@@ -456,11 +456,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelEventList.setLayout(new BoxLayout(jPanelEventList, BoxLayout.Y_AXIS));
 
         //// link table with table model
-        jTableEventList = new JTable(simulatorInterface.getEventTableModel());
-        jTableEventList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // only single selection
-        jTableEventList.setRowSelectionAllowed(true);                           // row selection enabled
-        jTableEventList.setFocusable(false);                                    // dont display focus on cells
-        jTableEventList.getTableHeader().setReorderingAllowed(false);           // disable reordering columns
+        jTableEventList = new JTableEventList(simulatorInterface.getEventTableModel());
         //
         jPanelEventListTable = new JPanel();
         jScrollPaneTableEventList = new JScrollPane();
