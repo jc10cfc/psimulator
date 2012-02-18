@@ -6,6 +6,7 @@ import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.interfaces.SaveableInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
  *
@@ -15,6 +16,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
     // strings for saving
     private static final String TOOLBAR_ICON_SIZE = "TOOLBAR_ICON_SIZE";
+    private static final String PACKAGE_IMAGE_TYPE = "PACKAGE_IMAGE_TYPE";
     private static final String VIEW_DEVICE_NAMES = "VIEW_DEVICE_NAMES";
     private static final String VIEW_DEVICE_TYPES = "VIEW_DEVICE_TYPES";
     private static final String VIEW_INTERFACE_NAMES = "VIEW_INTERFACE_NAMES";
@@ -27,6 +29,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     
     // set to default
     private ToolbarIconSizeEnum toolbarIconSize = ToolbarIconSizeEnum.MEDIUM;
+    private PacketImageType packageImageType = PacketImageType.CLASSIC;
     private boolean viewDeviceNames = true;
     private boolean viewDeviceTypes = true;
     private boolean viewInterfaceNames = true;
@@ -39,7 +42,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     public PreferencesManager(){
         // initialize preferences store
         prefs = Preferences.userNodeForPackage(this.getClass());
-        
+
         loadPreferences();
     }
  
@@ -48,6 +51,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     public void savePreferences() {
         // save toolbar icon size
         prefs.put(TOOLBAR_ICON_SIZE, toolbarIconSize.toString());
+        prefs.put(PACKAGE_IMAGE_TYPE, packageImageType.toString());
         
         prefs.putBoolean(VIEW_DEVICE_NAMES, viewDeviceNames);
         prefs.putBoolean(VIEW_DEVICE_TYPES, viewDeviceTypes);
@@ -63,6 +67,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     public void loadPreferences() {
         // load toolbar icon size
         toolbarIconSize = ToolbarIconSizeEnum.valueOf(prefs.get(TOOLBAR_ICON_SIZE, toolbarIconSize.toString()));
+        packageImageType = PacketImageType.valueOf(prefs.get(PACKAGE_IMAGE_TYPE, packageImageType.toString()));
         
         viewDeviceNames = prefs.getBoolean(VIEW_DEVICE_NAMES, viewDeviceNames);
         viewDeviceTypes = prefs.getBoolean(VIEW_DEVICE_TYPES, viewDeviceTypes);
@@ -87,6 +92,18 @@ public final class PreferencesManager extends Observable implements SaveableInte
         notifyObservers(ObserverUpdateEventType.ICON_SIZE);  
     }
 
+    public PacketImageType getPackageImageType() {
+        return packageImageType;
+    }
+
+    public void setPackageImageType(PacketImageType packageImageType) {
+        this.packageImageType = packageImageType;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.PACKET_IMAGE_TYPE_CHANGE);  
+    }
+    
     public boolean isViewDeviceNames() {
         return viewDeviceNames;
     }

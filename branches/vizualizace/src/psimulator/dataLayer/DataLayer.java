@@ -10,20 +10,22 @@ import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
  *
  * @author Martin
  */
-public class DataLayer extends DataLayerFacade{
+public class DataLayer extends DataLayerFacade {
+
     private LanguageManager languageManager;
     private PreferencesManager preferencesManager;
     private SimulatorManager simulatorManager;
     private AbstractNetworkAdapter abstractNetworkAdapter;
     private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
-    
-    public DataLayer(){
+
+    public DataLayer() {
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
         simulatorManager = new SimulatorManager();
@@ -40,7 +42,7 @@ public class DataLayer extends DataLayerFacade{
     public void setToolbarIconSize(ToolbarIconSizeEnum size) {
         preferencesManager.setToolbarIconSize(size);
     }
-    
+
     @Override
     public void savePreferences() {
         preferencesManager.savePreferences();
@@ -75,7 +77,7 @@ public class DataLayer extends DataLayerFacade{
     public void addPreferencesObserver(Observer observer) {
         preferencesManager.addObserver(observer);
     }
-    
+
     @Override
     public void deletePreferencesObserver(Observer observer) {
         preferencesManager.deleteObserver(observer);
@@ -85,7 +87,7 @@ public class DataLayer extends DataLayerFacade{
     public void deleteLanguageObserver(Observer observer) {
         languageManager.deleteObserver(observer);
     }
-    
+
     @Override
     public void addSimulatorObserver(Observer observer) {
         simulatorManager.addObserver(observer);
@@ -178,5 +180,13 @@ public class DataLayer extends DataLayerFacade{
         preferencesManager.setViewMacAddresses(viewMacAddresses);
     }
 
-    
+    @Override
+    public PacketImageType getPackageImageType() {
+        return preferencesManager.getPackageImageType();
+    }
+
+    @Override
+    public void setPackageImageType(PacketImageType packageImageType) {
+        preferencesManager.setPackageImageType(packageImageType);
+    }
 }

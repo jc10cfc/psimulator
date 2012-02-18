@@ -3,6 +3,7 @@ package psimulator.dataLayer.interfaces;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
  *
@@ -27,6 +28,9 @@ public interface PreferencesInterface {
     public boolean isViewMacAddresses();
     public void setViewMacAddresses(boolean viewMacAddresses);
     
+    
+    public PacketImageType getPackageImageType();
+    public void setPackageImageType(PacketImageType packageImageType);
     
     public void savePreferences();
     

@@ -7,6 +7,7 @@ import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
  *
@@ -14,6 +15,7 @@ import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
  */
 public final class SettingsDialog extends AbstractPropertiesDialog {
 
+    private Font font;
     /*
      * window componenets
      */
@@ -31,6 +33,10 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private JCheckBox jCheckBoxMacAddresses;
     private JRadioButton jRadioButtonManualLOD;
     private JRadioButton jRadioButtonAutoLOD;
+    //
+    private JRadioButton classicPacketIconButton;
+    private JRadioButton carPacketIconButton;
+    private JLabel packetImageTypePicture;
     /*
      * END of window components
      */
@@ -38,6 +44,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
      * variables for local store
      */
     private ToolbarIconSizeEnum toolbarIconSize;
+    private PacketImageType packetImageType;
+            
     private int currentLanguagePosition;
     //
     private boolean viewDeviceNames;
@@ -77,6 +85,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     protected void copyValuesFromGlobalToLocal() {
         currentLanguagePosition = dataLayer.getCurrentLanguagePosition();
         toolbarIconSize = dataLayer.getToolbarIconSize();
+        packetImageType = dataLayer.getPackageImageType();
         //
         viewDeviceNames = dataLayer.isViewDeviceNames();
         viewDeviceTypes = dataLayer.isViewDeviceTypes();
@@ -103,6 +112,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     protected void copyValuesFromLocalToGlobal() {
         dataLayer.setCurrentLanguage(currentLanguagePosition);
         dataLayer.setToolbarIconSize(toolbarIconSize);
+        dataLayer.setPackageImageType(packetImageType);
         //
         dataLayer.setViewDeviceNames(viewDeviceNames);
         dataLayer.setViewDeviceTypes(viewDeviceTypes);
@@ -123,6 +133,10 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         }
 
         if (toolbarIconSize != dataLayer.getToolbarIconSize()) {
+            return true;
+        }
+        
+        if (packetImageType != dataLayer.getPackageImageType()){
             return true;
         }
 
@@ -162,6 +176,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         languageList.setSelectedIndex(currentLanguagePosition);
         // set image like in preferences
         setIconSize();
+        // set packet icon size like in preferences
+        setPacketIconType();
         //
         setLevelOfDetails();
     }
@@ -174,7 +190,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
 
         tabbedPane.addTab(dataLayer.getString("GENERAL"), new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/home.png")), createCardGeneral());
 
-        tabbedPane.addTab("Second", new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/exec.png")), createCard2());
+        tabbedPane.addTab(dataLayer.getString("SIMULATOR"), new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/exec.png")), createCardSimulator());
 
         mainPanel.add(tabbedPane);
 
@@ -291,7 +307,7 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         languagePanel.setLayout(new BoxLayout(languagePanel, BoxLayout.X_AXIS));
 
         JLabel languageLabel = new JLabel(dataLayer.getString("LANGUAGE"));
-        Font font = new Font(languageLabel.getFont().getName(), Font.BOLD, languageLabel.getFont().getSize());
+        font = new Font(languageLabel.getFont().getName(), Font.BOLD, languageLabel.getFont().getSize());
         languageLabel.setFont(font);
 
         languageList = new JComboBox(dataLayer.getAvaiableLanguageNames());
@@ -370,12 +386,58 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         return panel;
     }
 
-    private JPanel createCard2() {
-        JPanel card = new JPanel();
+    private JPanel createCardSimulator() {
+        JPanel pane = new JPanel();
+        pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+        
+        // PACKET ICON TYPE panel
+        JPanel packetImageTypePanel = new JPanel();
+        packetImageTypePanel.setLayout(new BoxLayout(packetImageTypePanel, BoxLayout.X_AXIS));
+        packetImageTypePanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("PACKET_IMAGE_TYPE")));
 
-        card.add(new JButton("Button 2"));
+        JLabel iconSizeLabel = new JLabel(dataLayer.getString("PACKET_IMAGE_TYPE"));
+        iconSizeLabel.setFont(font);
+    
+        packetImageTypePanel.add(iconSizeLabel);
+        packetImageTypePanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        packetImageTypePanel.add(createPacketIconPanel());
 
-        return card;
+        // END APPLICATION PANEL
+        pane.add(packetImageTypePanel);
+        
+        return pane;
+    }
+    
+    private JPanel createPacketIconPanel(){
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        ActionListener packetImageTypeListener = new PacketImageTypeListener();
+
+        classicPacketIconButton = new JRadioButton(dataLayer.getString("CLASSIC"));
+        classicPacketIconButton.setActionCommand(PacketImageType.CLASSIC.toString());
+        classicPacketIconButton.addActionListener(packetImageTypeListener);
+
+        carPacketIconButton = new JRadioButton(dataLayer.getString("CARS"));
+        carPacketIconButton.setActionCommand(PacketImageType.CAR.toString());
+        carPacketIconButton.addActionListener(packetImageTypeListener);
+
+        buttonGroup.add(classicPacketIconButton);
+        buttonGroup.add(carPacketIconButton);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(0, 1));
+        buttonPanel.add(classicPacketIconButton);
+        buttonPanel.add(carPacketIconButton);
+
+        panel.add(buttonPanel);
+
+        packetImageTypePicture = new JLabel();
+        packetImageTypePicture.setPreferredSize(new Dimension(48, 48));
+
+        panel.add(packetImageTypePicture);
+
+        return panel;
     }
 
     private void setIconSize() {
@@ -396,6 +458,19 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
             case LARGE:
                 largeToolbarIconButton.setSelected(true);
                 iconSizePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/48/home.png")));
+                break;
+        }
+    }
+    
+    private void setPacketIconType(){
+        switch(packetImageType){
+            case CLASSIC:
+                classicPacketIconButton.setSelected(true);
+                packetImageTypePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/simulator/packages/package_pink_48.png")));
+                break;
+            case CAR:
+                carPacketIconButton.setSelected(true);
+                packetImageTypePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/simulator/packages/delivery_truck_pink_48.png")));
                 break;
         }
     }
@@ -450,6 +525,22 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         public void actionPerformed(ActionEvent e) {
             toolbarIconSize = ToolbarIconSizeEnum.valueOf(e.getActionCommand());
             setIconSize();
+         }
+    }
+    
+    /////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for ToolbarIconSize
+     */
+    class PacketImageTypeListener implements ActionListener {
+
+        /**
+         *
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            packetImageType = PacketImageType.valueOf(e.getActionCommand());
+            setPacketIconType();
          }
     }
 }
