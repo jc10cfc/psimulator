@@ -8,12 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashMap;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.InterfacesTable.InterfacesTableModel;
@@ -31,15 +29,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
      * window componenets
      */
     private JFormattedTextField jTextFieldDeviceName;
-    /*
-    private JComboBox jComboBoxInterface;
-    private JLabel jLabelInterfaceNameValue;
-    private JLabel jLabelConnectedValue;
-    private JLabel jLabelConnectedToValue;
-    private JLabel jLabelUniqueIdValue;
-    private JFormattedTextField jTextFieldIpAddress;
-    private JFormattedTextField jTextFieldMacAddress;
-    */
+
     /*
      * END of window components
      */

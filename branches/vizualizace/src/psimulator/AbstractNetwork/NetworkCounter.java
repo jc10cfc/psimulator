@@ -18,7 +18,7 @@ public class NetworkCounter implements Serializable {
     public NetworkCounter(int nextId, int nextMacAddress) {
         this.nextId = nextId;
         this.nextMacAddress = nextMacAddress;
-        this.nextNumberMap = new EnumMap<>(HwTypeEnum.class);
+        this.nextNumberMap = new EnumMap<HwTypeEnum, Integer>(HwTypeEnum.class);
         
     }
 
