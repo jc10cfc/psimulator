@@ -2,13 +2,16 @@ package psimulator.AbstractNetwork;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -20,9 +23,10 @@ public class Network implements Serializable {
     //private String name;
 
     private NetworkCounter counter;
-    private LinkedHashMap<Integer, NetworkCable> cables;
-    private LinkedHashMap<Integer, NetworkDevice> devices;
+    private Map<Integer, NetworkCable> cables;
+    private Map<Integer, NetworkDevice> devices;
     // needed for Graph restore from Network - fast lookup
+    @XmlTransient
     private LinkedHashMap<Integer, NetworkInterface> interfacesMap;
 
     public Network(/*
@@ -31,8 +35,8 @@ public class Network implements Serializable {
         //this.ID = ID;
         //this.name = name;
 
-        this.cables = new LinkedHashMap<Integer, NetworkCable>();
-        this.devices = new LinkedHashMap<Integer, NetworkDevice>();
+        this.cables = new HashMap<Integer, NetworkCable>();
+        this.devices = new HashMap<Integer, NetworkDevice>();
 
         this.interfacesMap = new LinkedHashMap<Integer, NetworkInterface>();
     }
@@ -60,7 +64,7 @@ public class Network implements Serializable {
         Network network = null;
 
         JAXBContext context = JAXBContext.newInstance(Network.class);
-        
+
         Unmarshaller unmarsh = context.createUnmarshaller();
 
         network = (Network) unmarsh.unmarshal(file);
@@ -86,13 +90,11 @@ public class Network implements Serializable {
         return interfacesMap.get(id);
     }
 
-    @XmlElement(name = "cable")
-    public LinkedHashMap<Integer, NetworkCable> getCables() {
+    public Map<Integer, NetworkCable> getCables() {
         return cables;
     }
 
-    @XmlElement(name = "device")
-    public LinkedHashMap<Integer, NetworkDevice> getDevices() {
+    public Map<Integer, NetworkDevice> getDevices() {
         return devices;
     }
 
@@ -107,13 +109,16 @@ public class Network implements Serializable {
 
     // ---------------------------------------------------------------
     // Martin Svihlik tyto metody nepotrebuje:
-    public void setCables(LinkedHashMap<Integer, NetworkCable> cables) {
+    public void setCables(Map<Integer, NetworkCable> cables) {
         this.cables = cables;
     }
 
-    public void setDevices(LinkedHashMap<Integer, NetworkDevice> devices) {
+    public void setDevices(Map<Integer, NetworkDevice> devices) {
         this.devices = devices;
     }
+    
+    
+    
     /*
      * public int getID() { return ID; }
      *
