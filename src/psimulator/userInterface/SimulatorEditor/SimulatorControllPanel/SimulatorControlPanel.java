@@ -65,11 +65,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     //
     //
     private DataLayerFacade dataLayer;
-    private SimulatorManagerInterface simulatorInterface;
+    private SimulatorManagerInterface simulatorManagerInterface;
 
     public SimulatorControlPanel(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
-        this.simulatorInterface = dataLayer.getSimulatorManager();
+        this.simulatorManagerInterface = dataLayer.getSimulatorManager();
 
         // create graphic layout with components
         initComponents();
@@ -82,14 +82,14 @@ public class SimulatorControlPanel extends JPanel implements Observer {
      * Turns of playing, realtime and recording.
      */
     public void setTurnedOff() {
-        simulatorInterface.setPlayingStopped();
-        simulatorInterface.setRealtimeActivated(false);
-        simulatorInterface.setRecordingActivated(false);
+        simulatorManagerInterface.setPlayingStopped();
+        simulatorManagerInterface.setRealtimeActivated(false);
+        simulatorManagerInterface.setRecordingActivated(false);
         // can stay connected
     }
 
     public void clearEvents() {
-        simulatorInterface.deleteAllSimulatorEvents();
+        simulatorManagerInterface.deleteAllSimulatorEvents();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 int rowNumber = jTableEventList.rowAtPoint(p);
 
                 // set concrete row in model
-                simulatorInterface.setConcreteRawSelected(rowNumber);
+                simulatorManagerInterface.setConcreteRawSelected(rowNumber);
             }
         });
 
@@ -144,7 +144,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void stateChanged(ChangeEvent ce) {
                 // set the speed in model
-                simulatorInterface.setPlayerSpeed(jSliderPlayerSpeed.getValue());
+                simulatorManagerInterface.setPlayerSpeed(jSliderPlayerSpeed.getValue());
             }
         });
 
@@ -153,7 +153,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.pullTriggerTmp();
+                simulatorManagerInterface.pullTriggerTmp();
             }
         });
 
@@ -163,13 +163,13 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 // if table empty
-                if (!simulatorInterface.hasEvents()) {
+                if (!simulatorManagerInterface.hasEvents()) {
                     showWarningDialog(dataLayer.getString("WARNING"), dataLayer.getString("LIST_IS_EMPTY_WARNING"));
                 } else { // if has content
                     int i = showYesNoDialog(dataLayer.getString("WARNING"), dataLayer.getString("DELETING_EVENT_LIST_WARNING"));
                     // if YES
                     if (i == 0) {
-                        simulatorInterface.deleteAllSimulatorEvents();
+                        simulatorManagerInterface.deleteAllSimulatorEvents();
                     }
                 }
             }
@@ -180,7 +180,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.FIRST);
+                simulatorManagerInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.FIRST);
             }
         });
 
@@ -189,7 +189,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.LAST);
+                simulatorManagerInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.LAST);
             }
         });
 
@@ -198,7 +198,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.NEXT);
+                simulatorManagerInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.NEXT);
             }
         });
 
@@ -207,7 +207,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulatorInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.PREVIOUS);
+                simulatorManagerInterface.setPlayerFunctionActivated(SimulatorPlayerCommand.PREVIOUS);
             }
         });
 
@@ -217,9 +217,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jToggleButtonPlay.isSelected()) {
-                    simulatorInterface.setPlayingActivated();
+                    simulatorManagerInterface.setPlayingActivated();
                 } else {
-                    simulatorInterface.setPlayingStopped();
+                    simulatorManagerInterface.setPlayingStopped();
                 }
             }
         });
@@ -230,9 +230,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jToggleButtonCapture.isSelected()) {
-                    simulatorInterface.setRecordingActivated(true);
+                    simulatorManagerInterface.setRecordingActivated(true);
                 } else {
-                    simulatorInterface.setRecordingActivated(false);
+                    simulatorManagerInterface.setRecordingActivated(false);
                 }
             }
         });
@@ -243,9 +243,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jToggleButtonRealtime.isSelected()) {
-                    simulatorInterface.setRealtimeActivated(true);
+                    simulatorManagerInterface.setRealtimeActivated(true);
                 } else {
-                    simulatorInterface.setRealtimeActivated(false);
+                    simulatorManagerInterface.setRealtimeActivated(false);
                 }
             }
         });
@@ -256,9 +256,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jCheckBoxPacketDetails.isSelected()) {
-                    simulatorInterface.setPacketDetails(true);
+                    simulatorManagerInterface.setPacketDetails(true);
                 } else {
-                    simulatorInterface.setPacketDetails(false);
+                    simulatorManagerInterface.setPacketDetails(false);
                 }
             }
         });
@@ -268,9 +268,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jCheckBoxNamesOfDevices.isSelected()) {
-                    simulatorInterface.setNamesOfDevices(true);
+                    simulatorManagerInterface.setNamesOfDevices(true);
                 } else {
-                    simulatorInterface.setNamesOfDevices(false);
+                    simulatorManagerInterface.setNamesOfDevices(false);
                 }
             }
         });
@@ -456,7 +456,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelEventList.setLayout(new BoxLayout(jPanelEventList, BoxLayout.Y_AXIS));
 
         //// link table with table model
-        jTableEventList = new JTableEventList(simulatorInterface.getEventTableModel());
+        jTableEventList = new JTableEventList(simulatorManagerInterface.getEventTableModel());
         //
         jPanelEventListTable = new JPanel();
         jScrollPaneTableEventList = new JScrollPane();
@@ -562,7 +562,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updateConnectionInfoAccordingToModel() {
-        if (simulatorInterface.isConnectedToServer()) {
+        if (simulatorManagerInterface.isConnectedToServer()) {
             jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_ok.png"))); // NOI18N
             jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
             //
@@ -584,7 +584,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updateRecordingInfoAccordingToModel() {
-        if (simulatorInterface.isRecording()) {
+        if (simulatorManagerInterface.isRecording()) {
             jToggleButtonCapture.setText(dataLayer.getString("CAPTURE_STOP"));
             jToggleButtonCapture.setToolTipText(dataLayer.getString("CAPTURE_PACKETS_FROM_SERVER_STOP"));
             jToggleButtonCapture.setSelected(true);
@@ -596,7 +596,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updatePlayingInfoAccordingToModel() {
-        if (simulatorInterface.isPlaying()) {
+        if (simulatorManagerInterface.isPlaying()) {
             jToggleButtonPlay.setSelected(true);
         } else {
             jToggleButtonPlay.setSelected(false);
@@ -604,8 +604,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updatePositionInListAccordingToModel() {
-        if (simulatorInterface.getListSize() > 0) {
-            int row = simulatorInterface.getCurrentPositionInList();
+        if (simulatorManagerInterface.getListSize() > 0) {
+            int row = simulatorManagerInterface.getCurrentPositionInList();
             // if some row selected
             if (row >= 0) {
                 jTableEventList.setRowSelectionInterval(row, row);
@@ -616,7 +616,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                     @Override
                     public void run() {
                         // scrolls table to selected row position
-                        jTableEventList.scrollRectToVisible(jTableEventList.getCellRect(simulatorInterface.getCurrentPositionInList(), 0, false));
+                        jTableEventList.scrollRectToVisible(jTableEventList.getCellRect(simulatorManagerInterface.getCurrentPositionInList(), 0, false));
                     }
                 });
             }
@@ -627,7 +627,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updateRealtimeAccordingToModel() {
-        if (simulatorInterface.isRealtime()) {
+        if (simulatorManagerInterface.isRealtime()) {
             jToggleButtonRealtime.setText(dataLayer.getString("REALTIME_STOP"));
             jToggleButtonRealtime.setToolTipText(dataLayer.getString("REALTIME_STOP_TOOLTIP"));
             jToggleButtonRealtime.setSelected(true);
@@ -654,7 +654,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jSliderPlayerSpeed.setEnabled(enabled);
 
         // capture button could be enabled when not connected to server, we have to check this
-        if (simulatorInterface.isConnectedToServer() && enabled) {
+        if (simulatorManagerInterface.isConnectedToServer() && enabled) {
             jToggleButtonCapture.setEnabled(enabled);
         } else {
             jToggleButtonCapture.setEnabled(false);
