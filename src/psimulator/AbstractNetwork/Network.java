@@ -3,7 +3,6 @@ package psimulator.AbstractNetwork;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -11,7 +10,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -26,7 +24,7 @@ public class Network implements Serializable {
     private Map<Integer, NetworkCable> cables;
     private Map<Integer, NetworkDevice> devices;
     // needed for Graph restore from Network - fast lookup
-    @XmlTransient
+    
     private Map<Integer, NetworkInterface> interfacesMap;
 
     public Network(/*
@@ -107,6 +105,17 @@ public class Network implements Serializable {
         this.counter = counter;
     }
 
+    
+    public Map<Integer, NetworkInterface> getInterfacesMap() {
+        return interfacesMap;
+    }
+
+    public void setInterfacesMap(Map<Integer, NetworkInterface> interfacesMap) {
+        this.interfacesMap = interfacesMap;
+    }
+
+    
+    
     // ---------------------------------------------------------------
     // Martin Svihlik tyto metody nepotrebuje:
     public void setCables(Map<Integer, NetworkCable> cables) {
