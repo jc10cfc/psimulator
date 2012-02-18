@@ -1,9 +1,9 @@
 package psimulator.AbstractNetwork;
 
-import psimulator.AbstractNetwork.xml.EnumMapAdapter;
 import java.io.Serializable;
 import java.util.EnumMap;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -13,12 +13,13 @@ public class NetworkCounter implements Serializable {
 
     private int nextId;
     private int nextMacAddress;
-    private EnumMap<HwTypeEnum, Integer> nextNumberMap;
+    private Map<HwTypeEnum, Integer> nextNumberMap;
 
     public NetworkCounter(int nextId, int nextMacAddress) {
         this.nextId = nextId;
         this.nextMacAddress = nextMacAddress;
-        this.nextNumberMap = new EnumMap<HwTypeEnum, Integer>(HwTypeEnum.class);
+        this.nextNumberMap = new EnumMap<>(HwTypeEnum.class);
+        
     }
 
     public NetworkCounter() {
@@ -32,9 +33,18 @@ public class NetworkCounter implements Serializable {
         this.nextId = nextId;
     }
 
-    @XmlJavaTypeAdapter(EnumMapAdapter.class)
-    public EnumMap<HwTypeEnum, Integer> getNextNumberMap() {
+    public void setNextNumberMap(Map<HwTypeEnum, Integer> nextNumberMap) {
+        this.nextNumberMap = nextNumberMap;
+    }
+
+    
+    
+    public Map<HwTypeEnum, Integer> getNextNumberMap() {
         return nextNumberMap;
+    }
+
+    public void setNextMacAddress(int nextMacAddress) {
+        this.nextMacAddress = nextMacAddress;
     }
 
     public void setNextNumberMap(EnumMap<HwTypeEnum, Integer> nextNumberMap) {

@@ -27,7 +27,7 @@ public class Network implements Serializable {
     private Map<Integer, NetworkDevice> devices;
     // needed for Graph restore from Network - fast lookup
     @XmlTransient
-    private LinkedHashMap<Integer, NetworkInterface> interfacesMap;
+    private Map<Integer, NetworkInterface> interfacesMap;
 
     public Network(/*
              * int ID, String name
@@ -38,7 +38,7 @@ public class Network implements Serializable {
         this.cables = new HashMap<Integer, NetworkCable>();
         this.devices = new HashMap<Integer, NetworkDevice>();
 
-        this.interfacesMap = new LinkedHashMap<Integer, NetworkInterface>();
+        this.interfacesMap = new HashMap<Integer, NetworkInterface>();
     }
 
     public void save(String fileName) throws JAXBException {
@@ -116,9 +116,6 @@ public class Network implements Serializable {
     public void setDevices(Map<Integer, NetworkDevice> devices) {
         this.devices = devices;
     }
-    
-    
-    
     /*
      * public int getID() { return ID; }
      *
