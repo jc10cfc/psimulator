@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingSource;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
@@ -48,8 +49,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         this.setOpaque(false);
 
-        animations = Collections.synchronizedList(new ArrayList<Animation>());
-
+        // CopyOnWrite is good for:
+        //  - reads hugely outnumber writes (paint component every 15ms)
+        //  - the array is small (or writes are very infrequent)
+        animations = new CopyOnWriteArrayList<Animation>();
 
         f_repaintTimer.init();
         f_repaintTimer.addPostTickListener(new TimingSource.PostTickListener() {
@@ -117,24 +120,22 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         this.graph = graph;
         this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
     }
+    
+    @Override
+    public Graph getGraph(){
+        return graph;
+    }
 
     @Override
     public void createAnimation(int timeInMiliseconds, int idSource, int idDestination) {
-        // for now it is Random, the ids in parameter not valid
-        List<AbstractHwComponent> list = new ArrayList<AbstractHwComponent>(graph.getHwComponents());
-        int componentCount = graph.getAbstractHwComponentsCount();
-        int i1 = random.nextInt(componentCount);
-        int i2 = random.nextInt(componentCount);
-
-        Point src = list.get(i1).getCenterLocationDefaultZoom();
-        Point dest = list.get(i2).getCenterLocationDefaultZoom();
-
-
         // points in Default zoom
-        //Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
-        //Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
+        Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
+        Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
 
+        // create new animation
         Animation animation = new Animation(this, imageFactory, zoomManager, src, dest, timeInMiliseconds);
+        
+        // add animation to animations list
         animations.add(animation);
     }
 }

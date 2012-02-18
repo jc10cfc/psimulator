@@ -24,6 +24,9 @@ public abstract class AnimationPanelOuterInterface extends JComponent implements
      */
     public abstract void setGraph(Graph graph);
     
+    // TEMP METHOD
+    public abstract Graph getGraph();
+    
     //@Override
     //public abstract Dimension getPreferredSize();
     
