@@ -5,80 +5,94 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
+import psimulator.AbstractNetwork.AdditionsSimulator.SimNetworkDevice;
+import psimulator.AbstractNetwork.AdditionsUI.UINetworkDevice;
 
 /**
  *
  * @author Martin
  */
-
-public class NetworkDevice implements Serializable{
-    
+public class NetworkDevice implements Serializable {
     
     private int ID;
     private HwTypeEnum hwType;
     private String name;
-    
-    
-    private int x;
-    private int y;
-    
-    
     private List<NetworkInterface> interfaces;
-
-    public NetworkDevice(int ID, HwTypeEnum hwType, String name,int x, int y) {
+    
+    private UINetworkDevice uiAdds;
+    private SimNetworkDevice simAdds;
+    
+    public NetworkDevice(int ID, HwTypeEnum hwType, String name, int x, int y) {
         this.ID = ID;
         this.hwType = hwType;
         this.name = name;
-        this.x = x;
-        this.y = y;
+        
+        uiAdds = new UINetworkDevice(x, y);
+        
     }
-
+    
     public NetworkDevice() {
     }
     
-    @XmlAttribute @XmlID
-    public String getIDAsString(){
+    @XmlAttribute
+    @XmlID
+    public String getIDAsString() {
         return String.valueOf(ID);
     }
     
-    public void setIDAsString(String id){
+    public void setIDAsString(String id) {
         ID = Integer.valueOf(id);
     }
     
-
     public int getID() {
         return ID;
     }
-
+    
     public HwTypeEnum getHwType() {
         return hwType;
     }
-
-    @XmlElement(name="interface")
+    
+    @XmlElement(name = "interface")
     public List<NetworkInterface> getInterfaces() {
         return interfaces;
     }
-
+    
     public void setInterfaces(List<NetworkInterface> interfaces) {
         this.interfaces = interfaces;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public int getX() {
-        return x;
+        return uiAdds.getX();
     }
-
+    
     public int getY() {
-        return y;
+        return uiAdds.getY();
     }
 
+    public SimNetworkDevice getSimAdds() {
+        return simAdds;
+    }
 
+    public void setSimAdds(SimNetworkDevice simAdds) {
+        this.simAdds = simAdds;
+    }
+
+    public UINetworkDevice getUiAdds() {
+        return uiAdds;
+    }
+
+    public void setUiAdds(UINetworkDevice uiAdds) {
+        this.uiAdds = uiAdds;
+    }
+
+    
+    
     // ---------------------------------------------------------------
     // Martin Svihlik nasledujici metody nepotrebuje
-    
     public void setID(int ID) {
         this.ID = ID;
     }
@@ -92,10 +106,10 @@ public class NetworkDevice implements Serializable{
     }
     
     public void setX(int x) {
-        this.x = x;
+        uiAdds.setX(x);
     }
     
     public void setY(int y) {
-        this.y = y;
+        uiAdds.setY(y);
     }
 }
