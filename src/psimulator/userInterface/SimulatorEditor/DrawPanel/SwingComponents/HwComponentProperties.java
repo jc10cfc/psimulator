@@ -31,6 +31,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
      * window componenets
      */
     private JFormattedTextField jTextFieldDeviceName;
+    /*
     private JComboBox jComboBoxInterface;
     private JLabel jLabelInterfaceNameValue;
     private JLabel jLabelConnectedValue;
@@ -38,6 +39,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
     private JLabel jLabelUniqueIdValue;
     private JFormattedTextField jTextFieldIpAddress;
     private JFormattedTextField jTextFieldMacAddress;
+    */
     /*
      * END of window components
      */
@@ -47,8 +49,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
     private boolean viewUniqueId = true;
     //
     private String deviceName;
-    private HashMap<String, String> ipMap;
-    private HashMap<String, String> macMap;
     //
     private InterfacesTableModel tableInterfacesModel;
     // 
@@ -97,11 +97,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         //add content
         addContent();
 
-        // update according to first interface
-        if (showInterfaces) {
-            upadteInterfaceRelatedItems();
-        }
-
         //Make textField get the focus whenever frame is activated.
         this.addWindowFocusListener(new WindowAdapter() {
 
@@ -126,18 +121,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
     protected void copyValuesFromGlobalToLocal() {
         // save name
         deviceName = abstractHwComponent.getDeviceName();
-
-        // if interfaces has addreses than save addreses
-        if (showAddresses) {
-            ipMap = new HashMap<String, String>();
-            macMap = new HashMap<String, String>();
-
-            for (EthInterface ethInterface : abstractHwComponent.getInterfaces()) {
-                ipMap.put(ethInterface.getName(), ethInterface.getIpAddress());
-                macMap.put(ethInterface.getName(), ethInterface.getMacAddress());
-            }
-
-        }
     }
 
     /**
@@ -150,11 +133,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
         // if interfaces has addreses than save addreses
         if (showAddresses) {
-            for (EthInterface ethInterface : abstractHwComponent.getInterfaces()) {
-                ethInterface.setIpAddress(ipMap.get(ethInterface.getName()));
-                ethInterface.setMacAddress(macMap.get(ethInterface.getName()));
-            }
-            
             tableInterfacesModel.copyValuesFromLocalToGlobal();
         }
 
@@ -168,32 +146,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
     @Override
     protected void copyValuesFromFieldsToLocal() {
         deviceName = jTextFieldDeviceName.getText().trim();
-
-        if (showAddresses) {
-            String ethName = jLabelInterfaceNameValue.getText();
-
-            String ipAddress = jTextFieldIpAddress.getText();
-            if (!Validator.validateIpAddress(ipAddress)) {
-                ipAddress = "";
-                jTextFieldIpAddress.setText(ipAddress);
-            }
-
-            String macAddress = jTextFieldMacAddress.getText();
-            if (!Validator.validateMacAddress(macAddress)) {
-                macAddress = "";
-                jTextFieldMacAddress.setText(macAddress);
-            }
-
-            if (macAddress.equals("  -  -  -  -  -  ")) {
-                macAddress = "";
-                jTextFieldMacAddress.setText(macAddress);
-            }
-
-            ipMap.put(ethName, ipAddress);
-            macMap.put(ethName, macAddress);
-
-            //System.out.println("Eth name = " + ethName + ", IP=" + ipAddress + ", MAC=" + macAddress + ".");
-        }
     }
 
     /**
@@ -211,60 +163,9 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
             if(tableInterfacesModel.hasChangesMade()){
                 return true;
             }
-            
-            for (EthInterface ethInterface : abstractHwComponent.getInterfaces()) {
-                if (!ethInterface.getIpAddress().equals(ipMap.get(ethInterface.getName()))) {
-                    return true;
-                }
-                if (!ethInterface.getMacAddress().equals(macMap.get(ethInterface.getName()))) {
-                    return true;
-                }
-            }
         }
 
         return false;
-    }
-
-    private void upadteInterfaceRelatedItems() {
-        // get selected row
-        int index = jComboBoxInterface.getSelectedIndex();
-
-        EthInterface ethInterface = abstractHwComponent.getEthInterfaceAtIndex(index);
-
-        // set name
-        jLabelInterfaceNameValue.setText(ethInterface.getName());
-        // set connected state
-        if (ethInterface.hasCable()) {
-            jLabelConnectedValue.setText(dataLayer.getString("YES"));
-        } else {
-            jLabelConnectedValue.setText(dataLayer.getString("NO"));
-        }
-
-        // if is connected
-        if (ethInterface.hasCable()) {
-            // set name of device connected to
-            // if component1 of cable is different from abstractHwComponent
-            if (ethInterface.getCable().getComponent1().getId().intValue() != abstractHwComponent.getId().intValue()) {
-                // set name from component1
-                jLabelConnectedToValue.setText(ethInterface.getCable().getComponent1().getDeviceName());
-            } else {
-                // set name from component2
-                jLabelConnectedToValue.setText(ethInterface.getCable().getComponent2().getDeviceName());
-            }
-        } else { // set empty
-            jLabelConnectedToValue.setText("");
-        }
-
-        if (viewUniqueId) {
-            jLabelUniqueIdValue.setText("" + ethInterface.getId());
-        }
-
-        if (showAddresses) {
-            // set IP address
-            jTextFieldIpAddress.setText(ipMap.get(ethInterface.getName()));
-            // set mac address
-            jTextFieldMacAddress.setText(macMap.get(ethInterface.getName()));
-        }
     }
 
     @Override
@@ -278,7 +179,7 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
 
         if (showInterfaces) {
-            mainPanel.add(createInterfacesPanel());
+            //mainPanel.add(createInterfacesPanel());
             
             mainPanel.add(createInterfaceTablePanel());
         } else {
@@ -344,111 +245,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         return devicePanel;
     }
 
-    private JPanel createInterfacesPanel() {
-        JPanel interfacesPanel = new JPanel();
-        interfacesPanel.setLayout(new BoxLayout(interfacesPanel, BoxLayout.Y_AXIS));
-        interfacesPanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("INTERFACES")));
-
-
-        JPanel interfacesAboutPanel = new JPanel();
-        GridLayout interfacesPanelLayout = new GridLayout(0, 2);
-        interfacesPanelLayout.setHgap(10);
-        //
-        interfacesAboutPanel.setLayout(interfacesPanelLayout);
-        //
-        JLabel chooseInterfaceName = new JLabel(dataLayer.getString("CHOOSE_INTERFACE"));
-        chooseInterfaceName.setFont(fontBold);
-        interfacesAboutPanel.add(chooseInterfaceName);
-
-        jComboBoxInterface = new JComboBox(abstractHwComponent.getInterfacesNames());
-        jComboBoxInterface.addActionListener(new JComboBoxInterfaceListener());
-        interfacesAboutPanel.add(jComboBoxInterface);
-        //
-        JLabel interfaceName = new JLabel(dataLayer.getString("INTERFACE"));
-        interfaceName.setFont(fontBold);
-        interfacesAboutPanel.add(interfaceName);
-
-        jLabelInterfaceNameValue = new JLabel();
-        interfacesAboutPanel.add(jLabelInterfaceNameValue);
-        //
-        JLabel connectedName = new JLabel(dataLayer.getString("CONNECTED"));
-        connectedName.setFont(fontBold);
-        interfacesAboutPanel.add(connectedName);
-
-        jLabelConnectedValue = new JLabel();
-        interfacesAboutPanel.add(jLabelConnectedValue);
-        //
-        JLabel connectedToName = new JLabel(dataLayer.getString("CONNECTED_TO"));
-        connectedToName.setFont(fontBold);
-        interfacesAboutPanel.add(connectedToName);
-
-        jLabelConnectedToValue = new JLabel();
-        interfacesAboutPanel.add(jLabelConnectedToValue);
-        //
-        if (viewUniqueId) {
-            JLabel uniqueIdName = new JLabel(dataLayer.getString("DEVICE_UNIQUE_ID"));
-            uniqueIdName.setFont(fontBold);
-            interfacesAboutPanel.add(uniqueIdName);
-
-            jLabelUniqueIdValue = new JLabel();
-            interfacesAboutPanel.add(jLabelUniqueIdValue);
-        }
-
-        //
-        interfacesPanel.add(interfacesAboutPanel);
-
-
-
-        // if show addresses set to true
-        if (showAddresses) {
-            JPanel addressesPanel = new JPanel();
-            GridLayout addressesPanelLayout = new GridLayout(0, 3);
-            addressesPanelLayout.setHgap(10);
-            addressesPanel.setLayout(addressesPanelLayout);
-
-            JLabel ipAddressName = new JLabel(dataLayer.getString("IP_ADDRESS"));
-            ipAddressName.setFont(fontBold);
-            addressesPanel.add(ipAddressName);
-
-            RegexFormatter ipMaskFormatter = new RegexFormatter(Validator.IP_WITH_MASK_PATTERN);
-            ipMaskFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
-            ipMaskFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
-            ipMaskFormatter.setOverwriteMode(false);        // do notoverwrite charracters
-
-            jTextFieldIpAddress = new JFormattedTextField(ipMaskFormatter);
-            jTextFieldIpAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 192.168.1.1/24 (IP/mask)");
-            // add decorator that paints wrong input icon
-            addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldIpAddress, layerUI));
-
-            JLabel ipAddressTip = new JLabel("10.0.0.1/24 (IP/mask)");
-            addressesPanel.add(ipAddressTip);
-
-            //
-            JLabel macAddressName = new JLabel(dataLayer.getString("MAC_ADDRESS"));
-            macAddressName.setFont(fontBold);
-            addressesPanel.add(macAddressName);
-
-            RegexFormatter macMaskFormatter = new RegexFormatter(Validator.MAC_PATTERN);
-            macMaskFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
-            macMaskFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
-            macMaskFormatter.setOverwriteMode(false);         // do notoverwrite charracters
-
-            jTextFieldMacAddress = new JFormattedTextField(macMaskFormatter);
-            jTextFieldMacAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)");
-            // add decorator that paints wrong input icon
-            addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldMacAddress, layerUI));
-
-            JLabel macAddressTip = new JLabel("HH-HH-HH-HH-HH-HH");
-            addressesPanel.add(macAddressTip);
-
-            //
-            interfacesPanel.add(addressesPanel);
-        }
-
-
-        return interfacesPanel;
-    }
-
     private JPanel createInterfaceTablePanel() {
         JPanel interfacesTablePanel = new JPanel();
         // create border
@@ -508,7 +304,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             copyValuesFromFieldsToLocal();
-            upadteInterfaceRelatedItems();
         }
     }
 }
