@@ -4,7 +4,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingSource;
@@ -12,7 +15,6 @@ import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.MainWindowInnerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
@@ -32,21 +34,21 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     private ZoomManager zoomManager;
     private Graph graph;
     //
-    //
     private List<Animation> animations;
     //
-    private Random random = new Random();
 
     public AnimationPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel,
             AbstractImageFactory imageFactory, DataLayerFacade dataLayer, ZoomManager zoomManager,
             DrawPanelOuterInterface drawPanel) {
 
         super();
+        // set timing sourcce to Animator
         Animator.setDefaultTimingSource(f_repaintTimer);
 
         this.imageFactory = imageFactory;
         this.zoomManager = zoomManager;
 
+        // set opacity
         this.setOpaque(false);
 
         // CopyOnWrite is good for:
@@ -54,7 +56,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         //  - the array is small (or writes are very infrequent)
         animations = new CopyOnWriteArrayList<Animation>();
 
+        // init timer
         f_repaintTimer.init();
+        
+        // add listener for tick
         f_repaintTimer.addPostTickListener(new TimingSource.PostTickListener() {
 
             @Override
@@ -64,6 +69,9 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         });
     }
 
+    /**
+     * Paints animations on this panel.
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -90,6 +98,9 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         }
     }
 
+    /**
+     * Removes all animations from list
+     */
     private void removeAllAnimations() {
         Iterator<Animation> it = animations.iterator();
         while (it.hasNext()) {
@@ -101,11 +112,19 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         animations.clear();
     }
 
+    /**
+     * Removes concrete animation from animations list
+     * @param animation 
+     */
     @Override
     public void removeAnimation(Animation animation) {
         animations.remove(animation);
     }
 
+    /**
+     * Removes all animations and removes Graph.
+     * @return 
+     */
     @Override
     public Graph removeGraph() {
         removeAllAnimations();
@@ -115,6 +134,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         return tmp;
     }
 
+    /**
+     * Sets graph and chnage bounds of this panel
+     * @param graph 
+     */
     @Override
     public void setGraph(Graph graph) {
         this.graph = graph;
@@ -126,6 +149,13 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         return graph;
     }
 
+    /**
+     * Creates animation of given timeInMiliseconds from AbstractHwComponent idSource to
+     * AbstractHwComponent idDestination.
+     * @param timeInMiliseconds
+     * @param idSource
+     * @param idDestination 
+     */
     @Override
     public void createAnimation(int timeInMiliseconds, int idSource, int idDestination) {
         // points in Default zoom
