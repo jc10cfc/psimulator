@@ -10,17 +10,17 @@ import psimulator.AbstractNetwork.HwTypeEnum;
  *
  * @author Martin Lukáš <lukasma1@fit.cvut.cz>
  */
-public class EnumMapAdapter extends XmlAdapter< EnumMapEntry[], EnumMap<HwTypeEnum, Integer>> {
+public class EnumMapAdapter extends XmlAdapter< MapEntry[], EnumMap<HwTypeEnum, Integer>> {
 
     @Override
-    public EnumMap<HwTypeEnum, Integer> unmarshal(EnumMapEntry vt[]) throws Exception {
+    public EnumMap<HwTypeEnum, Integer> unmarshal(MapEntry vt[]) throws Exception {
 
-        EnumMap<HwTypeEnum, Integer> ret = new EnumMap<HwTypeEnum, Integer>(HwTypeEnum.class);
+        EnumMap<HwTypeEnum, Integer> ret = new EnumMap<>(HwTypeEnum.class);
 
 
         for (int i = 0; i < vt.length; i++) {
-            String key = vt[i].getKey();
-            Integer value = vt[i].getValue();
+            String key = (String) vt[i].getKey();
+            Integer value = (Integer) vt[i].getValue();
 
             ret.put(HwTypeEnum.valueOf(key), value);
         }
@@ -31,16 +31,16 @@ public class EnumMapAdapter extends XmlAdapter< EnumMapEntry[], EnumMap<HwTypeEn
     }
 
     @Override
-    public EnumMapEntry[] marshal(EnumMap<HwTypeEnum, Integer> bt) throws Exception {
+    public MapEntry[] marshal(EnumMap<HwTypeEnum, Integer> bt) throws Exception {
 
 
-        EnumMapEntry[] ret = new EnumMapEntry[bt.size()];
+        MapEntry[] ret = new MapEntry[bt.size()];
         int i = 0;
         for (Map.Entry<HwTypeEnum, Integer> entry : bt.entrySet()) {
             HwTypeEnum hwTypeEnum = entry.getKey();
             Integer value = entry.getValue();
 
-            EnumMapEntry en = new EnumMapEntry();
+            MapEntry en = new MapEntry();
             en.setKey(hwTypeEnum.toString());
             en.setValue(value);
 

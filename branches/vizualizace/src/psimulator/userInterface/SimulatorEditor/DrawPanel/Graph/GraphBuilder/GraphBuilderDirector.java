@@ -1,7 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import psimulator.AbstractNetwork.Network;
 import psimulator.AbstractNetwork.NetworkCable;
@@ -23,7 +21,7 @@ public class GraphBuilderDirector {
 
     public void construct() {
 
-        LinkedHashMap<Integer, NetworkDevice> devices = network.getDevices();
+        Map<Integer, NetworkDevice> devices = network.getDevices();
 
         // build all devices
         for (Map.Entry<Integer, NetworkDevice> entry : devices.entrySet()) {
@@ -31,7 +29,7 @@ public class GraphBuilderDirector {
             abstractGraphBuilder.buildDevice(networkDevice);
         }
 
-        LinkedHashMap<Integer, NetworkCable> cables = network.getCables();
+        Map<Integer, NetworkCable> cables = network.getCables();
 
         // build all cables
         for (Map.Entry<Integer, NetworkCable> entry : cables.entrySet()) {
