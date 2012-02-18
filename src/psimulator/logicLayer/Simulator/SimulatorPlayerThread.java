@@ -2,13 +2,13 @@ package psimulator.logicLayer.Simulator;
 
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JPanel;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.GlassPanelPainter;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**
@@ -27,7 +27,9 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     //
     private boolean isNewPacket;
     //
-    private GlassPanelPainter glassPanelPainter;
+    //private GlassPanelPainter glassPanelPainter;
+    //
+    private AnimationPanelOuterInterface animationPanelOuterInterface;
 
     public SimulatorPlayerThread(DataLayerFacade model, UserInterfaceOuterFacade view) {
         this.simulatorManagerInterface = model.getSimulatorManager();
@@ -36,7 +38,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
         currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
         
         // get glass panel
-        glassPanelPainter = view.getGlassPanelPainter();
+        //glassPanelPainter = view.getGlassPanelPainter();
+        
+        // getn animation panel
+        animationPanelOuterInterface = view.getAnimationPanelOuterInterface();
     }
 
     public void startThread(Thread t) {
@@ -61,6 +66,8 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     // move to the last event
                     simulatorManagerInterface.moveToEvent(index);
                     
+                    animationPanelOuterInterface.createAnimation(2000, 0, 0);
+                    
                     // get event
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
 
@@ -69,7 +76,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     Thread.sleep(200);
                 
                 } else if (isPlaying) { // if in playing mode
-                    glassPanelPainter.doPaintRedDots(true);
+                    //glassPanelPainter.doPaintRedDots(true);
                     
                     
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
@@ -79,12 +86,15 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     int i = (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
 
                     int time = i * 500 - 4;
+                    
+                    animationPanelOuterInterface.createAnimation(time, 0, 0);
+                    
                     Thread.sleep(time);
 
                     simulatorManagerInterface.moveToNextEvent();
 
                 } else {
-                    glassPanelPainter.doPaintRedDots(false);
+                    //glassPanelPainter.doPaintRedDots(false);
                     System.out.println("Player going to sleep " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
                     Thread.sleep(Long.MAX_VALUE);
                 }

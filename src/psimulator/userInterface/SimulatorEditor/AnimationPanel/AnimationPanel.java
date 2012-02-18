@@ -22,8 +22,9 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin
  */
-public class AnimationPanel extends AnimationPanelOuterInterface implements AnimationPanelInnerInterface{
+public class AnimationPanel extends AnimationPanelOuterInterface implements AnimationPanelInnerInterface {
     //
+
     private static final TimingSource f_repaintTimer = new SwingTimerTimingSource();
     //
     private AbstractImageFactory imageFactory;
@@ -52,6 +53,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         f_repaintTimer.init();
         f_repaintTimer.addPostTickListener(new TimingSource.PostTickListener() {
+
             @Override
             public void timingSourcePostTick(TimingSource source, long nanoTime) {
                 repaint();
@@ -85,26 +87,26 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         }
     }
 
-    private void removeAllAnimations(){
+    private void removeAllAnimations() {
         Iterator<Animation> it = animations.iterator();
         while (it.hasNext()) {
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             animation.stopAnimator();
             it.remove();
         }
-        
+
         animations.clear();
     }
-    
+
     @Override
-    public void removeAnimation(Animation animation){
+    public void removeAnimation(Animation animation) {
         animations.remove(animation);
     }
-    
+
     @Override
     public Graph removeGraph() {
         removeAllAnimations();
-        
+
         Graph tmp = graph;
         graph = null;
         return tmp;
@@ -114,19 +116,25 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     public void setGraph(Graph graph) {
         this.graph = graph;
         this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
+    }
 
+    @Override
+    public void createAnimation(int timeInMiliseconds, int idSource, int idDestination) {
+        // for now it is Random, the ids in parameter not valid
         List<AbstractHwComponent> list = new ArrayList<AbstractHwComponent>(graph.getHwComponents());
+        int componentCount = graph.getAbstractHwComponentsCount();
+        int i1 = random.nextInt(componentCount);
+        int i2 = random.nextInt(componentCount);
 
-        for (int i = 0; i < 100; i++) {
+        Point src = list.get(i1).getCenterLocationDefaultZoom();
+        Point dest = list.get(i2).getCenterLocationDefaultZoom();
 
-            int componentCount = graph.getAbstractHwComponentsCount();
-            int i1 = random.nextInt(componentCount);
-            int i2 = random.nextInt(componentCount);
 
-            Point p1 = list.get(i1).getCenterLocationDefaultZoom();
-            Point p2 = list.get(i2).getCenterLocationDefaultZoom();
+        // points in Default zoom
+        //Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
+        //Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
 
-            animations.add(new Animation(this, imageFactory, zoomManager, p1, p2));
-        }
+        Animation animation = new Animation(this, imageFactory, zoomManager, src, dest, timeInMiliseconds);
+        animations.add(animation);
     }
 }

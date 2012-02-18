@@ -3,6 +3,7 @@ package psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane;
 import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.JLayeredPane;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
@@ -85,5 +86,5 @@ public abstract class UserInterfaceLayeredPaneOuterInterface extends JLayeredPan
     
     public abstract Graph getGraph();
     
-    
+    public abstract AnimationPanelOuterInterface getAnimationPanelOuterInterface();
 }

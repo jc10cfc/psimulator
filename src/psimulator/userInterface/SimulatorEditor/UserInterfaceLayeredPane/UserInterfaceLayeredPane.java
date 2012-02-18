@@ -182,6 +182,11 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     public void setCurrentMouseListenerSimulator() {
         jPanelDraw.setCurrentMouseListenerSimulator();
     }
+    
+    @Override
+    public AnimationPanelOuterInterface getAnimationPanelOuterInterface(){
+        return jPanelAnimation;
+    }
 
     
 }
