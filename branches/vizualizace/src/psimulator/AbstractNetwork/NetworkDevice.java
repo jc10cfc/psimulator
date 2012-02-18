@@ -5,6 +5,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import psimulator.AbstractNetwork.AdditionsSimulator.SimNetworkDevice;
 import psimulator.AbstractNetwork.AdditionsUI.UINetworkDevice;
 
@@ -53,6 +54,7 @@ public class NetworkDevice implements Serializable {
     }
     
     @XmlElement(name = "interface")
+    @XmlIDREF
     public List<NetworkInterface> getInterfaces() {
         return interfaces;
     }

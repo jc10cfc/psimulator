@@ -2,7 +2,6 @@ package psimulator.AbstractNetwork;
 
 import java.io.Serializable;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
