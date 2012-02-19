@@ -492,6 +492,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
         return 0;
     }
 
+    /**
+     * Returns preffered size in actual zoom
+     * @return 
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(getWidth(),getHeight());
