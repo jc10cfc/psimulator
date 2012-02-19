@@ -87,4 +87,6 @@ public abstract class UserInterfaceLayeredPaneOuterInterface extends JLayeredPan
     public abstract Graph getGraph();
     
     public abstract AnimationPanelOuterInterface getAnimationPanelOuterInterface();
+    
+    public abstract void updateSize();
 }

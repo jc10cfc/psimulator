@@ -103,6 +103,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         }
     }
     
+    /*
     @Override
     public void setSize(int width, int height) {
         this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
@@ -111,7 +112,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     @Override
     public void setSize(Dimension d) {
         this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
-    }
+    }*/
     
     /**
      * Removes all animations from list
@@ -121,7 +122,6 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         while (it.hasNext()) {
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             animation.stopAnimator();
-            it.remove();
         }
 
         animations.clear();

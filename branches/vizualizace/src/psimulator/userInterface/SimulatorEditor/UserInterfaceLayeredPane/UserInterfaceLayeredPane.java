@@ -82,6 +82,11 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         jPanelAnimation.setSize(d);
     }
 
+    @Override
+    public void updateSize() {
+        Dimension d = jPanelDraw.getGraph().getPreferredSize();
+        setSize(d);
+    }
     
     //
     @Override
@@ -190,6 +195,8 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     public AnimationPanelOuterInterface getAnimationPanelOuterInterface(){
         return jPanelAnimation;
     }
+
+    
 
     
 }

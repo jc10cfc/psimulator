@@ -1,8 +1,8 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import javax.swing.JComponent;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
@@ -25,6 +25,8 @@ public class Graph extends JComponent implements GraphOuterInterface {
     private Grid grid;
     private int widthDefault;
     private int heightDefault;
+    //
+    private long lastEditTimestamp;
     //
     private DrawPanelInnerInterface drawPanel;
     private ZoomManager zoomManager;
@@ -51,6 +53,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
          * dataLayer.addPreferencesObserver((Observer) this);
          * dataLayer.addLanguageObserver((Observer) this);
          */
+        
+        // set timestamp of edit
+        editHappend();
     }
 
     /**
@@ -333,6 +338,8 @@ public class Graph extends JComponent implements GraphOuterInterface {
         cable.getEth1().setCable(cable);
         cable.getEth2().setCable(cable);
 
+        // set timestamp of edit
+        editHappend();
     }
 
     @Override
@@ -360,6 +367,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
             // remove bundle of cables
             removeBundleOfCables(boc);
         }
+        
+        // set timestamp of edit
+        editHappend();
     }
 
     @Override
@@ -428,6 +438,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         //components.add(component);
         componentsMap.put(component.getId(), component);
         updateSizeAddComponent(component.getLowerRightCornerLocation());
+        
+        // set timestamp of edit
+        editHappend();
     }
 
     /**
@@ -454,6 +467,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         //updateSizeRemoveComponents(component.getLowerRightCornerLocation());
         updateSizeByRecalculate();
+        
+        // set timestamp of edit
+        editHappend();
     }
 
     @Override
@@ -465,6 +481,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         //updateSizeRemoveComponents(getLowerRightBound(components));
         updateSizeByRecalculate();
+        
+        // set timestamp of edit
+        editHappend();
     }
 
     @Override
@@ -615,6 +634,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // update size of graph
         updateSizeMovePosition(oldPosition, newPosition);
         //System.out.println("tady1: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
+        
+        // set timestamp of edit
+        editHappend();
     }
 
     @Override
@@ -631,6 +653,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // update size of graph
         updateSizeMovePosition(oldPosition, newPosition);
         //System.out.println("tady2: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
+        
+        // set timestamp of edit
+        editHappend();
     }
 
     /**
@@ -822,7 +847,6 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
             i++;
         }
-
         return movedComponentsMap;
     }
 
@@ -876,5 +900,16 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public DrawPanelInnerInterface getDrawPanelInnerInterface() {
         return drawPanel;
+    }
+
+    @Override
+    public void editHappend() {
+        //
+        lastEditTimestamp = System.currentTimeMillis();
+    }
+
+    @Override
+    public long getLastEditTimestamp() {
+        return lastEditTimestamp;
     }
 }

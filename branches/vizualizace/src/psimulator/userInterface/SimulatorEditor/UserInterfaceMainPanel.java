@@ -418,4 +418,11 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     public AnimationPanelOuterInterface getAnimationPanelOuterInterface() {
         return jLayeredPane.getAnimationPanelOuterInterface();
     }
+
+    @Override
+    public void updateSize() {
+        jLayeredPane.updateSize();
+        repaint();
+        revalidate();
+    }
 }
