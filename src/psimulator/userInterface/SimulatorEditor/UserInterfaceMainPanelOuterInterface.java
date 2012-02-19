@@ -34,29 +34,7 @@ public abstract class UserInterfaceMainPanelOuterInterface extends JPanel{
      * Calls REDO operation
      */
     public abstract void redo();
-    /**
-     * Finds if ZOOM IN can be performed
-     * @return true if yes, false if no
-     */
-    public abstract boolean canZoomIn();
-    /**
-     * Finds if ZOOM OUT can be performed
-     * @return true if yes, false if no
-     */
-    public abstract boolean canZoomOut();
-    /**
-     * Calls ZOOM IN
-     */
-    public abstract void zoomIn();
-    /**
-     * Calls ZOOM OUT
-     */
-    public abstract void zoomOut();
-    /**
-     * Calls ZOOM RESET
-     */
-    public abstract void zoomReset();
-    
+
     /**
      * Removes graph and returns it in parameter
      * @return 

@@ -6,7 +6,6 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
@@ -16,8 +15,8 @@ import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 public class DrawPanelListenerStrategySimulator extends DrawPanelListenerStrategyDragMove{
 
     
-    public DrawPanelListenerStrategySimulator(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
-        super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
+    public DrawPanelListenerStrategySimulator(DrawPanelInnerInterface drawPanel, UndoManager undoManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+        super(drawPanel, undoManager,mainWindow, dataLayer);
     }
     
     @Override

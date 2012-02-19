@@ -11,7 +11,6 @@ import javax.swing.JComponent;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -22,7 +21,6 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
 
     //
     protected AbstractImageFactory imageFactory;
-    protected ZoomManager zoomManager;
     protected DataLayerFacade dataLayer;
     //
     protected HwTypeEnum hwType;
@@ -37,15 +35,13 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      * Use when creating graph by user actions.
      * @param dataLayer
      * @param imageFactory
-     * @param zoomManager
      * @param hwType 
      */
-    public AbstractComponent(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager, HwTypeEnum hwType){
+    public AbstractComponent(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType){
         this.id = new Integer(GeneratorSingleton.getInstance().getNextId());
         //
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
-        this.zoomManager = zoomManager;
         this.hwType = hwType;
     }
     
@@ -64,12 +60,10 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      * Use when building graph from Network.
      * @param dataLayer
      * @param imageFactory
-     * @param zoomManager 
      */
-    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager){
+    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory){
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
-        this.zoomManager = zoomManager;
     }
     
     /**
@@ -78,14 +72,6 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      */
     public void setImageFactory(AbstractImageFactory imageFactory){
         this.imageFactory = imageFactory;
-    }
-    
-    /**
-     * Need to call it after constructor to properly setup component.
-     * @param zoomManager 
-     */
-    public void setZoomManager(ZoomManager zoomManager){
-        this.zoomManager = zoomManager;
     }
 
     @Override

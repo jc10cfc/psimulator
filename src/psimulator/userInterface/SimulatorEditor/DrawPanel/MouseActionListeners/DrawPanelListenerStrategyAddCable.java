@@ -17,7 +17,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterfac
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableConnectToInterfacePopupMenu;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableAddCable;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 import psimulator.userInterface.SimulatorEditor.Tools.CreateCableTool;
 
@@ -38,8 +37,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
     
     private CreateCableTool createCableTool;
 
-    public DrawPanelListenerStrategyAddCable(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
-        super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
+    public DrawPanelListenerStrategyAddCable(DrawPanelInnerInterface drawPanel, UndoManager undoManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+        super(drawPanel, undoManager, mainWindow, dataLayer);
 
         popupMenu = new CableConnectToInterfacePopupMenu(drawPanel, new PopupInterfaceChooseListener(), this);
     }
@@ -225,7 +224,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      */
     private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterface eth1, EthInterface eth2) {
         // create new cabel
-        Cable cable = new Cable(dataLayer, drawPanel.getImageFactory(), zoomManager, createCableTool.getHwType(), c1, c2, eth1, eth2);
+        Cable cable = new Cable(dataLayer, drawPanel.getImageFactory(), createCableTool.getHwType(), c1, c2, eth1, eth2);
         
         // initialize cable
         cable.initialize();

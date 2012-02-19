@@ -10,7 +10,7 @@ import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -40,12 +40,11 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     /**
      * Use when creating graph by user actions.
      * @param imageFactory
-     * @param zoomManager
      * @param dataLayer
      * @param hwType 
      */
-    public AbstractHwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer, HwTypeEnum hwType){//, int interfacesCount) {
-        super(dataLayer, imageFactory, zoomManager,  hwType);
+    public AbstractHwComponent(AbstractImageFactory imageFactory, DataLayerFacade dataLayer, HwTypeEnum hwType){//, int interfacesCount) {
+        super(dataLayer, imageFactory,  hwType);
     }
     
     /**
@@ -82,8 +81,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @param middlePoint Center of image in actual zoom
      */
     public void setLocationByMiddlePoint(Point middlePoint) {
-        setLocation(zoomManager.doScaleToDefault(middlePoint.x) - (defaultZoomWidth / 2),
-                zoomManager.doScaleToDefault(middlePoint.y) - (defaultZoomHeight / 2));
+        setLocation(ZoomManagerSingleton.getInstance().doScaleToDefault(middlePoint.x) - (defaultZoomWidth / 2),
+                ZoomManagerSingleton.getInstance().doScaleToDefault(middlePoint.y) - (defaultZoomHeight / 2));
     }
 
     @Override
@@ -138,8 +137,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
             
             int x,y,w,h;
             
-            x=(int) (zoomManager.doScaleToActual(defaultZoomXPos) - ((image.getWidth() - zoomManager.doScaleToActual(defaultZoomWidth))/2.0));
-            y= zoomManager.doScaleToActual(defaultZoomYPos) + zoomManager.doScaleToActual(defaultZoomHeight) + i*image.getHeight();
+            x=(int) (ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomXPos) - ((image.getWidth() - ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomWidth))/2.0));
+            y= ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomYPos) + ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomHeight) + i*image.getHeight();
             w = image.getWidth();
             h = image.getHeight();
             
@@ -298,27 +297,27 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         
         int y = getDefaultZoomYPos() + getDefaultZoomHeight() + getDefaultZoomTextHeight();
         
-        return new Point(zoomManager.doScaleToActual(x), zoomManager.doScaleToActual(y));
+        return new Point(ZoomManagerSingleton.getInstance().doScaleToActual(x), ZoomManagerSingleton.getInstance().doScaleToActual(y));
     }
 
     @Override
     public int getWidth() {
-        return zoomManager.doScaleToActual(defaultZoomWidth);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomWidth);
     }
 
     @Override
     public int getHeight() {
-        return zoomManager.doScaleToActual(defaultZoomHeight);// + getTextHeight();
+        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomHeight);// + getTextHeight();
     }
 
     @Override
     public int getX() {
-        return zoomManager.doScaleToActual(defaultZoomXPos);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomXPos);
     }
 
     @Override
     public int getY() {
-        return zoomManager.doScaleToActual(defaultZoomYPos);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomYPos);
     }
 
     public String getDeviceName() {
@@ -358,11 +357,11 @@ public abstract class AbstractHwComponent extends AbstractComponent {
     }
     
     public int getTextsWidth(){
-        return zoomManager.doScaleToActual(defaultZoomTextWidth);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomTextWidth);
     }
     
     public int getTextsHeight(){
-        return zoomManager.doScaleToActual(defaultZoomTextHeight);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomTextHeight);
     }
 
     public int getDefaultZoomTextHeight() {

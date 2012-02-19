@@ -17,7 +17,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCab
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
@@ -29,7 +29,6 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     protected DrawPanelInnerInterface drawPanel;
     protected MainWindowInnerInterface mainWindow;
     protected UndoManager undoManager;
-    protected ZoomManager zoomManager;
     protected DataLayerFacade dataLayer;
     
     protected JComponent comp;
@@ -41,14 +40,13 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
      */
     //protected List<Markable> markedComponents = new ArrayList<Markable>();
 
-    public DrawPanelListenerStrategy(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, 
+    public DrawPanelListenerStrategy(DrawPanelInnerInterface drawPanel, UndoManager undoManager, 
             MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         super();
 
         this.drawPanel = drawPanel;
         this.undoManager = undoManager;
         this.mainWindow = mainWindow;
-        this.zoomManager = zoomManager;
         this.dataLayer = dataLayer;
     }
 
@@ -67,10 +65,10 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
             //System.out.println("Point:"+convertPoint(e.getPoint());
             // scroll down
             if (e.getWheelRotation() == 1) {
-                zoomManager.zoomIn(convertPoint(e.getPoint()), ZoomType.MOUSE);
+                ZoomManagerSingleton.getInstance().zoomIn(convertPoint(e.getPoint()), ZoomType.MOUSE);
                 //scroll up    
             } else if (e.getWheelRotation() == -1) {
-                zoomManager.zoomOut(convertPoint(e.getPoint()), ZoomType.MOUSE);
+                ZoomManagerSingleton.getInstance().zoomOut(convertPoint(e.getPoint()), ZoomType.MOUSE);
             }
         }
     }

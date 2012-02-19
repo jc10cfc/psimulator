@@ -9,7 +9,7 @@ import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -21,14 +21,13 @@ public class HwComponent extends AbstractHwComponent {
     /**
      * Use when creating graph by user actions.
      * @param imageFactory
-     * @param zoomManager
      * @param dataLayer
      * @param hwType
      * @param interfacesCount 
      */
-    public HwComponent(AbstractImageFactory imageFactory, ZoomManager zoomManager, DataLayerFacade dataLayer,
+    public HwComponent(AbstractImageFactory imageFactory, DataLayerFacade dataLayer,
             HwTypeEnum hwType, int interfacesCount) {
-        super(imageFactory, zoomManager, dataLayer, hwType);
+        super(imageFactory, dataLayer, hwType);
 
         // generate device name for HwComponent
         deviceName = GeneratorSingleton.getInstance().getNextDeviceName(hwType);
@@ -68,19 +67,19 @@ public class HwComponent extends AbstractHwComponent {
         doUpdateImages();
 
         // set image width and height in default zoom
-        defaultZoomWidth = zoomManager.doScaleToDefault(imageUnmarked.getWidth());
-        defaultZoomHeight = zoomManager.doScaleToDefault(imageUnmarked.getHeight());
+        defaultZoomWidth = ZoomManagerSingleton.getInstance().doScaleToDefault(imageUnmarked.getWidth());
+        defaultZoomHeight = ZoomManagerSingleton.getInstance().doScaleToDefault(imageUnmarked.getHeight());
     }
 
     @Override
     public final void doUpdateImages() {
         // get new images of icons
-        imageUnmarked = imageFactory.getImage(hwType, zoomManager.getIconWidth(), false);
-        imageMarked = imageFactory.getImage(hwType, zoomManager.getIconWidth(), true);
+        imageUnmarked = imageFactory.getImage(hwType, ZoomManagerSingleton.getInstance().getIconWidth(), false);
+        imageMarked = imageFactory.getImage(hwType, ZoomManagerSingleton.getInstance().getIconWidth(), true);
         
         // get texts that have to be painted
         List<String> texts = getTexts();
-        textImages = getTextsImages(texts, zoomManager.getCurrentFontSize());
+        textImages = getTextsImages(texts, ZoomManagerSingleton.getInstance().getCurrentFontSize());
         
         // set text images width and height
         int textW = 0;
@@ -94,8 +93,8 @@ public class HwComponent extends AbstractHwComponent {
             textH = textH + image.getHeight();
         }
 
-        defaultZoomTextWidth = zoomManager.doScaleToDefault(textW);
-        defaultZoomTextHeight = zoomManager.doScaleToDefault(textH);
+        defaultZoomTextWidth = ZoomManagerSingleton.getInstance().doScaleToDefault(textW);
+        defaultZoomTextHeight = ZoomManagerSingleton.getInstance().doScaleToDefault(textH);
     }
 
     @Override
@@ -150,7 +149,7 @@ public class HwComponent extends AbstractHwComponent {
 
         // if LOD active
         if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
-            switch (zoomManager.getCurrentLevelOfDetails()) {
+            switch (ZoomManagerSingleton.getInstance().getCurrentLevelOfDetails()) {
                 case LEVEL_1:
                     break;
                 case LEVEL_2:

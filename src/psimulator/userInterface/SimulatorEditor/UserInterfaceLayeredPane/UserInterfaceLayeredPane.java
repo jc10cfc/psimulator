@@ -13,7 +13,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -26,7 +26,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     private DrawPanelOuterInterface jPanelDraw; // draw panel
     private AnimationPanelOuterInterface jPanelAnimation; // animation panel
     //
-    private ZoomManager zoomManager = new ZoomManager();
+    //private ZoomManager zoomManager = new ZoomManager();
     //
     private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
@@ -42,19 +42,19 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         this.userInterface = userInterface;
         
         // create draw panel
-        jPanelDraw = new DrawPanel(mainWindow, userInterface, imageFactory, dataLayer, zoomManager);
+        jPanelDraw = new DrawPanel(mainWindow, userInterface, imageFactory, dataLayer);
         
         // add panel to layered pane
         this.add(jPanelDraw, 1, 0);
         
         // create animation panel
-        jPanelAnimation = new AnimationPanel(mainWindow, userInterface, imageFactory, dataLayer, zoomManager, jPanelDraw);
+        jPanelAnimation = new AnimationPanel(mainWindow, userInterface, imageFactory, dataLayer, jPanelDraw);
         
         // add panel to layered pane
         this.add(jPanelAnimation, 2, 0);
         
         // add jPanelAnimation as observer to zoom manager
-        zoomManager.addObserver(jPanelAnimation);
+        ZoomManagerSingleton.getInstance().addObserver(jPanelAnimation);
         
         // add jPanelAnimation as observer to preferences manager
         dataLayer.addPreferencesObserver(jPanelAnimation);
@@ -86,37 +86,6 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     public void updateSize() {
         Dimension d = jPanelDraw.getGraph().getPreferredSize();
         setSize(d);
-    }
-    
-    //
-    @Override
-    public boolean canZoomIn() {
-        return zoomManager.canZoomIn();
-    }
-
-    @Override
-    public boolean canZoomOut() {
-        return zoomManager.canZoomOut();
-    }
-
-    @Override
-    public void zoomIn() {
-        zoomManager.zoomIn();
-    }
-
-    @Override
-    public void zoomOut() {
-        zoomManager.zoomOut();
-    }
-
-    @Override
-    public void zoomReset() {
-        zoomManager.zoomReset();
-    }
-
-    @Override
-    public void addObserverToZoomManager(Observer obsrvr) {
-        zoomManager.addObserver(obsrvr);
     }
     
 /// from Draw panel outer interface

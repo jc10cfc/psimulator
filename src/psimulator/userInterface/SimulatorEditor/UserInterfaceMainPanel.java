@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor;
 
-import psimulator.userInterface.SimulatorEditor.SimulatorControllPanel.SimulatorControlPanel;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.ActionListener;
@@ -16,7 +15,8 @@ import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOut
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import psimulator.userInterface.SimulatorEditor.SimulatorControllPanel.SimulatorControlPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane.UserInterfaceLayeredPane;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -132,8 +132,8 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
         // ----------- rest of constructor -----------------------
         // add this to zoom Manager as Observer
-        jLayeredPane.addObserverToZoomManager((Observer) this);
-
+        //jLayeredPane.addObserverToZoomManager((Observer) this);
+        ZoomManagerSingleton.getInstance().addObserver((Observer) this);
 
         doChangeMode(userInterfaceState);
     }
@@ -184,7 +184,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     public void update(Observable o, Object o1) {
        switch ((ObserverUpdateEventType) o1) {
             case ZOOM_CHANGE:
-                ZoomEventWrapper zoomEventWrapper = ((ZoomManager) o).getZoomEventWrapper();
+                ZoomEventWrapper zoomEventWrapper = ZoomManagerSingleton.getInstance().getZoomEventWrapper();
                 zoomChangeUpdate(zoomEventWrapper);
                 break;
             default:
@@ -356,31 +356,6 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     @Override
     public void redo() {
         jLayeredPane.redo();
-    }
-
-    @Override
-    public boolean canZoomIn() {
-        return jLayeredPane.canZoomIn();
-    }
-
-    @Override
-    public boolean canZoomOut() {
-        return jLayeredPane.canZoomOut();
-    }
-
-    @Override
-    public void zoomIn() {
-        jLayeredPane.zoomIn();
-    }
-
-    @Override
-    public void zoomOut() {
-        jLayeredPane.zoomOut();
-    }
-
-    @Override
-    public void zoomReset() {
-        jLayeredPane.zoomReset();
     }
 
     @Override
