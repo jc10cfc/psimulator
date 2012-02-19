@@ -1,9 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -101,7 +98,19 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             case PACKET_IMAGE_TYPE_CHANGE:
                 // no need to react
                 break;
+            
+            
         }
+    }
+    
+    @Override
+    public void setSize(int width, int height) {
+        this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
+    }
+    
+    @Override
+    public void setSize(Dimension d) {
+        this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
     }
     
     /**
@@ -173,6 +182,8 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
         Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
 
+        //System.out.println("Src= "+src+", dest= "+dest);
+        
         // create new animation
         Animation anim = new Animation(this, dataLayer, imageFactory, zoomManager, 
                 packetType, src, dest, timeInMiliseconds);

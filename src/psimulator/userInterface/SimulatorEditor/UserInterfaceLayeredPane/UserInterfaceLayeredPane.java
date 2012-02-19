@@ -71,7 +71,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         super.setSize(width, height);
         //System.out.println("SetSize2");
         jPanelDraw.setSize(width, height);
-        //jPanelAnimation.setSize(width, height);
+        jPanelAnimation.setSize(width, height);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         super.setSize(d);
         //System.out.println("SetSize1");
         jPanelDraw.setSize(d);
-        //jPanelAnimation.setSize(d);
+        jPanelAnimation.setSize(d);
     }
 
     
