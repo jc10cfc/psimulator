@@ -43,7 +43,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
             }
 
             try {
-                int time = tmpRandom.nextInt(100) + 100; // 1000 + 100
+                int time = tmpRandom.nextInt(10) + 10; // 1000 + 100
 
                 Thread.sleep(time);
                 //Thread.sleep(1);
