@@ -7,7 +7,7 @@ import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class Controller implements ControllerFacade{
 

@@ -5,7 +5,7 @@ import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelOuterInter
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class GlassPanelPainter {
     

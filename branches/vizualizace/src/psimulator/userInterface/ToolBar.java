@@ -16,7 +16,7 @@ import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public final class ToolBar extends JToolBar implements Observer {
     

@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlIDREF;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class NetworkCable implements Serializable{
     private int ID;

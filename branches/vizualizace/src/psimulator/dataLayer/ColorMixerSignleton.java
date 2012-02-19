@@ -5,7 +5,7 @@ import psimulator.dataLayer.Simulator.PacketType;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class ColorMixerSignleton {
 

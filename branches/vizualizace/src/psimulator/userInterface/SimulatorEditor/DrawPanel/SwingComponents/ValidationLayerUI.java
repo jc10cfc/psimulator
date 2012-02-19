@@ -11,7 +11,7 @@ import javax.swing.plaf.LayerUI;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class ValidationLayerUI extends LayerUI<JFormattedTextField> {
     

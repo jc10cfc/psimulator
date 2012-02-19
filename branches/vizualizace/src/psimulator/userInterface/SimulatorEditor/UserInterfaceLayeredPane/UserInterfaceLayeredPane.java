@@ -19,7 +19,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInterface{
 

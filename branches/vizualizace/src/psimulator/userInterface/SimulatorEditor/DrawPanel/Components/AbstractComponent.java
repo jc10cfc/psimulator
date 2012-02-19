@@ -10,12 +10,12 @@ import java.util.List;
 import javax.swing.JComponent;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public abstract class AbstractComponent extends JComponent implements Markable, Identifiable {
 

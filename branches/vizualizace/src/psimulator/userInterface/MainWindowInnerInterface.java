@@ -7,7 +7,7 @@ import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface MainWindowInnerInterface {
     // used by view:

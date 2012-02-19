@@ -11,7 +11,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.C
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class CableConnectToInterfacePopupMenu extends JPopupMenu {
 

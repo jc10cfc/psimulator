@@ -5,16 +5,18 @@ import java.util.*;
 import java.util.List;
 import javax.swing.JComponent;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.CustomObservable;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class Graph extends JComponent implements GraphOuterInterface {
 
@@ -28,7 +30,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     //
     private long lastEditTimestamp;
     //
-    private DrawPanelInnerInterface drawPanel;
+    private CustomObservable customObservable = new CustomObservable();
     
     public Graph() {
     }
@@ -38,19 +40,11 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         setInitReferencesToComponents(dataLayer, imageFactory);
 
-        this.drawPanel = drawPanel;
-
         // update size of graph with all components
         updateSizeWithAllComponents();
 
         // init grid
         grid = new Grid((GraphOuterInterface) this);
-
-        /*
-         * ZoomManagerSingleton.getInstance().addObserver((Observer) this);
-         * dataLayer.addPreferencesObserver((Observer) this);
-         * dataLayer.addLanguageObserver((Observer) this);
-         */
         
         // set timestamp of edit
         editHappend();
@@ -104,11 +98,6 @@ public class Graph extends JComponent implements GraphOuterInterface {
             AbstractHwComponent component = it.next();
             updateSizeAddComponent(component.getLowerRightCornerLocation());
         }
-    }
-
-    public void deInitialize(DataLayerFacade dataLayer) {
-        drawPanel = null;
-        grid = null;
     }
 
     public void doUpdateImages() {
@@ -704,7 +693,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         this.widthDefault = p.x;
         this.heightDefault = p.y;
         //System.out.println("update size recalculate");
-        doInformDrawPanelAboutSizeChange();
+        doInformAboutSizeChange();
     }
 
     /**
@@ -724,16 +713,18 @@ public class Graph extends JComponent implements GraphOuterInterface {
             this.heightDefault = ZoomManagerSingleton.getInstance().doScaleToDefault(lowerRightCorner.y);
         }
         //System.out.println("update size add");
-        doInformDrawPanelAboutSizeChange();
+        doInformAboutSizeChange();
     }
 
     /**
      * Informs drawPanel about change of graph size
      */
-    private void doInformDrawPanelAboutSizeChange() {
+    private void doInformAboutSizeChange() {
         Dimension d = new Dimension(ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault), ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault));
         //System.out.println("new size of graph = "+d.width+","+d.height);
-        drawPanel.updateSize(d);
+        //drawPanel.updateSize(d);
+        
+        customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_SIZE_CHANGED);
     }
 
     @Override
@@ -871,13 +862,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         return componentsMap.get(id);
     }
 
-    @Override
-    public DrawPanelInnerInterface getDrawPanelInnerInterface() {
-        return drawPanel;
-    }
-
-    @Override
-    public void editHappend() {
+    private void editHappend() {
         //
         lastEditTimestamp = System.currentTimeMillis();
     }
@@ -885,5 +870,15 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public long getLastEditTimestamp() {
         return lastEditTimestamp;
+    }
+
+    @Override
+    public synchronized void addObserver(Observer obsrvr) {
+        customObservable.addObserver(obsrvr);
+    }
+
+    @Override
+    public synchronized void deleteObserver(Observer obsrvr) {
+        customObservable.deleteObserver(obsrvr);
     }
 }

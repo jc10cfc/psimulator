@@ -9,7 +9,7 @@ import javax.swing.table.TableCellRenderer;
 
 /**
  *
- * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz> Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class JTableEventListColorCellRenderer extends JLabel implements TableCellRenderer{
 

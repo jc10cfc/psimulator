@@ -5,7 +5,7 @@ import java.awt.Rectangle;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class GraphicUtils {
     

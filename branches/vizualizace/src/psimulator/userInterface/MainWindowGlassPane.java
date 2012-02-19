@@ -9,7 +9,7 @@ import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanel;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class MainWindowGlassPane extends JPanel {
 

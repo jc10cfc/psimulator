@@ -5,17 +5,17 @@ import java.awt.Point;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observer;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Markable;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface GraphOuterInterface {
     /**
@@ -185,13 +185,10 @@ public interface GraphOuterInterface {
      * @param componentList 
      */
     public void addHwComponents(List<AbstractHwComponent> componentList);
-    
-    
-    public void editHappend();
-    
+
     public long getLastEditTimestamp();
     
-    //public void doUpdateImages();
-    //TMP methpd
-    public DrawPanelInnerInterface getDrawPanelInnerInterface();
+    public void addObserver(Observer obsrvr);
+    
+    public void deleteObserver(Observer obsrvr);
 }

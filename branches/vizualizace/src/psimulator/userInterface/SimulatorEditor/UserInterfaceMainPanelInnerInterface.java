@@ -5,7 +5,7 @@ import javax.swing.JViewport;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface UserInterfaceMainPanelInnerInterface {
     /**

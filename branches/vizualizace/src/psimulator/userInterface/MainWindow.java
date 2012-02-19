@@ -33,7 +33,7 @@ import psimulator.userInterface.imageFactories.AwtImageFactory;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade, Observer {
 

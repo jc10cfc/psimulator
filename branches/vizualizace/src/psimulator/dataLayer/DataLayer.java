@@ -15,7 +15,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class DataLayer extends DataLayerFacade {
 

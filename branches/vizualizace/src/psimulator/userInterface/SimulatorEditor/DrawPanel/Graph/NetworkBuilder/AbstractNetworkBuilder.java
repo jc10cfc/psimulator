@@ -3,11 +3,11 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.NetworkBuilder;
 import psimulator.AbstractNetwork.Network;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public abstract class AbstractNetworkBuilder {
 

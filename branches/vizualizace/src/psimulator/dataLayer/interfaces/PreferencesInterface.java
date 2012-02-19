@@ -7,7 +7,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface PreferencesInterface {
     public ToolbarIconSizeEnum getToolbarIconSize();

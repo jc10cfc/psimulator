@@ -12,7 +12,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class MenuBar extends JMenuBar implements Observer {
 

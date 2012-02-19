@@ -4,7 +4,7 @@ import java.util.Observer;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface LanguageInterface {
     public void setCurrentLanguage(int languagePosition);

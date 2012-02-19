@@ -13,7 +13,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface DrawPanelInnerInterface{
     
@@ -67,15 +67,11 @@ public interface DrawPanelInnerInterface{
      */
     public void doSetDefaultToolInEditorToolBar();
     
-    public void doUpdateImages();
-    
     /**
      * Updates size of panel according to parameter. If dimension is bigger than actual
      * size of drawPanel, than size is changed.
      * @param dimension of Graph
      */
-    
-    public void updateSize(Dimension dim);
     
     public JScrollPane getJScrollPane();
 }

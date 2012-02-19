@@ -8,13 +8,13 @@ import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class HwComponent extends AbstractHwComponent {
 

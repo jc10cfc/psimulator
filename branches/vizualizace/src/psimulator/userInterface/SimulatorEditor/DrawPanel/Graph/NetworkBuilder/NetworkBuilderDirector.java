@@ -5,11 +5,11 @@ import java.util.Iterator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class NetworkBuilderDirector {
     private AbstractNetworkBuilder abstractNetworkBuilder;

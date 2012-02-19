@@ -13,7 +13,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public abstract class AbstractImageFactory {
     //

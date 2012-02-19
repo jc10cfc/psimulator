@@ -10,7 +10,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Valida
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public abstract class AbstractPropertiesDialog extends JDialog {
 

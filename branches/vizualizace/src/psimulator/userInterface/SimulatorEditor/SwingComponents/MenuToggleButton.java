@@ -11,7 +11,7 @@ import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class MenuToggleButton extends JToggleButton {
     private DataLayerFacade dataLayer;
@@ -143,7 +143,7 @@ public class MenuToggleButton extends JToggleButton {
 
 /**
  * Class represents small arrow for menu use
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 class MenuArrowIcon implements Icon {
 

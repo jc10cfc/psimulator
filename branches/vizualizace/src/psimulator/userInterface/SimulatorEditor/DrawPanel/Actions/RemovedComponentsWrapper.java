@@ -6,7 +6,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class RemovedComponentsWrapper {
     private List<AbstractHwComponent> removedComponents;

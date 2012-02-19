@@ -16,7 +16,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Valida
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class InterfacesTableMacAddressCellEditor extends DefaultCellEditor {
     protected LayerUI<JFormattedTextField> layerUI = new ValidationLayerUI();

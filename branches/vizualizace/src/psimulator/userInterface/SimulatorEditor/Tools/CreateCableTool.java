@@ -8,7 +8,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class CreateCableTool extends AbstractCreationTool{
 

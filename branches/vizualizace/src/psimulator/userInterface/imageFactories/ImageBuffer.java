@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class ImageBuffer {
     /* Data structures for buffering */

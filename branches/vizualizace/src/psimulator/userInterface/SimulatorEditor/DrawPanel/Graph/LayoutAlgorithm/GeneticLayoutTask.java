@@ -5,7 +5,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs.ProgresBarGene
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class GeneticLayoutTask extends SwingWorker<Void, Void> {
 

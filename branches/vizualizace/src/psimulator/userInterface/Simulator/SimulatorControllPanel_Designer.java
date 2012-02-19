@@ -6,7 +6,7 @@ package psimulator.userInterface.Simulator;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class SimulatorControllPanel_Designer extends javax.swing.JPanel {
 

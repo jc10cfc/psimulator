@@ -2,12 +2,12 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.undo.UndoManager;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class ActionFitToSize extends AbstractDrawPanelAction{
     

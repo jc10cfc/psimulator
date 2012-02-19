@@ -10,7 +10,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class PopupMenuCable extends JPopupMenu{
     

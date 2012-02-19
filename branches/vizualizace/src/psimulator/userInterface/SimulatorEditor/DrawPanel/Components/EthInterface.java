@@ -1,11 +1,11 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 import psimulator.AbstractNetwork.HwTypeEnum;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class EthInterface implements Identifiable{
     private Integer id;

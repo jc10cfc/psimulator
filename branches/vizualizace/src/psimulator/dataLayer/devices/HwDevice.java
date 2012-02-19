@@ -4,7 +4,7 @@ import psimulator.AbstractNetwork.HwTypeEnum;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class HwDevice extends AbstractDevice{
     private int interfaces;

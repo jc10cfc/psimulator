@@ -11,7 +11,7 @@ import psimulator.AbstractNetwork.AdditionsUI.UINetworkDevice;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class NetworkDevice implements Serializable {
     
