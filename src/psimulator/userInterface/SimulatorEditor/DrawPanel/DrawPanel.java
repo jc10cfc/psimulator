@@ -10,6 +10,7 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.*;
@@ -18,7 +19,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.*;
-import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -41,7 +41,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private UndoManager undoManager = new UndoManager();
     private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
-    private UserInterfaceMainPanelInnerInterface editorPanel;
+    private UserInterfaceMainPanelInnerInterface userInterface;
     // variables for creating cables
     private boolean lineInProgress = false;
     private Point lineStartInDefaultZoom;
@@ -56,11 +56,11 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private DataLayerFacade dataLayer;
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
-    public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel, 
+    public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface UserInterface, 
             AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
         super();
 
-        this.editorPanel = editorPanel;
+        this.userInterface = UserInterface;
         this.mainWindow = mainWindow;
         this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
@@ -221,7 +221,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.revalidate();
         
         //
-        editorPanel.updateSize();
+        userInterface.updateSize();
     }
     
     private void doUpdateImages(){
@@ -288,7 +288,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.removeMouseWheelListener(currentMouseListener);
         */
         
-        JViewport jViewport = editorPanel.getJViewport();
+        JViewport jViewport = userInterface.getJViewport();
         
         jViewport.removeMouseListener(currentMouseListener);
         jViewport.removeMouseMotionListener(currentMouseListener);
@@ -329,7 +329,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.addMouseMotionListener(currentMouseListener);
         this.addMouseWheelListener(currentMouseListener);*/
         
-        JViewport jViewport = editorPanel.getJViewport();
+        JViewport jViewport = userInterface.getJViewport();
         
         jViewport.addMouseListener(currentMouseListener);
         jViewport.addMouseMotionListener(currentMouseListener);
@@ -371,12 +371,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
     @Override
     public void doSetDefaultToolInEditorToolBar() {
-        editorPanel.doSetDefaultToolInToolBar();
+        userInterface.doSetDefaultToolInToolBar();
     }
     
     @Override
     public JScrollPane getJScrollPane() {
-        return editorPanel.getJScrollPane();
+        return userInterface.getJScrollPane();
     }
 
 // END ============ IMPLEMENTATION OF DrawPanelInnerInterface ==============
