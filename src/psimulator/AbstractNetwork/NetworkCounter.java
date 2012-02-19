@@ -11,14 +11,16 @@ import java.util.Map;
 public class NetworkCounter implements Serializable {
 
     private int nextId;
+    private int lastTelnetPort;
     private int nextMacAddress;
     private Map<HwTypeEnum, Integer> nextNumberMap;
 
     public NetworkCounter(int nextId, int nextMacAddress) {
         this.nextId = nextId;
+        this.lastTelnetPort = 2000;
         this.nextMacAddress = nextMacAddress;
         this.nextNumberMap = new EnumMap<HwTypeEnum, Integer>(HwTypeEnum.class);
-        
+
     }
 
     public NetworkCounter() {
@@ -36,8 +38,20 @@ public class NetworkCounter implements Serializable {
         this.nextNumberMap = nextNumberMap;
     }
 
-    
-    
+    public int generateNextTelnetPort() {
+        int ret = lastTelnetPort;
+        this.lastTelnetPort += 1;
+        return ret;
+    }
+
+    public int getLastTelnetPort() {
+        return lastTelnetPort;
+    }
+
+    public void setLastTelnetPort(int lastTelnetPort) {
+        this.lastTelnetPort = lastTelnetPort;
+    }
+
     public Map<HwTypeEnum, Integer> getNextNumberMap() {
         return nextNumberMap;
     }
