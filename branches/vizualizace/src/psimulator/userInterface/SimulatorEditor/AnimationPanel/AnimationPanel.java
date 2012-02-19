@@ -1,6 +1,9 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -15,7 +18,6 @@ import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
@@ -30,14 +32,13 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     //
     private DataLayerFacade dataLayer;
     private AbstractImageFactory imageFactory;
-    private ZoomManager zoomManager;
     private Graph graph;
     //
     private List<Animation> animations;
     //
 
     public AnimationPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel,
-            AbstractImageFactory imageFactory, DataLayerFacade dataLayer, ZoomManager zoomManager,
+            AbstractImageFactory imageFactory, DataLayerFacade dataLayer,
             DrawPanelOuterInterface drawPanel) {
 
         super();
@@ -46,8 +47,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
-        this.zoomManager = zoomManager;
-
+        
         // set opacity
         this.setOpaque(false);
 
@@ -185,7 +185,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         //System.out.println("Src= "+src+", dest= "+dest);
         
         // create new animation
-        Animation anim = new Animation(this, dataLayer, imageFactory, zoomManager, 
+        Animation anim = new Animation(this, dataLayer, imageFactory, 
                 packetType, src, dest, timeInMiliseconds);
         
         // add animation to animations list

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -25,7 +25,7 @@ public class BundleOfCables extends AbstractComponent{
     private static final int LINE_WIDTH = 2;
     
     
-    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2, ZoomManager zoomManager){
+    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
         super(null, HwTypeEnum.BUNDLE_OF_CABLES);
         
         cables = new ArrayList<Cable>();
@@ -33,23 +33,20 @@ public class BundleOfCables extends AbstractComponent{
         this.component1 = component1;
         this.component2 = component2;
         
-        this.zoomManager = zoomManager;
     }
     
     /**
      * Use when building graph from Network.
      * @param dataLayer
      * @param imageFactory
-     * @param zoomManager 
      */
     @Override
-    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager){
+    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory){
         this.dataLayer = dataLayer;
         this.imageFactory = imageFactory;
-        this.zoomManager = zoomManager;
         
         for(Cable c : cables){
-            c.setInitReferences(dataLayer, imageFactory, zoomManager);
+            c.setInitReferences(dataLayer, imageFactory);
         }
     }
     
@@ -117,8 +114,8 @@ public class BundleOfCables extends AbstractComponent{
         double L = Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
         
         // count difference between cables that will be applied
-        double maxDiffernce = (zoomManager.getIconWidth()/1.5) / cables.size();
-        double optimalDifference = 12.0 * zoomManager.getCurrentScale();
+        double maxDiffernce = (ZoomManagerSingleton.getInstance().getIconWidth()/1.5) / cables.size();
+        double optimalDifference = 12.0 * ZoomManagerSingleton.getInstance().getCurrentScale();
         double difference = Math.min(maxDiffernce, optimalDifference);
         
         // set offset to start with
@@ -215,8 +212,7 @@ public class BundleOfCables extends AbstractComponent{
     
     private Rectangle doCreateRectangleAroundPoint(Point p){
         // count difference on both sides from p
-        //int difference = Math.max((int) (zoomManager.getStrokeWidth() / 1.5), 1);
-        int difference = Math.max((int) (zoomManager.getStrokeWidth()), 1);
+        int difference = Math.max((int) (ZoomManagerSingleton.getInstance().getStrokeWidth()), 1);
         
         // create rectangle around point
         Rectangle r = new Rectangle(p.x - difference, p.y - difference,

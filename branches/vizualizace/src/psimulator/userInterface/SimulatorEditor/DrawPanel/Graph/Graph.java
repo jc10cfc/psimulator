@@ -9,7 +9,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedCompone
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -29,27 +29,25 @@ public class Graph extends JComponent implements GraphOuterInterface {
     private long lastEditTimestamp;
     //
     private DrawPanelInnerInterface drawPanel;
-    private ZoomManager zoomManager;
-
+    
     public Graph() {
     }
 
-    public void initialize(DrawPanelInnerInterface drawPanel, ZoomManager zoomManager, DataLayerFacade dataLayer,
+    public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer,
             AbstractImageFactory imageFactory) {
 
-        setInitReferencesToComponents(zoomManager, dataLayer, imageFactory);
+        setInitReferencesToComponents(dataLayer, imageFactory);
 
-        this.zoomManager = zoomManager;
         this.drawPanel = drawPanel;
 
         // update size of graph with all components
         updateSizeWithAllComponents();
 
         // init grid
-        grid = new Grid((GraphOuterInterface) this, zoomManager);
+        grid = new Grid((GraphOuterInterface) this);
 
         /*
-         * zoomManager.addObserver((Observer) this);
+         * ZoomManagerSingleton.getInstance().addObserver((Observer) this);
          * dataLayer.addPreferencesObserver((Observer) this);
          * dataLayer.addLanguageObserver((Observer) this);
          */
@@ -62,11 +60,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * Use in initialize to put references of parameters to all components in
      * graph.
      *
-     * @param zoomManager
      * @param dataLayer
      * @param imageFactory
      */
-    private void setInitReferencesToComponents(ZoomManager zoomManager, DataLayerFacade dataLayer, AbstractImageFactory imageFactory) {
+    private void setInitReferencesToComponents(DataLayerFacade dataLayer, AbstractImageFactory imageFactory) {
         // get Collection of values contained in LinkedHashMap
         Collection<AbstractHwComponent> colection = componentsMap.values();
         // obtain an Iterator for Collection
@@ -76,7 +73,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         while (it.hasNext()) {
             AbstractHwComponent component = it.next();
             // set references
-            component.setInitReferences(dataLayer, imageFactory, zoomManager);
+            component.setInitReferences(dataLayer, imageFactory);
             // initialize
             component.initialize();
         }
@@ -84,7 +81,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // set references to all BundleOfCables and Cables
         for (BundleOfCables boc : bundlesOfCables) {
             // boc performs the same operation on its cables
-            boc.setInitReferences(dataLayer, imageFactory, zoomManager);
+            boc.setInitReferences(dataLayer, imageFactory);
         }
 
         // initialize cables
@@ -110,33 +107,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     public void deInitialize(DataLayerFacade dataLayer) {
-        //zoomManager.deleteObserver(this);
-        //dataLayer.deleteLanguageObserver(this);
-        //dataLayer.deletePreferencesObserver(this);
         drawPanel = null;
-        zoomManager = null;
         grid = null;
     }
 
-//    @Override
-//    public void update(Observable o, Object o1) {
-//        //System.out.println("Updatuju Graph");
-// 
-//        /*
-//        // get Collection of values contained in LinkedHashMap
-//        Collection<AbstractHwComponent> colection = componentsMap.values();
-//        // obtain an Iterator for Collection
-//        Iterator<AbstractHwComponent> it = colection.iterator();
-//        
-//        // get all marked components
-//        while (it.hasNext()) {
-//            it.next().doUpdateImages();
-//        }
-//        
-//        for(BundleOfCables boc : bundlesOfCables){
-//            boc.doUpdateImages();
-//        }*/
-//    }
     public void doUpdateImages() {
         // get Collection of values contained in LinkedHashMap
         Collection<AbstractHwComponent> colection = componentsMap.values();
@@ -300,7 +274,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         // if there is not a bundle between component1 and component2, we make the bundle
         if (bundle == null) {
-            bundle = new BundleOfCables(component1, component2, zoomManager);
+            bundle = new BundleOfCables(component1, component2);
             bundlesOfCables.add(bundle);
             component1.addBundleOfCables(bundle);
             component2.addBundleOfCables(bundle);
@@ -493,12 +467,12 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
     @Override
     public int getWidth() {
-        return zoomManager.doScaleToActual(widthDefault);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault);
     }
 
     @Override
     public int getHeight() {
-        return zoomManager.doScaleToActual(heightDefault);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault);
     }
 
     @Override
@@ -678,8 +652,8 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         // 3.case - moved out of graph dimension
         // if x or y is out of current width or height
-        if ((newPositionLowerRightCorner.x >= zoomManager.doScaleToActual(widthDefault))
-                && newPositionLowerRightCorner.y >= zoomManager.doScaleToActual(heightDefault)) {
+        if ((newPositionLowerRightCorner.x >= ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault))
+                && newPositionLowerRightCorner.y >= ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault)) {
             // update like addComponent
             //System.out.println("update size move calling updateSizeAddComponent, case 3");
             updateSizeAddComponent(newPositionLowerRightCorner);
@@ -690,9 +664,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // 1.case - moved right or down in graph dimension (not out of them)
         // if (oldX <= newX <=  width) and (oldY <= newY <= height)
         if ((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
-                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
+                && newPositionLowerRightCorner.x <= ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault))
                 && (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
-                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))) {
+                && newPositionLowerRightCorner.y <= ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault))) {
             // do nothing, graph size is not changed
             //System.out.println("update size move nothingto do, case 1");
             return;
@@ -710,9 +684,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         // 5. case 
         if ((oldPositionLowerRightCorner.x <= newPositionLowerRightCorner.x
-                && newPositionLowerRightCorner.x <= zoomManager.doScaleToActual(widthDefault))
+                && newPositionLowerRightCorner.x <= ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault))
                 || (oldPositionLowerRightCorner.y <= newPositionLowerRightCorner.y
-                && newPositionLowerRightCorner.y <= zoomManager.doScaleToActual(heightDefault))) {
+                && newPositionLowerRightCorner.y <= ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault))) {
             // update like addComponent
             //System.out.println("update size move nothingto do, case 5");
             updateSizeAddComponent(newPositionLowerRightCorner);
@@ -726,7 +700,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * call when need to go through all components to lower right bound
      */
     private void updateSizeByRecalculate() {
-        Point p = zoomManager.doScaleToDefault(getGraphLowerRightBound());
+        Point p = ZoomManagerSingleton.getInstance().doScaleToDefault(getGraphLowerRightBound());
         this.widthDefault = p.x;
         this.heightDefault = p.y;
         //System.out.println("update size recalculate");
@@ -740,14 +714,14 @@ public class Graph extends JComponent implements GraphOuterInterface {
      */
     private void updateSizeAddComponent(Point lowerRightCorner) {
         // if width changed
-        if (lowerRightCorner.x > zoomManager.doScaleToActual(widthDefault)) {
+        if (lowerRightCorner.x > ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault)) {
             // resize width
-            this.widthDefault = zoomManager.doScaleToDefault(lowerRightCorner.x);
+            this.widthDefault = ZoomManagerSingleton.getInstance().doScaleToDefault(lowerRightCorner.x);
         }
         // if height changed
-        if (lowerRightCorner.y > zoomManager.doScaleToActual(heightDefault)) {
+        if (lowerRightCorner.y > ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault)) {
             // resize height
-            this.heightDefault = zoomManager.doScaleToDefault(lowerRightCorner.y);
+            this.heightDefault = ZoomManagerSingleton.getInstance().doScaleToDefault(lowerRightCorner.y);
         }
         //System.out.println("update size add");
         doInformDrawPanelAboutSizeChange();
@@ -757,7 +731,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * Informs drawPanel about change of graph size
      */
     private void doInformDrawPanelAboutSizeChange() {
-        Dimension d = new Dimension(zoomManager.doScaleToActual(widthDefault), zoomManager.doScaleToActual(heightDefault));
+        Dimension d = new Dimension(ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault), ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault));
         //System.out.println("new size of graph = "+d.width+","+d.height);
         drawPanel.updateSize(d);
     }
@@ -835,8 +809,8 @@ public class Graph extends JComponent implements GraphOuterInterface {
             AbstractHwComponent c = it.next();
 
             Point originalLocation = c.getCenterLocationDefaultZoom();
-            Point newLocation = new Point(geneticGraph.getNodes()[i][0] * 30 + zoomManager.getIconWidthDefaultZoom(),
-                    geneticGraph.getNodes()[i][1] * 30 + zoomManager.getIconWidthDefaultZoom());
+            Point newLocation = new Point(geneticGraph.getNodes()[i][0] * 30 + ZoomManagerSingleton.getInstance().getIconWidthDefaultZoom(),
+                    geneticGraph.getNodes()[i][1] * 30 + ZoomManagerSingleton.getInstance().getIconWidthDefaultZoom());
 
             Dimension differenceInDefaultZoom = new Dimension(originalLocation.x - newLocation.x,
                     originalLocation.y - newLocation.y);

@@ -23,6 +23,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
@@ -169,11 +170,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
     @Override
     public void updateZoomButtons() {
-        jMenuBar.setZoomInEnabled(jPanelUserInterfaceMain.canZoomIn());
-        jToolBar.setZoomInEnabled(jPanelUserInterfaceMain.canZoomIn());
+        jMenuBar.setZoomInEnabled(ZoomManagerSingleton.getInstance().canZoomIn());
+        jToolBar.setZoomInEnabled(ZoomManagerSingleton.getInstance().canZoomIn());
 
-        jMenuBar.setZoomOutEnabled(jPanelUserInterfaceMain.canZoomOut());
-        jToolBar.setZoomOutEnabled(jPanelUserInterfaceMain.canZoomOut());
+        jMenuBar.setZoomOutEnabled(ZoomManagerSingleton.getInstance().canZoomOut());
+        jToolBar.setZoomOutEnabled(ZoomManagerSingleton.getInstance().canZoomOut());
 
         jMenuBar.setZoomResetEnabled(true);
         jToolBar.setZoomResetEnabled(true);
@@ -249,13 +250,13 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             switch (Zoom.valueOf(e.getActionCommand())) {
                 case IN:
-                    jPanelUserInterfaceMain.zoomIn();
+                    ZoomManagerSingleton.getInstance().zoomIn();
                     break;
                 case OUT:
-                    jPanelUserInterfaceMain.zoomOut();
+                    ZoomManagerSingleton.getInstance().zoomOut();
                     break;
                 case RESET:
-                    jPanelUserInterfaceMain.zoomReset();
+                    ZoomManagerSingleton.getInstance().zoomReset();
                     break;
             }
         }

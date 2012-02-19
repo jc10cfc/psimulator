@@ -17,7 +17,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterf
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuCable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableMoveComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 import psimulator.userInterface.SimulatorEditor.Tools.ManipulationTool;
 
@@ -52,8 +52,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             
     private ManipulationTool manipulationTool;
 
-    public DrawPanelListenerStrategyHand(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
-        super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
+    public DrawPanelListenerStrategyHand(DrawPanelInnerInterface drawPanel, UndoManager undoManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+        super(drawPanel, undoManager, mainWindow, dataLayer);
     }
 
     @Override
@@ -203,11 +203,11 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // get upper left corner of all components
             draggedComponentsOriginalPoint = graph.getUpperLeftBound(draggedComponents);
             // scale properly
-            draggedComponentsOriginalPoint = zoomManager.doScaleToDefault(draggedComponentsOriginalPoint);
+            draggedComponentsOriginalPoint = ZoomManagerSingleton.getInstance().doScaleToDefault(draggedComponentsOriginalPoint);
 
             // count difference between upper left corner of component and clicked point on component
-            differenceXdefaultZoom = zoomManager.doScaleToDefault(e.getX()) - draggedComponentsOriginalPoint.x;
-            differenceYdefaultZoom = zoomManager.doScaleToDefault(e.getY()) - draggedComponentsOriginalPoint.y;
+            differenceXdefaultZoom = ZoomManagerSingleton.getInstance().doScaleToDefault(e.getX()) - draggedComponentsOriginalPoint.x;
+            differenceYdefaultZoom = ZoomManagerSingleton.getInstance().doScaleToDefault(e.getY()) - draggedComponentsOriginalPoint.y;
         }
 
     }
@@ -254,8 +254,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
 
         // get point from mouse in actual zoom shifted by difference
-        Point p = new Point(e.getX() - zoomManager.doScaleToActual(differenceXdefaultZoom),
-                e.getY() - zoomManager.doScaleToActual(differenceYdefaultZoom));
+        Point p = new Point(e.getX() - ZoomManagerSingleton.getInstance().doScaleToActual(differenceXdefaultZoom),
+                e.getY() - ZoomManagerSingleton.getInstance().doScaleToActual(differenceYdefaultZoom));
 
         // get upper left bound of dragged components
         Point draggedComponentsTmpPoint = graph.getUpperLeftBound(draggedComponents);
@@ -278,7 +278,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         // change position of all components
-        graph.doChangePositionOfAbstractHwComponents(draggedComponents, zoomManager.doScaleToDefault(differenceInActualZoom), true);
+        graph.doChangePositionOfAbstractHwComponents(draggedComponents, ZoomManagerSingleton.getInstance().doScaleToDefault(differenceInActualZoom), true);
 
 
         drawPanel.repaint();
@@ -294,8 +294,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         if (draggedComponents != null && !draggedComponents.isEmpty()) {
             // new default location for undoable edit  (math.max(0,x) because we dont want to move it to negative position)
 
-            Point newDefaultZoomLocation = new Point(Math.max(0, zoomManager.doScaleToDefault(e.getX()) - differenceXdefaultZoom),
-                    Math.max(0, zoomManager.doScaleToDefault(e.getY()) - differenceYdefaultZoom));
+            Point newDefaultZoomLocation = new Point(Math.max(0, ZoomManagerSingleton.getInstance().doScaleToDefault(e.getX()) - differenceXdefaultZoom),
+                    Math.max(0, ZoomManagerSingleton.getInstance().doScaleToDefault(e.getY()) - differenceYdefaultZoom));
 
             // if were draggedComponents moved
             if (!newDefaultZoomLocation.equals(draggedComponentsOriginalPoint)) {

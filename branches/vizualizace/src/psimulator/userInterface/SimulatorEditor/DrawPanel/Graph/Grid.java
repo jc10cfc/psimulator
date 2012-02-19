@@ -3,7 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 
 /**
  *
@@ -12,13 +12,11 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 public class Grid{
 
     private GraphOuterInterface graph;
-    private ZoomManager zoomManager;
     private int distance;
     
     
-    public Grid(GraphOuterInterface graph, ZoomManager zoomManager) {
+    public Grid(GraphOuterInterface graph) {
         this.graph = graph;
-        this.zoomManager = zoomManager;
     }
     
     public void paintComponent(Graphics g) {
@@ -27,9 +25,8 @@ public class Grid{
         int width = graph.getWidth();
         int height = graph.getHeight();
         
-        distance = zoomManager.getIconWidth()/2;
-        //distance = zoomManager.getIconWidthDefaultZoom() /2;
-     
+        distance = ZoomManagerSingleton.getInstance().getIconWidth()/2;
+
         for(int i = distance;i<width; i= i + distance){
             g2.drawLine(i, 0, i, height-1);
         }
@@ -41,7 +38,7 @@ public class Grid{
     }
     
     public Point getNearestGridPointDefaultZoom(Point centerPoint){
-        distance = (int) (zoomManager.getIconWidthDefaultZoom() / 2);
+        distance = (int) (ZoomManagerSingleton.getInstance().getIconWidthDefaultZoom() / 2);
 
         
         return getNearestGridPoint(centerPoint.x, centerPoint.y, distance);

@@ -10,7 +10,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwC
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableAddHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 import psimulator.userInterface.SimulatorEditor.Tools.AddDeviceTool;
 
@@ -22,8 +21,8 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
 
     private AddDeviceTool addDeviceTool;
 
-    public DrawPanelListenerStrategyAddHwComponent(DrawPanelInnerInterface drawPanel, UndoManager undoManager, ZoomManager zoomManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
-        super(drawPanel, undoManager, zoomManager, mainWindow, dataLayer);
+    public DrawPanelListenerStrategyAddHwComponent(DrawPanelInnerInterface drawPanel, UndoManager undoManager, MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
+        super(drawPanel, undoManager, mainWindow, dataLayer);
     }
 
     @Override
@@ -38,7 +37,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
     @Override
     public void mousePressedLeft(MouseEvent e) {
         // create new component
-        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), zoomManager, dataLayer,
+        AbstractHwComponent component = new HwComponent(drawPanel.getImageFactory(), dataLayer,
                 addDeviceTool.getHwType(), addDeviceTool.getInterfaces());
 
         component.initialize();

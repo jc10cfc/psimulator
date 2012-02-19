@@ -10,7 +10,7 @@ import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomManager;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
@@ -42,16 +42,15 @@ public class Cable extends AbstractComponent {
      * Use when creating graph by user actions.
      * @param dataLayer
      * @param imageFactory
-     * @param zoomManager
      * @param hwType
      * @param component1
      * @param component2
      * @param eth1
      * @param eth2 
      */
-    public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, ZoomManager zoomManager,HwTypeEnum hwType, 
+    public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType, 
             AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2){
-        super(dataLayer, imageFactory, zoomManager, hwType);
+        super(dataLayer, imageFactory, hwType);
         
         this.component1 = component1;
         this.component2 = component2;
@@ -106,7 +105,7 @@ public class Cable extends AbstractComponent {
     @Override
     public void doUpdateImages() {
         // get delay image
-        delayImage = getTextImage("" + delay, zoomManager.getCurrentFontSize() - 2);
+        delayImage = getTextImage("" + delay, ZoomManagerSingleton.getInstance().getCurrentFontSize() - 2);
 
         // set what needs to be painted
         setWhatToPaint();
@@ -115,18 +114,18 @@ public class Cable extends AbstractComponent {
         List<String> texts = getInterfaceTexts(eth1);
         
         // get images that have to be painted
-        eth1TextImages = getTextsImages(texts, zoomManager.getCurrentFontSize() - 2);
+        eth1TextImages = getTextsImages(texts, ZoomManagerSingleton.getInstance().getCurrentFontSize() - 2);
         
         texts = getInterfaceTexts(eth2);
         
         // get images that have to be painted
-        eth2TextImages = getTextsImages(texts, zoomManager.getCurrentFontSize() - 2);
+        eth2TextImages = getTextsImages(texts, ZoomManagerSingleton.getInstance().getCurrentFontSize() - 2);
     }
 
     public void paintComponent(Graphics g, int x1, int y1, int x2, int y2) {
         Graphics2D g2 = (Graphics2D) g;
 
-        stroke = new BasicStroke(zoomManager.getStrokeWidth());
+        stroke = new BasicStroke(ZoomManagerSingleton.getInstance().getStrokeWidth());
 
         line.setLine(x1, y1, x2, y2);
 
@@ -270,7 +269,7 @@ public class Cable extends AbstractComponent {
 
     private void setWhatToPaint() {
         if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
-            switch (zoomManager.getCurrentLevelOfDetails()) {
+            switch (ZoomManagerSingleton.getInstance().getCurrentLevelOfDetails()) {
                 case LEVEL_4:
                     paintDelay = true;
                     paintInterfaceNames = true;
@@ -340,14 +339,14 @@ public class Cable extends AbstractComponent {
     public int getWidth() {
         //return Math.abs(getX1()-getX2());
         //return LINE_WIDTH;
-        return (int) zoomManager.getStrokeWidth();
+        return (int) ZoomManagerSingleton.getInstance().getStrokeWidth();
     }
 
     @Override
     public int getHeight() {
         //return Math.abs(getY1()-getY2());
         //return LINE_WIDTH;
-        return (int) zoomManager.getStrokeWidth();
+        return (int) ZoomManagerSingleton.getInstance().getStrokeWidth();
     }
 
     @Override
