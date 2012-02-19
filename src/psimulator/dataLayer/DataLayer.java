@@ -189,4 +189,24 @@ public class DataLayer extends DataLayerFacade {
     public void setPackageImageType(PacketImageType packageImageType) {
         preferencesManager.setPackageImageType(packageImageType);
     }
+
+    @Override
+    public String getConnectionIpAddress() {
+        return preferencesManager.getConnectionIpAddress();
+    }
+
+    @Override
+    public void setConnectionIpAddress(String connectionIpAddress) {
+        preferencesManager.setConnectionIpAddress(connectionIpAddress);
+    }
+
+    @Override
+    public String getConnectionPort() {
+        return preferencesManager.getConnectionPort();
+    }
+
+    @Override
+    public void setConnectionPort(String connectionPort) {
+        preferencesManager.setConnectionPort(connectionPort);
+    }
 }

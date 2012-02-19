@@ -16,6 +16,8 @@ import psimulator.userInterface.UserInterfaceOuterFacade;
  */
 public class SimulatorPlayerThread implements Runnable, Observer {
 
+    private static boolean DEBUG=false;
+    
     private Thread thread;
     //
     private SimulatorManagerInterface simulatorManagerInterface;
@@ -67,7 +69,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     animationPanelOuterInterface.createAnimation(event.getPacketType(), 2000, event.getSourcceId(), event.getDestId());
                     
                     // play event
-                    System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
+                    if(DEBUG) System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
                     Thread.sleep(200);
                 
                 } else if (isPlaying) { // if in playing mode
@@ -75,9 +77,9 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     
                     
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
-                    System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
+                    if(DEBUG)System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
 
-                    System.out.println("Event: " + event + ".");
+                    if(DEBUG)System.out.println("Event: " + event + ".");
                     int i = (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
 
                     int time = i * 500 - 4;
@@ -91,13 +93,13 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
                 } else {
                     //glassPanelPainter.doPaintRedDots(false);
-                    System.out.println("Player going to sleep " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
+                    if(DEBUG)System.out.println("Player going to sleep " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
                     Thread.sleep(Long.MAX_VALUE);
                 }
 
 
             } catch (InterruptedException ex) {
-                System.out.println("Interrupted");
+                if(DEBUG)System.out.println("Interrupted");
             }
 
         }

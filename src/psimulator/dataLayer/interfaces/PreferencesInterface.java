@@ -32,6 +32,11 @@ public interface PreferencesInterface {
     public PacketImageType getPackageImageType();
     public void setPackageImageType(PacketImageType packageImageType);
     
+    public String getConnectionIpAddress();
+    public void setConnectionIpAddress(String connectionIpAddress);
+    public String getConnectionPort();
+    public void setConnectionPort(String connectionPort);
+    
     public void savePreferences();
     
     public void addPreferencesObserver(Observer observer);

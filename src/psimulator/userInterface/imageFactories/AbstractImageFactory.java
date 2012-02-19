@@ -42,7 +42,7 @@ public abstract class AbstractImageFactory {
     public static final String TOOL_SWITCH_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/switch_linux.png";
     public static final String TOOL_SWITCH_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/switch_cisco.png";
     //
-    public static final String PACKAGE_PREFIX_PATH ="/resources/toolbarIcons/simulator/packages/";
+    public static final String PACKAGE_PREFIX_PATH = "/resources/toolbarIcons/simulator/packages/";
     //
     protected ImageBuffer imageBuffer;
     protected BufferedImageLoader bufferedImageLoader;
@@ -79,6 +79,23 @@ public abstract class AbstractImageFactory {
                 // should never happen
             }
         }
+
+        //PacketType packetType, PacketImageType packageImageType
+
+        PacketType packetTypes[] = PacketType.values();
+        PacketImageType packetImageTypes[] = PacketImageType.values();
+
+        for (PacketType packetType : packetTypes) {
+            for (PacketImageType packetImageType : packetImageTypes) {
+                String path = getImagePath(packetType, packetImageType);
+                try {
+                    bufferedImageLoader.getImage(path);
+                } catch (IOException ex) {
+                    // should never happen
+                }
+            }
+        }
+
     }
 
     /**
@@ -181,11 +198,11 @@ public abstract class AbstractImageFactory {
 
     /**
      * Returns BufferedImage for packetType and packetImageType with width.
-     * 
+     *
      * @param packetType
      * @param packageImageType
      * @param width
-     * @return 
+     * @return
      */
     public BufferedImage getPacketImage(PacketType packetType, PacketImageType packageImageType, int width) {
         BufferedImage image;
@@ -379,8 +396,9 @@ public abstract class AbstractImageFactory {
 
     /**
      * Creates square image of given image
+     *
      * @param image
-     * @return 
+     * @return
      */
     private ImageIcon createSquareImage(Image image) {
         int size = image.getWidth(null);
@@ -406,12 +424,13 @@ public abstract class AbstractImageFactory {
 
     /**
      * Creates buffered image from path of width.
+     *
      * @param path
      * @param width
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
-    private BufferedImage getScaledBufferedImage(String path, int width){
+    private BufferedImage getScaledBufferedImage(String path, int width) {
         BufferedImage bi;
 
         Image tmp = null;
@@ -440,7 +459,7 @@ public abstract class AbstractImageFactory {
 
         return bi;
     }
-    
+
     /**
      * Creates scaled image of image at path. Size will be size x size.
      *
@@ -467,7 +486,7 @@ public abstract class AbstractImageFactory {
     private String getImagePath(PacketType packetType, PacketImageType packageImageType) {
         String middle;
         String suffix;
-        
+
         switch (packetType) {
             case ARP:
                 suffix = "yellow.png";
@@ -486,8 +505,8 @@ public abstract class AbstractImageFactory {
                 suffix = "pink.png";
                 break;
         }
-        
-        switch(packageImageType){
+
+        switch (packageImageType) {
             case CAR:
                 middle = "delivery_truck";
                 break;
@@ -496,7 +515,7 @@ public abstract class AbstractImageFactory {
                 middle = "package";
                 break;
         }
-        
+
         return PACKAGE_PREFIX_PATH + middle + "_" + suffix;
         //return PACKAGE_PREFIX_PATH + middle + ".png";
     }

@@ -8,6 +8,8 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.RegexFormatter;
 
 /**
  *
@@ -37,6 +39,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private JRadioButton classicPacketIconButton;
     private JRadioButton carPacketIconButton;
     private JLabel packetImageTypePicture;
+    private JFormattedTextField jTextFieldPsimulatorIpAddress;
+    private JFormattedTextField jTextFieldPsimulatorPort;
     /*
      * END of window components
      */
@@ -45,7 +49,6 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
      */
     private ToolbarIconSizeEnum toolbarIconSize;
     private PacketImageType packetImageType;
-            
     private int currentLanguagePosition;
     //
     private boolean viewDeviceNames;
@@ -56,6 +59,9 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private boolean viewMacAddresses;
     //
     private LevelOfDetailsMode levelOfDetails;
+    //
+    private String connectionIpAddress;
+    private String connectionPort;
     /*
      * END variables for local store
      */
@@ -94,6 +100,9 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         viewIpAddresses = dataLayer.isViewIpAddresses();
         viewMacAddresses = dataLayer.isViewMacAddresses();
         levelOfDetails = dataLayer.getLevelOfDetails();
+        //
+        connectionIpAddress = dataLayer.getConnectionIpAddress();
+        connectionPort = dataLayer.getConnectionPort();
     }
 
     @Override
@@ -106,6 +115,9 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         viewCableDelay = jCheckBoxCableDelay.isSelected();
         viewIpAddresses = jCheckBoxIpAddresses.isSelected();
         viewMacAddresses = jCheckBoxMacAddresses.isSelected();
+        //
+        connectionIpAddress = jTextFieldPsimulatorIpAddress.getText();
+        connectionPort = jTextFieldPsimulatorPort.getText();
     }
 
     @Override
@@ -121,6 +133,9 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         dataLayer.setViewIpAddresses(viewIpAddresses);
         dataLayer.setViewMacAddresses(viewMacAddresses);
         dataLayer.setLevelOfDetails(levelOfDetails);
+        //
+        dataLayer.setConnectionIpAddress(connectionIpAddress);
+        dataLayer.setConnectionPort(connectionPort);
         
         // save preferences 
         dataLayer.savePreferences();
@@ -135,8 +150,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         if (toolbarIconSize != dataLayer.getToolbarIconSize()) {
             return true;
         }
-        
-        if (packetImageType != dataLayer.getPackageImageType()){
+
+        if (packetImageType != dataLayer.getPackageImageType()) {
             return true;
         }
 
@@ -151,16 +166,16 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         if (viewInterfaceNames != dataLayer.isViewInterfaceNames()) {
             return true;
         }
-        
-        if(viewCableDelay != dataLayer.isViewCableDelay()){
+
+        if (viewCableDelay != dataLayer.isViewCableDelay()) {
             return true;
         }
-        
-        if(viewIpAddresses != dataLayer.isViewIpAddresses()){
+
+        if (viewIpAddresses != dataLayer.isViewIpAddresses()) {
             return true;
         }
-        
-        if(viewMacAddresses != dataLayer.isViewMacAddresses()){
+
+        if (viewMacAddresses != dataLayer.isViewMacAddresses()) {
             return true;
         }
 
@@ -168,6 +183,14 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
             return true;
         }
         
+        if(!connectionIpAddress.equals(dataLayer.getConnectionIpAddress())){
+            return true;
+        }
+        
+        if(!connectionPort.equals(dataLayer.getConnectionPort())){
+            return true;
+        }
+
         return false;
     }
 
@@ -270,17 +293,17 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         jCheckBoxCableDelay.setAlignmentX(Component.LEFT_ALIGNMENT);
         jCheckBoxCableDelay.setSelected(viewCableDelay);
         checkBoxesPanel.add(jCheckBoxCableDelay);
-        
+
         jCheckBoxIpAddresses = new JCheckBox(dataLayer.getString("IP_ADDRESSES"));
         jCheckBoxIpAddresses.setAlignmentX(Component.LEFT_ALIGNMENT);
         jCheckBoxIpAddresses.setSelected(viewIpAddresses);
         checkBoxesPanel.add(jCheckBoxIpAddresses);
-        
+
         jCheckBoxMacAddresses = new JCheckBox(dataLayer.getString("MAC_ADDRESSES"));
         jCheckBoxMacAddresses.setAlignmentX(Component.LEFT_ALIGNMENT);
         jCheckBoxMacAddresses.setSelected(viewMacAddresses);
         checkBoxesPanel.add(jCheckBoxMacAddresses);
-        
+
         //
         detailsPanel.add(autoManualPanel);
         detailsPanel.add(Box.createRigidArea(new Dimension(0, 3)));
@@ -389,7 +412,21 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     private JPanel createCardSimulator() {
         JPanel pane = new JPanel();
         pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+
+        // add packet icon change panel
+        pane.add(createPacketIconPanel());
+
+        pane.add(Box.createRigidArea(new Dimension(0, 6)));
         
+        // add Connection properties panel
+        pane.add(createConnectionPropertiesPanel());
+
+        pane.add(Box.createRigidArea(new Dimension(0, 130)));
+        
+        return pane;
+    }
+
+    private JPanel createPacketIconPanel() {
         // PACKET ICON TYPE panel
         JPanel packetImageTypePanel = new JPanel();
         packetImageTypePanel.setLayout(new BoxLayout(packetImageTypePanel, BoxLayout.X_AXIS));
@@ -397,18 +434,8 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
 
         JLabel iconSizeLabel = new JLabel(dataLayer.getString("PACKET_IMAGE_TYPE"));
         iconSizeLabel.setFont(font);
-    
-        packetImageTypePanel.add(iconSizeLabel);
-        packetImageTypePanel.add(Box.createRigidArea(new Dimension(5, 0)));
-        packetImageTypePanel.add(createPacketIconPanel());
-
-        // END APPLICATION PANEL
-        pane.add(packetImageTypePanel);
         
-        return pane;
-    }
-    
-    private JPanel createPacketIconPanel(){
+        
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
@@ -437,7 +464,59 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
 
         panel.add(packetImageTypePicture);
 
-        return panel;
+        packetImageTypePanel.add(iconSizeLabel);
+        packetImageTypePanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        packetImageTypePanel.add(panel);
+        
+        return packetImageTypePanel;
+    }
+
+    private JPanel createConnectionPropertiesPanel() {
+        JPanel addressesPanel = new JPanel();
+        addressesPanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("CONNECTION_PROPERTIES")));
+        // set layout
+        GridLayout addressesPanelLayout = new GridLayout(0, 3);
+        addressesPanelLayout.setHgap(10);
+        addressesPanel.setLayout(addressesPanelLayout);
+
+        // IP address
+        JLabel ipAddressName = new JLabel(dataLayer.getString("IP_ADDRESS"));
+        ipAddressName.setFont(font);
+        addressesPanel.add(ipAddressName);
+
+        RegexFormatter ipMaskFormatter = new RegexFormatter(Validator.IP_PATTERN);
+        ipMaskFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
+        ipMaskFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
+        ipMaskFormatter.setOverwriteMode(false);        // do notoverwrite charracters
+
+        jTextFieldPsimulatorIpAddress = new JFormattedTextField(ipMaskFormatter);
+        jTextFieldPsimulatorIpAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 192.168.1.1 (IP)");
+        jTextFieldPsimulatorIpAddress.setText(connectionIpAddress);
+        // add decorator that paints wrong input icon
+        addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldPsimulatorIpAddress, layerUI));
+
+        JLabel ipAddressTip = new JLabel("10.0.0.1 (IP)");
+        addressesPanel.add(ipAddressTip);
+        
+        // PORT
+        JLabel portName = new JLabel(dataLayer.getString("PORT"));
+        portName.setFont(font);
+        addressesPanel.add(portName);
+        
+        RegexFormatter portFormatter = new RegexFormatter(Validator.PORT_PATTERN);
+        portFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
+        portFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
+        portFormatter.setOverwriteMode(false);        // do notoverwrite charracters
+        
+        jTextFieldPsimulatorPort = new JFormattedTextField(portFormatter);
+        jTextFieldPsimulatorPort.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 1-49 999");
+        jTextFieldPsimulatorPort.setText(connectionPort);
+        addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldPsimulatorPort, layerUI));
+        
+        JLabel portTip = new JLabel("1-49 999");
+        addressesPanel.add(portTip);
+        
+        return addressesPanel;
     }
 
     private void setIconSize() {
@@ -461,9 +540,9 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
                 break;
         }
     }
-    
-    private void setPacketIconType(){
-        switch(packetImageType){
+
+    private void setPacketIconType() {
+        switch (packetImageType) {
             case CLASSIC:
                 classicPacketIconButton.setSelected(true);
                 packetImageTypePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/simulator/packages/package_pink_48.png")));
@@ -525,9 +604,9 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         public void actionPerformed(ActionEvent e) {
             toolbarIconSize = ToolbarIconSizeEnum.valueOf(e.getActionCommand());
             setIconSize();
-         }
+        }
     }
-    
+
     /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for ToolbarIconSize
@@ -541,6 +620,6 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
         public void actionPerformed(ActionEvent e) {
             packetImageType = PacketImageType.valueOf(e.getActionCommand());
             setPacketIconType();
-         }
+        }
     }
 }
