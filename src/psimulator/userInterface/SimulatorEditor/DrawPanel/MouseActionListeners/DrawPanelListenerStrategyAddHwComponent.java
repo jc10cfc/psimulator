@@ -56,6 +56,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         undoManager.undoableEditHappened(new UndoableEditEvent(this,
                 new UndoableAddHwComponent(drawPanel.getGraphOuterInterface(), component)));
 
+        // update undo redo buttons
         mainWindow.updateUndoRedoButtons();
 
     }

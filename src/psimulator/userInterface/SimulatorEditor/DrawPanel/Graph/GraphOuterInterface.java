@@ -186,7 +186,12 @@ public interface GraphOuterInterface {
      */
     public void addHwComponents(List<AbstractHwComponent> componentList);
     
-    //public void doUpdateImages();
     
+    public void editHappend();
+    
+    public long getLastEditTimestamp();
+    
+    //public void doUpdateImages();
+    //TMP methpd
     public DrawPanelInnerInterface getDrawPanelInnerInterface();
 }

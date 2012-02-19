@@ -55,6 +55,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private GlassPanelPainter glassPanelPainter;
     private MainWindowGlassPane glassPane;
     //private Component originalGlassPane;
+    private long lastSavedTimestamp;
 
     public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
@@ -278,10 +279,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                         return;
                     }
                     
-                    // set original glass pane
-                    //mainWindow.setGlassPane(originalGlassPane);
-                    //mainWindow.remove(glassPane);
-
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.EDITOR, true);
 
@@ -292,11 +289,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                         return;
                     }
                     
-                    // add glass pane
-                    //mainWindow.setGlassPane(glassPane);
-                    //glassPane.setOpaque(false);
-                    //getGlassPane().setVisible(true);
-
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.SIMULATOR, true);
 
@@ -322,6 +314,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             }
 
             refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR, false);
+            
+            // set saved timestamp
+            setLastSavedTimestampNow();
         }
     }
 
@@ -439,6 +434,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         if (!(jPanelUserInterfaceMain.hasGraph() && (jPanelUserInterfaceMain.canUndo() || jPanelUserInterfaceMain.canRedo()))) {
             return false;
         }
+        
+        // if timestamps say graph was not modified
+        if(jPanelUserInterfaceMain.getGraph().getLastEditTimestamp() <= lastSavedTimestamp){
+            return false;
+        }
 
         //save config data
         int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
@@ -481,6 +481,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             // save graph
             dataLayer.saveGraphToFile(graph, file);
             
+            // set saved timestamp
+            setLastSavedTimestampNow();
+            
             return true;
         }
         return false;
@@ -501,10 +504,18 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             // load graph
             Graph graph = dataLayer.loadGraphFromFile(file);
             
+            // init graph (set edit timestamp)
             refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
+            
+            // set saved timestamp
+            setLastSavedTimestampNow();
         }
     }
 
+    private void setLastSavedTimestampNow(){
+        lastSavedTimestamp = System.currentTimeMillis();
+    }
+    
     /**
      * Updates jPanelUserInterfaceMain according to userInterfaceState. If
      * changing to SIMULATOR or EDITOR state, graph cannot be null.

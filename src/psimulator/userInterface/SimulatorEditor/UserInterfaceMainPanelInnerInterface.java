@@ -16,4 +16,6 @@ public interface UserInterfaceMainPanelInnerInterface {
     public JScrollPane getJScrollPane();
     
     public JViewport getJViewport();
+    
+    public void updateSize();
 }

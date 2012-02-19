@@ -241,6 +241,9 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
 
         // repaint draw panel
         drawPanel.repaint();
+        
+        // update undo redo buttons
+        mainWindow.updateUndoRedoButtons();
     }
 
     /**
