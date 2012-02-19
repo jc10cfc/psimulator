@@ -19,6 +19,7 @@ public class NetworkDevice implements Serializable {
     private HwTypeEnum hwType;
     private String name;
     private List<NetworkInterface> interfaces;
+    private int telnetPort;
     
     private UINetworkDevice uiAdds;
     private SimNetworkDevice simAdds;
@@ -89,6 +90,14 @@ public class NetworkDevice implements Serializable {
 
     public void setUiAdds(UINetworkDevice uiAdds) {
         this.uiAdds = uiAdds;
+    }
+
+    public int getTelnetPort() {
+        return telnetPort;
+    }
+
+    public void setTelnetPort(int telnetPort) {
+        this.telnetPort = telnetPort;
     }
 
     
