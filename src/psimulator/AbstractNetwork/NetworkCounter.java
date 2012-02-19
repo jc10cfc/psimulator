@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class NetworkCounter implements Serializable {
 

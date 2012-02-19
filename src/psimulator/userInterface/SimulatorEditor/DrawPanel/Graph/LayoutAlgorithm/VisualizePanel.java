@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class VisualizePanel extends JPanel {
 

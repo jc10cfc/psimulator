@@ -22,7 +22,7 @@ import psimulator.userInterface.SimulatorEditor.Tools.CreateCableTool;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy implements ChooseEthInterfaceInterface {
 

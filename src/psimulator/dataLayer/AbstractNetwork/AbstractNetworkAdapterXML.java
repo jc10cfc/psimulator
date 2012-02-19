@@ -11,7 +11,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.NetworkBuilder.N
 
 /**
  *
- * @author Martin Lukáš <lukasma1@fit.cvut.cz>
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz> Lukáš <lukasma1@fit.cvut.cz>
  */
 public class AbstractNetworkAdapterXML {
 

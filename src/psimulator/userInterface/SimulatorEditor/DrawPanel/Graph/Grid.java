@@ -7,7 +7,7 @@ import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class Grid{
 

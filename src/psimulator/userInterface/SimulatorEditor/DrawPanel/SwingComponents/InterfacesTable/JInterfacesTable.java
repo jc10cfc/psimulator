@@ -12,7 +12,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwC
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class JInterfacesTable extends JTable {
 

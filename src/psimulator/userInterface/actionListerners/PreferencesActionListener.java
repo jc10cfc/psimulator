@@ -8,7 +8,7 @@ import psimulator.userInterface.SettingsDialog;
 
 /**
  * Action Listener for Preferences Button
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class PreferencesActionListener implements ActionListener {
 

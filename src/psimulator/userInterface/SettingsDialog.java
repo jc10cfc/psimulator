@@ -13,7 +13,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.RegexF
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public final class SettingsDialog extends AbstractPropertiesDialog {
 

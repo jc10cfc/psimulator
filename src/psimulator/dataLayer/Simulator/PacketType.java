@@ -2,7 +2,7 @@ package psimulator.dataLayer.Simulator;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public enum PacketType {
     TCP,        // green

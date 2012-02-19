@@ -7,7 +7,7 @@ import psimulator.AbstractNetwork.NetworkDevice;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class GraphBuilderDirector {
 

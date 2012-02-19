@@ -12,7 +12,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public final class CableProperties extends AbstractPropertiesDialog {
 

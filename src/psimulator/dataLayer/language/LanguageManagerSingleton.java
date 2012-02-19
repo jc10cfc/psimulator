@@ -14,7 +14,7 @@ import psimulator.dataLayer.interfaces.SaveableInterface;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class LanguageManagerSingleton extends Observable implements SaveableInterface{
     

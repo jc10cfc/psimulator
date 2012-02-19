@@ -7,7 +7,7 @@ import javax.swing.table.TableModel;
 
 /**
  *
- * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz> Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class JTableEventList extends JTable {
 

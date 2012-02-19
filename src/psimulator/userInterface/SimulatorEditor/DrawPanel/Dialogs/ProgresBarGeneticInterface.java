@@ -5,7 +5,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface ProgresBarGeneticInterface {
     

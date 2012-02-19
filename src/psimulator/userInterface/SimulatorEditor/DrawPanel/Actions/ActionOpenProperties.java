@@ -13,7 +13,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.HwComp
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class ActionOpenProperties extends AbstractDrawPanelAction {
 
@@ -46,7 +46,7 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
             HwComponentProperties hwComponentProperties = new HwComponentProperties(mainWindow.getMainWindowComponent(), dataLayer, drawPanel, abstractHwComponent);
             
             // 
-            drawPanel.doUpdateImages();
+            //drawPanel.doUpdateImages();
             
             return;
         }else if(graph.getMarkedCablesCount() == 1){
@@ -63,7 +63,7 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
             CableProperties cableProperties = new CableProperties(mainWindow.getMainWindowComponent(), dataLayer, cable);
        
             // 
-            drawPanel.doUpdateImages();
+            //drawPanel.doUpdateImages();
             
             return;
         }

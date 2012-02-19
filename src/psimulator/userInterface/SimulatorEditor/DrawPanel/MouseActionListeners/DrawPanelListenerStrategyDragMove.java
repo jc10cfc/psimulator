@@ -13,7 +13,7 @@ import psimulator.userInterface.SimulatorEditor.Tools.ManipulationTool;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class DrawPanelListenerStrategyDragMove extends DrawPanelListenerStrategy {
 

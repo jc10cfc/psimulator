@@ -19,7 +19,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Interf
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public final class HwComponentProperties extends AbstractPropertiesDialog {
 

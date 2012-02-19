@@ -6,7 +6,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterf
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class UndoableAddHwComponent extends AbstractUndoableEdit {
     protected GraphOuterInterface graph;
@@ -33,10 +33,5 @@ public class UndoableAddHwComponent extends AbstractUndoableEdit {
     public void redo() {
       super.redo();
       graph.addHwComponent(component);
-      
-      graph.getDrawPanelInnerInterface().doUpdateImages();
-      
-      // panel could be resized before undo, so we need to update its size
-      //drawPanel.updateSize(component.getLowerRightCornerLocation());
     }
 }

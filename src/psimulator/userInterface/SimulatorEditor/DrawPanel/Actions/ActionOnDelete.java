@@ -10,7 +10,7 @@ import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class ActionOnDelete extends AbstractDrawPanelAction {
 

@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class BufferedImageLoader {
 

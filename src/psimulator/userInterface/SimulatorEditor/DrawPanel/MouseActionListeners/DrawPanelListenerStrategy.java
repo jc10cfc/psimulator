@@ -22,7 +22,7 @@ import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implements MouseWheelListener {
 

@@ -1,4 +1,4 @@
-package psimulator.userInterface.SimulatorEditor.DrawPanel.Support;
+package psimulator.dataLayer.Singletons;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -7,7 +7,7 @@ import psimulator.AbstractNetwork.HwTypeEnum;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class GeneratorSingleton {
 

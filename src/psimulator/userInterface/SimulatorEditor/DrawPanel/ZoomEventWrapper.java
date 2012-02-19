@@ -4,7 +4,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class ZoomEventWrapper {
     

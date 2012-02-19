@@ -1,7 +1,6 @@
 
 package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
-import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
@@ -9,7 +8,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public abstract class DrawPanelOuterInterface extends JPanel implements DrawPanelToolChangeOuterInterface{
    

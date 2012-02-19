@@ -7,7 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class EventTableModel extends AbstractTableModel {
     

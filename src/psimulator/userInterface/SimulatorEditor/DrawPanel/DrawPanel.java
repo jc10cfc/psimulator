@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
-import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.EnumMap;
@@ -11,6 +10,7 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
@@ -18,13 +18,13 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.*;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz> 
  */
 public final class DrawPanel extends DrawPanelOuterInterface implements
         DrawPanelInnerInterface, Observer{
@@ -192,6 +192,47 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
     }
 
+    
+    private void updateSize() {
+        Dimension dim = graph.getPreferredSize();
+        
+        // if nothing to resize
+        if (!(dim.width > actualZoomArea.width || dim.height > actualZoomArea.height)) {
+            return;
+        }
+
+        // if lowerRightCorner.x is out of area
+        if (dim.width > actualZoomArea.width) {
+            // update area width
+            actualZoomArea.width = dim.width;
+        }
+
+        // if lowerRightCorner.y is out of area
+        if (dim.height > actualZoomArea.height) {
+            // update area height
+            actualZoomArea.height = dim.height;
+        }
+
+        // update default zoom size
+        defaultZoomArea.setSize(ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.width),
+                ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.height));
+
+        // let scrool pane in editor know about the change
+        this.revalidate();
+        
+        //
+        editorPanel.updateSize();
+    }
+    
+    private void doUpdateImages(){
+        // has to be here to perform before repaint
+        if(graph!=null){
+            graph.doUpdateImages();
+            
+            this.revalidate();
+            this.repaint();
+        }
+    }
 
 // ====================  IMPLEMENTATION OF Observer ======================   
     /**
@@ -204,8 +245,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     public void update(Observable o, Object o1) {
         doUpdateImages();
 
-        
         switch ((ObserverUpdateEventType) o1) {
+            case GRAPH_SIZE_CHANGED:
+                updateSize();
+                break;
             case VIEW_DETAILS:
             case LANGUAGE:
                 // repaint
@@ -295,46 +338,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 // END ==============  IMPLEMENTATION OF ToolChangeInterface ===============
 
 // ============== IMPLEMENTATION OF DrawPanelInnerInterface ================
-    @Override
-    public void updateSize(Dimension dim) {
-        // if nothing to resize
-        if (!(dim.width > actualZoomArea.width || dim.height > actualZoomArea.height)) {
-            return;
-        }
-
-        // if lowerRightCorner.x is out of area
-        if (dim.width > actualZoomArea.width) {
-            // update area width
-            actualZoomArea.width = dim.width;
-        }
-
-        // if lowerRightCorner.y is out of area
-        if (dim.height > actualZoomArea.height) {
-            // update area height
-            actualZoomArea.height = dim.height;
-        }
-
-        // update default zoom size
-        defaultZoomArea.setSize(ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.width),
-                ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.height));
-
-        // let scrool pane in editor know about the change
-        this.revalidate();
-        
-        //
-        editorPanel.updateSize();
-    }
     
-    @Override
-    public void doUpdateImages(){
-        // has to be here to perform before repaint
-        if(graph!=null){
-            graph.doUpdateImages();
-            
-            this.revalidate();
-            this.repaint();
-        }
-    }
+    
     
     @Override
     public DataLayerFacade getDataLayerFacade() {
@@ -378,12 +383,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 // ============== IMPLEMENTATION OF DrawPanelOuterInterface ================
     @Override
     public Graph removeGraph() {
+        if(graph != null){
+            graph.deleteObserver(this);
+        }
+        
         Graph tmp = graph;
         graph = null;
-        
-        if(tmp!=null){
-            tmp.deInitialize(dataLayer);
-        }
         
         imageFactory.clearTextBuffers();
 
@@ -399,6 +404,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
         
         this.graph = graph;
+        graph.addObserver(this);
         
         // if graph is empty - new project is created
         if(graph.getAbstractHwComponentsCount() == 0){

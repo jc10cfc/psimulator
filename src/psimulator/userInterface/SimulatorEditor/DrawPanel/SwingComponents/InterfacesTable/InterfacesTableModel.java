@@ -7,7 +7,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterfac
 
 /**
  *
- * @author Martin
+ * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class InterfacesTableModel extends AbstractTableModel {
 
