@@ -1,9 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -93,7 +90,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             case VIEW_DETAILS:
                 break;
             case ZOOM_CHANGE:
-                //System.out.println("Aniamtion panel zoom changed");
+                // no need to react, will react from UserInterfaceLayeredPane
                 break;
             case PACKET_IMAGE_TYPE_CHANGE:
                 // no need to react
@@ -103,7 +100,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         }
     }
     
-    /*
+    
     @Override
     public void setSize(int width, int height) {
         this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
@@ -112,7 +109,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     @Override
     public void setSize(Dimension d) {
         this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
-    }*/
+    }
     
     /**
      * Removes all animations from list

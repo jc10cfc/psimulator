@@ -60,5 +60,5 @@ public abstract class UserInterfaceLayeredPaneOuterInterface extends JLayeredPan
     
     public abstract AnimationPanelOuterInterface getAnimationPanelOuterInterface();
     
-    public abstract void updateSize();
+    //public abstract void updateSize();
 }
