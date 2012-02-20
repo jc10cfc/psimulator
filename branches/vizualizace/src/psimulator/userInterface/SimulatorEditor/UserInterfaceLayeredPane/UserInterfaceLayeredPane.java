@@ -52,7 +52,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         jPanelAnimation = new AnimationPanel(mainWindow, userInterface, imageFactory, dataLayer, jPanelDraw);
 
         // add panel to layered pane
-        //this.add(jPanelAnimation, 2, 0);
+        this.add(jPanelAnimation, 2, 0);
 
         // add this as observer to zoom manager
         ZoomManagerSingleton.getInstance().addObserver(this);
@@ -77,6 +77,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     private void updateSize() {
         Dimension dim = jPanelDraw.getPreferredSize();
         jPanelAnimation.setPreferredSize(dim);
+        jPanelAnimation.setSize(dim);
     }
 
     @Override
