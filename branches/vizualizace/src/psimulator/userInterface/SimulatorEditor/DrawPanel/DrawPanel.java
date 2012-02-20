@@ -152,7 +152,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                 break;
             case GRAPH_SIZE_CHANGED:
                 // udate size of this panel according to graph size
-                System.out.println("Zde");
                 updateSizeAccordingToGraph();
                 // goes through !
             case ZOOM_CHANGE:

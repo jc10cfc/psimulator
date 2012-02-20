@@ -37,6 +37,8 @@ import psimulator.userInterface.imageFactories.AwtImageFactory;
  */
 public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade, Observer {
 
+    private SaveLoadManager saveLoadManager = new SaveLoadManager();
+    //
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
     private AbstractImageFactory imageFactory;
@@ -52,11 +54,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     private JFrame mainWindow;
     private JFileChooser fileChooser;
-    
     private GlassPanelPainter glassPanelPainter;
     private MainWindowGlassPane glassPane;
     //private Component originalGlassPane;
-    private long lastSavedTimestamp;
 
     public MainWindow(DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
@@ -92,18 +92,18 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         dataLayer.addLanguageObserver((Observer) this);
 
         this.setIconImage(imageFactory.getImageIconForToolbar(MainTool.ADD_REAL_PC).getImage());
-        
-        
+
+
         // create glass pane and glass pane painter
-        glassPane = new MainWindowGlassPane((UserInterfaceMainPanel)jPanelUserInterfaceMain);
-        
+        glassPane = new MainWindowGlassPane((UserInterfaceMainPanel) jPanelUserInterfaceMain);
+
         glassPanelPainter = new GlassPanelPainter(glassPane, jPanelUserInterfaceMain);
         //originalGlassPane = this.getGlassPane();
-        
+
         this.setGlassPane(glassPane);
         glassPane.setOpaque(false);
         getGlassPane().setVisible(true);
-        
+
     }
 
     @Override
@@ -128,7 +128,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 doCloseAction();
             }
         });
-        
+
         // set of window properties
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.setMinimumSize(new Dimension(1024, 768));
@@ -202,15 +202,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
 
     @Override
-    public AnimationPanelOuterInterface getAnimationPanelOuterInterface(){
+    public AnimationPanelOuterInterface getAnimationPanelOuterInterface() {
         return jPanelUserInterfaceMain.getAnimationPanelOuterInterface();
     }
-    
+
     @Override
     public Component getMainWindowComponent() {
         return this;
     }
-
 
     /////////////////////-----------------------------------////////////////////
     /**
@@ -279,7 +278,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.EDITOR) {
                         return;
                     }
-                    
+
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.EDITOR, true);
 
@@ -289,7 +288,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.SIMULATOR) {
                         return;
                     }
-                    
+
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.SIMULATOR, true);
 
@@ -315,9 +314,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             }
 
             refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR, false);
-            
+
             // set saved timestamp
-            setLastSavedTimestampNow();
+            setLastSavedTimestampAndFile(null);
         }
     }
 
@@ -372,8 +371,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("LISTENER Save");
-
+            //System.out.println("LISTENER Save");
+            
+            // if save successfull
+            if (doSaveAction()) {
+                System.out.println("save ok");
+            } else {
+                System.out.println("save problem");
+            }
         }
     }
 
@@ -435,9 +440,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         if (!(jPanelUserInterfaceMain.hasGraph() && (jPanelUserInterfaceMain.canUndo() || jPanelUserInterfaceMain.canRedo()))) {
             return false;
         }
-        
+
         // if timestamps say graph was not modified
-        if(jPanelUserInterfaceMain.getGraph().getLastEditTimestamp() <= lastSavedTimestamp){
+        if (jPanelUserInterfaceMain.getGraph().getLastEditTimestamp() <= saveLoadManager.getLastSavedTimestamp()) {
             return false;
         }
 
@@ -463,6 +468,21 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         return false;
     }
 
+    private boolean doSaveAction() {
+        File file = saveLoadManager.getFile();
+
+        // same as save as but do not ask the user
+        if (file != null) {
+            // save
+            save(file);
+            return true;
+        } else { // same as save as
+            // save as
+            return doSaveAsAction();
+        }
+        //return false;
+    }
+
     /**
      * Shows save dialog.
      *
@@ -474,20 +494,25 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             //This is where a real application would open the file.
-            System.out.println("Saving file: " + file);
+            System.out.println("Saving as file: " + file);
 
-            // only get, not remove, we want to keep the graph inside editor
-            Graph graph = jPanelUserInterfaceMain.getGraph();
-            
-            // save graph
-            dataLayer.saveGraphToFile(graph, file);
-            
-            // set saved timestamp
-            setLastSavedTimestampNow();
-            
+            // save
+            save(file);
+
             return true;
         }
         return false;
+    }
+
+    private void save(File file) {
+        // only get, not remove, we want to keep the graph inside editor
+        Graph graph = jPanelUserInterfaceMain.getGraph();
+
+        // save graph
+        dataLayer.saveGraphToFile(graph, file);
+
+        // set saved timestamp
+        setLastSavedTimestampAndFile(file);
     }
 
     /**
@@ -504,19 +529,20 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             //Graph graph = new Graph();
             // load graph
             Graph graph = dataLayer.loadGraphFromFile(file);
-            
+
             // init graph (set edit timestamp)
             refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
-            
-            // set saved timestamp
-            setLastSavedTimestampNow();
+
+            // set saved timestamp and file name
+            setLastSavedTimestampAndFile(file);
         }
     }
 
-    private void setLastSavedTimestampNow(){
-        lastSavedTimestamp = System.currentTimeMillis();
+    private void setLastSavedTimestampAndFile(File file) {
+        saveLoadManager.setLastSavedTimestamp(System.currentTimeMillis());
+        saveLoadManager.setFile(file);
     }
-    
+
     /**
      * Updates jPanelUserInterfaceMain according to userInterfaceState. If
      * changing to SIMULATOR or EDITOR state, graph cannot be null.
