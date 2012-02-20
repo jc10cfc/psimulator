@@ -1,6 +1,9 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -88,9 +91,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     public void update(Observable o, Object o1) {
         switch ((ObserverUpdateEventType) o1) {
             case VIEW_DETAILS:
+                // no need to react, 
                 break;
             case ZOOM_CHANGE:
-                // no need to react, will react from UserInterfaceLayeredPane
+                // no need to react, will change size from UserInterfaceLayeredPane
                 break;
             case PACKET_IMAGE_TYPE_CHANGE:
                 // no need to react
@@ -99,19 +103,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             
         }
     }
-    
-    
-    @Override
-    public void setSize(int width, int height) {
-        this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
-    }
-    
-    @Override
-    public void setSize(Dimension d) {
-        this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
-    }
-    
-    /**
+/**
      * Removes all animations from list
      */
     private void removeAllAnimations() {
@@ -158,7 +150,6 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     @Override
     public void setGraph(Graph graph) {
         this.graph = graph;
-        this.setBounds(0, 0, graph.getPreferredSize().width - 1, graph.getPreferredSize().height - 1);
     }
     
     @Override
@@ -189,5 +180,9 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         animations.add(anim);
     }
 
-    
+    // do not take cursor
+    @Override
+    public boolean contains(int x, int y) {
+        return false;
+    }
 }
