@@ -10,12 +10,12 @@ import javax.swing.JViewport;
 import javax.swing.border.BevelBorder;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
-import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.SimulatorControllPanel.SimulatorControlPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane.UserInterfaceLayeredPane;
 import psimulator.userInterface.imageFactories.AbstractImageFactory;
@@ -133,6 +133,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         // ----------- rest of constructor -----------------------
         // add this to zoom Manager as Observer
         //jLayeredPane.addObserverToZoomManager((Observer) this);
+        
         ZoomManagerSingleton.getInstance().addObserver((Observer) this);
 
         doChangeMode(userInterfaceState);
@@ -313,16 +314,12 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
     @Override
     public Graph removeGraph() {
-        //jPanelAnimation.removeGraph();
         return jLayeredPane.removeGraph();
     }
 
     @Override
     public void setGraph(Graph graph) {
         jLayeredPane.setGraph(graph);
-        //jPanelAnimation.setGraph(graph);
-        //jPanelAnimation.repaint();
-        //jLayeredPane.repaint();
 
         // initialize viewport to beginning
         jViewPort.setViewPosition(new Point(0, 0));
@@ -392,12 +389,5 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     @Override
     public AnimationPanelOuterInterface getAnimationPanelOuterInterface() {
         return jLayeredPane.getAnimationPanelOuterInterface();
-    }
-
-    @Override
-    public void updateSize() {
-        jLayeredPane.updateSize();
-        repaint();
-        revalidate();
     }
 }

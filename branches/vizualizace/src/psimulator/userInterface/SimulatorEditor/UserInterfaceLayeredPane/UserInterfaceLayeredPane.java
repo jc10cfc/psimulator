@@ -1,9 +1,11 @@
 package psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane;
 
 import java.awt.Dimension;
+import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractAction;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanel;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
@@ -21,7 +23,7 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInterface{
+public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInterface implements Observer {
 
     private DrawPanelOuterInterface jPanelDraw; // draw panel
     private AnimationPanelOuterInterface jPanelAnimation; // animation panel
@@ -31,7 +33,6 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
     private UserInterfaceMainPanelInnerInterface userInterface;
-    
 
     public UserInterfaceLayeredPane(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface userInterface,
             AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
@@ -40,54 +41,72 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         this.mainWindow = mainWindow;
         this.imageFactory = imageFactory;
         this.userInterface = userInterface;
-        
+
         // create draw panel
         jPanelDraw = new DrawPanel(mainWindow, userInterface, imageFactory, dataLayer);
-        
+
         // add panel to layered pane
         this.add(jPanelDraw, 1, 0);
-        
+
         // create animation panel
         jPanelAnimation = new AnimationPanel(mainWindow, userInterface, imageFactory, dataLayer, jPanelDraw);
-        
+
         // add panel to layered pane
-        this.add(jPanelAnimation, 2, 0);
-        
+        //this.add(jPanelAnimation, 2, 0);
+
+        // add this as observer to zoom manager
+        ZoomManagerSingleton.getInstance().addObserver(this);
+
         // add jPanelAnimation as observer to zoom manager
-        ZoomManagerSingleton.getInstance().addObserver(jPanelAnimation);
-        
+        //ZoomManagerSingleton.getInstance().addObserver(jPanelAnimation);
+
         // add jPanelAnimation as observer to preferences manager
         dataLayer.addPreferencesObserver(jPanelAnimation);
     }
 
     @Override
+    public void update(Observable o, Object o1) {
+        switch ((ObserverUpdateEventType) o1) {
+            case ZOOM_CHANGE:
+            case GRAPH_SIZE_CHANGED:
+                updateSize();
+                break;
+        }
+    }
+
+    private void updateSize() {
+        Dimension dim = jPanelDraw.getPreferredSize();
+        jPanelAnimation.setPreferredSize(dim);
+    }
+
+    @Override
     public Dimension getPreferredSize() {
-        //System.out.println("GetPrefSize");
+        // Draw panel always has the desired size
         return jPanelDraw.getPreferredSize();
     }
 
+    /*
     @Override
     public void setSize(int width, int height) {
         super.setSize(width, height);
         //System.out.println("SetSize2");
-        jPanelDraw.setSize(width, height);
-        jPanelAnimation.setSize(width, height);
+        //jPanelDraw.setSize(width, height);
+        //jPanelAnimation.setSize(width, height);
     }
 
     @Override
     public void setSize(Dimension d) {
         super.setSize(d);
         //System.out.println("SetSize1");
-        jPanelDraw.setSize(d);
-        jPanelAnimation.setSize(d);
-    }
+        //jPanelDraw.setSize(d);
+        //jPanelAnimation.setSize(d);
+    }*/
 
-    @Override
-    public void updateSize() {
-        Dimension d = jPanelDraw.getGraph().getPreferredSize();
-        setSize(d);
+    /*
+     * @Override public void updateSize() { Dimension d =
+     * jPanelDraw.getGraph().getPreferredSize(); setSize(d);
     }
-    
+     */
 /// from Draw panel outer interface
     @Override
     public boolean canUndo() {
@@ -116,6 +135,11 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
 
     @Override
     public Graph removeGraph() {
+        // remove this as observer from graph
+        if (jPanelDraw.hasGraph()) {
+            jPanelDraw.getGraph().deleteObserver(this);
+        }
+
         jPanelAnimation.removeGraph();
         return jPanelDraw.removeGraph();
     }
@@ -124,6 +148,9 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     public void setGraph(Graph graph) {
         jPanelDraw.setGraph(graph);
         jPanelAnimation.setGraph(graph);
+
+        // observe for graph size changes
+        graph.addObserver(this);
     }
 
     @Override
@@ -136,10 +163,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         return jPanelDraw.getGraph();
     }
 
-    
 // IMPLEMENTS DrawPanelToolChangeOuterInterface    
-
-
     @Override
     public void removeCurrentMouseListener() {
         jPanelDraw.removeCurrentMouseListener();
@@ -159,13 +183,9 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     public void setCurrentMouseListenerSimulator() {
         jPanelDraw.setCurrentMouseListenerSimulator();
     }
-    
+
     @Override
-    public AnimationPanelOuterInterface getAnimationPanelOuterInterface(){
+    public AnimationPanelOuterInterface getAnimationPanelOuterInterface() {
         return jPanelAnimation;
     }
-
-    
-
-    
 }
