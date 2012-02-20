@@ -152,6 +152,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                 break;
             case GRAPH_SIZE_CHANGED:
                 // udate size of this panel according to graph size
+                System.out.println("Zde");
                 updateSizeAccordingToGraph();
                 // goes through !
             case ZOOM_CHANGE:
@@ -312,6 +313,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
 
         graph.initialize(this, dataLayer, imageFactory);
+        
+        // If opened graph before, and new graph is smaller, it will shrink the size of draw panel
+        doFitToGraphSize();
     }
 
     @Override

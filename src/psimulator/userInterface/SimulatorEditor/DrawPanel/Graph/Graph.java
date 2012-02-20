@@ -720,10 +720,6 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * Informs drawPanel about change of graph size
      */
     public void doInformAboutSizeChange() {
-        //Dimension d = new Dimension(ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault), ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault));
-        //System.out.println("new size of graph = "+d.width+","+d.height);
-        //drawPanel.updateSize(d);
-        
         customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_SIZE_CHANGED);
     }
 
