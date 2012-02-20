@@ -55,10 +55,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         this.add(jPanelAnimation, 2, 0);
 
         // add this as observer to zoom manager
-        ZoomManagerSingleton.getInstance().addObserver(this);
-
-        // add jPanelAnimation as observer to zoom manager
-        //ZoomManagerSingleton.getInstance().addObserver(jPanelAnimation);
+        ZoomManagerSingleton.getInstance().addObserver((Observer)this);
 
         // add jPanelAnimation as observer to preferences manager
         dataLayer.addPreferencesObserver(jPanelAnimation);
@@ -69,15 +66,11 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         switch ((ObserverUpdateEventType) o1) {
             case ZOOM_CHANGE:
             case GRAPH_SIZE_CHANGED:
-                updateSize();
+                Dimension dim = jPanelDraw.getPreferredSize();
+                jPanelAnimation.setPreferredSize(dim);
+                jPanelAnimation.setSize(dim);
                 break;
         }
-    }
-
-    private void updateSize() {
-        Dimension dim = jPanelDraw.getPreferredSize();
-        jPanelAnimation.setPreferredSize(dim);
-        jPanelAnimation.setSize(dim);
     }
 
     @Override
@@ -86,28 +79,6 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         return jPanelDraw.getPreferredSize();
     }
 
-    /*
-    @Override
-    public void setSize(int width, int height) {
-        super.setSize(width, height);
-        //System.out.println("SetSize2");
-        //jPanelDraw.setSize(width, height);
-        //jPanelAnimation.setSize(width, height);
-    }
-
-    @Override
-    public void setSize(Dimension d) {
-        super.setSize(d);
-        //System.out.println("SetSize1");
-        //jPanelDraw.setSize(d);
-        //jPanelAnimation.setSize(d);
-    }*/
-
-    /*
-     * @Override public void updateSize() { Dimension d =
-     * jPanelDraw.getGraph().getPreferredSize(); setSize(d);
-    }
-     */
 /// from Draw panel outer interface
     @Override
     public boolean canUndo() {
