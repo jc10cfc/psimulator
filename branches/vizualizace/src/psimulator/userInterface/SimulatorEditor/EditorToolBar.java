@@ -11,12 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;
 import psimulator.userInterface.SimulatorEditor.SwingComponents.MenuToggleButton;
 import psimulator.userInterface.SimulatorEditor.Tools.ToolsFactory;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -25,7 +25,6 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
 public class EditorToolBar extends JToolBar implements Observer {
 
     private DataLayerFacade dataLayer;
-    private AbstractImageFactory imageFactory;
     
     private JButton jButtonFitToSize;
     private JButton jButtonAlignToGrid;
@@ -40,10 +39,9 @@ public class EditorToolBar extends JToolBar implements Observer {
     private MenuToggleButton toggleButtonRealPC;
     private MenuToggleButton toggleButtonCable;
 
-    public EditorToolBar(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, DrawPanelToolChangeOuterInterface toolChangeInterface) {
+    public EditorToolBar(DataLayerFacade dataLayer, DrawPanelToolChangeOuterInterface toolChangeInterface) {
         super();
         this.dataLayer = dataLayer;
-        this.imageFactory = imageFactory;
         
         // add this ToolBar as observer to languageManager
         dataLayer.addLanguageObserver((Observer)this);
@@ -58,21 +56,21 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         // BUTTONS
-        jButtonFitToSize = new JButton(imageFactory.getImageIconForToolbar(SecondaryTool.FIT_TO_SIZE));
+        jButtonFitToSize = new JButton(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.FIT_TO_SIZE));
         jButtonFitToSize.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         
-        jButtonAlignToGrid = new JButton(imageFactory.getImageIconForToolbar(SecondaryTool.ALIGN_TO_GRID));
+        jButtonAlignToGrid = new JButton(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.ALIGN_TO_GRID));
         jButtonAlignToGrid.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         
         toolsButtonGroup = new ButtonGroup();
         
-        toggleButtonDragMove = new MenuToggleButton(ToolsFactory.getTools(MainTool.DRAG_MOVE, imageFactory, toolChangeInterface), dataLayer);
-        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, imageFactory, toolChangeInterface), dataLayer);
-        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_ROUTER, imageFactory, toolChangeInterface), dataLayer);
-        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_SWITCH, imageFactory, toolChangeInterface), dataLayer);
-        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_END_DEVICE, imageFactory, toolChangeInterface), dataLayer);
-        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_REAL_PC, imageFactory, toolChangeInterface), dataLayer);
-        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_CABLE, imageFactory, toolChangeInterface), dataLayer);
+        toggleButtonDragMove = new MenuToggleButton(ToolsFactory.getTools(MainTool.DRAG_MOVE, toolChangeInterface), dataLayer);
+        toggleButtonHand = new MenuToggleButton(ToolsFactory.getTools(MainTool.HAND, toolChangeInterface), dataLayer);
+        toggleButtonRouters = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_ROUTER, toolChangeInterface), dataLayer);
+        toggleButtonSwitches = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_SWITCH, toolChangeInterface), dataLayer);
+        toggleButtonEndDevices = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_END_DEVICE, toolChangeInterface), dataLayer);
+        toggleButtonRealPC = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_REAL_PC, toolChangeInterface), dataLayer);
+        toggleButtonCable = new MenuToggleButton(ToolsFactory.getTools(MainTool.ADD_CABLE, toolChangeInterface), dataLayer);
                 
         toolsButtonGroup.add(toggleButtonDragMove);
         toolsButtonGroup.add(toggleButtonHand);

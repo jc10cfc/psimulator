@@ -11,6 +11,7 @@ import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.*;
@@ -20,7 +21,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.*;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -39,7 +39,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     // END mouse listenrs
     private Graph graph;
     private UndoManager undoManager = new UndoManager();
-    private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
     private UserInterfaceMainPanelInnerInterface userInterface;
     // variables for creating cables
@@ -57,12 +56,11 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
     public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface UserInterface,
-            AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
+            DataLayerFacade dataLayer) {
         super();
 
         this.userInterface = UserInterface;
         this.mainWindow = mainWindow;
-        this.imageFactory = imageFactory;
         this.dataLayer = dataLayer;
 
         actualZoomArea.width = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width);
@@ -251,11 +249,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
 
     @Override
-    public AbstractImageFactory getImageFactory() {
-        return imageFactory;
-    }
-
-    @Override
     public void setLineInProgras(boolean lineInProgres, Point startInDefaultZoom, Point endInActualZoom) {
         this.lineInProgress = lineInProgres;
         lineStartInDefaultZoom = startInDefaultZoom;
@@ -289,7 +282,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         Graph tmp = graph;
         graph = null;
 
-        imageFactory.clearTextBuffers();
+        ImageFactorySingleton.getInstance().clearTextBuffers();
 
         undoManager.discardAllEdits();
         ZoomManagerSingleton.getInstance().zoomReset();
@@ -311,7 +304,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             GeneratorSingleton.getInstance().initialize();
         }
 
-        graph.initialize(this, dataLayer, imageFactory);
+        graph.initialize(this, dataLayer);
         
         // If opened graph before, and new graph is smaller, it will shrink the size of draw panel
         doFitToGraphSize();

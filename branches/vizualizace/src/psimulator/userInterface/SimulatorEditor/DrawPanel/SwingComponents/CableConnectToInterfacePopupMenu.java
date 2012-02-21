@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.event.PopupMenuListener;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
@@ -48,7 +49,7 @@ public class CableConnectToInterfacePopupMenu extends JPopupMenu {
         
         int i = 0;
         
-        Icon icon = new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/eth_interface_image.png"));
+        Icon icon = ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_ETH_INTERFACE_16_PATH);
         
         // create menu items
         for(EthInterface ei : component.getInterfaces()){

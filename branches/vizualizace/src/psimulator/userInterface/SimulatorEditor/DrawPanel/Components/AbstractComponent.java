@@ -11,7 +11,7 @@ import javax.swing.JComponent;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 
 /**
  *
@@ -20,7 +20,6 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
 public abstract class AbstractComponent extends JComponent implements Markable, Identifiable {
 
     //
-    protected AbstractImageFactory imageFactory;
     protected DataLayerFacade dataLayer;
     //
     protected HwTypeEnum hwType;
@@ -37,11 +36,10 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      * @param imageFactory
      * @param hwType 
      */
-    public AbstractComponent(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType){
+    public AbstractComponent(DataLayerFacade dataLayer, HwTypeEnum hwType){
         this.id = new Integer(GeneratorSingleton.getInstance().getNextId());
         //
         this.dataLayer = dataLayer;
-        this.imageFactory = imageFactory;
         this.hwType = hwType;
     }
     
@@ -61,17 +59,8 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      * @param dataLayer
      * @param imageFactory
      */
-    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory){
+    public void setInitReferences(DataLayerFacade dataLayer){
         this.dataLayer = dataLayer;
-        this.imageFactory = imageFactory;
-    }
-    
-    /**
-     * Need to call it after constructor to properly setup component.
-     * @param imageFactory 
-     */
-    public void setImageFactory(AbstractImageFactory imageFactory){
-        this.imageFactory = imageFactory;
     }
 
     @Override
@@ -114,7 +103,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
         Font font = new Font("SanSerif", Font.PLAIN, fontSize); //zoomManager.getCurrentFontSize()
 
         // get font metrics
-        FontMetrics fm = imageFactory.getFontMetrics(font);
+        FontMetrics fm = ImageFactorySingleton.getInstance().getFontMetrics(font);
 
         List<BufferedImage> images = new ArrayList<BufferedImage>();
 
@@ -136,7 +125,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
         int textWidth = fm.stringWidth(text);
         int textHeight = fm.getAscent() + fm.getDescent();
 
-        return imageFactory.getImageWithText(text, font, textWidth, textHeight, fm.getMaxAscent());
+        return ImageFactorySingleton.getInstance().getImageWithText(text, font, textWidth, textHeight, fm.getMaxAscent());
     }
 
     /**
@@ -151,7 +140,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
         Font font = new Font("SanSerif", Font.PLAIN, fontSize); //zoomManager.getCurrentFontSize()
 
         // get font metrics
-        FontMetrics fm = imageFactory.getFontMetrics(font);
+        FontMetrics fm = ImageFactorySingleton.getInstance().getFontMetrics(font);
 
         return getImageForText(fm, text, font);
     }

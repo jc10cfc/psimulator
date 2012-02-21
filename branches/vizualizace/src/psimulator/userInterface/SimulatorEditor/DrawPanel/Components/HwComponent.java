@@ -9,8 +9,8 @@ import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -25,9 +25,8 @@ public class HwComponent extends AbstractHwComponent {
      * @param hwType
      * @param interfacesCount 
      */
-    public HwComponent(AbstractImageFactory imageFactory, DataLayerFacade dataLayer,
-            HwTypeEnum hwType, int interfacesCount) {
-        super(imageFactory, dataLayer, hwType);
+    public HwComponent(DataLayerFacade dataLayer, HwTypeEnum hwType, int interfacesCount) {
+        super(dataLayer, hwType);
 
         // generate device name for HwComponent
         deviceName = GeneratorSingleton.getInstance().getNextDeviceName(hwType);
@@ -74,8 +73,8 @@ public class HwComponent extends AbstractHwComponent {
     @Override
     public final void doUpdateImages() {
         // get new images of icons
-        imageUnmarked = imageFactory.getImage(hwType, ZoomManagerSingleton.getInstance().getIconWidth(), false);
-        imageMarked = imageFactory.getImage(hwType, ZoomManagerSingleton.getInstance().getIconWidth(), true);
+        imageUnmarked = ImageFactorySingleton.getInstance().getImage(hwType, ZoomManagerSingleton.getInstance().getIconWidth(), false);
+        imageMarked = ImageFactorySingleton.getInstance().getImage(hwType, ZoomManagerSingleton.getInstance().getIconWidth(), true);
         
         // get texts that have to be painted
         List<String> texts = getTexts();

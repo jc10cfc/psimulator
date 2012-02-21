@@ -1,7 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.AbstractAction;
@@ -9,7 +8,6 @@ import javax.swing.JScrollPane;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -22,12 +20,6 @@ public interface DrawPanelInnerInterface{
      * @return 
      */
     public GraphOuterInterface getGraphOuterInterface();
-    /**
-     * Gets image factory
-     * @return 
-     */
-    public AbstractImageFactory getImageFactory();
-    
     /**
      * Gets dataLayerFacade;
      * @return 

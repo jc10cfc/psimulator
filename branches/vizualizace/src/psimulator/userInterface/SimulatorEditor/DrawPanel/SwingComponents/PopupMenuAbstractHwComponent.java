@@ -3,6 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 import java.util.List;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
@@ -43,12 +44,12 @@ public class PopupMenuAbstractHwComponent extends JPopupMenu {
         jItemAutomaticLayout.addActionListener(drawPanel.getAbstractAction(DrawPanelAction.AUTOMATIC_LAYOUT));
         
         // add images
-        jItemComponentProperties.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/configure.png")));
-        jItemAlignToGrid.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/grid.png")));
-        jItemDeleteComponent.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png")));
-        jItemSelectAll.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/select_all.png")));
-        jItemFitToSize.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/fit_to_size.png")));
-        jItemAutomaticLayout.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/stock_alignment.png")));
+        jItemComponentProperties.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_CONFIGURE_16_PATH));
+        jItemAlignToGrid.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_GRID_16_PATH));
+        jItemDeleteComponent.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_CANCEL_16_PATH));
+        jItemSelectAll.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_SELECT_ALL_16_PATH));
+        jItemFitToSize.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_FIT_TO_SIZE_16_PATH));
+        jItemAutomaticLayout.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_STOCK_ALIGNMENT_16_PATH));
 
         if (components == 1) {
             createOneComponentMenu();

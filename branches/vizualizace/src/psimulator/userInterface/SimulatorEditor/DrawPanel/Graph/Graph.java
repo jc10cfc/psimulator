@@ -1,18 +1,17 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import javax.swing.JComponent;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
-import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.CustomObservable;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -35,10 +34,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
     public Graph() {
     }
 
-    public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer,
-            AbstractImageFactory imageFactory) {
+    public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer) {
 
-        setInitReferencesToComponents(dataLayer, imageFactory);
+        setInitReferencesToComponents(dataLayer);
 
         // update size of graph with all components
         updateSizeWithAllComponents();
@@ -57,7 +55,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @param dataLayer
      * @param imageFactory
      */
-    private void setInitReferencesToComponents(DataLayerFacade dataLayer, AbstractImageFactory imageFactory) {
+    private void setInitReferencesToComponents(DataLayerFacade dataLayer) {
         // get Collection of values contained in LinkedHashMap
         Collection<AbstractHwComponent> colection = componentsMap.values();
         // obtain an Iterator for Collection
@@ -67,7 +65,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         while (it.hasNext()) {
             AbstractHwComponent component = it.next();
             // set references
-            component.setInitReferences(dataLayer, imageFactory);
+            component.setInitReferences(dataLayer);
             // initialize
             component.initialize();
         }
@@ -75,7 +73,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // set references to all BundleOfCables and Cables
         for (BundleOfCables boc : bundlesOfCables) {
             // boc performs the same operation on its cables
-            boc.setInitReferences(dataLayer, imageFactory);
+            boc.setInitReferences(dataLayer);
         }
 
         // initialize cables

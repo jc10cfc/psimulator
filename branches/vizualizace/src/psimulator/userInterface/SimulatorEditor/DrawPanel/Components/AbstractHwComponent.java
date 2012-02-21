@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
 /**
  *
@@ -43,8 +42,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @param dataLayer
      * @param hwType 
      */
-    public AbstractHwComponent(AbstractImageFactory imageFactory, DataLayerFacade dataLayer, HwTypeEnum hwType){//, int interfacesCount) {
-        super(dataLayer, imageFactory,  hwType);
+    public AbstractHwComponent(DataLayerFacade dataLayer, HwTypeEnum hwType){//, int interfacesCount) {
+        super(dataLayer, hwType);
     }
     
     /**

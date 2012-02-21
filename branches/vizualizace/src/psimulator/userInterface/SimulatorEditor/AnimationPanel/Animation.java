@@ -7,8 +7,8 @@ import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Simulator.PacketType;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -21,7 +21,6 @@ public class Animation implements TimingTarget {
     //
     private AnimationPanelInnerInterface animationPanelInnerInterface;
     private DataLayerFacade dataLayer;
-    private AbstractImageFactory imageFactory;
     //
     private int defaultZoomStartX;
     private int defaultZoomStartY;
@@ -37,19 +36,18 @@ public class Animation implements TimingTarget {
     private double defautlZoomHeightDifference =0.0;
 
     public Animation(final AnimationPanelInnerInterface animationPanelInnerInterface,
-            DataLayerFacade dataLayer, AbstractImageFactory imageFactory,
+            DataLayerFacade dataLayer,
             PacketType packetType, Point defaultZoomSource, Point defaultZoomDest, 
             int durationInMilliseconds) {
 
         this.dataLayer = dataLayer;
         this.animationPanelInnerInterface = animationPanelInnerInterface;
-        this.imageFactory = imageFactory;
         //
         this.packetType = packetType;
         
         
         // get image
-        image = imageFactory.getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
+        image = ImageFactorySingleton.getInstance().getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
                 ZoomManagerSingleton.getInstance().getPackageIconWidth());
 
         // get start coordinates in default zoom
@@ -89,7 +87,7 @@ public class Animation implements TimingTarget {
      * @return 
      */
     public Image getImage() {
-        image = imageFactory.getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
+        image = ImageFactorySingleton.getInstance().getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
                 ZoomManagerSingleton.getInstance().getPackageIconWidth());
         return image;
     }
