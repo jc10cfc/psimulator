@@ -19,7 +19,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterfac
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -31,22 +30,19 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     private static final TimingSource f_repaintTimer = new SwingTimerTimingSource();
     //
     private DataLayerFacade dataLayer;
-    private AbstractImageFactory imageFactory;
     private Graph graph;
     //
     private List<Animation> animations;
     //
 
     public AnimationPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel,
-            AbstractImageFactory imageFactory, DataLayerFacade dataLayer,
-            DrawPanelOuterInterface drawPanel) {
+            DataLayerFacade dataLayer, DrawPanelOuterInterface drawPanel) {
 
         super();
         // set timing sourcce to Animator
         Animator.setDefaultTimingSource(f_repaintTimer);
 
         this.dataLayer = dataLayer;
-        this.imageFactory = imageFactory;
         
         // set opacity
         this.setOpaque(false);
@@ -173,7 +169,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         //System.out.println("Src= "+src+", dest= "+dest);
         
         // create new animation
-        Animation anim = new Animation(this, dataLayer, imageFactory, 
+        Animation anim = new Animation(this, dataLayer, 
                 packetType, src, dest, timeInMiliseconds);
         
         // add animation to animations list

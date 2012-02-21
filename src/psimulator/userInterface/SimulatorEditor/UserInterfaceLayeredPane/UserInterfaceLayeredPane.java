@@ -6,6 +6,7 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanel;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
@@ -15,9 +16,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
-import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -30,26 +29,24 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     //
     //private ZoomManager zoomManager = new ZoomManager();
     //
-    private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
     private UserInterfaceMainPanelInnerInterface userInterface;
 
     public UserInterfaceLayeredPane(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface userInterface,
-            AbstractImageFactory imageFactory, DataLayerFacade dataLayer) {
+            DataLayerFacade dataLayer) {
 
         //
         this.mainWindow = mainWindow;
-        this.imageFactory = imageFactory;
         this.userInterface = userInterface;
 
         // create draw panel
-        jPanelDraw = new DrawPanel(mainWindow, userInterface, imageFactory, dataLayer);
+        jPanelDraw = new DrawPanel(mainWindow, userInterface, dataLayer);
 
         // add panel to layered pane
         this.add(jPanelDraw, 1, 0);
 
         // create animation panel
-        jPanelAnimation = new AnimationPanel(mainWindow, userInterface, imageFactory, dataLayer, jPanelDraw);
+        jPanelAnimation = new AnimationPanel(mainWindow, userInterface, dataLayer, jPanelDraw);
 
         // add panel to layered pane
         this.add(jPanelAnimation, 2, 0);

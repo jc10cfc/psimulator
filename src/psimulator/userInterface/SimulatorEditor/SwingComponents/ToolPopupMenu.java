@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractCreationTool;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -37,7 +37,7 @@ public class ToolPopupMenu extends JPopupMenu{
 
             // create menu item for tool
             JRadioButtonMenuItem mi = new JRadioButtonMenuItem(/*tmp.getName() + tmp.getParameterLabel() + tmp.getParameter(), */
-                    tmp.getImageIcon(AbstractImageFactory.ICON_SIZE_MENU_BAR_POPUP));
+                    tmp.getImageIcon(ImageFactorySingleton.ICON_SIZE_MENU_BAR_POPUP));
             
             jMenuItems.add(mi);
             

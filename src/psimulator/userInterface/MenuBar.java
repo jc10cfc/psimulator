@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 
@@ -51,15 +52,15 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuFile = new JMenu();
         
         jMenuItemNew = new JMenuItem();
-        jMenuItemNew.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/filenew.png")));
+        jMenuItemNew.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_FILENEW_16_PATH));
         jMenuItemClose = new JMenuItem();
-        jMenuItemClose.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/fileclose.png")));
+        jMenuItemClose.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_FILECLOSE_16_PATH));
         jMenuItemOpen = new JMenuItem();
-        jMenuItemOpen.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/folder_green_open.png")));
+        jMenuItemOpen.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_OPEN_GREEN_16_PATH));
         jMenuItemSave = new JMenuItem(); 
-        jMenuItemSave.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/filesave.png")));
+        jMenuItemSave.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_FILESAVE_16_PATH));
         jMenuItemSaveAs = new JMenuItem();
-        jMenuItemSaveAs.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/filesaveas.png")));
+        jMenuItemSaveAs.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_FILESAVEAS_16_PATH));
         jMenuItemExit = new JMenuItem();
         
         jMenuFile.add(jMenuItemNew);

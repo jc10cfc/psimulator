@@ -9,9 +9,8 @@ import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
 /**
  *
@@ -48,9 +47,9 @@ public class Cable extends AbstractComponent {
      * @param eth1
      * @param eth2 
      */
-    public Cable(DataLayerFacade dataLayer, AbstractImageFactory imageFactory, HwTypeEnum hwType, 
+    public Cable(DataLayerFacade dataLayer, HwTypeEnum hwType, 
             AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2){
-        super(dataLayer, imageFactory, hwType);
+        super(dataLayer, hwType);
         
         this.component1 = component1;
         this.component2 = component2;

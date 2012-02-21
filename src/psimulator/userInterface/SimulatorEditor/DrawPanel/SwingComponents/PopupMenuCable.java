@@ -1,10 +1,10 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 
@@ -39,8 +39,8 @@ public class PopupMenuCable extends JPopupMenu{
         
         
         // add icons 
-        jItemCableProperties.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/configure.png")));
-        jItemDeleteCable.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png")));
+        jItemCableProperties.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_CONFIGURE_16_PATH));
+        jItemDeleteCable.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_CANCEL_16_PATH));
         
         // add buttons for operations 
         this.add(jItemDeleteCable);

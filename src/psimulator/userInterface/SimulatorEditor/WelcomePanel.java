@@ -6,6 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 
 /**
  *
@@ -60,13 +61,13 @@ public class WelcomePanel extends JPanel implements Observer{
         //
         jButtonNewProject = new JButton();
         jButtonNewProject.setFont(font);
-        jButtonNewProject.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/128/filenew.png")));// NOI18N
+        jButtonNewProject.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_FILENEW_128_PATH));// NOI18N
         jButtonNewProject.setHorizontalTextPosition(SwingConstants.CENTER);
         jButtonNewProject.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         //
         jButtonOpenProject = new JButton();
         jButtonOpenProject.setFont(font); 
-        jButtonOpenProject.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/128/folder_green_open.png")));// NOI18N
+        jButtonOpenProject.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_OPENFILE_GREEN_128_PATH));// NOI18N
         jButtonOpenProject.setHorizontalTextPosition(SwingConstants.CENTER);
         jButtonOpenProject.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         //

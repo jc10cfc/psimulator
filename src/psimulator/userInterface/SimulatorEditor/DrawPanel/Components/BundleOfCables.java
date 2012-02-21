@@ -9,7 +9,6 @@ import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -26,7 +25,7 @@ public class BundleOfCables extends AbstractComponent{
     
     
     public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
-        super(null, HwTypeEnum.BUNDLE_OF_CABLES);
+        super(new Integer(-1), HwTypeEnum.BUNDLE_OF_CABLES);
         
         cables = new ArrayList<Cable>();
         
@@ -41,12 +40,11 @@ public class BundleOfCables extends AbstractComponent{
      * @param imageFactory
      */
     @Override
-    public void setInitReferences(DataLayerFacade dataLayer, AbstractImageFactory imageFactory){
+    public void setInitReferences(DataLayerFacade dataLayer){
         this.dataLayer = dataLayer;
-        this.imageFactory = imageFactory;
         
         for(Cable c : cables){
-            c.setInitReferences(dataLayer, imageFactory);
+            c.setInitReferences(dataLayer);
         }
     }
     

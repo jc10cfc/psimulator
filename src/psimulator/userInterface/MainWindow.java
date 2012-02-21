@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
@@ -28,8 +29,6 @@ import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
 import psimulator.userInterface.actionListerners.PreferencesActionListener;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
-import psimulator.userInterface.imageFactories.AwtImageFactory;
 
 /**
  *
@@ -41,7 +40,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     //
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
-    private AbstractImageFactory imageFactory;
     /*
      * window componenets
      */
@@ -82,16 +80,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         this.mainWindow = (JFrame) this;
 
-        this.imageFactory = new AwtImageFactory();
-
-        jPanelUserInterfaceMain = new UserInterfaceMainPanel(this, dataLayer, imageFactory, UserInterfaceMainPanelState.WELCOME);
+        jPanelUserInterfaceMain = new UserInterfaceMainPanel(this, dataLayer, UserInterfaceMainPanelState.WELCOME);
         this.add(jPanelUserInterfaceMain, BorderLayout.CENTER);
 
 
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
 
-        this.setIconImage(imageFactory.getImageIconForToolbar(MainTool.ADD_REAL_PC).getImage());
+        this.setIconImage(ImageFactorySingleton.getInstance().getImageIconForToolbar(MainTool.ADD_REAL_PC).getImage());
 
 
         // create glass pane and glass pane painter
@@ -458,7 +454,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // if YES -> save
         if (i == 0) {
             // if save not successfull
-            if (!doSaveAsAction()) {
+            //if (!doSaveAsAction()) {
+            if(!doSaveAction()){
                 // do nothing
                 System.out.println("ukladani se nepovedlo");
                 return true;

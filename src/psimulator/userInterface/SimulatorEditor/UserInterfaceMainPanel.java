@@ -18,7 +18,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
 import psimulator.userInterface.SimulatorEditor.SimulatorControllPanel.SimulatorControlPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane.UserInterfaceLayeredPane;
-import psimulator.userInterface.imageFactories.AbstractImageFactory;
 
 /**
  *
@@ -27,7 +26,6 @@ import psimulator.userInterface.imageFactories.AbstractImageFactory;
 public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface implements UserInterfaceMainPanelInnerInterface,
         Observer {
 
-    private AbstractImageFactory imageFactory;
     private MainWindowInnerInterface mainWindow;
     private DataLayerFacade dataLayer;
     //
@@ -47,14 +45,13 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     //
     private WelcomePanel jPanelWelcome;
 
-    public UserInterfaceMainPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer, AbstractImageFactory imageFactory,
+    public UserInterfaceMainPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer, 
             UserInterfaceMainPanelState userInterfaceState) {
         super(new BorderLayout());
 
         this.mainWindow = mainWindow;
         this.dataLayer = dataLayer;
-        this.imageFactory = imageFactory;
-
+        
         // set border
         this.setBorder(new BevelBorder(BevelBorder.LOWERED));
 
@@ -81,7 +78,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
             }
         };
         // create layered pane
-        jLayeredPane = new UserInterfaceLayeredPane(mainWindow, this, imageFactory, dataLayer);
+        jLayeredPane = new UserInterfaceLayeredPane(mainWindow, this, dataLayer);
         
         //AnimationPanel panel  = new AnimationPanel(mainWindow, this, imageFactory, dataLayer, null, null);
         
@@ -102,7 +99,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
         // ----------- EDITOR STUFF CREATION -----------------------
         // create tool bar
-        jToolBarEditor = new EditorToolBar(dataLayer, imageFactory, jLayeredPane);
+        jToolBarEditor = new EditorToolBar(dataLayer, jLayeredPane);
 
         // add listener for FitToSize button in tool bar
         jToolBarEditor.addToolActionFitToSizeListener(jLayeredPane.getAbstractAction(DrawPanelAction.FIT_TO_SIZE));

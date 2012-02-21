@@ -7,6 +7,7 @@ import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapterXML;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
@@ -31,6 +32,9 @@ public class DataLayer extends DataLayerFacade {
         simulatorManager = new SimulatorManager();
         abstractNetworkAdapter = new AbstractNetworkAdapter();
         abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
+        
+        // get instance to init imageFactory
+        ImageFactorySingleton.getInstance();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package psimulator.userInterface.imageFactories;
+package psimulator.dataLayer.Singletons.ImageFactory;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
