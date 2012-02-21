@@ -1,10 +1,14 @@
 package psimulator.dataLayer.AbstractNetwork;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import psimulator.AbstractNetwork.Network;
 import psimulator.dataLayer.Enums.SaveLoadExceptionType;
 import psimulator.dataLayer.SaveLoadException;
+import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder.GraphBuilderFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.NetworkBuilder.NetworkBuilderFacade;
@@ -23,14 +27,19 @@ public class AbstractNetworkAdapterXML {
         // save network to file
         String fileName = file.getPath();
         
+        
         // try if file exists
         if(!file.exists()){
-            throw new SaveLoadException(SaveLoadExceptionType.FILE_DOES_NOT_EXISTS.toString());
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_CREATING, fileName, true));
+            }
         }
         
         // try if file readable
         if (!file.canWrite()) {
-            throw new SaveLoadException(SaveLoadExceptionType.CANT_WRITE_TO_FILE.toString());
+            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.CANT_WRITE_TO_FILE, fileName, true));
         }
         
         try {
@@ -40,7 +49,7 @@ public class AbstractNetworkAdapterXML {
             //Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
             
             // throw exception
-            throw new SaveLoadException(SaveLoadExceptionType.FILE_WRITE_ERROR.toString());
+            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_WRITING, fileName, true));
         }
     }
 
@@ -50,12 +59,12 @@ public class AbstractNetworkAdapterXML {
 
         // try if file exists
         if(!file.exists()){
-            throw new SaveLoadException(SaveLoadExceptionType.FILE_DOES_NOT_EXISTS.toString());
+            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.FILE_DOES_NOT_EXIST, fileName, false));
         }
         
         // try if file readable
         if (!file.canRead()) {
-            throw new SaveLoadException(SaveLoadExceptionType.CANT_READ_FROM_FILE.toString());
+            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.CANT_READ_FROM_FILE, fileName, false));
         }
         
         // try read
@@ -66,7 +75,7 @@ public class AbstractNetworkAdapterXML {
             //Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
             
             // throw exception
-            throw new SaveLoadException(SaveLoadExceptionType.FILE_READ_ERROR.toString());
+            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_READING, fileName, false));
         }
 
 

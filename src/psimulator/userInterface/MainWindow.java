@@ -11,8 +11,6 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -21,6 +19,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.SaveLoadExceptionType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.SaveLoadException;
+import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
@@ -355,14 +354,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (doCheckUserIfSaveWhenPossibleDataLoss()) {
                 return;
             }
-            
+
             try {
                 doOpenAction();
             } catch (SaveLoadException ex) {
                 // get type
-                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                System.out.println("SaveLoadException 1 ");
                 
-                System.out.println("SaveLoadException 1 " + type);
+                showWarningSaveLoadError(ex.getParametersWrapper());
             }
         }
     }
@@ -379,14 +378,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
-            
-            try{
+
+            try {
                 doSaveAction();
-            } catch(SaveLoadException ex){
+            } catch (SaveLoadException ex) {
                 // get type
-                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                System.out.println("SaveLoadException 2 ");
                 
-                System.out.println("SaveLoadException 2 " + type);
+                showWarningSaveLoadError(ex.getParametersWrapper());
             }
         }
     }
@@ -404,13 +403,13 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
 
-            try{
+            try {
                 doSaveAsAction();
-            } catch(SaveLoadException ex){
+            } catch (SaveLoadException ex) {
                 // get type
-                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                System.out.println("SaveLoadException 3 ");
                 
-                System.out.println("SaveLoadException 3 " + type);
+                showWarningSaveLoadError(ex.getParametersWrapper());
             }
         }
     }
@@ -471,12 +470,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             try {
                 // try save
                 doSaveAction();
-            } catch(SaveLoadException ex){
+            } catch (SaveLoadException ex) {
                 // get type
-                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                System.out.println("SaveLoadException 4 ");
                 
-                System.out.println("SaveLoadException 4 " + type);
-                return false;
+                showWarningSaveLoadError(ex.getParametersWrapper());
+                return true;
             }
         }
 
@@ -485,10 +484,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
     /**
      * saves without dialog
-     * 
-     * @throws SaveLoadException 
+     *
+     * @throws SaveLoadException
      */
-    private void doSaveAction() throws SaveLoadException{
+    private void doSaveAction() throws SaveLoadException {
         File file = saveLoadManager.getFile();
 
         // same as save as but do not ask the user
@@ -519,8 +518,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
     }
 
-    
-    private void save(File file) throws SaveLoadException{
+    private void save(File file) throws SaveLoadException {
         // only get, not remove, we want to keep the graph inside editor
         Graph graph = jPanelUserInterfaceMain.getGraph();
 
@@ -534,7 +532,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     /**
      * Shows open dialog
      */
-    private void doOpenAction() throws SaveLoadException{
+    private void doOpenAction() throws SaveLoadException {
         int returnVal = fileChooser.showOpenDialog(mainWindow);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -622,6 +620,51 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 options[0]); //default button title
 
         return n;
+    }
+
+    private void showWarningSaveLoadError(SaveLoadExceptionParametersWrapper parametersWrapper) {
+
+        String title;
+
+        if (parametersWrapper.isSaving()) {
+            title = dataLayer.getString("ERROR_WHILE_SAVING");
+        } else {
+            title = dataLayer.getString("ERROR_WHILE_LOADING");
+        }
+
+        String message;
+
+        switch (parametersWrapper.getSaveLoadExceptionType()) {
+            case FILE_DOES_NOT_EXIST:
+                message = dataLayer.getString("FILE_DOES_NOT_EXIST");
+                break;
+            case CANT_READ_FROM_FILE:
+                message = dataLayer.getString("FILE_IS_LOCKED_FOR_READ");
+                break;
+            case ERROR_WHILE_READING:
+                message = dataLayer.getString("ERROR_OCCOURED_WHILE_READING_FROM_FILE");
+                break;
+            case CANT_WRITE_TO_FILE:
+                message = dataLayer.getString("FILE_IS_LOCKED_FOR_WRITE");
+                break;
+            case ERROR_WHILE_WRITING:
+                message = dataLayer.getString("ERROR_OCCOURED_WHILE_WRITING_TO_FILE");
+                break;
+            case ERROR_WHILE_CREATING:
+                message = dataLayer.getString("ERROR_OCCOURED_WHILE_CREATING_NEW_FILE");
+                break;
+            default:
+                message = "default in main window in method show warning save load error";
+                break;
+        }
+
+        //message += ": " + parametersWrapper.getFileName();
+
+
+        JOptionPane.showMessageDialog(this,
+                message,
+                title,
+                JOptionPane.ERROR_MESSAGE);
     }
 
     private void updateProjectRelatedButtons() {

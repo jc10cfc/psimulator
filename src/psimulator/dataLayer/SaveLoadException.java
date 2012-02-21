@@ -5,11 +5,14 @@ package psimulator.dataLayer;
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class SaveLoadException extends Exception{
-    public SaveLoadException(String msg){
-      super(msg);
+    
+    private SaveLoadExceptionParametersWrapper parametersWrapper;
+    
+    public SaveLoadException(SaveLoadExceptionParametersWrapper parametersWrapper){
+        this.parametersWrapper = parametersWrapper;
     }
 
-    public SaveLoadException(String msg, Throwable t){
-      super(msg,t);
-    } 
+    public SaveLoadExceptionParametersWrapper getParametersWrapper() {
+        return parametersWrapper;
+    }
 }
