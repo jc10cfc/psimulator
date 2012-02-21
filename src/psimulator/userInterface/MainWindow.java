@@ -39,7 +39,7 @@ import psimulator.userInterface.actionListerners.PreferencesActionListener;
  */
 public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade, Observer {
 
-    private SaveLoadManager saveLoadManager = new SaveLoadManager();
+    private SaveLoadManager saveLoadManager;
     //
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
@@ -54,7 +54,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * end of window components
      */
     private JFrame mainWindow;
-    private JFileChooser fileChooser;
+    
     private GlassPanelPainter glassPanelPainter;
     private MainWindowGlassPane glassPane;
     //private Component originalGlassPane;
@@ -72,6 +72,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         } catch (Exception e) {
         }
+        
+        saveLoadManager = new SaveLoadManager((Component)this, dataLayer);
 
         jMenuBar = new MenuBar(dataLayer);
         jToolBar = new ToolBar(dataLayer);
@@ -109,10 +111,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     public void initView(ControllerFacade controller) {
         this.controller = controller;
 
-        fileChooser = new JFileChooser();
 
         // set translated texts to file chooser
-        setTextsToFileChooser();
+        //setTextsToFileChooser();
 
         updateProjectRelatedButtons();
 
@@ -124,7 +125,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             @Override
             public void windowClosing(WindowEvent e) {
-                doCloseAction();
+                // if no data loss possible
+                if(!saveLoadManager.doCloseAction(jPanelUserInterfaceMain.getGraph())){
+                    System.exit(0);
+                }
             }
         });
 
@@ -192,7 +196,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     @Override
     public void update(Observable o, Object o1) {
-        setTextsToFileChooser();
+        //setTextsToFileChooser();
+        saveLoadManager.updateTextsOnFileChooser();
     }
 
     @Override
@@ -308,14 +313,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (doCheckUserIfSaveWhenPossibleDataLoss()) {
+            if (saveLoadManager.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
 
             refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR, false);
 
             // set saved timestamp
-            setLastSavedTimestampAndFile(null);
+            saveLoadManager.setLastSavedTimestamp();
+            saveLoadManager.setLastSavedFile(null);
         }
     }
 
@@ -331,7 +337,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (doCheckUserIfSaveWhenPossibleDataLoss()) {
+            if (saveLoadManager.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
 
@@ -351,17 +357,18 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (doCheckUserIfSaveWhenPossibleDataLoss()) {
+            if (saveLoadManager.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
+            
+            Graph graph = saveLoadManager.doOpenAction();
+            
+            if(graph!=null){
+                // init graph (set edit timestamp)
+                refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
 
-            try {
-                doOpenAction();
-            } catch (SaveLoadException ex) {
-                // get type
-                System.out.println("SaveLoadException 1 ");
-                
-                showWarningSaveLoadError(ex.getParametersWrapper());
+                // set saved timestamp
+                saveLoadManager.setLastSavedTimestamp();
             }
         }
     }
@@ -378,15 +385,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
-
-            try {
-                doSaveAction();
-            } catch (SaveLoadException ex) {
-                // get type
-                System.out.println("SaveLoadException 2 ");
-                
-                showWarningSaveLoadError(ex.getParametersWrapper());
-            }
+            saveLoadManager.doSaveAction(jPanelUserInterfaceMain.getGraph());
         }
     }
 
@@ -402,15 +401,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
-
-            try {
-                doSaveAsAction();
-            } catch (SaveLoadException ex) {
-                // get type
-                System.out.println("SaveLoadException 3 ");
-                
-                showWarningSaveLoadError(ex.getParametersWrapper());
-            }
+            saveLoadManager.doSaveAsAction(jPanelUserInterfaceMain.getGraph());
         }
     }
 
@@ -425,137 +416,19 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            doCloseAction();
+            if(!saveLoadManager.doCloseAction(jPanelUserInterfaceMain.getGraph())){
+                System.exit(0);
+            }
         }
     }
 ////////------------ PRIVATE------------///////////
 
-    /**
-     * checks possible data loss and closes window
-     */
-    private void doCloseAction() {
-        if (doCheckUserIfSaveWhenPossibleDataLoss()) {
-            return;
-        }
-        // exit
-        System.exit(0);
-    }
 
-    /**
-     *
-     * @return true if data can be lost, false if cant be lost
-     */
-    private boolean doCheckUserIfSaveWhenPossibleDataLoss() {
-        // if no mofifications made
-        if (!(jPanelUserInterfaceMain.hasGraph() && (jPanelUserInterfaceMain.canUndo() || jPanelUserInterfaceMain.canRedo()))) {
-            return false;
-        }
+    
 
-        // if timestamps say graph was not modified
-        if (jPanelUserInterfaceMain.getGraph().getLastEditTimestamp() <= saveLoadManager.getLastSavedTimestamp()) {
-            return false;
-        }
+    
 
-        //save config data
-        int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
-
-        // if canceled
-        if (i == 2 || i == -1) {
-            // do nothing
-            return true;
-        }
-
-        // if YES -> save
-        if (i == 0) {
-            try {
-                // try save
-                doSaveAction();
-            } catch (SaveLoadException ex) {
-                // get type
-                System.out.println("SaveLoadException 4 ");
-                
-                showWarningSaveLoadError(ex.getParametersWrapper());
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * saves without dialog
-     *
-     * @throws SaveLoadException
-     */
-    private void doSaveAction() throws SaveLoadException {
-        File file = saveLoadManager.getFile();
-
-        // same as save as but do not ask the user
-        if (file != null) {
-            // save
-            save(file);
-        } else { // same as save as
-            // save as
-            doSaveAsAction();
-        }
-    }
-
-    /**
-     * Shows save dialog.
-     *
-     * @return true if succesfully saved, false if not
-     */
-    private void doSaveAsAction() throws SaveLoadException {
-        int returnVal = fileChooser.showSaveDialog(mainWindow);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.println("Saving as file: " + file);
-
-            // save
-            save(file);
-        }
-    }
-
-    private void save(File file) throws SaveLoadException {
-        // only get, not remove, we want to keep the graph inside editor
-        Graph graph = jPanelUserInterfaceMain.getGraph();
-
-        // save graph
-        dataLayer.saveGraphToFile(graph, file);
-
-        // set saved timestamp
-        setLastSavedTimestampAndFile(file);
-    }
-
-    /**
-     * Shows open dialog
-     */
-    private void doOpenAction() throws SaveLoadException {
-        int returnVal = fileChooser.showOpenDialog(mainWindow);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.println("Opening file: " + file);
-
-            //Graph graph = new Graph();
-            // load graph
-            Graph graph = dataLayer.loadGraphFromFile(file);
-
-            // init graph (set edit timestamp)
-            refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
-
-            // set saved timestamp and file name
-            setLastSavedTimestampAndFile(file);
-        }
-    }
-
-    private void setLastSavedTimestampAndFile(File file) {
-        saveLoadManager.setLastSavedTimestamp(System.currentTimeMillis());
-        saveLoadManager.setFile(file);
-    }
+    
 
     /**
      * Updates jPanelUserInterfaceMain according to userInterfaceState. If
@@ -608,64 +481,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         updateProjectRelatedButtons();
     }
 
-    private int showWarningPossibleDataLossDialog(String title, String message) {
-        Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE"), dataLayer.getString("CANCEL")};
-        int n = JOptionPane.showOptionDialog(this,
-                message,
-                title,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null, //do not use a custom Icon
-                options, //the titles of buttons
-                options[0]); //default button title
-
-        return n;
-    }
-
-    private void showWarningSaveLoadError(SaveLoadExceptionParametersWrapper parametersWrapper) {
-
-        String title;
-
-        if (parametersWrapper.isSaving()) {
-            title = dataLayer.getString("ERROR_WHILE_SAVING");
-        } else {
-            title = dataLayer.getString("ERROR_WHILE_LOADING");
-        }
-
-        String message;
-
-        switch (parametersWrapper.getSaveLoadExceptionType()) {
-            case FILE_DOES_NOT_EXIST:
-                message = dataLayer.getString("FILE_DOES_NOT_EXIST");
-                break;
-            case CANT_READ_FROM_FILE:
-                message = dataLayer.getString("FILE_IS_LOCKED_FOR_READ");
-                break;
-            case ERROR_WHILE_READING:
-                message = dataLayer.getString("ERROR_OCCOURED_WHILE_READING_FROM_FILE");
-                break;
-            case CANT_WRITE_TO_FILE:
-                message = dataLayer.getString("FILE_IS_LOCKED_FOR_WRITE");
-                break;
-            case ERROR_WHILE_WRITING:
-                message = dataLayer.getString("ERROR_OCCOURED_WHILE_WRITING_TO_FILE");
-                break;
-            case ERROR_WHILE_CREATING:
-                message = dataLayer.getString("ERROR_OCCOURED_WHILE_CREATING_NEW_FILE");
-                break;
-            default:
-                message = "default in main window in method show warning save load error";
-                break;
-        }
-
-        //message += ": " + parametersWrapper.getFileName();
-
-
-        JOptionPane.showMessageDialog(this,
-                message,
-                title,
-                JOptionPane.ERROR_MESSAGE);
-    }
+   
 
     private void updateProjectRelatedButtons() {
 
@@ -767,46 +583,4 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         return (os.indexOf("win") >= 0);
     }
 
-    /**
-     * Sets internationalized texts to file chooser
-     */
-    private void setTextsToFileChooser() {
-        UIManager.put("FileChooser.lookInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
-        UIManager.put("FileChooser.filesOfTypeLabelText", dataLayer.getString("FILE_CHOOSER_FILES_OF_TYPE"));
-        UIManager.put("FileChooser.upFolderToolTipText", dataLayer.getString("FILE_CHOOSER_UP_FOLDER"));
-
-        UIManager.put("FileChooser.fileNameLabelText", dataLayer.getString("FILE_CHOOSER_FILE_NAME"));
-        UIManager.put("FileChooser.homeFolderToolTipText", dataLayer.getString("FILE_CHOOSER_HOME_FOLDER"));
-        UIManager.put("FileChooser.newFolderToolTipText", dataLayer.getString("FILE_CHOOSER_NEW_FOLDER"));
-        UIManager.put("FileChooser.listViewButtonToolTipTextlist", dataLayer.getString("FILE_CHOOSER_LIST_VIEW"));
-        UIManager.put("FileChooser.detailsViewButtonToolTipText", dataLayer.getString("FILE_CHOOSER_DETAILS_VIEW"));
-        UIManager.put("FileChooser.saveButtonText", dataLayer.getString("FILE_CHOOSER_SAVE"));
-        UIManager.put("FileChooser.openButtonText", dataLayer.getString("FILE_CHOOSER_OPEN"));
-        UIManager.put("FileChooser.cancelButtonText", dataLayer.getString("FILE_CHOOSER_CANCEL"));
-        UIManager.put("FileChooser.updateButtonText=", dataLayer.getString("FILE_CHOOSER_UPDATE"));
-        UIManager.put("FileChooser.helpButtonText", dataLayer.getString("FILE_CHOOSER_HELP"));
-        UIManager.put("FileChooser.saveButtonToolTipText", dataLayer.getString("FILE_CHOOSER_SAVE"));
-        UIManager.put("FileChooser.openButtonToolTipText", dataLayer.getString("FILE_CHOOSER_OPEN"));
-        UIManager.put("FileChooser.cancelButtonToolTipText", dataLayer.getString("FILE_CHOOSER_CANCEL"));
-        UIManager.put("FileChooser.updateButtonToolTipText", dataLayer.getString("FILE_CHOOSER_UPDATE"));
-        UIManager.put("FileChooser.helpButtonToolTipText", dataLayer.getString("FILE_CHOOSER_HELP"));
-
-
-        UIManager.put("FileChooser.openDialogTitleText", dataLayer.getString("FILE_CHOOSER_OPEN"));
-        UIManager.put("FileChooser.saveDialogTitleText", dataLayer.getString("FILE_CHOOSER_SAVE"));
-        UIManager.put("FileChooser.fileNameHeaderText", dataLayer.getString("FILE_CHOOSER_FILE_NAME"));
-        UIManager.put("FileChooser.newFolderButtonText", dataLayer.getString("FILE_CHOOSER_NEW_FOLDER"));
-
-        UIManager.put("FileChooser.renameFileButtonText", dataLayer.getString("FILE_CHOOSER_RENAME_FILE"));
-        UIManager.put("FileChooser.deleteFileButtonText", dataLayer.getString("FILE_CHOOSER_DELETE_FILE"));
-        UIManager.put("FileChooser.filterLabelText", dataLayer.getString("FILE_CHOOSER_FILE_TYPES"));
-        UIManager.put("FileChooser.fileSizeHeaderText", dataLayer.getString("FILE_CHOOSER_SIZE"));
-        UIManager.put("FileChooser.fileDateHeaderText", dataLayer.getString("FILE_CHOOSER_DATE_MODIFIED"));
-
-        UIManager.put("FileChooser.saveInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
-        UIManager.put("FileChooser.acceptAllFileFilterText", dataLayer.getString("FILE_CHOOSER_ACCEPT_FILES"));
-
-        // let fileChooser to update according to current look and feel = it loads texts againt
-        fileChooser.updateUI();
-    }
 }
