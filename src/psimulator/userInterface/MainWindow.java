@@ -11,12 +11,16 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.SaveLoadExceptionType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.SaveLoadException;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
@@ -305,7 +309,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (doCheckPossibleDataLoss()) {
+            if (doCheckUserIfSaveWhenPossibleDataLoss()) {
                 return;
             }
 
@@ -328,7 +332,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (doCheckPossibleDataLoss()) {
+            if (doCheckUserIfSaveWhenPossibleDataLoss()) {
                 return;
             }
 
@@ -348,11 +352,18 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (doCheckPossibleDataLoss()) {
+            if (doCheckUserIfSaveWhenPossibleDataLoss()) {
                 return;
             }
-
-            doOpenAction();
+            
+            try {
+                doOpenAction();
+            } catch (SaveLoadException ex) {
+                // get type
+                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                
+                System.out.println("SaveLoadException 1 " + type);
+            }
         }
     }
 
@@ -369,11 +380,13 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
             
-            // if save successfull
-            if (doSaveAction()) {
-                System.out.println("save ok");
-            } else {
-                System.out.println("save problem");
+            try{
+                doSaveAction();
+            } catch(SaveLoadException ex){
+                // get type
+                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                
+                System.out.println("SaveLoadException 2 " + type);
             }
         }
     }
@@ -391,11 +404,13 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
 
-            // if save successfull
-            if (doSaveAsAction()) {
-                System.out.println("save ok");
-            } else {
-                System.out.println("save problem");
+            try{
+                doSaveAsAction();
+            } catch(SaveLoadException ex){
+                // get type
+                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                
+                System.out.println("SaveLoadException 3 " + type);
             }
         }
     }
@@ -420,7 +435,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * checks possible data loss and closes window
      */
     private void doCloseAction() {
-        if (doCheckPossibleDataLoss()) {
+        if (doCheckUserIfSaveWhenPossibleDataLoss()) {
             return;
         }
         // exit
@@ -431,7 +446,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      *
      * @return true if data can be lost, false if cant be lost
      */
-    private boolean doCheckPossibleDataLoss() {
+    private boolean doCheckUserIfSaveWhenPossibleDataLoss() {
         // if no mofifications made
         if (!(jPanelUserInterfaceMain.hasGraph() && (jPanelUserInterfaceMain.canUndo() || jPanelUserInterfaceMain.canRedo()))) {
             return false;
@@ -453,31 +468,37 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         // if YES -> save
         if (i == 0) {
-            // if save not successfull
-            //if (!doSaveAsAction()) {
-            if(!doSaveAction()){
-                // do nothing
-                System.out.println("ukladani se nepovedlo");
-                return true;
+            try {
+                // try save
+                doSaveAction();
+            } catch(SaveLoadException ex){
+                // get type
+                SaveLoadExceptionType type = SaveLoadExceptionType.valueOf(ex.getMessage());
+                
+                System.out.println("SaveLoadException 4 " + type);
+                return false;
             }
         }
 
         return false;
     }
 
-    private boolean doSaveAction() {
+    /**
+     * saves without dialog
+     * 
+     * @throws SaveLoadException 
+     */
+    private void doSaveAction() throws SaveLoadException{
         File file = saveLoadManager.getFile();
 
         // same as save as but do not ask the user
         if (file != null) {
             // save
             save(file);
-            return true;
         } else { // same as save as
             // save as
-            return doSaveAsAction();
+            doSaveAsAction();
         }
-        //return false;
     }
 
     /**
@@ -485,7 +506,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      *
      * @return true if succesfully saved, false if not
      */
-    private boolean doSaveAsAction() {
+    private void doSaveAsAction() throws SaveLoadException {
         int returnVal = fileChooser.showSaveDialog(mainWindow);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -495,13 +516,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             // save
             save(file);
-
-            return true;
         }
-        return false;
     }
 
-    private void save(File file) {
+    
+    private void save(File file) throws SaveLoadException{
         // only get, not remove, we want to keep the graph inside editor
         Graph graph = jPanelUserInterfaceMain.getGraph();
 
@@ -515,7 +534,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     /**
      * Shows open dialog
      */
-    private void doOpenAction() {
+    private void doOpenAction() throws SaveLoadException{
         int returnVal = fileChooser.showOpenDialog(mainWindow);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {

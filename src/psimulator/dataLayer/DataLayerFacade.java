@@ -17,6 +17,6 @@ public abstract class DataLayerFacade implements PreferencesInterface, LanguageI
     public abstract SimulatorManagerInterface getSimulatorManager();
     public abstract void addSimulatorObserver(Observer observer);
     
-    public abstract void saveGraphToFile(Graph graph, File file);
-    public abstract Graph loadGraphFromFile(File file);
+    public abstract void saveGraphToFile(Graph graph, File file) throws SaveLoadException;
+    public abstract Graph loadGraphFromFile(File file) throws SaveLoadException;
 }
