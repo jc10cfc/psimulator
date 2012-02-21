@@ -103,13 +103,13 @@ public class DataLayer extends DataLayerFacade {
     }
 
     @Override
-    public void saveGraphToFile(Graph graph, File file) {
+    public void saveGraphToFile(Graph graph, File file) throws SaveLoadException{
         //abstractNetworkAdapter.saveGraphToFile(graph, file);
         abstractNetworkAdapterXML.saveGraphToFile(graph, file);
     }
 
     @Override
-    public Graph loadGraphFromFile(File file) {
+    public Graph loadGraphFromFile(File file) throws SaveLoadException{
         //return abstractNetworkAdapter.loadGraphFromFile(file);
         return abstractNetworkAdapterXML.loadGraphFromFile(file);
     }
