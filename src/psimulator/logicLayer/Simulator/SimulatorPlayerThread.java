@@ -80,15 +80,19 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     if(DEBUG)System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
 
                     if(DEBUG)System.out.println("Event: " + event + ".");
-                    int i = (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
+                    int speedCoeficient = (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
 
-                    int time = i * 500 - 4;
+                    //speedCoeficient = speedCoeficient * 50;
                     
+                    int time = animationPanelOuterInterface.getAnimationDuration(event.getCableId(), speedCoeficient);
+ 
                     // start animation
                     animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId());
                     
+                    // sleep thread
                     Thread.sleep(time);
 
+                    // move to next event
                     simulatorManagerInterface.moveToNextEvent();
 
                 } else {

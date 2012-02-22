@@ -6,6 +6,7 @@ package psimulator.dataLayer.Enums;
  */
 public enum ObserverUpdateEventType {
     GRAPH_SIZE_CHANGED,         // when Graph size is changed
+    GRAPH_COMPONENT_CHANGED,    //
     
     VIEW_DETAILS,               // when view details changed
     LANGUAGE,                   // when language changed

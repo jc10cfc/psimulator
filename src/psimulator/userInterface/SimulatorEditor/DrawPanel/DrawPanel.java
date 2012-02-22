@@ -85,7 +85,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         dataLayer.addPreferencesObserver((Observer) this);
 
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -127,9 +127,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
     }
 
-    
-    
-
 // ====================  IMPLEMENTATION OF Observer ======================   
     /**
      * Reaction to notification from zoom manager
@@ -139,32 +136,54 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
      */
     @Override
     public void update(Observable o, Object o1) {
-        doUpdateImages();
+        //doUpdateImages();
 
         switch ((ObserverUpdateEventType) o1) {
             case VIEW_DETAILS:
+                // update images
+                doUpdateImages();
+                // udate size of this panel according to graph size, new labels could make graph bigger
+                updateSizeAccordingToGraph();
+                //
+                break;
             case LANGUAGE:
-                // repaint
-                this.revalidate();
-                this.repaint();
+                // update images
+                doUpdateImages();
+                //
+                break;
+            case GRAPH_COMPONENT_CHANGED:
+                // update images
+                doUpdateImages();
+                // 
                 break;
             case GRAPH_SIZE_CHANGED:
+                // DO NOT CALL DO UPDATE IMAGES - IT WILL LOOP INDEFINETLY
                 // udate size of this panel according to graph size
                 updateSizeAccordingToGraph();
-                // goes through !
+                // set new sizes
+                setNewSizes();
+                // 
+                break;
+            // goes through !
             case ZOOM_CHANGE:
-
+                doUpdateImages();
                 //set new sizes of this (JDrawPanel) 
-                actualZoomArea.width = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width);
-                actualZoomArea.height = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.height);
-                this.setSize(actualZoomArea);
-                this.setPreferredSize(actualZoomArea);
-                this.setMinimumSize(actualZoomArea);
-                this.setMaximumSize(actualZoomArea);
-
-                this.revalidate();
+                setNewSizes();
+                //
                 break;
         }
+        
+        this.revalidate();
+        this.repaint();
+    }
+
+    private void setNewSizes() {
+        actualZoomArea.width = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width);
+        actualZoomArea.height = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.height);
+        this.setSize(actualZoomArea);
+        this.setPreferredSize(actualZoomArea);
+        this.setMinimumSize(actualZoomArea);
+        this.setMaximumSize(actualZoomArea);
     }
 // END ====================  IMPLEMENTATION OF Observer ======================      
 
@@ -305,7 +324,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
 
         graph.initialize(this, dataLayer);
-        
+
         // If opened graph before, and new graph is smaller, it will shrink the size of draw panel
         doFitToGraphSize();
     }
@@ -380,9 +399,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         graph.doInformAboutSizeChange();
     }
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
-    
-    
-    
+
     // -------- PRIVATE -------------------
     private void createKeyBindings() {
         InputMap inputMap = mainWindow.getRootPane().getInputMap();
@@ -456,7 +473,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             this.repaint();
         }
     }
-    
+
     private void updateSizeAccordingToGraph() {
         if (graph == null) {
             actualZoomArea = new Dimension(ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomAreaMin));

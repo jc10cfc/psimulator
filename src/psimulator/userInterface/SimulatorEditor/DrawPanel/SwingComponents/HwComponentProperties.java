@@ -127,7 +127,10 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
         }
 
         // repaint draw panel
-        drawPanel.repaint();
+        //drawPanel.repaint();
+        
+        // fire edit happend on graph
+        drawPanel.getGraphOuterInterface().editHappend();
     }
 
     /**

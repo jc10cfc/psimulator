@@ -40,6 +40,9 @@ public abstract class AbstractPropertiesDialog extends JDialog {
 
     protected abstract void copyValuesFromFieldsToLocal();
 
+    /**
+     * Call only when changes made
+     */
     protected abstract void copyValuesFromLocalToGlobal();
 
     protected abstract boolean hasChangesMade();

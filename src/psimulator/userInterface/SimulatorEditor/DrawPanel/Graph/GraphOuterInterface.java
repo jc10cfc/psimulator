@@ -188,6 +188,11 @@ public interface GraphOuterInterface {
 
     public long getLastEditTimestamp();
     
+    /**
+     * Call when changed: IP, MAC, NAME, DELAY etc. 
+     */
+    public void editHappend();
+    
     public void addObserver(Observer obsrvr);
     
     public void deleteObserver(Observer obsrvr);
