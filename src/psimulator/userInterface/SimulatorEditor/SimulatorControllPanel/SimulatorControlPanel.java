@@ -86,6 +86,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         simulatorManagerInterface.setRealtimeActivated(false);
         simulatorManagerInterface.setRecordingActivated(false);
         // can stay connected
+        
+        
     }
 
     public void clearEvents() {

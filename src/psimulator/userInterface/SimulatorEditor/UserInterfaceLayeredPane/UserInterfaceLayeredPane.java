@@ -56,6 +56,9 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
 
         // add jPanelAnimation as observer to preferences manager
         dataLayer.addPreferencesObserver(jPanelAnimation);
+        
+        // add jPanelAnimation as observer to simulator manager
+        dataLayer.addSimulatorObserver(jPanelAnimation);
     }
 
     @Override
