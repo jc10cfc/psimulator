@@ -8,6 +8,7 @@ import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Dialogs.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 
 /**
@@ -17,6 +18,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 public final class CableProperties extends AbstractPropertiesDialog {
 
     private Cable cable;
+    private DrawPanelInnerInterface drawPanel;
     /*
      * window componenets
      */
@@ -29,9 +31,10 @@ public final class CableProperties extends AbstractPropertiesDialog {
     //
     private int delay;
 
-    public CableProperties(Component mainWindow, DataLayerFacade dataLayer, Cable cable) {
+    public CableProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, Cable cable) {
         super(mainWindow, dataLayer);
         
+        this.drawPanel = drawPanel;
         this.cable = cable;
 
         // copy values to local
@@ -60,6 +63,9 @@ public final class CableProperties extends AbstractPropertiesDialog {
     protected void copyValuesFromLocalToGlobal() {
         // save delay to global
         cable.setDelay(delay);
+        
+        // fire edit happend on graph
+        drawPanel.getGraphOuterInterface().editHappend();
     }
 
     @Override

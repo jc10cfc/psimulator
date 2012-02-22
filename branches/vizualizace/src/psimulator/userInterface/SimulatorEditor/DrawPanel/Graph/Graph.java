@@ -20,6 +20,8 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.CustomObservab
 public class Graph extends JComponent implements GraphOuterInterface {
 
     private LinkedHashMap<Integer, AbstractHwComponent> componentsMap = new LinkedHashMap<Integer, AbstractHwComponent>();
+    private LinkedHashMap<Integer, Cable> cablesMap = new LinkedHashMap<Integer, Cable>();
+    //
     private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
     private List<Cable> markedCables = new ArrayList<Cable>();
     private List<AbstractHwComponent> markedAbstractHwComponents = new ArrayList<AbstractHwComponent>();
@@ -112,6 +114,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         for (BundleOfCables boc : bundlesOfCables) {
             boc.doUpdateImages();
         }
+        
+        // update size by recalculate
+        updateSizeByRecalculate();
     }
 
     @Override
@@ -286,7 +291,6 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public void addCable(Cable cable) {
 
-
         // get bundle of cables between c1 and c2
         BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
 
@@ -298,6 +302,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         boc.addCable(cable);
         cable.getEth1().setCable(cable);
         cable.getEth2().setCable(cable);
+        
+        // add cable to hash map
+        cablesMap.put(cable.getId(), cable);
 
         // set timestamp of edit
         editHappend();
@@ -328,6 +335,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
             // remove bundle of cables
             removeBundleOfCables(boc);
         }
+        
+        // remove cable from hash map
+        cablesMap.remove(cable.getId());
         
         // set timestamp of edit
         editHappend();
@@ -852,13 +862,34 @@ public class Graph extends JComponent implements GraphOuterInterface {
         return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
     }
 
+    /**
+     * Returns AbstractHwComponent with ID id, or null if not found
+     * @param id
+     * @return 
+     */
     public AbstractHwComponent getAbstractHwComponent(int id) {
         return componentsMap.get(id);
     }
+    
+    /**
+     * Returns cablle with ID id, or null if not found
+     * @param id
+     * @return 
+     */
+    public Cable getCable(int id){
+        return cablesMap.get(id);
+    }
 
-    private void editHappend() {
+    /**
+     * Call when something in graph changed (move, add, remove)
+     */
+    @Override
+    public void editHappend() {
         //
         lastEditTimestamp = System.currentTimeMillis();
+        
+        // inform about graph change
+        customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_COMPONENT_CHANGED);
     }
 
     @Override

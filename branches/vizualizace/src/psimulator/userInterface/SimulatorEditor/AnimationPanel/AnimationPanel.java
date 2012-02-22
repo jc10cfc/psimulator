@@ -15,6 +15,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.PacketType;
 import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
@@ -161,7 +162,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      * @param idDestination 
      */
     @Override
-    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination) {
+    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination){
         // points in Default zoom
         Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
         Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
@@ -174,6 +175,25 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         
         // add animation to animations list
         animations.add(anim);
+    }
+    
+    /**
+     * Counts the duration of animation im milliseconds
+     * @param cableId
+     * @param speedCoeficient
+     * @return 
+     */
+    @Override
+    public int getAnimationDuration(int cableId, int speedCoeficient){
+        Cable cable = graph.getCable(cableId);
+        
+        int delay = cable.getDelay();
+        
+        speedCoeficient = speedCoeficient * 50;
+        
+        int speed = delay * speedCoeficient;
+        
+        return speed;
     }
 
     // do not take cursor

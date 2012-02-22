@@ -392,7 +392,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //
         jToggleButtonPlay = new JToggleButton();
         jToggleButtonPlay.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_play.png"))); // NOI18N
-        jToggleButtonPlay.setSelectedIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_pause.png"))); // NOI18N
+        jToggleButtonPlay.setSelectedIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_stop.png"))); // NOI18N
         //
         jPanelPlayControlsPlayButtons.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelPlayControlsPlayButtons.add(jButtonFirst);

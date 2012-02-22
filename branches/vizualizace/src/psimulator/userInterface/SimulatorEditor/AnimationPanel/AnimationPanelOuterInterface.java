@@ -32,4 +32,6 @@ public abstract class AnimationPanelOuterInterface extends JComponent implements
     //public abstract Dimension getPreferredSize();
     
     public abstract void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination);
+    
+    public abstract int getAnimationDuration(int cableId, int speedCoeficient);
 }

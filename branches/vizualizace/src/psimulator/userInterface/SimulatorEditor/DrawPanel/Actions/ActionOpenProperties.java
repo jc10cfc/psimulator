@@ -60,7 +60,7 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
             drawPanel.repaint();
             
             // open properties window
-            CableProperties cableProperties = new CableProperties(mainWindow.getMainWindowComponent(), dataLayer, cable);
+            CableProperties cableProperties = new CableProperties(mainWindow.getMainWindowComponent(), dataLayer, drawPanel, cable);
        
             // 
             //drawPanel.doUpdateImages();
