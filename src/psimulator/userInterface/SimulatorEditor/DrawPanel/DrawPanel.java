@@ -120,9 +120,14 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         // DRAW makring rectangle
         if (rectangleInProgress) {
             g2.setColor(Color.BLUE);
-            g2.draw(rectangle);
+            //
+            Rectangle rectangleInActualZoom = new Rectangle(ZoomManagerSingleton.getInstance().doScaleToActual(rectangle.getLocation()), 
+                    ZoomManagerSingleton.getInstance().doScaleToActual(rectangle.getSize()));
+            //g2.draw(rectangle);
+            g2.draw(rectangleInActualZoom);
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.12f));
-            g2.fill(rectangle);
+            //g2.fill(rectangle);
+            g2.fill(rectangleInActualZoom);
 
         }
     }

@@ -236,15 +236,17 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // --- Painting transparent rectange for marking more components ----
         if (draggedComponents.isEmpty() && transparentRectangleInProgress == true) {
             // scale start point to acutal
-            startPointOfMarkingTransparentRectangle = ZoomManagerSingleton.getInstance().doScaleToActual(startPointOfMarkingTransparentRectangleDefaultZoom);
+            //startPointOfMarkingTransparentRectangle = ZoomManagerSingleton.getInstance().doScaleToActual(startPointOfMarkingTransparentRectangleDefaultZoom);
+            
+            //startPointOfMarkingTransparentRectangleDefaultZoom
             
             // calculate width an height
-            int width = startPointOfMarkingTransparentRectangle.x - e.getPoint().x;
-            int height = startPointOfMarkingTransparentRectangle.y - e.getPoint().y;
+            int width = startPointOfMarkingTransparentRectangleDefaultZoom.x - ZoomManagerSingleton.getInstance().doScaleToDefault(e.getPoint().x);
+            int height = startPointOfMarkingTransparentRectangleDefaultZoom.y - ZoomManagerSingleton.getInstance().doScaleToDefault(e.getPoint().y);
 
             // calculate x and y position
-            int x = width < 0 ? startPointOfMarkingTransparentRectangle.x : e.getPoint().x;
-            int y = height < 0 ? startPointOfMarkingTransparentRectangle.y : e.getPoint().y;
+            int x = width < 0 ? startPointOfMarkingTransparentRectangleDefaultZoom.x : ZoomManagerSingleton.getInstance().doScaleToDefault(e.getPoint().x);
+            int y = height < 0 ? startPointOfMarkingTransparentRectangleDefaultZoom.y : ZoomManagerSingleton.getInstance().doScaleToDefault(e.getPoint().y);
 
             // create rectangle
             Rectangle rect = new Rectangle(x, y, Math.abs(width), Math.abs(height));
@@ -446,10 +448,14 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     }
 
     /**
-     * Marks only components and its cables that intersects with rectangle in parameter
-     * @param rectangle 
+     * Marks only components and its cables that intersects with rectangle in default zoom in parameter
+     * @param rectangleDefaultZoom 
      */
-    private void doMarkHwComponentsAndItsCablesInRectangle(Rectangle rectangle) {
+    private void doMarkHwComponentsAndItsCablesInRectangle(Rectangle rectangleDefaultZoom) {
+        // get actual zoom rectangle
+        Rectangle rectangleInActualZoom = new Rectangle(ZoomManagerSingleton.getInstance().doScaleToActual(rectangleDefaultZoom.getLocation()), 
+                    ZoomManagerSingleton.getInstance().doScaleToActual(rectangleDefaultZoom.getSize()));
+        
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         // set all components unmarked
@@ -457,7 +463,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // mark only the intersecting components
         for (AbstractHwComponent component : graph.getHwComponents()) {
-            if (component.intersects(rectangle)) {
+            if (component.intersects(rectangleInActualZoom)) {
                 graph.doMarkComponentWithCables(component, true);
             }
         }
@@ -466,7 +472,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         if (graph.getMarkedAbstractHWComponentsCount() == 0) {
             for (BundleOfCables bundle : graph.getBundlesOfCables()) {
                 for (Cable c : bundle.getCables()) {
-                    if (c.intersects(rectangle)) {
+                    if (c.intersects(rectangleInActualZoom)) {
                         graph.doMarkCable(c);
                     }
                 }
