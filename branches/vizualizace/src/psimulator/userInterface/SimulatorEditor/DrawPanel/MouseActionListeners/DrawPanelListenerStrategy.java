@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
@@ -17,7 +18,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCab
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
-import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
@@ -138,7 +138,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         return SwingUtilities.convertPoint(vport,point,comp);
     }
     
-    protected MouseEvent convertMousePoint(MouseEvent mouseEvent){
+    protected MouseEvent convertMouseEvent(MouseEvent mouseEvent){
         return SwingUtilities.convertMouseEvent(vport,mouseEvent,comp);
     }
     

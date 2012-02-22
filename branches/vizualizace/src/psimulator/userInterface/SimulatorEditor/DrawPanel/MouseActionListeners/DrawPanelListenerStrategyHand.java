@@ -91,8 +91,11 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      */
     @Override
     public void mouseClickedLeft(MouseEvent e) {
+        // convert
+        e = convertMouseEvent(e);
+        
         // get clicked component
-        Markable clickedComponent = getClickedItem(convertPoint(e.getPoint()));
+        Markable clickedComponent = getClickedItem(e.getPoint());
         
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
@@ -155,6 +158,9 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mousePressedLeft(MouseEvent e) {
+        // convert
+        e = convertMouseEvent(e);
+        
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         boolean addToDragAllMarkedComponents = false;
@@ -164,12 +170,12 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // if control not down, clear selection
         }
 
-        Markable clickedComponent = getClickedAbstractHwComponent(convertPoint(e.getPoint()));
+        Markable clickedComponent = getClickedAbstractHwComponent(e.getPoint());
 
         if (clickedComponent == null) {
             // start painting transparent rectange for marking more components
-            startPointOfMarkingTransparentRectangle = convertPoint(e.getPoint());
-            startPointOfMarkingTransparentRectangleDefaultZoom = ZoomManagerSingleton.getInstance().doScaleToDefault(convertPoint(e.getPoint()));
+            startPointOfMarkingTransparentRectangle = e.getPoint();
+            startPointOfMarkingTransparentRectangleDefaultZoom = ZoomManagerSingleton.getInstance().doScaleToDefault(e.getPoint());
             transparentRectangleInProgress = true;
             return;
         }else{
@@ -178,7 +184,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // try if start dragging of some component
         for (AbstractHwComponent c : graph.getHwComponents()) {
-            if (c.intersects(convertPoint(e.getPoint()))) {
+            if (c.intersects(e.getPoint())) {
                 // if c is marked, we will drag all marked components
                 if (c.isMarked()) {
                     addToDragAllMarkedComponents = true;
@@ -210,6 +216,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // count difference between upper left corner of component and clicked point on component
             differenceXdefaultZoom = ZoomManagerSingleton.getInstance().doScaleToDefault(e.getX()) - draggedComponentsOriginalPoint.x;
             differenceYdefaultZoom = ZoomManagerSingleton.getInstance().doScaleToDefault(e.getY()) - draggedComponentsOriginalPoint.y;
+        
         }
 
     }
@@ -217,7 +224,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     @Override
     public void mouseDraggedLeft(MouseEvent e) {
         // convert mouse event 
-        e = convertMousePoint(e);
+        e = convertMouseEvent(e);
         
         
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
@@ -295,6 +302,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseReleasedLeft(MouseEvent e) {
+        e = convertMouseEvent(e);
+        
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         // dragging all marked components
@@ -337,10 +346,13 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        // convert
+        e = convertMouseEvent(e);
+        
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         for (AbstractHwComponent c : graph.getHwComponents()) {
-            if (c.intersects(convertPoint(e.getPoint()))) {
+            if (c.intersects(e.getPoint())) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 return;
             }
@@ -349,7 +361,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         //Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
 
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
-            if (boc.intersects(convertPoint(e.getPoint()))) {
+            if (boc.intersects(e.getPoint())) {
                 drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 return;
             }
@@ -360,18 +372,21 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mousePressedRight(MouseEvent e) {
+        // convert
+        e = convertMouseEvent(e);
+        
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         transparentRectangleInProgress = false;
         
         // get clicked component
-        AbstractComponent clickedComponent = getClickedItem(convertPoint(e.getPoint()));
+        AbstractComponent clickedComponent = getClickedItem(e.getPoint());
 
         // if there are more marked AbstractHwComponent components and we clicked one
         if (graph.getMarkedAbstractHWComponentsCount() > 1 && (clickedComponent != null && clickedComponent.isMarked())) {
             // show popup for more components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, graph.getMarkedAbstractHWComponentsCount());
 
-            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
 
@@ -380,7 +395,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // show popup for all components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
 
-            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             
             return;
         }
@@ -395,7 +410,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             
             PopupMenuCable popup = new PopupMenuCable(drawPanel, dataLayer, graph.getMarkedCablesCount());
 
-            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
         
@@ -412,7 +427,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             // show popup for one component
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 1);
 
-            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
 
@@ -425,7 +440,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, 0);
 
-            popup.show(drawPanel, convertPoint(e.getPoint()).x, convertPoint(e.getPoint()).y);
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
             return;
         }
     }

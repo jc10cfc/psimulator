@@ -36,6 +36,9 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
 
     @Override
     public void mousePressedLeft(MouseEvent e) {
+        // convert
+        e = convertMouseEvent(e);
+        
         // create new component
         AbstractHwComponent component = new HwComponent( dataLayer, addDeviceTool.getHwType(), 
                 addDeviceTool.getInterfaces());
@@ -43,7 +46,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         component.initialize();
 
         // set position of new component
-        component.setLocationByMiddlePoint(convertPoint(e.getPoint()));
+        component.setLocationByMiddlePoint(e.getPoint());
 
         // add component to graph
         drawPanel.getGraphOuterInterface().addHwComponent(component);
