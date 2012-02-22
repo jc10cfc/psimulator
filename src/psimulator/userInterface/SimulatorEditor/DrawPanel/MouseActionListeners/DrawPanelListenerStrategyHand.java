@@ -47,6 +47,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
      * point in actual zoom where started components marking
      */
     protected Point startPointOfMarkingTransparentRectangle;
+    protected Point startPointOfMarkingTransparentRectangleDefaultZoom;
     
     protected boolean transparentRectangleInProgress;
             
@@ -168,6 +169,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         if (clickedComponent == null) {
             // start painting transparent rectange for marking more components
             startPointOfMarkingTransparentRectangle = convertPoint(e.getPoint());
+            startPointOfMarkingTransparentRectangleDefaultZoom = ZoomManagerSingleton.getInstance().doScaleToDefault(convertPoint(e.getPoint()));
             transparentRectangleInProgress = true;
             return;
         }else{
@@ -214,21 +216,28 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
     @Override
     public void mouseDraggedLeft(MouseEvent e) {
+        // convert mouse event 
+        e = convertMousePoint(e);
+        
+        
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
         if (draggedComponents == null) {
             return;
         }
 
-        // painting transparent rectange for marking more components
+        // --- Painting transparent rectange for marking more components ----
         if (draggedComponents.isEmpty() && transparentRectangleInProgress == true) {
+            // scale start point to acutal
+            startPointOfMarkingTransparentRectangle = ZoomManagerSingleton.getInstance().doScaleToActual(startPointOfMarkingTransparentRectangleDefaultZoom);
+            
             // calculate width an height
-            int width = startPointOfMarkingTransparentRectangle.x - convertPoint(e.getPoint()).x;
-            int height = startPointOfMarkingTransparentRectangle.y - convertPoint(e.getPoint()).y;
+            int width = startPointOfMarkingTransparentRectangle.x - e.getPoint().x;
+            int height = startPointOfMarkingTransparentRectangle.y - e.getPoint().y;
 
             // calculate x and y position
-            int x = width < 0 ? startPointOfMarkingTransparentRectangle.x : convertPoint(e.getPoint()).x;
-            int y = height < 0 ? startPointOfMarkingTransparentRectangle.y : convertPoint(e.getPoint()).y;
+            int x = width < 0 ? startPointOfMarkingTransparentRectangle.x : e.getPoint().x;
+            int y = height < 0 ? startPointOfMarkingTransparentRectangle.y : e.getPoint().y;
 
             // create rectangle
             Rectangle rect = new Rectangle(x, y, Math.abs(width), Math.abs(height));
