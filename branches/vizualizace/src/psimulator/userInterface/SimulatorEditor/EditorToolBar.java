@@ -120,9 +120,19 @@ public class EditorToolBar extends JToolBar implements Observer {
     /**
      * Enables deafult tool of this toolbar
      */
-    public void setDefaultTool(){
-        toggleButtonHand.setCurrentToolEnabled();
-        toggleButtonHand.setSelected(true);
+    public void setTool(MainTool tool){
+        switch(tool){
+            case HAND:
+                toggleButtonHand.setCurrentToolEnabled();
+                toggleButtonHand.setSelected(true);
+                break;
+            case DRAG_MOVE:
+                toggleButtonDragMove.setCurrentToolEnabled();
+                toggleButtonDragMove.setSelected(true);
+                break;
+        }
+        
+        
     }
     
     /**

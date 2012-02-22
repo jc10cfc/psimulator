@@ -281,8 +281,8 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     }
 
     @Override
-    public void doSetDefaultToolInEditorToolBar() {
-        userInterface.doSetDefaultToolInToolBar();
+    public void doSetTollInEditorToolBar(MainTool mainTool) { 
+        userInterface.doSetToolInToolBar(mainTool);
     }
 
     @Override
@@ -413,11 +413,17 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         inputMap.put(keyDel, DrawPanelAction.DELETE);
         actionMap.put(DrawPanelAction.DELETE, getAbstractAction(DrawPanelAction.DELETE));
 
-        // add key binding for H
+        // add key binding for H - switch to hand tool
         KeyStroke keyH = KeyStroke.getKeyStroke(KeyEvent.VK_H, 0);
 
         inputMap.put(keyH, DrawPanelAction.SWITCH_TO_HAND_TOOL);
         actionMap.put(DrawPanelAction.SWITCH_TO_HAND_TOOL, getAbstractAction(DrawPanelAction.SWITCH_TO_HAND_TOOL));
+        
+        // add key binding for M - switch to move tool
+        KeyStroke keyM = KeyStroke.getKeyStroke(KeyEvent.VK_M, 0);
+        inputMap.put(keyM, DrawPanelAction.SWITCH_TO_MOVE_TOOL);
+        actionMap.put(DrawPanelAction.SWITCH_TO_MOVE_TOOL, getAbstractAction(DrawPanelAction.SWITCH_TO_MOVE_TOOL));
+        
     }
 
     /**
@@ -447,7 +453,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                     actions.put(drawPanelAction, new ActionAutomaticLayout(undoManager, this, mainWindow, dataLayer));
                     break;
                 case SWITCH_TO_HAND_TOOL:
-                    actions.put(drawPanelAction, new ActionSwitchToHandToolAction(undoManager, this, mainWindow));
+                    actions.put(drawPanelAction, new ActionSwitchToToolAction(undoManager, this, mainWindow, MainTool.HAND));
+                    break;
+                case SWITCH_TO_MOVE_TOOL:
+                    actions.put(drawPanelAction, new ActionSwitchToToolAction(undoManager, this, mainWindow, MainTool.DRAG_MOVE));
                     break;
             }
         }

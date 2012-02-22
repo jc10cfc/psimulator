@@ -15,6 +15,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwC
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableConnectToInterfacePopupMenu;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableAddCable;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
@@ -161,7 +162,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         if(tmp!= null || hasFirstComponent){
             mousePressedLeft(e);
         }else{ // if nothing clicked
-            drawPanel.doSetDefaultToolInEditorToolBar();
+            drawPanel.doSetTollInEditorToolBar(MainTool.HAND);
         }
         
     }

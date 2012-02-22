@@ -14,6 +14,7 @@ import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
 import psimulator.userInterface.SimulatorEditor.SimulatorControllPanel.SimulatorControlPanel;
@@ -155,7 +156,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
                 // set default tool in ToolBar
                 jLayeredPane.removeCurrentMouseListener();
-                doSetDefaultToolInToolBar();
+                doSetToolInToolBar(MainTool.HAND);
                 break;
             case SIMULATOR:
                 this.add(jScrollPane, BorderLayout.CENTER);
@@ -351,11 +352,10 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     public void redo() {
         jLayeredPane.redo();
     }
-
+    
     @Override
-    public final void doSetDefaultToolInToolBar() {
-        // set default tool in ToolBar
-        jToolBarEditor.setDefaultTool();
+    public final void doSetToolInToolBar(MainTool mainTool){
+         jToolBarEditor.setTool(mainTool);
     }
 
     @Override
