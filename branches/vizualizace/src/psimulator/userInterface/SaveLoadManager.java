@@ -2,17 +2,13 @@ package psimulator.userInterface;
 
 import java.awt.Component;
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Enums.SaveLoadExceptionType;
 import psimulator.dataLayer.SaveLoadException;
 import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
-import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
 
 /**
  *
@@ -172,19 +168,15 @@ public class SaveLoadManager {
         int returnVal = fileChooser.showOpenDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+            File selctedFile = fileChooser.getSelectedFile();
             //This is where a real application would open the file.
-            System.out.println("Opening file: " + file);
+            System.out.println("Opening file: " + selctedFile);
 
-            //Graph graph = new Graph();
             // load graph
-            Graph graph = dataLayer.loadGraphFromFile(file);
-
-            // init graph (set edit timestamp)
-            //refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
+            Graph graph = dataLayer.loadGraphFromFile(selctedFile);
 
             // set saved timestamp and file name
-            setLastSavedFile(file);
+            setLastSavedFile(selctedFile);
 
             return graph;
         }
@@ -202,18 +194,18 @@ public class SaveLoadManager {
         int returnVal = fileChooser.showSaveDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+            File selctedFile = fileChooser.getSelectedFile();
             //This is where a real application would open the file.
-            System.out.println("Saving as file: " + file);
+            System.out.println("Saving as file: " + selctedFile);
 
             // check if overwrite
-            if (file.exists()) {
+            if (selctedFile.exists()) {
                 int i = showWarningPossibleOverwriteDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("DO_YOU_WANT_TO_OVERWRITE"));
                 
                 // if OK, save dialog
                 if(i == JOptionPane.OK_OPTION){
                     // save
-                    save(file, graph);
+                    save(selctedFile, graph);
                     return true;
                 }
                 
@@ -226,20 +218,9 @@ public class SaveLoadManager {
                 return false;
             }else{
                 // save
-                save(file, graph);
+                save(selctedFile, graph);
                 return true;
             }
-            /*
-            // overwrite file if true than yes
-            if (doCheckIfOverwrite(file)) {
-                // save
-                save(file, graph);
-                
-                return true;
-            } else {
-                return false;
-            }*/
-
         }
         return false;
     }
@@ -254,21 +235,6 @@ public class SaveLoadManager {
         // set saved timestamp
         setLastSavedFile(file);
         setLastSavedTimestamp();
-    }
-
-    /**
-     * Returs true if overwrite, false if do not
-     *
-     * @param file
-     * @return
-     */
-    private boolean doCheckIfOverwrite(File file) {
-        if (file.exists()) {
-            if (JOptionPane.OK_OPTION == showWarningPossibleOverwriteDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("DO_YOU_WANT_TO_OVERWRITE"))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private int showWarningPossibleDataLossDialog(String title, String message) {

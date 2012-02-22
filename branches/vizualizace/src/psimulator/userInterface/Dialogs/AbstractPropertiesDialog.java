@@ -1,4 +1,4 @@
-package psimulator.userInterface;
+package psimulator.userInterface.Dialogs;
 
 import java.awt.Component;
 import java.awt.Dimension;

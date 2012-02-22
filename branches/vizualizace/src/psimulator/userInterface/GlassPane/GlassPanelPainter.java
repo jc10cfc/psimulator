@@ -1,5 +1,6 @@
-package psimulator.userInterface;
+package psimulator.userInterface.GlassPane;
 
+import psimulator.userInterface.GlassPane.MainWindowGlassPane;
 import javax.swing.JPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelOuterInterface;
 
