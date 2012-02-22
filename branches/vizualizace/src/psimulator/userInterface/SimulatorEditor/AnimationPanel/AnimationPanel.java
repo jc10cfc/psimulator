@@ -96,11 +96,13 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             case PACKET_IMAGE_TYPE_CHANGE:
                 // no need to react
                 break;
-            
+            case SIMULATOR_PLAYER_STOP:
+                removeAllAnimations();
+                break;
             
         }
     }
-/**
+    /**
      * Removes all animations from list
      */
     private void removeAllAnimations() {
