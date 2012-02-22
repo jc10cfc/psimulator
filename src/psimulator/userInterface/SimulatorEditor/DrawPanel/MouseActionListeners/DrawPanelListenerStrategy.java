@@ -17,6 +17,8 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwC
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
@@ -110,7 +112,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     }
     
     public void mousePressedRight(MouseEvent e) {
-        drawPanel.doSetDefaultToolInEditorToolBar();
+        drawPanel.doSetTollInEditorToolBar(MainTool.HAND);
     }
 
     public void mouseClickedLeft(MouseEvent e) {

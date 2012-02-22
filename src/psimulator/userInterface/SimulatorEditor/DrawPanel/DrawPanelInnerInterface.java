@@ -7,6 +7,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JScrollPane;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
@@ -55,10 +56,10 @@ public interface DrawPanelInnerInterface{
     public abstract void doFitToGraphSize();
     
     /**
-     * Sets default tool in EditorPanels toolBar
+     * Sets tool in EditorPanels toolBar
+     * @param mainTool
      */
-    public void doSetDefaultToolInEditorToolBar();
-    
+    public void doSetTollInEditorToolBar(MainTool mainTool);
     /**
      * Updates size of panel according to parameter. If dimension is bigger than actual
      * size of drawPanel, than size is changed.
