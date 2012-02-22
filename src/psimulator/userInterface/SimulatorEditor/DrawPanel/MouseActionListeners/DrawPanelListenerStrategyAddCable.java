@@ -60,20 +60,18 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        // convert
+        e = convertMouseEvent(e);
+        
         if (hasFirstComponent) {
-            /*
-            drawPanel.setLineInProgras(true, startPointInDefault, 
-                    zoomManager.doScaleToDefault(convertPoint(e.getPoint())));*/
-
-            drawPanel.setLineInProgras(true, startPointInDefault, 
-                    convertPoint(e.getPoint()));
+            drawPanel.setLineInProgras(true, startPointInDefault,e.getPoint());
             
             drawPanel.repaint();
         }
 
         // if mouse over any HW component
         for (AbstractHwComponent c : drawPanel.getGraphOuterInterface().getHwComponents()) {
-            if (c.intersects(convertPoint(e.getPoint()))) {
+            if (c.intersects(e.getPoint())) {
                 // change cursor
                 drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
                 return;
@@ -89,11 +87,13 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      */
     @Override
     public void mousePressedLeft(MouseEvent e) {
-
+        // convert
+        e = convertMouseEvent(e);
+        
         // clicked component
         AbstractHwComponent tmp = null;
         
-        tmp = getClickedAbstractHwComponent(convertPoint(e.getPoint()));
+        tmp = getClickedAbstractHwComponent(e.getPoint());
 
         // if nothing clicked
         if (tmp == null) {
@@ -153,7 +153,10 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
    
     @Override
     public void mousePressedRight(MouseEvent e) {
-        AbstractHwComponent tmp = getClickedAbstractHwComponent(convertPoint(e.getPoint()));
+        // convert
+        e = convertMouseEvent(e);
+        
+        AbstractHwComponent tmp = getClickedAbstractHwComponent(e.getPoint());
         // if something clicked, or has first component
         if(tmp!= null || hasFirstComponent){
             mousePressedLeft(e);
