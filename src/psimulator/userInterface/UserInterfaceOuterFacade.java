@@ -1,5 +1,6 @@
 package psimulator.userInterface;
 
+import psimulator.userInterface.GlassPane.GlassPanelPainter;
 import psimulator.logicLayer.ControllerFacade;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 

@@ -1,4 +1,4 @@
-package psimulator.userInterface;
+package psimulator.userInterface.GlassPane;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

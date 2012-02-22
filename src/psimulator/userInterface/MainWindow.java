@@ -1,5 +1,7 @@
 package psimulator.userInterface;
 
+import psimulator.userInterface.GlassPane.GlassPanelPainter;
+import psimulator.userInterface.GlassPane.MainWindowGlassPane;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -8,18 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Enums.SaveLoadExceptionType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.SaveLoadException;
-import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
@@ -196,7 +192,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     @Override
     public void update(Observable o, Object o1) {
-        //setTextsToFileChooser();
         saveLoadManager.updateTextsOnFileChooser();
     }
 
@@ -423,13 +418,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
 ////////------------ PRIVATE------------///////////
 
-
-    
-
-    
-
-    
-
     /**
      * Updates jPanelUserInterfaceMain according to userInterfaceState. If
      * changing to SIMULATOR or EDITOR state, graph cannot be null.
@@ -484,8 +472,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
    
 
     private void updateProjectRelatedButtons() {
-
-
         if (!jPanelUserInterfaceMain.hasGraph()) {
             jMenuBar.setProjectRelatedButtonsEnabled(false);
             jToolBar.setProjectRelatedButtonsEnabled(false, jPanelUserInterfaceMain.getUserInterfaceState());
@@ -551,9 +537,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jMenuBar.addUndoRedoActionListener(udnoListener);
         jToolBar.addUndoRedoActionListener(udnoListener);
 
-        //jMenuBar.addDeleteListener();
-        //jMenuBar.addSelectAllListener();
-        // END add listeners to Menu Bar - EDIT
+         // END add listeners to Menu Bar - EDIT
 
         // add listeners to Menu Bar - VIEW
         ActionListener zoomListener = new JMenuItemZoomListener();

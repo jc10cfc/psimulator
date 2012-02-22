@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SettingsDialog;
+import psimulator.userInterface.Dialogs.SettingsDialog;
 
 /**
  * Action Listener for Preferences Button

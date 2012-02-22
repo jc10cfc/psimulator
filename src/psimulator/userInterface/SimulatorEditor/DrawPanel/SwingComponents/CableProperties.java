@@ -6,7 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.AbstractPropertiesDialog;
+import psimulator.userInterface.Dialogs.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 

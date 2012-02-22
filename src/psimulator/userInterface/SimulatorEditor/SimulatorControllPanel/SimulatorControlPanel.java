@@ -651,7 +651,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonNext.setEnabled(enabled);
         jButtonLast.setEnabled(enabled);
         jToggleButtonPlay.setEnabled(enabled);
-        jSliderPlayerSpeed.setEnabled(enabled);
+        //jSliderPlayerSpeed.setEnabled(enabled);
 
         // capture button could be enabled when not connected to server, we have to check this
         if (simulatorManagerInterface.isConnectedToServer() && enabled) {
