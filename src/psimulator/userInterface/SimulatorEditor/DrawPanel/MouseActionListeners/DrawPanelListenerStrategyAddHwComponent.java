@@ -25,8 +25,11 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         super(drawPanel, undoManager, mainWindow, dataLayer);
     }
 
+    
+    
     @Override
     public void deInitialize() {
+        drawPanel.setCursor(defCursor);
     }
 
     @Override

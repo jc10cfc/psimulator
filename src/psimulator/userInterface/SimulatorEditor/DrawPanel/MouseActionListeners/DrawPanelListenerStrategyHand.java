@@ -61,12 +61,13 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     public void initialize() {
         super.initialize();
         
-        drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         transparentRectangleInProgress = false;
     }
 
     @Override
     public void deInitialize() {
+        drawPanel.setCursor(defCursor);
+        
         if(drawPanel.getGraphOuterInterface()!=null){
            drawPanel.getGraphOuterInterface().doUnmarkAllComponents(); 
         }
@@ -355,7 +356,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         
         for (AbstractHwComponent c : graph.getHwComponents()) {
             if (c.intersects(e.getPoint())) {
-                drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                drawPanel.setCursor(hndCursor);
                 return;
             }
         }
@@ -364,12 +365,12 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         for (BundleOfCables boc : graph.getBundlesOfCables()) {
             if (boc.intersects(e.getPoint())) {
-                drawPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                drawPanel.setCursor(hndCursor);
                 return;
             }
         }
 
-        drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        drawPanel.setCursor(defCursor);
     }
 
     @Override

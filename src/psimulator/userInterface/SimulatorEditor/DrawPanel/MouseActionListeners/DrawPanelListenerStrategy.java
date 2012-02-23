@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
+import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -36,6 +37,9 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     protected JComponent comp;
     protected JViewport vport;
     
+    protected final Cursor defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+    protected final Cursor hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+    
     
     /**
      * list for all marked components
@@ -53,6 +57,8 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
     }
 
     public void initialize(){
+        drawPanel.setCursor(defCursor);
+        
         comp = (DrawPanel) drawPanel;
         vport = drawPanel.getJScrollPane().getViewport();
     }

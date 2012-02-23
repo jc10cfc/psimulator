@@ -19,8 +19,7 @@ public class DrawPanelListenerStrategyDragMove extends DrawPanelListenerStrategy
 
     private ManipulationTool manipulationTool;
     //
-    private final Cursor defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
-    private final Cursor hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
+    
     private final Point pp = new Point();
     //
 
@@ -31,6 +30,7 @@ public class DrawPanelListenerStrategyDragMove extends DrawPanelListenerStrategy
 
     @Override
     public void deInitialize() {
+        drawPanel.setCursor(defCursor);
         drawPanel.repaint();
     }
 
