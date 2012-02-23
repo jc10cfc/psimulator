@@ -123,9 +123,6 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
             tableInterfacesModel.copyValuesFromLocalToGlobal();
         }
 
-        // repaint draw panel
-        //drawPanel.repaint();
-        
         // fire edit happend on graph
         drawPanel.getGraphOuterInterface().editHappend();
     }
@@ -280,6 +277,11 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         realPcPanel.add(realPcLabel);
 
         return realPcPanel;
+    }
+
+    @Override
+    protected void validateInputs() {
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     /////////////////////-----------------------------------////////////////////

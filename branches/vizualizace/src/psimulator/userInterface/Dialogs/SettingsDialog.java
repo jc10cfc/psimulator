@@ -114,6 +114,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         viewIpAddresses = jCheckBoxIpAddresses.isSelected();
         viewMacAddresses = jCheckBoxMacAddresses.isSelected();
         //
+        
         connectionIpAddress = jTextFieldPsimulatorIpAddress.getText();
         connectionPort = jTextFieldPsimulatorPort.getText();
     }
@@ -190,6 +191,12 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         }
 
         return false;
+    }
+    
+    
+    @Override
+    protected void validateInputs() {
+        //
     }
 
     private void setElementsAccordingToLocal() {
