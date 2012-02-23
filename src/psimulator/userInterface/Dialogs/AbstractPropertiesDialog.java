@@ -55,6 +55,9 @@ public abstract class AbstractPropertiesDialog extends JDialog{
 
             @Override
             public void windowClosing(WindowEvent e) {
+                
+                //validateInputs();
+                
                 closeAction();
             }
         });
@@ -89,7 +92,7 @@ public abstract class AbstractPropertiesDialog extends JDialog{
     
     protected void closeAction() {
         boolean close = true;
-
+        
         copyValuesFromFieldsToLocal();
         if (hasChangesMade()) {
             if (checkUserAndSave() == false) {
@@ -143,6 +146,8 @@ public abstract class AbstractPropertiesDialog extends JDialog{
         // add Content
         this.getContentPane().add(createMainPanel());
     }
+    
+    protected abstract void validateInputs();
     
     protected abstract void setDefaultJButton();
     

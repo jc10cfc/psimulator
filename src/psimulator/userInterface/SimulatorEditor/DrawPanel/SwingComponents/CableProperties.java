@@ -191,5 +191,10 @@ public final class CableProperties extends AbstractPropertiesOkCancelDialog {
         return parametersPanel;
     }
 
+    @Override
+    protected void validateInputs() {
+        //
+    }
+
 
 }

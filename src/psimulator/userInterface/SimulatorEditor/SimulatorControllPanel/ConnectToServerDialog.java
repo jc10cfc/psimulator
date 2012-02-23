@@ -79,6 +79,14 @@ public final class ConnectToServerDialog extends AbstractPropertiesDialog {
         return false;
     }
     
+    
+    @Override
+    protected void validateInputs() {
+        //jTextFieldPsimulatorIpAddress.set
+        //jTextFieldPsimulatorPort;
+    }
+
+    
     @Override
     protected void setDefaultJButton() {
         jButtonDefault = jButtonConnectToServer;
@@ -87,7 +95,7 @@ public final class ConnectToServerDialog extends AbstractPropertiesDialog {
     @Override
     protected JPanel createMainPanel() {
         JPanel mainPanel = new JPanel();
-        //mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
@@ -158,8 +166,7 @@ public final class ConnectToServerDialog extends AbstractPropertiesDialog {
         jButtonCancel.addActionListener(new AbstractPropertiesDialog.JButtonCancelListener());
 
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-        buttonPane.add(Box.createHorizontalGlue());
+        buttonPane.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         buttonPane.add(jButtonConnectToServer);
         buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonPane.add(jButtonCancel);
