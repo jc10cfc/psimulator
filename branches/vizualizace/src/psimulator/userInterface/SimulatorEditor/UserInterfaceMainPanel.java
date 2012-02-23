@@ -92,7 +92,6 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         // add viewport to scroll pane
         jScrollPane.setViewport(jViewPort);
 
-
         // add scroll bars
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);

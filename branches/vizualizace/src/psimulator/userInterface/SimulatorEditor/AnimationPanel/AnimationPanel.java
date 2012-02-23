@@ -84,10 +84,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
         }
-
+        /*
         g2.setColor(Color.BLACK);
         g2.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
-
+        */
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
     }

@@ -52,5 +52,6 @@ public interface SimulatorManagerInterface {
     
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
      
+    public boolean isTimeReset();
     
 }

@@ -283,4 +283,11 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean hasEvents() {
         return eventTableModel.hasEvents();
     }
+    
+    
+    @Override
+    public boolean isTimeReset() {
+        return eventTableModel.isTimeReset();
+    }
+    
 }

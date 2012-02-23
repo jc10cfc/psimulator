@@ -11,6 +11,8 @@ import javax.swing.table.AbstractTableModel;
  */
 public class EventTableModel extends AbstractTableModel {
     
+    private boolean timeReset = true;
+    
     private List<SimulatorEvent> eventList;
     // names of columns are set in SimulatorControlPanel
     //private String[] columnNames = {"Time", "From", "To", "Type", "Info"};
@@ -22,10 +24,15 @@ public class EventTableModel extends AbstractTableModel {
     
     public void addSimulatorEvent(SimulatorEvent simulatorEvent){
         eventList.add(simulatorEvent);
+        
+        timeReset = false;
+        
         this.fireTableRowsInserted(eventList.size()-1, eventList.size()-1);
     }
     
     public void deleteAllSimulatorEvents(){
+        timeReset = true;
+        
         eventList.clear();
         this.fireTableRowsDeleted(0, 0);
     }
@@ -36,6 +43,11 @@ public class EventTableModel extends AbstractTableModel {
     
     public boolean hasEvents(){
         return !eventList.isEmpty();
+    }
+
+    
+    public boolean isTimeReset() {
+        return timeReset;
     }
     
     @Override
@@ -57,5 +69,7 @@ public class EventTableModel extends AbstractTableModel {
     public Class getColumnClass(int c) {
         return getValueAt(0, c).getClass();
     }
+    
+    
    
 }

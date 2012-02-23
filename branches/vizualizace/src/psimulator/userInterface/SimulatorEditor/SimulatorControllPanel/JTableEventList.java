@@ -19,8 +19,11 @@ public class JTableEventList extends JTable {
         this.setFocusable(false);                                    // dont display focus on cells
         this.getTableHeader().setReorderingAllowed(false);           // disable reordering columns
 
-        // set custom cell renderer 
+        // set custom cell renderer for color column
         this.getColumnModel().getColumn(4).setCellRenderer(new JTableEventListColorCellRenderer());
+        
+        // set custom cell renderer for time column
+        this.getColumnModel().getColumn(0).setCellRenderer(new JTableEventListTimeCellRenderer());
         
         
         // init column sizes of table
@@ -36,7 +39,7 @@ public class JTableEventList extends JTable {
             column = this.getColumnModel().getColumn(i);
             switch (i) {
                 case 0:
-                    column.setPreferredWidth(20);
+                    column.setPreferredWidth(5);
                     break;
                 case 1:
                     column.setPreferredWidth(20);
@@ -48,7 +51,7 @@ public class JTableEventList extends JTable {
                     column.setPreferredWidth(10);
                     break;
                 case 4:
-                    column.setPreferredWidth(10);
+                    column.setPreferredWidth(5);
                     break;
                 default:
                     column.setPreferredWidth(10);

@@ -1,7 +1,6 @@
 package psimulator.logicLayer.Simulator;
 
 import java.util.*;
-import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.PacketType;
@@ -23,6 +22,8 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
     private boolean isRecording;
     private Random tmpRandom = new Random();
     private UserInterfaceOuterFacade userInterfaceOuterFacade;
+    
+    private long timeOfFirstEvent;
 
     public SimulatorClientEventRecieverThread(DataLayerFacade model, UserInterfaceOuterFacade userInterfaceOuterFacade) {
         this.simulatorManagerInterface = model.getSimulatorManager();
@@ -125,13 +126,18 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         }
 
 
-
+        // if reset time
+        if(simulatorManagerInterface.isTimeReset()){
+            timeOfFirstEvent = System.currentTimeMillis();
+        }
+        
         // generate packet type
         int index = tmpRandom.nextInt(PacketType.values().length);
         PacketType packetType = PacketType.values()[index];
 
         // generate time
-        int time = (int) (System.currentTimeMillis() % (86400000));
+        //int time = (int) (System.currentTimeMillis() % (86400000));
+        int time = (int) (System.currentTimeMillis() - timeOfFirstEvent);
         
         //
         int cableId;
