@@ -20,6 +20,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.*;
+import psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane.UserInterfaceLayeredPaneInnerInterface;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
 
 /**
@@ -41,6 +42,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private UndoManager undoManager = new UndoManager();
     private MainWindowInnerInterface mainWindow;
     private UserInterfaceMainPanelInnerInterface userInterface;
+    private UserInterfaceLayeredPaneInnerInterface layeredPane;
     // variables for creating cables
     private boolean lineInProgress = false;
     private Point lineStartInDefaultZoom;
@@ -49,32 +51,22 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
     private boolean rectangleInProgress = false;
     private Rectangle rectangle;
     //
-    private Dimension defaultZoomAreaMin = new Dimension(800, 600);
-    private Dimension defaultZoomArea = new Dimension(defaultZoomAreaMin);
-    private Dimension actualZoomArea = new Dimension(defaultZoomArea);
     private DataLayerFacade dataLayer;
     private EnumMap<DrawPanelAction, AbstractAction> actions;
 
     public DrawPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface UserInterface,
-            DataLayerFacade dataLayer) {
+            DataLayerFacade dataLayer, UserInterfaceLayeredPaneInnerInterface layeredPane) {
         super();
 
         this.userInterface = UserInterface;
         this.mainWindow = mainWindow;
         this.dataLayer = dataLayer;
-
-        actualZoomArea.width = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width);
-        actualZoomArea.height = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.height);
-
-        this.setPreferredSize(actualZoomArea);
-        this.setMinimumSize(actualZoomArea);
-        this.setMaximumSize(actualZoomArea);
+        this.layeredPane = layeredPane;
 
         this.setBackground(ColorMixerSignleton.drawPanelColor);
 
         createDrawPaneMouseListeners();
         createAllActions();
-
         createKeyBindings();
 
         // add as a zoom observer
@@ -130,6 +122,11 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             g2.fill(rectangleInActualZoom);
 
         }
+        
+        g2.setColor(Color.RED);
+        g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
+        
+        g2.dispose();
     }
 
 // ====================  IMPLEMENTATION OF Observer ======================   
@@ -141,54 +138,22 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
      */
     @Override
     public void update(Observable o, Object o1) {
-        //doUpdateImages();
-
+        
         switch ((ObserverUpdateEventType) o1) {
             case VIEW_DETAILS:
-                // update images
-                doUpdateImages();
-                // udate size of this panel according to graph size, new labels could make graph bigger
-                updateSizeAccordingToGraph();
-                //
                 break;
             case LANGUAGE:
-                // update images
-                doUpdateImages();
-                //
                 break;
             case GRAPH_COMPONENT_CHANGED:
-                // update images
-                doUpdateImages();
-                // 
                 break;
             case GRAPH_SIZE_CHANGED:
-                // DO NOT CALL DO UPDATE IMAGES - IT WILL LOOP INDEFINETLY
-                // udate size of this panel according to graph size
-                updateSizeAccordingToGraph();
-                // set new sizes
-                setNewSizes();
-                // 
                 break;
-            // goes through !
             case ZOOM_CHANGE:
-                doUpdateImages();
-                //set new sizes of this (JDrawPanel) 
-                setNewSizes();
-                //
                 break;
         }
         
-        this.revalidate();
-        this.repaint();
-    }
-
-    private void setNewSizes() {
-        actualZoomArea.width = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width);
-        actualZoomArea.height = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.height);
-        this.setSize(actualZoomArea);
-        this.setPreferredSize(actualZoomArea);
-        this.setMinimumSize(actualZoomArea);
-        this.setMaximumSize(actualZoomArea);
+        //this.revalidate();
+        //this.repaint();
     }
 // END ====================  IMPLEMENTATION OF Observer ======================      
 
@@ -204,12 +169,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         if (currentMouseListener != null) {
             currentMouseListener.deInitialize();
         }
-
-        /*
-         * this.removeMouseListener(currentMouseListener);
-         * this.removeMouseMotionListener(currentMouseListener);
-         * this.removeMouseWheelListener(currentMouseListener);
-         */
 
         JViewport jViewport = userInterface.getJViewport();
 
@@ -246,12 +205,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         currentMouseListener = mouseListener;
 
         currentMouseListener.initialize();
-
-        /*
-         * this.addMouseListener(currentMouseListener);
-         * this.addMouseMotionListener(currentMouseListener);
-         * this.addMouseWheelListener(currentMouseListener);
-         */
 
         JViewport jViewport = userInterface.getJViewport();
 
@@ -329,9 +282,6 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         }
 
         graph.initialize(this, dataLayer);
-
-        // If opened graph before, and new graph is smaller, it will shrink the size of draw panel
-        doFitToGraphSize();
     }
 
     @Override
@@ -374,34 +324,10 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         update(null, ObserverUpdateEventType.UNDO_REDO);
     }
 
+
     @Override
     public void doFitToGraphSize() {
-
-        int graphWidthActual = graph.getWidth();
-        int graphHeightActual = graph.getHeight();
-
-
-        // validate if new size is smaller than defaultZoomAreaMin
-        if (ZoomManagerSingleton.getInstance().doScaleToDefault(graphWidthActual) < defaultZoomAreaMin.getWidth()
-                && ZoomManagerSingleton.getInstance().doScaleToDefault(graphHeightActual) < defaultZoomAreaMin.getHeight()) {
-            // new size is smaller than defaultZoomAreaMin
-            // set defaultZoomArea to defaultZoomAreaMin
-            defaultZoomArea.setSize(defaultZoomAreaMin.width, defaultZoomAreaMin.height);
-
-            // set area according to defaultZoomArea
-            actualZoomArea.setSize(ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width),
-                    ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.height));
-        } else {
-            // update area size
-            actualZoomArea.setSize(graphWidthActual, graphHeightActual);
-            // update default zoom size
-            defaultZoomArea.setSize(ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.width),
-                    ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.height));
-        }
-
-        // let scrool pane in editor know about the change
-        //this.revalidate();
-        graph.doInformAboutSizeChange();
+        layeredPane.doFitToGraphSize();
     }
 // END ============ IMPLEMENTATION OF DrawPanelOuterInterface ==============
 
@@ -476,46 +402,5 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         mouseListenerAddHwComponent = new DrawPanelListenerStrategyAddHwComponent(this, undoManager, mainWindow, dataLayer);
         mouseListenerCable = new DrawPanelListenerStrategyAddCable(this, undoManager, mainWindow, dataLayer);
         mouseListenerSimulator = new DrawPanelListenerStrategySimulator(this, undoManager, mainWindow, dataLayer);
-    }
-
-    private void doUpdateImages() {
-        // has to be here to perform before repaint
-        if (graph != null) {
-            graph.doUpdateImages();
-
-            this.revalidate();
-            this.repaint();
-        }
-    }
-
-    private void updateSizeAccordingToGraph() {
-        if (graph == null) {
-            actualZoomArea = new Dimension(ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomAreaMin));
-            defaultZoomArea = new Dimension(defaultZoomAreaMin);
-            return;
-        }
-
-        Dimension dim = graph.getPreferredSize();
-
-        // if nothing to resize
-        if (!(dim.width > actualZoomArea.width || dim.height > actualZoomArea.height)) {
-            return;
-        }
-
-        // if lowerRightCorner.x is out of area
-        if (dim.width > actualZoomArea.width) {
-            // update area width
-            actualZoomArea.width = dim.width;
-        }
-
-        // if lowerRightCorner.y is out of area
-        if (dim.height > actualZoomArea.height) {
-            // update area height
-            actualZoomArea.height = dim.height;
-        }
-
-        // update default zoom size
-        defaultZoomArea.setSize(ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.width),
-                ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.height));
     }
 }

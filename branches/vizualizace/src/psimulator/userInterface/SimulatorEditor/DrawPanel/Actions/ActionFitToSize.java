@@ -18,6 +18,7 @@ public class ActionFitToSize extends AbstractDrawPanelAction{
     @Override
     public void actionPerformed(ActionEvent ae) {
         drawPanel.doFitToGraphSize();
+        //System.out.println("Fit to size nefunguje");
     }
     
 }

@@ -1,12 +1,10 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingSource;
@@ -64,6 +62,12 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
                 repaint();
             }
         });
+        
+        // add jPanelAnimation as observer to preferences manager
+        dataLayer.addPreferencesObserver((Observer)this);
+        
+        // add jPanelAnimation as observer to simulator manager
+        dataLayer.addSimulatorObserver((Observer)this);
     }
 
     /**
@@ -80,6 +84,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
         }
+        
+        g2.setColor(Color.BLACK);
+        g2.drawRect(1, 1, getWidth()-3, getHeight()-3);
+        
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
     }

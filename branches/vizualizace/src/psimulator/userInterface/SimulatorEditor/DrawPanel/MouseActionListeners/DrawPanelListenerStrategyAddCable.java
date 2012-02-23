@@ -49,7 +49,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      */
     @Override
     public void deInitialize() {
-        //drawPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        drawPanel.setCursor(defCursor);
+        
         initVariablesForCableMaking();
         drawPanel.repaint();
     }
