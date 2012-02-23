@@ -546,7 +546,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // END add listeners to Menu Bar - VIEW
 
         // add listeners to Menu Bar - OPTIONS
-        ActionListener preferencesListener = new PreferencesActionListener(this, dataLayer);
+        ActionListener preferencesListener = new PreferencesActionListener((MainWindowInnerInterface)this, dataLayer);
         jMenuBar.addPreferencesActionListener(preferencesListener);
         jToolBar.addPreferencesActionListener(preferencesListener);
 

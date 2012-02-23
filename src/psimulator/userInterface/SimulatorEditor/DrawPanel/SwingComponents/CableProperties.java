@@ -6,7 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Dialogs.AbstractPropertiesDialog;
+import psimulator.userInterface.Dialogs.AbstractPropertiesOkCancelDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
@@ -15,7 +15,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public final class CableProperties extends AbstractPropertiesDialog {
+public final class CableProperties extends AbstractPropertiesOkCancelDialog {
 
     private Cable cable;
     private DrawPanelInnerInterface drawPanel;
@@ -37,20 +37,17 @@ public final class CableProperties extends AbstractPropertiesDialog {
         this.drawPanel = drawPanel;
         this.cable = cable;
 
-        // copy values to local
-        copyValuesFromGlobalToLocal();
-
         // set title
         this.setTitle(dataLayer.getString("CABLE_PROPERTIES"));
 
         // set minimum size
         this.setMinimumSize(new Dimension(300, 100));
 
-        // add content to panel
-        addContent();
-        
         // initialize
         initialize();
+        
+        // set visible true
+        this.setVisible(true);
     }
 
     @Override

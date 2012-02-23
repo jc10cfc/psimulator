@@ -15,6 +15,7 @@ import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
+import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
  *
@@ -65,11 +66,13 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     //
     //
     private DataLayerFacade dataLayer;
+    private MainWindowInnerInterface mainWindow;
     private SimulatorManagerInterface simulatorManagerInterface;
 
-    public SimulatorControlPanel(DataLayerFacade dataLayer) {
+    public SimulatorControlPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
         this.simulatorManagerInterface = dataLayer.getSimulatorManager();
+        this.mainWindow = mainWindow;
 
         // create graphic layout with components
         initComponents();
@@ -155,6 +158,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConnectToServerDialog connectToServerDialog = new ConnectToServerDialog(mainWindow.getMainWindowComponent(), dataLayer);
+                
                 simulatorManagerInterface.pullTriggerTmp();
             }
         });
