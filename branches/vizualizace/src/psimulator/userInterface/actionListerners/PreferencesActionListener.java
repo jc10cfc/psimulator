@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Dialogs.SettingsDialog;
+import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
  * Action Listener for Preferences Button
@@ -12,18 +13,18 @@ import psimulator.userInterface.Dialogs.SettingsDialog;
  */
 public class PreferencesActionListener implements ActionListener {
 
-    private Component parentComponent;
+    private MainWindowInnerInterface mainWindow;
     private DataLayerFacade dataLayer;
 
-    public PreferencesActionListener(Component parentComponent, DataLayerFacade dataLayer) {
+    public PreferencesActionListener(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         super();
         
-        this.parentComponent = parentComponent;
+        this.mainWindow = mainWindow;
         this.dataLayer = dataLayer;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        SettingsDialog dialog = new SettingsDialog(parentComponent, dataLayer);
+        SettingsDialog dialog = new SettingsDialog(mainWindow.getMainWindowComponent(), dataLayer);
     }
 }

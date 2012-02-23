@@ -15,7 +15,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.RegexF
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public final class SettingsDialog extends AbstractPropertiesDialog {
+public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
 
     private Font font;
     /*
@@ -69,22 +69,20 @@ public final class SettingsDialog extends AbstractPropertiesDialog {
     public SettingsDialog(Component mainWindow, DataLayerFacade dataLayer) {
         super(mainWindow, dataLayer);
 
-        // copy values to local
-        copyValuesFromGlobalToLocal();
-
         // set title
         this.setTitle(dataLayer.getString("PREFERENCES"));
 
         // set minimum size
         this.setMinimumSize(new Dimension(150, 150));
 
-        // add content to panel
-        addContent();
-
-        setElementsAccordingToLocal();
-
         // initialize
         initialize();
+        
+        // update swing components
+        setElementsAccordingToLocal();
+
+        // set visible
+        this.setVisible(true);
     }
 
     @Override

@@ -110,7 +110,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
 
         // ----------- SIMULATOR STUFF CREATION -----------------------
         // create simulator panel
-        jPanelSimulator = new SimulatorControlPanel(dataLayer);
+        jPanelSimulator = new SimulatorControlPanel(mainWindow, dataLayer);
 
         // add as a language observer
         dataLayer.addLanguageObserver((Observer) jPanelSimulator);

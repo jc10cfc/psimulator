@@ -1,7 +1,7 @@
 package psimulator.userInterface.Dialogs;
 
 import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.Dialog;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
@@ -12,49 +12,44 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Valida
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public abstract class AbstractPropertiesDialog extends JDialog {
-
+public abstract class AbstractPropertiesDialog extends JDialog{
+    
+    protected JDialog thisDialog;
+    protected JButton jButtonDefault;
+    
     // A single LayerUI for all the fields.
     protected LayerUI<JFormattedTextField> layerUI = new ValidationLayerUI();
-    //
-    protected DataLayerFacade dataLayer;
-    protected JDialog thisDialog;
+    
     protected Component parentComponent;
-    /*
-     * window componenets
-     */
-    protected JButton jButtonOk;
-    protected JButton jButtonCancel;
-
+    protected DataLayerFacade dataLayer;
+    
     public AbstractPropertiesDialog(Component mainWindow, DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
         this.parentComponent = (Component) mainWindow;
 
         // set of JDialog parameters
-        this.setModalityType(ModalityType.APPLICATION_MODAL);
+        this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
     
-    protected abstract void copyValuesFromGlobalToLocal();
+    protected final void initialize(){
+        // copy values to local
+        copyValuesFromGlobalToLocal();
+        
+        // add content to panel
+        addContent();
+        
+        // set default jbutton
+        setDefaultJButton();
+        
+        // initialize
+        setDialogParameters();
 
-    protected abstract void copyValuesFromFieldsToLocal();
-
-    /**
-     * Call only when changes made
-     */
-    protected abstract void copyValuesFromLocalToGlobal();
-
-    protected abstract boolean hasChangesMade();
-
-    protected abstract JPanel createContentPanel();
-
-    protected void addContent(){
-        // add Content
-        this.getContentPane().add(createMainPanel());
     }
     
-    protected void initialize() {
+    
+    private void setDialogParameters() {
 
         this.addWindowListener(new WindowAdapter() {
 
@@ -65,21 +60,19 @@ public abstract class AbstractPropertiesDialog extends JDialog {
         });
 
         // set OK button as default button
-        this.getRootPane().setDefaultButton(jButtonOk);
+        this.getRootPane().setDefaultButton(jButtonDefault);
 
         //
         this.thisDialog = (JDialog) this;
 
         this.pack();
-
+        
         // place in middle of parent window
         int y = parentComponent.getY() + (parentComponent.getHeight() / 2) - (this.getHeight() / 2);
         int x = parentComponent.getX() + (parentComponent.getWidth() / 2) - (this.getWidth() / 2);
         this.setLocation(x, y);
-
-        this.setVisible(true);
     }
-    
+        
     /**
      * Add key events reactions to root pane
      *
@@ -92,40 +85,8 @@ public abstract class AbstractPropertiesDialog extends JDialog {
         rootPane.registerKeyboardAction(new JButtonCancelListener(), stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
         return rootPane;
     }
-
-    private JPanel createMainPanel() {
-        JPanel mainPanel = new JPanel();
-        //mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
-        mainPanel.add(createContentPanel());
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
-        mainPanel.add(createOkCancelPanel());
-
-        return mainPanel;
-    }
-
-    private JPanel createOkCancelPanel() {
-        JPanel buttonPane = new JPanel();
-
-        jButtonOk = new JButton(dataLayer.getString("SAVE"));
-        jButtonOk.addActionListener(new JButtonOkListener());
-
-        jButtonCancel = new JButton(dataLayer.getString("CANCEL"));
-        jButtonCancel.addActionListener(new JButtonCancelListener());
-
-        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-        buttonPane.add(Box.createHorizontalGlue());
-        buttonPane.add(jButtonOk);
-        buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
-        buttonPane.add(jButtonCancel);
-        buttonPane.add(Box.createRigidArea(new Dimension(3, 0)));
-
-        return buttonPane;
-    }
-
+    
+    
     protected void closeAction() {
         boolean close = true;
 
@@ -141,11 +102,12 @@ public abstract class AbstractPropertiesDialog extends JDialog {
             this.dispose();    //closes the window
         }
     }
-
+    
+    
     /**
      * Checks user if he wants to save changes and saves it.
      */
-    private boolean checkUserAndSave() {
+    protected boolean checkUserAndSave() {
         // want to save?
         int i = showWarningSave(dataLayer.getString("WARNING"), dataLayer.getString("DO_YOU_WANT_TO_SAVE_CHANGES"));
 
@@ -160,8 +122,10 @@ public abstract class AbstractPropertiesDialog extends JDialog {
             return true;
         }
     }
+    
+    
 
-    private int showWarningSave(String title, String message) {
+    protected int showWarningSave(String title, String message) {
         Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE")};
         int n = JOptionPane.showOptionDialog(this,
                 message,
@@ -175,32 +139,33 @@ public abstract class AbstractPropertiesDialog extends JDialog {
         return n;
     }
 
-    //
-    /////////////////////-----------------------------------////////////////////
-    /**
-     * Action Listener for JComboBoxInterface
-     */
-    class JButtonOkListener implements ActionListener {
-
-        /**
-         *
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            copyValuesFromFieldsToLocal();
-            if (hasChangesMade()) {
-                copyValuesFromLocalToGlobal();
-            }
-            thisDialog.setVisible(false);
-            thisDialog.dispose();    //closes the window
-        }
+    protected void addContent(){
+        // add Content
+        this.getContentPane().add(createMainPanel());
     }
+    
+    protected abstract void setDefaultJButton();
+    
+    protected abstract JPanel createContentPanel();
+    
+    protected abstract JPanel createMainPanel();
+    
+    protected abstract void copyValuesFromGlobalToLocal();
 
+    protected abstract void copyValuesFromFieldsToLocal();
+
+    /**
+     * Call only when changes made
+     */
+    protected abstract void copyValuesFromLocalToGlobal();
+
+    protected abstract boolean hasChangesMade();
+    
     /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for JComboBoxInterface
      */
-    class JButtonCancelListener implements ActionListener {
+    public class JButtonCancelListener implements ActionListener {
 
         /**
          *
@@ -210,4 +175,6 @@ public abstract class AbstractPropertiesDialog extends JDialog {
             closeAction();
         }
     }
+    
+    
 }

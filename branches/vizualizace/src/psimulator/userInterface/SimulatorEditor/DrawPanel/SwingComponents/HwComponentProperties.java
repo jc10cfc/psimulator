@@ -10,7 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.Dialogs.AbstractPropertiesDialog;
+import psimulator.userInterface.Dialogs.AbstractPropertiesOkCancelDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
@@ -21,7 +21,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Interf
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public final class HwComponentProperties extends AbstractPropertiesDialog {
+public final class HwComponentProperties extends AbstractPropertiesOkCancelDialog {
 
     private AbstractHwComponent abstractHwComponent;
     private DrawPanelInnerInterface drawPanel;
@@ -48,9 +48,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
         this.abstractHwComponent = abstractHwComponent;
         this.drawPanel = drawPanel;
-
-        // copy values to local
-        copyValuesFromGlobalToLocal();
 
         // set title
         this.setTitle(abstractHwComponent.getDeviceName());
@@ -84,9 +81,6 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
                 break;
         }
 
-        //add content
-        addContent();
-
         //Make textField get the focus whenever frame is activated.
         this.addWindowFocusListener(new WindowAdapter() {
 
@@ -99,9 +93,12 @@ public final class HwComponentProperties extends AbstractPropertiesDialog {
 
             }
         });
-
-        //
+        
+        // initialize
         initialize();
+        
+        // set visible true
+        this.setVisible(true);
     }
 
     /**

@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  */
 public class JTableEventListTimeCellRenderer extends DefaultTableCellRenderer{
 
-    private DecimalFormat fmt = new DecimalFormat("0.00");  
+    private DecimalFormat fmt = new DecimalFormat("0.000");  
     
     public JTableEventListTimeCellRenderer(){
         super();
