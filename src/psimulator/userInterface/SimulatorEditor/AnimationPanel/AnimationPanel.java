@@ -42,7 +42,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         Animator.setDefaultTimingSource(f_repaintTimer);
 
         this.dataLayer = dataLayer;
-        
+
         // set opacity
         this.setOpaque(false);
 
@@ -53,7 +53,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         // init timer
         f_repaintTimer.init();
-        
+
         // add listener for tick
         f_repaintTimer.addPostTickListener(new TimingSource.PostTickListener() {
 
@@ -62,12 +62,12 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
                 repaint();
             }
         });
-        
+
         // add jPanelAnimation as observer to preferences manager
-        dataLayer.addPreferencesObserver((Observer)this);
-        
+        dataLayer.addPreferencesObserver((Observer) this);
+
         // add jPanelAnimation as observer to simulator manager
-        dataLayer.addSimulatorObserver((Observer)this);
+        dataLayer.addSimulatorObserver((Observer) this);
     }
 
     /**
@@ -84,10 +84,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
         }
-        
+
         g2.setColor(Color.BLACK);
-        g2.drawRect(1, 1, getWidth()-3, getHeight()-3);
-        
+        g2.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
+
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
     }
@@ -107,9 +107,15 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             case SIMULATOR_PLAYER_STOP:
                 removeAllAnimations();
                 break;
-            
+            case SIMULATOR_REALTIME:
+                if (!dataLayer.getSimulatorManager().isRealtime()) {
+                    removeAllAnimations();
+                }
+                break;
+
         }
     }
+
     /**
      * Removes all animations from list
      */
@@ -125,13 +131,14 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
     /**
      * Removes concrete animation from animations list
-     * @param animation 
+     *
+     * @param animation
      */
     @Override
     public void removeAnimation(Animation animation) {
         animations.remove(animation);
     }
-    
+
     @Override
     public PacketImageType getPacketImageType() {
         return dataLayer.getPackageImageType();
@@ -139,7 +146,8 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
     /**
      * Removes all animations and removes Graph.
-     * @return 
+     *
+     * @return
      */
     @Override
     public Graph removeGraph() {
@@ -152,57 +160,60 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
     /**
      * Sets graph and chnage bounds of this panel
-     * @param graph 
+     *
+     * @param graph
      */
     @Override
     public void setGraph(Graph graph) {
         this.graph = graph;
     }
-    
+
     @Override
-    public Graph getGraph(){
+    public Graph getGraph() {
         return graph;
     }
 
     /**
-     * Creates animation of given timeInMiliseconds from AbstractHwComponent idSource to
-     * AbstractHwComponent idDestination.
+     * Creates animation of given timeInMiliseconds from AbstractHwComponent
+     * idSource to AbstractHwComponent idDestination.
+     *
      * @param timeInMiliseconds
      * @param idSource
-     * @param idDestination 
+     * @param idDestination
      */
     @Override
-    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination){
+    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination) {
         // points in Default zoom
         Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
         Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
 
         //System.out.println("Src= "+src+", dest= "+dest);
-        
+
         // create new animation
-        Animation anim = new Animation(this, dataLayer, 
+        Animation anim = new Animation(this, dataLayer,
                 packetType, src, dest, timeInMiliseconds);
-        
+
         // add animation to animations list
         animations.add(anim);
     }
-    
+
     /**
      * Counts the duration of animation im milliseconds
+     *
      * @param cableId
      * @param speedCoeficient
-     * @return 
+     * @return
      */
     @Override
-    public int getAnimationDuration(int cableId, int speedCoeficient){
+    public int getAnimationDuration(int cableId, int speedCoeficient) {
         Cable cable = graph.getCable(cableId);
-        
+
         int delay = cable.getDelay();
-        
+
         speedCoeficient = speedCoeficient * 50;
-        
+
         int speed = delay * speedCoeficient;
-        
+
         return speed;
     }
 

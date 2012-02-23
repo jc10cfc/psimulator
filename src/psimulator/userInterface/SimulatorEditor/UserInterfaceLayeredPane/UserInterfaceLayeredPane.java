@@ -28,8 +28,6 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     private DrawPanelOuterInterface jPanelDraw; // draw panel
     private AnimationPanelOuterInterface jPanelAnimation; // animation panel
     //
-    //private ZoomManager zoomManager = new ZoomManager();
-    //
     private MainWindowInnerInterface mainWindow;
     private UserInterfaceMainPanelInnerInterface userInterface;
     //
@@ -75,27 +73,9 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
 
     @Override
     public void update(Observable o, Object o1) {
-        /*
-        switch ((ObserverUpdateEventType) o1) {
-            case ZOOM_CHANGE:
-            case GRAPH_SIZE_CHANGED:
-                //Dimension dim = jPanelDraw.getPreferredSize();
-                //jPanelAnimation.setPreferredSize(dim);
-                //jPanelAnimation.setSize(dim);
-                
-                updateSizeAccordingToGraph();
-                
-                jPanelDraw.setPreferredSize(actualZoomArea);
-                jPanelDraw.setSize(actualZoomArea);
-                
-                jPanelAnimation.setPreferredSize(actualZoomArea);
-                jPanelAnimation.setSize(actualZoomArea);
-                
-                break;
-        }*/
-        
         switch ((ObserverUpdateEventType) o1) {
             case VIEW_DETAILS:
+                //System.out.println("Layered pane update:Details");
                 // update images
                 doUpdateImages();
                 // udate size of this panel according to graph size, new labels could make graph bigger
@@ -103,16 +83,19 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
                 //
                 break;
             case LANGUAGE:
+                //System.out.println("Layered pane update:Language");
                 // update images
                 doUpdateImages();
                 //
                 break;
             case GRAPH_COMPONENT_CHANGED:
+                //System.out.println("Layered pane update:Graph component");
                 // update images
                 doUpdateImages();
                 // 
                 break;
             case GRAPH_SIZE_CHANGED:
+                //System.out.println("Layered pane update:Graph size");
                 // DO NOT CALL DO UPDATE IMAGES - IT WILL LOOP INDEFINETLY
                 // udate size of this panel according to graph size
                 updateSizeAccordingToGraph();
@@ -121,6 +104,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
                 // 
                 break;
             case ZOOM_CHANGE:
+                //System.out.println("Layered pane update:Zoom change");
                 doUpdateImages();
                 //set new sizes of this (JDrawPanel) 
                 setNewSizes();
@@ -128,11 +112,11 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
                 break;
         }
         
-        jPanelDraw.revalidate();
-        jPanelDraw.repaint();
+        //jPanelDraw.revalidate();
+        //jPanelDraw.repaint();
         
-        jPanelAnimation.revalidate();
-        jPanelAnimation.repaint();
+        //jPanelAnimation.revalidate();
+        //jPanelAnimation.repaint();
         
         this.revalidate();
         this.repaint();
@@ -163,7 +147,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         jPanelAnimation.setMinimumSize(actualZoomArea);
         jPanelAnimation.setMaximumSize(actualZoomArea);
     }
-
+    
     private void updateSizeAccordingToGraph() {
         if (!jPanelDraw.hasGraph()) {
             actualZoomArea = new Dimension(ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomAreaMin));
@@ -171,28 +155,27 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
             return;
         }
 
-        Dimension dim = jPanelDraw.getGraph().getPreferredSize();
+        Dimension dimDef = jPanelDraw.getGraph().getPreferredSizeDefaultZoom();
 
-        // if nothing to resize
-        if (!(dim.width > actualZoomArea.width || dim.height > actualZoomArea.height)) {
+        // (both are smaller or equal) If nothing to resize:
+        if (!(dimDef.width > defaultZoomArea.width || dimDef.height > defaultZoomArea.height)) {
             return;
         }
 
         // if lowerRightCorner.x is out of area
-        if (dim.width > actualZoomArea.width) {
+        if (dimDef.width > defaultZoomArea.width) {
             // update area width
-            actualZoomArea.width = dim.width;
+            defaultZoomArea.width = dimDef.width;
         }
 
         // if lowerRightCorner.y is out of area
-        if (dim.height > actualZoomArea.height) {
+        if (dimDef.height > defaultZoomArea.height) {
             // update area height
-            actualZoomArea.height = dim.height;
+            defaultZoomArea.height = dimDef.height;
         }
 
-        // update default zoom size
-        defaultZoomArea.setSize(ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.width),
-                ZoomManagerSingleton.getInstance().doScaleToDefault(actualZoomArea.height));
+        actualZoomArea.setSize(ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width),
+                ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.height));
     }
     
     @Override
