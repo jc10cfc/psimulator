@@ -123,7 +123,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         }
         
-        g2.setColor(Color.RED);
+        g2.setColor(Color.GRAY);
         g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
         
         g2.dispose();

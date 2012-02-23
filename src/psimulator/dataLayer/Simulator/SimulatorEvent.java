@@ -1,7 +1,6 @@
 package psimulator.dataLayer.Simulator;
 
 import java.awt.Color;
-import javax.swing.JLabel;
 import psimulator.dataLayer.ColorMixerSignleton;
 
 /**
@@ -9,9 +8,8 @@ import psimulator.dataLayer.ColorMixerSignleton;
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class SimulatorEvent {
-    
-    
-    private double timeStamp;
+ 
+    private long timeStamp;
     private String from;
     private String to;
     
@@ -24,7 +22,7 @@ public class SimulatorEvent {
     
     private Object [] list;
 
-    public SimulatorEvent(double timeStamp, int sourcceId, int destId, int cableId, 
+    public SimulatorEvent(long timeStamp, int sourcceId, int destId, int cableId, 
             String from, String to, PacketType packetType) {
         this.timeStamp = timeStamp;
         this.from = from;

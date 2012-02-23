@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.UserInterfaceLayeredPane;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
@@ -41,6 +42,10 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
         //
         this.mainWindow = mainWindow;
         this.userInterface = userInterface;
+        
+        //
+        this.setOpaque(true);
+        this.setBackground(Color.WHITE);
         
         //
         actualZoomArea.width = ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomArea.width);

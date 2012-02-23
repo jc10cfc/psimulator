@@ -551,7 +551,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jCheckBoxPacketDetails.setText(dataLayer.getString("PACKET_DETAILS"));
         jCheckBoxNamesOfDevices.setText(dataLayer.getString("NAMES_OF_DEVICES"));
         //
-        jTableEventList.getColumnModel().getColumn(0).setHeaderValue(dataLayer.getString("TIME"));
+        jTableEventList.getColumnModel().getColumn(0).setHeaderValue(dataLayer.getString("TIME")+" [s]");
         jTableEventList.getColumnModel().getColumn(1).setHeaderValue(dataLayer.getString("FROM"));
         jTableEventList.getColumnModel().getColumn(2).setHeaderValue(dataLayer.getString("TO"));
         jTableEventList.getColumnModel().getColumn(3).setHeaderValue(dataLayer.getString("TYPE"));
