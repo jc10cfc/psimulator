@@ -55,14 +55,14 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     
                     if(DEBUG)System.out.println("Reciever do connect " + tmpCounter++);
                     
-                    int i = tmpRandom.nextInt(2);
+                    int i = tmpRandom.nextInt(4);
                     
-                    if(i==0){
-                        Thread.sleep(2000);
-                        simulatorManagerInterface.connected();
-                    }else{
+                    if(i==3){
                         Thread.sleep(3000);
                         simulatorManagerInterface.connectingFailed();
+                    }else{
+                        Thread.sleep(2000);
+                        simulatorManagerInterface.connected();
                     }
                 }else if (doDisconnect){
                     doDisconnect = false;
@@ -78,7 +78,8 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
                     simulatorManagerInterface.setNewPacketRecieved();
                     
-                    int time = tmpRandom.nextInt(10) + 10; // 1000 + 100
+                    //int time = tmpRandom.nextInt(10) + 10; // 1000 + 100
+                    int time = tmpRandom.nextInt(1000) + 100;
 
                     Thread.sleep(time);
                     //Thread.sleep(1);
@@ -108,7 +109,8 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                 if(DEBUG)System.out.println("Event reciever: DO_DISCONNECT");
                 this.doDisconnect = true;
                 break;
-            case SIMULATOR_RECORDER:
+            case SIMULATOR_RECORDER_ON:
+            case SIMULATOR_RECORDER_OFF:
                 if(DEBUG)System.out.println("Event reciever: RECORDER");
                 this.isRecording = simulatorManagerInterface.isRecording();
                 break;

@@ -62,7 +62,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
             @Override
             public void run() {
-                
             }
         });
     }
@@ -95,10 +94,10 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             @Override
             public void run() {
                 isConnectedToServer = false;
-                
+
                 // turn off recording and realtime
-                setRecordingActivated(false);
-                setRealtimeActivated(false);
+                setRecordingDeactivated();
+                setRealtimeDeactivated();
 
                 // notify all observers
                 setChanged();
@@ -119,12 +118,20 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         // notify all observers
         setChanged();
         notifyObservers(ObserverUpdateEventType.CONNECTION_DO_DISCONNECT);
-        
+
         isConnectedToServer = false;
 
         // turn off recording and realtime
-        setRecordingActivated(false);
-        setRealtimeActivated(false);
+        //setRecordingActivated(false);
+        //setRealtimeActivated(false);
+
+        if (isRealtime) {
+            setRealtimeDeactivated();
+        }
+
+        if (isRecording) {
+            setRecordingDeactivated();
+        }
 
         // notify all observers
         setChanged();
@@ -177,31 +184,54 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public void setRecordingActivated(boolean activated) {
-        this.isRecording = activated;
-        System.out.println("Recording " + activated);
+    public void setRecordingActivated() {
+        this.isRecording = true;
+        System.out.println("Recording " + true);
 
         // notify all observers
         setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_RECORDER);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_RECORDER_ON);
     }
 
     @Override
-    public void setRealtimeActivated(boolean activated) {
+    public void setRecordingDeactivated() {
+        this.isRecording = false;
+        System.out.println("Recording " + false);
+
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_RECORDER_OFF);
+    }
+
+    @Override
+    public void setRealtimeActivated() {
         // if playing active and realtime activated, turn playing off
-        if (isPlaying && activated) {
+        if (isPlaying) {
             setPlayingStopped();
         }
 
         // start recording
-        setRecordingActivated(activated);
+        setRecordingActivated();
 
-        this.isRealtime = activated;
-        System.out.println("Realtime " + activated);
+        this.isRealtime = true;
+        System.out.println("Realtime " + true);
 
         // notify all observers
         setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_REALTIME);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_REALTIME_ON);
+    }
+
+    @Override
+    public void setRealtimeDeactivated() {
+        // start recording
+        setRecordingDeactivated();
+
+        this.isRealtime = false;
+        System.out.println("Realtime " + false);
+
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_REALTIME_OFF);
     }
 
     @Override
