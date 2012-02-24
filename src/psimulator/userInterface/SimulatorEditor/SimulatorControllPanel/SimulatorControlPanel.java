@@ -68,6 +68,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private DataLayerFacade dataLayer;
     private MainWindowInnerInterface mainWindow;
     private SimulatorManagerInterface simulatorManagerInterface;
+    //
+    private ConnectToServerDialog connectToServerDialog;
 
     public SimulatorControlPanel(MainWindowInnerInterface mainWindow, DataLayerFacade dataLayer) {
         this.dataLayer = dataLayer;
@@ -89,8 +91,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         simulatorManagerInterface.setRealtimeActivated(false);
         simulatorManagerInterface.setRecordingActivated(false);
         // can stay connected
-        
-        
+
+
     }
 
     public void clearEvents() {
@@ -103,7 +105,22 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             case LANGUAGE:
                 setTextsToComponents();
                 break;
-            case SIMULATOR_CONNECTION:
+            case CONNECTION_CONNECTING_FAILED:  // ony during connection establishing
+                if (connectToServerDialog != null) {
+                    connectToServerDialog.connectingFailed();
+                }
+                break;
+            case SIMULATOR_CONNECTED:           // when connection established
+                // dispose
+                if (connectToServerDialog != null) {
+                    connectToServerDialog.connected();
+                }
+                updateConnectionInfoAccordingToModel();
+                break;
+            case CONNECTION_CONNECTION_FAILED:  // when connection failed
+                updateConnectionInfoAccordingToModel();
+                break;
+            case SIMULATOR_DISCONNECTED:        // when disconnected by user
                 updateConnectionInfoAccordingToModel();
                 break;
             case SIMULATOR_RECORDER:
@@ -158,9 +175,17 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ConnectToServerDialog connectToServerDialog = new ConnectToServerDialog(mainWindow.getMainWindowComponent(), dataLayer);
-                
-                simulatorManagerInterface.pullTriggerTmp();
+                // if connected
+                if (simulatorManagerInterface.isConnectedToServer()) {
+                    // disconnect
+                    simulatorManagerInterface.doDisconnect();
+                } else {
+                    // open connect dialog
+                    connectToServerDialog = new ConnectToServerDialog(mainWindow.getMainWindowComponent(), dataLayer);
+
+                    // set visible
+                    connectToServerDialog.setVisible(true);
+                }
             }
         });
 
@@ -556,7 +581,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jCheckBoxPacketDetails.setText(dataLayer.getString("PACKET_DETAILS"));
         jCheckBoxNamesOfDevices.setText(dataLayer.getString("NAMES_OF_DEVICES"));
         //
-        jTableEventList.getColumnModel().getColumn(0).setHeaderValue(dataLayer.getString("TIME")+" [s]");
+        jTableEventList.getColumnModel().getColumn(0).setHeaderValue(dataLayer.getString("TIME") + " [s]");
         jTableEventList.getColumnModel().getColumn(1).setHeaderValue(dataLayer.getString("FROM"));
         jTableEventList.getColumnModel().getColumn(2).setHeaderValue(dataLayer.getString("TO"));
         jTableEventList.getColumnModel().getColumn(3).setHeaderValue(dataLayer.getString("TYPE"));

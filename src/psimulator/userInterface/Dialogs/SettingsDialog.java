@@ -41,6 +41,9 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
     private JLabel packetImageTypePicture;
     private JFormattedTextField jTextFieldPsimulatorIpAddress;
     private JFormattedTextField jTextFieldPsimulatorPort;
+    //
+    private RegexFormatter ipMaskFormatter;
+    private RegexFormatter portFormatter;
     /*
      * END of window components
      */
@@ -195,8 +198,11 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
     
     
     @Override
-    protected void validateInputs() {
-        //
+    protected void windowClosing() {
+        jButtonCancel.requestFocusInWindow();
+
+        jTextFieldPsimulatorIpAddress.setValue(jTextFieldPsimulatorIpAddress.getValue());
+        jTextFieldPsimulatorPort.setValue(jTextFieldPsimulatorPort.getValue());
     }
 
     private void setElementsAccordingToLocal() {
@@ -489,7 +495,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         ipAddressName.setFont(font);
         addressesPanel.add(ipAddressName);
 
-        RegexFormatter ipMaskFormatter = new RegexFormatter(Validator.IP_PATTERN);
+        ipMaskFormatter = new RegexFormatter(Validator.IP_PATTERN);
         ipMaskFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
         ipMaskFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
         ipMaskFormatter.setOverwriteMode(false);        // do notoverwrite charracters
@@ -498,7 +504,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         jTextFieldPsimulatorIpAddress.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 192.168.1.1 (IP)");
         jTextFieldPsimulatorIpAddress.setText(connectionIpAddress);
         // add decorator that paints wrong input icon
-        addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldPsimulatorIpAddress, layerUI));
+        addressesPanel.add(new JLayer<>(jTextFieldPsimulatorIpAddress, layerUI));
 
         JLabel ipAddressTip = new JLabel("10.0.0.1 (IP)");
         addressesPanel.add(ipAddressTip);
@@ -508,7 +514,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         portName.setFont(font);
         addressesPanel.add(portName);
         
-        RegexFormatter portFormatter = new RegexFormatter(Validator.PORT_PATTERN);
+        portFormatter = new RegexFormatter(Validator.PORT_PATTERN);
         portFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
         portFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
         portFormatter.setOverwriteMode(false);        // do notoverwrite charracters
@@ -516,7 +522,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         jTextFieldPsimulatorPort = new JFormattedTextField(portFormatter);
         jTextFieldPsimulatorPort.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 1-49 999");
         jTextFieldPsimulatorPort.setText(connectionPort);
-        addressesPanel.add(new JLayer<JFormattedTextField>(jTextFieldPsimulatorPort, layerUI));
+        addressesPanel.add(new JLayer<>(jTextFieldPsimulatorPort, layerUI));
         
         JLabel portTip = new JLabel("1-49 999");
         addressesPanel.add(portTip);

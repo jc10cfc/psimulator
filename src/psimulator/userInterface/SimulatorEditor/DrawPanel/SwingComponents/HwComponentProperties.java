@@ -280,7 +280,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
     }
 
     @Override
-    protected void validateInputs() {
+    protected void windowClosing() {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -12,9 +12,15 @@ public interface SimulatorManagerInterface {
 
     public void addSimulatorEvent(SimulatorEvent simulatorEvent);
     public void deleteAllSimulatorEvents();
- 
-    public void pullTriggerTmp();
- 
+
+    public void doConnect();
+    public void doDisconnect();
+    
+    public void connected();
+    public void disconnected();
+    public void connectingFailed();
+    public void connectionFailed();
+    
     // -------------------- SETTERS --------------------------
     public void setPlayerSpeed(int speed);
     
@@ -48,7 +54,7 @@ public interface SimulatorManagerInterface {
     public boolean hasEvents();
     
     public void moveToNextEvent();
-    public void moveToEvent(int index);
+    public void moveToEvent(final int index);
     
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
      

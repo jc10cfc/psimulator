@@ -21,9 +21,15 @@ public enum ObserverUpdateEventType {
     SIMULATOR_PLAYER_NEXT,      // automatic move to next event when playing
     SIMULATOR_SPEED,            // when speed is changed
     SIMULATOR_RECORDER,         // when recorder is turned on / off
-    SIMULATOR_CONNECTION,       // when connected / disconnected
+    SIMULATOR_CONNECTED,        // when connected
+    SIMULATOR_DISCONNECTED,     // when disconnected
     SIMULATOR_REALTIME,         // when realtime enabled / disabled
     SIMULATOR_NEW_PACKET,       // when new packet recieved
-    SIMULATOR_DETAILS;      
+    SIMULATOR_DETAILS,
+    //
+    CONNECTION_DO_CONNECT,      // when do connect called
+    CONNECTION_DO_DISCONNECT,   // when do disconnect called
+    CONNECTION_CONNECTION_FAILED,          // when connection failed called
+    CONNECTION_CONNECTING_FAILED;          // when connecting failed
     
 }
