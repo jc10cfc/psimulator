@@ -27,9 +27,11 @@ public interface SimulatorManagerInterface {
     public void setPlayerFunctionActivated(SimulatorPlayerCommand simulatorPlayerState);
     public void setConcreteRawSelected(int row);
     
-    public void setRecordingActivated(boolean activated);
+    public void setRecordingActivated();
+    public void setRecordingDeactivated();
     
-    public void setRealtimeActivated(boolean activated);
+    public void setRealtimeActivated();
+    public void setRealtimeDeactivated();
     
     public void setPlayingActivated();
     public void setPlayingStopped();

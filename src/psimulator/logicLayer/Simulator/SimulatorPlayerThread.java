@@ -16,8 +16,7 @@ import psimulator.userInterface.UserInterfaceOuterFacade;
  */
 public class SimulatorPlayerThread implements Runnable, Observer {
 
-    private static boolean DEBUG=false;
-    
+    private static boolean DEBUG = false;
     private Thread thread;
     //
     private SimulatorManagerInterface simulatorManagerInterface;
@@ -32,7 +31,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
     public SimulatorPlayerThread(DataLayerFacade model, UserInterfaceOuterFacade view) {
         this.simulatorManagerInterface = model.getSimulatorManager();
-        
+
         // set speed according to model
         currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
 
@@ -57,38 +56,44 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     isNewPacket = false;
 
                     // get last event
-                    int index = simulatorManagerInterface.getListSize()-1;
-                    
+                    int index = simulatorManagerInterface.getListSize() - 1;
+
                     // move to the last event
                     simulatorManagerInterface.moveToEvent(index);
-                    
+
                     // get event
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
 
                     // start animation
                     animationPanelOuterInterface.createAnimation(event.getPacketType(), 2000, event.getSourcceId(), event.getDestId());
-                    
+
                     // play event
-                    if(DEBUG) System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
+                    if (DEBUG) {
+                        System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
+                    }
                     Thread.sleep(200);
-                
+
                 } else if (isPlaying) { // if in playing mode
                     //glassPanelPainter.doPaintRedDots(true);
-                    
-                    
-                    SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
-                    if(DEBUG)System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
 
-                    if(DEBUG)System.out.println("Event: " + event + ".");
+
+                    SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+                    if (DEBUG) {
+                        System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
+                    }
+
+                    if (DEBUG) {
+                        System.out.println("Event: " + event + ".");
+                    }
                     int speedCoeficient = (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
 
                     //speedCoeficient = speedCoeficient * 50;
-                    
+
                     int time = animationPanelOuterInterface.getAnimationDuration(event.getCableId(), speedCoeficient);
- 
+
                     // start animation
                     animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId());
-                    
+
                     // sleep thread
                     Thread.sleep(time);
 
@@ -97,13 +102,17 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
                 } else {
                     //glassPanelPainter.doPaintRedDots(false);
-                    if(DEBUG)System.out.println("Player going to sleep " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
+                    if (DEBUG) {
+                        System.out.println("Player going to sleep " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
+                    }
                     Thread.sleep(Long.MAX_VALUE);
                 }
 
 
             } catch (InterruptedException ex) {
-                if(DEBUG)System.out.println("Interrupted");
+                if (DEBUG) {
+                    System.out.println("Interrupted");
+                }
             }
 
         }
@@ -122,17 +131,25 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                 // interrupt
                 break;
             case SIMULATOR_PLAYER_LIST_MOVE:
-                if(isRealtime){
+                if (isRealtime) {
                     // do not interrupt
                     return;
                 }
                 // interrupt
                 break;
-            case SIMULATOR_REALTIME:
+            case SIMULATOR_REALTIME_OFF:
+                // if nothing changed, do not interrupt
+                if (isRealtime == false && simulatorManagerInterface.isRealtime() == false) {
+                    // do not interrupt
+                    return;
+                }
+            // goes through!
+            case SIMULATOR_REALTIME_ON:
                 isRealtime = simulatorManagerInterface.isRealtime();
                 isNewPacket = false;
                 // interrupt
                 break;
+
             case SIMULATOR_SPEED:
                 currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
                 // do not interrupt
@@ -147,6 +164,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     return;
                 }
             default:
+                // do not interrupt
                 return;
         }
 

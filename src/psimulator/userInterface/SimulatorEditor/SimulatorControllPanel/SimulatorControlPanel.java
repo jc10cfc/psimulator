@@ -88,8 +88,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
      */
     public void setTurnedOff() {
         simulatorManagerInterface.setPlayingStopped();
-        simulatorManagerInterface.setRealtimeActivated(false);
-        simulatorManagerInterface.setRecordingActivated(false);
+        simulatorManagerInterface.setRealtimeDeactivated();
+        simulatorManagerInterface.setRecordingDeactivated();
         // can stay connected
 
 
@@ -128,13 +128,15 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             case SIMULATOR_DISCONNECTED:        // when disconnected by user
                 updateConnectionInfoAccordingToModel();
                 break;
-            case SIMULATOR_RECORDER:
+            case SIMULATOR_RECORDER_ON:
+            case SIMULATOR_RECORDER_OFF:
                 updateRecordingInfoAccordingToModel();
                 break;
             case SIMULATOR_PLAYER_STOP:
                 updatePlayingInfoAccordingToModel();
                 break;
-            case SIMULATOR_REALTIME:
+            case SIMULATOR_REALTIME_ON:
+            case SIMULATOR_REALTIME_OFF:
                 updateRealtimeAccordingToModel();
             case SIMULATOR_PLAYER_LIST_MOVE:
             case SIMULATOR_PLAYER_NEXT:
@@ -267,9 +269,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jToggleButtonCapture.isSelected()) {
-                    simulatorManagerInterface.setRecordingActivated(true);
+                    simulatorManagerInterface.setRecordingActivated();
                 } else {
-                    simulatorManagerInterface.setRecordingActivated(false);
+                    simulatorManagerInterface.setRecordingDeactivated();
                 }
             }
         });
@@ -280,9 +282,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if (jToggleButtonRealtime.isSelected()) {
-                    simulatorManagerInterface.setRealtimeActivated(true);
+                    simulatorManagerInterface.setRealtimeActivated();
                 } else {
-                    simulatorManagerInterface.setRealtimeActivated(false);
+                    simulatorManagerInterface.setRealtimeDeactivated();
                 }
             }
         });

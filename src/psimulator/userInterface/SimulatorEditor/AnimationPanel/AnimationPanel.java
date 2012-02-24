@@ -107,11 +107,12 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             case SIMULATOR_PLAYER_STOP:
                 removeAllAnimations();
                 break;
+                /*
             case SIMULATOR_REALTIME:
                 if (!dataLayer.getSimulatorManager().isRealtime()) {
                     removeAllAnimations();
                 }
-                break;
+                break;*/
 
         }
     }
