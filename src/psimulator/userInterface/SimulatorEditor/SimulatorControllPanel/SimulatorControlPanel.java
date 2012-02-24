@@ -119,6 +119,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 break;
             case CONNECTION_CONNECTION_FAILED:  // when connection failed
                 updateConnectionInfoAccordingToModel();
+                // do inform user
+                JOptionPane.showMessageDialog(mainWindow.getMainWindowComponent(),
+                        dataLayer.getString("CONNECTION_BROKE_DOWN"),
+                        dataLayer.getString("WARNING"),
+                        JOptionPane.WARNING_MESSAGE);
                 break;
             case SIMULATOR_DISCONNECTED:        // when disconnected by user
                 updateConnectionInfoAccordingToModel();

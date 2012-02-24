@@ -57,13 +57,11 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     
                     int i = tmpRandom.nextInt(2);
                     
-                    i =1;
-                    
                     if(i==0){
                         Thread.sleep(2000);
                         simulatorManagerInterface.connected();
                     }else{
-                        Thread.sleep(10000);
+                        Thread.sleep(3000);
                         simulatorManagerInterface.connectingFailed();
                     }
                 }else if (doDisconnect){

@@ -94,6 +94,12 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
             @Override
             public void run() {
+                isConnectedToServer = false;
+                
+                // turn off recording and realtime
+                setRecordingActivated(false);
+                setRealtimeActivated(false);
+
                 // notify all observers
                 setChanged();
                 notifyObservers(ObserverUpdateEventType.CONNECTION_CONNECTION_FAILED);
