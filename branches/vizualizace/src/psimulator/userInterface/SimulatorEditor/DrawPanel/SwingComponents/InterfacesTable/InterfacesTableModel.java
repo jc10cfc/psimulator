@@ -144,7 +144,10 @@ public class InterfacesTableModel extends AbstractTableModel {
                 abstractHwComponent.getInterfaces().get(i).setIpAddress(getValueAt(i,3).toString());
                 
                 // save MAC
-                abstractHwComponent.getInterfaces().get(i).setMacAddress(getValueAt(i,4).toString());
+                String mac = getValueAt(i,4).toString();
+                mac = mac.replaceAll(":", "-");
+                
+                abstractHwComponent.getInterfaces().get(i).setMacAddress(mac);
             }
         }
     }

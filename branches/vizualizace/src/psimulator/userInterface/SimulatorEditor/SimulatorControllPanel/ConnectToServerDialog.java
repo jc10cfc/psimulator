@@ -41,9 +41,6 @@ public final class ConnectToServerDialog extends AbstractPropertiesDialog {
         // set title
         this.setTitle(dataLayer.getString("CONNECT_TO_SERVER"));
 
-        // set minimum size
-        //this.setMinimumSize(new Dimension(350, 150));
-
         // initialize
         initialize();
     }
