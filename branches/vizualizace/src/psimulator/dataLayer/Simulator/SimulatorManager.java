@@ -1,6 +1,7 @@
 package psimulator.dataLayer.Simulator;
 
 import java.util.Observable;
+import javax.swing.SwingUtilities;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
@@ -34,21 +35,94 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     // ----- OBSERVERS notify methods
+    /**
+     * Used from another thread
+     */
     @Override
-    public void pullTriggerTmp() {
-        if (isConnectedToServer) {
-            isConnectedToServer = false;
+    public void connected() {
+        SwingUtilities.invokeLater(new Runnable() {
 
-            // turn off recording and realtime
-            setRecordingActivated(false);
-            setRealtimeActivated(false);
-        } else {
-            isConnectedToServer = true;
-        }
+            @Override
+            public void run() {
+                isConnectedToServer = true;
+
+                // notify all observers
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.SIMULATOR_CONNECTED);
+            }
+        });
+    }
+
+    /**
+     * Used from another thread
+     */
+    @Override
+    public void disconnected() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                
+            }
+        });
+    }
+
+    /**
+     * Used from another thread
+     */
+    @Override
+    public void connectingFailed() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                isConnectedToServer = false;
+
+                // notify all observers
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.CONNECTION_CONNECTING_FAILED);
+            }
+        });
+    }
+
+    /**
+     * Used from another thread
+     */
+    @Override
+    public void connectionFailed() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                // notify all observers
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.CONNECTION_CONNECTION_FAILED);
+            }
+        });
+    }
+
+    @Override
+    public void doConnect() {
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.CONNECTION_DO_CONNECT);
+    }
+
+    @Override
+    public void doDisconnect() {
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.CONNECTION_DO_DISCONNECT);
+        
+        isConnectedToServer = false;
+
+        // turn off recording and realtime
+        setRecordingActivated(false);
+        setRealtimeActivated(false);
 
         // notify all observers
         setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_CONNECTION);
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_DISCONNECTED);
     }
 
     @Override
@@ -192,7 +266,83 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         currentPositionInList = 0;
     }
 
-    // ----- GETTERS and SETTERS
+    /**
+     * Used from another thread
+     */
+    @Override
+    public void setNewPacketRecieved() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                // notify all observers
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.SIMULATOR_NEW_PACKET);
+            }
+        });
+    }
+
+    /**
+     * Used from another thread
+     */
+    @Override
+    public void addSimulatorEvent(final SimulatorEvent simulatorEvent) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                eventTableModel.addSimulatorEvent(simulatorEvent);
+            }
+        });
+    }
+
+    /**
+     * Used from another thread
+     */
+    @Override
+    public void moveToNextEvent() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                // if nothing else to play
+                if (currentPositionInList >= eventTableModel.getRowCount() - 1) {
+                    isPlaying = false;
+                    System.out.println("Playing automaticly set to " + isPlaying);
+
+                    // notify all observers
+                    setChanged();
+                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
+                } else {
+                    currentPositionInList++;
+
+                    // notify all observers
+                    setChanged();
+                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+                }
+            }
+        });
+    }
+
+    /**
+     * Used from another thread
+     */
+    @Override
+    public void moveToEvent(final int index) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+
+                currentPositionInList = index;
+
+                // notify all observers
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+            }
+        });
+    }
+
     @Override
     public boolean isConnectedToServer() {
         return isConnectedToServer;
@@ -201,11 +351,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public EventTableModel getEventTableModel() {
         return eventTableModel;
-    }
-
-    @Override
-    public void addSimulatorEvent(SimulatorEvent simulatorEvent) {
-        eventTableModel.addSimulatorEvent(simulatorEvent);
     }
 
     @Override
@@ -234,34 +379,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public void moveToNextEvent() {
-        // if nothing else to play
-        if (currentPositionInList >= eventTableModel.getRowCount() - 1) {
-            this.isPlaying = false;
-            System.out.println("Playing automaticly set to " + isPlaying);
-
-            // notify all observers
-            setChanged();
-            notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
-        } else {
-            currentPositionInList++;
-
-            // notify all observers
-            setChanged();
-            notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
-        }
-    }
-
-    @Override
-    public void moveToEvent(int index) {
-        currentPositionInList = index;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
-    }
-
-    @Override
     public SimulatorEvent getSimulatorEventAtCurrentPosition() {
         return eventTableModel.getSimulatorEvent(currentPositionInList);
     }
@@ -272,22 +389,12 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public void setNewPacketRecieved() {
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_NEW_PACKET);
-
-    }
-
-    @Override
     public boolean hasEvents() {
         return eventTableModel.hasEvents();
     }
-    
-    
+
     @Override
     public boolean isTimeReset() {
         return eventTableModel.isTimeReset();
     }
-    
 }

@@ -18,12 +18,19 @@ import psimulator.userInterface.UserInterfaceOuterFacade;
  */
 public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
+    private static boolean DEBUG=true;
+    //
+    private Thread thread;
+    //
     private SimulatorManagerInterface simulatorManagerInterface;
-    private boolean isRecording;
     private Random tmpRandom = new Random();
     private UserInterfaceOuterFacade userInterfaceOuterFacade;
-    
+    //
     private long timeOfFirstEvent;
+    //
+    private boolean isRecording;
+    private boolean doConnect;
+    private boolean doDisconnect;
 
     public SimulatorClientEventRecieverThread(DataLayerFacade model, UserInterfaceOuterFacade userInterfaceOuterFacade) {
         this.simulatorManagerInterface = model.getSimulatorManager();
@@ -31,11 +38,17 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
         this.userInterfaceOuterFacade = userInterfaceOuterFacade;
     }
+    
+    public void startThread(Thread t) {
+        this.thread = t;
+        t.start();
+    }
+    
     @Override
     public void run() {
-
         int tmpCounter = 0;
-
+        
+        /*
         while (true) {
             if (isRecording) {
 
@@ -52,22 +65,87 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                 System.out.println("Recorder Interrupted");
                 return;
             }
+        }*/
+        
+        while(true){
+            try{
+                if(doConnect){
+                    if(DEBUG)System.out.println("Reciever do connect " + tmpCounter++);
+                    
+                    int i = tmpRandom.nextInt(2);
+                    
+                    //i =0;
+                    
+                    if(i==0){
+                        Thread.sleep(2000);
+                        simulatorManagerInterface.connected();
+                    }else{
+                        Thread.sleep(3000);
+                        simulatorManagerInterface.connectingFailed();
+                    }
+
+  
+                    //
+                    doConnect = false;
+                }else if (doDisconnect){
+                    if(DEBUG)System.out.println("Reciever do disconnect " + tmpCounter++);
+
+                    simulatorManagerInterface.disconnected();
+                    
+                    //
+                    doDisconnect = false;
+                }
+
+                if(isRecording){
+                    if(DEBUG)System.out.println("Reciever recording " + tmpCounter++);
+                    
+                    simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
+                    simulatorManagerInterface.setNewPacketRecieved();
+                    
+                    int time = tmpRandom.nextInt(10) + 10; // 1000 + 100
+
+                    Thread.sleep(time);
+                    //Thread.sleep(1);
+
+                } else{
+                    if(DEBUG)System.out.println("Reciever going to long sleep " + tmpCounter++);
+                    // sleep for a long time
+                    Thread.sleep(Long.MAX_VALUE);
+                }
+            } catch (InterruptedException ex) {
+                if(DEBUG)System.out.println("Reciever interrupted");
+            }
+            
         }
+        
 
     }
 
     @Override
     public void update(Observable o, Object o1) {
         switch ((ObserverUpdateEventType) o1) {
+            case CONNECTION_DO_CONNECT:
+                if(DEBUG)System.out.println("Event reciever: DO_CONNECT");
+                this.doConnect = true;
+                break;
+            case CONNECTION_DO_DISCONNECT:
+                if(DEBUG)System.out.println("Event reciever: DO_DISCONNECT");
+                this.doDisconnect = true;
+                break;
             case SIMULATOR_RECORDER:
+                if(DEBUG)System.out.println("Event reciever: RECORDER");
                 this.isRecording = simulatorManagerInterface.isRecording();
                 break;
             default:
                 return;
         }
 
-        System.out.println("Event reciever: recording=" + isRecording);
+        //System.out.println("Event reciever: recording=" + isRecording);
+        
+        thread.interrupt();
     }
+    
+    
     
     /**
      * Generates simulator event from real graph. It tries to create event with random 

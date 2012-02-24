@@ -9,6 +9,15 @@ import java.util.regex.Pattern;
  */
 public class Validator {
 
+    public static final String PORT_PATTERN_NOT_EMPTY = 
+            "^((0)|([1-4]{1}[0-9]{0,4})|([1-9]{1}[0-9]{0,3}))$";
+    
+    public static final String IP_PATTERN_NOT_EMPTY = 
+            "^((([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+            + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])))$";
+    
     public static final String PORT_PATTERN = 
             "^((0)|([1-4]{1}[0-9]{0,4})|([1-9]{1}[0-9]{0,3})|)$";
     

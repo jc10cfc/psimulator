@@ -56,7 +56,7 @@ public abstract class AbstractPropertiesDialog extends JDialog{
             @Override
             public void windowClosing(WindowEvent e) {
                 
-                //validateInputs();
+                windowClosing();
                 
                 closeAction();
             }
@@ -74,6 +74,13 @@ public abstract class AbstractPropertiesDialog extends JDialog{
         int y = parentComponent.getY() + (parentComponent.getHeight() / 2) - (this.getHeight() / 2);
         int x = parentComponent.getX() + (parentComponent.getWidth() / 2) - (this.getWidth() / 2);
         this.setLocation(x, y);
+    }
+    
+    /**
+     * Override this method to react on windowClosing event
+     */
+    protected void windowClosing(){
+        
     }
         
     /**
@@ -94,6 +101,7 @@ public abstract class AbstractPropertiesDialog extends JDialog{
         boolean close = true;
         
         copyValuesFromFieldsToLocal();
+        
         if (hasChangesMade()) {
             if (checkUserAndSave() == false) {
                 close = false;
@@ -146,8 +154,6 @@ public abstract class AbstractPropertiesDialog extends JDialog{
         // add Content
         this.getContentPane().add(createMainPanel());
     }
-    
-    protected abstract void validateInputs();
     
     protected abstract void setDefaultJButton();
     
