@@ -18,7 +18,7 @@ import psimulator.userInterface.UserInterfaceOuterFacade;
  */
 public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
-    private static boolean DEBUG=true;
+    private static boolean DEBUG = false;
     //
     private Thread thread;
     //
@@ -48,52 +48,30 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
     public void run() {
         int tmpCounter = 0;
         
-        /*
-        while (true) {
-            if (isRecording) {
-
-                simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
-                simulatorManagerInterface.setNewPacketRecieved();
-            }
-
-            try {
-                int time = tmpRandom.nextInt(10) + 10; // 1000 + 100
-
-                Thread.sleep(time);
-                //Thread.sleep(1);
-            } catch (InterruptedException ex) {
-                System.out.println("Recorder Interrupted");
-                return;
-            }
-        }*/
-        
         while(true){
             try{
                 if(doConnect){
+                    doConnect = false;
+                    
                     if(DEBUG)System.out.println("Reciever do connect " + tmpCounter++);
                     
                     int i = tmpRandom.nextInt(2);
                     
-                    //i =0;
+                    i =1;
                     
                     if(i==0){
                         Thread.sleep(2000);
                         simulatorManagerInterface.connected();
                     }else{
-                        Thread.sleep(3000);
+                        Thread.sleep(10000);
                         simulatorManagerInterface.connectingFailed();
                     }
-
-  
-                    //
-                    doConnect = false;
                 }else if (doDisconnect){
+                    doDisconnect = false;
+                    //
                     if(DEBUG)System.out.println("Reciever do disconnect " + tmpCounter++);
 
                     simulatorManagerInterface.disconnected();
-                    
-                    //
-                    doDisconnect = false;
                 }
 
                 if(isRecording){

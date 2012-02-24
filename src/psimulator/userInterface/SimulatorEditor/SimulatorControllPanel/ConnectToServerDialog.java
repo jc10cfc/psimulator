@@ -121,8 +121,6 @@ public final class ConnectToServerDialog extends AbstractPropertiesDialog {
         if (connectingActive) {
             dataLayer.getSimulatorManager().doDisconnect();
             //
-            connectingFailed();
-            //
             connectingActive = false;
         }
 
