@@ -25,7 +25,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private boolean isPlaying = false;
     private int currentSpeed = SPEED_INIT;
     //
-    private int currentPositionInList = 0;
+    private volatile int currentPositionInList = 0;
     //
     private EventTableModel eventTableModel;
 
@@ -337,11 +337,11 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      */
     @Override
     public void moveToNextEvent() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                // if nothing else to play
+//        SwingUtilities.invokeLater(new Runnable() {
+//
+//           @Override
+//            public void run() {
+                //if nothing else to play
                 if (currentPositionInList >= eventTableModel.getRowCount() - 1) {
                     isPlaying = false;
                     System.out.println("Playing automaticly set to " + isPlaying);
@@ -356,8 +356,8 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
                     setChanged();
                     notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
                 }
-            }
-        });
+//            }
+//        });
     }
 
     /**
@@ -365,18 +365,18 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      */
     @Override
     public void moveToEvent(final int index) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
+//        SwingUtilities.invokeLater(new Runnable() {
+//
+//           @Override
+//            public void run() {
 
                 currentPositionInList = index;
 
                 // notify all observers
                 setChanged();
                 notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
-            }
-        });
+//            }
+//        });
     }
 
     @Override
@@ -405,7 +405,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public int getCurrentPositionInList() {
+    public synchronized int getCurrentPositionInList() {
         return currentPositionInList;
     }
 
@@ -414,9 +414,12 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         return eventTableModel.getRowCount();
     }
 
+    /**
+     * Used from another thread
+     */
     @Override
     public SimulatorEvent getSimulatorEventAtCurrentPosition() {
-        return eventTableModel.getSimulatorEvent(currentPositionInList);
+        return eventTableModel.getSimulatorEvent(getCurrentPositionInList());
     }
 
     @Override
