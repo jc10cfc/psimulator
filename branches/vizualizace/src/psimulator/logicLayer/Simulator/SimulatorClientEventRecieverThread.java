@@ -141,6 +141,9 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         AbstractHwComponent c1 = null;
         AbstractHwComponent c2 = null;
 
+        EthInterface eth1 = null;
+        EthInterface eth2 = null;
+        
         Cable cable = null;
 
         int i1;
@@ -148,7 +151,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
         // find connected components
         int counter = 0;
-        while (counter < 50) {
+        while (counter < 100) {
             i1 = tmpRandom.nextInt(componentCount);
             i2 = tmpRandom.nextInt(componentCount);
 
@@ -159,16 +162,18 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
             c1 = list.get(i1);
             c2 = list.get(i2);
 
-            for (EthInterface eth1 : c1.getInterfaces()) {
-                if (!eth1.hasCable()) {
+            for (EthInterface tmp1 : c1.getInterfaces()) {
+                if (!tmp1.hasCable()) {
                     continue;
                 }
-                for (EthInterface eth2 : c2.getInterfaces()) {
-                    if (!eth2.hasCable()) {
+                for (EthInterface tmp2 : c2.getInterfaces()) {
+                    if (!tmp2.hasCable()) {
                         continue;
                     }
-                    if (eth1.getCable().getId().intValue() == eth2.getCable().getId().intValue()) {
-                        cable = eth1.getCable();
+                    if (tmp1.getCable().getId().intValue() == tmp2.getCable().getId().intValue()) {
+                        cable = tmp1.getCable();
+                        eth1 = tmp1;
+                        eth2 = tmp2;
                         break;
                     }
                 }
@@ -205,6 +210,11 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
         SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1.getId(), c2.getId(), 
                 cableId, c1.getDeviceName(), c2.getDeviceName(), packetType);
+        
+        simulatorEvent.setComponent1(c1);
+        simulatorEvent.setComponent2(c2);
+        simulatorEvent.setEth1(eth1);
+        simulatorEvent.setEth2(eth2);
         
         return simulatorEvent;
     }

@@ -13,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
+import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
@@ -62,6 +63,16 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private JPanel jPanelRightColumn;
     private JCheckBox jCheckBoxPacketDetails;
     private JCheckBox jCheckBoxNamesOfDevices;
+    // Packet details panel
+    private JPanel jPanelPacketDetails;
+    private JLabel jLabelDetailsTimeName;
+    private JLabel jLabelDetailsTimeValue;
+    private JLabel jLabelDetailsFromName;
+    private JLabel jLabelDetailsFromValue;
+    private JLabel jLabelDetailsToName;
+    private JLabel jLabelDetailsToValue;
+    private JLabel jLabelDetailsTypeName;
+    private JLabel jLabelDetailsTypeValue;
     //
     //
     //
@@ -142,6 +153,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             case SIMULATOR_PLAYER_NEXT:
             case SIMULATOR_PLAYER_PLAY:
                 updatePositionInListAccordingToModel();
+                updatePacketDetailsAccordingToModel();
                 break;
 
         }
@@ -209,6 +221,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                     // if YES
                     if (i == 0) {
                         simulatorManagerInterface.deleteAllSimulatorEvents();
+                        
+                        // update packet details
+                        updatePacketDetailsAccordingToModel();
                     }
                 }
             }
@@ -350,7 +365,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
         cons.gridx = 0;
         cons.gridy = 7;
-        this.add(createDetailsPanel(), cons);
+        createDetailsPanel();
+        
+        this.add(createPacketDetailsPanel(), cons);
         cons.gridx = 0;
         cons.gridy = 8;
         this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
@@ -551,6 +568,94 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //        
         return jPanelDetails;
     }
+    
+    private JPanel createPacketDetailsPanel(){
+        jPanelPacketDetails = new JPanel();
+        jPanelPacketDetails.setLayout(new BoxLayout(jPanelPacketDetails, BoxLayout.PAGE_AXIS));
+        //
+        JPanel jPanelTime = new JPanel();
+        jPanelTime.setLayout(new BoxLayout(jPanelTime, BoxLayout.LINE_AXIS));
+        
+        jLabelDetailsTimeName = new JLabel();
+        Font boldFont =  new Font(jLabelDetailsTimeName.getFont().getName(), Font.BOLD, jLabelDetailsTimeName.getFont().getSize());
+        jLabelDetailsTimeName.setFont(boldFont);
+        jLabelDetailsTimeName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jPanelTime.add(jLabelDetailsTimeName);
+        
+        jLabelDetailsTimeValue = new JLabel();
+        
+        jPanelTime.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelTime.add(jLabelDetailsTimeName);
+        jPanelTime.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelTime.add(jLabelDetailsTimeValue);
+        
+        jPanelTime.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        jPanelPacketDetails.add(jPanelTime);
+        //
+        //
+        JPanel jPanelFrom = new JPanel();
+        jPanelFrom.setLayout(new BoxLayout(jPanelFrom, BoxLayout.LINE_AXIS));
+        
+        jLabelDetailsFromName = new JLabel();
+        jLabelDetailsFromName.setFont(boldFont);
+        jLabelDetailsFromName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jPanelFrom.add(jLabelDetailsFromName);
+        
+        jLabelDetailsFromValue = new JLabel();
+        
+        jPanelFrom.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelFrom.add(jLabelDetailsFromName);
+        jPanelFrom.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelFrom.add(jLabelDetailsFromValue);
+        
+        jPanelFrom.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        jPanelPacketDetails.add(jPanelFrom);
+        
+        //
+        JPanel jPanelTo = new JPanel();
+        jPanelTo.setLayout(new BoxLayout(jPanelTo, BoxLayout.LINE_AXIS));
+        
+        jLabelDetailsToName = new JLabel();
+        jLabelDetailsToName.setFont(boldFont);
+        jLabelDetailsToName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jPanelTo.add(jLabelDetailsToName);
+        
+        jLabelDetailsToValue = new JLabel();
+        
+        jPanelTo.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelTo.add(jLabelDetailsToName);
+        jPanelTo.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelTo.add(jLabelDetailsToValue);
+        
+        jPanelTo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        jPanelPacketDetails.add(jPanelTo);
+        
+        //
+        JPanel jPanelType = new JPanel();
+        jPanelType.setLayout(new BoxLayout(jPanelType, BoxLayout.LINE_AXIS));
+        
+        jLabelDetailsTypeName = new JLabel();
+        jLabelDetailsTypeName.setFont(boldFont);
+        jLabelDetailsTypeName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jPanelType.add(jLabelDetailsTypeName);
+        
+        jLabelDetailsTypeValue = new JLabel();
+        
+        jPanelType.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelType.add(jLabelDetailsTypeName);
+        jPanelType.add(Box.createRigidArea(new Dimension(5, 0)));
+        jPanelType.add(jLabelDetailsTypeValue);
+        
+        jPanelType.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        jPanelPacketDetails.add(jPanelType);
+        
+        
+        return jPanelPacketDetails;
+    }
 
     private void setTextsToComponents() {
         jPanelConnectSaveLoad.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("CONNECT_SAVE_LOAD")));
@@ -593,6 +698,12 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jTableEventList.getColumnModel().getColumn(2).setHeaderValue(dataLayer.getString("TO"));
         jTableEventList.getColumnModel().getColumn(3).setHeaderValue(dataLayer.getString("TYPE"));
         jTableEventList.getColumnModel().getColumn(4).setHeaderValue(dataLayer.getString("INFO"));
+        //
+        jPanelPacketDetails.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("SELECTED_PACKET_DETAILS")));
+        jLabelDetailsTimeName.setText(dataLayer.getString("TIME")+":");
+        jLabelDetailsFromName.setText(dataLayer.getString("FROM")+":");
+        jLabelDetailsToName.setText(dataLayer.getString("TO")+":");
+        jLabelDetailsTypeName.setText(dataLayer.getString("TYPE")+":");
         //
         updateConnectionInfoAccordingToModel();
         updateRecordingInfoAccordingToModel();
@@ -662,6 +773,26 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         } else {
             // if no content, remove selection
             jTableEventList.getSelectionModel().clearSelection();
+        }
+    }
+    
+    private void updatePacketDetailsAccordingToModel(){
+        int row = simulatorManagerInterface.getCurrentPositionInList();
+        
+        // if some row selected
+        if (simulatorManagerInterface.getListSize() > 0 && row >= 0) {
+            SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+            jLabelDetailsTimeValue.setText(jTableEventList.getModel().getValueAt(row, 0).toString());
+            String from = event.getComponent1().getDeviceName()+", "+ event.getEth1().getName();
+            jLabelDetailsFromValue.setText(from);
+            String to = event.getComponent2().getDeviceName()+", "+ event.getEth2().getName();
+            jLabelDetailsToValue.setText(to);
+            jLabelDetailsTypeValue.setText(event.getPacketType().toString());
+        }else{
+            jLabelDetailsTimeValue.setText("");
+            jLabelDetailsFromValue.setText("");
+            jLabelDetailsToValue.setText("");
+            jLabelDetailsTypeValue.setText("");
         }
     }
 

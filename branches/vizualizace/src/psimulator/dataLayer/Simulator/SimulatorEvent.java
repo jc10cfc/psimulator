@@ -2,6 +2,8 @@ package psimulator.dataLayer.Simulator;
 
 import java.awt.Color;
 import psimulator.dataLayer.ColorMixerSignleton;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 
 /**
  *
@@ -21,6 +23,12 @@ public class SimulatorEvent {
     private Color color;
     
     private Object [] list;
+    
+    //
+    private AbstractHwComponent component1;
+    private AbstractHwComponent component2;
+    private EthInterface eth1;
+    private EthInterface eth2;
 
     public SimulatorEvent(long timeStamp, int sourcceId, int destId, int cableId, 
             String from, String to, PacketType packetType) {
@@ -62,4 +70,40 @@ public class SimulatorEvent {
     public String toString(){
         return "time="+timeStamp+", sourceId"+sourcceId+", destId"+destId+", from="+from+", to="+to+", type="+packetType+", color="+color;
     }
+    
+    
+    //////
+
+    public AbstractHwComponent getComponent1() {
+        return component1;
+    }
+
+    public void setComponent1(AbstractHwComponent component1) {
+        this.component1 = component1;
+    }
+
+    public AbstractHwComponent getComponent2() {
+        return component2;
+    }
+
+    public void setComponent2(AbstractHwComponent component2) {
+        this.component2 = component2;
+    }
+
+    public EthInterface getEth1() {
+        return eth1;
+    }
+
+    public void setEth1(EthInterface eth1) {
+        this.eth1 = eth1;
+    }
+
+    public EthInterface getEth2() {
+        return eth2;
+    }
+
+    public void setEth2(EthInterface eth2) {
+        this.eth2 = eth2;
+    }
+    
 }
