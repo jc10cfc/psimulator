@@ -55,7 +55,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     
                     if(DEBUG)System.out.println("Reciever do connect " + tmpCounter++);
                     
-                    int i = tmpRandom.nextInt(4);
+                    int i = tmpRandom.nextInt(10);
                     
                     if(i==3){
                         Thread.sleep(3000);

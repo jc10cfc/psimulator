@@ -63,14 +63,22 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
                     // get event
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+                    
+                    //calculate speed coeficient
+                    int speedCoeficient = calculateSpeedCoefifient();
 
+                    // get time
+                    int time = animationPanelOuterInterface.getAnimationDuration(event.getCableId(), speedCoeficient);
+                    
                     // start animation
-                    animationPanelOuterInterface.createAnimation(event.getPacketType(), 2000, event.getSourcceId(), event.getDestId());
+                    animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId());
 
                     // play event
                     if (DEBUG) {
                         System.out.println("Player alive " + tmpCounter++ + ", Next event=" + event);
                     }
+                    
+                    // sleep for short time
                     Thread.sleep(200);
 
                 } else if (isPlaying) { // if in playing mode
@@ -85,16 +93,18 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     if (DEBUG) {
                         System.out.println("Event: " + event + ".");
                     }
-                    int speedCoeficient = (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
-
-                    //speedCoeficient = speedCoeficient * 50;
-
+                    
+                    
+                    //calculate speed coeficient
+                    int speedCoeficient = calculateSpeedCoefifient();
+                    
+                    // calculate time
                     int time = animationPanelOuterInterface.getAnimationDuration(event.getCableId(), speedCoeficient);
 
                     // start animation
                     animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId());
 
-                    // sleep thread
+                    // sleep thread for the same time as the animation takes
                     Thread.sleep(time);
 
                     // move to next event
@@ -117,6 +127,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
         }
 
+    }
+    
+    private int calculateSpeedCoefifient(){
+        return (int) (((double) SimulatorManager.SPEED_MAX) / (double) currentSpeed); // 1-10
     }
 
     @Override
