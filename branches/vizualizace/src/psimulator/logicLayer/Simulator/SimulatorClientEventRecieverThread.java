@@ -134,7 +134,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         Graph graph = userInterfaceOuterFacade.getAnimationPanelOuterInterface().getGraph();
         
         // for now it is Random, the ids in parameter not valid
-        List<AbstractHwComponent> list = new ArrayList<AbstractHwComponent>(graph.getHwComponents());
+        List<AbstractHwComponent> list = new ArrayList<>(graph.getHwComponents());
         int componentCount = graph.getAbstractHwComponentsCount();
 
 
@@ -207,15 +207,17 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         }else{
             cableId = -1;
         }
+        
+        String detailsText = "A very long text to be displayed in onle line or even in two lines. "
+                + "This line should now skip to next line \n and this should be on the next line. "
+                + "Now two empty lines follows. And this is the end of our text area.";
 
         SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1.getId(), c2.getId(), 
-                cableId, c1.getDeviceName(), c2.getDeviceName(), packetType);
+                cableId, packetType, detailsText);
         
-        simulatorEvent.setComponent1(c1);
-        simulatorEvent.setComponent2(c2);
-        simulatorEvent.setEth1(eth1);
-        simulatorEvent.setEth2(eth2);
-        
+        // set details to event
+        simulatorEvent.setDetails(c1.getDeviceName(), c2.getDeviceName(), c1, c2, eth1, eth2);
+
         return simulatorEvent;
     }
 }
