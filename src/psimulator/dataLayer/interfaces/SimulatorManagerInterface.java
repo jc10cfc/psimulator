@@ -36,9 +36,10 @@ public interface SimulatorManagerInterface {
     public void setPlayingActivated();
     public void setPlayingStopped();
     
+    /*
     public void setPacketDetails(boolean activated);
     public void setNamesOfDevices(boolean activated);
-    
+    */
     public void setNewPacketRecieved();
     
     // -------------------- GETTERS --------------------------

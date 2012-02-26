@@ -14,14 +14,11 @@ public class EventTableModel extends AbstractTableModel {
     private boolean timeReset = true;
     
     private List<SimulatorEvent> eventList;
-    // names of columns are set in SimulatorControlPanel
-    //private String[] columnNames = {"Time", "From", "To", "Type", "Info"};
-    
+
     public EventTableModel(){
         eventList = Collections.synchronizedList(new ArrayList<SimulatorEvent>());
     }
-    
-    
+
     public void addSimulatorEvent(SimulatorEvent simulatorEvent){
         eventList.add(simulatorEvent);
         
@@ -45,7 +42,6 @@ public class EventTableModel extends AbstractTableModel {
         return !eventList.isEmpty();
     }
 
-    
     public boolean isTimeReset() {
         return timeReset;
     }
@@ -69,7 +65,14 @@ public class EventTableModel extends AbstractTableModel {
     public Class getColumnClass(int c) {
         return getValueAt(0, c).getClass();
     }
+
+    public List<SimulatorEvent> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<SimulatorEvent> eventList) {
+        this.eventList = eventList;
+    }
     
     
-   
 }

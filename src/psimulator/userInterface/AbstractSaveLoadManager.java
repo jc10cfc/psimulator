@@ -6,32 +6,35 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.SaveLoadException;
 import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class SaveLoadManager {
-
-    private DataLayerFacade dataLayer;
-    private Component parentComponent;
-    private JFileChooser fileChooser;
+public abstract class AbstractSaveLoadManager {
+    protected DataLayerFacade dataLayer;
+    protected Component parentComponent;
+    protected JFileChooser fileChooser;
     //
-    private File file;
-    private long lastSavedTimestamp;
-
-    public SaveLoadManager(Component parentComponent, DataLayerFacade dataLayer) {
+    protected File file;
+    protected long lastSavedTimestamp;
+    
+    public AbstractSaveLoadManager(Component parentComponent, DataLayerFacade dataLayer) {
         this.parentComponent = parentComponent;
         this.dataLayer = dataLayer;
-
+        
+        // create file chooser
         fileChooser = new JFileChooser();
 
+        // set texts to file chooser
         setTextsToFileChooser();
     }
 
+    public void updateTextsOnFileChooser() {
+        setTextsToFileChooser();
+    }
+    
     public File getFile() {
         return file;
     }
@@ -39,7 +42,11 @@ public class SaveLoadManager {
     public void setFile(File file) {
         this.file = file;
     }
-
+    
+    public void setLastSavedTimestamp() {
+        setLastSavedTimestamp(System.currentTimeMillis());
+    }
+    
     public long getLastSavedTimestamp() {
         return lastSavedTimestamp;
     }
@@ -48,196 +55,11 @@ public class SaveLoadManager {
         this.lastSavedTimestamp = lastSavedTimestamp;
     }
 
-    public void updateTextsOnFileChooser() {
-        setTextsToFileChooser();
-    }
-
-    public void setLastSavedTimestamp() {
-        setLastSavedTimestamp(System.currentTimeMillis());
-    }
-
     public void setLastSavedFile(File file) {
         setFile(file);
     }
-
-    /**
-     * true if data can be lost
-     *
-     * @return
-     */
-    public boolean doCloseAction(Graph graph) {
-        return doCheckIfPossibleDataLoss(graph);
-    }
-
-
-    /**
-     *
-     * @return true if data can be lost, false if cant be lost
-     */
-    public boolean doCheckIfPossibleDataLoss(Graph graph) {
-        // if no mofifications made
-        //if (!(jPanelUserInterfaceMain.hasGraph() && (jPanelUserInterfaceMain.canUndo() || jPanelUserInterfaceMain.canRedo()))) {
-        if (graph == null) {
-            return false;
-        }
-
-        // if timestamps say graph was not modified
-        if (graph.getLastEditTimestamp() <= getLastSavedTimestamp()) {
-            return false;
-        }
-
-        //save config data
-        int i = showWarningPossibleDataLossDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("CLOSING_NOT_SAVED_PROJECT"));
-
-        // if canceled
-        if (i == 2 || i == -1) {
-            // do nothing
-            return true;
-        }
-
-        // if YES -> save
-        if (i == 0) {
-            boolean result = doSaveAction(graph);
-            
-            // if not success
-            if(result == false){
-                // data can be lost
-                return true;
-            }else{
-                // data cant be lost
-                return false;
-            }
-        }
-
-        return false;
-    }
-
     
-    /**
-     * Shows save dialog.
-     *
-     */
-    public boolean doSaveAsAction(Graph graph) {
-        try {
-            // save as
-            return saveAs(graph);
-        } catch (SaveLoadException ex) {
-            showWarningSaveLoadError(ex.getParametersWrapper());
-            return false;
-        }
-    }
-    
-    /**
-     * saves without dialog
-     * Returns true if succesfull
-     *
-     * @throws SaveLoadException
-     */
-    public boolean doSaveAction(Graph graph) {
-        File file = getFile();
-
-        try {
-            // same as save as but do not ask the user
-            if (file != null) {
-                // save
-                save(file, graph);
-            } else { // same as save as
-                // save as
-                return saveAs(graph);
-            }
-        } catch (SaveLoadException ex) {
-            showWarningSaveLoadError(ex.getParametersWrapper());
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Shows open dialog
-     */
-    public Graph doOpenAction(){
-        try {
-            return open();
-        } catch (SaveLoadException ex) {
-            showWarningSaveLoadError(ex.getParametersWrapper());
-            return null;
-        }
-    }
-    
-    private Graph open() throws SaveLoadException {
-        int returnVal = fileChooser.showOpenDialog(parentComponent);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File selctedFile = fileChooser.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.println("Opening file: " + selctedFile);
-
-            // load graph
-            Graph graph = dataLayer.loadGraphFromFile(selctedFile);
-
-            // set saved timestamp and file name
-            setLastSavedFile(selctedFile);
-
-            return graph;
-        }
-        return null;
-    }
-    
-    /**
-     * Returns true if success
-     * 
-     * @param graph
-     * @return
-     * @throws SaveLoadException 
-     */
-    private boolean saveAs(Graph graph) throws SaveLoadException {
-        int returnVal = fileChooser.showSaveDialog(parentComponent);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File selctedFile = fileChooser.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.println("Saving as file: " + selctedFile);
-
-            // check if overwrite
-            if (selctedFile.exists()) {
-                int i = showWarningPossibleOverwriteDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("DO_YOU_WANT_TO_OVERWRITE"));
-                
-                // if OK, save dialog
-                if(i == JOptionPane.OK_OPTION){
-                    // save
-                    save(selctedFile, graph);
-                    return true;
-                }
-                
-                // if CANCEL, show dialog again
-                if(i == JOptionPane.NO_OPTION){
-                    return saveAs(graph);
-                }
-                
-                // cancel or quit dialog
-                return false;
-            }else{
-                // save
-                save(selctedFile, graph);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void save(File file, Graph graph) throws SaveLoadException {
-        // only get, not remove, we want to keep the graph inside editor
-        //Graph graph = jPanelUserInterfaceMain.getGraph();
-
-        // save graph
-        dataLayer.saveGraphToFile(graph, file);
-
-        // set saved timestamp
-        setLastSavedFile(file);
-        setLastSavedTimestamp();
-    }
-
-    private int showWarningPossibleDataLossDialog(String title, String message) {
+    protected final int showWarningPossibleDataLossDialog(String title, String message) {
         Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE"), dataLayer.getString("CANCEL")};
         int n = JOptionPane.showOptionDialog(parentComponent,
                 message,
@@ -250,8 +72,8 @@ public class SaveLoadManager {
 
         return n;
     }
-
-    private int showWarningPossibleOverwriteDialog(String title, String message) {
+    
+    protected final int showWarningPossibleOverwriteDialog(String title, String message) {
         Object[] options = {dataLayer.getString("YES"), dataLayer.getString("NO"), dataLayer.getString("CANCEL")};
         int n = JOptionPane.showOptionDialog(parentComponent,
                 message,
@@ -264,8 +86,8 @@ public class SaveLoadManager {
 
         return n;
     }
-
-    private void showWarningSaveLoadError(SaveLoadExceptionParametersWrapper parametersWrapper) {
+    
+    protected final void showWarningSaveLoadError(SaveLoadExceptionParametersWrapper parametersWrapper) {
 
         String title;
 
@@ -303,19 +125,16 @@ public class SaveLoadManager {
                 break;
         }
 
-        //message += ": " + parametersWrapper.getFileName();
-
-
         JOptionPane.showMessageDialog(parentComponent,
                 message,
                 title,
                 JOptionPane.ERROR_MESSAGE);
     }
-
+    
     /**
      * Sets internationalized texts to file chooser
      */
-    private void setTextsToFileChooser() {
+    protected final void setTextsToFileChooser() {
         UIManager.put("FileChooser.lookInLabelText", dataLayer.getString("FILE_CHOOSER_LOOK_IN"));
         UIManager.put("FileChooser.filesOfTypeLabelText", dataLayer.getString("FILE_CHOOSER_FILES_OF_TYPE"));
         UIManager.put("FileChooser.upFolderToolTipText", dataLayer.getString("FILE_CHOOSER_UP_FOLDER"));
