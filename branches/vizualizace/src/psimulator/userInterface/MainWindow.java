@@ -130,7 +130,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         // set of window properties
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.setMinimumSize(new Dimension(1024, 768));
+        this.setMinimumSize(new Dimension(987, 740));
         this.setSize(new Dimension(1024, 768));
         this.setVisible(true);
 
