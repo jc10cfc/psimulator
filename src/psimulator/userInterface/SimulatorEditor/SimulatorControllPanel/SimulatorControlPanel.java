@@ -11,6 +11,8 @@ import java.util.Observer;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
@@ -58,12 +60,6 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private JTableEventList jTableEventList;
     private JScrollPane jScrollPaneTableEventList;
     private JButton jButtonDeleteEvents;
-    // Details panel
-    //private JPanel jPanelDetails;
-    //private JPanel jPanelLeftColumn;
-    //private JPanel jPanelRightColumn;
-    //private JCheckBox jCheckBoxPacketDetails;
-    //private JCheckBox jCheckBoxNamesOfDevices;
     // Packet details panel
     private JPanel jPanelPacketDetails;
     private JLabel jLabelDetailsTimeName;
@@ -80,7 +76,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private JLabel jLabelDetailsTypeValue;
     private JTextArea jTextAreaPacketDetails;
     //
-    private DecimalFormat fmt = new DecimalFormat("0.000");  
+    private DecimalFormat fmt = new DecimalFormat("0.000");
     //
     //
     private DataLayerFacade dataLayer;
@@ -168,18 +164,16 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
     ////////------------ PRIVATE------------///////////
     private void addListenersToComponents() {
-
-        // jTableEventList listener for single click
-        jTableEventList.addMouseListener(new MouseAdapter() {
+        jTableEventList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             @Override
-            public void mousePressed(MouseEvent e) {
-                // get the coordinates of the mouse click
-                Point p = e.getPoint();
-
-                // get the row index that contains that coordinate
-                int rowNumber = jTableEventList.rowAtPoint(p);
-
+            public void valueChanged(ListSelectionEvent event) {
+                if (event.getValueIsAdjusting()) {
+                    return;
+                }
+                
+                int rowNumber = jTableEventList.getSelectedRow();
+                
                 // set concrete row in model
                 simulatorManagerInterface.setConcreteRawSelected(rowNumber);
             }
@@ -228,7 +222,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                     // if YES
                     if (i == 0) {
                         simulatorManagerInterface.deleteAllSimulatorEvents();
-                        
+
                         // update packet details
                         updatePacketDetailsAccordingToModel();
                     }
@@ -311,30 +305,22 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             }
         });
         /*
-        // -------------------- VIEW DETAILS ---------------------
-        jCheckBoxPacketDetails.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (jCheckBoxPacketDetails.isSelected()) {
-                    simulatorManagerInterface.setPacketDetails(true);
-                } else {
-                    simulatorManagerInterface.setPacketDetails(false);
-                }
-            }
+         * // -------------------- VIEW DETAILS ---------------------
+         * jCheckBoxPacketDetails.addActionListener(new ActionListener() {
+         *
+         * @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+         * { if (jCheckBoxPacketDetails.isSelected()) {
+         * simulatorManagerInterface.setPacketDetails(true); } else {
+         * simulatorManagerInterface.setPacketDetails(false); } } });
+         *
+         * jCheckBoxNamesOfDevices.addActionListener(new ActionListener() {
+         *
+         * @Override public void actionPerformed(java.awt.event.ActionEvent evt)
+         * { if (jCheckBoxNamesOfDevices.isSelected()) {
+         * simulatorManagerInterface.setNamesOfDevices(true); } else {
+         * simulatorManagerInterface.setNamesOfDevices(false); } }
         });
-
-        jCheckBoxNamesOfDevices.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                if (jCheckBoxNamesOfDevices.isSelected()) {
-                    simulatorManagerInterface.setNamesOfDevices(true);
-                } else {
-                    simulatorManagerInterface.setNamesOfDevices(false);
-                }
-            }
-        });*/
+         */
     }
 
     private void initComponents() {
@@ -373,7 +359,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         cons.gridx = 0;
         cons.gridy = 7;
         //createDetailsPanel();
-        
+
         this.add(createPacketDetailsPanel(), cons);
         cons.gridx = 0;
         cons.gridy = 8;
@@ -553,36 +539,28 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     /*
-    private JPanel createDetailsPanel() {
-        jPanelDetails = new JPanel();
-        jPanelDetails.setLayout(new BoxLayout(jPanelDetails, BoxLayout.LINE_AXIS));
-        //
-        jPanelLeftColumn = new JPanel();
-        jPanelLeftColumn.setLayout(new BoxLayout(jPanelLeftColumn, BoxLayout.PAGE_AXIS));
-        //
-        jPanelRightColumn = new JPanel();
-        jPanelRightColumn.setLayout(new BoxLayout(jPanelRightColumn, BoxLayout.PAGE_AXIS));
-        //
-        jCheckBoxPacketDetails = new JCheckBox();
-        jCheckBoxPacketDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
-        jCheckBoxNamesOfDevices = new JCheckBox();
-        jCheckBoxNamesOfDevices.setAlignmentX(Component.LEFT_ALIGNMENT);
-        //
-        jPanelLeftColumn.add(jCheckBoxPacketDetails);
-        jPanelLeftColumn.add(jCheckBoxNamesOfDevices);
-        //  
-        jPanelDetails.add(jPanelLeftColumn);
-        jPanelDetails.add(jPanelRightColumn);
-        //        
-        return jPanelDetails;
-    }*/
-    
-    private JPanel createPacketDetailsPanel(){
+     * private JPanel createDetailsPanel() { jPanelDetails = new JPanel();
+     * jPanelDetails.setLayout(new BoxLayout(jPanelDetails,
+     * BoxLayout.LINE_AXIS)); // jPanelLeftColumn = new JPanel();
+     * jPanelLeftColumn.setLayout(new BoxLayout(jPanelLeftColumn,
+     * BoxLayout.PAGE_AXIS)); // jPanelRightColumn = new JPanel();
+     * jPanelRightColumn.setLayout(new BoxLayout(jPanelRightColumn,
+     * BoxLayout.PAGE_AXIS)); // jCheckBoxPacketDetails = new JCheckBox();
+     * jCheckBoxPacketDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
+     * jCheckBoxNamesOfDevices = new JCheckBox();
+     * jCheckBoxNamesOfDevices.setAlignmentX(Component.LEFT_ALIGNMENT); //
+     * jPanelLeftColumn.add(jCheckBoxPacketDetails);
+     * jPanelLeftColumn.add(jCheckBoxNamesOfDevices); //
+     * jPanelDetails.add(jPanelLeftColumn);
+     * jPanelDetails.add(jPanelRightColumn); // return jPanelDetails;
+    }
+     */
+    private JPanel createPacketDetailsPanel() {
         jPanelPacketDetails = new JPanel();
         jPanelPacketDetails.setLayout(new BoxLayout(jPanelPacketDetails, BoxLayout.PAGE_AXIS));
         //
         JPanel jPanelDetails = new JPanel();
-        jPanelDetails.setLayout(new GridLayout(0,2));
+        jPanelDetails.setLayout(new GridLayout(0, 2));
         //
         JPanel jPanelLeftColumn = new JPanel();
         jPanelLeftColumn.setLayout(new BoxLayout(jPanelLeftColumn, BoxLayout.PAGE_AXIS));
@@ -598,28 +576,28 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         JPanel jPanelTime = new JPanel();
         jPanelTime.setLayout(new BoxLayout(jPanelTime, BoxLayout.LINE_AXIS));
         jPanelTime.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         jLabelDetailsTimeName = new JLabel();
-        Font boldFont =  new Font(jLabelDetailsTimeName.getFont().getName(), Font.BOLD, jLabelDetailsTimeName.getFont().getSize());
+        Font boldFont = new Font(jLabelDetailsTimeName.getFont().getName(), Font.BOLD, jLabelDetailsTimeName.getFont().getSize());
         jLabelDetailsTimeName.setFont(boldFont);
         jPanelTime.add(jLabelDetailsTimeName);
         jLabelDetailsTimeValue = new JLabel();
-        
+
         jPanelTime.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelTime.add(jLabelDetailsTimeName);
         jPanelTime.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelTime.add(jLabelDetailsTimeValue);
-        
+
         jPanelLeftColumn.add(jPanelTime);
-        
+
         JPanel jPanelType = new JPanel();
         jPanelType.setLayout(new BoxLayout(jPanelType, BoxLayout.LINE_AXIS));
         jPanelType.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         jLabelDetailsTypeName = new JLabel();
         jLabelDetailsTypeName.setFont(boldFont);
         jLabelDetailsTypeValue = new JLabel();
-        
+
         jPanelType.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelType.add(jLabelDetailsTypeName);
         jPanelType.add(Box.createRigidArea(new Dimension(5, 0)));
@@ -634,52 +612,52 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jLabelDetailsFromName = new JLabel();
         jLabelDetailsFromName.setFont(boldFont);
         jLabelDetailsFromValue = new JLabel();
-        
+
         jPanelFrom.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelFrom.add(jLabelDetailsFromName);
         jPanelFrom.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelFrom.add(jLabelDetailsFromValue);
-        
+
         jPanelLeftColumn.add(jPanelFrom);
-        
+
         JPanel jPanelFromInterface = new JPanel();
         jPanelFromInterface.setLayout(new BoxLayout(jPanelFromInterface, BoxLayout.LINE_AXIS));
         jPanelFromInterface.setAlignmentX(Component.LEFT_ALIGNMENT);
         jLabelDetailsFromInterfaceName = new JLabel();
         jLabelDetailsFromInterfaceName.setFont(boldFont);
         jLabelDetailsFromInterfaceValue = new JLabel();
- 
+
         jPanelFromInterface.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelFromInterface.add(jLabelDetailsFromInterfaceName);
         jPanelFromInterface.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelFromInterface.add(jLabelDetailsFromInterfaceValue);
-        
+
         jPanelRightColumn.add(jPanelFromInterface);
-        
+
         //
         JPanel jPanelTo = new JPanel();
         jPanelTo.setLayout(new BoxLayout(jPanelTo, BoxLayout.LINE_AXIS));
         jPanelTo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         jLabelDetailsToName = new JLabel();
         jLabelDetailsToName.setFont(boldFont);
         jLabelDetailsToValue = new JLabel();
-        
+
         jPanelTo.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelTo.add(jLabelDetailsToName);
         jPanelTo.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelTo.add(jLabelDetailsToValue);
-        
+
         jPanelLeftColumn.add(jPanelTo);
-        
+
         JPanel jPanelToInterface = new JPanel();
         jPanelToInterface.setLayout(new BoxLayout(jPanelToInterface, BoxLayout.LINE_AXIS));
         jPanelToInterface.setAlignmentX(Component.LEFT_ALIGNMENT);
         jLabelDetailsToInterfaceName = new JLabel();
         jLabelDetailsToInterfaceName.setFont(boldFont);
         jLabelDetailsToInterfaceName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        jLabelDetailsToInterfaceValue  = new JLabel();
-        
+        jLabelDetailsToInterfaceValue = new JLabel();
+
         jPanelToInterface.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelToInterface.add(jLabelDetailsToInterfaceName);
         jPanelToInterface.add(Box.createRigidArea(new Dimension(5, 0)));
@@ -690,22 +668,22 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //
         JPanel jPanelTextArea = new JPanel();
         jPanelTextArea.setLayout(new BoxLayout(jPanelTextArea, BoxLayout.PAGE_AXIS));
-        
+
         jTextAreaPacketDetails = new JTextArea(5, 20);
-        JScrollPane scrollPane = new JScrollPane(jTextAreaPacketDetails); 
+        JScrollPane scrollPane = new JScrollPane(jTextAreaPacketDetails);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setMinimumSize(new Dimension(100, 80));
         //scrollPane.setMaximumSize(new Dimension(500, 150));
-        
+
         jTextAreaPacketDetails.setFont(new Font(boldFont.getName(), Font.PLAIN, boldFont.getSize()));
         jTextAreaPacketDetails.setLineWrap(true);
         jTextAreaPacketDetails.setWrapStyleWord(true);
         jTextAreaPacketDetails.setEditable(false);
-        
+
         jPanelTextArea.add(scrollPane);
         jPanelPacketDetails.add(jPanelTextArea);
-        
+
         return jPanelPacketDetails;
     }
 
@@ -748,12 +726,12 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jTableEventList.getColumnModel().getColumn(4).setHeaderValue(dataLayer.getString("INFO"));
         //
         jPanelPacketDetails.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("SELECTED_PACKET_DETAILS")));
-        jLabelDetailsTimeName.setText(dataLayer.getString("TIME")+":");
-        jLabelDetailsFromName.setText(dataLayer.getString("FROM")+":");
-        jLabelDetailsFromInterfaceName.setText(dataLayer.getString("INTERFACE")+":");
-        jLabelDetailsToName.setText(dataLayer.getString("TO")+":");
-        jLabelDetailsToInterfaceName.setText(dataLayer.getString("INTERFACE")+":");
-        jLabelDetailsTypeName.setText(dataLayer.getString("TYPE")+":");
+        jLabelDetailsTimeName.setText(dataLayer.getString("TIME") + ":");
+        jLabelDetailsFromName.setText(dataLayer.getString("FROM") + ":");
+        jLabelDetailsFromInterfaceName.setText(dataLayer.getString("INTERFACE") + ":");
+        jLabelDetailsToName.setText(dataLayer.getString("TO") + ":");
+        jLabelDetailsToInterfaceName.setText(dataLayer.getString("INTERFACE") + ":");
+        jLabelDetailsTypeName.setText(dataLayer.getString("TYPE") + ":");
         //
         updateConnectionInfoAccordingToModel();
         updateRecordingInfoAccordingToModel();
@@ -825,16 +803,16 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jTableEventList.getSelectionModel().clearSelection();
         }
     }
-    
-    private void updatePacketDetailsAccordingToModel(){
+
+    private void updatePacketDetailsAccordingToModel() {
         int row = simulatorManagerInterface.getCurrentPositionInList();
-        
+
         // if some row selected
         if (simulatorManagerInterface.getListSize() > 0 && row >= 0) {
             SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
-            
-            String seconds =  fmt.format(event.getTimeStamp() / 1000.0);
-            jLabelDetailsTimeValue.setText(seconds); 
+
+            String seconds = fmt.format(event.getTimeStamp() / 1000.0);
+            jLabelDetailsTimeValue.setText(seconds);
             jLabelDetailsTypeValue.setText(event.getPacketType().toString());
             //
             jLabelDetailsFromValue.setText(event.getComponent1().getDeviceName());
@@ -843,8 +821,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jLabelDetailsToValue.setText(event.getComponent2().getDeviceName());
             jLabelDetailsToInterfaceValue.setText(event.getEth2().getName());
             //
-            jTextAreaPacketDetails.setText("A very long text to be displayed in onle line or even in two lines. This line should now skip to next line \n and this should be on the next line. Now two empty lines follows. And this is the end of our text area.");
-        }else{
+            jTextAreaPacketDetails.setText(event.getDetailsText());
+        } else {
             jLabelDetailsTimeValue.setText("");
             jLabelDetailsFromValue.setText("");
             jLabelDetailsFromInterfaceValue.setText("");

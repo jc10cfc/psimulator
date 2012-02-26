@@ -16,7 +16,7 @@ public class JTableEventList extends JTable {
 
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // only single selection
         this.setRowSelectionAllowed(true);                           // row selection enabled
-        this.setFocusable(false);                                    // dont display focus on cells
+        this.setFocusable(true);                                    // dont display focus on cells
         this.getTableHeader().setReorderingAllowed(false);           // disable reordering columns
 
         // set custom cell renderer for color column
@@ -29,8 +29,6 @@ public class JTableEventList extends JTable {
         // init column sizes of table
         initColumnSizes();
     }
-    
-    
     
     private void initColumnSizes() {
         
