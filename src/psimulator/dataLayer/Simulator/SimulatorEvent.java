@@ -62,6 +62,10 @@ public class SimulatorEvent {
         return sourcceId;
     }
 
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+    
     public Object getValueAt(int i){
         return list[i];
     }
