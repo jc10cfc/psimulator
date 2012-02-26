@@ -17,8 +17,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public static final int SPEED_MAX = 100;
     public static final int SPEED_INIT = 50;
     // simulator state variables
-    private boolean isPacketDetails = false;
-    private boolean isDeviceNames = false;
     private boolean isConnectedToServer = false;
     private boolean isRecording = false;
     private boolean isRealtime = false;
@@ -259,7 +257,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
     }
-
+/*
     @Override
     public void setPacketDetails(boolean activated) {
         isPacketDetails = activated;
@@ -281,7 +279,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS);
     }
-
+*/
     @Override
     public void setConcreteRawSelected(int row) {
         System.out.println("Row " + row + " double clicked");

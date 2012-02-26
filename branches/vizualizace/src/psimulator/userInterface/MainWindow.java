@@ -35,7 +35,7 @@ import psimulator.userInterface.actionListerners.PreferencesActionListener;
  */
 public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade, Observer {
 
-    private SaveLoadManager saveLoadManager;
+    private SaveLoadManagerGraph saveLoadManager;
     //
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
@@ -69,7 +69,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         } catch (Exception e) {
         }
         
-        saveLoadManager = new SaveLoadManager((Component)this, dataLayer);
+        saveLoadManager = new SaveLoadManagerGraph((Component)this, dataLayer);
 
         jMenuBar = new MenuBar(dataLayer);
         jToolBar = new ToolBar(dataLayer);
@@ -357,7 +357,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 return;
             }
             
-            Graph graph = saveLoadManager.doOpenAction();
+            Graph graph = saveLoadManager.doOpenGraphAction();
             
             if(graph!=null){
                 // init graph (set edit timestamp)
@@ -381,7 +381,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
-            saveLoadManager.doSaveAction(jPanelUserInterfaceMain.getGraph());
+            saveLoadManager.doSaveGraphAction(jPanelUserInterfaceMain.getGraph());
         }
     }
 
@@ -397,7 +397,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
-            saveLoadManager.doSaveAsAction(jPanelUserInterfaceMain.getGraph());
+            saveLoadManager.doSaveAsGraphAction(jPanelUserInterfaceMain.getGraph());
         }
     }
 

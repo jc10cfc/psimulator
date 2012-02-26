@@ -10,23 +10,25 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterfac
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class SimulatorEvent {
-
+    // those variables has to be loaded from file / recieved via TCP connection, SAVE THEM
     private long timeStamp;
-    private String from;
-    private String to;
     private int sourcceId;
     private int destId;
     private int cableId;
     private PacketType packetType;
     private String detailsText;
-    private Color color;
-    private Object[] list;
-    //
-    private AbstractHwComponent component1;
-    private AbstractHwComponent component2;
-    private EthInterface eth1;
-    private EthInterface eth2;
+   
+    // those variables will be set using set details method, DO NOT SAVE THEM
+    private transient Color color;
+    private transient String from;
+    private transient String to;
+    private transient AbstractHwComponent component1;
+    private transient AbstractHwComponent component2;
+    private transient EthInterface eth1;
+    private transient EthInterface eth2;
+    private transient Object[] list;
 
+    // USE THIS CONSTRUCTOR when creating event
     public SimulatorEvent(long timeStamp, int sourcceId, int destId, int cableId,
             PacketType packetType, String detailsText) {
         this.timeStamp = timeStamp;
@@ -35,8 +37,6 @@ public class SimulatorEvent {
         this.destId = destId;
         this.cableId = cableId;
         this.detailsText = detailsText;
-
-        this.color = ColorMixerSignleton.getColorAccodringToPacketType(packetType);
     }
 
     public PacketType getPacketType() {
@@ -91,6 +91,8 @@ public class SimulatorEvent {
         this.component2 = component2;
         this.eth1 = eth1;
         this.eth2 = eth2;
+        
+        this.color = ColorMixerSignleton.getColorAccodringToPacketType(packetType);
         
         Object[] tmp = {timeStamp, from, to, packetType, color};
         list = tmp;
