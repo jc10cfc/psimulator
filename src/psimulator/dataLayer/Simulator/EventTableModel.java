@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 
 /**
  *
@@ -66,12 +67,16 @@ public class EventTableModel extends AbstractTableModel {
         return getValueAt(0, c).getClass();
     }
 
-    public List<SimulatorEvent> getEventList() {
-        return eventList;
+    public List<SimulatorEvent> getEventListCopy() {
+        List<SimulatorEvent> copy = new ArrayList<>(eventList);
+        return copy;
     }
 
     public void setEventList(List<SimulatorEvent> eventList) {
+        // set event list
         this.eventList = eventList;
+        // fire event
+        this.fireTableRowsInserted(0, eventList.size());
     }
     
     

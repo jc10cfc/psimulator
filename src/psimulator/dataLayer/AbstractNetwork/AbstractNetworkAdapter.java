@@ -52,12 +52,12 @@ public class AbstractNetworkAdapter {
 
         } finally {
             try {
-                fileOuptutStream.close();
+                objectOutputStream.close();
             } catch (IOException ex) {
                 // nothing to do
             }
             try {
-                objectOutputStream.close();
+                fileOuptutStream.close();
             } catch (IOException ex) {
                 // nothing to do
             }
@@ -80,13 +80,14 @@ public class AbstractNetworkAdapter {
         } catch (IOException ex) {
             Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
+            
             try {
-                fileInputStream.close();
+                objectInputStream.close();
             } catch (IOException ex) {
                 // nothing to do
             }
             try {
-                objectInputStream.close();
+                fileInputStream.close();
             } catch (IOException ex) {
                 // nothing to do
             }

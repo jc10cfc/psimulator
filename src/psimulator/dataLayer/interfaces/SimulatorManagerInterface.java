@@ -2,7 +2,8 @@ package psimulator.dataLayer.interfaces;
 
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Simulator.EventTableModel;
-import psimulator.dataLayer.Simulator.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 
 /**
  *
@@ -42,6 +43,9 @@ public interface SimulatorManagerInterface {
     */
     public void setNewPacketRecieved();
     
+    public SimulatorEventsWrapper getSimulatorEvents();
+    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents);
+    
     // -------------------- GETTERS --------------------------
     public EventTableModel getEventTableModel();
     public boolean isConnectedToServer();
@@ -62,5 +66,7 @@ public interface SimulatorManagerInterface {
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
      
     public boolean isTimeReset();
+    
+    
     
 }

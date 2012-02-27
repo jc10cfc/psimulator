@@ -2,6 +2,7 @@ package psimulator.dataLayer;
 
 import java.io.File;
 import java.util.Observer;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.LanguageInterface;
 import psimulator.dataLayer.interfaces.PreferencesInterface;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
@@ -19,4 +20,7 @@ public abstract class DataLayerFacade implements PreferencesInterface, LanguageI
     
     public abstract void saveGraphToFile(Graph graph, File file) throws SaveLoadException;
     public abstract Graph loadGraphFromFile(File file) throws SaveLoadException;
+    
+    public abstract void saveEventsToFile(SimulatorEventsWrapper simulatorEvents, File file) throws SaveLoadException;
+    public abstract SimulatorEventsWrapper loadEventsFromFile(File file) throws SaveLoadException;
 }
