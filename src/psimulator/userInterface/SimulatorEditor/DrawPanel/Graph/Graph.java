@@ -497,6 +497,32 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
     
     
+    /**
+     * Call when something in graph changed (move, add, remove)
+     */
+    @Override
+    public void editHappend() {
+        //
+        lastEditTimestamp = System.currentTimeMillis();
+        
+        // inform about graph change
+        customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_COMPONENT_CHANGED);
+    }
+
+    @Override
+    public long getLastEditTimestamp() {
+        return lastEditTimestamp;
+    }
+
+    @Override
+    public synchronized void addObserver(Observer obsrvr) {
+        customObservable.addObserver(obsrvr);
+    }
+
+    @Override
+    public synchronized void deleteObserver(Observer obsrvr) {
+        customObservable.deleteObserver(obsrvr);
+    }
 
 // ============= MARKING =========    
     @Override
@@ -887,30 +913,4 @@ public class Graph extends JComponent implements GraphOuterInterface {
         return cablesMap.get(id);
     }
 
-    /**
-     * Call when something in graph changed (move, add, remove)
-     */
-    @Override
-    public void editHappend() {
-        //
-        lastEditTimestamp = System.currentTimeMillis();
-        
-        // inform about graph change
-        customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_COMPONENT_CHANGED);
-    }
-
-    @Override
-    public long getLastEditTimestamp() {
-        return lastEditTimestamp;
-    }
-
-    @Override
-    public synchronized void addObserver(Observer obsrvr) {
-        customObservable.addObserver(obsrvr);
-    }
-
-    @Override
-    public synchronized void deleteObserver(Observer obsrvr) {
-        customObservable.deleteObserver(obsrvr);
-    }
 }

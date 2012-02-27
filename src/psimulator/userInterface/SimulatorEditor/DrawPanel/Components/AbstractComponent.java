@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
+import psimulator.dataLayer.Network.Identifiable;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Point;
@@ -27,9 +28,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
     //
     private boolean marked = false;
     //
-    
-    
-    
+
     /**
      * Use when creating graph by user actions.
      * @param dataLayer
@@ -89,8 +88,6 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
     public abstract void doUpdateImages();
 
     public abstract void initialize();
-
-    
 
     /**
      * Creates images for givent texts
