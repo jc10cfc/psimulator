@@ -13,17 +13,7 @@ public class NetworkComponentsFactory {
 
     public NetworkComponentsFactory() {
     }
-
-    public BundleOfCablesModel createBundleOfCablesModel(HwComponentModel component1, HwComponentModel component2) {
-        Integer id = GeneratorSingleton.getInstance().getNextId();
-        HwTypeEnum hwType = HwTypeEnum.BUNDLE_OF_CABLES;
-        List<CableModel> cables = new ArrayList<>();
-        
-        BundleOfCablesModel bocm = new BundleOfCablesModel(id, hwType, component1, component2, cables);
-        
-        return bocm;
-    }
-    
+   
     public CableModel createCable(HwTypeEnum hwType, HwComponentModel component1, HwComponentModel component2, EthInterfaceModel interface1, EthInterfaceModel interface2){
         Integer id = GeneratorSingleton.getInstance().getNextId();
         
@@ -95,7 +85,7 @@ public class NetworkComponentsFactory {
         HwComponentModel hwComponentModel = null;
         CableModel cable = null;
         
-        EthInterfaceModel ethInterfaceModel = new EthInterfaceModel(interfaceId, hwType, hwComponentModel, cable, ipAddress, macAddress);
+        EthInterfaceModel ethInterfaceModel = new EthInterfaceModel(interfaceId, hwType, hwComponentModel, cable, ipAddress, macAddress, interfaceName);
         
         return ethInterfaceModel;
     }

@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -10,6 +9,7 @@ import java.util.List;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
@@ -17,7 +17,6 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterf
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuAbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuCable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableMoveComponent;
-import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 import psimulator.userInterface.SimulatorEditor.Tools.ManipulationTool;
 

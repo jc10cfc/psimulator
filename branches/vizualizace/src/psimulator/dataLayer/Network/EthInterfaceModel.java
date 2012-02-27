@@ -6,7 +6,7 @@ import psimulator.AbstractNetwork.HwTypeEnum;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class EthInterfaceModel extends AbstractComponentModel{
+public class EthInterfaceModel extends AbstractComponentModel implements NameInterface {
     
     /**
      * Component that this interface belongs to
@@ -19,6 +19,10 @@ public class EthInterfaceModel extends AbstractComponentModel{
     
     // -------------------------------------------------------
     /**
+     * Name.
+     */
+    private String interfaceName;
+    /**
      * Ip address of this eth interface
      */
     private String ipAddress;
@@ -27,7 +31,8 @@ public class EthInterfaceModel extends AbstractComponentModel{
      */
     private String macAddress;
 
-    public EthInterfaceModel(Integer id, HwTypeEnum hwType, HwComponentModel hwComponent, CableModel cable, String ipAddress, String macAddress) {
+    public EthInterfaceModel(Integer id, HwTypeEnum hwType, HwComponentModel hwComponent, CableModel cable, 
+            String ipAddress, String macAddress, String interfaceName) {
         super(id, hwType);
         
         // assign variables
@@ -35,6 +40,7 @@ public class EthInterfaceModel extends AbstractComponentModel{
         this.cable = cable;
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
+        this.interfaceName = interfaceName;
     }
 
     /**
@@ -118,4 +124,19 @@ public class EthInterfaceModel extends AbstractComponentModel{
     public void setMacAddress(String macAddress) {
         this.macAddress = macAddress;
     }
+
+    /**
+     * Returns name of interface
+     */
+    @Override
+    public String getName() {
+        return interfaceName;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.interfaceName = name;
+    }
+    
+    
 }
