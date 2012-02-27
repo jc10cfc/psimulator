@@ -1,4 +1,4 @@
-package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
+package psimulator.dataLayer.Network;
 
 /**
  *
