@@ -10,17 +10,12 @@ import psimulator.AbstractNetwork.HwTypeEnum;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class HwComponentModel extends AbstractComponentModel implements PositionInterface, NameInterface{
+public final class HwComponentModel extends AbstractComponentModel implements PositionInterface, NameInterface{
     
-    /**
-     * List with bundles of cables that are connected to this component
-     */
-    private List<BundleOfCablesModel> bundlesOfCables;
     /**
      * LinkedHashMap of EthInterfaces that component owns. Key is the ethInterface ID.
      */
     private LinkedHashMap<Integer, EthInterfaceModel> interfacesMap;
-    
     // -------------------------------------------------------
     /**
      * Device name.
@@ -34,13 +29,10 @@ public class HwComponentModel extends AbstractComponentModel implements Position
      * Y position of component in Default zoom
      */
     private int defaultZoomYPos;
-
-    
+      
     public HwComponentModel(Integer id, HwTypeEnum hwType, String deviceName, List<EthInterfaceModel> ethInterfaces, int defaultZoomXPos, int defaultZoomYPos){
         super(id, hwType);
         
-        // create new array list for bundles of cables
-        bundlesOfCables = new ArrayList<>();
         interfacesMap = new LinkedHashMap<>();
         
         // add values to variables
@@ -52,6 +44,54 @@ public class HwComponentModel extends AbstractComponentModel implements Position
         for(EthInterfaceModel eth : ethInterfaces){
             interfacesMap.put(eth.getId(), eth);
         }
+    }
+    
+    /**
+     * Gets first avaiable ethInterface, if no avaiable null is renturned
+     *
+     * @return
+     */
+    public EthInterfaceModel getFirstFreeInterface() {
+        for (EthInterfaceModel ei : interfacesMap.values()) {
+            if (!ei.hasCable()) {
+                return ei;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * finds out whether component has any free EthInterface
+     *
+     * @return
+     */
+    public boolean hasFreeInterace() {
+        for (EthInterfaceModel ei : interfacesMap.values()) {
+            if (!ei.hasCable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+ 
+    public Object[] getInterfacesNames() {
+        Object[] list = new Object[interfacesMap.size()];
+
+        int i=0;
+        for(EthInterfaceModel ei : interfacesMap.values()){
+            list[i] = ei.getName();
+            i++;
+        }
+        return list;
+    }
+
+    public EthInterfaceModel getEthInterface(Integer id) {
+        return interfacesMap.get(id);
+    }
+
+    public EthInterfaceModel getEthInterfaceAtIndex(int index) {
+        List<EthInterfaceModel> list = new ArrayList<>(interfacesMap.values());
+        return list.get(index);
     }
 
     /**
@@ -68,7 +108,7 @@ public class HwComponentModel extends AbstractComponentModel implements Position
      * @return 
      */
     @Override
-    public int getDefaultZOomYPos() {
+    public int getDefaultZoomYPos() {
         return defaultZoomYPos;
     }
 
@@ -109,34 +149,10 @@ public class HwComponentModel extends AbstractComponentModel implements Position
     }
     
     /**
-     * gets all bundles of cables
-     * @return
-     */
-    public List<BundleOfCablesModel> getBundleOfCableses() {
-        return bundlesOfCables;
-    }
-
-    /**
-     * adds bundle of cables to bundle of cables list
-     * @param boc
-     */
-    public void addBundleOfCables(BundleOfCablesModel boc) {
-        bundlesOfCables.add(boc);
-    }
-
-    /**
-     * removes bundle of cables from this components bundle of cables list
-     * @param boc
-     */
-    public void removeBundleOfCables(BundleOfCablesModel boc) {
-        bundlesOfCables.remove(boc);
-    }
-    
-    /**
      * Returns collection of interfaces
      */
     public Collection getEthInterfaces(){
         return interfacesMap.values();
-    }
+    } 
     
 }

@@ -12,16 +12,11 @@ public class NetworkModel implements Identifiable{
     /**
      * Map with components. Identified by component ID.
      */
-    private LinkedHashMap<Integer, HwComponentModel> componentsMap;// = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, HwComponentModel> componentsMap;
     /**
      * Map with cables. Identified by cable ID.
      */
-    private LinkedHashMap<Integer, CableModel> cablesMap;// = new LinkedHashMap<>();
-    /**
-     * List with bundeOfCables.
-     */
-    private List<BundleOfCablesModel> bundlesOfCables;// = new ArrayList<>();
-    //
+    private LinkedHashMap<Integer, CableModel> cablesMap;
     /**
      * Last edit timestamp in milliseconds.
      */
@@ -32,10 +27,9 @@ public class NetworkModel implements Identifiable{
     private Integer id;
 
     
-    public NetworkModel(LinkedHashMap<Integer, HwComponentModel> componentsMap, LinkedHashMap<Integer, CableModel> cablesMap, List<BundleOfCablesModel> bundlesOfCables, long lastEditTimestamp, Integer id) {
+    public NetworkModel(LinkedHashMap<Integer, HwComponentModel> componentsMap, LinkedHashMap<Integer, CableModel> cablesMap, long lastEditTimestamp, Integer id) {
         this.componentsMap = componentsMap;
         this.cablesMap = cablesMap;
-        this.bundlesOfCables = bundlesOfCables;
         this.lastEditTimestamp = lastEditTimestamp;
         this.id = id;
     }
@@ -80,26 +74,13 @@ public class NetworkModel implements Identifiable{
         Collection<HwComponentModel> colection = componentsMap.values();
         colection.removeAll(componentList);
     }
-    
-    public List<BundleOfCablesModel> getBundlesOfCables() {
-        return bundlesOfCables;
-    }
-    
-    public void addBundleOfCables(BundleOfCablesModel bundleOfCablesModel){
-        bundlesOfCables.add(bundleOfCablesModel);
-    }
-    
-    public void removeBundleOfCables(BundleOfCablesModel bundleOfCablesModel){
-        bundlesOfCables.remove(bundleOfCablesModel);
-    }
-    
+
     public void addCable(CableModel cableModel){
         cablesMap.put(cableModel.getId(), cableModel);
     }
     
     public void removeCable(CableModel cableModel){
         cablesMap.remove(cableModel.getId());
-                
     }
     
     public int getCablesCount() {
