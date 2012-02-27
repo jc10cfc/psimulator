@@ -1,4 +1,4 @@
-package psimulator.dataLayer.Simulator;
+package psimulator.dataLayer.SimulatorEvents;
 
 /**
  *

@@ -1,7 +1,5 @@
 package psimulator.userInterface;
 
-import psimulator.userInterface.GlassPane.GlassPanelPainter;
-import psimulator.userInterface.GlassPane.MainWindowGlassPane;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -16,9 +14,12 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
+import psimulator.userInterface.GlassPane.GlassPanelPainter;
+import psimulator.userInterface.GlassPane.MainWindowGlassPane;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
@@ -35,7 +36,8 @@ import psimulator.userInterface.actionListerners.PreferencesActionListener;
  */
 public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade, Observer {
 
-    private SaveLoadManagerGraph saveLoadManager;
+    private SaveLoadManagerGraph saveLoadManagerGraph;
+    private SaveLoadManagerEvents saveLoadManagerEvents;
     //
     private DataLayerFacade dataLayer;
     private ControllerFacade controller;
@@ -69,7 +71,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         } catch (Exception e) {
         }
         
-        saveLoadManager = new SaveLoadManagerGraph((Component)this, dataLayer);
+        saveLoadManagerGraph = new SaveLoadManagerGraph((Component)this, dataLayer);
+        saveLoadManagerEvents = new SaveLoadManagerEvents((Component)this, dataLayer);
 
         jMenuBar = new MenuBar(dataLayer);
         jToolBar = new ToolBar(dataLayer);
@@ -122,7 +125,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             @Override
             public void windowClosing(WindowEvent e) {
                 // if no data loss possible
-                if(!saveLoadManager.doCloseAction(jPanelUserInterfaceMain.getGraph())){
+                if(!saveLoadManagerGraph.doCloseAction(jPanelUserInterfaceMain.getGraph())){
                     System.exit(0);
                 }
             }
@@ -193,7 +196,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     @Override
     public void update(Observable o, Object o1) {
-        saveLoadManager.updateTextsOnFileChooser();
+        saveLoadManagerGraph.updateTextsOnFileChooser();
+        saveLoadManagerEvents.updateTextsOnFileChooser();
     }
 
     @Override
@@ -209,6 +213,24 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     @Override
     public Component getMainWindowComponent() {
         return this;
+    }
+
+    /**
+     * Saves events. Exceptions handled inside.
+     * @param simulatorEventsWrapper 
+     */
+    @Override
+    public void saveEventsAction(SimulatorEventsWrapper simulatorEventsWrapper) {
+        saveLoadManagerEvents.doSaveAsEventsAction(simulatorEventsWrapper);
+    }
+
+    /**
+     * Returns loaded events or null if it could not be loaded. Exceptions are handled inside.
+     * @return 
+     */
+    @Override
+    public SimulatorEventsWrapper loadEventsAction() {
+        return saveLoadManagerEvents.doLoadEventsAction();
     }
 
     /////////////////////-----------------------------------////////////////////
@@ -309,15 +331,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (saveLoadManager.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
+            if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
 
             refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR, false);
 
             // set saved timestamp
-            saveLoadManager.setLastSavedTimestamp();
-            saveLoadManager.setLastSavedFile(null);
+            saveLoadManagerGraph.setLastSavedTimestamp();
+            saveLoadManagerGraph.setLastSavedFile(null);
         }
     }
 
@@ -333,7 +355,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (saveLoadManager.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
+            if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
 
@@ -353,18 +375,18 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             // if data can be lost
-            if (saveLoadManager.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
+            if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
             
-            Graph graph = saveLoadManager.doOpenGraphAction();
+            Graph graph = saveLoadManagerGraph.doOpenGraphAction();
             
             if(graph!=null){
                 // init graph (set edit timestamp)
                 refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
 
                 // set saved timestamp
-                saveLoadManager.setLastSavedTimestamp();
+                saveLoadManagerGraph.setLastSavedTimestamp();
             }
         }
     }
@@ -381,7 +403,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
-            saveLoadManager.doSaveGraphAction(jPanelUserInterfaceMain.getGraph());
+            saveLoadManagerGraph.doSaveGraphAction(jPanelUserInterfaceMain.getGraph());
         }
     }
 
@@ -397,7 +419,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
-            saveLoadManager.doSaveAsGraphAction(jPanelUserInterfaceMain.getGraph());
+            saveLoadManagerGraph.doSaveAsGraphAction(jPanelUserInterfaceMain.getGraph());
         }
     }
 
@@ -412,7 +434,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(!saveLoadManager.doCloseAction(jPanelUserInterfaceMain.getGraph())){
+            if(!saveLoadManagerGraph.doCloseAction(jPanelUserInterfaceMain.getGraph())){
                 System.exit(0);
             }
         }

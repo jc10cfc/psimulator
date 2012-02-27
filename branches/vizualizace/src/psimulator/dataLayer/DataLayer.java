@@ -1,12 +1,17 @@
 package psimulator.dataLayer;
 
 import java.io.File;
+import java.util.List;
 import java.util.Observer;
 import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapter;
 import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapterXML;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsSerializer;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsSerializerXML;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.dataLayer.language.LanguageManager;
@@ -25,6 +30,8 @@ public class DataLayer extends DataLayerFacade {
     private SimulatorManager simulatorManager;
     private AbstractNetworkAdapter abstractNetworkAdapter;
     private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
+    private SimulatorEventsSerializer simulatorEventsSerializer;
+    private SimulatorEventsSerializerXML simulatorEventsSerializerXML;
 
     public DataLayer() {
         preferencesManager = new PreferencesManager();
@@ -32,6 +39,8 @@ public class DataLayer extends DataLayerFacade {
         simulatorManager = new SimulatorManager();
         abstractNetworkAdapter = new AbstractNetworkAdapter();
         abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
+        simulatorEventsSerializer = new SimulatorEventsSerializer();
+        simulatorEventsSerializerXML = new SimulatorEventsSerializerXML();
         
         // get instance to init imageFactory
         ImageFactorySingleton.getInstance();
@@ -112,6 +121,18 @@ public class DataLayer extends DataLayerFacade {
     public Graph loadGraphFromFile(File file) throws SaveLoadException{
         //return abstractNetworkAdapter.loadGraphFromFile(file);
         return abstractNetworkAdapterXML.loadGraphFromFile(file);
+    }
+  
+    @Override
+    public void saveEventsToFile(SimulatorEventsWrapper simulatorEvents, File file) throws SaveLoadException {
+        simulatorEventsSerializer.saveEventsToFile(simulatorEvents, file);
+        //simulatorEventsSerializerXML.saveEventsToFile(simulatorEvents, file);
+    }
+
+    @Override
+    public SimulatorEventsWrapper loadEventsFromFile(File file) throws SaveLoadException {
+        return simulatorEventsSerializer.loadEventsFromFile(file);
+        //return simulatorEventsSerializerXML.loadEventsFromFile(file);
     }
 
     @Override
@@ -213,4 +234,5 @@ public class DataLayer extends DataLayerFacade {
     public void setConnectionPort(String connectionPort) {
         preferencesManager.setConnectionPort(connectionPort);
     }
+
 }

@@ -1,9 +1,8 @@
 package psimulator.userInterface.SimulatorEditor.SimulatorControllPanel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
 import java.util.Observable;
@@ -16,8 +15,9 @@ import javax.swing.event.ListSelectionListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.Simulator.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
 
@@ -179,6 +179,43 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             }
         });
 
+        // LOAD button action listener
+        jButtonLoadListFromFile.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                // if list not empty as if rewrite
+                if(simulatorManagerInterface.hasEvents()){
+                    
+                    int i = showYesNoDialog(dataLayer.getString("WARNING"), dataLayer.getString("REWRITE_EVENT_LIST_WARNING"));
+                    // if do not rewrite
+                    if (i != JOptionPane.OK_OPTION) {
+                        return;
+                    }
+                }
+        
+                // load events
+                SimulatorEventsWrapper simulatorEventsWrapper = mainWindow.loadEventsAction();
+                
+                // set events to simulator manager
+                simulatorManagerInterface.setSimulatorEvents(simulatorEventsWrapper);
+            }
+        });
+        
+        // SAVE button action listener
+        jButtonSaveListToFile.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                
+                // get events
+                SimulatorEventsWrapper simulatorEventsWrapper = simulatorManagerInterface.getSimulatorEvents();
+                
+                // save events
+                mainWindow.saveEventsAction(simulatorEventsWrapper);
+            }
+        });
+        
 
         // jSliderPlayerSpeed state change listener
         jSliderPlayerSpeed.addChangeListener(new ChangeListener() {

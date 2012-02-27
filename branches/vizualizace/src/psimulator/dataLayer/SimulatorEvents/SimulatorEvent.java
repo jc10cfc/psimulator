@@ -1,6 +1,7 @@
-package psimulator.dataLayer.Simulator;
+package psimulator.dataLayer.SimulatorEvents;
 
 import java.awt.Color;
+import java.io.Serializable;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
@@ -9,7 +10,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterfac
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class SimulatorEvent {
+public class SimulatorEvent implements Serializable{
     // those variables has to be loaded from file / recieved via TCP connection, SAVE THEM
     private long timeStamp;
     private int sourcceId;

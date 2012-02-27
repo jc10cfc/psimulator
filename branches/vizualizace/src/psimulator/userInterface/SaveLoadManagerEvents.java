@@ -2,12 +2,11 @@ package psimulator.userInterface;
 
 import java.awt.Component;
 import java.io.File;
-import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.SaveLoadException;
-import psimulator.dataLayer.Simulator.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 
 /**
  *
@@ -23,7 +22,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
      * Shows save dialog.
      *
      */
-    public boolean doSaveAsEventsAction(List<SimulatorEvent> simulatorEvents) {
+    public boolean doSaveAsEventsAction(SimulatorEventsWrapper simulatorEvents) {
         try {
             // save as
             return saveAsEvents(simulatorEvents);
@@ -36,7 +35,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
     /**
      * Shows open dialog
      */
-    public List<SimulatorEvent> doLoadEventsAction(){
+    public SimulatorEventsWrapper doLoadEventsAction(){
         try {
             return load();
         } catch (SaveLoadException ex) {
@@ -46,7 +45,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
     }
     
     
-    private List<SimulatorEvent> load() throws SaveLoadException {
+    private SimulatorEventsWrapper load() throws SaveLoadException {
         int returnVal = fileChooser.showOpenDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -54,13 +53,14 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
             //This is where a real application would open the file.
             System.out.println("Opening file: " + selctedFile);
 
-            // load event list
-            //Graph graph = dataLayer.loadGraphFromFile(selctedFile);
-            List<SimulatorEvent> simulatorEvents = null;
-            
-            
+            // load events from file
+            SimulatorEventsWrapper simulatorEvents= dataLayer.loadEventsFromFile(file);
+
             // set saved timestamp and file name
             setLastSavedFile(selctedFile);
+            
+            //
+            setLastSavedTimestamp();
 
             return simulatorEvents;
         }
@@ -70,7 +70,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
     /**
      * Returns true if success
      */
-    private boolean saveAsEvents(List<SimulatorEvent> simulatorEvents) throws SaveLoadException {
+    private boolean saveAsEvents(SimulatorEventsWrapper simulatorEvents) throws SaveLoadException {
         int returnVal = fileChooser.showSaveDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -105,9 +105,9 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
         return false;
     }
     
-    private void saveEvents(File file, List<SimulatorEvent> simulatorEvents) throws SaveLoadException {
+    private void saveEvents(File file, SimulatorEventsWrapper simulatorEvents) throws SaveLoadException {
         // save events
-        //dataLayer.saveGraphToFile(graph, file);
+        dataLayer.saveEventsToFile(simulatorEvents, file);
 
         // set saved timestamp
         setLastSavedFile(file);

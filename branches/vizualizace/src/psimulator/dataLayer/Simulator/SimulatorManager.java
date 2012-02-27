@@ -4,6 +4,8 @@ import java.util.Observable;
 import javax.swing.SwingUtilities;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 
 /**
@@ -434,4 +436,20 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isTimeReset() {
         return eventTableModel.isTimeReset();
     }
+    
+    @Override
+    public SimulatorEventsWrapper getSimulatorEvents(){
+        SimulatorEventsWrapper simulatorEvents = new SimulatorEventsWrapper(eventTableModel.getEventListCopy());
+        return simulatorEvents;
+    }
+    
+    @Override
+    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents){
+        // delete items
+        eventTableModel.deleteAllSimulatorEvents();
+        currentPositionInList = 0;
+        //
+        eventTableModel.setEventList(simulatorEvents.getSimulatorEvents());
+    }
+    
 }

@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.dataLayer.Simulator.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;

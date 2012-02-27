@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Simulator.PacketType;
+import psimulator.dataLayer.SimulatorEvents.PacketType;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 

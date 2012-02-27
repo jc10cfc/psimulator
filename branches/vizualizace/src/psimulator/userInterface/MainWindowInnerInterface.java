@@ -2,8 +2,8 @@ package psimulator.userInterface;
 
 import java.awt.Component;
 import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 
 /**
  *
@@ -28,4 +28,8 @@ public interface MainWindowInnerInterface {
     public JRootPane getRootPane();
 
     public Component getMainWindowComponent();
+    
+    public void saveEventsAction(SimulatorEventsWrapper simulatorEventsWrapper);
+    
+    public SimulatorEventsWrapper loadEventsAction();
 }
