@@ -17,6 +17,7 @@ public class UndoableRemoveComponents extends AbstractUndoableEdit {
     
     public UndoableRemoveComponents(GraphOuterInterface graph, List<HwComponentGraphic> components, List<CableGraphic> cables){
         super();
+        
         this.components = components;
         this.graph = graph;
         this.cables = cables;

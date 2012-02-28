@@ -41,14 +41,10 @@ public class GraphBuilder extends AbstractGraphBuilder {
         int component1id = cableModel.getComponent1().getId();
         int component2id = cableModel.getComponent2().getId();
         
-        System.out.println("Id1"+component1id+", id2"+component2id);
-
         // get components by ID from Graph
         HwComponentGraphic component1 = graph.getAbstractHwComponent(component1id);
         HwComponentGraphic component2 = graph.getAbstractHwComponent(component2id);
               
-        System.out.println("C1"+component1+", c2"+component2);
-        
         // create new cable
         CableGraphic cable = new CableGraphic(cableModel, component1, component2);
         
