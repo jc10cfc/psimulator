@@ -10,8 +10,9 @@ import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class NetworkModelSerializer {
+public class NetworkModelSerializer implements AbstractNetworkSerializer{
 
+    @Override
     public void saveNetworkModelToFile(NetworkModel networkModel, File file) throws SaveLoadException {
         // get file name
         String fileName = file.getPath();
@@ -42,6 +43,7 @@ public class NetworkModelSerializer {
         }
     }
 
+    @Override
     public NetworkModel loadNetworkModelFromFile(File file) throws SaveLoadException {
         // get file name
         String fileName = file.getPath();
