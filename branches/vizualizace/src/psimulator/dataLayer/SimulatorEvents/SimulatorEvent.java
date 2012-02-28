@@ -40,6 +40,31 @@ public class SimulatorEvent implements Serializable{
         this.cableId = cableId;
         this.detailsText = detailsText;
     }
+    
+      
+    /**
+     * Used in PSImulator UI after finding components by ID.
+     * @param from
+     * @param to
+     * @param component1
+     * @param component2
+     * @param eth1
+     * @param eth2 
+     */
+    public void setDetails(String from, String to, HwComponentModel component1, 
+            HwComponentModel component2, EthInterfaceModel eth1, EthInterfaceModel eth2){
+        this.from = from;
+        this.to = to;
+        this.component1 = component1;
+        this.component2 = component2;
+        this.eth1 = eth1;
+        this.eth2 = eth2;
+        
+        this.color = ColorMixerSignleton.getColorAccodringToPacketType(packetType);
+        
+        Object[] tmp = {timeStamp, from, to, packetType, color};
+        list = tmp;
+    }
 
     public PacketType getPacketType() {
         return packetType;
@@ -75,31 +100,6 @@ public class SimulatorEvent implements Serializable{
     }
 
     //////
-  
-    /**
-     * Used in PSImulator UI after finding components by ID.
-     * @param from
-     * @param to
-     * @param component1
-     * @param component2
-     * @param eth1
-     * @param eth2 
-     */
-    public void setDetails(String from, String to, HwComponentModel component1, 
-            HwComponentModel component2, EthInterfaceModel eth1, EthInterfaceModel eth2){
-        this.from = from;
-        this.to = to;
-        this.component1 = component1;
-        this.component2 = component2;
-        this.eth1 = eth1;
-        this.eth2 = eth2;
-        
-        this.color = ColorMixerSignleton.getColorAccodringToPacketType(packetType);
-        
-        Object[] tmp = {timeStamp, from, to, packetType, color};
-        list = tmp;
-    }
-    
     public HwComponentModel getComponent1() {
         return component1;
     }
