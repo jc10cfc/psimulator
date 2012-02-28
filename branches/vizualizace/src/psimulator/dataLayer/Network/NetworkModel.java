@@ -5,11 +5,15 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
+@XmlRootElement
+//@XmlType(propOrder={"componentsMap", "cablesMap", "networkCounterModel", "lastEditTimestamp" })
 public class NetworkModel implements Identifiable, Serializable{
     /**
      * Map with components. Identified by component ID.
@@ -41,6 +45,14 @@ public class NetworkModel implements Identifiable, Serializable{
         this.id = id;
     }
 
+    /**
+     * no-arg constructor needed for jaxb
+     */
+    public NetworkModel() {
+    }
+
+    
+    
     public long getLastEditTimestamp() {
         return lastEditTimestamp;
     }
@@ -49,6 +61,7 @@ public class NetworkModel implements Identifiable, Serializable{
         this.lastEditTimestamp = lastEditTimestamp;
     }
 
+    @XmlElement(name = "counter")
     public NetworkCounterModel getNetworkCounterModel() {
         return networkCounterModel;
     }
@@ -109,4 +122,30 @@ public class NetworkModel implements Identifiable, Serializable{
     public CableModel getCableModelById(int id){
         return cablesMap.get(id);
     }
+
+    public Map<Integer, CableModel> getCablesMap() {
+        return cablesMap;
+    }
+
+    public void setCablesMap(Map<Integer, CableModel> cablesMap) {
+        this.cablesMap = cablesMap;
+    }
+
+    public Map<Integer, HwComponentModel> getComponentsMap() {
+        return componentsMap;
+    }
+
+    public void setComponentsMap(Map<Integer, HwComponentModel> componentsMap) {
+        this.componentsMap = componentsMap;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setNetworkCounterModel(NetworkCounterModel networkCounterModel) {
+        this.networkCounterModel = networkCounterModel;
+    }
+    
+    
 }
