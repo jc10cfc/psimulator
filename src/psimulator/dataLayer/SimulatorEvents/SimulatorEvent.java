@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.io.Serializable;
 import psimulator.dataLayer.ColorMixerSignleton;
 import psimulator.dataLayer.Network.EthInterfaceModel;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
+import psimulator.dataLayer.Network.HwComponentModel;
 
 /**
  *
@@ -23,8 +23,9 @@ public class SimulatorEvent implements Serializable{
     private transient Color color;
     private transient String from;
     private transient String to;
-    private transient HwComponentGraphic component1;
-    private transient HwComponentGraphic component2;
+    
+    private transient HwComponentModel component1;
+    private transient HwComponentModel component2;
     private transient EthInterfaceModel eth1;
     private transient EthInterfaceModel eth2;
     private transient Object[] list;
@@ -84,8 +85,8 @@ public class SimulatorEvent implements Serializable{
      * @param eth1
      * @param eth2 
      */
-    public void setDetails(String from, String to, HwComponentGraphic component1, 
-            HwComponentGraphic component2, EthInterfaceModel eth1, EthInterfaceModel eth2){
+    public void setDetails(String from, String to, HwComponentModel component1, 
+            HwComponentModel component2, EthInterfaceModel eth1, EthInterfaceModel eth2){
         this.from = from;
         this.to = to;
         this.component1 = component1;
@@ -99,11 +100,11 @@ public class SimulatorEvent implements Serializable{
         list = tmp;
     }
     
-    public HwComponentGraphic getComponent1() {
+    public HwComponentModel getComponent1() {
         return component1;
     }
 
-    public HwComponentGraphic getComponent2() {
+    public HwComponentModel getComponent2() {
         return component2;
     }
 

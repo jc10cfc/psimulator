@@ -1,9 +1,6 @@
 package psimulator.dataLayer.Network;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -14,7 +11,7 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
     /**
      * LinkedHashMap of EthInterfaces that component owns. Key is the ethInterface ID.
      */
-    private LinkedHashMap<Integer, EthInterfaceModel> interfacesMap;
+    private Map<Integer, EthInterfaceModel> interfacesMap;
     // -------------------------------------------------------
     /**
      * Device name.

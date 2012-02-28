@@ -2,8 +2,12 @@ package psimulator.dataLayer.Simulator;
 
 import java.util.Observable;
 import javax.swing.SwingUtilities;
+import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
+import psimulator.dataLayer.Network.CableModel;
+import psimulator.dataLayer.Network.EthInterfaceModel;
+import psimulator.dataLayer.Network.HwComponentModel;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
@@ -13,8 +17,9 @@ import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class SimulatorManager extends Observable implements SimulatorManagerInterface {
+    
+    private DataLayerFacade dataLayerFacade;
     // player speeds
-
     public static final int SPEED_MIN = 10;
     public static final int SPEED_MAX = 100;
     public static final int SPEED_INIT = 50;
@@ -29,7 +34,8 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     //
     private EventTableModel eventTableModel;
 
-    public SimulatorManager() {
+    public SimulatorManager(DataLayerFacade dataLayerFacade) {
+        this.dataLayerFacade = dataLayerFacade;
         eventTableModel = new EventTableModel();
         isPlaying = false;
     }
@@ -327,6 +333,21 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
             @Override
             public void run() {
+                
+                //simulatorEvent.setDetails(c1.getName(), c2.getName(), c1, c2, eth1, eth2);
+                
+                // set details to event
+                HwComponentModel c1 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getSourcceId());
+                HwComponentModel c2 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getDestId());
+
+                CableModel cable = dataLayerFacade.getNetworkFacade().getCableModelById(simulatorEvent.getCableId());
+                
+                EthInterfaceModel eth1 = cable.getInterface1();
+                EthInterfaceModel eth2 = cable.getInterface2();
+                
+                simulatorEvent.setDetails(c1.getName(), c2.getName(), c1, c2, eth1, eth2);
+                
+                // add to table
                 eventTableModel.addSimulatorEvent(simulatorEvent);
             }
         });

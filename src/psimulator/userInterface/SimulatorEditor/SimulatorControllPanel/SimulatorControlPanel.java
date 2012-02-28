@@ -852,10 +852,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jLabelDetailsTimeValue.setText(seconds);
             jLabelDetailsTypeValue.setText(event.getPacketType().toString());
             //
-            jLabelDetailsFromValue.setText(event.getComponent1().getDeviceName());
+            jLabelDetailsFromValue.setText(event.getComponent1().getName());
             jLabelDetailsFromInterfaceValue.setText(event.getEth1().getName());
             //
-            jLabelDetailsToValue.setText(event.getComponent2().getDeviceName());
+            jLabelDetailsToValue.setText(event.getComponent2().getName());
             jLabelDetailsToInterfaceValue.setText(event.getEth2().getName());
             //
             jTextAreaPacketDetails.setText(event.getDetailsText());

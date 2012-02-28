@@ -306,9 +306,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         BundleOfCablesGraphic boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
         
         boc.removeCable(cable);
-        //cable.getEth1().removeCable();
-        //cable.getEth2().removeCable();
-
+        
         // if no cable in bundle of cables
         if (boc.getCablesCount() == 0) {
             // remove bundle of cables
@@ -376,7 +374,6 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @return LowerRight bound point
      */
     private Point getGraphLowerRightBound() {
-        //return getLowerRightBound(components);
         return getLowerRightBound(componentsMap.values());
     }
 
@@ -391,22 +388,6 @@ public class Graph extends JComponent implements GraphOuterInterface {
     public Collection<CableGraphic> getCables(){
         return cablesMap.values();
     }
-    
-    /*
-    public List<CableGraphic> getCables() {
-        List<CableGraphic> temp = new ArrayList<>();
-
-        Iterator<BundleOfCablesGraphic> it = bundlesOfCables.iterator();
-
-        // get all marked components
-        while (it.hasNext()) {
-            BundleOfCablesGraphic b = it.next();
-            // add all cables to temp
-            temp.addAll(b.getCables());
-        }
-
-        return temp;
-    }*/
 
     @Override
     public void addHwComponent(HwComponentGraphic component) {
