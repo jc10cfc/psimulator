@@ -1,14 +1,13 @@
 package psimulator.dataLayer;
 
 import java.io.File;
-import java.util.List;
 import java.util.Observer;
 import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapter;
 import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapterXML;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Simulator.SimulatorManager;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsSerializer;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsSerializerXML;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
@@ -32,6 +31,9 @@ public class DataLayer extends DataLayerFacade {
     private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
     private SimulatorEventsSerializer simulatorEventsSerializer;
     private SimulatorEventsSerializerXML simulatorEventsSerializerXML;
+    //
+    private NetworkFacade networkFacade;
+    
 
     public DataLayer() {
         preferencesManager = new PreferencesManager();
@@ -44,7 +46,12 @@ public class DataLayer extends DataLayerFacade {
         
         // get instance to init imageFactory
         ImageFactorySingleton.getInstance();
+        
+        //
+        networkFacade = new NetworkFacade();
     }
+    
+    
 
     @Override
     public ToolbarIconSizeEnum getToolbarIconSize() {
@@ -233,6 +240,11 @@ public class DataLayer extends DataLayerFacade {
     @Override
     public void setConnectionPort(String connectionPort) {
         preferencesManager.setConnectionPort(connectionPort);
+    }
+
+    @Override
+    public NetworkFacade getNetworkFacade() {
+        return networkFacade;
     }
 
 }

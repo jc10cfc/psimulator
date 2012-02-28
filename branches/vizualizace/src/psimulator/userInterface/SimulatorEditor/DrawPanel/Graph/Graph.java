@@ -6,6 +6,8 @@ import java.util.*;
 import javax.swing.JComponent;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Network.HwComponentModel;
+import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
@@ -19,12 +21,12 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.CustomObservab
  */
 public class Graph extends JComponent implements GraphOuterInterface {
 
-    private LinkedHashMap<Integer, AbstractHwComponent> componentsMap = new LinkedHashMap<Integer, AbstractHwComponent>();
-    private LinkedHashMap<Integer, Cable> cablesMap = new LinkedHashMap<Integer, Cable>();
+    private LinkedHashMap<Integer, AbstractHwComponent> componentsMap = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, Cable> cablesMap = new LinkedHashMap<>();
     //
-    private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
-    private List<Cable> markedCables = new ArrayList<Cable>();
-    private List<AbstractHwComponent> markedAbstractHwComponents = new ArrayList<AbstractHwComponent>();
+    private List<BundleOfCables> bundlesOfCables = new ArrayList<>();
+    private List<Cable> markedCables = new ArrayList<>();
+    private List<AbstractHwComponent> markedAbstractHwComponents = new ArrayList<>();
     private Grid grid;
     private int widthDefault;
     private int heightDefault;
@@ -33,11 +35,15 @@ public class Graph extends JComponent implements GraphOuterInterface {
     //
     private CustomObservable customObservable = new CustomObservable();
     
+    private NetworkFacade networkFacade;
+    
     public Graph() {
     }
 
     public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer) {
 
+        this.networkFacade = dataLayer.getNetworkFacade();
+        
         setInitReferencesToComponents(dataLayer);
 
         // update size of graph with all components
@@ -168,7 +174,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
     @Override
     public List<AbstractHwComponent> getMarkedHwComponentsCopy() {
-        List<AbstractHwComponent> temp = new ArrayList<AbstractHwComponent>();
+        List<AbstractHwComponent> temp = new ArrayList<>();
 
         //Iterator<AbstractHwComponent> it = components.iterator();
 
@@ -195,7 +201,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      */
     @Override
     public List<Cable> getMarkedCablesCopy() {
-        List<Cable> temp = new ArrayList<Cable>();
+        List<Cable> temp = new ArrayList<>();
 
         Iterator<BundleOfCables> it = bundlesOfCables.iterator();
 
@@ -215,7 +221,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     public List<Cable> getCables() {
-        List<Cable> temp = new ArrayList<Cable>();
+        List<Cable> temp = new ArrayList<>();
 
         Iterator<BundleOfCables> it = bundlesOfCables.iterator();
 
@@ -284,8 +290,6 @@ public class Graph extends JComponent implements GraphOuterInterface {
         bundleOfCables.getComponent2().removeBundleOfCables(bundleOfCables);
 
         bundlesOfCables.remove(bundleOfCables);
-
-        bundleOfCables = null;
     }
 
     @Override
@@ -300,8 +304,11 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
 
         boc.addCable(cable);
-        cable.getEth1().setCable(cable);
-        cable.getEth2().setCable(cable);
+        //cable.getEth1().setCable(cable);
+        //cable.getEth2().setCable(cable);
+        
+        // add cable to network
+        networkFacade.addCable(cable.getCableModel());
         
         // add cable to hash map
         cablesMap.put(cable.getId(), cable);
@@ -338,6 +345,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         
         // remove cable from hash map
         cablesMap.remove(cable.getId());
+        
+        // remove cable from network
+        networkFacade.removeCable(cable.getCableModel());
         
         // set timestamp of edit
         editHappend();
@@ -410,6 +420,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         componentsMap.put(component.getId(), component);
         updateSizeAddComponent(component.getLowerRightCornerLocation());
         
+        // add to network
+        networkFacade.addHwComponent(component.getHwComponentModel());
+        
         // set timestamp of edit
         editHappend();
     }
@@ -420,6 +433,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
      */
     public void addHwComponentWithoutGraphSizeChange(AbstractHwComponent component) {
         componentsMap.put(component.getId(), component);
+        
+        // add to network
+        networkFacade.addHwComponent(component.getHwComponentModel());
     }
 
     @Override
@@ -435,7 +451,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         Collection<AbstractHwComponent> colection = componentsMap.values();
         colection.remove(component);
 
-
+        // remove from network
+        networkFacade.removeHwComponent(component.getHwComponentModel());
+        
         //updateSizeRemoveComponents(component.getLowerRightCornerLocation());
         updateSizeByRecalculate();
         
@@ -449,7 +467,15 @@ public class Graph extends JComponent implements GraphOuterInterface {
         Collection<AbstractHwComponent> colection = componentsMap.values();
         colection.removeAll(componentList);
 
-
+        List<HwComponentModel> list = new ArrayList<>();
+        Iterator<AbstractHwComponent> it = colection.iterator();
+        while(it.hasNext()){
+            list.add(it.next().getHwComponentModel());
+        }
+        
+        // remove from network
+        networkFacade.removeHwComponents(list);
+        
         //updateSizeRemoveComponents(getLowerRightBound(components));
         updateSizeByRecalculate();
         

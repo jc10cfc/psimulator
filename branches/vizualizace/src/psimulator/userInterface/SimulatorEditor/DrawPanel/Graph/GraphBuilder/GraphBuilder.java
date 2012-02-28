@@ -3,12 +3,11 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.*;
+import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
-import psimulator.dataLayer.Singletons.GeneratorSingleton;
 
 /**
  *
@@ -40,11 +39,11 @@ public class GraphBuilder extends AbstractGraphBuilder {
         }
 
         // create new component
-        AbstractHwComponent hwComponent = new HwComponent(device.getID(), device.getHwType(), device.getName(), 
-                ethInterfaces, device.getX(), device.getY());
-
-        // add component to graph
-        graph.addHwComponentWithoutGraphSizeChange(hwComponent);
+//        AbstractHwComponent hwComponent = new AbstractHwComponent(device.getID(), device.getHwType(), device.getName(), 
+//                ethInterfaces, device.getX(), device.getY());
+//
+//        // add component to graph
+//        graph.addHwComponentWithoutGraphSizeChange(hwComponent);
     }
 
     @Override
@@ -62,15 +61,15 @@ public class GraphBuilder extends AbstractGraphBuilder {
         AbstractHwComponent component1 = graph.getAbstractHwComponent(component1id);
         AbstractHwComponent component2 = graph.getAbstractHwComponent(component2id);
         
-        // get interfaces by ID
-        EthInterface eth1 = component1.getEthInterface(eth1id);
-        EthInterface eth2 = component2.getEthInterface(eth2id);
-        
-        // create new cable
-        Cable cable = new Cable(cableId, networkCable.getHwType(), component1, component2, eth1, eth2, networkCable.getDelay());
-                
-        // add cable to graph
-        graph.addCable(cable);
+//        // get interfaces by ID
+//        EthInterface eth1 = component1.getEthInterface(eth1id);
+//        EthInterface eth2 = component2.getEthInterface(eth2id);
+//        
+//        // create new cable
+//        Cable cable = new Cable(cableId, networkCable.getHwType(), component1, component2, eth1, eth2, networkCable.getDelay());
+//                
+//        // add cable to graph
+//        graph.addCable(cable);
         
     }
     

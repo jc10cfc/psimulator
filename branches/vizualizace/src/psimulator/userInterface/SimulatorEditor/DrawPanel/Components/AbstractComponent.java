@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import psimulator.dataLayer.Network.Identifiable;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Point;
@@ -11,7 +10,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Singletons.GeneratorSingleton;
+import psimulator.dataLayer.Network.Identifiable;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 
 /**
@@ -23,34 +22,22 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
     //
     protected DataLayerFacade dataLayer;
     //
-    protected HwTypeEnum hwType;
-    protected Integer id;
-    //
+
     private boolean marked = false;
     //
 
     /**
      * Use when creating graph by user actions.
      * @param dataLayer
-     * @param imageFactory
-     * @param hwType 
      */
-    public AbstractComponent(DataLayerFacade dataLayer, HwTypeEnum hwType){
-        this.id = new Integer(GeneratorSingleton.getInstance().getNextId());
-        //
+    public AbstractComponent(DataLayerFacade dataLayer){
         this.dataLayer = dataLayer;
-        this.hwType = hwType;
     }
     
     /**
      * Use when building graph from Network.
-     * 
-     * @param id
-     * @param hwType 
      */
-    public AbstractComponent(Integer id, HwTypeEnum hwType){
-        this.id = id;
-        this.hwType = hwType;
+    public AbstractComponent(){
     }
     
     /**
@@ -72,14 +59,7 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
         this.marked = marked;
     }
     
-    @Override
-    public Integer getId() {
-        return id;
-    }
-    
-    public HwTypeEnum getHwType() {
-        return hwType;
-    }
+    public abstract HwTypeEnum getHwType();
 
     public abstract boolean intersects(Point p);
 

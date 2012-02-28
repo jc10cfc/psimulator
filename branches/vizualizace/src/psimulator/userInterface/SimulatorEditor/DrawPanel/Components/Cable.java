@@ -9,6 +9,8 @@ import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
+import psimulator.dataLayer.Network.CableModel;
+import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
@@ -18,17 +20,18 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
  */
 public class Cable extends AbstractComponent {
 
+    private CableModel cableModel;
+    
+    // HAS TO HAVE GRAPHIC COMPONENTS
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
-    private EthInterface eth1;
-    private EthInterface eth2;
     //
     private BufferedImage delayImage;
     //
     protected List<BufferedImage> eth1TextImages;
     protected List<BufferedImage> eth2TextImages;
     //
-    private int delay;
+    //private int delay;
     private Line2D line = new Line2D.Float();
     private Stroke stroke = new BasicStroke(3.5f);
     //int x1, y1, x2, y2;
@@ -39,63 +42,42 @@ public class Cable extends AbstractComponent {
 
     /**
      * Use when creating graph by user actions.
-     * @param dataLayer
-     * @param imageFactory
-     * @param hwType
-     * @param component1
-     * @param component2
-     * @param eth1
-     * @param eth2 
      */
-    public Cable(DataLayerFacade dataLayer, HwTypeEnum hwType, 
-            AbstractHwComponent component1, AbstractHwComponent component2, EthInterface eth1, EthInterface eth2){
-        super(dataLayer, hwType);
+    public Cable(DataLayerFacade dataLayer, CableModel cableModel, AbstractHwComponent component1, AbstractHwComponent component2){
+        super(dataLayer);
         
+        this.cableModel = cableModel;
         this.component1 = component1;
         this.component2 = component2;
-        
-        this.eth1 = eth1;
-        this.eth2 = eth2;
-        
-        this.hwType = hwType;
-        
-        // set delay according to type
-        switch (hwType) {
-            case CABLE_ETHERNET:
-                delay = 10;
-                break;
-            case CABLE_OPTIC:
-            default:
-                delay = 2;
-                break;
-        }
     }
      
     /**
      * Use when building graph from Network.
-     * @param id
-     * @param hwType
-     * @param component1
-     * @param component2
-     * @param eth1
-     * @param eth2
-     * @param delay 
      */
-    public Cable(int id, HwTypeEnum hwType, AbstractHwComponent component1, AbstractHwComponent component2, 
-            EthInterface eth1, EthInterface eth2, int delay){
-        super(id, hwType);
+    public Cable(CableModel cableModel, AbstractHwComponent component1, AbstractHwComponent component2){
+        super();
         
+        this.cableModel = cableModel;
         this.component1 = component1;
         this.component2 = component2;
-        
-        this.eth1 = eth1;
-        this.eth2 = eth2;
-        
-        this.hwType = hwType;
-        
-        this.delay = delay;
     }
 
+    public CableModel getCableModel() {
+        return cableModel;
+    }
+    
+    
+    @Override
+    public HwTypeEnum getHwType() {
+        return cableModel.getHwType();
+    }
+
+    @Override
+    public Integer getId() {
+        return cableModel.getId();
+    }
+
+ 
     @Override
     public void initialize() {
         doUpdateImages();
@@ -104,18 +86,18 @@ public class Cable extends AbstractComponent {
     @Override
     public void doUpdateImages() {
         // get delay image
-        delayImage = getTextImage("" + delay, ZoomManagerSingleton.getInstance().getCurrentFontSize() - 2);
+        delayImage = getTextImage("" + cableModel.getDelay(), ZoomManagerSingleton.getInstance().getCurrentFontSize() - 2);
 
         // set what needs to be painted
         setWhatToPaint();
 
         // get texts that have to be painted
-        List<String> texts = getInterfaceTexts(eth1);
+        List<String> texts = getInterfaceTexts(getEth1());
         
         // get images that have to be painted
         eth1TextImages = getTextsImages(texts, ZoomManagerSingleton.getInstance().getCurrentFontSize() - 2);
         
-        texts = getInterfaceTexts(eth2);
+        texts = getInterfaceTexts(getEth2());
         
         // get images that have to be painted
         eth2TextImages = getTextsImages(texts, ZoomManagerSingleton.getInstance().getCurrentFontSize() - 2);
@@ -137,7 +119,7 @@ public class Cable extends AbstractComponent {
             g2.drawLine(x1, y1, x2, y2);
         } else {
             // set cable color
-            switch (hwType) {
+            switch (cableModel.getHwType()) {
                 case CABLE_ETHERNET:
                     g2.setColor(Color.black);
                     break;
@@ -295,9 +277,9 @@ public class Cable extends AbstractComponent {
      *
      * @return
      */
-    private List<String> getInterfaceTexts(EthInterface ethInterface) {
+    private List<String> getInterfaceTexts(EthInterfaceModel ethInterface) {
         // list for texts
-        List<String> texts = new ArrayList<String>();
+        List<String> texts = new ArrayList<>();
 
         if (paintInterfaceNames) {
             texts.add(ethInterface.getName());
@@ -326,12 +308,12 @@ public class Cable extends AbstractComponent {
         return component2;
     }
 
-    public EthInterface getEth1() {
-        return eth1;
+    public EthInterfaceModel getEth1() {
+        return cableModel.getInterface1();
     }
 
-    public EthInterface getEth2() {
-        return eth2;
+    public EthInterfaceModel getEth2() {
+        return cableModel.getInterface2();
     }
 
     @Override
@@ -400,20 +382,19 @@ public class Cable extends AbstractComponent {
     }
 
     public int getDelay() {
-        return delay;
+        return cableModel.getDelay();
     }
 
     public void setDelay(int delay) {
-        this.delay = delay;
+        cableModel.setDelay(delay);
     }
     
     public void swapComponentsAndEthInterfaces(){
         AbstractHwComponent tmpComponent = component1;
         component1 = component2;
         component2 = tmpComponent;
-        
-        EthInterface tmpImterface = eth1;
-        eth1 = eth2;
-        eth2 = tmpImterface;
+
+        cableModel.swapComponentsAndEthInterfaces();
     }
+
 }

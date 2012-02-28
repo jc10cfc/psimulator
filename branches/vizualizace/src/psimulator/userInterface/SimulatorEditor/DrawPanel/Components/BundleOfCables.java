@@ -25,13 +25,23 @@ public class BundleOfCables extends AbstractComponent{
     
     
     public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
-        super(new Integer(-1), HwTypeEnum.BUNDLE_OF_CABLES);
+        super();
         
-        cables = new ArrayList<Cable>();
+        cables = new ArrayList<>();
         
         this.component1 = component1;
         this.component2 = component2;
-        
+    }
+    
+    
+    @Override
+    public HwTypeEnum getHwType() {
+        return HwTypeEnum.BUNDLE_OF_CABLES;
+    }
+
+    @Override
+    public Integer getId() {
+        return new Integer(-1);
     }
     
     /**
@@ -222,4 +232,5 @@ public class BundleOfCables extends AbstractComponent{
     public void initialize() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }

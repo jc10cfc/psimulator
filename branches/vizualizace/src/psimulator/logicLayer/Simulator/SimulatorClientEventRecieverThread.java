@@ -3,12 +3,12 @@ package psimulator.logicLayer.Simulator;
 import java.util.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Network.CableModel;
+import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.dataLayer.SimulatorEvents.PacketType;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
@@ -141,10 +141,10 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         AbstractHwComponent c1 = null;
         AbstractHwComponent c2 = null;
 
-        EthInterface eth1 = null;
-        EthInterface eth2 = null;
+        EthInterfaceModel eth1 = null;
+        EthInterfaceModel eth2 = null;
         
-        Cable cable = null;
+        CableModel cable = null;
 
         int i1;
         int i2;
@@ -162,11 +162,11 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
             c1 = list.get(i1);
             c2 = list.get(i2);
 
-            for (EthInterface tmp1 : c1.getInterfaces()) {
+            for (EthInterfaceModel tmp1 : c1.getInterfaces()) {
                 if (!tmp1.hasCable()) {
                     continue;
                 }
-                for (EthInterface tmp2 : c2.getInterfaces()) {
+                for (EthInterfaceModel tmp2 : c2.getInterfaces()) {
                     if (!tmp2.hasCable()) {
                         continue;
                     }
@@ -216,7 +216,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                 cableId, packetType, detailsText);
         
         // set details to event
-        simulatorEvent.setDetails(c1.getDeviceName(), c2.getDeviceName(), c1, c2, eth1, eth2);
+        //simulatorEvent.setDetails(c1.getDeviceName(), c2.getDeviceName(), c1, c2, eth1, eth2);
 
         return simulatorEvent;
     }

@@ -2,8 +2,8 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Inter
 
 import javax.swing.table.AbstractTableModel;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 
 /**
  *
@@ -42,7 +42,7 @@ public class InterfacesTableModel extends AbstractTableModel {
         data = new Object[interfacesCount][columnNames.length];
 
         for (int i = 0; i < interfacesCount; i++) {
-            EthInterface ethInterface = abstractHwComponent.getEthInterfaceAtIndex(i);
+            EthInterfaceModel ethInterface = abstractHwComponent.getEthInterfaceAtIndex(i);
 
             // fill interface names
             data[i][0] = ethInterface.getName();
@@ -54,10 +54,10 @@ public class InterfacesTableModel extends AbstractTableModel {
             if (ethInterface.hasCable()) {
                 if (ethInterface.getCable().getComponent1().getId().intValue() != abstractHwComponent.getId().intValue()) {
                     // set name from component1
-                    data[i][2] = ethInterface.getCable().getComponent1().getDeviceName();
+                    data[i][2] = ethInterface.getCable().getComponent1().getName();
                 } else {
                     // set name from component2
-                    data[i][2] = ethInterface.getCable().getComponent2().getDeviceName();
+                    data[i][2] = ethInterface.getCable().getComponent2().getName();
                 }
             } else {
                 data[i][2] = "";

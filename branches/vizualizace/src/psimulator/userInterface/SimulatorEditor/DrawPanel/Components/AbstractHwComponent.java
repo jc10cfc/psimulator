@@ -1,14 +1,16 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.LevelOfDetailsMode;
+import psimulator.dataLayer.Network.EthInterfaceModel;
+import psimulator.dataLayer.Network.HwComponentModel;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
@@ -16,24 +18,22 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public abstract class AbstractHwComponent extends AbstractComponent {
+public final class AbstractHwComponent extends AbstractComponent {
 
+    protected HwComponentModel hwComponentModel;
+    
     // position in 1:1 zoom
-    protected int defaultZoomXPos;
-    protected int defaultZoomYPos;
     protected int defaultZoomWidth;
     protected int defaultZoomHeight;
     // position of textRectangle in 1:1 zoom
     protected int defaultZoomTextWidth;
     protected int defaultZoomTextHeight;
     //
-    private List<BundleOfCables> bundlesOfCables = new ArrayList<BundleOfCables>();
-    
-    protected List<EthInterface> interfaces = new ArrayList<EthInterface>();
+    private List<BundleOfCables> bundlesOfCables = new ArrayList<>();
+    //
     protected BufferedImage imageUnmarked;
     protected BufferedImage imageMarked;
     protected List<BufferedImage> textImages;
-    protected String deviceName;
     //
     
     /**
@@ -42,8 +42,10 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @param dataLayer
      * @param hwType 
      */
-    public AbstractHwComponent(DataLayerFacade dataLayer, HwTypeEnum hwType){//, int interfacesCount) {
-        super(dataLayer, hwType);
+    public AbstractHwComponent(DataLayerFacade dataLayer, HwComponentModel hwComponentModel){//, int interfacesCount) {
+        super(dataLayer);
+        
+        this.hwComponentModel = hwComponentModel;
     }
     
     /**
@@ -51,8 +53,25 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @param id
      * @param hwType 
      */
-    public AbstractHwComponent(int id, HwTypeEnum hwType){
-        super(id, hwType);
+    public AbstractHwComponent(HwComponentModel hwComponentModel){
+        super();
+        
+        this.hwComponentModel = hwComponentModel;
+    }
+
+    public HwComponentModel getHwComponentModel() {
+        return hwComponentModel;
+    }
+    
+    
+    @Override
+    public HwTypeEnum getHwType() {
+        return hwComponentModel.getHwType();
+    }
+
+    @Override
+    public Integer getId() {
+        return hwComponentModel.getId();
     }
 
     /**
@@ -64,11 +83,11 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         Point defaultZoomPoint;
         // count point to move component
         if (positive) {
-            defaultZoomPoint = new Point(defaultZoomXPos + offsetInDefaultZoom.width,
-                    defaultZoomYPos + offsetInDefaultZoom.height);
+            defaultZoomPoint = new Point(hwComponentModel.getDefaultZoomXPos() + offsetInDefaultZoom.width,
+                    hwComponentModel.getDefaultZoomYPos() + offsetInDefaultZoom.height);
         } else {
-            defaultZoomPoint = new Point(defaultZoomXPos - offsetInDefaultZoom.width,
-                    defaultZoomYPos - offsetInDefaultZoom.height);
+            defaultZoomPoint = new Point(hwComponentModel.getDefaultZoomXPos() - offsetInDefaultZoom.width,
+                    hwComponentModel.getDefaultZoomYPos() - offsetInDefaultZoom.height);
         }
         // set new postion
         setLocation(defaultZoomPoint.x, defaultZoomPoint.y);
@@ -96,8 +115,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         }
 
         // update defautl position (without zoom)
-        this.defaultZoomXPos = defaultZoomXPos;
-        this.defaultZoomYPos = defaultZoomYPos;
+        this.hwComponentModel.setDefaultZoomXPos(defaultZoomXPos);
+        this.hwComponentModel.setDefaultZoomYPos(defaultZoomYPos);
     }
 
     @Override
@@ -136,8 +155,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
             
             int x,y,w,h;
             
-            x=(int) (ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomXPos) - ((image.getWidth() - ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomWidth))/2.0));
-            y= ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomYPos) + ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomHeight) + i*image.getHeight();
+            x=(int) (ZoomManagerSingleton.getInstance().doScaleToActual(hwComponentModel.getDefaultZoomXPos()) - ((image.getWidth() - ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomWidth))/2.0));
+            y= ZoomManagerSingleton.getInstance().doScaleToActual(hwComponentModel.getDefaultZoomYPos()) + ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomHeight) + i*image.getHeight();
             w = image.getWidth();
             h = image.getHeight();
             
@@ -165,30 +184,20 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      *
      * @return
      */
-    public List<EthInterface> getInterfaces() {
-        return interfaces;
+    public List<EthInterfaceModel> getInterfaces() {
+        return new ArrayList<>(hwComponentModel.getEthInterfaces());
     }
 
     public Object[] getInterfacesNames() {
-        Object[] list = new Object[interfaces.size()];
-
-        for (int i = 0; i < interfaces.size(); i++) {
-            list[i] = interfaces.get(i).getName();
-        }
-        return list;
+        return hwComponentModel.getInterfacesNames();
     }
 
-    public EthInterface getEthInterface(Integer id) {
-        for (EthInterface ei : interfaces) {
-            if (ei.getId().intValue() == id.intValue()) {
-                return ei;
-            }
-        }
-        return null;
+    public EthInterfaceModel getEthInterface(Integer id) {
+        return hwComponentModel.getEthInterface(id);
     }
 
-    public EthInterface getEthInterfaceAtIndex(int index) {
-        return interfaces.get(index);
+    public EthInterfaceModel getEthInterfaceAtIndex(int index) {
+        return hwComponentModel.getEthInterfaceAtIndex(index);
     }
 
     /**
@@ -196,13 +205,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      *
      * @return
      */
-    public EthInterface getFirstFreeInterface() {
-        for (EthInterface ei : interfaces) {
-            if (!ei.hasCable()) {
-                return ei;
-            }
-        }
-        return null;
+    public EthInterfaceModel getFirstFreeInterface() {
+        return hwComponentModel.getFirstFreeInterface();
     }
 
     /**
@@ -211,12 +215,7 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return
      */
     public boolean hasFreeInterace() {
-        for (EthInterface ei : interfaces) {
-            if (!ei.hasCable()) {
-                return true;
-            }
-        }
-        return false;
+        return hwComponentModel.hasFreeInterace();
     }
 
     /**
@@ -261,7 +260,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return
      */
     public Point getCenterLocationDefault() {
-        return new Point(defaultZoomXPos + defaultZoomWidth / 2, defaultZoomYPos + defaultZoomTextHeight / 2);
+        return new Point(hwComponentModel.getDefaultZoomXPos() + defaultZoomWidth / 2, 
+                hwComponentModel.getDefaultZoomYPos() + defaultZoomTextHeight / 2);
     }
 
     /**
@@ -270,8 +270,8 @@ public abstract class AbstractHwComponent extends AbstractComponent {
      * @return
      */
     public Point getCenterLocationDefaultZoom() {
-        return new Point(defaultZoomXPos + defaultZoomWidth / 2,
-                defaultZoomYPos + defaultZoomHeight / 2);
+        return new Point(hwComponentModel.getDefaultZoomXPos() + defaultZoomWidth / 2,
+                hwComponentModel.getDefaultZoomYPos() + defaultZoomHeight / 2);
     }
 
     /**
@@ -311,40 +311,40 @@ public abstract class AbstractHwComponent extends AbstractComponent {
 
     @Override
     public int getX() {
-        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomXPos);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(hwComponentModel.getDefaultZoomXPos());
     }
 
     @Override
     public int getY() {
-        return ZoomManagerSingleton.getInstance().doScaleToActual(defaultZoomYPos);
+        return ZoomManagerSingleton.getInstance().doScaleToActual(hwComponentModel.getDefaultZoomYPos());
     }
 
     public String getDeviceName() {
-        return deviceName;
+        return hwComponentModel.getName();
     }
 
     public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
+        hwComponentModel.setName(deviceName);
     }
 
     public int getInterfaceCount() {
-        return interfaces.size();
+        return hwComponentModel.getEthInterfaceCount();
     }
 
     public void setDefaultZoomXPos(int defaultZoomXPos) {
-        this.defaultZoomXPos = defaultZoomXPos;
+        this.hwComponentModel.setDefaultZoomXPos(defaultZoomXPos);
     }
 
     public void setDefaultZoomYPos(int defaultZoomYPos) {
-        this.defaultZoomYPos = defaultZoomYPos;
+        this.setDefaultZoomYPos(defaultZoomYPos);
     }
 
     public int getDefaultZoomXPos() {
-        return defaultZoomXPos;
+        return hwComponentModel.getDefaultZoomXPos();
     }
 
     public int getDefaultZoomYPos() {
-        return defaultZoomYPos;
+        return hwComponentModel.getDefaultZoomYPos();
     }
 
     public int getDefaultZoomHeight() {
@@ -371,5 +371,129 @@ public abstract class AbstractHwComponent extends AbstractComponent {
         return defaultZoomTextWidth;
     }
     
+    @Override
+    public void initialize() {
+        doUpdateImages();
+
+        // set image width and height in default zoom
+        defaultZoomWidth = ZoomManagerSingleton.getInstance().doScaleToDefault(imageUnmarked.getWidth());
+        defaultZoomHeight = ZoomManagerSingleton.getInstance().doScaleToDefault(imageUnmarked.getHeight());
+    }
+
+    @Override
+    public final void doUpdateImages() {
+        // get new images of icons
+        imageUnmarked = ImageFactorySingleton.getInstance().getImage(getHwType(), ZoomManagerSingleton.getInstance().getIconWidth(), false);
+        imageMarked = ImageFactorySingleton.getInstance().getImage(getHwType(), ZoomManagerSingleton.getInstance().getIconWidth(), true);
+        
+        // get texts that have to be painted
+        List<String> texts = getTexts();
+        textImages = getTextsImages(texts, ZoomManagerSingleton.getInstance().getCurrentFontSize());
+        
+        // set text images width and height
+        int textW = 0;
+        int textH = 0;
+
+        for (BufferedImage image : textImages) {
+            if (image.getWidth() > textW) {
+                textW = image.getWidth();
+            }
+
+            textH = textH + image.getHeight();
+        }
+
+        defaultZoomTextWidth = ZoomManagerSingleton.getInstance().doScaleToDefault(textW);
+        defaultZoomTextHeight = ZoomManagerSingleton.getInstance().doScaleToDefault(textH);
+    }
     
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        if (isMarked()) {
+            // paint image
+            g2.drawImage(imageMarked, getX(), getY(), null);
+        } else {
+            // paint image
+            g2.drawImage(imageUnmarked, getX(), getY(), null);
+        }
+        
+        // paint texts
+        if (textImages != null) {
+            paintTextsUnderImage(g2);
+        }
+    }
+
+    private void paintTextsUnderImage(Graphics2D g2) {
+        paintTexts(g2, textImages);
+    }
+
+    /**
+     * Paint imagess of texts centered in Y_axes under component image
+     *
+     * @param g2
+     * @param images
+     */
+    private void paintTexts(Graphics2D g2, List<BufferedImage> images) {
+        int x;
+        int y = getY() + getHeight() + 1;
+
+        for (BufferedImage image : images) {
+            x = (int) (getX() - ((image.getWidth() - getWidth()) / 2.0));
+
+            g2.drawImage(image, x, y, null);
+            
+            y = y + image.getHeight();
+        }
+    }
+    
+    
+    /**
+     * Gets text that have to be displayed with this component.
+     *
+     * @return
+     */
+    private List<String> getTexts() {
+        boolean paintType = false;
+        boolean paintName = false;
+
+        // if LOD active
+        if (dataLayer.getLevelOfDetails() == LevelOfDetailsMode.AUTO) {
+            switch (ZoomManagerSingleton.getInstance().getCurrentLevelOfDetails()) {
+                case LEVEL_1:
+                    break;
+                case LEVEL_2:
+                    paintName = true;
+                    break;
+                case LEVEL_3:
+                case LEVEL_4:
+                default:
+                    paintType = true;
+                    paintName = true;
+                    break;
+            }
+        } else { // if LOD not active
+            paintName = dataLayer.isViewDeviceNames();
+            paintType = dataLayer.isViewDeviceTypes();
+        }
+
+        /*
+         * if (paintName == false && paintType == false) { return null; }
+         */
+
+        // list for texts
+        List<String> texts = new ArrayList<String>();
+
+        if (paintType) {
+            texts.add(dataLayer.getString(getHwType().toString()));
+        }
+
+        if (paintName) {
+            texts.add(getDeviceName());
+        }
+
+
+        return texts;
+    }
+
 }
