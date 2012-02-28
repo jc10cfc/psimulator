@@ -19,6 +19,15 @@ public class NetworkCounterModel implements Serializable{
         this.nextNumberMap = nextNumberMap;
     }
 
+    public NetworkCounterModel() {
+    }
+
+    public void setNextId(int nextId) {
+        this.nextId = nextId;
+    }
+
+    
+    
     public int getNextId() {
         return nextId++;
     }
@@ -42,5 +51,23 @@ public class NetworkCounterModel implements Serializable{
     public void putToNumberMap(HwTypeEnum key, Integer value){
         nextNumberMap.put(key, value);
     }
+
+    public int getNextMacAddress() {
+        return nextMacAddress;
+    }
+
+    public void setNextMacAddress(int nextMacAddress) {
+        this.nextMacAddress = nextMacAddress;
+    }
+
+    public Map<HwTypeEnum, Integer> getNextNumberMap() {
+        return nextNumberMap;
+    }
+
+    public void setNextNumberMap(Map<HwTypeEnum, Integer> nextNumberMap) {
+        this.nextNumberMap = nextNumberMap;
+    }
+    
+    
     
 }

@@ -1,16 +1,19 @@
 package psimulator.dataLayer.Network;
 
 import java.util.*;
+import javax.xml.bind.annotation.*;
 
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public final class HwComponentModel extends AbstractComponentModel implements PositionInterface, NameInterface{
-    
+public final class HwComponentModel implements PositionInterface, NameInterface, AbstractComponentModel {
+
     /**
-     * LinkedHashMap of EthInterfaces that component owns. Key is the ethInterface ID.
+     * LinkedHashMap of EthInterfaces that component owns. Key is the
+     * ethInterface ID.
      */
+    
     private Map<Integer, EthInterfaceModel> interfacesMap;
     // -------------------------------------------------------
     /**
@@ -25,23 +28,41 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
      * Y position of component in Default zoom
      */
     private int defaultZoomYPos;
-      
-    public HwComponentModel(Integer id, HwTypeEnum hwType, String deviceName, List<EthInterfaceModel> ethInterfaces, int defaultZoomXPos, int defaultZoomYPos){
-        super(id, hwType);
-        
-        interfacesMap = new LinkedHashMap<>();
-        
+    /**
+     * Type of component
+     */
+    private HwTypeEnum hwType;
+    /**
+     * Id of component
+     */
+    private Integer id;
+
+    public HwComponentModel(Integer id, HwTypeEnum hwType, String deviceName, List<EthInterfaceModel> ethInterfaces, int defaultZoomXPos, int defaultZoomYPos) {
+
         // add values to variables
+        this.id = id;
+        this.hwType = hwType;
         this.deviceName = deviceName;
         this.defaultZoomXPos = defaultZoomXPos;
         this.defaultZoomYPos = defaultZoomYPos;
-        
+
         // add interfaces to map
-        for(EthInterfaceModel eth : ethInterfaces){
-            interfacesMap.put(eth.getId(), eth);
-        }
+        this.setInterfacesAsList(ethInterfaces);
+    }
+
+    public HwComponentModel() {
+        this.interfacesMap = new LinkedHashMap<>();
     }
     
+    @XmlAttribute @XmlID
+    public String getIDAsString(){
+        return String.valueOf(this.id);
+    }
+    
+    public void setIDAsString(String id){
+        this.id = Integer.valueOf(id);
+    }
+
     /**
      * Gets first avaiable ethInterface, if no avaiable null is renturned
      *
@@ -69,12 +90,12 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
         }
         return false;
     }
- 
+
     public Object[] getInterfacesNames() {
         Object[] list = new Object[interfacesMap.size()];
 
-        int i=0;
-        for(EthInterfaceModel ei : interfacesMap.values()){
+        int i = 0;
+        for (EthInterfaceModel ei : interfacesMap.values()) {
             list[i] = ei.getName();
             i++;
         }
@@ -90,13 +111,14 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
         return list.get(index);
     }
 
-    public int getEthInterfaceCount(){
+    public int getEthInterfaceCount() {
         return interfacesMap.size();
     }
-    
+
     /**
      * Gets X position of component in default zoom
-     * @return 
+     *
+     * @return
      */
     @Override
     public int getDefaultZoomXPos() {
@@ -105,7 +127,8 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
 
     /**
      * Gets Y position of component in default zoom
-     * @return 
+     *
+     * @return
      */
     @Override
     public int getDefaultZoomYPos() {
@@ -114,7 +137,8 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
 
     /**
      * Sets X position of component in default zoom
-     * @param defaultZoomXPos 
+     *
+     * @param defaultZoomXPos
      */
     @Override
     public void setDefaultZoomXPos(int defaultZoomXPos) {
@@ -123,7 +147,8 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
 
     /**
      * Sets Y position of component in default zoom
-     * @param defaultZoomYPos 
+     *
+     * @param defaultZoomYPos
      */
     @Override
     public void setDefaultZoomYPos(int defaultZoomYPos) {
@@ -132,7 +157,8 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
 
     /**
      * Sets name of component
-     * @param name 
+     *
+     * @param name
      */
     @Override
     public void setName(String name) {
@@ -141,18 +167,72 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
 
     /**
      * Gets name of component
-     * @return 
+     *
+     * @return
      */
     @Override
     public String getName() {
         return this.deviceName;
     }
-    
+
     /**
      * Returns collection of interfaces
      */
-    public Collection getEthInterfaces(){
+    public Collection getEthInterfaces() {
         return interfacesMap.values();
-    } 
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    @XmlTransient // do not store as a map, we need a reference to this object for JAXB, storing as List
+    public Map<Integer, EthInterfaceModel> getInterfacesMap() {
+        return interfacesMap;
+    }
+    
+    public void setInterfacesMap(Map<Integer, EthInterfaceModel> interfacesMap) {
+        this.interfacesMap = interfacesMap;
+    }
+
+    @XmlElement(name = "interface")
+    public List<EthInterfaceModel> getInterfacesAsList() {
+        return new ArrayList<EthInterfaceModel>(this.interfacesMap.values());
+    }
+
+    public void setInterfacesAsList(List<EthInterfaceModel> ethInterfaces) {
+
+        this.interfacesMap = new LinkedHashMap<>();
+
+        for (EthInterfaceModel eth : ethInterfaces) {
+            interfacesMap.put(eth.getId(), eth);
+        }
+
+    }
+
+    @Override
+    public HwTypeEnum getHwType() {
+        return hwType;
+    }
+
+    @Override
+    public void setHwType(HwTypeEnum hwType) {
+        this.hwType = hwType;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     
 }

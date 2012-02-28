@@ -1,10 +1,14 @@
 package psimulator.dataLayer.Network;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class EthInterfaceModel extends AbstractComponentModel implements NameInterface {
+public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
     
     /**
      * Component that this interface belongs to
@@ -28,12 +32,23 @@ public class EthInterfaceModel extends AbstractComponentModel implements NameInt
      * Mac address of this eth interface
      */
     private String macAddress;
+    
+        /**
+     * Type of component
+     */
+    private HwTypeEnum hwType;
+    /**
+     * Id of component
+     */
+    private Integer id;
+
 
     public EthInterfaceModel(Integer id, HwTypeEnum hwType, HwComponentModel hwComponent, CableModel cable, 
             String ipAddress, String macAddress, String interfaceName) {
-        super(id, hwType);
         
         // assign variables
+        this.id = id;
+        this.hwType=hwType;
         this.hwComponent = hwComponent;
         this.cable = cable;
         this.ipAddress = ipAddress;
@@ -41,10 +56,23 @@ public class EthInterfaceModel extends AbstractComponentModel implements NameInt
         this.interfaceName = interfaceName;
     }
 
+    public EthInterfaceModel() {
+    }
+    
+    @XmlAttribute @XmlID
+    public String getIDAsString(){
+        return String.valueOf(this.id);
+    }
+    
+    public void setIDAsString(String id){
+        this.id = Integer.valueOf(id);
+    }
+
     /**
      * Returns cable that is connected to interface
      * @return 
      */
+    @XmlIDREF
     public CableModel getCable() {
         return cable;
     }
@@ -80,12 +108,14 @@ public class EthInterfaceModel extends AbstractComponentModel implements NameInt
      * Gets hwComponent that this interface belong to
      * @return 
      */
+    @XmlAttribute @XmlIDREF
     public HwComponentModel getHwComponent() {
         return hwComponent;
     }
     
     /**
      * Sets hw component to this interface
+     * @param hwComponent 
      */
     public void setHwComponent(HwComponentModel hwComponent){
         this.hwComponent = hwComponent;
@@ -125,6 +155,7 @@ public class EthInterfaceModel extends AbstractComponentModel implements NameInt
 
     /**
      * Returns name of interface
+     * @return 
      */
     @Override
     public String getName() {
@@ -135,6 +166,34 @@ public class EthInterfaceModel extends AbstractComponentModel implements NameInt
     public void setName(String name) {
         this.interfaceName = name;
     }
-    
+
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
+    }
+
+    @Override
+    public HwTypeEnum getHwType() {
+        return hwType;
+    }
+
+    @Override
+    public void setHwType(HwTypeEnum hwType) {
+        this.hwType = hwType;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     
 }

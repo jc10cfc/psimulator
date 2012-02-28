@@ -6,40 +6,23 @@ import java.io.Serializable;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public abstract class AbstractComponentModel implements Identifiable, Serializable{
-    /**
-     * Type of component
-     */
-    protected HwTypeEnum hwType;
-    /**
-     * Id of component
-     */
-    protected Integer id;
-
-    /**
-     * @param id
-     * @param hwType 
-     */
-    public AbstractComponentModel(Integer id, HwTypeEnum hwType){
-        this.id = id;
-        this.hwType = hwType;
-    }
+public interface AbstractComponentModel extends Identifiable, Serializable{
     
     /**
      * Returns unique ID
      * @return 
      */
     @Override
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId();
     
     /**
      * Returs HwType of component
      * @return 
      */
-    public HwTypeEnum getHwType() {
-        return hwType;
-    }
+    public HwTypeEnum getHwType();
+
+    public void setHwType(HwTypeEnum hwType);
+
+    public void setId(Integer id);
     
 }
