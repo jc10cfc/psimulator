@@ -180,11 +180,11 @@ public final class CableProperties extends AbstractPropertiesOkCancelDialog {
 
         jTextFieldDelay = new JFormattedTextField(delayFormatter);
         jTextFieldDelay.setText("" + cable.getDelay());
-        jTextFieldDelay.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 0-99999");
+        jTextFieldDelay.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 1-99999");
         // add decorator that paints wrong input icon
         parametersPanel.add(new JLayer<JFormattedTextField>(jTextFieldDelay, layerUI));
 
-        JLabel delayTip = new JLabel("0-99999");
+        JLabel delayTip = new JLabel("1-99999");
         parametersPanel.add(delayTip);
 
         // --  ------------------------------------------------------------
@@ -193,7 +193,9 @@ public final class CableProperties extends AbstractPropertiesOkCancelDialog {
 
     @Override
     protected void windowClosing() {
-        //
+        jButtonCancel.requestFocusInWindow();
+
+        jTextFieldDelay.setValue(jTextFieldDelay.getValue());
     }
 
 
