@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Network.CableModel;
 import psimulator.dataLayer.Network.HwComponentModel;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
@@ -125,6 +126,22 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
                 System.out.println(it2.next().getId()+"");
             }
             
+            System.out.println("IDs Graph cables:");
+            
+            Iterator<CableGraphic> itc1 = graph.getCables().iterator();
+            
+            while(itc1.hasNext()){
+                System.out.println(itc1.next().getId()+"");
+            }
+            
+            
+            System.out.println("IDs Network cables:");
+            
+            Iterator<CableModel> itc2 = graph.getNetworkFacade().getCables().iterator();
+            
+            while(itc2.hasNext()){
+                System.out.println(itc2.next().getId()+"");
+            }
             
             if (e.isControlDown()) {
                 // do nothing

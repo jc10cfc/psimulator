@@ -6,7 +6,6 @@ import java.util.*;
 import javax.swing.JComponent;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.dataLayer.Network.HwComponentModel;
 import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
@@ -50,8 +49,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
     public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer) {
 
-        //this.networkFacade = dataLayer.getNetworkFacade();
-        
+        // init references
         setInitReferencesToComponents(dataLayer);
 
         // update size of graph with all components
@@ -86,7 +84,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
             component.initialize();
         }
 
-        // set references to all BundleOfCablesGraphic and Cables
+        // set references to all BundleOfCablesGraphic
         for (BundleOfCablesGraphic boc : bundlesOfCables) {
             // boc performs the same operation on its cables
             boc.setInitReferences(dataLayer);
@@ -94,6 +92,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         // initialize cables
         for (CableGraphic cable : getCables()) {
+            // set references
+            cable.setInitReferences(dataLayer);
+            // initialize
             cable.initialize();
         }
     }
@@ -182,8 +183,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
     @Override
     public List<HwComponentGraphic> getMarkedHwComponentsCopy() {
-        List<HwComponentGraphic> temp = new ArrayList<>();
+        List<HwComponentGraphic> temp = new ArrayList<>(markedAbstractHwComponents);
 
+        /*
         //Iterator<AbstractHwComponent> it = components.iterator();
 
         // get Collection of values contained in LinkedHashMap
@@ -197,7 +199,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
             if (c.isMarked()) {
                 temp.add(c);
             }
-        }
+        }*/
 
         return temp;
     }
@@ -209,8 +211,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
      */
     @Override
     public List<CableGraphic> getMarkedCablesCopy() {
-        List<CableGraphic> temp = new ArrayList<>();
-
+        
+        List<CableGraphic> temp = new ArrayList<>(markedCables);
+        /*
         Iterator<BundleOfCablesGraphic> it = bundlesOfCables.iterator();
 
         // get all marked components
@@ -223,33 +226,21 @@ public class Graph extends JComponent implements GraphOuterInterface {
                 }
             }
 
-        }
+        }*/
 
         return temp;
     }
 
-    public List<CableGraphic> getCables() {
-        List<CableGraphic> temp = new ArrayList<>();
-
-        Iterator<BundleOfCablesGraphic> it = bundlesOfCables.iterator();
-
-        // get all marked components
-        while (it.hasNext()) {
-            BundleOfCablesGraphic b = it.next();
-            // add all cables to temp
-            temp.addAll(b.getCables());
-        }
-
-        return temp;
-    }
 
     @Override
     public int getCablesCount() {
+        /*
         int count = 0;
         for (BundleOfCablesGraphic boc : bundlesOfCables) {
             count += boc.getCables().size();
         }
-        return count;
+        return count;*/
+        return cablesMap.size();
     }
 
     @Override
@@ -325,7 +316,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
 
         boc.addCable(cable);
-
+        
         if(propagateToNetwork){
             // add cable to network
             networkFacade.addCable(cable.getCableModel());
@@ -340,8 +331,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
     @Override
     public void addCables(List<CableGraphic> cableList) {
+        System.out.println("Adding cables "+cableList.size());
         for (CableGraphic c : cableList) {
-            addCable(c, false);
+            addCable(c, true);
         }
     }
 
@@ -354,9 +346,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
     public void removeCable(CableGraphic cable) {
         // get bundle of cables between c1 and c2
         BundleOfCablesGraphic boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
+        
         boc.removeCable(cable);
-        cable.getEth1().removeCable();
-        cable.getEth2().removeCable();
+        //cable.getEth1().removeCable();
+        //cable.getEth2().removeCable();
 
         // if no cable in bundle of cables
         if (boc.getCablesCount() == 0) {
@@ -434,6 +427,28 @@ public class Graph extends JComponent implements GraphOuterInterface {
         //return components;
         return componentsMap.values();
     }
+    
+    
+    @Override
+    public Collection<CableGraphic> getCables(){
+        return cablesMap.values();
+    }
+    
+    /*
+    public List<CableGraphic> getCables() {
+        List<CableGraphic> temp = new ArrayList<>();
+
+        Iterator<BundleOfCablesGraphic> it = bundlesOfCables.iterator();
+
+        // get all marked components
+        while (it.hasNext()) {
+            BundleOfCablesGraphic b = it.next();
+            // add all cables to temp
+            temp.addAll(b.getCables());
+        }
+
+        return temp;
+    }*/
 
     @Override
     public void addHwComponent(HwComponentGraphic component) {
@@ -828,7 +843,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * of position change in default zoom.
      */
     private HashMap<HwComponentGraphic, Dimension> doAlignComponentsToGrid(Collection<HwComponentGraphic> componentsToAlign) {
-        HashMap<HwComponentGraphic, Dimension> movedComponentsMap = new HashMap<HwComponentGraphic, Dimension>();
+        HashMap<HwComponentGraphic, Dimension> movedComponentsMap = new HashMap<>();
 
         // obtain an Iterator for Collection
         Iterator<HwComponentGraphic> it = componentsToAlign.iterator();
@@ -868,7 +883,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
             }
         }
 
-        HashMap<HwComponentGraphic, Dimension> movedComponentsMap = new HashMap<HwComponentGraphic, Dimension>();
+        HashMap<HwComponentGraphic, Dimension> movedComponentsMap = new HashMap<>();
 
         // get Collection of values contained in LinkedHashMap
         Collection<HwComponentGraphic> colection = componentsMap.values();
