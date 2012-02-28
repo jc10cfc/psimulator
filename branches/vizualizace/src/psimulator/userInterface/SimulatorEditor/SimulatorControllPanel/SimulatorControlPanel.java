@@ -197,6 +197,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 // load events
                 SimulatorEventsWrapper simulatorEventsWrapper = mainWindow.loadEventsAction();
                 
+                if(simulatorEventsWrapper == null){
+                    return;
+                }
+                
                 // set events to simulator manager
                 simulatorManagerInterface.setSimulatorEvents(simulatorEventsWrapper);
             }
@@ -207,6 +211,13 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
+                
+                // if list empty
+                if(simulatorManagerInterface.getListSize() <= 0){
+                    showWarningDialog(dataLayer.getString("WARNING"), dataLayer.getString("NOTHING_TO_SAVE_WARNING"));
+                    //
+                    return;
+                }
                 
                 // get events
                 SimulatorEventsWrapper simulatorEventsWrapper = simulatorManagerInterface.getSimulatorEvents();
@@ -341,23 +352,6 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 }
             }
         });
-        /*
-         * // -------------------- VIEW DETAILS ---------------------
-         * jCheckBoxPacketDetails.addActionListener(new ActionListener() {
-         *
-         * @Override public void actionPerformed(java.awt.event.ActionEvent evt)
-         * { if (jCheckBoxPacketDetails.isSelected()) {
-         * simulatorManagerInterface.setPacketDetails(true); } else {
-         * simulatorManagerInterface.setPacketDetails(false); } } });
-         *
-         * jCheckBoxNamesOfDevices.addActionListener(new ActionListener() {
-         *
-         * @Override public void actionPerformed(java.awt.event.ActionEvent evt)
-         * { if (jCheckBoxNamesOfDevices.isSelected()) {
-         * simulatorManagerInterface.setNamesOfDevices(true); } else {
-         * simulatorManagerInterface.setNamesOfDevices(false); } }
-        });
-         */
     }
 
     private void initComponents() {
