@@ -7,6 +7,7 @@ import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Network.NetworkModel;
 import psimulator.dataLayer.Network.Serializer.NetworkModelSerializer;
+import psimulator.dataLayer.Network.Serializer.NetworkModelSerializerXML;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializer;
 import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializerXML;
@@ -32,6 +33,7 @@ public class DataLayer extends DataLayerFacade {
     //private AbstractNetworkAdapter abstractNetworkAdapter;
     //private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
     private NetworkModelSerializer networkModelSerializer;
+    private NetworkModelSerializerXML networkModelSerializerXML;
     //
     private SimulatorEventsSerializer simulatorEventsSerializer;
     private SimulatorEventsSerializerXML simulatorEventsSerializerXML;
@@ -48,6 +50,7 @@ public class DataLayer extends DataLayerFacade {
         //abstractNetworkAdapter = new AbstractNetworkAdapter();
         //abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
         networkModelSerializer = new NetworkModelSerializer();
+        networkModelSerializerXML = new NetworkModelSerializerXML();
         
         simulatorEventsSerializer = new SimulatorEventsSerializer();
         simulatorEventsSerializerXML = new SimulatorEventsSerializerXML();
@@ -142,12 +145,14 @@ public class DataLayer extends DataLayerFacade {
     
     @Override
     public void saveNetworkModelToFile(File file) throws SaveLoadException {
-        networkModelSerializer.saveNetworkModelToFile(networkFacade.getNetworkModel(), file);
+        //networkModelSerializer.saveNetworkModelToFile(networkFacade.getNetworkModel(), file);
+        networkModelSerializerXML.saveNetworkModelToFile(networkFacade.getNetworkModel(), file);
     }
 
     @Override
     public void loadNetworkModelFromFile(File file) throws SaveLoadException {
-        NetworkModel networkModel = networkModelSerializer.loadNetworkModelFromFile(file);
+        //NetworkModel networkModel = networkModelSerializer.loadNetworkModelFromFile(file);
+        NetworkModel networkModel = networkModelSerializerXML.loadNetworkModelFromFile(file);
         networkFacade.setNetworkModel(networkModel);
     }
   
