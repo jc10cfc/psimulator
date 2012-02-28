@@ -80,8 +80,8 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
                     simulatorManagerInterface.setNewPacketRecieved();
                     
-                    //int time = tmpRandom.nextInt(10) + 10; // 1000 + 100
-                    int time = tmpRandom.nextInt(1000) + 100;
+                    int time = tmpRandom.nextInt(100) + 10; // 1000 + 100
+                    //int time = tmpRandom.nextInt(1000) + 100;
 
                     Thread.sleep(time);
                     //Thread.sleep(1);

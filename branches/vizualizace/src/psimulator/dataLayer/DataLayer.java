@@ -49,11 +49,9 @@ public class DataLayer extends DataLayerFacade {
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
         simulatorManager = new SimulatorManager((DataLayerFacade)this);
-        //abstractNetworkAdapter = new AbstractNetworkAdapter();
-        //abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
-        //networkModelSerializer = new NetworkModelSerializer();
-        //networkModelSerializerXML = new NetworkModelSerializerXML();
-        abstractNetworkSerializer = new NetworkModelSerializerXML();
+        
+        //abstractNetworkSerializer = new NetworkModelSerializerXML();
+        abstractNetworkSerializer = new NetworkModelSerializer();
         
         simulatorEventsSerializer = new SimulatorEventsSerializer();
         simulatorEventsSerializerXML = new SimulatorEventsSerializerXML();

@@ -16,7 +16,7 @@ import psimulator.userInterface.UserInterfaceOuterFacade;
  */
 public class SimulatorPlayerThread implements Runnable, Observer {
 
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     private Thread thread;
     //
     private SimulatorManagerInterface simulatorManagerInterface;
@@ -121,7 +121,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
             } catch (InterruptedException ex) {
                 if (DEBUG) {
-                    System.out.println("Interrupted");
+                    System.out.println("Player Interrupted");
                 }
             }
 

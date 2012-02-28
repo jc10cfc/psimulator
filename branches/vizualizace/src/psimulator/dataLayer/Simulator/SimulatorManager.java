@@ -19,6 +19,8 @@ import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
  */
 public class SimulatorManager extends Observable implements SimulatorManagerInterface {
 
+    private static boolean DEBUG = true;
+    
     private DataLayerFacade dataLayerFacade;
     // player speeds
     public static final int SPEED_MIN = 10;
@@ -158,7 +160,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public void setPlayerFunctionActivated(SimulatorPlayerCommand simulatorPlayerState) {
         //this.simulatorPlayerState = simulatorPlayerState;
 
-        System.out.println("State=" + simulatorPlayerState);
+        if(DEBUG)System.out.println("State=" + simulatorPlayerState);
 
         switch (simulatorPlayerState) {
             case FIRST:
@@ -193,7 +195,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void setRecordingActivated() {
         this.isRecording = true;
-        System.out.println("Recording " + true);
+        if(DEBUG)System.out.println("Recording " + true);
 
         // notify all observers
         setChanged();
@@ -203,7 +205,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void setRecordingDeactivated() {
         this.isRecording = false;
-        System.out.println("Recording " + false);
+        if(DEBUG)System.out.println("Recording " + false);
 
         // notify all observers
         setChanged();
@@ -221,7 +223,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         setRecordingActivated();
 
         this.isRealtime = true;
-        System.out.println("Realtime " + true);
+        if(DEBUG)System.out.println("Realtime " + true);
 
         // notify all observers
         setChanged();
@@ -234,7 +236,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         setRecordingDeactivated();
 
         this.isRealtime = false;
-        System.out.println("Realtime " + false);
+        if(DEBUG)System.out.println("Realtime " + false);
 
         // notify all observers
         setChanged();
@@ -250,7 +252,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         }
 
         this.isPlaying = true;
-        System.out.println("START Playing ");
+        if(DEBUG)System.out.println("START Playing ");
 
         // notify all observers
         setChanged();
@@ -260,33 +262,15 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void setPlayingStopped() {
         this.isPlaying = false;
-        System.out.println("STOP Playing ");
+        if(DEBUG)System.out.println("STOP Playing ");
 
         // notify all observers
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
     }
-    /*
-     * @Override public void setPacketDetails(boolean activated) {
-     * isPacketDetails = activated;
-     *
-     * System.out.println("Packet details " + activated);
-     *
-     * // notify all observers setChanged();
-     * notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS); }
-     *
-     * @Override public void setNamesOfDevices(boolean activated) {
-     * isDeviceNames = activated;
-     *
-     * System.out.println("Names of devices " + activated);
-     *
-     * // notify all observers setChanged();
-     * notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS); }
-     */
 
     @Override
     public void setConcreteRawSelected(int row) {
-        System.out.println("Row " + row + " double clicked");
         currentPositionInList = row;
 
         // notify all observers
@@ -344,44 +328,49 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         // delete items
         eventTableModel.deleteAllSimulatorEvents();
         currentPositionInList = 0;
-        
+
         // get simulator event list
         List<SimulatorEvent> simulatorEventsList = simulatorEvents.getSimulatorEvents();
-        
+
         // add details to events
         addDetailsToSimulatorEvents(simulatorEventsList);
-        
+
         // add events to table model
         eventTableModel.setEventList(simulatorEvents.getSimulatorEvents());
     }
-
 
     /**
      * Used from another thread
      */
     @Override
     public void moveToNextEvent() {
-//        SwingUtilities.invokeLater(new Runnable() {
-//
-//           @Override
-//            public void run() {
         //if nothing else to play
         if (currentPositionInList >= eventTableModel.getRowCount() - 1) {
             isPlaying = false;
-            System.out.println("Playing automaticly set to " + isPlaying);
+            if(DEBUG)System.out.println("Playing automaticly set to " + isPlaying);
 
-            // notify all observers
-            setChanged();
-            notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    // notify all observers
+                    setChanged();
+                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
+                }
+            });
         } else {
             currentPositionInList++;
 
-            // notify all observers
-            setChanged();
-            notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+            SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                    // notify all observers
+                    setChanged();
+                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+                }
+            });
         }
-//            }
-//        });
     }
 
     /**
@@ -389,18 +378,18 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      */
     @Override
     public void moveToEvent(final int index) {
-//        SwingUtilities.invokeLater(new Runnable() {
-//
-//           @Override
-//            public void run() {
-
         currentPositionInList = index;
 
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
-//            }
-//        });
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                // notify all observers
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+            }
+        });
     }
 
     @Override
@@ -430,9 +419,13 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
     @Override
     public synchronized int getCurrentPositionInList() {
+        System.out.println("Current position "+currentPositionInList);
         return currentPositionInList;
     }
 
+    /**
+     * Used from another thread
+     */
     @Override
     public int getListSize() {
         return eventTableModel.getRowCount();
@@ -466,9 +459,9 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         SimulatorEventsWrapper simulatorEvents = new SimulatorEventsWrapper(eventTableModel.getEventListCopy());
         return simulatorEvents;
     }
-    
+
     private void addDetailsToSimulatorEvents(List<SimulatorEvent> simulatorEvents) {
-        for(SimulatorEvent simulatorEvent : simulatorEvents){
+        for (SimulatorEvent simulatorEvent : simulatorEvents) {
             addDetailToSimulatorEvent(simulatorEvent);
         }
     }
