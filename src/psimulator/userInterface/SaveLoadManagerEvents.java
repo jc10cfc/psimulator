@@ -54,7 +54,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
             System.out.println("Opening file: " + selctedFile);
 
             // load events from file
-            SimulatorEventsWrapper simulatorEvents= dataLayer.loadEventsFromFile(file);
+            SimulatorEventsWrapper simulatorEvents= dataLayer.loadEventsFromFile(selctedFile);
 
             // set saved timestamp and file name
             setLastSavedFile(selctedFile);
