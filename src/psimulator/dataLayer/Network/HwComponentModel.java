@@ -94,6 +94,10 @@ public final class HwComponentModel extends AbstractComponentModel implements Po
         return list.get(index);
     }
 
+    public int getEthInterfaceCount(){
+        return interfacesMap.size();
+    }
+    
     /**
      * Gets X position of component in default zoom
      * @return 

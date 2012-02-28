@@ -31,23 +31,23 @@ public class NetworkBuilder extends AbstractNetworkBuilder {
         // create interfaces
         List<NetworkInterface> networkInterfaces = new ArrayList<NetworkInterface>();
 
-        for (EthInterface ethInteface : hwComponent.getInterfaces()) {
-            // create interface
-            NetworkInterface networkInterface = new NetworkInterface(ethInteface.getId().intValue(), networkDevice, ethInteface.getName(),
-                    ethInteface.getIpAddress(), ethInteface.getMacAddress());
-            
-            // add interface to list
-            networkInterfaces.add(networkInterface);
-            
-            // add interface to hashMap in network for search
-            network.addNetworkInterface(networkInterface);
-        }
-
-        // add interfaces to device
-        networkDevice.setInterfaces(networkInterfaces);
-        
-        // add network device to network
-        network.addDevice(networkDevice);
+//        for (EthInterface ethInteface : hwComponent.getInterfaces()) {
+//            // create interface
+//            NetworkInterface networkInterface = new NetworkInterface(ethInteface.getId().intValue(), networkDevice, ethInteface.getName(),
+//                    ethInteface.getIpAddress(), ethInteface.getMacAddress());
+//            
+//            // add interface to list
+//            networkInterfaces.add(networkInterface);
+//            
+//            // add interface to hashMap in network for search
+//            network.addNetworkInterface(networkInterface);
+//        }
+//
+//        // add interfaces to device
+//        networkDevice.setInterfaces(networkInterfaces);
+//        
+//        // add network device to network
+//        network.addDevice(networkDevice);
     }
 
     @Override

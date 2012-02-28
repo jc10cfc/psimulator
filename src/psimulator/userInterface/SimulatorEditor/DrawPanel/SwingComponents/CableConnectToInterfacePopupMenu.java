@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.event.PopupMenuListener;
+import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.ChooseEthInterfaceInterface;
 
@@ -52,7 +52,7 @@ public class CableConnectToInterfacePopupMenu extends JPopupMenu {
         Icon icon = ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_ETH_INTERFACE_16_PATH);
         
         // create menu items
-        for(EthInterface ei : component.getInterfaces()){
+        for(EthInterfaceModel ei : component.getInterfaces()){
             // new menu item
             items[i] = new JMenuItem(ei.getName(), icon);
             // if EthInterface in use, marked as disabled

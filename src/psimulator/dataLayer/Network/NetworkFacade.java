@@ -11,29 +11,45 @@ import psimulator.AbstractNetwork.HwTypeEnum;
  */
 public class NetworkFacade {
     
-    private NetworkModel network; 
+    private NetworkModel networkModel; 
     private NetworkComponentsFactory networkComponentsFactory;
     
     public NetworkFacade(){
         networkComponentsFactory = new NetworkComponentsFactory();
     }
 
-    public NetworkModel getNetwork() {
-        return network;
+    public NetworkModel getNetworkModel() {
+        return networkModel;
     }
 
-    public void setNetwork(NetworkModel network) {
-        this.network = network;
+    public void setNetworkModel(NetworkModel network) {
+        this.networkModel = network;
+    }
+    
+    public NetworkModel createNetworkModel(){
+        System.out.println("Vytvarim");
+        this.networkModel = networkComponentsFactory.createEmptyNetworkModel();
+        return networkModel;
+    }
+    
+    public HwComponentModel createHwComponentModel(HwTypeEnum hwType, int interfacesCount, int defaultZoomXPos, int defaultZoomYPos){
+        HwComponentModel hwComponentModel = networkComponentsFactory.createHwComponent(hwType, interfacesCount, defaultZoomXPos, defaultZoomYPos); 
+        return hwComponentModel;
+    }
+    
+    public CableModel createCableModel(HwTypeEnum hwType, HwComponentModel component1, HwComponentModel component2, EthInterfaceModel interface1, EthInterfaceModel interface2){
+        CableModel cableModel = networkComponentsFactory.createCable(hwType, component1, component2, interface1, interface2);
+        return cableModel;
     }
     
     // -----------------------------------------------
     
     public int getCablesCount(){
-        return network.getCablesCount();
+        return networkModel.getCablesCount();
     }
     
     public int getHwComponentsCount(){
-        return network.getHwComponentsCount();
+        return networkModel.getHwComponentsCount();
     }
     
     /**
@@ -45,7 +61,7 @@ public class NetworkFacade {
         cable.getInterface2().setCable(cable);
         
         // add cable to hash map
-        network.addCable(cable);
+        networkModel.addCable(cable);
 
         // set timestamp of edit
         editHappend();
@@ -67,7 +83,7 @@ public class NetworkFacade {
         cable.getInterface2().removeCable();
 
         // remove cable from hash map
-        network.removeCable(cable);
+        networkModel.removeCable(cable);
         
         // set timestamp of edit
         editHappend();
@@ -80,12 +96,12 @@ public class NetworkFacade {
     }
     
     public Collection<HwComponentModel> getHwComponents() {
-        return network.getHwComponents();
+        return networkModel.getHwComponents();
     }
     
     
     public void addHwComponent(HwComponentModel component) {
-        network.addHwComponent(component);
+        networkModel.addHwComponent(component);
         
         // set timestamp of edit
         editHappend();
@@ -98,47 +114,22 @@ public class NetworkFacade {
     }
     
     public void removeHwComponent(HwComponentModel component) {
-        network.removeHwComponent(component);
+        networkModel.removeHwComponent(component);
 
         // set timestamp of edit
         editHappend();
     }
     
     public void removeHwComponents(List<HwComponentModel> componentList) {
-        network.removeHwComponents(componentList);
+        networkModel.removeHwComponents(componentList);
 
         // set timestamp of edit
         editHappend();
-    }
-
-    /**
-     * Creates new cableModel in network component factory.
-     * @param hwType
-     * @param component1
-     * @param component2
-     * @param interface1
-     * @param interface2
-     * @return 
-     */
-    public CableModel createCable(HwTypeEnum hwType, HwComponentModel component1, HwComponentModel component2, EthInterfaceModel interface1, EthInterfaceModel interface2){
-        return networkComponentsFactory.createCable(hwType, component1, component2, interface1, interface2);
-    }
-    
-    /**
-     * Creates new hwComponent in network component factory.
-     * @param hwType
-     * @param interfacesCount
-     * @param defaultZoomXPos
-     * @param defaultZoomYPos
-     * @return 
-     */
-    public HwComponentModel createHwComponent(HwTypeEnum hwType, int interfacesCount, int defaultZoomXPos, int defaultZoomYPos){
-        return networkComponentsFactory.createHwComponent(hwType, interfacesCount, defaultZoomXPos, defaultZoomYPos);
     }
     
     // TODO
     public void editHappend(){
         //
-        network.setLastEditTimestamp(System.currentTimeMillis());        
+        networkModel.setLastEditTimestamp(System.currentTimeMillis());        
     }
 }

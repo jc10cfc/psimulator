@@ -10,10 +10,11 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Network.CableModel;
+import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableConnectToInterfacePopupMenu;
@@ -29,8 +30,8 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
 
     private AbstractHwComponent component1;
     private AbstractHwComponent component2;
-    private EthInterface eth1;
-    private EthInterface eth2;
+    private EthInterfaceModel eth1;
+    private EthInterfaceModel eth2;
     boolean hasFirstComponent = false;
     boolean hasSecondComponent = false;
     private Point startPointInDefault;
@@ -93,7 +94,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         e = convertMouseEvent(e);
         
         // clicked component
-        AbstractHwComponent tmp = null;
+        AbstractHwComponent tmp;
         
         tmp = getClickedAbstractHwComponent(e.getPoint());
 
@@ -173,7 +174,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      * @param ethInterface 
      */
     @Override
-    public void setChosenInterface(EthInterface ethInterface) {
+    public void setChosenInterface(EthInterfaceModel ethInterface) {
         // if we have only first component
         if (hasFirstComponent && !hasSecondComponent) {
             // get choosen ethInterface
@@ -227,9 +228,13 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      * @param eth1
      * @param eth2 
      */
-    private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterface eth1, EthInterface eth2) {
+    private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterfaceModel eth1, EthInterfaceModel eth2) {
+        // create cable model
+        CableModel cableModel = dataLayer.getNetworkFacade().createCableModel(createCableTool.getHwType(), 
+                c1.getHwComponentModel(), c2.getHwComponentModel(), eth1, eth2);
+        
         // create new cabel
-        Cable cable = new Cable(dataLayer, createCableTool.getHwType(), c1, c2, eth1, eth2);
+        Cable cable = new Cable(dataLayer, cableModel, c1, c2);
         
         // initialize cable
         cable.initialize();
