@@ -7,15 +7,16 @@ import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.SaveLoadException;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder.GraphBuilderFacade;
 
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class SaveLoadManagerGraph extends AbstractSaveLoadManager{
+public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager{
 
     
-    public SaveLoadManagerGraph(Component parentComponent, DataLayerFacade dataLayer) {
+    public SaveLoadManagerNetworkModel(Component parentComponent, DataLayerFacade dataLayer) {
         super(parentComponent, dataLayer);
     }
 
@@ -55,7 +56,7 @@ public class SaveLoadManagerGraph extends AbstractSaveLoadManager{
 
         // if YES -> save
         if (i == 0) {
-            boolean result = doSaveGraphAction(graph);
+            boolean result = doSaveGraphAction();
             
             // if not success
             if(result == false){
@@ -74,10 +75,10 @@ public class SaveLoadManagerGraph extends AbstractSaveLoadManager{
      * Shows save dialog.
      *
      */
-    public boolean doSaveAsGraphAction(Graph graph) {
+    public boolean doSaveAsGraphAction() {
         try {
             // save as
-            return saveAs(graph);
+            return saveAs();
         } catch (SaveLoadException ex) {
             showWarningSaveLoadError(ex.getParametersWrapper());
             return false;
@@ -90,17 +91,17 @@ public class SaveLoadManagerGraph extends AbstractSaveLoadManager{
      *
      * @throws SaveLoadException
      */
-    public boolean doSaveGraphAction(Graph graph) {
-        File file = getFile();
+    public boolean doSaveGraphAction() {
+        File selectedFile = getFile();
 
         try {
             // same as save as but do not ask the user
-            if (file != null) {
+            if (selectedFile != null) {
                 // save
-                save(file, graph);
+                save(selectedFile);
             } else { // same as save as
                 // save as
-                return saveAs(graph);
+                return saveAs();
             }
         } catch (SaveLoadException ex) {
             showWarningSaveLoadError(ex.getParametersWrapper());
@@ -129,8 +130,13 @@ public class SaveLoadManagerGraph extends AbstractSaveLoadManager{
             //This is where a real application would open the file.
             System.out.println("Opening file: " + selctedFile);
 
-            // load graph
-            Graph graph = dataLayer.loadGraphFromFile(selctedFile);
+            // load network model
+            dataLayer.loadNetworkModelFromFile(selctedFile);
+            
+            // Build graph
+            GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
+            Graph graph = graphBuilderFacade.buildGraph(dataLayer.getNetworkFacade());
+            
 
             // set saved timestamp and file name
             setLastSavedFile(selctedFile);
@@ -147,7 +153,7 @@ public class SaveLoadManagerGraph extends AbstractSaveLoadManager{
      * @return
      * @throws SaveLoadException 
      */
-    private boolean saveAs(Graph graph) throws SaveLoadException {
+    private boolean saveAs() throws SaveLoadException {
         int returnVal = fileChooser.showSaveDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -162,29 +168,30 @@ public class SaveLoadManagerGraph extends AbstractSaveLoadManager{
                 // if OK, save dialog
                 if(i == JOptionPane.OK_OPTION){
                     // save
-                    save(selctedFile, graph);
+                    save(selctedFile);
                     return true;
                 }
                 
                 // if CANCEL, show dialog again
                 if(i == JOptionPane.NO_OPTION){
-                    return saveAs(graph);
+                    return saveAs();
                 }
                 
                 // cancel or quit dialog
                 return false;
             }else{
                 // save
-                save(selctedFile, graph);
+                save(selctedFile);
                 return true;
             }
         }
         return false;
     }
 
-    private void save(File file, Graph graph) throws SaveLoadException {
+    private void save(File file) throws SaveLoadException {
         // save graph
-        dataLayer.saveGraphToFile(graph, file);
+        //dataLayer.saveGraphToFile(graph, file);
+        dataLayer.saveNetworkModelToFile(file);
 
         // set saved timestamp
         setLastSavedFile(file);

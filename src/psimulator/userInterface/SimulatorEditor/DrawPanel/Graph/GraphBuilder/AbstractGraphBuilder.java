@@ -1,8 +1,8 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
-import psimulator.AbstractNetwork.NetworkCable;
-import psimulator.AbstractNetwork.NetworkCounter;
-import psimulator.AbstractNetwork.NetworkDevice;
+import psimulator.dataLayer.Network.CableModel;
+import psimulator.dataLayer.Network.HwComponentModel;
+import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
@@ -13,10 +13,10 @@ public abstract class AbstractGraphBuilder {
     
     public abstract Graph getResult();
     
-    public abstract void buildDevice(NetworkDevice device);
+    public abstract void buildGraph(NetworkFacade networkFacade);
     
-    public abstract void buildCable(NetworkCable cable);
+    public abstract void buildHwComponent(HwComponentModel hwComponentModel);
     
-    public abstract void buildCounter(NetworkCounter counter);
+    public abstract void buildCable(CableModel cable);
 
 }

@@ -277,9 +277,12 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         // if graph is empty - new project is created
         if (graph.getAbstractHwComponentsCount() == 0) {
+            // get network coutner model
             // initialize generator singleton
-            GeneratorSingleton.getInstance().initialize();
+            
         }
+        
+        GeneratorSingleton.getInstance().initialize(dataLayer.getNetworkFacade().getNetworkCounterModel());
 
         graph.initialize(this, dataLayer);
     }

@@ -1,9 +1,10 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
-import java.util.Map;
-import psimulator.AbstractNetwork.Network;
-import psimulator.AbstractNetwork.NetworkCable;
-import psimulator.AbstractNetwork.NetworkDevice;
+import java.util.Collection;
+import java.util.Iterator;
+import psimulator.dataLayer.Network.CableModel;
+import psimulator.dataLayer.Network.HwComponentModel;
+import psimulator.dataLayer.Network.NetworkFacade;
 
 /**
  *
@@ -12,32 +13,33 @@ import psimulator.AbstractNetwork.NetworkDevice;
 public class GraphBuilderDirector {
 
     private AbstractGraphBuilder abstractGraphBuilder;
-    private Network network;
+    private NetworkFacade networkFacade;
 
-    public GraphBuilderDirector(AbstractGraphBuilder abstractGraphBuilder, Network network) {
+    public GraphBuilderDirector(AbstractGraphBuilder abstractGraphBuilder, NetworkFacade networkFacade) {
         this.abstractGraphBuilder = abstractGraphBuilder;
-        this.network = network;
+        this.networkFacade = networkFacade;
     }
 
     public void construct() {
+        // create graph
+        abstractGraphBuilder.buildGraph(networkFacade);
 
-        Map<Integer, NetworkDevice> devices = network.getDevices();
-
-        // build all devices
-        for (Map.Entry<Integer, NetworkDevice> entry : devices.entrySet()) {
-            NetworkDevice networkDevice = entry.getValue();
-            abstractGraphBuilder.buildDevice(networkDevice);
+        Collection <HwComponentModel> devices = networkFacade.getHwComponents();
+        Iterator<HwComponentModel> ith = devices.iterator();
+        
+        // build all hw components
+        while(ith.hasNext()){
+            HwComponentModel hwComp = ith.next();
+            abstractGraphBuilder.buildHwComponent(hwComp);
         }
 
-        Map<Integer, NetworkCable> cables = network.getCables();
-
+        Collection <CableModel> cables = networkFacade.getCables();
+        Iterator<CableModel> itc = cables.iterator();
+        
         // build all cables
-        for (Map.Entry<Integer, NetworkCable> entry : cables.entrySet()) {
-            NetworkCable networkCable = entry.getValue();
-            abstractGraphBuilder.buildCable(networkCable);
-
+        while(itc.hasNext()){
+            CableModel cableModel = itc.next();
+            abstractGraphBuilder.buildCable(cableModel);
         }
-        // build counter
-        abstractGraphBuilder.buildCounter(network.getCounter());
     }
 }

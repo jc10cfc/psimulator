@@ -3,7 +3,6 @@ package psimulator.dataLayer.Network;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import psimulator.AbstractNetwork.HwTypeEnum;
 
 /**
  *
@@ -44,6 +43,10 @@ public class NetworkFacade {
     
     // -----------------------------------------------
     
+    public NetworkCounterModel getNetworkCounterModel(){
+        return networkModel.getNetworkCounterModel();
+    }
+    
     public int getCablesCount(){
         return networkModel.getCablesCount();
     }
@@ -51,6 +54,10 @@ public class NetworkFacade {
     public int getHwComponentsCount(){
         return networkModel.getHwComponentsCount();
     }
+    
+    public Collection<CableModel> getCables(){
+        return networkModel.getCables();
+    } 
     
     /**
      * Adds calbe to proper bundle of cables, eth interfaces
@@ -121,7 +128,9 @@ public class NetworkFacade {
     }
     
     public void removeHwComponents(List<HwComponentModel> componentList) {
-        networkModel.removeHwComponents(componentList);
+       for(HwComponentModel component : componentList){
+            networkModel.removeHwComponent(component);
+        }
 
         // set timestamp of edit
         editHappend();

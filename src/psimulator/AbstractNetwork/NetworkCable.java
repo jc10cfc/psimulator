@@ -1,5 +1,6 @@
 package psimulator.AbstractNetwork;
 
+import psimulator.dataLayer.Network.HwTypeEnum;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlIDREF;

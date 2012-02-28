@@ -12,9 +12,9 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.Network.NetworkModel;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
@@ -37,7 +37,7 @@ import psimulator.userInterface.actionListerners.PreferencesActionListener;
  */
 public class MainWindow extends JFrame implements MainWindowInnerInterface, UserInterfaceOuterFacade, Observer {
 
-    private SaveLoadManagerGraph saveLoadManagerGraph;
+    private SaveLoadManagerNetworkModel saveLoadManagerGraph;
     private SaveLoadManagerEvents saveLoadManagerEvents;
     //
     private DataLayerFacade dataLayer;
@@ -69,10 +69,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 //UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             }
 
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }
         
-        saveLoadManagerGraph = new SaveLoadManagerGraph((Component)this, dataLayer);
+        saveLoadManagerGraph = new SaveLoadManagerNetworkModel((Component)this, dataLayer);
         saveLoadManagerEvents = new SaveLoadManagerEvents((Component)this, dataLayer);
 
         jMenuBar = new MenuBar(dataLayer);
@@ -339,7 +339,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             dataLayer.getNetworkFacade().createNetworkModel();
             //dataLayer.getNetworkFacade().setNetworkModel(networkModel);
 
-            refreshUserInterfaceMainPanel(new Graph(), UserInterfaceMainPanelState.EDITOR, false);
+            Graph graph = new Graph(dataLayer.getNetworkFacade());
+            
+            refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
 
             // set saved timestamp
             saveLoadManagerGraph.setLastSavedTimestamp();
@@ -407,7 +409,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
-            saveLoadManagerGraph.doSaveGraphAction(jPanelUserInterfaceMain.getGraph());
+            saveLoadManagerGraph.doSaveGraphAction();
         }
     }
 
@@ -423,7 +425,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
-            saveLoadManagerGraph.doSaveAsGraphAction(jPanelUserInterfaceMain.getGraph());
+            saveLoadManagerGraph.doSaveAsGraphAction();
         }
     }
 

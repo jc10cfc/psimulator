@@ -5,7 +5,7 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.Network.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Network.EthInterfaceModel;

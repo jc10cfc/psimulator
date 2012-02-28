@@ -1,12 +1,12 @@
 package psimulator.dataLayer.Network;
 
-import psimulator.AbstractNetwork.HwTypeEnum;
+import java.io.Serializable;
 
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public abstract class AbstractComponentModel implements Identifiable{
+public abstract class AbstractComponentModel implements Identifiable, Serializable{
     /**
      * Type of component
      */

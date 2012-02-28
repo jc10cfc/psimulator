@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observer;
+import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
@@ -18,7 +19,11 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface GraphOuterInterface {
+    
+    public NetworkFacade getNetworkFacade();
+    
     /**
+     * 
      * Returns width of Graph in actual zoom
      * @return
      */

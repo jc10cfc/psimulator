@@ -1,9 +1,6 @@
 package psimulator.dataLayer.Network;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import psimulator.AbstractNetwork.HwTypeEnum;
+import java.util.*;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
 
 /**
@@ -20,10 +17,26 @@ public class NetworkComponentsFactory {
         LinkedHashMap<Integer, CableModel> cablesMap = new LinkedHashMap<>();
         long lastEditTimestamp = 0L;
         Integer id = new Integer(-1);
+        NetworkCounterModel networkCounterModel = createEmptyNetworkCounter();
 
-        NetworkModel networkModel = new NetworkModel(componentsMap, cablesMap, lastEditTimestamp, id);
+        NetworkModel networkModel = new NetworkModel(componentsMap, cablesMap, lastEditTimestamp, id, networkCounterModel);
         
         return networkModel;
+    }
+    
+    public NetworkCounterModel createEmptyNetworkCounter(){
+        
+        int nextId = 0;
+        int nextMacAddress = 0;
+        Map<HwTypeEnum, Integer> nextNumberMap = new EnumMap<>(HwTypeEnum.class);
+        
+        for (HwTypeEnum hwTypeEnum : HwTypeEnum.values()) {
+            nextNumberMap.put(hwTypeEnum, new Integer(0));
+        }
+        
+        NetworkCounterModel networkCounterModel = new NetworkCounterModel(nextId, nextMacAddress, nextNumberMap);
+        
+        return networkCounterModel;
     }
 
     public CableModel createCable(HwTypeEnum hwType, HwComponentModel component1, HwComponentModel component2, EthInterfaceModel interface1, EthInterfaceModel interface2) {

@@ -1,5 +1,6 @@
 package psimulator.dataLayer.Network;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class NetworkModel implements Identifiable{
+public class NetworkModel implements Identifiable, Serializable{
     /**
      * Map with components. Identified by component ID.
      */
@@ -18,6 +19,10 @@ public class NetworkModel implements Identifiable{
      */
     private LinkedHashMap<Integer, CableModel> cablesMap;
     /**
+     * Counter with numer lines.
+     */
+    private NetworkCounterModel networkCounterModel;
+    /**
      * Last edit timestamp in milliseconds.
      */
     private long lastEditTimestamp;
@@ -25,11 +30,12 @@ public class NetworkModel implements Identifiable{
      * Id of network
      */
     private Integer id;
-
-    
-    public NetworkModel(LinkedHashMap<Integer, HwComponentModel> componentsMap, LinkedHashMap<Integer, CableModel> cablesMap, long lastEditTimestamp, Integer id) {
+ 
+    public NetworkModel(LinkedHashMap<Integer, HwComponentModel> componentsMap, LinkedHashMap<Integer, CableModel> cablesMap, 
+            long lastEditTimestamp, Integer id, NetworkCounterModel networkCounterModel) {
         this.componentsMap = componentsMap;
         this.cablesMap = cablesMap;
+        this.networkCounterModel = networkCounterModel; 
         this.lastEditTimestamp = lastEditTimestamp;
         this.id = id;
     }
@@ -42,6 +48,10 @@ public class NetworkModel implements Identifiable{
         this.lastEditTimestamp = lastEditTimestamp;
     }
 
+    public NetworkCounterModel getNetworkCounterModel() {
+        return networkCounterModel;
+    }
+    
     @Override
     public Integer getId() {
         return id;
@@ -53,6 +63,10 @@ public class NetworkModel implements Identifiable{
     
     public Collection<HwComponentModel> getHwComponents() {
         return componentsMap.values();
+    }
+    
+    public Collection<CableModel> getCables() {
+        return cablesMap.values();
     }
 
     public void addHwComponent(HwComponentModel component) {
@@ -66,13 +80,13 @@ public class NetworkModel implements Identifiable{
     }
     
     public void removeHwComponent(HwComponentModel component) {
-        Collection<HwComponentModel> colection = componentsMap.values();
-        colection.remove(component);
+        componentsMap.remove(component.getId());
     }
     
     public void removeHwComponents(List<HwComponentModel> componentList) {
-        Collection<HwComponentModel> colection = componentsMap.values();
-        colection.removeAll(componentList);
+        for(HwComponentModel component : componentList){
+            removeHwComponent(component);
+        }
     }
 
     public void addCable(CableModel cableModel){

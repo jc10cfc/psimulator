@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.NetworkBuilder;
 
+import psimulator.dataLayer.Network.HwTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.AbstractNetwork.*;
@@ -74,11 +75,11 @@ public class NetworkBuilder extends AbstractNetworkBuilder {
         // create network counter
         NetworkCounter networkCounter = new NetworkCounter(id, macAddress);
         
-        // for all possible HwTypes
-        for (HwTypeEnum hwType : HwTypeEnum.values()) {
-            // put into networkCounter value for hwType from singletonCounter
-            networkCounter.putIntoNextNumberMap(hwType, singletonCounter.getFromNextNumberMap(hwType));
-        }
+//        // for all possible HwTypes
+//        for (HwTypeEnum hwType : HwTypeEnum.values()) {
+//            // put into networkCounter value for hwType from singletonCounter
+//            networkCounter.putIntoNextNumberMap(hwType, singletonCounter.getFromNextNumberMap(hwType));
+//        }
         
         // set network counter to network
         network.setCounter(networkCounter);
