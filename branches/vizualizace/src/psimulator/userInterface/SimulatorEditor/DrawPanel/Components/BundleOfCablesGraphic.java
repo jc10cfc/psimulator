@@ -6,8 +6,8 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.dataLayer.Network.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Network.HwTypeEnum;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 
 /**
@@ -53,9 +53,10 @@ public class BundleOfCablesGraphic extends AbstractComponentGraphic{
     public void setInitReferences(DataLayerFacade dataLayer){
         this.dataLayer = dataLayer;
         
+        /*
         for(CableGraphic c : cables){
             c.setInitReferences(dataLayer);
-        }
+        }*/
     }
     
     @Override

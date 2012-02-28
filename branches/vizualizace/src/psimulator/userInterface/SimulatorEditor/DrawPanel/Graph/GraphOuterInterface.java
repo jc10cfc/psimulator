@@ -135,6 +135,12 @@ public interface GraphOuterInterface {
      * @return List of HwComponentGraphic
      */
     public Collection<HwComponentGraphic> getHwComponents();
+    
+    /**
+     * Gets all CableGraphic in list. It is NOT a copy
+     * @return 
+     */
+    public Collection<CableGraphic> getCables();
     /**
      * Gets all BundleOfCablesGraphic in list. It is NOT a copy
      * @return 
