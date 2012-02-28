@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuListener;
 import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.ChooseEthInterfaceInterface;
 
@@ -23,7 +23,7 @@ public class CableConnectToInterfacePopupMenu extends JPopupMenu {
     private JMenuItem items[];
     // END graphical components
     
-    private AbstractHwComponent component;
+    private HwComponentGraphic component;
     private ChooseEthInterfaceInterface chooseEthInterfaceInterface;
    
     public CableConnectToInterfacePopupMenu(DrawPanelInnerInterface drawPanel, PopupMenuListener popupMenuListener, ChooseEthInterfaceInterface chooseEthInterfaceInterface) {
@@ -33,12 +33,12 @@ public class CableConnectToInterfacePopupMenu extends JPopupMenu {
     }
 
     /**
-     * Shows JPopupMenu for AbstractHwComponent component at x and y coordinates. Parent is a drawPanel
+     * Shows JPopupMenu for HwComponentGraphic component at x and y coordinates. Parent is a drawPanel
      * @param component
      * @param x Coordinate
      * @param y Coordinate
      */
-    public void showPopupInterfaceChoose(AbstractHwComponent component, int x, int y) {
+    public void showPopupInterfaceChoose(HwComponentGraphic component, int x, int y) {
         // init data structures
         interfaceGroup = new ButtonGroup();
         this.removeAll();

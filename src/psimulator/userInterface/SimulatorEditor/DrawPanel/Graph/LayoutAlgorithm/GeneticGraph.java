@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCablesGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
@@ -37,7 +37,7 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
 
         this.gridSize = gridSize;
 
-        List<AbstractHwComponent> tmpList = new ArrayList(graph.getHwComponents());
+        List<HwComponentGraphic> tmpList = new ArrayList(graph.getHwComponents());
         
         int nodesCount = graph.getHwComponents().size();
         int edgesCount = graph.getBundlesOfCables().size();
@@ -47,7 +47,7 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
 
         // fill edges
         for (int i = 0; i < edgesCount; i++) {
-            BundleOfCables boc = graph.getBundlesOfCables().get(i);
+            BundleOfCablesGraphic boc = graph.getBundlesOfCables().get(i);
 
             //edges[i][0] = graph.getHwComponents().indexOf(boc.getComponent1());
             //edges[i][1] = graph.getHwComponents().indexOf(boc.getComponent2());

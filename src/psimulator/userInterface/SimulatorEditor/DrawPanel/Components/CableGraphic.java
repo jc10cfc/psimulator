@@ -18,13 +18,13 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class Cable extends AbstractComponent {
+public class CableGraphic extends AbstractComponentGraphic {
 
     private CableModel cableModel;
     
     // HAS TO HAVE GRAPHIC COMPONENTS
-    private AbstractHwComponent component1;
-    private AbstractHwComponent component2;
+    private HwComponentGraphic component1;
+    private HwComponentGraphic component2;
     //
     private BufferedImage delayImage;
     //
@@ -43,7 +43,7 @@ public class Cable extends AbstractComponent {
     /**
      * Use when creating graph by user actions.
      */
-    public Cable(DataLayerFacade dataLayer, CableModel cableModel, AbstractHwComponent component1, AbstractHwComponent component2){
+    public CableGraphic(DataLayerFacade dataLayer, CableModel cableModel, HwComponentGraphic component1, HwComponentGraphic component2){
         super(dataLayer);
         
         this.cableModel = cableModel;
@@ -54,7 +54,7 @@ public class Cable extends AbstractComponent {
     /**
      * Use when building graph from Network.
      */
-    public Cable(CableModel cableModel, AbstractHwComponent component1, AbstractHwComponent component2){
+    public CableGraphic(CableModel cableModel, HwComponentGraphic component1, HwComponentGraphic component2){
         super();
         
         this.cableModel = cableModel;
@@ -161,7 +161,7 @@ public class Cable extends AbstractComponent {
         }
     }
 
-    private void paintInterfaceLabels(Graphics2D g2, List<BufferedImage> images, AbstractHwComponent component, boolean first) {
+    private void paintInterfaceLabels(Graphics2D g2, List<BufferedImage> images, HwComponentGraphic component, boolean first) {
         // get edpoints of line
         Point lineP1 = new Point((int) line.getP1().getX(), (int) line.getP1().getY());
         Point lineP2 = new Point((int) line.getP2().getX(), (int) line.getP2().getY());
@@ -186,7 +186,7 @@ public class Cable extends AbstractComponent {
      * @param g2
      * @param images
      */
-    private void paintTexts(Graphics2D g2, List<BufferedImage> images, AbstractHwComponent component, Point intersectingPoint) {
+    private void paintTexts(Graphics2D g2, List<BufferedImage> images, HwComponentGraphic component, Point intersectingPoint) {
         int x;
         int y;
         
@@ -300,11 +300,11 @@ public class Cable extends AbstractComponent {
         return texts;
     }
 
-    public AbstractHwComponent getComponent1() {
+    public HwComponentGraphic getComponent1() {
         return component1;
     }
 
-    public AbstractHwComponent getComponent2() {
+    public HwComponentGraphic getComponent2() {
         return component2;
     }
 
@@ -390,7 +390,7 @@ public class Cable extends AbstractComponent {
     }
     
     public void swapComponentsAndEthInterfaces(){
-        AbstractHwComponent tmpComponent = component1;
+        HwComponentGraphic tmpComponent = component1;
         component1 = component2;
         component2 = tmpComponent;
 

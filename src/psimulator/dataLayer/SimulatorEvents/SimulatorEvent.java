@@ -3,8 +3,8 @@ package psimulator.dataLayer.SimulatorEvents;
 import java.awt.Color;
 import java.io.Serializable;
 import psimulator.dataLayer.ColorMixerSignleton;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.EthInterface;
+import psimulator.dataLayer.Network.EthInterfaceModel;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 
 /**
  *
@@ -23,10 +23,10 @@ public class SimulatorEvent implements Serializable{
     private transient Color color;
     private transient String from;
     private transient String to;
-    private transient AbstractHwComponent component1;
-    private transient AbstractHwComponent component2;
-    private transient EthInterface eth1;
-    private transient EthInterface eth2;
+    private transient HwComponentGraphic component1;
+    private transient HwComponentGraphic component2;
+    private transient EthInterfaceModel eth1;
+    private transient EthInterfaceModel eth2;
     private transient Object[] list;
 
     // USE THIS CONSTRUCTOR when creating event
@@ -84,8 +84,8 @@ public class SimulatorEvent implements Serializable{
      * @param eth1
      * @param eth2 
      */
-    public void setDetails(String from, String to, AbstractHwComponent component1, 
-            AbstractHwComponent component2, EthInterface eth1, EthInterface eth2){
+    public void setDetails(String from, String to, HwComponentGraphic component1, 
+            HwComponentGraphic component2, EthInterfaceModel eth1, EthInterfaceModel eth2){
         this.from = from;
         this.to = to;
         this.component1 = component1;
@@ -99,19 +99,19 @@ public class SimulatorEvent implements Serializable{
         list = tmp;
     }
     
-    public AbstractHwComponent getComponent1() {
+    public HwComponentGraphic getComponent1() {
         return component1;
     }
 
-    public AbstractHwComponent getComponent2() {
+    public HwComponentGraphic getComponent2() {
         return component2;
     }
 
-    public EthInterface getEth1() {
+    public EthInterfaceModel getEth1() {
         return eth1;
     }
 
-    public EthInterface getEth2() {
+    public EthInterfaceModel getEth2() {
         return eth2;
     }
 }

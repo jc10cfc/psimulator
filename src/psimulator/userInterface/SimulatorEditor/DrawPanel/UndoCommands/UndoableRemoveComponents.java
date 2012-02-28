@@ -2,8 +2,8 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands;
 
 import java.util.List;
 import javax.swing.undo.AbstractUndoableEdit;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
@@ -11,11 +11,11 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterf
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class UndoableRemoveComponents extends AbstractUndoableEdit {
-    protected List<AbstractHwComponent> components;
-    protected List<Cable> cables;
+    protected List<HwComponentGraphic> components;
+    protected List<CableGraphic> cables;
     protected GraphOuterInterface graph;
     
-    public UndoableRemoveComponents(GraphOuterInterface graph, List<AbstractHwComponent> components, List<Cable> cables){
+    public UndoableRemoveComponents(GraphOuterInterface graph, List<HwComponentGraphic> components, List<CableGraphic> cables){
         super();
         this.components = components;
         this.graph = graph;

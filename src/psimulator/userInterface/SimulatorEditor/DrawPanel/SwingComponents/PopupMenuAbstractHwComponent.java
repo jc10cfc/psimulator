@@ -4,7 +4,7 @@ import java.util.List;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
 

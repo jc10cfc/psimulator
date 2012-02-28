@@ -17,7 +17,7 @@ import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public abstract class AbstractComponent extends JComponent implements Markable, Identifiable {
+public abstract class AbstractComponentGraphic extends JComponent implements Markable, Identifiable {
 
     //
     protected DataLayerFacade dataLayer;
@@ -30,14 +30,14 @@ public abstract class AbstractComponent extends JComponent implements Markable, 
      * Use when creating graph by user actions.
      * @param dataLayer
      */
-    public AbstractComponent(DataLayerFacade dataLayer){
+    public AbstractComponentGraphic(DataLayerFacade dataLayer){
         this.dataLayer = dataLayer;
     }
     
     /**
      * Use when building graph from Network.
      */
-    public AbstractComponent(){
+    public AbstractComponentGraphic(){
     }
     
     /**

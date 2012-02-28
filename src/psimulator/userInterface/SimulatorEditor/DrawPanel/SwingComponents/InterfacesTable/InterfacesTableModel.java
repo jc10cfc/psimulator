@@ -3,7 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Inter
 import javax.swing.table.AbstractTableModel;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Network.EthInterfaceModel;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 
 /**
  *
@@ -11,7 +11,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwC
  */
 public class InterfacesTableModel extends AbstractTableModel {
 
-    private AbstractHwComponent abstractHwComponent;
+    private HwComponentGraphic abstractHwComponent;
     private DataLayerFacade dataLayer;
     //
     private boolean showAddresses;
@@ -19,7 +19,7 @@ public class InterfacesTableModel extends AbstractTableModel {
     private String[] columnNames;
     private Object[][] data;// = ...//same as before...
 
-    public InterfacesTableModel(AbstractHwComponent abstractHwComponent, DataLayerFacade dataLayer, boolean showAddresses) {
+    public InterfacesTableModel(HwComponentGraphic abstractHwComponent, DataLayerFacade dataLayer, boolean showAddresses) {
         this.dataLayer = dataLayer;
         this.abstractHwComponent = abstractHwComponent;
         this.showAddresses = showAddresses;

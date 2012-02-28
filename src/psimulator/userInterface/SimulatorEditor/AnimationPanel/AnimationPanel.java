@@ -13,7 +13,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.SimulatorEvents.PacketType;
 import psimulator.userInterface.MainWindowInnerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
@@ -207,7 +207,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      */
     @Override
     public int getAnimationDuration(int cableId, int speedCoeficient) {
-        Cable cable = graph.getCable(cableId);
+        CableGraphic cable = graph.getCable(cableId);
 
         int delay = cable.getDelay();
 

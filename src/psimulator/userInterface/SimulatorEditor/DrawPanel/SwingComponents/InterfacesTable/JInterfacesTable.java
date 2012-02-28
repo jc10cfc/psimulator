@@ -8,7 +8,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 
 /**
  *
@@ -16,10 +16,10 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwC
  */
 public class JInterfacesTable extends JTable {
 
-    private AbstractHwComponent abstractHwComponent;
+    private HwComponentGraphic abstractHwComponent;
     private DataLayerFacade dataLayer;
     //
-    public JInterfacesTable(TableModel tableModel, AbstractHwComponent abstractHwComponent, DataLayerFacade dataLayer) {
+    public JInterfacesTable(TableModel tableModel, HwComponentGraphic abstractHwComponent, DataLayerFacade dataLayer) {
         super(tableModel);
 
         this.abstractHwComponent = abstractHwComponent;

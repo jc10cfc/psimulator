@@ -13,9 +13,9 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractComponentGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCablesGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
@@ -155,9 +155,9 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
      * @param point
      * @return component clicked
      */
-    protected AbstractComponent getClickedItem(Point point) {
+    protected AbstractComponentGraphic getClickedItem(Point point) {
         // search HwComponents
-        AbstractComponent clickedComponent = getClickedAbstractHwComponent(point);
+        AbstractComponentGraphic clickedComponent = getClickedAbstractHwComponent(point);
 
         if (clickedComponent != null) {
             return clickedComponent;
@@ -166,7 +166,7 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
         // create small rectangle arround clicked point
         
         // search cables
-        for (BundleOfCables boc : drawPanel.getGraphOuterInterface().getBundlesOfCables()) {
+        for (BundleOfCablesGraphic boc : drawPanel.getGraphOuterInterface().getBundlesOfCables()) {
             clickedComponent = boc.getIntersectingCable(point);
             if(clickedComponent != null){
                return clickedComponent; 
@@ -181,11 +181,11 @@ public abstract class DrawPanelListenerStrategy extends MouseInputAdapter implem
      * @param point
      * @return 
      */
-    protected AbstractHwComponent getClickedAbstractHwComponent(Point point) {
-        AbstractHwComponent clickedComponent = null;
+    protected HwComponentGraphic getClickedAbstractHwComponent(Point point) {
+        HwComponentGraphic clickedComponent = null;
 
         // search HwComponents
-        for (AbstractHwComponent c : drawPanel.getGraphOuterInterface().getHwComponents()) {
+        for (HwComponentGraphic c : drawPanel.getGraphOuterInterface().getHwComponents()) {
             if (c.intersects(point)) {
                 clickedComponent = c;
                 break;

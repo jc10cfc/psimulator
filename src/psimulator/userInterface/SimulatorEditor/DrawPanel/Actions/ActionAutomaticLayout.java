@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Dialogs.ProgressBarGeneticDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
@@ -43,7 +43,7 @@ public class ActionAutomaticLayout extends AbstractDrawPanelAction {
             GeneticGraph graph = dialog.getGeneticGraph();
 
             
-            HashMap<AbstractHwComponent, Dimension> movedComponentsMap = drawPanel.getGraphOuterInterface().doChangePositions(graph);
+            HashMap<HwComponentGraphic, Dimension> movedComponentsMap = drawPanel.getGraphOuterInterface().doChangePositions(graph);
             
             undoManager.undoableEditHappened(new UndoableEditEvent(this,
                     new UndoableChagePositionOfAllComponents(drawPanel.getGraphOuterInterface(), movedComponentsMap)));

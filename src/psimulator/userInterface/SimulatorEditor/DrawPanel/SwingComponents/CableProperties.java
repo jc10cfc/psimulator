@@ -7,7 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Dialogs.AbstractPropertiesOkCancelDialog;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 
@@ -17,7 +17,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
  */
 public final class CableProperties extends AbstractPropertiesOkCancelDialog {
 
-    private Cable cable;
+    private CableGraphic cable;
     private DrawPanelInnerInterface drawPanel;
     /*
      * window componenets
@@ -31,7 +31,7 @@ public final class CableProperties extends AbstractPropertiesOkCancelDialog {
     //
     private int delay;
 
-    public CableProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, Cable cable) {
+    public CableProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, CableGraphic cable) {
         super(mainWindow, dataLayer);
         
         this.drawPanel = drawPanel;
