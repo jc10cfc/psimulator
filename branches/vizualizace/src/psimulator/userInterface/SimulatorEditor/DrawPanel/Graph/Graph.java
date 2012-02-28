@@ -21,12 +21,12 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.CustomObservab
  */
 public class Graph extends JComponent implements GraphOuterInterface {
 
-    private LinkedHashMap<Integer, AbstractHwComponent> componentsMap = new LinkedHashMap<>();
-    private LinkedHashMap<Integer, Cable> cablesMap = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, HwComponentGraphic> componentsMap = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, CableGraphic> cablesMap = new LinkedHashMap<>();
     //
-    private List<BundleOfCables> bundlesOfCables = new ArrayList<>();
-    private List<Cable> markedCables = new ArrayList<>();
-    private List<AbstractHwComponent> markedAbstractHwComponents = new ArrayList<>();
+    private List<BundleOfCablesGraphic> bundlesOfCables = new ArrayList<>();
+    private List<CableGraphic> markedCables = new ArrayList<>();
+    private List<HwComponentGraphic> markedAbstractHwComponents = new ArrayList<>();
     private Grid grid;
     private int widthDefault;
     private int heightDefault;
@@ -73,27 +73,27 @@ public class Graph extends JComponent implements GraphOuterInterface {
      */
     private void setInitReferencesToComponents(DataLayerFacade dataLayer) {
         // get Collection of values contained in LinkedHashMap
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = colection.iterator();
+        Iterator<HwComponentGraphic> it = colection.iterator();
 
         // get all marked components
         while (it.hasNext()) {
-            AbstractHwComponent component = it.next();
+            HwComponentGraphic component = it.next();
             // set references
             component.setInitReferences(dataLayer);
             // initialize
             component.initialize();
         }
 
-        // set references to all BundleOfCables and Cables
-        for (BundleOfCables boc : bundlesOfCables) {
+        // set references to all BundleOfCablesGraphic and Cables
+        for (BundleOfCablesGraphic boc : bundlesOfCables) {
             // boc performs the same operation on its cables
             boc.setInitReferences(dataLayer);
         }
 
         // initialize cables
-        for (Cable cable : getCables()) {
+        for (CableGraphic cable : getCables()) {
             cable.initialize();
         }
     }
@@ -103,29 +103,29 @@ public class Graph extends JComponent implements GraphOuterInterface {
      */
     private void updateSizeWithAllComponents() {
         // get Collection of values contained in LinkedHashMap
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = colection.iterator();
+        Iterator<HwComponentGraphic> it = colection.iterator();
 
         // update graph with all components
         while (it.hasNext()) {
-            AbstractHwComponent component = it.next();
+            HwComponentGraphic component = it.next();
             updateSizeAddComponent(component.getLowerRightCornerLocation());
         }
     }
 
     public void doUpdateImages() {
         // get Collection of values contained in LinkedHashMap
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = colection.iterator();
+        Iterator<HwComponentGraphic> it = colection.iterator();
 
         // get all marked components
         while (it.hasNext()) {
             it.next().doUpdateImages();
         }
 
-        for (BundleOfCables boc : bundlesOfCables) {
+        for (BundleOfCablesGraphic boc : bundlesOfCables) {
             boc.doUpdateImages();
         }
         
@@ -153,26 +153,26 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
 
         // DRAW cables
-        for (AbstractComponent c : getBundlesOfCables()) {
+        for (AbstractComponentGraphic c : getBundlesOfCables()) {
             if (!c.isMarked()) {
                 c.paint(g2);
             }
         }
 
-        for (AbstractComponent c : markedCables) {
+        for (AbstractComponentGraphic c : markedCables) {
             c.paint(g2);
         }
 
 
 
         // DRAW HWcomponents
-        for (AbstractComponent c : getHwComponents()) {
+        for (AbstractComponentGraphic c : getHwComponents()) {
             if (!c.isMarked()) {
                 c.paint(g2);
             }
         }
 
-        for (AbstractComponent c : markedAbstractHwComponents) {
+        for (AbstractComponentGraphic c : markedAbstractHwComponents) {
             c.paint(g2);
         }
 
@@ -181,19 +181,19 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public List<AbstractHwComponent> getMarkedHwComponentsCopy() {
-        List<AbstractHwComponent> temp = new ArrayList<>();
+    public List<HwComponentGraphic> getMarkedHwComponentsCopy() {
+        List<HwComponentGraphic> temp = new ArrayList<>();
 
         //Iterator<AbstractHwComponent> it = components.iterator();
 
         // get Collection of values contained in LinkedHashMap
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = colection.iterator();
+        Iterator<HwComponentGraphic> it = colection.iterator();
 
         // get all marked components
         while (it.hasNext()) {
-            AbstractHwComponent c = it.next();
+            HwComponentGraphic c = it.next();
             if (c.isMarked()) {
                 temp.add(c);
             }
@@ -208,16 +208,16 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @return
      */
     @Override
-    public List<Cable> getMarkedCablesCopy() {
-        List<Cable> temp = new ArrayList<>();
+    public List<CableGraphic> getMarkedCablesCopy() {
+        List<CableGraphic> temp = new ArrayList<>();
 
-        Iterator<BundleOfCables> it = bundlesOfCables.iterator();
+        Iterator<BundleOfCablesGraphic> it = bundlesOfCables.iterator();
 
         // get all marked components
         while (it.hasNext()) {
-            BundleOfCables b = it.next();
+            BundleOfCablesGraphic b = it.next();
 
-            for (Cable c : b.getCables()) {
+            for (CableGraphic c : b.getCables()) {
                 if (c.isMarked()) {
                     temp.add(c);
                 }
@@ -228,14 +228,14 @@ public class Graph extends JComponent implements GraphOuterInterface {
         return temp;
     }
 
-    public List<Cable> getCables() {
-        List<Cable> temp = new ArrayList<>();
+    public List<CableGraphic> getCables() {
+        List<CableGraphic> temp = new ArrayList<>();
 
-        Iterator<BundleOfCables> it = bundlesOfCables.iterator();
+        Iterator<BundleOfCablesGraphic> it = bundlesOfCables.iterator();
 
         // get all marked components
         while (it.hasNext()) {
-            BundleOfCables b = it.next();
+            BundleOfCablesGraphic b = it.next();
             // add all cables to temp
             temp.addAll(b.getCables());
         }
@@ -246,7 +246,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public int getCablesCount() {
         int count = 0;
-        for (BundleOfCables boc : bundlesOfCables) {
+        for (BundleOfCablesGraphic boc : bundlesOfCables) {
             count += boc.getCables().size();
         }
         return count;
@@ -266,11 +266,11 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @param component2
      * @return
      */
-    private BundleOfCables getBundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2) {
-        BundleOfCables bundle = null;
+    private BundleOfCablesGraphic getBundleOfCables(HwComponentGraphic component1, HwComponentGraphic component2) {
+        BundleOfCablesGraphic bundle = null;
 
         // find bundle to place the cable in
-        for (BundleOfCables boc : bundlesOfCables) {
+        for (BundleOfCablesGraphic boc : bundlesOfCables) {
             if ((boc.getComponent1() == component1 && boc.getComponent2() == component2)
                     || (boc.getComponent1() == component2 && boc.getComponent2() == component1)) {
                 bundle = boc;
@@ -280,7 +280,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         // if there is not a bundle between component1 and component2, we make the bundle
         if (bundle == null) {
-            bundle = new BundleOfCables(component1, component2);
+            bundle = new BundleOfCablesGraphic(component1, component2);
             bundlesOfCables.add(bundle);
             component1.addBundleOfCables(bundle);
             component2.addBundleOfCables(bundle);
@@ -289,11 +289,11 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     /**
-     * removes BundleOfCables from both components and graph
+     * removes BundleOfCablesGraphic from both components and graph
      *
      * @param bundleOfCables
      */
-    private void removeBundleOfCables(BundleOfCables bundleOfCables) {
+    private void removeBundleOfCables(BundleOfCablesGraphic bundleOfCables) {
         bundleOfCables.getComponent1().removeBundleOfCables(bundleOfCables);
         bundleOfCables.getComponent2().removeBundleOfCables(bundleOfCables);
 
@@ -304,20 +304,20 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * Use only on graph build!
      * @param cable 
      */
-    public void addCableOnGraphBuild(Cable cable) {
+    public void addCableOnGraphBuild(CableGraphic cable) {
         addCable(cable, false);
         
     }
     
     @Override
-    public void addCable(Cable cable) {
+    public void addCable(CableGraphic cable) {
         addCable(cable, true);
         
     }
     
-    private void addCable(Cable cable, boolean propagateToNetwork) {
+    private void addCable(CableGraphic cable, boolean propagateToNetwork) {
         // get bundle of cables between c1 and c2
-        BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
+        BundleOfCablesGraphic boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
 
         // set component1 and component2 in calbe and bundle of cables the same
         if (cable.getComponent1() != boc.getComponent1()) {
@@ -339,8 +339,8 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public void addCables(List<Cable> cableList) {
-        for (Cable c : cableList) {
+    public void addCables(List<CableGraphic> cableList) {
+        for (CableGraphic c : cableList) {
             addCable(c, false);
         }
     }
@@ -351,9 +351,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @param cable
      */
     @Override
-    public void removeCable(Cable cable) {
+    public void removeCable(CableGraphic cable) {
         // get bundle of cables between c1 and c2
-        BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
+        BundleOfCablesGraphic boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
         boc.removeCable(cable);
         cable.getEth1().removeCable();
         cable.getEth2().removeCable();
@@ -375,17 +375,17 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public void removeCables(List<Cable> cableList) {
-        for (Iterator<Cable> it = cableList.iterator(); it.hasNext();) {
+    public void removeCables(List<CableGraphic> cableList) {
+        for (Iterator<CableGraphic> it = cableList.iterator(); it.hasNext();) {
             removeCable(it.next());
         }
     }
 
     @Override
-    public Point getUpperLeftBound(List<AbstractHwComponent> components) {
+    public Point getUpperLeftBound(List<HwComponentGraphic> components) {
         Point p = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
-        for (AbstractHwComponent c : components) {
+        for (HwComponentGraphic c : components) {
             if (c.getX() < p.x) {
                 p.x = c.getX();
             }
@@ -402,10 +402,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @param components to look in
      * @return LowerRight bound point
      */
-    private Point getLowerRightBound(Collection<AbstractHwComponent> components) {
+    private Point getLowerRightBound(Collection<HwComponentGraphic> components) {
         Point p = new Point(0, 0);
 
-        for (AbstractHwComponent c : components) {
+        for (HwComponentGraphic c : components) {
             Point tmp = c.getLowerRightCornerLocation();
 
             if (tmp.x > p.x) {
@@ -430,13 +430,13 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public Collection<AbstractHwComponent> getHwComponents() {
+    public Collection<HwComponentGraphic> getHwComponents() {
         //return components;
         return componentsMap.values();
     }
 
     @Override
-    public void addHwComponent(AbstractHwComponent component) {
+    public void addHwComponent(HwComponentGraphic component) {
         //components.add(component);
         componentsMap.put(component.getId().intValue(), component);
         updateSizeAddComponent(component.getLowerRightCornerLocation());
@@ -452,23 +452,23 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * Use FROM BUILDER ONLY when components not initialized (do not have references on zoom
      * manager and etc.)
      */
-    public void addHwComponentWithoutGraphSizeChange(AbstractHwComponent component) {
+    public void addHwComponentWithoutGraphSizeChange(HwComponentGraphic component) {
         componentsMap.put(component.getId().intValue(), component);
         
         // do not add to network
     }
 
     @Override
-    public void addHwComponents(List<AbstractHwComponent> componentList) {
-        for (AbstractHwComponent component : componentList) {
+    public void addHwComponents(List<HwComponentGraphic> componentList) {
+        for (HwComponentGraphic component : componentList) {
             addHwComponent(component);
         }
     }
 
     @Override
-    public void removeHwComponent(AbstractHwComponent component) {
+    public void removeHwComponent(HwComponentGraphic component) {
         //components.remove(component);
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         colection.remove(component);
 
         // remove from network
@@ -482,13 +482,13 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public void removeHwComponents(List<AbstractHwComponent> componentList) {
+    public void removeHwComponents(List<HwComponentGraphic> componentList) {
         //components.removeAll(componentList);
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         colection.removeAll(componentList);
 
         // remove from network
-        Iterator<AbstractHwComponent> it = componentList.iterator();
+        Iterator<HwComponentGraphic> it = componentList.iterator();
         while(it.hasNext()){
             networkFacade.removeHwComponent(it.next().getHwComponentModel());
         }
@@ -502,7 +502,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public List<BundleOfCables> getBundlesOfCables() {
+    public List<BundleOfCablesGraphic> getBundlesOfCables() {
         return bundlesOfCables;
     }
 
@@ -571,22 +571,22 @@ public class Graph extends JComponent implements GraphOuterInterface {
 // ============= MARKING =========    
     @Override
     public void doMarkComponentWithCables(Markable component, boolean marked) {
-        // if component is isntance of AbstractHwComponent
-        if (component instanceof AbstractHwComponent) {
+        // if component is isntance of HwComponentGraphic
+        if (component instanceof HwComponentGraphic) {
             component.setMarked(marked);
             if (marked) {
                 //markedComponents.add(component);
-                markedAbstractHwComponents.add((AbstractHwComponent) component);
+                markedAbstractHwComponents.add((HwComponentGraphic) component);
             } else {
                 //markedComponents.remove(component);
-                markedAbstractHwComponents.remove((AbstractHwComponent) component);
+                markedAbstractHwComponents.remove((HwComponentGraphic) component);
             }
 
             // set marked to all its cables
-            List<BundleOfCables> bundle = ((AbstractHwComponent) component).getBundleOfCableses();
+            List<BundleOfCablesGraphic> bundle = ((HwComponentGraphic) component).getBundleOfCableses();
 
-            for (BundleOfCables boc : bundle) {
-                for (Cable c : boc.getCables()) {
+            for (BundleOfCablesGraphic boc : bundle) {
+                for (CableGraphic c : boc.getCables()) {
                     if (marked) {
                         c.setMarked(marked);
                         //markedComponents.add(c);
@@ -606,17 +606,17 @@ public class Graph extends JComponent implements GraphOuterInterface {
             component.setMarked(marked);
             if (marked) {
                 //markedComponents.add(component);
-                markedCables.add((Cable) component);
+                markedCables.add((CableGraphic) component);
             } else {
                 //markedComponents.remove(component);
-                markedCables.remove((Cable) component);
+                markedCables.remove((CableGraphic) component);
             }
 
         }
     }
 
     @Override
-    public void doMarkCable(Cable cable) {
+    public void doMarkCable(CableGraphic cable) {
         cable.setMarked(true);
         markedCables.add(cable);
     }
@@ -651,19 +651,19 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public void doMarkAllComponents() {
         // get Collection of values contained in LinkedHashMap
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = colection.iterator();
+        Iterator<HwComponentGraphic> it = colection.iterator();
 
         // mark all AbstractHwComponents
         while (it.hasNext()) {
-            AbstractHwComponent m = it.next();
+            HwComponentGraphic m = it.next();
             m.setMarked(true);
             markedAbstractHwComponents.add(m);
         }
 
-        for (BundleOfCables boc : bundlesOfCables) {
-            for (Cable c : boc.getCables()) {
+        for (BundleOfCablesGraphic boc : bundlesOfCables) {
+            for (CableGraphic c : boc.getCables()) {
                 c.setMarked(true);
                 markedCables.add(c);
             }
@@ -672,7 +672,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
 // ============== CHANGE POSITION AND RESIZE =======================
     @Override
-    public void doChangePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive) {
+    public void doChangePositionOfAbstractHwComponent(HwComponentGraphic component, Dimension offsetInDefaultZoom, boolean positive) {
         // get old position
         Point oldPosition = component.getLowerRightCornerLocation();
         // change position
@@ -688,11 +688,11 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public void doChangePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive) {
+    public void doChangePositionOfAbstractHwComponents(List<HwComponentGraphic> components, Dimension offsetInDefaultZoom, boolean positive) {
         // get old lowerRightCorner of all components
         Point oldPosition = getLowerRightBound(components);
         // change position of all components
-        for (AbstractHwComponent component : components) {
+        for (HwComponentGraphic component : components) {
             // change position of component
             component.doChangePosition(offsetInDefaultZoom, positive);
         }
@@ -707,7 +707,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     /**
-     * Updates graph's dimension. Call after AbstractHwComponent move.
+     * Updates graph's dimension. Call after HwComponentGraphic move.
      *
      * @param oldPositionLowerRightCorner
      * @param newPositionLowerRightCorner
@@ -782,7 +782,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     /**
-     * Updates size of Graph. Call after AbstractHwComponent ADD only.
+     * Updates size of Graph. Call after HwComponentGraphic ADD only.
      *
      * @param lowerRightCorner LowerRightCorner in ActualZoom
      */
@@ -809,12 +809,12 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid() {
+    public HashMap<HwComponentGraphic, Dimension> doAlignComponentsToGrid() {
         return doAlignComponentsToGrid(componentsMap.values());
     }
 
     @Override
-    public HashMap<AbstractHwComponent, Dimension> doAlignMarkedComponentsToGrid() {
+    public HashMap<HwComponentGraphic, Dimension> doAlignMarkedComponentsToGrid() {
         return doAlignComponentsToGrid(markedAbstractHwComponents);
     }
 
@@ -827,15 +827,15 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @return HashMap with all components that has been moved and the dimension
      * of position change in default zoom.
      */
-    private HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid(Collection<AbstractHwComponent> componentsToAlign) {
-        HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
+    private HashMap<HwComponentGraphic, Dimension> doAlignComponentsToGrid(Collection<HwComponentGraphic> componentsToAlign) {
+        HashMap<HwComponentGraphic, Dimension> movedComponentsMap = new HashMap<HwComponentGraphic, Dimension>();
 
         // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = componentsToAlign.iterator();
+        Iterator<HwComponentGraphic> it = componentsToAlign.iterator();
 
         // mark all AbstractHwComponents
         while (it.hasNext()) {
-            AbstractHwComponent c = it.next();
+            HwComponentGraphic c = it.next();
 
             Point originalLocation = c.getCenterLocationDefaultZoom();
             Point newLocation = grid.getNearestGridPointDefaultZoom(originalLocation);
@@ -854,7 +854,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     @Override
-    public HashMap<AbstractHwComponent, Dimension> doChangePositions(GeneticGraph geneticGraph) {
+    public HashMap<HwComponentGraphic, Dimension> doChangePositions(GeneticGraph geneticGraph) {
         int maxX = 0;
         int maxY = 0;
 
@@ -868,17 +868,17 @@ public class Graph extends JComponent implements GraphOuterInterface {
             }
         }
 
-        HashMap<AbstractHwComponent, Dimension> movedComponentsMap = new HashMap<AbstractHwComponent, Dimension>();
+        HashMap<HwComponentGraphic, Dimension> movedComponentsMap = new HashMap<HwComponentGraphic, Dimension>();
 
         // get Collection of values contained in LinkedHashMap
-        Collection<AbstractHwComponent> colection = componentsMap.values();
+        Collection<HwComponentGraphic> colection = componentsMap.values();
         // obtain an Iterator for Collection
-        Iterator<AbstractHwComponent> it = colection.iterator();
+        Iterator<HwComponentGraphic> it = colection.iterator();
 
         int i = 0;
 
         while (it.hasNext()) {
-            AbstractHwComponent c = it.next();
+            HwComponentGraphic c = it.next();
 
             Point originalLocation = c.getCenterLocationDefaultZoom();
             Point newLocation = new Point(geneticGraph.getNodes()[i][0] * 30 + ZoomManagerSingleton.getInstance().getIconWidthDefaultZoom(),
@@ -899,10 +899,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public RemovedComponentsWrapper doRemoveMarkedComponents() {
         // get all marked components
-        List<AbstractHwComponent> markedComponents = this.getMarkedHwComponentsCopy();
+        List<HwComponentGraphic> markedComponents = this.getMarkedHwComponentsCopy();
 
         // put all marked cables to cables toRemove
-        List<Cable> cablesToRemove = this.getMarkedCablesCopy();
+        List<CableGraphic> cablesToRemove = this.getMarkedCablesCopy();
 
         // if there is no marked cable and no component
         if (markedComponents.isEmpty() && cablesToRemove.isEmpty()) {
@@ -910,10 +910,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
 
         // for all removed components
-        for (AbstractHwComponent c : markedComponents) {
+        for (HwComponentGraphic c : markedComponents) {
             // all its cables add to cablesToRemove
-            for (BundleOfCables boc : c.getBundleOfCableses()) {
-                for (Cable cable : boc.getCables()) {
+            for (BundleOfCablesGraphic boc : c.getBundleOfCableses()) {
+                for (CableGraphic cable : boc.getCables()) {
                     // if collection doesnt contain, than add cable
                     if (!cablesToRemove.contains(cable)) {
                         cablesToRemove.add(cable);
@@ -940,14 +940,14 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     /**
-     * Returns AbstractHwComponent with ID id, or null if not found
+     * Returns HwComponentGraphic with ID id, or null if not found
      * @param id
      * @return 
      */
-    public AbstractHwComponent getAbstractHwComponent(int id) {
+    public HwComponentGraphic getAbstractHwComponent(int id) {
         System.out.println("size"+componentsMap.size());
         
-        Iterator<AbstractHwComponent> it = componentsMap.values().iterator();
+        Iterator<HwComponentGraphic> it = componentsMap.values().iterator();
         
         while(it.hasNext()){
             System.out.println("Id="+it.next().getId());
@@ -961,7 +961,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @param id
      * @return 
      */
-    public Cable getCable(int id){
+    public CableGraphic getCable(int id){
         return cablesMap.get(id);
     }
 

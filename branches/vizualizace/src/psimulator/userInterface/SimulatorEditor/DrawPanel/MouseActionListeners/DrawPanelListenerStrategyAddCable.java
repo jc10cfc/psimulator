@@ -13,8 +13,8 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Network.CableModel;
 import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.userInterface.MainWindowInnerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableConnectToInterfacePopupMenu;
@@ -28,8 +28,8 @@ import psimulator.userInterface.SimulatorEditor.Tools.CreateCableTool;
  */
 public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy implements ChooseEthInterfaceInterface {
 
-    private AbstractHwComponent component1;
-    private AbstractHwComponent component2;
+    private HwComponentGraphic component1;
+    private HwComponentGraphic component2;
     private EthInterfaceModel eth1;
     private EthInterfaceModel eth2;
     boolean hasFirstComponent = false;
@@ -73,7 +73,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         }
 
         // if mouse over any HW component
-        for (AbstractHwComponent c : drawPanel.getGraphOuterInterface().getHwComponents()) {
+        for (HwComponentGraphic c : drawPanel.getGraphOuterInterface().getHwComponents()) {
             if (c.intersects(e.getPoint())) {
                 // change cursor
                 drawPanel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -94,7 +94,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         e = convertMouseEvent(e);
         
         // clicked component
-        AbstractHwComponent tmp;
+        HwComponentGraphic tmp;
         
         tmp = getClickedAbstractHwComponent(e.getPoint());
 
@@ -159,7 +159,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
         // convert
         e = convertMouseEvent(e);
         
-        AbstractHwComponent tmp = getClickedAbstractHwComponent(e.getPoint());
+        HwComponentGraphic tmp = getClickedAbstractHwComponent(e.getPoint());
         // if something clicked, or has first component
         if(tmp!= null || hasFirstComponent){
             mousePressedLeft(e);
@@ -209,7 +209,7 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      * @param e Mouse event
      * @param component Component that is beeing connected
      */
-    private void doChooseInterface(MouseEvent e, AbstractHwComponent component) {
+    private void doChooseInterface(MouseEvent e, HwComponentGraphic component) {
         // if right mouse button clicked
         if (SwingUtilities.isRightMouseButton(e)) {
             // show popup menu with choose
@@ -228,13 +228,13 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
      * @param eth1
      * @param eth2 
      */
-    private void connectComponents(AbstractHwComponent c1, AbstractHwComponent c2, EthInterfaceModel eth1, EthInterfaceModel eth2) {
+    private void connectComponents(HwComponentGraphic c1, HwComponentGraphic c2, EthInterfaceModel eth1, EthInterfaceModel eth2) {
         // create cable model
         CableModel cableModel = dataLayer.getNetworkFacade().createCableModel(createCableTool.getHwType(), 
                 c1.getHwComponentModel(), c2.getHwComponentModel(), eth1, eth2);
         
         // create new cabel
-        Cable cable = new Cable(dataLayer, cableModel, c1, c2);
+        CableGraphic cable = new CableGraphic(dataLayer, cableModel, c1, c2);
         
         // initialize cable
         cable.initialize();

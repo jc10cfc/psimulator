@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.MainWindowInnerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.CableProperties;
@@ -29,12 +29,12 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
     public void actionPerformed(ActionEvent ae) {
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
 
-        // only one AbstractHwComponent or one cable should be marked
+        // only one HwComponentGraphic or one cable should be marked
 
-        // if one AbstractHwComponent marked
+        // if one HwComponentGraphic marked
         if (graph.getMarkedAbstractHWComponentsCount() == 1) {
             // get component
-            AbstractHwComponent abstractHwComponent = graph.getMarkedHwComponentsCopy().get(0);
+            HwComponentGraphic abstractHwComponent = graph.getMarkedHwComponentsCopy().get(0);
 
             // unmark all components
             graph.doUnmarkAllComponents();
@@ -51,7 +51,7 @@ public class ActionOpenProperties extends AbstractDrawPanelAction {
             return;
         }else if(graph.getMarkedCablesCount() == 1){
             // get calbe
-            Cable cable = graph.getMarkedCablesCopy().get(0);
+            CableGraphic cable = graph.getMarkedCablesCopy().get(0);
             
             // unmark all components
             graph.doUnmarkAllComponents();

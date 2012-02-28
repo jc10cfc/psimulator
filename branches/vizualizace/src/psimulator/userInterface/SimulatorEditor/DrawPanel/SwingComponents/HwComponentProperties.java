@@ -11,7 +11,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.Dialogs.AbstractPropertiesOkCancelDialog;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.InterfacesTable.InterfacesTableModel;
@@ -23,7 +23,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Interf
  */
 public final class HwComponentProperties extends AbstractPropertiesOkCancelDialog {
 
-    private AbstractHwComponent abstractHwComponent;
+    private HwComponentGraphic abstractHwComponent;
     private DrawPanelInnerInterface drawPanel;
     /*
      * window componenets
@@ -43,7 +43,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
     private InterfacesTableModel tableInterfacesModel;
     // 
 
-    public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, AbstractHwComponent abstractHwComponent) {
+    public HwComponentProperties(Component mainWindow, DataLayerFacade dataLayer, DrawPanelInnerInterface drawPanel, HwComponentGraphic abstractHwComponent) {
         super(mainWindow, dataLayer);
 
         this.abstractHwComponent = abstractHwComponent;

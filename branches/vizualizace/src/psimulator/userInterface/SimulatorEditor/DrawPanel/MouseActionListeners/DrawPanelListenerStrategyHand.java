@@ -39,7 +39,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
     /**
      * components that are dragged
      */
-    protected List<AbstractHwComponent> draggedComponents;
+    protected List<HwComponentGraphic> draggedComponents;
     /**
      * original position, left-upper point in default zoom of dragged components
      */
@@ -111,7 +111,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
             
             System.out.println("IDs graph:");
             
-            Iterator <AbstractHwComponent> it = graph.getHwComponents().iterator();
+            Iterator <HwComponentGraphic> it = graph.getHwComponents().iterator();
             
             while(it.hasNext()){
                 System.out.println(it.next().getId()+"");
@@ -188,7 +188,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         
         boolean addToDragAllMarkedComponents = false;
         if (draggedComponents == null) {
-            draggedComponents = new ArrayList<AbstractHwComponent>();
+            draggedComponents = new ArrayList<HwComponentGraphic>();
         } else {
             // if control not down, clear selection
         }
@@ -206,7 +206,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         // try if start dragging of some component
-        for (AbstractHwComponent c : graph.getHwComponents()) {
+        for (HwComponentGraphic c : graph.getHwComponents()) {
             if (c.intersects(e.getPoint())) {
                 // if c is marked, we will drag all marked components
                 if (c.isMarked()) {
@@ -223,7 +223,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // if we have to add all marked components to dragged components
         if (addToDragAllMarkedComponents) {
             // add all marked components to dragged components
-            for (AbstractHwComponent c : graph.getMarkedHwComponentsCopy()) {
+            for (HwComponentGraphic c : graph.getMarkedHwComponentsCopy()) {
                 if (!draggedComponents.contains(c)) {
                     draggedComponents.add(c);
                 }
@@ -376,7 +376,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         
-        for (AbstractHwComponent c : graph.getHwComponents()) {
+        for (HwComponentGraphic c : graph.getHwComponents()) {
             if (c.intersects(e.getPoint())) {
                 drawPanel.setCursor(hndCursor);
                 return;
@@ -385,7 +385,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         //Rectangle r = new Rectangle(e.getX() - 1, e.getY() - 1, 3, 3);
 
-        for (BundleOfCables boc : graph.getBundlesOfCables()) {
+        for (BundleOfCablesGraphic boc : graph.getBundlesOfCables()) {
             if (boc.intersects(e.getPoint())) {
                 drawPanel.setCursor(hndCursor);
                 return;
@@ -404,9 +404,9 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         transparentRectangleInProgress = false;
         
         // get clicked component
-        AbstractComponent clickedComponent = getClickedItem(e.getPoint());
+        AbstractComponentGraphic clickedComponent = getClickedItem(e.getPoint());
 
-        // if there are more marked AbstractHwComponent components and we clicked one
+        // if there are more marked HwComponentGraphic components and we clicked one
         if (graph.getMarkedAbstractHWComponentsCount() > 1 && (clickedComponent != null && clickedComponent.isMarked())) {
             // show popup for more components
             PopupMenuAbstractHwComponent popup = new PopupMenuAbstractHwComponent(drawPanel, dataLayer, graph.getMarkedAbstractHWComponentsCount());
@@ -426,10 +426,10 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         }
 
         // if clicled on cable
-        if(clickedComponent != null && clickedComponent instanceof Cable){
+        if(clickedComponent != null && clickedComponent instanceof CableGraphic){
             if(!clickedComponent.isMarked()){
                 graph.doUnmarkAllComponents();
-                graph.doMarkCable((Cable) clickedComponent);
+                graph.doMarkCable((CableGraphic) clickedComponent);
                 drawPanel.repaint();
             }
             
@@ -485,7 +485,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         graph.doUnmarkAllComponents();
 
         // mark only the intersecting components
-        for (AbstractHwComponent component : graph.getHwComponents()) {
+        for (HwComponentGraphic component : graph.getHwComponents()) {
             if (component.intersects(rectangleInActualZoom)) {
                 graph.doMarkComponentWithCables(component, true);
             }
@@ -493,8 +493,8 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
 
         // if no abstract component marked, mark only cables in rectangle
         if (graph.getMarkedAbstractHWComponentsCount() == 0) {
-            for (BundleOfCables bundle : graph.getBundlesOfCables()) {
-                for (Cable c : bundle.getCables()) {
+            for (BundleOfCablesGraphic bundle : graph.getBundlesOfCables()) {
+                for (CableGraphic c : bundle.getCables()) {
                     if (c.intersects(rectangleInActualZoom)) {
                         graph.doMarkCable(c);
                     }

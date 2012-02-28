@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableChagePositionOfAllComponents;
@@ -24,7 +24,7 @@ public class ActionAlignComponentsToGrid extends AbstractDrawPanelAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         // align components to grid
-        HashMap<AbstractHwComponent, Dimension> movedComponentsMap;
+        HashMap<HwComponentGraphic, Dimension> movedComponentsMap;
         
         GraphOuterInterface graph = drawPanel.getGraphOuterInterface();
         

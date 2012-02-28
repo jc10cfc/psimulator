@@ -8,7 +8,7 @@ import psimulator.dataLayer.Network.EthInterfaceModel;
 import psimulator.dataLayer.SimulatorEvents.PacketType;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
@@ -134,12 +134,12 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         Graph graph = userInterfaceOuterFacade.getAnimationPanelOuterInterface().getGraph();
         
         // for now it is Random, the ids in parameter not valid
-        List<AbstractHwComponent> list = new ArrayList<>(graph.getHwComponents());
+        List<HwComponentGraphic> list = new ArrayList<>(graph.getHwComponents());
         int componentCount = graph.getAbstractHwComponentsCount();
 
 
-        AbstractHwComponent c1 = null;
-        AbstractHwComponent c2 = null;
+        HwComponentGraphic c1 = null;
+        HwComponentGraphic c2 = null;
 
         EthInterfaceModel eth1 = null;
         EthInterfaceModel eth2 = null;

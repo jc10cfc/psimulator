@@ -26,7 +26,6 @@ public class NetworkFacade {
     }
     
     public NetworkModel createNetworkModel(){
-        System.out.println("Vytvarim");
         this.networkModel = networkComponentsFactory.createEmptyNetworkModel();
         return networkModel;
     }

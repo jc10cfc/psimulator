@@ -14,17 +14,17 @@ import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class BundleOfCables extends AbstractComponent{
+public class BundleOfCablesGraphic extends AbstractComponentGraphic{
 
-    private AbstractHwComponent component1;
-    private AbstractHwComponent component2;
+    private HwComponentGraphic component1;
+    private HwComponentGraphic component2;
     
-    private List<Cable> cables;
+    private List<CableGraphic> cables;
     
     private static final int LINE_WIDTH = 2;
     
     
-    public BundleOfCables(AbstractHwComponent component1, AbstractHwComponent component2){
+    public BundleOfCablesGraphic(HwComponentGraphic component1, HwComponentGraphic component2){
         super();
         
         cables = new ArrayList<>();
@@ -53,31 +53,31 @@ public class BundleOfCables extends AbstractComponent{
     public void setInitReferences(DataLayerFacade dataLayer){
         this.dataLayer = dataLayer;
         
-        for(Cable c : cables){
+        for(CableGraphic c : cables){
             c.setInitReferences(dataLayer);
         }
     }
     
     @Override
     public void doUpdateImages() {
-        for (Cable c : cables) {
+        for (CableGraphic c : cables) {
             c.doUpdateImages();
         }
     }
     
-    public AbstractHwComponent getComponent1(){
+    public HwComponentGraphic getComponent1(){
         return component1;
     }
     
-    public AbstractHwComponent getComponent2(){
+    public HwComponentGraphic getComponent2(){
         return component2;
     }
     
-    public Cable getIntersectingCable(Point p){
+    public CableGraphic getIntersectingCable(Point p){
         //throw new UnsupportedOperationException("Not supported yet.");
         Rectangle r = doCreateRectangleAroundPoint(p);
         
-        for(Cable c : cables){
+        for(CableGraphic c : cables){
             if(c.intersects(r)){
                 return c;
             }
@@ -85,7 +85,7 @@ public class BundleOfCables extends AbstractComponent{
         return null;
     }
 
-    public List<Cable> getCables() {
+    public List<CableGraphic> getCables() {
         return cables;
     }
  
@@ -97,7 +97,7 @@ public class BundleOfCables extends AbstractComponent{
      * adds cable to bundle
      * @param c 
      */
-    public void addCable(Cable c){
+    public void addCable(CableGraphic c){
         cables.add(c);
     }
     
@@ -105,7 +105,7 @@ public class BundleOfCables extends AbstractComponent{
      * remove cable from bundle
      * @param c 
      */
-    public void removeCable(Cable c){
+    public void removeCable(CableGraphic c){
         cables.remove(c);
     }
      
@@ -130,7 +130,7 @@ public class BundleOfCables extends AbstractComponent{
         double offsetPixels = -(difference * (cables.size()-1) /2.0);
                
         // for all cables
-        for(Cable c : cables){
+        for(CableGraphic c : cables){
             // count starting point
             int x1p = (int)(x1 + offsetPixels * (y2-y1) / L);
             int y1p = (int)(y1 + offsetPixels * (x1-x2) / L);
@@ -184,7 +184,7 @@ public class BundleOfCables extends AbstractComponent{
     
     @Override
     public boolean intersects(Rectangle r) {
-        for(Cable c : cables){
+        for(CableGraphic c : cables){
             if(c.intersects(r)){
                 return true;
             }

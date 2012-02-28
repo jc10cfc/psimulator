@@ -3,7 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands;
 import java.awt.Dimension;
 import java.util.HashMap;
 import javax.swing.undo.AbstractUndoableEdit;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
@@ -13,9 +13,9 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterf
 public class UndoableChagePositionOfAllComponents extends AbstractUndoableEdit {
 
     protected GraphOuterInterface graph;
-    protected HashMap<AbstractHwComponent, Dimension> map;
+    protected HashMap<HwComponentGraphic, Dimension> map;
     
-    public UndoableChagePositionOfAllComponents(GraphOuterInterface graph, HashMap<AbstractHwComponent, Dimension> map) {
+    public UndoableChagePositionOfAllComponents(GraphOuterInterface graph, HashMap<HwComponentGraphic, Dimension> map) {
         super();
         this.graph = graph;
         this.map = map;
@@ -26,7 +26,7 @@ public class UndoableChagePositionOfAllComponents extends AbstractUndoableEdit {
         super.undo();
 
    
-        for (AbstractHwComponent component : map.keySet()) {
+        for (HwComponentGraphic component : map.keySet()) {
             graph.doChangePositionOfAbstractHwComponent(component, map.get(component), true);
         }
 
@@ -36,7 +36,7 @@ public class UndoableChagePositionOfAllComponents extends AbstractUndoableEdit {
     public void redo() {
         super.redo();
 
-        for (AbstractHwComponent component : map.keySet()) {
+        for (HwComponentGraphic component : map.keySet()) {
             graph.doChangePositionOfAbstractHwComponent(component, map.get(component), false);
         }
 

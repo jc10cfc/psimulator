@@ -3,7 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands;
 import java.awt.Dimension;
 import java.util.List;
 import javax.swing.undo.AbstractUndoableEdit;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
@@ -14,11 +14,11 @@ public class UndoableMoveComponent extends AbstractUndoableEdit {
     
     protected GraphOuterInterface graph;
     
-    protected List<AbstractHwComponent> components;
+    protected List<HwComponentGraphic> components;
     protected Dimension offsetInDefaultZoom;
     
     
-    public UndoableMoveComponent(GraphOuterInterface graph, List<AbstractHwComponent> components, Dimension offsetInDefaultZoom) {
+    public UndoableMoveComponent(GraphOuterInterface graph, List<HwComponentGraphic> components, Dimension offsetInDefaultZoom) {
         super();
         this.components = components;
         this.offsetInDefaultZoom = offsetInDefaultZoom;
@@ -37,7 +37,7 @@ public class UndoableMoveComponent extends AbstractUndoableEdit {
       graph.doChangePositionOfAbstractHwComponents(components, offsetInDefaultZoom, false);
       
       /*
-      for(AbstractHwComponent component : components){
+      for(HwComponentGraphic component : components){
           component.doChangePosition(offsetInDefaultZoom, false);
       }
       
@@ -53,7 +53,7 @@ public class UndoableMoveComponent extends AbstractUndoableEdit {
       graph.doChangePositionOfAbstractHwComponents(components, offsetInDefaultZoom, true);
       
       /*
-      for(AbstractHwComponent component : components){
+      for(HwComponentGraphic component : components){
           component.doChangePosition(offsetInDefaultZoom, true);
       }
       // panel could be resized before redo, so we need to update its size

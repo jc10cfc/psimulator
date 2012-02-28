@@ -18,7 +18,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public final class AbstractHwComponent extends AbstractComponent {
+public final class HwComponentGraphic extends AbstractComponentGraphic {
 
     protected HwComponentModel hwComponentModel;
     
@@ -29,7 +29,7 @@ public final class AbstractHwComponent extends AbstractComponent {
     protected int defaultZoomTextWidth;
     protected int defaultZoomTextHeight;
     //
-    private List<BundleOfCables> bundlesOfCables = new ArrayList<>();
+    private List<BundleOfCablesGraphic> bundlesOfCables = new ArrayList<>();
     //
     protected BufferedImage imageUnmarked;
     protected BufferedImage imageMarked;
@@ -42,7 +42,7 @@ public final class AbstractHwComponent extends AbstractComponent {
      * @param dataLayer
      * @param hwType 
      */
-    public AbstractHwComponent(DataLayerFacade dataLayer, HwComponentModel hwComponentModel){//, int interfacesCount) {
+    public HwComponentGraphic(DataLayerFacade dataLayer, HwComponentModel hwComponentModel){//, int interfacesCount) {
         super(dataLayer);
         
         this.hwComponentModel = hwComponentModel;
@@ -53,7 +53,7 @@ public final class AbstractHwComponent extends AbstractComponent {
      * @param id
      * @param hwType 
      */
-    public AbstractHwComponent(HwComponentModel hwComponentModel){
+    public HwComponentGraphic(HwComponentModel hwComponentModel){
         super();
         
         this.hwComponentModel = hwComponentModel;
@@ -223,7 +223,7 @@ public final class AbstractHwComponent extends AbstractComponent {
      *
      * @return
      */
-    public List<BundleOfCables> getBundleOfCableses() {
+    public List<BundleOfCablesGraphic> getBundleOfCableses() {
         return bundlesOfCables;
     }
 
@@ -232,7 +232,7 @@ public final class AbstractHwComponent extends AbstractComponent {
      *
      * @param boc
      */
-    public void addBundleOfCables(BundleOfCables boc) {
+    public void addBundleOfCables(BundleOfCablesGraphic boc) {
         bundlesOfCables.add(boc);
     }
 
@@ -241,7 +241,7 @@ public final class AbstractHwComponent extends AbstractComponent {
      *
      * @param boc
      */
-    public void removeBundleOfCables(BundleOfCables boc) {
+    public void removeBundleOfCables(BundleOfCablesGraphic boc) {
         bundlesOfCables.remove(boc);
     }
 

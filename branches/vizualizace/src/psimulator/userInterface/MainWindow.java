@@ -336,9 +336,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 return;
             }
             
+            // create new network model
             dataLayer.getNetworkFacade().createNetworkModel();
-            //dataLayer.getNetworkFacade().setNetworkModel(networkModel);
 
+            // create new graph
             Graph graph = new Graph(dataLayer.getNetworkFacade());
             
             refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);

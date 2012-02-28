@@ -7,7 +7,7 @@ import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Network.HwComponentModel;
 import psimulator.userInterface.MainWindowInnerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands.UndoableAddHwComponent;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
@@ -46,7 +46,7 @@ public final class DrawPanelListenerStrategyAddHwComponent extends DrawPanelList
         HwComponentModel hwComponentModel = dataLayer.getNetworkFacade().createHwComponentModel(addDeviceTool.getHwType(), addDeviceTool.getInterfaces(), 0, 0);
         
         // create new component
-        AbstractHwComponent component = new AbstractHwComponent( dataLayer, hwComponentModel);
+        HwComponentGraphic component = new HwComponentGraphic( dataLayer, hwComponentModel);
 
         component.initialize();
 

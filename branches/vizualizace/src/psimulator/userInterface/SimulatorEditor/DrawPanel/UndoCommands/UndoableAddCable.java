@@ -1,7 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.UndoCommands;
 
 import javax.swing.undo.AbstractUndoableEdit;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterface;
 
 /**
@@ -9,10 +9,10 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphOuterInterf
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class UndoableAddCable extends AbstractUndoableEdit {
-    protected Cable cable;
+    protected CableGraphic cable;
     protected GraphOuterInterface graph;
     
-    public UndoableAddCable(Cable cable, GraphOuterInterface graph){
+    public UndoableAddCable(CableGraphic cable, GraphOuterInterface graph){
         super();
         this.cable = cable;
         this.graph = graph;

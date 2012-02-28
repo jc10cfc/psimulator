@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Observer;
 import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.RemovedComponentsWrapper;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.AbstractHwComponent;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCables;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Cable;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.BundleOfCablesGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.Markable;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.GeneticGraph;
 
@@ -39,31 +39,31 @@ public interface GraphOuterInterface {
     public Dimension getPreferredSizeDefaultZoom();
     
     /**
-     * Changes position of AbstractHwComponent component by Dimension offsetInDefaultZoom
+     * Changes position of HwComponentGraphic component by Dimension offsetInDefaultZoom
      * according to boolean positive.
      * @param component - Component that is being moved
      * @param offsetInDefaultZoom - offset in default Zoom
      * @param positive - orientation of move
      */
-    public void doChangePositionOfAbstractHwComponent(AbstractHwComponent component, Dimension offsetInDefaultZoom, boolean positive);
+    public void doChangePositionOfAbstractHwComponent(HwComponentGraphic component, Dimension offsetInDefaultZoom, boolean positive);
     /**
-     * Changes position of all AbstractHwComponent component in list by Dimension offsetInDefaultZoom
+     * Changes position of all HwComponentGraphic component in list by Dimension offsetInDefaultZoom
      * according to boolean positive.
      * @param components - List of components to move 
      * @param offsetInDefaultZoom - offset in default Zoom
      * @param positive - orientation of move
      */
-    public void doChangePositionOfAbstractHwComponents(List<AbstractHwComponent> components, Dimension offsetInDefaultZoom, boolean positive);
+    public void doChangePositionOfAbstractHwComponents(List<HwComponentGraphic> components, Dimension offsetInDefaultZoom, boolean positive);
     /**
      * Aligns all components to grid
      * @return HashMap - map of component+dimension pairs
      */
-    public HashMap<AbstractHwComponent, Dimension> doAlignComponentsToGrid();
+    public HashMap<HwComponentGraphic, Dimension> doAlignComponentsToGrid();
     /**
      * Aligns all components to grid
      * @return HashMap - map of component+dimension pairs
      */
-    public HashMap<AbstractHwComponent, Dimension> doAlignMarkedComponentsToGrid();
+    public HashMap<HwComponentGraphic, Dimension> doAlignMarkedComponentsToGrid();
     /**
      * Removes all marked AbstractHwComponents and Cables and returns them
      * wrapped.
@@ -76,12 +76,12 @@ public interface GraphOuterInterface {
      * @param geneticGraph
      * @return HashMap - map of component+dimension pairs
      */
-    public HashMap<AbstractHwComponent, Dimension> doChangePositions(GeneticGraph geneticGraph);
+    public HashMap<HwComponentGraphic, Dimension> doChangePositions(GeneticGraph geneticGraph);
     
     
     /**
      * If component is cable, then mark or unmark it and add/remove it to marked components.
-     * If component is AbstractHwComponent, than mark/unmark it and its all cables and add/remove
+     * If component is HwComponentGraphic, than mark/unmark it and its all cables and add/remove
      * it to marked components.
      * @param marked True if mark, false if unmark.
      * @param component Component that needs to be marked.
@@ -93,7 +93,7 @@ public interface GraphOuterInterface {
      * Marks cable as marked
      * @param cable 
      */
-    public void doMarkCable(Cable cable);
+    public void doMarkCable(CableGraphic cable);
     
     public void doMarkAllComponents();
     
@@ -118,28 +118,28 @@ public interface GraphOuterInterface {
      * Retruns new ArrayList with marked cables
      * @return 
      */
-    public List<Cable> getMarkedCablesCopy();
+    public List<CableGraphic> getMarkedCablesCopy();
     /**
      * Retruns new ArrayList with marked components
      * @return 
      */
-    public List<AbstractHwComponent> getMarkedHwComponentsCopy();
+    public List<HwComponentGraphic> getMarkedHwComponentsCopy();
      /**
      * Gets upper left bound point from all components
      * @param components to look in
      * @return UpperLeft bound point
      */
-    public Point getUpperLeftBound(List<AbstractHwComponent> components);
+    public Point getUpperLeftBound(List<HwComponentGraphic> components);
     /**
-     * Gets all AbstractHwComponent in list. It is NOT a copy
-     * @return List of AbstractHwComponent
+     * Gets all HwComponentGraphic in list. It is NOT a copy
+     * @return List of HwComponentGraphic
      */
-    public Collection<AbstractHwComponent> getHwComponents();
+    public Collection<HwComponentGraphic> getHwComponents();
     /**
-     * Gets all BundleOfCables in list. It is NOT a copy
+     * Gets all BundleOfCablesGraphic in list. It is NOT a copy
      * @return 
      */
-    public List<BundleOfCables> getBundlesOfCables();
+    public List<BundleOfCablesGraphic> getBundlesOfCables();
     /**
      * Gets count of cables in graph
      * @return 
@@ -155,43 +155,43 @@ public interface GraphOuterInterface {
      * Removes all cables from cableList in Graph
      * @param cableList 
      */
-    public void removeCables(List<Cable> cableList);
+    public void removeCables(List<CableGraphic> cableList);
     /**
      * removes cable from graph
      * @param cable 
      */
-    public void removeCable(Cable cable);
+    public void removeCable(CableGraphic cable);
     /**
-     * removes AbstractHwComponent from graph
+     * removes HwComponentGraphic from graph
      * @param component 
      */
-    public void removeHwComponent(AbstractHwComponent component);
+    public void removeHwComponent(HwComponentGraphic component);
     /**
      * removes all AbstractHwComponents in list from graph
      * @param componentList 
      */
-    public void removeHwComponents(List<AbstractHwComponent> componentList);
+    public void removeHwComponents(List<HwComponentGraphic> componentList);
     
     /**
      * Adds all cables in list to graph
      * @param cableList 
      */
-    public void addCables(List<Cable> cableList);
+    public void addCables(List<CableGraphic> cableList);
     /**
      * adds cable to graph
      * @param cable 
      */
-    public void addCable(Cable cable);
+    public void addCable(CableGraphic cable);
     /**
-     * Adds AbstractHwComponent to graph
+     * Adds HwComponentGraphic to graph
      * @param component 
      */
-    public void addHwComponent(AbstractHwComponent component);
+    public void addHwComponent(HwComponentGraphic component);
     /**
      * Adds all AbstractHwComponents in list to graph
      * @param componentList 
      */
-    public void addHwComponents(List<AbstractHwComponent> componentList);
+    public void addHwComponents(List<HwComponentGraphic> componentList);
 
     public long getLastEditTimestamp();
     
