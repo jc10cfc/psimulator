@@ -5,10 +5,10 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Network.CableModel;
 import psimulator.dataLayer.Network.EthInterfaceModel;
+import psimulator.dataLayer.Network.HwComponentModel;
 import psimulator.dataLayer.SimulatorEvents.PacketType;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
@@ -25,6 +25,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
     private SimulatorManagerInterface simulatorManagerInterface;
     private Random tmpRandom = new Random();
     private UserInterfaceOuterFacade userInterfaceOuterFacade;
+    private DataLayerFacade dataLayer;
     //
     private long timeOfFirstEvent;
     //
@@ -32,8 +33,9 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
     private boolean doConnect;
     private boolean doDisconnect;
 
-    public SimulatorClientEventRecieverThread(DataLayerFacade model, UserInterfaceOuterFacade userInterfaceOuterFacade) {
-        this.simulatorManagerInterface = model.getSimulatorManager();
+    public SimulatorClientEventRecieverThread(DataLayerFacade dataLayer, UserInterfaceOuterFacade userInterfaceOuterFacade) {
+        this.dataLayer = dataLayer;
+        this.simulatorManagerInterface = dataLayer.getSimulatorManager();
         this.isRecording = simulatorManagerInterface.isRecording();
 
         this.userInterfaceOuterFacade = userInterfaceOuterFacade;
@@ -134,12 +136,14 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         Graph graph = userInterfaceOuterFacade.getAnimationPanelOuterInterface().getGraph();
         
         // for now it is Random, the ids in parameter not valid
-        List<HwComponentGraphic> list = new ArrayList<>(graph.getHwComponents());
-        int componentCount = graph.getAbstractHwComponentsCount();
+        //List<HwComponentGraphic> list = new ArrayList<>(graph.getHwComponents());
+        //int componentCount = graph.getAbstractHwComponentsCount();
 
+        List<HwComponentModel> list = new ArrayList<>(dataLayer.getNetworkFacade().getHwComponents());
+        int componentCount = dataLayer.getNetworkFacade().getHwComponentsCount();
 
-        HwComponentGraphic c1 = null;
-        HwComponentGraphic c2 = null;
+        HwComponentModel c1 = null;
+        HwComponentModel c2 = null;
 
         EthInterfaceModel eth1 = null;
         EthInterfaceModel eth2 = null;
@@ -162,11 +166,15 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
             c1 = list.get(i1);
             c2 = list.get(i2);
 
-            for (EthInterfaceModel tmp1 : c1.getInterfaces()) {
+            
+            List<EthInterfaceModel> eth1list = new ArrayList<>(c1.getEthInterfaces());
+            List<EthInterfaceModel> eth2list = new ArrayList<>(c2.getEthInterfaces());
+            
+            for (EthInterfaceModel tmp1 : eth1list) {
                 if (!tmp1.hasCable()) {
                     continue;
                 }
-                for (EthInterfaceModel tmp2 : c2.getInterfaces()) {
+                for (EthInterfaceModel tmp2 : eth2list) {
                     if (!tmp2.hasCable()) {
                         continue;
                     }
@@ -215,9 +223,6 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1.getId(), c2.getId(), 
                 cableId, packetType, detailsText);
         
-        // set details to event
-        //simulatorEvent.setDetails(c1.getDeviceName(), c2.getDeviceName(), c1, c2, eth1, eth2);
-
         return simulatorEvent;
     }
 }

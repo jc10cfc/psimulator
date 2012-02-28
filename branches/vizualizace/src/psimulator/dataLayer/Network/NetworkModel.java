@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,11 +14,11 @@ public class NetworkModel implements Identifiable, Serializable{
     /**
      * Map with components. Identified by component ID.
      */
-    private LinkedHashMap<Integer, HwComponentModel> componentsMap;
+    private Map<Integer, HwComponentModel> componentsMap;
     /**
      * Map with cables. Identified by cable ID.
      */
-    private LinkedHashMap<Integer, CableModel> cablesMap;
+    private Map<Integer, CableModel> cablesMap;
     /**
      * Counter with numer lines.
      */
@@ -99,5 +100,13 @@ public class NetworkModel implements Identifiable, Serializable{
     
     public int getCablesCount() {
         return cablesMap.size();
+    }
+    
+    public HwComponentModel getHwComponentModelById(int id){
+        return componentsMap.get(id);
+    }
+    
+    public CableModel getCableModelById(int id){
+        return cablesMap.get(id);
     }
 }

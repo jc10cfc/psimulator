@@ -40,9 +40,11 @@ public class DataLayer extends DataLayerFacade {
     
 
     public DataLayer() {
+        networkFacade = new NetworkFacade();
+        //
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
-        simulatorManager = new SimulatorManager();
+        simulatorManager = new SimulatorManager((DataLayerFacade)this);
         //abstractNetworkAdapter = new AbstractNetworkAdapter();
         //abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
         networkModelSerializer = new NetworkModelSerializer();
@@ -54,7 +56,7 @@ public class DataLayer extends DataLayerFacade {
         ImageFactorySingleton.getInstance();
         
         //
-        networkFacade = new NetworkFacade();
+        
     }
     
     

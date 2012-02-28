@@ -135,6 +135,14 @@ public class NetworkFacade {
         editHappend();
     }
     
+    public HwComponentModel getHwComponentModelById(int id){
+        return networkModel.getHwComponentModelById(id);
+    }
+    
+    public CableModel getCableModelById(int id){
+        return networkModel.getCableModelById(id);
+    }
+    
     // TODO
     public void editHappend(){
         //

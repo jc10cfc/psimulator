@@ -1,6 +1,9 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -49,7 +52,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         // CopyOnWrite is good for:
         //  - reads hugely outnumber writes (paint component every 15ms)
         //  - the array is small (or writes are very infrequent)
-        animations = new CopyOnWriteArrayList<Animation>();
+        animations = new CopyOnWriteArrayList<>();
 
         // init timer
         f_repaintTimer.init();
