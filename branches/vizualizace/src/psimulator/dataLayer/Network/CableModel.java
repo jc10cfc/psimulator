@@ -1,7 +1,5 @@
 package psimulator.dataLayer.Network;
 
-import psimulator.AbstractNetwork.HwTypeEnum;
-
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>

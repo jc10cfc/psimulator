@@ -37,12 +37,20 @@ public class Graph extends JComponent implements GraphOuterInterface {
     
     private NetworkFacade networkFacade;
     
-    public Graph() {
+    public Graph(NetworkFacade networkFacade) {
+        this.networkFacade = networkFacade;
     }
+
+    @Override
+    public NetworkFacade getNetworkFacade() {
+        return networkFacade;
+    }
+    
+    
 
     public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer) {
 
-        this.networkFacade = dataLayer.getNetworkFacade();
+        //this.networkFacade = dataLayer.getNetworkFacade();
         
         setInitReferencesToComponents(dataLayer);
 
@@ -292,9 +300,22 @@ public class Graph extends JComponent implements GraphOuterInterface {
         bundlesOfCables.remove(bundleOfCables);
     }
 
+    /**
+     * Use only on graph build!
+     * @param cable 
+     */
+    public void addCableOnGraphBuild(Cable cable) {
+        addCable(cable, false);
+        
+    }
+    
     @Override
     public void addCable(Cable cable) {
-
+        addCable(cable, true);
+        
+    }
+    
+    private void addCable(Cable cable, boolean propagateToNetwork) {
         // get bundle of cables between c1 and c2
         BundleOfCables boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
 
@@ -304,14 +325,14 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
 
         boc.addCable(cable);
-        //cable.getEth1().setCable(cable);
-        //cable.getEth2().setCable(cable);
-        
-        // add cable to network
-        networkFacade.addCable(cable.getCableModel());
+
+        if(propagateToNetwork){
+            // add cable to network
+            networkFacade.addCable(cable.getCableModel());
+        }
         
         // add cable to hash map
-        cablesMap.put(cable.getId(), cable);
+        cablesMap.put(cable.getId().intValue(), cable);
 
         // set timestamp of edit
         editHappend();
@@ -320,7 +341,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public void addCables(List<Cable> cableList) {
         for (Cable c : cableList) {
-            addCable(c);
+            addCable(c, false);
         }
     }
 
@@ -344,7 +365,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
         
         // remove cable from hash map
-        cablesMap.remove(cable.getId());
+        cablesMap.remove(cable.getId().intValue());
         
         // remove cable from network
         networkFacade.removeCable(cable.getCableModel());
@@ -417,7 +438,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     @Override
     public void addHwComponent(AbstractHwComponent component) {
         //components.add(component);
-        componentsMap.put(component.getId(), component);
+        componentsMap.put(component.getId().intValue(), component);
         updateSizeAddComponent(component.getLowerRightCornerLocation());
         
         // add to network
@@ -428,14 +449,13 @@ public class Graph extends JComponent implements GraphOuterInterface {
     }
 
     /**
-     * Use when components not initialized (do not have references on zoom
+     * Use FROM BUILDER ONLY when components not initialized (do not have references on zoom
      * manager and etc.)
      */
     public void addHwComponentWithoutGraphSizeChange(AbstractHwComponent component) {
-        componentsMap.put(component.getId(), component);
+        componentsMap.put(component.getId().intValue(), component);
         
-        // add to network
-        networkFacade.addHwComponent(component.getHwComponentModel());
+        // do not add to network
     }
 
     @Override
@@ -467,14 +487,12 @@ public class Graph extends JComponent implements GraphOuterInterface {
         Collection<AbstractHwComponent> colection = componentsMap.values();
         colection.removeAll(componentList);
 
-        List<HwComponentModel> list = new ArrayList<>();
-        Iterator<AbstractHwComponent> it = colection.iterator();
-        while(it.hasNext()){
-            list.add(it.next().getHwComponentModel());
-        }
-        
         // remove from network
-        networkFacade.removeHwComponents(list);
+        Iterator<AbstractHwComponent> it = componentList.iterator();
+        while(it.hasNext()){
+            networkFacade.removeHwComponent(it.next().getHwComponentModel());
+        }
+
         
         //updateSizeRemoveComponents(getLowerRightBound(components));
         updateSizeByRecalculate();
@@ -927,6 +945,14 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @return 
      */
     public AbstractHwComponent getAbstractHwComponent(int id) {
+        System.out.println("size"+componentsMap.size());
+        
+        Iterator<AbstractHwComponent> it = componentsMap.values().iterator();
+        
+        while(it.hasNext()){
+            System.out.println("Id="+it.next().getId());
+        }
+        
         return componentsMap.get(id);
     }
     

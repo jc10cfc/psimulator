@@ -3,6 +3,7 @@ package psimulator.AbstractNetwork;
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
+import psimulator.dataLayer.Network.HwTypeEnum;
 
 /**
  *

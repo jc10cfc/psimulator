@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.Network.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 

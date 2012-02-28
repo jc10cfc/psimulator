@@ -5,10 +5,12 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Network.HwComponentModel;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.*;
@@ -103,6 +105,27 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         if (clickedComponent == null) {
             System.out.println("Graph - " + graph.getHwComponents().size() + " components, " + graph.getCablesCount()
                     + " cables and " + graph.getBundlesOfCables().size() + " bundles of cables");
+            
+            System.out.println("Network - " + graph.getNetworkFacade().getHwComponentsCount()+ " components, " 
+                    + graph.getNetworkFacade().getCablesCount()+ " cables");
+            
+            System.out.println("IDs graph:");
+            
+            Iterator <AbstractHwComponent> it = graph.getHwComponents().iterator();
+            
+            while(it.hasNext()){
+                System.out.println(it.next().getId()+"");
+            }
+            
+            System.out.println("IDs network:");
+            
+            Iterator <HwComponentModel> it2 = graph.getNetworkFacade().getHwComponents().iterator();
+            
+            while(it2.hasNext()){
+                System.out.println(it2.next().getId()+"");
+            }
+            
+            
             if (e.isControlDown()) {
                 // do nothing
             } else {

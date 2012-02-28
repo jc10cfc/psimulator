@@ -1,7 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Components;
 
 import psimulator.dataLayer.Network.Identifiable;
-import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.Network.HwTypeEnum;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
 
 /**

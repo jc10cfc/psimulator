@@ -1,6 +1,6 @@
 package psimulator.dataLayer.devices;
 
-import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.Network.HwTypeEnum;
 
 /**
  *

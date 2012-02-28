@@ -1,4 +1,4 @@
-package psimulator.AbstractNetwork;
+package psimulator.dataLayer.Network;
 
 import javax.xml.bind.annotation.XmlEnum;
 

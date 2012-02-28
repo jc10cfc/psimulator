@@ -2,11 +2,11 @@ package psimulator.dataLayer;
 
 import java.io.File;
 import java.util.Observer;
-import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapter;
-import psimulator.dataLayer.AbstractNetwork.AbstractNetworkAdapterXML;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Network.NetworkFacade;
+import psimulator.dataLayer.Network.NetworkModel;
+import psimulator.dataLayer.Network.Serializer.NetworkModelSerializer;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsSerializer;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsSerializerXML;
@@ -27,8 +27,12 @@ public class DataLayer extends DataLayerFacade {
     private LanguageManager languageManager;
     private PreferencesManager preferencesManager;
     private SimulatorManager simulatorManager;
-    private AbstractNetworkAdapter abstractNetworkAdapter;
-    private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
+    
+    //
+    //private AbstractNetworkAdapter abstractNetworkAdapter;
+    //private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
+    private NetworkModelSerializer networkModelSerializer;
+    //
     private SimulatorEventsSerializer simulatorEventsSerializer;
     private SimulatorEventsSerializerXML simulatorEventsSerializerXML;
     //
@@ -39,8 +43,10 @@ public class DataLayer extends DataLayerFacade {
         preferencesManager = new PreferencesManager();
         languageManager = new LanguageManager();
         simulatorManager = new SimulatorManager();
-        abstractNetworkAdapter = new AbstractNetworkAdapter();
-        abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
+        //abstractNetworkAdapter = new AbstractNetworkAdapter();
+        //abstractNetworkAdapterXML = new AbstractNetworkAdapterXML();
+        networkModelSerializer = new NetworkModelSerializer();
+        
         simulatorEventsSerializer = new SimulatorEventsSerializer();
         simulatorEventsSerializerXML = new SimulatorEventsSerializerXML();
         
@@ -118,16 +124,29 @@ public class DataLayer extends DataLayerFacade {
         return simulatorManager;
     }
 
+    
+//    @Override
+//    public void saveGraphToFile(Graph graph, File file) throws SaveLoadException{
+//        //abstractNetworkAdapter.saveGraphToFile(graph, file);
+//        abstractNetworkAdapterXML.saveGraphToFile(graph, file);
+//    }
+//
+//    @Override
+//    public Graph loadGraphFromFile(File file) throws SaveLoadException{
+//        //return abstractNetworkAdapter.loadGraphFromFile(file);
+//        return abstractNetworkAdapterXML.loadGraphFromFile(file);
+//    }
+    
+    
     @Override
-    public void saveGraphToFile(Graph graph, File file) throws SaveLoadException{
-        //abstractNetworkAdapter.saveGraphToFile(graph, file);
-        abstractNetworkAdapterXML.saveGraphToFile(graph, file);
+    public void saveNetworkModelToFile(File file) throws SaveLoadException {
+        networkModelSerializer.saveNetworkModelToFile(networkFacade.getNetworkModel(), file);
     }
 
     @Override
-    public Graph loadGraphFromFile(File file) throws SaveLoadException{
-        //return abstractNetworkAdapter.loadGraphFromFile(file);
-        return abstractNetworkAdapterXML.loadGraphFromFile(file);
+    public void loadNetworkModelFromFile(File file) throws SaveLoadException {
+        NetworkModel networkModel = networkModelSerializer.loadNetworkModelFromFile(file);
+        networkFacade.setNetworkModel(networkModel);
     }
   
     @Override
@@ -246,5 +265,6 @@ public class DataLayer extends DataLayerFacade {
     public NetworkFacade getNetworkFacade() {
         return networkFacade;
     }
+
 
 }

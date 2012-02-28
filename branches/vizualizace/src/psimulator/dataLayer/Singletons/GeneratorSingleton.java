@@ -1,9 +1,9 @@
 package psimulator.dataLayer.Singletons;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import psimulator.AbstractNetwork.HwTypeEnum;
+import psimulator.dataLayer.Network.HwTypeEnum;
+import psimulator.dataLayer.Network.NetworkCounterModel;
 
 /**
  *
@@ -11,22 +11,9 @@ import psimulator.AbstractNetwork.HwTypeEnum;
  */
 public class GeneratorSingleton {
 
-    /**
-     * Unique identificator
-     */
-    private int nextId = 0;
-    //
-    private EnumMap<HwTypeEnum, Integer> nextNumberMap;
-    //
-    private int nextMacAddress = 0;
+    private NetworkCounterModel networkCounterModel;
 
     private GeneratorSingleton() {
-
-        nextNumberMap = new EnumMap<HwTypeEnum, Integer>(HwTypeEnum.class);
-
-        for (HwTypeEnum hwTypeEnum : HwTypeEnum.values()) {
-            nextNumberMap.put(hwTypeEnum, new Integer(0));
-        }
     }
 
     public static GeneratorSingleton getInstance() {
@@ -34,42 +21,15 @@ public class GeneratorSingleton {
     }
 
     private static class IdGeneratorSingletonHolder {
-
         private static final GeneratorSingleton INSTANCE = new GeneratorSingleton();
     }
     
     /**
-     * Sets all counters to zero
+     * 
      */
-    public void initialize(){
-        // init nextId
-        nextId = 0;
-        
-        // init next mac address
-        nextMacAddress = 0;
-        
-        // init next number map
-        for (HwTypeEnum hwTypeEnum : HwTypeEnum.values()) {
-            nextNumberMap.put(hwTypeEnum, new Integer(0));
-        }
-    }
-    
-    
-    public void setNextId(int nextId){
-        this.nextId = nextId;
-    }
-    
-    public void setNextMacAddress(int nextMacAddress){
-        this.nextMacAddress = nextMacAddress;
-    }
-    
-    public void putIntoNextNumberMap(HwTypeEnum hwType, Integer value){
-        this.nextNumberMap.put(hwType, value);
-    }
-    
-    public Integer getFromNextNumberMap(HwTypeEnum hwType){
-        return nextNumberMap.get(hwType);
-    }  
+    public void initialize(NetworkCounterModel networkCounterModel){
+        this.networkCounterModel = networkCounterModel;
+     }
 
     /**
      * Returns free id and incremets id by 1.
@@ -77,15 +37,15 @@ public class GeneratorSingleton {
      * @return Free id.
      */
     public int getNextId() {
-        return nextId++;
+        return networkCounterModel.getNextId();
     }
     
     public int getCurrentId(){
-        return nextId;
+        return networkCounterModel.getCurrentId();
     }
     
     public int getCurrentMacAddress(){
-        return nextMacAddress;
+        return networkCounterModel.getCurrentMacAddress();
     }
 
     /**
@@ -97,7 +57,7 @@ public class GeneratorSingleton {
      * @return List with generated names.
      */
     public List<String> getInterfaceNames(HwTypeEnum hwType, int count) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
 
         int counter = 0;
         String prefix = "";
@@ -148,45 +108,45 @@ public class GeneratorSingleton {
             case CISCO_ROUTER:
                 prefix = "Router";
                 // get number
-                number = nextNumberMap.get(HwTypeEnum.LINUX_ROUTER).intValue();
+                number = networkCounterModel.getFromNumberMap(HwTypeEnum.LINUX_ROUTER).intValue();
                 // increase counter
-                nextNumberMap.put(HwTypeEnum.LINUX_ROUTER, new Integer(number + 1));
+                networkCounterModel.putToNumberMap(HwTypeEnum.LINUX_ROUTER, new Integer(number + 1));
                 break;
             case LINUX_SWITCH:
             case CISCO_SWITCH:
                 prefix = "Switch";
                 // get number
-                number = nextNumberMap.get(HwTypeEnum.LINUX_SWITCH).intValue();
+                number = networkCounterModel.getFromNumberMap(HwTypeEnum.LINUX_SWITCH).intValue();
                 // increase counter
-                nextNumberMap.put(HwTypeEnum.LINUX_SWITCH, new Integer(number + 1));
+                networkCounterModel.putToNumberMap(HwTypeEnum.LINUX_SWITCH, new Integer(number + 1));
                 break;
             case END_DEVICE_NOTEBOOK:
                 prefix = "Notebook";
                 // get number
-                number = nextNumberMap.get(hwType).intValue();
+                number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter
-                nextNumberMap.put(hwType, new Integer(number + 1));
+                networkCounterModel.putToNumberMap(hwType, new Integer(number + 1));
                 break;
             case END_DEVICE_PC:
                 prefix = "PC";
                 // get number
-                number = nextNumberMap.get(hwType).intValue();
+                number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter
-                nextNumberMap.put(hwType, new Integer(number + 1));
+                networkCounterModel.putToNumberMap(hwType, new Integer(number + 1));
                 break;
             case END_DEVICE_WORKSTATION:
                 prefix = "Workstation";
                 // get number
-                number = nextNumberMap.get(hwType).intValue();
+                number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter
-                nextNumberMap.put(hwType, new Integer(number + 1));
+                networkCounterModel.putToNumberMap(hwType, new Integer(number + 1));
                 break;
             case REAL_PC:
                 prefix = "RealPC";
                 // get number
-                number = nextNumberMap.get(hwType).intValue();
+                number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter
-                nextNumberMap.put(hwType, new Integer(number + 1));
+                networkCounterModel.putToNumberMap(hwType, new Integer(number + 1));
                 break;
             default:
                 // this should never happen
@@ -210,7 +170,7 @@ public class GeneratorSingleton {
         String macAddressManufacturerPrefix = "AA-11-E0-";
         String macAddressDeviceSuffix = "";
 
-        String tmp = Integer.toHexString(nextMacAddress).toUpperCase();
+        String tmp = Integer.toHexString(networkCounterModel.getCurrentMacAddress()).toUpperCase();
 
         // fill the rest of address
         for (int i = 0; i < 6; i++) {
@@ -228,7 +188,8 @@ public class GeneratorSingleton {
         }
 
         // increase counter
-        nextMacAddress++;
+        //nextMacAddress++;
+        networkCounterModel.increaseMacAddressCounter();
 
         // glue two parts together
         macAddress = macAddressManufacturerPrefix + macAddressDeviceSuffix;
