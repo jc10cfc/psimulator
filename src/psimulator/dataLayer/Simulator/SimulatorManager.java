@@ -1,5 +1,6 @@
 package psimulator.dataLayer.Simulator;
 
+import java.util.List;
 import java.util.Observable;
 import javax.swing.SwingUtilities;
 import psimulator.dataLayer.DataLayerFacade;
@@ -17,7 +18,7 @@ import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class SimulatorManager extends Observable implements SimulatorManagerInterface {
-    
+
     private DataLayerFacade dataLayerFacade;
     // player speeds
     public static final int SPEED_MIN = 10;
@@ -265,29 +266,24 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
     }
-/*
-    @Override
-    public void setPacketDetails(boolean activated) {
-        isPacketDetails = activated;
+    /*
+     * @Override public void setPacketDetails(boolean activated) {
+     * isPacketDetails = activated;
+     *
+     * System.out.println("Packet details " + activated);
+     *
+     * // notify all observers setChanged();
+     * notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS); }
+     *
+     * @Override public void setNamesOfDevices(boolean activated) {
+     * isDeviceNames = activated;
+     *
+     * System.out.println("Names of devices " + activated);
+     *
+     * // notify all observers setChanged();
+     * notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS); }
+     */
 
-        System.out.println("Packet details " + activated);
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS);
-    }
-
-    @Override
-    public void setNamesOfDevices(boolean activated) {
-        isDeviceNames = activated;
-
-        System.out.println("Names of devices " + activated);
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.SIMULATOR_DETAILS);
-    }
-*/
     @Override
     public void setConcreteRawSelected(int row) {
         System.out.println("Row " + row + " double clicked");
@@ -333,25 +329,32 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
             @Override
             public void run() {
-                
-                //simulatorEvent.setDetails(c1.getName(), c2.getName(), c1, c2, eth1, eth2);
-                
-                // set details to event
-                HwComponentModel c1 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getSourcceId());
-                HwComponentModel c2 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getDestId());
 
-                CableModel cable = dataLayerFacade.getNetworkFacade().getCableModelById(simulatorEvent.getCableId());
-                
-                EthInterfaceModel eth1 = cable.getInterface1();
-                EthInterfaceModel eth2 = cable.getInterface2();
-                
-                simulatorEvent.setDetails(c1.getName(), c2.getName(), c1, c2, eth1, eth2);
-                
+                // set details to event
+                addDetailToSimulatorEvent(simulatorEvent);
+
                 // add to table
                 eventTableModel.addSimulatorEvent(simulatorEvent);
             }
         });
     }
+
+    @Override
+    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents) {
+        // delete items
+        eventTableModel.deleteAllSimulatorEvents();
+        currentPositionInList = 0;
+        
+        // get simulator event list
+        List<SimulatorEvent> simulatorEventsList = simulatorEvents.getSimulatorEvents();
+        
+        // add details to events
+        addDetailsToSimulatorEvents(simulatorEventsList);
+        
+        // add events to table model
+        eventTableModel.setEventList(simulatorEvents.getSimulatorEvents());
+    }
+
 
     /**
      * Used from another thread
@@ -362,21 +365,21 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 //
 //           @Override
 //            public void run() {
-                //if nothing else to play
-                if (currentPositionInList >= eventTableModel.getRowCount() - 1) {
-                    isPlaying = false;
-                    System.out.println("Playing automaticly set to " + isPlaying);
+        //if nothing else to play
+        if (currentPositionInList >= eventTableModel.getRowCount() - 1) {
+            isPlaying = false;
+            System.out.println("Playing automaticly set to " + isPlaying);
 
-                    // notify all observers
-                    setChanged();
-                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
-                } else {
-                    currentPositionInList++;
+            // notify all observers
+            setChanged();
+            notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
+        } else {
+            currentPositionInList++;
 
-                    // notify all observers
-                    setChanged();
-                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
-                }
+            // notify all observers
+            setChanged();
+            notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+        }
 //            }
 //        });
     }
@@ -391,11 +394,11 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 //           @Override
 //            public void run() {
 
-                currentPositionInList = index;
+        currentPositionInList = index;
 
-                // notify all observers
-                setChanged();
-                notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
 //            }
 //        });
     }
@@ -457,20 +460,29 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isTimeReset() {
         return eventTableModel.isTimeReset();
     }
-    
+
     @Override
-    public SimulatorEventsWrapper getSimulatorEvents(){
+    public SimulatorEventsWrapper getSimulatorEvents() {
         SimulatorEventsWrapper simulatorEvents = new SimulatorEventsWrapper(eventTableModel.getEventListCopy());
         return simulatorEvents;
     }
     
-    @Override
-    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents){
-        // delete items
-        eventTableModel.deleteAllSimulatorEvents();
-        currentPositionInList = 0;
-        //
-        eventTableModel.setEventList(simulatorEvents.getSimulatorEvents());
+    private void addDetailsToSimulatorEvents(List<SimulatorEvent> simulatorEvents) {
+        for(SimulatorEvent simulatorEvent : simulatorEvents){
+            addDetailToSimulatorEvent(simulatorEvent);
+        }
     }
-    
+
+    private void addDetailToSimulatorEvent(SimulatorEvent simulatorEvent) {
+        // set details to event
+        HwComponentModel c1 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getSourcceId());
+        HwComponentModel c2 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getDestId());
+
+        CableModel cable = dataLayerFacade.getNetworkFacade().getCableModelById(simulatorEvent.getCableId());
+
+        EthInterfaceModel eth1 = cable.getInterface1();
+        EthInterfaceModel eth2 = cable.getInterface2();
+
+        simulatorEvent.setDetails(c1.getName(), c2.getName(), c1, c2, eth1, eth2);
+    }
 }
