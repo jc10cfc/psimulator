@@ -338,7 +338,6 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         // change position of all components
         graph.doChangePositionOfAbstractHwComponents(draggedComponents, ZoomManagerSingleton.getInstance().doScaleToDefault(differenceInActualZoom), true);
 
-
         drawPanel.repaint();
     }
 
