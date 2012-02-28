@@ -174,6 +174,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 
                 int rowNumber = jTableEventList.getSelectedRow();
                 
+                if(rowNumber < 0){
+                    return;
+                }
                 // set concrete row in model
                 simulatorManagerInterface.setConcreteRawSelected(rowNumber);
             }
