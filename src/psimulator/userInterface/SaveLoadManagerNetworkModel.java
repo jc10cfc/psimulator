@@ -5,6 +5,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder.GraphBuilderFacade;
@@ -109,11 +110,9 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager{
         }
         return true;
     }
-
-    /**
-     * Shows open dialog
-     */
-    public Graph doOpenGraphAction(){
+    
+    
+    public NetworkModel doLoadNetworkModel(){
         try {
             return open();
         } catch (SaveLoadException ex) {
@@ -121,8 +120,15 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager{
             return null;
         }
     }
+
+    public Graph buildGraphFromNetworkModel(NetworkModel networkModel){
+         GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
+         Graph graph = graphBuilderFacade.buildGraph(networkModel);
+         
+         return graph;
+    }
     
-    private Graph open() throws SaveLoadException {
+    private NetworkModel open() throws SaveLoadException {
         int returnVal = fileChooser.showOpenDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -131,17 +137,18 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager{
             System.out.println("Opening file: " + selctedFile);
 
             // load network model
-            dataLayer.loadNetworkModelFromFile(selctedFile);
+            NetworkModel networkModel = dataLayer.loadNetworkModelFromFile(selctedFile);
             
+            /*
             // Build graph
             GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
             Graph graph = graphBuilderFacade.buildGraph(dataLayer.getNetworkFacade());
-            
+            */
 
             // set saved timestamp and file name
             setLastSavedFile(selctedFile);
 
-            return graph;
+            return networkModel;
         }
         return null;
     }

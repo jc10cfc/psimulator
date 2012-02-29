@@ -1,6 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
-import psimulator.dataLayer.Network.NetworkFacade;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**
@@ -12,10 +12,10 @@ public class GraphBuilderFacade {
     public GraphBuilderFacade(){
     }
     
-    public Graph buildGraph(NetworkFacade networkFacade){
+    public Graph buildGraph(NetworkModel networkModel){
         AbstractGraphBuilder graphBuilder = new GraphBuilder();
         
-        GraphBuilderDirector graphBuilderDirector = new GraphBuilderDirector(graphBuilder, networkFacade);
+        GraphBuilderDirector graphBuilderDirector = new GraphBuilderDirector(graphBuilder, networkModel);
         graphBuilderDirector.construct();
         
         return graphBuilder.getResult();

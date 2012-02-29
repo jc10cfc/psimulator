@@ -27,8 +27,7 @@ public class NetworkFacade {
     }
     
     public NetworkModel createNetworkModel(){
-        this.networkModel = networkComponentsFactory.createEmptyNetworkModel();
-        return networkModel;
+        return networkComponentsFactory.createEmptyNetworkModel();
     }
     
     public HwComponentModel createHwComponentModel(HwTypeEnum hwType, int interfacesCount, int defaultZoomXPos, int defaultZoomYPos){

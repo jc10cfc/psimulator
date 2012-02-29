@@ -35,8 +35,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     private CustomObservable customObservable = new CustomObservable();
     private NetworkFacade networkFacade;
 
-    public Graph(NetworkFacade networkFacade) {
-        this.networkFacade = networkFacade;
+    public Graph() {
     }
 
     @Override
@@ -51,7 +50,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @param dataLayer
      */
     public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer) {
-
+        // 
+        this.networkFacade = dataLayer.getNetworkFacade();
+        
         // init references
         setInitReferencesToComponents(dataLayer);
 

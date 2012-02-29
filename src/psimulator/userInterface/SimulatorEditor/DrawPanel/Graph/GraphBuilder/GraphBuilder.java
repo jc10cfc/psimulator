@@ -20,9 +20,9 @@ public class GraphBuilder extends AbstractGraphBuilder {
     }
 
     @Override
-    public void buildGraph(NetworkFacade networkFacade){
+    public void buildGraph(){
         //
-        this.graph = new Graph(networkFacade);
+        this.graph = new Graph();
     }
     
     @Override

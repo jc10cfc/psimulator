@@ -137,6 +137,12 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     }
 
     @Override
+    public void stopSimulatorActivities(){
+         // turn of activities in simulator
+        jPanelSimulator.setTurnedOff();
+    }
+    
+    @Override
     public final void doChangeMode(UserInterfaceMainPanelState userInterfaceState) {
         this.userInterfaceState = userInterfaceState;
 

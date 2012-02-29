@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import psimulator.dataLayer.Network.Components.CableModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.dataLayer.Network.NetworkFacade;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 
 /**
  *
@@ -13,18 +13,18 @@ import psimulator.dataLayer.Network.NetworkFacade;
 public class GraphBuilderDirector {
 
     private AbstractGraphBuilder abstractGraphBuilder;
-    private NetworkFacade networkFacade;
+    private NetworkModel networkModel;
 
-    public GraphBuilderDirector(AbstractGraphBuilder abstractGraphBuilder, NetworkFacade networkFacade) {
+    public GraphBuilderDirector(AbstractGraphBuilder abstractGraphBuilder, NetworkModel networkModel) {
         this.abstractGraphBuilder = abstractGraphBuilder;
-        this.networkFacade = networkFacade;
+        this.networkModel = networkModel;
     }
 
     public void construct() {
         // create graph
-        abstractGraphBuilder.buildGraph(networkFacade);
+        abstractGraphBuilder.buildGraph();
 
-        Collection <HwComponentModel> devices = networkFacade.getHwComponents();
+        Collection <HwComponentModel> devices = networkModel.getHwComponents();
         Iterator<HwComponentModel> ith = devices.iterator();
         
         // build all hw components
@@ -33,7 +33,7 @@ public class GraphBuilderDirector {
             abstractGraphBuilder.buildHwComponent(hwComp);
         }
 
-        Collection <CableModel> cables = networkFacade.getCables();
+        Collection <CableModel> cables = networkModel.getCables();
         Iterator<CableModel> itc = cables.iterator();
         
         // build all cables
