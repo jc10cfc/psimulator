@@ -1,8 +1,9 @@
 package psimulator.userInterface.GlassPane;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
-import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanel;
 
 /**
  *
@@ -10,10 +11,28 @@ import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanel;
  */
 public class MainWindowGlassPane extends JPanel {
     
-    private UserInterfaceMainPanel userInterfaceMainPanel;
+    private List<Message> messageList;
     
-    public MainWindowGlassPane(UserInterfaceMainPanel userInterfaceMainPanel) {
-        this.userInterfaceMainPanel = userInterfaceMainPanel;
+    private boolean animationInProgress;
+    
+    public MainWindowGlassPane() {
+        messageList = new ArrayList<>();
+    }
+    
+    public void addMessage(Message message){
+        messageList.add(message);
+        
+        if(!animationInProgress){
+            startAnimation();
+        }
+    }
+    
+    public void removeMessage(Message message){
+        messageList.remove(message);
+    }
+  
+    private void startAnimation(){
+        
     }
 
     @Override

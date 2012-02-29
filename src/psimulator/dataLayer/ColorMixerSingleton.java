@@ -7,7 +7,7 @@ import psimulator.dataLayer.SimulatorEvents.PacketType;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class ColorMixerSignleton {
+public class ColorMixerSingleton {
 
     //public static Color mainToolbarColor = new Color(198, 83, 83);
     public static Color mainToolbarColor = new Color(164, 194, 245);
@@ -15,16 +15,16 @@ public class ColorMixerSignleton {
     public static Color editToolbarColor = Color.LIGHT_GRAY;
     public static Color drawPanelColor = Color.WHITE;
     
-    private static ColorMixerSignleton colorMixerSignletonObject;
+    private static ColorMixerSingleton colorMixerSignletonObject;
 
     /** A private Constructor prevents any other class from instantiating. */
-    private ColorMixerSignleton () {
+    private ColorMixerSingleton () {
         //	 Optional Code
     }
 
-    public static synchronized ColorMixerSignleton getSingletonObject() {
+    public static synchronized ColorMixerSingleton getSingletonObject() {
         if (colorMixerSignletonObject == null) {
-            colorMixerSignletonObject = new ColorMixerSignleton();
+            colorMixerSignletonObject = new ColorMixerSingleton();
         }
         return colorMixerSignletonObject;
     }

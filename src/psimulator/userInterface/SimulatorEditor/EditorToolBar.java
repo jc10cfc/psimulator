@@ -9,7 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
-import psimulator.dataLayer.ColorMixerSignleton;
+import psimulator.dataLayer.ColorMixerSingleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
@@ -99,10 +99,10 @@ public class EditorToolBar extends JToolBar implements Observer {
         setTextsToComponents();
 
         // apply background color
-        this.setBackground(ColorMixerSignleton.editToolbarColor);
+        this.setBackground(ColorMixerSingleton.editToolbarColor);
         Component[] comp = this.getComponents();
         for (Component c : comp) {
-            c.setBackground(ColorMixerSignleton.editToolbarColor);
+            c.setBackground(ColorMixerSingleton.editToolbarColor);
             // tool icon cannot be marked (ugly frame)
             c.setFocusable(false);
         }

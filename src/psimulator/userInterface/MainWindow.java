@@ -95,7 +95,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
 
         // create glass pane and glass pane painter
-        glassPane = new MainWindowGlassPane((UserInterfaceMainPanel) jPanelUserInterfaceMain);
+        glassPane = new MainWindowGlassPane();
 
         // initialize glass pane painter singleton
         GlassPanelPainterSingleton.getInstance().initialize(glassPane);
