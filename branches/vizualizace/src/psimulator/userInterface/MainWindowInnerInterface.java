@@ -1,6 +1,7 @@
 package psimulator.userInterface;
 
 import java.awt.Component;
+import java.awt.Point;
 import javax.swing.JRootPane;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;

@@ -1,9 +1,6 @@
 package psimulator.userInterface;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -199,7 +196,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         saveLoadManagerGraph.updateTextsOnFileChooser();
         saveLoadManagerEvents.updateTextsOnFileChooser();
     }
-
+    
     @Override
     public AnimationPanelOuterInterface getAnimationPanelOuterInterface() {
         return jPanelUserInterfaceMain.getAnimationPanelOuterInterface();
@@ -420,7 +417,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
-            saveLoadManagerGraph.doSaveAsGraphAction();
+            boolean success = saveLoadManagerGraph.doSaveAsGraphAction();
+            
+            if(success){
+                GlassPanelPainterSingleton.getInstance().addAnnouncement("Save action", "Saved to file:", "filename");
+            }
         }
     }
 
