@@ -1,6 +1,8 @@
 package psimulator.dataLayer.Network.Serializer;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import psimulator.dataLayer.Network.Components.NetworkModel;
 
 /**
@@ -28,17 +30,35 @@ public class NetworkModelSerializer implements AbstractNetworkSerializer {
             throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.CANT_WRITE_TO_FILE, fileName, true));
         }
 
+        OutputStream os = null;
+        ObjectOutputStream oos = null;
+        
         // save in autoclose stream
         try {
-            OutputStream os = new FileOutputStream(file);
+            os = new FileOutputStream(file);
 
-            ObjectOutputStream oos = new ObjectOutputStream(os);
+            oos = new ObjectOutputStream(os);
 
             oos.writeObject(networkModel);
         } catch (IOException ex) {
             //Logger.getLogger(NetworkModelSerializer.class.getName()).log(Level.SEVERE, null, ex);
             // throw exception
             throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_WRITING, fileName, true));
+        } finally{
+            try {
+                if(oos != null){
+                    oos.close();
+                }
+            } catch (IOException ex) {
+                // nothing to do
+            }
+            try {
+                if(os != null){
+                    os.close();
+                }
+            } catch (IOException ex) {
+                // nothing to do
+            }
         }
     }
 
@@ -59,17 +79,35 @@ public class NetworkModelSerializer implements AbstractNetworkSerializer {
             throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.CANT_READ_FROM_FILE, fileName, false));
         }
 
+        InputStream is = null;
+        ObjectInputStream ois =null;
+        
         // try read in autoclose streams
         try {
-            InputStream is = new FileInputStream(file);
+            is = new FileInputStream(file);
 
-            ObjectInputStream ois = new ObjectInputStream(is);
+            ois = new ObjectInputStream(is);
 
             //simulatorEvents = (SimulatorEventsWrapper) ois.readObject();
             networkModel = (NetworkModel) ois.readObject();
         } catch (Exception ex) {
             // throw exception
             throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_READING, fileName, true));
+        } finally{
+            try {
+                if(ois != null){
+                    ois.close();
+                }
+            } catch (IOException ex) {
+                // nothing to do
+            }
+            try {
+                if(is != null){
+                    is.close();
+                }
+            } catch (IOException ex) {
+                // nothing to do
+            }
         }
 
         return networkModel;
