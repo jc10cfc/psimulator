@@ -19,7 +19,7 @@ import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
-import psimulator.userInterface.GlassPane.GlassPanelPainter;
+import psimulator.userInterface.GlassPane.GlassPanelPainterSingleton;
 import psimulator.userInterface.GlassPane.MainWindowGlassPane;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
@@ -54,7 +54,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     private JFrame mainWindow;
     
-    private GlassPanelPainter glassPanelPainter;
     private MainWindowGlassPane glassPane;
     //private Component originalGlassPane;
 
@@ -98,8 +97,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // create glass pane and glass pane painter
         glassPane = new MainWindowGlassPane((UserInterfaceMainPanel) jPanelUserInterfaceMain);
 
-        glassPanelPainter = new GlassPanelPainter(glassPane, jPanelUserInterfaceMain);
-        //originalGlassPane = this.getGlassPane();
+        // initialize glass pane painter singleton
+        GlassPanelPainterSingleton.getInstance().initialize(glassPane);
 
         this.setGlassPane(glassPane);
         glassPane.setOpaque(false);
@@ -190,7 +189,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
 
     /**
-     * reaction to Language Observable update
+     * Reaction to Language Observable update
      *
      * @param o
      * @param o1
@@ -199,11 +198,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     public void update(Observable o, Object o1) {
         saveLoadManagerGraph.updateTextsOnFileChooser();
         saveLoadManagerEvents.updateTextsOnFileChooser();
-    }
-
-    @Override
-    public GlassPanelPainter getGlassPanelPainter() {
-        return glassPanelPainter;
     }
 
     @Override

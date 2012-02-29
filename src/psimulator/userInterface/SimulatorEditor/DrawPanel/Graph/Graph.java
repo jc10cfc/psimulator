@@ -33,9 +33,8 @@ public class Graph extends JComponent implements GraphOuterInterface {
     private long lastEditTimestamp;
     //
     private CustomObservable customObservable = new CustomObservable();
-    
     private NetworkFacade networkFacade;
-    
+
     public Graph(NetworkFacade networkFacade) {
         this.networkFacade = networkFacade;
     }
@@ -44,9 +43,13 @@ public class Graph extends JComponent implements GraphOuterInterface {
     public NetworkFacade getNetworkFacade() {
         return networkFacade;
     }
-    
-    
 
+    /**
+     * Use to initialize references in all graph components after load.
+     *
+     * @param drawPanel
+     * @param dataLayer
+     */
     public void initialize(DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer) {
 
         // init references
@@ -57,7 +60,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         // init grid
         grid = new Grid((GraphOuterInterface) this);
-        
+
         // set timestamp of edit
         editHappend();
     }
@@ -129,7 +132,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         for (BundleOfCablesGraphic boc : bundlesOfCables) {
             boc.doUpdateImages();
         }
-        
+
         // update size by recalculate
         updateSizeByRecalculate();
     }
@@ -161,9 +164,9 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
 
         /*
-        for (AbstractComponentGraphic c : markedCables) {
-            c.paint(g2);
-        }*/
+         * for (AbstractComponentGraphic c : markedCables) { c.paint(g2);
+        }
+         */
 
         // DRAW HWcomponents
         for (AbstractComponentGraphic c : getHwComponents()) {
@@ -175,38 +178,40 @@ public class Graph extends JComponent implements GraphOuterInterface {
         for (AbstractComponentGraphic c : markedAbstractHwComponents) {
             c.paint(g2);
         }
-
-
-        //System.out.println("marked comp="+markedAbstractHwComponentsComponents.size());
     }
-
-    @Override
-    public List<HwComponentGraphic> getMarkedHwComponentsCopy() {
-        List<HwComponentGraphic> temp = new ArrayList<>(markedAbstractHwComponents);
-        return temp;
-    }
-
-    /**
-     * Retruns new ArrayList with marked cables
-     * @return
+    
+    
+     /**
+     * Call when something in graph changed (move, add, remove)
      */
     @Override
-    public List<CableGraphic> getMarkedCablesCopy() {
-        List<CableGraphic> temp = new ArrayList<>(markedCables);
-        return temp;
-    }
+    public void editHappend() {
+        //
+        lastEditTimestamp = System.currentTimeMillis();
 
-
-    @Override
-    public int getCablesCount() {
-        return cablesMap.size();
+        // inform about graph change
+        customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_COMPONENT_CHANGED);
     }
 
     @Override
-    public int getAbstractHwComponentsCount() {
-        return componentsMap.size();
+    public long getLastEditTimestamp() {
+        return lastEditTimestamp;
     }
 
+    
+    // ----- OBSERVER ----------------------------------------------------------
+    @Override
+    public synchronized void addObserver(Observer obsrvr) {
+        customObservable.addObserver(obsrvr);
+    }
+
+    @Override
+    public synchronized void deleteObserver(Observer obsrvr) {
+        customObservable.deleteObserver(obsrvr);
+    }
+    // END ----- OBSERVER ----------------------------------------------------------
+
+    // ----- BUNDLE OF CABLES CABLE MANIPULATION -------------------------------
     /**
      * Returns bundle of cables between component1 and component2. If such a
      * bundle does not exist, it creates it and adds it to graph and both
@@ -249,22 +254,25 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
         bundlesOfCables.remove(bundleOfCables);
     }
+    // END----- BUNDLE OF CABLES CABLE MANIPULATION -------------------------------
 
+    // ----- CABLE MANIPULATION -----------------------------------------
     /**
      * Use only on graph build!
-     * @param cable 
+     *
+     * @param cable
      */
     public void addCableOnGraphBuild(CableGraphic cable) {
         addCable(cable, false);
-        
+
     }
-    
+
     @Override
     public void addCable(CableGraphic cable) {
         addCable(cable, true);
-        
+
     }
-    
+
     private void addCable(CableGraphic cable, boolean propagateToNetwork) {
         // get bundle of cables between c1 and c2
         BundleOfCablesGraphic boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
@@ -275,12 +283,12 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
 
         boc.addCable(cable);
-        
-        if(propagateToNetwork){
+
+        if (propagateToNetwork) {
             // add cable to network
             networkFacade.addCable(cable.getCableModel());
         }
-        
+
         // add cable to hash map
         cablesMap.put(cable.getId().intValue(), cable);
 
@@ -304,21 +312,21 @@ public class Graph extends JComponent implements GraphOuterInterface {
     public void removeCable(CableGraphic cable) {
         // get bundle of cables between c1 and c2
         BundleOfCablesGraphic boc = getBundleOfCables(cable.getComponent1(), cable.getComponent2());
-        
+
         boc.removeCable(cable);
-        
+
         // if no cable in bundle of cables
         if (boc.getCablesCount() == 0) {
             // remove bundle of cables
             removeBundleOfCables(boc);
         }
-        
+
         // remove cable from hash map
         cablesMap.remove(cable.getId().intValue());
-        
+
         // remove cable from network
         networkFacade.removeCable(cable.getCableModel());
-        
+
         // set timestamp of edit
         editHappend();
     }
@@ -329,7 +337,77 @@ public class Graph extends JComponent implements GraphOuterInterface {
             removeCable(it.next());
         }
     }
+    // END----- CABLE MANIPULATION -----------------------------------------
 
+    // ----- HW COMPONENT MANIPULATION-------------------------------
+    @Override
+    public void addHwComponent(HwComponentGraphic component) {
+        //components.add(component);
+        componentsMap.put(component.getId().intValue(), component);
+        updateSizeAddComponent(component.getLowerRightCornerLocation());
+
+        // add to network
+        networkFacade.addHwComponent(component.getHwComponentModel());
+
+        // set timestamp of edit
+        editHappend();
+    }
+
+    /**
+     * Use FROM BUILDER ONLY when components not initialized (do not have
+     * references on zoom manager and etc.)
+     */
+    public void addHwComponentWithoutGraphSizeChange(HwComponentGraphic component) {
+        componentsMap.put(component.getId().intValue(), component);
+
+        // do not add to network
+    }
+
+    @Override
+    public void addHwComponents(List<HwComponentGraphic> componentList) {
+        for (HwComponentGraphic component : componentList) {
+            addHwComponent(component);
+        }
+    }
+
+    @Override
+    public void removeHwComponent(HwComponentGraphic component) {
+        //components.remove(component);
+        Collection<HwComponentGraphic> colection = componentsMap.values();
+        colection.remove(component);
+
+        // remove from network
+        networkFacade.removeHwComponent(component.getHwComponentModel());
+
+        //updateSizeRemoveComponents(component.getLowerRightCornerLocation());
+        updateSizeByRecalculate();
+
+        // set timestamp of edit
+        editHappend();
+    }
+
+    @Override
+    public void removeHwComponents(List<HwComponentGraphic> componentList) {
+        //components.removeAll(componentList);
+        Collection<HwComponentGraphic> colection = componentsMap.values();
+        colection.removeAll(componentList);
+
+        // remove from network
+        Iterator<HwComponentGraphic> it = componentList.iterator();
+        while (it.hasNext()) {
+            networkFacade.removeHwComponent(it.next().getHwComponentModel());
+        }
+
+
+        //updateSizeRemoveComponents(getLowerRightBound(components));
+        updateSizeByRecalculate();
+
+        // set timestamp of edit
+        editHappend();
+    }
+    // END ----- HW COMPONENT MANIPULATION-------------------------------
+
+    // ----- GRAPH SIZES -----------------------------------------------
     @Override
     public Point getUpperLeftBound(List<HwComponentGraphic> components) {
         Point p = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -377,152 +455,23 @@ public class Graph extends JComponent implements GraphOuterInterface {
         return getLowerRightBound(componentsMap.values());
     }
 
-    @Override
-    public Collection<HwComponentGraphic> getHwComponents() {
-        //return components;
-        return componentsMap.values();
-    }
-    
-    
-    @Override
-    public Collection<CableGraphic> getCables(){
-        return cablesMap.values();
-    }
-
-    @Override
-    public void addHwComponent(HwComponentGraphic component) {
-        //components.add(component);
-        componentsMap.put(component.getId().intValue(), component);
-        updateSizeAddComponent(component.getLowerRightCornerLocation());
-        
-        // add to network
-        networkFacade.addHwComponent(component.getHwComponentModel());
-        
-        // set timestamp of edit
-        editHappend();
-    }
-
-    /**
-     * Use FROM BUILDER ONLY when components not initialized (do not have references on zoom
-     * manager and etc.)
-     */
-    public void addHwComponentWithoutGraphSizeChange(HwComponentGraphic component) {
-        componentsMap.put(component.getId().intValue(), component);
-        
-        // do not add to network
-    }
-
-    @Override
-    public void addHwComponents(List<HwComponentGraphic> componentList) {
-        for (HwComponentGraphic component : componentList) {
-            addHwComponent(component);
-        }
-    }
-
-    @Override
-    public void removeHwComponent(HwComponentGraphic component) {
-        //components.remove(component);
-        Collection<HwComponentGraphic> colection = componentsMap.values();
-        colection.remove(component);
-
-        // remove from network
-        networkFacade.removeHwComponent(component.getHwComponentModel());
-        
-        //updateSizeRemoveComponents(component.getLowerRightCornerLocation());
-        updateSizeByRecalculate();
-        
-        // set timestamp of edit
-        editHappend();
-    }
-
-    @Override
-    public void removeHwComponents(List<HwComponentGraphic> componentList) {
-        //components.removeAll(componentList);
-        Collection<HwComponentGraphic> colection = componentsMap.values();
-        colection.removeAll(componentList);
-
-        // remove from network
-        Iterator<HwComponentGraphic> it = componentList.iterator();
-        while(it.hasNext()){
-            networkFacade.removeHwComponent(it.next().getHwComponentModel());
-        }
-
-        
-        //updateSizeRemoveComponents(getLowerRightBound(components));
-        updateSizeByRecalculate();
-        
-        // set timestamp of edit
-        editHappend();
-    }
-
-    @Override
-    public List<BundleOfCablesGraphic> getBundlesOfCables() {
-        return bundlesOfCables;
-    }
-
-    @Override
-    public int getWidth() {
-        return ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault);
-    }
-
-    @Override
-    public int getHeight() {
-        return ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault);
-    }
-
-    @Override
-    public int getX() {
-        return 0;
-    }
-
-    @Override
-    public int getY() {
-        return 0;
-    }
-
     /**
      * Returns preffered size in actual zoom
-     * @return 
+     *
+     * @return
      */
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(getWidth(),getHeight());
+        return new Dimension(getWidth(), getHeight());
     }
-    
+
     @Override
     public Dimension getPreferredSizeDefaultZoom() {
         return new Dimension(widthDefault, heightDefault);
     }
-    
-    
-    /**
-     * Call when something in graph changed (move, add, remove)
-     */
-    @Override
-    public void editHappend() {
-        //
-        lastEditTimestamp = System.currentTimeMillis();
-        
-        // inform about graph change
-        customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_COMPONENT_CHANGED);
-    }
+    // END ----- GRAPH SIZES -----------------------------------------------
 
-    @Override
-    public long getLastEditTimestamp() {
-        return lastEditTimestamp;
-    }
-
-    @Override
-    public synchronized void addObserver(Observer obsrvr) {
-        customObservable.addObserver(obsrvr);
-    }
-
-    @Override
-    public synchronized void deleteObserver(Observer obsrvr) {
-        customObservable.deleteObserver(obsrvr);
-    }
-
-// ============= MARKING =========    
+    // ============= MARKING =========    
     @Override
     public void doMarkComponentWithCables(Markable component, boolean marked) {
         // if component is isntance of HwComponentGraphic
@@ -544,7 +493,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
                     if (marked) {
                         c.setMarked(marked);
                         //markedComponents.add(c);
-                        if(!markedCables.contains(c)){
+                        if (!markedCables.contains(c)) {
                             markedCables.add(c);
                         }
                     } else {
@@ -626,7 +575,52 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
     }
 
-// ============== CHANGE POSITION AND RESIZE =======================
+    @Override
+    public RemovedComponentsWrapper doRemoveMarkedComponents() {
+        // get all marked components
+        List<HwComponentGraphic> markedComponents = this.getMarkedHwComponentsCopy();
+
+        // put all marked cables to cables toRemove
+        List<CableGraphic> cablesToRemove = this.getMarkedCablesCopy();
+
+        // if there is no marked cable and no component
+        if (markedComponents.isEmpty() && cablesToRemove.isEmpty()) {
+            return null;
+        }
+
+
+        // for all removed components
+        for (HwComponentGraphic c : markedComponents) {
+            // all its cables add to cablesToRemove
+            for (BundleOfCablesGraphic boc : c.getBundleOfCableses()) {
+                for (CableGraphic cable : boc.getCables()) {
+                    // if collection doesnt contain, than add cable
+                    if (!cablesToRemove.contains(cable)) {
+                        cablesToRemove.add(cable);
+                    }
+                }
+            }
+            // unmark component
+            //this.doMarkComponentWithCables(c, false);
+        }
+
+        // unmark all components
+        this.doUnmarkAllComponents();
+
+        // remove cables from graph
+        this.removeCables(cablesToRemove);
+
+        // remove marked components from graph
+        this.removeHwComponents(markedComponents);
+
+        this.markedAbstractHwComponents.clear();
+        this.markedCables.clear();
+
+        return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
+    }
+    // END ============= MARKING =========  
+
+    // ============== CHANGE POSITION AND RESIZE =======================
     @Override
     public void doChangePositionOfAbstractHwComponent(HwComponentGraphic component, Dimension offsetInDefaultZoom, boolean positive) {
         // get old position
@@ -638,7 +632,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // update size of graph
         updateSizeMovePosition(oldPosition, newPosition);
         //System.out.println("tady1: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
-        
+
         // set timestamp of edit
         editHappend();
     }
@@ -657,7 +651,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // update size of graph
         updateSizeMovePosition(oldPosition, newPosition);
         //System.out.println("tady2: oldpos="+oldPosition.x+","+oldPosition.y+"; newpos="+newPosition.x+","+newPosition.y);
-        
+
         // set timestamp of edit
         editHappend();
     }
@@ -851,67 +845,90 @@ public class Graph extends JComponent implements GraphOuterInterface {
         }
         return movedComponentsMap;
     }
+    // END ============== CHANGE POSITION AND RESIZE =======================
+
+    // --------- GETTERS AND SETTERS    
+    @Override
+    public int getWidth() {
+        return ZoomManagerSingleton.getInstance().doScaleToActual(widthDefault);
+    }
 
     @Override
-    public RemovedComponentsWrapper doRemoveMarkedComponents() {
-        // get all marked components
-        List<HwComponentGraphic> markedComponents = this.getMarkedHwComponentsCopy();
+    public int getHeight() {
+        return ZoomManagerSingleton.getInstance().doScaleToActual(heightDefault);
+    }
 
-        // put all marked cables to cables toRemove
-        List<CableGraphic> cablesToRemove = this.getMarkedCablesCopy();
+    @Override
+    public int getX() {
+        return 0;
+    }
 
-        // if there is no marked cable and no component
-        if (markedComponents.isEmpty() && cablesToRemove.isEmpty()) {
-            return null;
-        }
+    @Override
+    public int getY() {
+        return 0;
+    }
+    
+    @Override
+    public List<BundleOfCablesGraphic> getBundlesOfCables() {
+        return bundlesOfCables;
+    }
 
-        
-        // for all removed components
-        for (HwComponentGraphic c : markedComponents) {
-            // all its cables add to cablesToRemove
-            for (BundleOfCablesGraphic boc : c.getBundleOfCableses()) {
-                for (CableGraphic cable : boc.getCables()) {
-                    // if collection doesnt contain, than add cable
-                    if (!cablesToRemove.contains(cable)) {
-                        cablesToRemove.add(cable);
-                    }
-                }
-            }
-            // unmark component
-            //this.doMarkComponentWithCables(c, false);
-        }
+    @Override
+    public Collection<HwComponentGraphic> getHwComponents() {
+        return componentsMap.values();
+    }
 
-        // unmark all components
-        this.doUnmarkAllComponents();
+    @Override
+    public Collection<CableGraphic> getCables() {
+        return cablesMap.values();
+    }
 
-        // remove cables from graph
-        this.removeCables(cablesToRemove);
+    @Override
+    public List<HwComponentGraphic> getMarkedHwComponentsCopy() {
+        List<HwComponentGraphic> temp = new ArrayList<>(markedAbstractHwComponents);
+        return temp;
+    }
 
-        // remove marked components from graph
-        this.removeHwComponents(markedComponents);
+    /**
+     * Retruns new ArrayList with marked cables
+     *
+     * @return
+     */
+    @Override
+    public List<CableGraphic> getMarkedCablesCopy() {
+        List<CableGraphic> temp = new ArrayList<>(markedCables);
+        return temp;
+    }
 
-        this.markedAbstractHwComponents.clear();
-        this.markedCables.clear();
+    @Override
+    public int getCablesCount() {
+        return cablesMap.size();
+    }
 
-        return new RemovedComponentsWrapper(markedComponents, cablesToRemove);
+    @Override
+    public int getAbstractHwComponentsCount() {
+        return componentsMap.size();
     }
 
     /**
      * Returns HwComponentGraphic with ID id, or null if not found
+     *
      * @param id
-     * @return 
+     * @return
      */
     public HwComponentGraphic getAbstractHwComponent(int id) {
         return componentsMap.get(id);
     }
-    
+
     /**
      * Returns cablle with ID id, or null if not found
+     *
      * @param id
-     * @return 
+     * @return
      */
-    public CableGraphic getCable(int id){
+    public CableGraphic getCable(int id) {
         return cablesMap.get(id);
     }
 
+   
 }
