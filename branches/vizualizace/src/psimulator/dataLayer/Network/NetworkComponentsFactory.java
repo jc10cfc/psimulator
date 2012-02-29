@@ -13,8 +13,8 @@ public class NetworkComponentsFactory {
     }
 
     public NetworkModel createEmptyNetworkModel() {
-        LinkedHashMap<Integer, HwComponentModel> componentsMap = new LinkedHashMap<>();
-        LinkedHashMap<Integer, CableModel> cablesMap = new LinkedHashMap<>();
+        LinkedHashMap<Integer, HwComponentModel> componentsMap = new LinkedHashMap<Integer, HwComponentModel>();
+        LinkedHashMap<Integer, CableModel> cablesMap = new LinkedHashMap<Integer, CableModel>();
         long lastEditTimestamp = 0L;
         Integer id = new Integer(-1);
         NetworkCounterModel networkCounterModel = createEmptyNetworkCounter();
@@ -28,7 +28,7 @@ public class NetworkComponentsFactory {
         
         int nextId = 0;
         int nextMacAddress = 0;
-        Map<HwTypeEnum, Integer> nextNumberMap = new EnumMap<>(HwTypeEnum.class);
+        Map<HwTypeEnum, Integer> nextNumberMap = new EnumMap<HwTypeEnum, Integer>(HwTypeEnum.class);
         
         for (HwTypeEnum hwTypeEnum : HwTypeEnum.values()) {
             nextNumberMap.put(hwTypeEnum, new Integer(0));
@@ -71,7 +71,7 @@ public class NetworkComponentsFactory {
         List<String> ethInterfaceNames = GeneratorSingleton.getInstance().getInterfaceNames(hwType, interfacesCount);
 
         // create interfaces
-        List<EthInterfaceModel> ethInterfaces = new ArrayList<>();
+        List<EthInterfaceModel> ethInterfaces = new ArrayList<EthInterfaceModel>();
 
         for (int i = 0; i < interfacesCount; i++) {
             ethInterfaces.add(createEthInterface(ethInterfaceNames.get(i), hwType));

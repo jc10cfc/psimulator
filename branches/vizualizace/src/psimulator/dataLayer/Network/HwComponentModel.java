@@ -51,7 +51,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
     }
 
     public HwComponentModel() {
-        this.interfacesMap = new LinkedHashMap<>();
+        this.interfacesMap = new LinkedHashMap<Integer, EthInterfaceModel>();
     }
     
     @XmlAttribute @XmlID
@@ -107,7 +107,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
     }
 
     public EthInterfaceModel getEthInterfaceAtIndex(int index) {
-        List<EthInterfaceModel> list = new ArrayList<>(interfacesMap.values());
+        List<EthInterfaceModel> list = new ArrayList<EthInterfaceModel>(interfacesMap.values());
         return list.get(index);
     }
 
@@ -206,7 +206,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
 
     public void setInterfacesAsList(List<EthInterfaceModel> ethInterfaces) {
 
-        this.interfacesMap = new LinkedHashMap<>();
+        this.interfacesMap = new LinkedHashMap<Integer, EthInterfaceModel>();
 
         for (EthInterfaceModel eth : ethInterfaces) {
             interfacesMap.put(eth.getId(), eth);
