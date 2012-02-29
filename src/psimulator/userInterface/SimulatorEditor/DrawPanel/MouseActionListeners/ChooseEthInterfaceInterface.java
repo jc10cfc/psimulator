@@ -1,6 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
-import psimulator.dataLayer.Network.EthInterfaceModel;
+import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 
 /**
  *

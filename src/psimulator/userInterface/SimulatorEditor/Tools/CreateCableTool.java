@@ -1,7 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.Tools;
 
 import javax.swing.ImageIcon;
-import psimulator.dataLayer.Network.HwTypeEnum;
+import psimulator.dataLayer.Network.Components.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;

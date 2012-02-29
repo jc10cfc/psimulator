@@ -1,10 +1,7 @@
 package psimulator.dataLayer.Network.Serializer;
 
 import java.io.*;
-import psimulator.dataLayer.Enums.SaveLoadExceptionType;
-import psimulator.dataLayer.Network.NetworkModel;
-import psimulator.dataLayer.SaveLoadException;
-import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 
 /**
  *

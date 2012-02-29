@@ -1,4 +1,4 @@
-package psimulator.dataLayer.Network;
+package psimulator.dataLayer.Network.Components;
 
 import java.io.Serializable;
 

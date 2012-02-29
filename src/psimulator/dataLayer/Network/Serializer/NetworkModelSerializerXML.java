@@ -6,10 +6,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import psimulator.dataLayer.Enums.SaveLoadExceptionType;
-import psimulator.dataLayer.Network.NetworkModel;
-import psimulator.dataLayer.SaveLoadException;
-import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 
 /**
  *

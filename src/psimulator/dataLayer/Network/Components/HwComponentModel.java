@@ -1,7 +1,11 @@
-package psimulator.dataLayer.Network;
+package psimulator.dataLayer.Network.Components;
 
 import java.util.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlTransient;
+import psimulator.dataLayer.Network.PositionInterface;
 
 /**
  *

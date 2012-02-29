@@ -1,7 +1,7 @@
 package psimulator.dataLayer.SimulatorEvents.Serializer;
 
 import java.io.File;
-import psimulator.dataLayer.SaveLoadException;
+import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 
 /**

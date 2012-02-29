@@ -1,4 +1,4 @@
-package psimulator.dataLayer.Enums;
+package psimulator.dataLayer.Network.Serializer;
 
 /**
  *

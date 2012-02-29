@@ -6,7 +6,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
+import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionParametersWrapper;
 
 /**
  *
