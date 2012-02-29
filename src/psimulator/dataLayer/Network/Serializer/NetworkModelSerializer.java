@@ -7,7 +7,7 @@ import psimulator.dataLayer.Network.Components.NetworkModel;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class NetworkModelSerializer implements AbstractNetworkSerializer{
+public class NetworkModelSerializer implements AbstractNetworkSerializer {
 
     @Override
     public void saveNetworkModelToFile(NetworkModel networkModel, File file) throws SaveLoadException {
@@ -29,11 +29,13 @@ public class NetworkModelSerializer implements AbstractNetworkSerializer{
         }
 
         // save in autoclose stream
-        try (OutputStream os = new FileOutputStream(file);
-                ObjectOutputStream oos = new ObjectOutputStream(os)) {
+        try {
+            OutputStream os = new FileOutputStream(file);
+
+            ObjectOutputStream oos = new ObjectOutputStream(os);
 
             oos.writeObject(networkModel);
-        } catch(IOException ex){
+        } catch (IOException ex) {
             //Logger.getLogger(NetworkModelSerializer.class.getName()).log(Level.SEVERE, null, ex);
             // throw exception
             throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_WRITING, fileName, true));
@@ -58,12 +60,14 @@ public class NetworkModelSerializer implements AbstractNetworkSerializer{
         }
 
         // try read in autoclose streams
-        try (InputStream is = new FileInputStream(file);
-                ObjectInputStream ois = new ObjectInputStream(is)) {
+        try {
+            InputStream is = new FileInputStream(file);
+
+            ObjectInputStream ois = new ObjectInputStream(is);
 
             //simulatorEvents = (SimulatorEventsWrapper) ois.readObject();
             networkModel = (NetworkModel) ois.readObject();
-        } catch (ClassNotFoundException | IOException ex) {
+        } catch (Exception ex) {
             // throw exception
             throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_READING, fileName, true));
         }
