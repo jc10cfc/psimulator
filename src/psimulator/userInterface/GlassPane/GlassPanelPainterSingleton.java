@@ -23,5 +23,11 @@ public class GlassPanelPainterSingleton {
         this.mainWindowGlassPane = mainWindowGlassPane;
     }
     
+    public void addAnnouncement(String title, String messageName, String messageValue){
+        Message message = new Message(title, messageName, messageValue);
+        
+        mainWindowGlassPane.addMessage(message);
+    }
+    
     
 }
