@@ -57,7 +57,7 @@ public class GeneratorSingleton {
      * @return List with generated names.
      */
     public List<String> getInterfaceNames(HwTypeEnum hwType, int count) {
-        List<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<String>();
 
         int counter = 0;
         String prefix = "";
