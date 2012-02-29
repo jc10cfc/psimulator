@@ -77,10 +77,11 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                 if(isRecording){
                     if(DEBUG)System.out.println("Reciever recording " + tmpCounter++);
                     
-                    simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
-                    simulatorManagerInterface.setNewPacketRecieved();
+                    if(!thread.isInterrupted() && isRecording == true){
+                        simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
+                    }
                     
-                    int time = tmpRandom.nextInt(100) + 10; // 1000 + 100
+                    int time = tmpRandom.nextInt(1) + 10; // 1000 + 100
                     //int time = tmpRandom.nextInt(1000) + 100;
 
                     Thread.sleep(time);

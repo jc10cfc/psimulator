@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
@@ -294,7 +295,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     }
 
                     // change state to editor without changing or removing the graph
-                    refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.EDITOR, true);
+                    refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.EDITOR, true);
 
                     break;
                 case SIMULATOR:
@@ -304,7 +305,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     }
 
                     // change state to editor without changing or removing the graph
-                    refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.SIMULATOR, true);
+                    refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.SIMULATOR, true);
 
                     break;
             }
@@ -326,14 +327,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
-            
+
             // create new network model
-            dataLayer.getNetworkFacade().createNetworkModel();
+            NetworkModel networkModel = dataLayer.getNetworkFacade().createNetworkModel();
 
             // create new graph
-            Graph graph = new Graph(dataLayer.getNetworkFacade());
-            
-            refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
+            Graph graph = new Graph();
+
+            // refresh UI
+            refreshUserInterfaceMainPanel(graph, networkModel, UserInterfaceMainPanelState.EDITOR, false);
 
             // set saved timestamp
             saveLoadManagerGraph.setLastSavedTimestamp();
@@ -356,8 +358,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
                 return;
             }
+            
+            // turn off playing recording and etc
+            //jPanelUserInterfaceMain.stopSimulatorActivities();
 
-            refreshUserInterfaceMainPanel(null, UserInterfaceMainPanelState.WELCOME, false);
+            refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
         }
     }
 
@@ -377,11 +382,22 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 return;
             }
             
-            Graph graph = saveLoadManagerGraph.doOpenGraphAction();
+            // turn off playing recording and etc
+            jPanelUserInterfaceMain.stopSimulatorActivities();
+            
+            // load network model
+            NetworkModel networkModel = saveLoadManagerGraph.doLoadNetworkModel();
+            
+            if(networkModel == null){
+                return;
+            }
+
+            // create graph from model
+            Graph graph = saveLoadManagerGraph.buildGraphFromNetworkModel(networkModel);
             
             if(graph!=null){
                 // init graph (set edit timestamp)
-                refreshUserInterfaceMainPanel(graph, UserInterfaceMainPanelState.EDITOR, false);
+                refreshUserInterfaceMainPanel(graph, networkModel, UserInterfaceMainPanelState.EDITOR, false);
 
                 // set saved timestamp
                 saveLoadManagerGraph.setLastSavedTimestamp();
@@ -436,7 +452,13 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
+
             if(!saveLoadManagerGraph.doCloseAction(jPanelUserInterfaceMain.getGraph())){
+                // turn off playing recording and etc
+                //jPanelUserInterfaceMain.stopSimulatorActivities();
+                
+                refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
+                
                 System.exit(0);
             }
         }
@@ -452,19 +474,28 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * @param userInterfaceState State to change to.
      * @param changingSimulatorEditor if true, the graph is kept untouched
      */
-    private void refreshUserInterfaceMainPanel(Graph graph, UserInterfaceMainPanelState userInterfaceState, boolean changingSimulatorEditor) {
+    private void refreshUserInterfaceMainPanel(Graph graph, NetworkModel networkModel, UserInterfaceMainPanelState userInterfaceState, boolean changingSimulatorEditor) {
+        
+        // turn off playing recording and etc
+        jPanelUserInterfaceMain.stopSimulatorActivities();
+        
+        if(!changingSimulatorEditor){
+            // delete events from simulator
+            jPanelUserInterfaceMain.init();
+        }
+            
         switch (userInterfaceState) {
             case WELCOME:
                 // remove graph
                 jPanelUserInterfaceMain.removeGraph();
                 break;
             case EDITOR:
-                // if not changing from simulator to editor or back
+                // if not only changing from simulator to editor or back
                 if (!changingSimulatorEditor) {
-                    // delete events from simulator
-                    jPanelUserInterfaceMain.init();
                     // remove graph
                     jPanelUserInterfaceMain.removeGraph();
+                    // set network model to network facade
+                    dataLayer.getNetworkFacade().setNetworkModel(networkModel);
                     // set another graph
                     jPanelUserInterfaceMain.setGraph(graph);
                 }
@@ -473,12 +504,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 jToolBar.setEditorSelected(true);
                 break;
             case SIMULATOR:
-                // if not changing from simulator to editor or back
+                // if not only changing from simulator to editor or back
                 if (!changingSimulatorEditor) {
-                    // delete events from simulator
-                    jPanelUserInterfaceMain.init();
                     // remove graph
                     jPanelUserInterfaceMain.removeGraph();
+                    // set network model to network facade
+                    dataLayer.getNetworkFacade().setNetworkModel(networkModel);
                     // set another graph
                     jPanelUserInterfaceMain.setGraph(graph);
                 }

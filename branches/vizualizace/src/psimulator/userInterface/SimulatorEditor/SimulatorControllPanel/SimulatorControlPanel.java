@@ -101,9 +101,16 @@ public class SimulatorControlPanel extends JPanel implements Observer {
      * Turns of playing, realtime and recording.
      */
     public void setTurnedOff() {
-        simulatorManagerInterface.setPlayingStopped();
-        simulatorManagerInterface.setRealtimeDeactivated();
-        simulatorManagerInterface.setRecordingDeactivated();
+        if(simulatorManagerInterface.isPlaying()){
+            simulatorManagerInterface.setPlayingStopped();
+        }
+        if(simulatorManagerInterface.isRealtime()){
+            simulatorManagerInterface.setRealtimeDeactivated();
+        }
+        if(simulatorManagerInterface.isRecording()){
+            simulatorManagerInterface.setRecordingDeactivated();
+        }
+        
         // can stay connected
 
 
@@ -111,6 +118,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
     public void clearEvents() {
         simulatorManagerInterface.deleteAllSimulatorEvents();
+        //jTableEventList.getSelectionModel().clearSelection();
     }
 
     @Override
@@ -854,6 +862,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private void updatePacketDetailsAccordingToModel() {
         int row = simulatorManagerInterface.getCurrentPositionInList();
 
+        
+        // tady udelat poradny vypis
+        
+        System.out.println("List size = "+simulatorManagerInterface.getListSize()+", list position = "+row);
+        
         // if some row selected
         if (simulatorManagerInterface.getListSize() > 0 && row >= 0) {
             SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();

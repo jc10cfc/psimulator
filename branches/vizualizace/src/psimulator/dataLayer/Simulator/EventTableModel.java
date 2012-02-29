@@ -31,8 +31,10 @@ public class EventTableModel extends AbstractTableModel {
     public void deleteAllSimulatorEvents(){
         timeReset = true;
         
+        int listSize = eventList.size();
         eventList.clear();
-        this.fireTableRowsDeleted(0, 0);
+        
+        this.fireTableRowsDeleted(0, listSize);
     }
     
     public SimulatorEvent getSimulatorEvent(int i){

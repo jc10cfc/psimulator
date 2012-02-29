@@ -54,6 +54,8 @@ public abstract class UserInterfaceMainPanelOuterInterface extends JPanel{
    
     public abstract void doChangeMode(UserInterfaceMainPanelState userInterfaceState);
     
+    public abstract void stopSimulatorActivities();
+    
     public abstract UserInterfaceMainPanelState getUserInterfaceState();
     
     public abstract void addNewProjectActionListener(ActionListener listener);

@@ -16,7 +16,7 @@ import psimulator.userInterface.UserInterfaceOuterFacade;
  */
 public class SimulatorPlayerThread implements Runnable, Observer {
 
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     private Thread thread;
     //
     private SimulatorManagerInterface simulatorManagerInterface;

@@ -131,9 +131,9 @@ public class DataLayer extends DataLayerFacade {
     }
 
     @Override
-    public void loadNetworkModelFromFile(File file) throws SaveLoadException {
+    public NetworkModel loadNetworkModelFromFile(File file) throws SaveLoadException {
         NetworkModel networkModel = abstractNetworkSerializer.loadNetworkModelFromFile(file);
-        networkFacade.setNetworkModel(networkModel);
+        return networkModel;
     }
   
     @Override
