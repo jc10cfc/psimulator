@@ -2,7 +2,7 @@ package psimulator.dataLayer.SimulatorEvents;
 
 import java.awt.Color;
 import java.io.Serializable;
-import psimulator.dataLayer.ColorMixerSignleton;
+import psimulator.dataLayer.ColorMixerSingleton;
 import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
 
@@ -60,7 +60,7 @@ public class SimulatorEvent implements Serializable{
         this.eth1 = eth1;
         this.eth2 = eth2;
         
-        this.color = ColorMixerSignleton.getColorAccodringToPacketType(packetType);
+        this.color = ColorMixerSingleton.getColorAccodringToPacketType(packetType);
         
         Object[] tmp = {timeStamp, from, to, packetType, color};
         list = tmp;

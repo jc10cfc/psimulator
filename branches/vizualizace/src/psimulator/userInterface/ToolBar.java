@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
-import psimulator.dataLayer.ColorMixerSignleton;
+import psimulator.dataLayer.ColorMixerSingleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
@@ -120,11 +120,11 @@ public final class ToolBar extends JToolBar implements Observer {
         setTextsToComponents();
         
         // apply background color
-        this.setBackground(ColorMixerSignleton.mainToolbarColor);
+        this.setBackground(ColorMixerSingleton.mainToolbarColor);
         Component [] comp = this.getComponents();
         
         for(Component c : comp){
-            c.setBackground(ColorMixerSignleton.mainToolbarColor);
+            c.setBackground(ColorMixerSingleton.mainToolbarColor);
             // tool icon cannot be marked (ugly frame)
             c.setFocusable(false);
         }

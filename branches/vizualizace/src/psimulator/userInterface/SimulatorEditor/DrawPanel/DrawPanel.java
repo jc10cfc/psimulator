@@ -7,7 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 import javax.swing.undo.UndoManager;
-import psimulator.dataLayer.ColorMixerSignleton;
+import psimulator.dataLayer.ColorMixerSingleton;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
@@ -63,7 +63,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         this.dataLayer = dataLayer;
         this.layeredPane = layeredPane;
 
-        this.setBackground(ColorMixerSignleton.drawPanelColor);
+        this.setBackground(ColorMixerSingleton.drawPanelColor);
 
         createDrawPaneMouseListeners();
         createAllActions();

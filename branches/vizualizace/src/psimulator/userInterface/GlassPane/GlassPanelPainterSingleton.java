@@ -7,8 +7,7 @@ package psimulator.userInterface.GlassPane;
 public class GlassPanelPainterSingleton {
     
     private MainWindowGlassPane mainWindowGlassPane;
-    
-    
+
     private GlassPanelPainterSingleton() {
     }
     
