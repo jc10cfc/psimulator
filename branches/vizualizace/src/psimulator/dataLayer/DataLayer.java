@@ -1,16 +1,17 @@
 package psimulator.dataLayer;
 
-import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import java.io.File;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Network.Components.NetworkModel;
+import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Network.Serializer.AbstractNetworkSerializer;
 import psimulator.dataLayer.Network.Serializer.NetworkModelSerializer;
 import psimulator.dataLayer.Network.Serializer.NetworkModelSerializerXML;
+import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.SimulatorEvents.Serializer.AbstractSimulatorEventsSaveLoadInterface;
 import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializer;
 import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializerXML;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
@@ -28,18 +29,11 @@ public class DataLayer extends DataLayerFacade {
 
     private LanguageManager languageManager;
     private PreferencesManager preferencesManager;
-    private SimulatorManager simulatorManager;
-    
+    private SimulatorManager simulatorManager; 
     //
-    //private AbstractNetworkAdapter abstractNetworkAdapter;
-    //private AbstractNetworkAdapterXML abstractNetworkAdapterXML;
-    //private NetworkModelSerializer networkModelSerializer;
-    //private NetworkModelSerializerXML networkModelSerializerXML;
-    
     private AbstractNetworkSerializer abstractNetworkSerializer;
     //
-    private SimulatorEventsSerializer simulatorEventsSerializer;
-    private SimulatorEventsSerializerXML simulatorEventsSerializerXML;
+    private AbstractSimulatorEventsSaveLoadInterface simulatorEventsSerializer;
     //
     private NetworkFacade networkFacade;
     
@@ -51,11 +45,11 @@ public class DataLayer extends DataLayerFacade {
         languageManager = new LanguageManager();
         simulatorManager = new SimulatorManager((DataLayerFacade)this);
         
-        //abstractNetworkSerializer = new NetworkModelSerializerXML();
-        abstractNetworkSerializer = new NetworkModelSerializer();
-        
+        abstractNetworkSerializer = new NetworkModelSerializerXML();
+        //abstractNetworkSerializer = new NetworkModelSerializer();
+
         simulatorEventsSerializer = new SimulatorEventsSerializer();
-        simulatorEventsSerializerXML = new SimulatorEventsSerializerXML();
+        //simulatorEventsSerializer = new SimulatorEventsSerializerXML();
         
         // get instance to init imageFactory
         ImageFactorySingleton.getInstance();
@@ -130,20 +124,6 @@ public class DataLayer extends DataLayerFacade {
     public SimulatorManagerInterface getSimulatorManager() {
         return simulatorManager;
     }
-
-    
-//    @Override
-//    public void saveGraphToFile(Graph graph, File file) throws SaveLoadException{
-//        //abstractNetworkAdapter.saveGraphToFile(graph, file);
-//        abstractNetworkAdapterXML.saveGraphToFile(graph, file);
-//    }
-//
-//    @Override
-//    public Graph loadGraphFromFile(File file) throws SaveLoadException{
-//        //return abstractNetworkAdapter.loadGraphFromFile(file);
-//        return abstractNetworkAdapterXML.loadGraphFromFile(file);
-//    }
-    
     
     @Override
     public void saveNetworkModelToFile(File file) throws SaveLoadException {
@@ -159,13 +139,11 @@ public class DataLayer extends DataLayerFacade {
     @Override
     public void saveEventsToFile(SimulatorEventsWrapper simulatorEvents, File file) throws SaveLoadException {
         simulatorEventsSerializer.saveEventsToFile(simulatorEvents, file);
-        //simulatorEventsSerializerXML.saveEventsToFile(simulatorEvents, file);
     }
 
     @Override
     public SimulatorEventsWrapper loadEventsFromFile(File file) throws SaveLoadException {
         return simulatorEventsSerializer.loadEventsFromFile(file);
-        //return simulatorEventsSerializerXML.loadEventsFromFile(file);
     }
 
     @Override

@@ -186,12 +186,12 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
                 }
                 break;
         }
-
+        
         // notify all observers
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_LIST_MOVE);
     }
-
+    
     @Override
     public void setRecordingActivated() {
         this.isRecording = true;
@@ -454,7 +454,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public SimulatorEventsWrapper getSimulatorEvents() {
+    public SimulatorEventsWrapper getSimulatorEventsCopy() {
         SimulatorEventsWrapper simulatorEvents = new SimulatorEventsWrapper(eventTableModel.getEventListCopy());
         return simulatorEvents;
     }

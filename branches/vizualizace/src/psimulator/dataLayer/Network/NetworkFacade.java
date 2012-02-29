@@ -1,14 +1,9 @@
 package psimulator.dataLayer.Network;
 
-import psimulator.dataLayer.Network.Components.NetworkModel;
-import psimulator.dataLayer.Network.Components.CableModel;
-import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.dataLayer.Network.Components.HwTypeEnum;
-import psimulator.dataLayer.Network.Components.NetworkCounterModel;
-import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import psimulator.dataLayer.Network.Components.*;
 
 /**
  *

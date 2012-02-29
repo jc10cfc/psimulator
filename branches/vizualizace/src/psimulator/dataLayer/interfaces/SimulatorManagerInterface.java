@@ -43,7 +43,7 @@ public interface SimulatorManagerInterface {
     */
     public void setNewPacketRecieved();
     
-    public SimulatorEventsWrapper getSimulatorEvents();
+    public SimulatorEventsWrapper getSimulatorEventsCopy();
     public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents);
     
     // -------------------- GETTERS --------------------------

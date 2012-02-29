@@ -32,6 +32,7 @@ public enum ObserverUpdateEventType {
     CONNECTION_DO_CONNECT,      // when do connect called
     CONNECTION_DO_DISCONNECT,   // when do disconnect called
     CONNECTION_CONNECTION_FAILED,          // when connection failed called
-    CONNECTION_CONNECTING_FAILED;          // when connecting failed
-    
+    CONNECTION_CONNECTING_FAILED,          // when connecting failed
+ 
+    LIST_MOVE;
 }

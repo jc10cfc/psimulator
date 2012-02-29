@@ -174,9 +174,16 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 
                 int rowNumber = jTableEventList.getSelectedRow();
                 
+                
                 if(rowNumber < 0){
                     return;
                 }
+                
+                // if position not changed when this event fired, do nothing
+                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber){
+                    return;
+                }
+                
                 // set concrete row in model
                 simulatorManagerInterface.setConcreteRawSelected(rowNumber);
             }
@@ -196,13 +203,19 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                         return;
                     }
                 }
-        
+                
                 // load events
                 SimulatorEventsWrapper simulatorEventsWrapper = mainWindow.loadEventsAction();
                 
                 if(simulatorEventsWrapper == null){
                     return;
                 }
+                
+                // stop playing
+                simulatorManagerInterface.setPlayingStopped();
+                
+                // stop recording  and realtime
+                simulatorManagerInterface.setRealtimeDeactivated();
                 
                 // set events to simulator manager
                 simulatorManagerInterface.setSimulatorEvents(simulatorEventsWrapper);
@@ -223,7 +236,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 }
                 
                 // get events
-                SimulatorEventsWrapper simulatorEventsWrapper = simulatorManagerInterface.getSimulatorEvents();
+                SimulatorEventsWrapper simulatorEventsWrapper = simulatorManagerInterface.getSimulatorEventsCopy();
                 
                 // save events
                 mainWindow.saveEventsAction(simulatorEventsWrapper);
