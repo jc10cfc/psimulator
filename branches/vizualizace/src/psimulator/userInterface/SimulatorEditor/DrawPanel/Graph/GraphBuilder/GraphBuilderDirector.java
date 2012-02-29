@@ -2,8 +2,8 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
 import java.util.Collection;
 import java.util.Iterator;
-import psimulator.dataLayer.Network.CableModel;
-import psimulator.dataLayer.Network.HwComponentModel;
+import psimulator.dataLayer.Network.Components.CableModel;
+import psimulator.dataLayer.Network.Components.HwComponentModel;
 import psimulator.dataLayer.Network.NetworkFacade;
 
 /**

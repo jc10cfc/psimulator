@@ -3,8 +3,8 @@ package psimulator.dataLayer.SimulatorEvents;
 import java.awt.Color;
 import java.io.Serializable;
 import psimulator.dataLayer.ColorMixerSignleton;
-import psimulator.dataLayer.Network.EthInterfaceModel;
-import psimulator.dataLayer.Network.HwComponentModel;
+import psimulator.dataLayer.Network.Components.EthInterfaceModel;
+import psimulator.dataLayer.Network.Components.HwComponentModel;
 
 /**
  *

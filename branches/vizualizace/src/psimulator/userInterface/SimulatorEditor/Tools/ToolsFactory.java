@@ -2,7 +2,7 @@ package psimulator.userInterface.SimulatorEditor.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.dataLayer.Network.HwTypeEnum;
+import psimulator.dataLayer.Network.Components.HwTypeEnum;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;

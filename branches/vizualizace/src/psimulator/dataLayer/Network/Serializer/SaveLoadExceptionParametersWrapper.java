@@ -1,6 +1,6 @@
-package psimulator.dataLayer;
+package psimulator.dataLayer.Network.Serializer;
 
-import psimulator.dataLayer.Enums.SaveLoadExceptionType;
+import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionType;
 
 /**
  *

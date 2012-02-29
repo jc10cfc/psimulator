@@ -1,11 +1,12 @@
 package psimulator.dataLayer;
 
+import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import java.io.File;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Network.NetworkFacade;
-import psimulator.dataLayer.Network.NetworkModel;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.Network.Serializer.AbstractNetworkSerializer;
 import psimulator.dataLayer.Network.Serializer.NetworkModelSerializer;
 import psimulator.dataLayer.Network.Serializer.NetworkModelSerializerXML;

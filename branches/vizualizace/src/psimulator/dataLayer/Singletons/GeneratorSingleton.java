@@ -2,8 +2,8 @@ package psimulator.dataLayer.Singletons;
 
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.dataLayer.Network.HwTypeEnum;
-import psimulator.dataLayer.Network.NetworkCounterModel;
+import psimulator.dataLayer.Network.Components.HwTypeEnum;
+import psimulator.dataLayer.Network.Components.NetworkCounterModel;
 
 /**
  *

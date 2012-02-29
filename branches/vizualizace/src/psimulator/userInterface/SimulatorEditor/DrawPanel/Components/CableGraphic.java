@@ -6,11 +6,11 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import psimulator.dataLayer.Network.HwTypeEnum;
+import psimulator.dataLayer.Network.Components.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
-import psimulator.dataLayer.Network.CableModel;
-import psimulator.dataLayer.Network.EthInterfaceModel;
+import psimulator.dataLayer.Network.Components.CableModel;
+import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 

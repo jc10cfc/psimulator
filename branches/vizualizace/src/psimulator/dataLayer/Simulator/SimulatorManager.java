@@ -6,9 +6,9 @@ import javax.swing.SwingUtilities;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.Network.CableModel;
-import psimulator.dataLayer.Network.EthInterfaceModel;
-import psimulator.dataLayer.Network.HwComponentModel;
+import psimulator.dataLayer.Network.Components.CableModel;
+import psimulator.dataLayer.Network.Components.EthInterfaceModel;
+import psimulator.dataLayer.Network.Components.HwComponentModel;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
@@ -419,7 +419,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
     @Override
     public synchronized int getCurrentPositionInList() {
-        System.out.println("Current position "+currentPositionInList);
         return currentPositionInList;
     }
 

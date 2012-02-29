@@ -1,4 +1,4 @@
-package psimulator.dataLayer.Network;
+package psimulator.dataLayer.Network.Components;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;

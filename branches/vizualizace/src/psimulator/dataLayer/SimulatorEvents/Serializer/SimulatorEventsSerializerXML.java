@@ -2,9 +2,9 @@ package psimulator.dataLayer.SimulatorEvents.Serializer;
 
 import java.io.File;
 import java.io.IOException;
-import psimulator.dataLayer.Enums.SaveLoadExceptionType;
-import psimulator.dataLayer.SaveLoadException;
-import psimulator.dataLayer.SaveLoadExceptionParametersWrapper;
+import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionType;
+import psimulator.dataLayer.Network.Serializer.SaveLoadException;
+import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionParametersWrapper;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 
 /**

@@ -8,9 +8,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
-import psimulator.dataLayer.Network.HwTypeEnum;
+import psimulator.dataLayer.Network.Components.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Network.Identifiable;
+import psimulator.dataLayer.Network.Components.Identifiable;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 
 /**
