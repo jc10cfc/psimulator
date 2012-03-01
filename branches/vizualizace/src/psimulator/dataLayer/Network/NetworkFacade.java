@@ -143,7 +143,14 @@ public class NetworkFacade {
         return networkModel.getCableModelById(id);
     }
     
-    // TODO
+    public long getLastEditTimestamp(){
+        return networkModel.getLastEditTimestamp();
+    }
+
+
+    /**
+     * Call whenever the network changes
+     */
     public void editHappend(){
         //
         networkModel.setLastEditTimestamp(System.currentTimeMillis());        

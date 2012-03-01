@@ -18,6 +18,8 @@ public class GraphBuilderFacade {
         GraphBuilderDirector graphBuilderDirector = new GraphBuilderDirector(graphBuilder, networkModel);
         graphBuilderDirector.construct();
         
-        return graphBuilder.getResult();
+        Graph graph = (Graph)graphBuilder.getResult();
+        
+        return graph;
     }
 }

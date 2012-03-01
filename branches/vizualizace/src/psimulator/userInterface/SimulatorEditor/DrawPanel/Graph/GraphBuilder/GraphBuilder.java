@@ -2,10 +2,10 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
 import psimulator.dataLayer.Network.Components.CableModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.dataLayer.Network.NetworkFacade;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilderInterface;
 
 /**
  *
@@ -13,7 +13,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
  */
 public class GraphBuilder extends AbstractGraphBuilder {
     //
-    private Graph graph;
+    private GraphBuilderInterface graph;
 
     public GraphBuilder() {
         
@@ -53,7 +53,7 @@ public class GraphBuilder extends AbstractGraphBuilder {
     }
 
     @Override
-    public Graph getResult() {
+    public GraphBuilderInterface getResult() {
         return graph;
     }
 
