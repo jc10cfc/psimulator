@@ -1,65 +1,77 @@
 package psimulator.userInterface.GlassPane;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
-import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class MessageGraphic extends JComponent{
+public class MessageGraphic extends JPanel{
     
-    private MainWindowGlassPaneMessageInterface glassPanel;
     //
     private Font titleFont;
     private Font nameFont;
     private Font valueFont;
     //
-    private BufferedImage titleImage;
-    private BufferedImage nameImage;
-    private BufferedImage valueImage;
+    private JLabel jLabelTitle;
+    private JLabel jLabelName;
+    private JLabel jLabelValue;
     
-    public MessageGraphic(Message message, MainWindowGlassPaneMessageInterface glassPanel){
-        this.glassPanel = glassPanel;
-        
-        titleFont = new Font("Courier", Font.BOLD,  8);
-        nameFont = new Font("Courier", Font.PLAIN,  10);
-        valueFont = new Font("Courier", Font.ITALIC,  10);
-        
-        titleImage = getImageForText(message.getTitle(), titleFont);
-        nameImage = getImageForText(message.getMessageName(), nameFont);
-        valueImage = getImageForText(message.getMessageValue(), valueFont);
-        
-        Dimension d = new Dimension(titleImage.getWidth(), titleImage.getHeight());
-        
-        this.setSize(d);
-        this.setPreferredSize(d);
-    }
-    
-    
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);//
+    public MessageGraphic(){
+        titleFont = new Font("Tahoma", Font.BOLD, 10); // NOI18N
+        nameFont = new Font("Tahoma", Font.PLAIN,  11);
+        valueFont = new Font("Tahoma", Font.ITALIC,  11);
 
-        Graphics2D g2 = (Graphics2D) g;
-        
-        Point p = glassPanel.getLowerLeftCorner();
-        
-        g2.drawImage(titleImage, p.x, p.y - titleImage.getHeight(), null);
+        initComponents();
     }
     
-    
-    private BufferedImage getImageForText(String text, Font font){
-        // get font metrics
-        FontMetrics fm = ImageFactorySingleton.getInstance().getFontMetrics(font);
-        
-        int textWidth = fm.stringWidth(text);
-        int textHeight = fm.getAscent() + fm.getDescent();
-
-        return ImageFactorySingleton.getInstance().getImageWithText(text, font, textWidth, textHeight, fm.getMaxAscent());
+    public void setMessage(Message message){
+        jLabelTitle.setText(message.getTitle());
+        jLabelName.setText(message.getMessageName());
+        jLabelValue.setText(message.getMessageValue());
     }
     
+    private void initComponents() {
+        // set background color to jpanel
+        this.setBackground(new Color(255, 255, 204));
+        
+        jLabelTitle = new JLabel();       
+        jLabelTitle.setFont(titleFont); // NOI18N
+        jLabelTitle.setFocusable(false);
+        
+        jLabelName = new JLabel();
+        jLabelName.setFont(nameFont); // NOI18N
+        jLabelName.setFocusable(false);
+        
+        jLabelValue = new JLabel();
+        jLabelValue.setFont(valueFont); // NOI18N
+        jLabelValue.setFocusable(false);
+        
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabelTitle)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelName, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelValue, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabelTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelName)
+                    .addComponent(jLabelValue))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+    }
 }

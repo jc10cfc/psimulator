@@ -862,11 +862,6 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private void updatePacketDetailsAccordingToModel() {
         int row = simulatorManagerInterface.getCurrentPositionInList();
 
-        
-        // tady udelat poradny vypis
-        
-        System.out.println("List size = "+simulatorManagerInterface.getListSize()+", list position = "+row);
-        
         // if some row selected
         if (simulatorManagerInterface.getListSize() > 0 && row >= 0) {
             SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();

@@ -51,7 +51,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * end of window components
      */
     private JFrame mainWindow;
-    
     private MainWindowGlassPane glassPane;
     //private Component originalGlassPane;
 
@@ -68,9 +67,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }
-        
-        saveLoadManagerGraph = new SaveLoadManagerNetworkModel((Component)this, dataLayer);
-        saveLoadManagerEvents = new SaveLoadManagerEvents((Component)this, dataLayer);
+
+        saveLoadManagerGraph = new SaveLoadManagerNetworkModel((Component) this, dataLayer);
+        saveLoadManagerEvents = new SaveLoadManagerEvents((Component) this, dataLayer);
 
         jMenuBar = new MenuBar(dataLayer);
         jToolBar = new ToolBar(dataLayer);
@@ -122,10 +121,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             @Override
             public void windowClosing(WindowEvent e) {
-                // if no data loss possible
-                if(!saveLoadManagerGraph.doCloseAction(jPanelUserInterfaceMain.getGraph())){
-                    System.exit(0);
+
+                // if data can be lost after check
+                if (!checkDataLoss()) {
+                    return;
                 }
+                
+                refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
+
+                System.exit(0);
             }
         });
 
@@ -197,7 +201,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         saveLoadManagerGraph.updateTextsOnFileChooser();
         saveLoadManagerEvents.updateTextsOnFileChooser();
     }
-    
+
     @Override
     public AnimationPanelOuterInterface getAnimationPanelOuterInterface() {
         return jPanelUserInterfaceMain.getAnimationPanelOuterInterface();
@@ -210,20 +214,39 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
     /**
      * Saves events. Exceptions handled inside.
-     * @param simulatorEventsWrapper 
+     *
+     * @param simulatorEventsWrapper
      */
     @Override
     public void saveEventsAction(SimulatorEventsWrapper simulatorEventsWrapper) {
-        saveLoadManagerEvents.doSaveAsEventsAction(simulatorEventsWrapper);
+        boolean success = saveLoadManagerEvents.doSaveAsEventsAction(simulatorEventsWrapper);
+
+        if (success) {
+            // inform user
+            String file = saveLoadManagerEvents.getFile().getPath();
+            GlassPanelPainterSingleton.getInstance().
+                    addAnnouncement(dataLayer.getString("EVENT_LIST_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
+        }
     }
 
     /**
-     * Returns loaded events or null if it could not be loaded. Exceptions are handled inside.
-     * @return 
+     * Returns loaded events or null if it could not be loaded. Exceptions are
+     * handled inside.
+     *
+     * @return
      */
     @Override
     public SimulatorEventsWrapper loadEventsAction() {
-        return saveLoadManagerEvents.doLoadEventsAction();
+        SimulatorEventsWrapper simulatorEventsWrapper = saveLoadManagerEvents.doLoadEventsAction();
+
+        if (simulatorEventsWrapper != null) {
+            // inform user
+            String file = saveLoadManagerEvents.getFile().getPath();
+            GlassPanelPainterSingleton.getInstance().
+                    addAnnouncement(dataLayer.getString("EVENT_LIST_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
+        }
+
+        return simulatorEventsWrapper;
     }
 
     /////////////////////-----------------------------------////////////////////
@@ -312,6 +335,40 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
     }
 
+    /**
+     * Returns true if checked and we should continue. False if do not continue.
+     *
+     * @return
+     */
+    private boolean checkDataLoss() {
+        // if data can be lost
+        if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
+
+            SaveLoadManagerUserReaction userReaction = saveLoadManagerGraph.doAskUserIfSave(jPanelUserInterfaceMain.getGraph());
+
+            switch (userReaction) {
+                case DO_NOT_SAVE:
+                    // user dont want to save, we should proceed
+                    return true;
+                case DO_SAVE:
+                    // save 
+                    boolean success = saveLoadManagerGraph.doSaveGraphAction();
+                    if (success) {
+                        String file = saveLoadManagerGraph.getFile().getPath();
+                        GlassPanelPainterSingleton.getInstance().
+                                addAnnouncement(dataLayer.getString("NETWORK_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
+                    }
+
+                    // return true if save successfull, false if not succesfull
+                    return success;
+                case CANCEL:
+                    return false;
+            }
+        }
+        // data cant be lost
+        return true;
+    }
+
 /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for NewProject button
@@ -323,8 +380,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            // if data can be lost
-            if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
+            // if data can be lost after check
+            if (!checkDataLoss()) {
                 return;
             }
 
@@ -354,11 +411,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            // if data can be lost
-            if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
+            // if data can be lost after check
+            if (!checkDataLoss()) {
                 return;
             }
-            
+
             // turn off playing recording and etc
             //jPanelUserInterfaceMain.stopSimulatorActivities();
 
@@ -377,30 +434,35 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            // if data can be lost
-            if (saveLoadManagerGraph.doCheckIfPossibleDataLoss(jPanelUserInterfaceMain.getGraph())) {
+            // if data can be lost after check
+            if (!checkDataLoss()) {
                 return;
             }
-            
+
             // turn off playing recording and etc
             jPanelUserInterfaceMain.stopSimulatorActivities();
-            
+
             // load network model
             NetworkModel networkModel = saveLoadManagerGraph.doLoadNetworkModel();
-            
-            if(networkModel == null){
+
+            if (networkModel == null) {
                 return;
             }
 
             // create graph from model
             Graph graph = saveLoadManagerGraph.buildGraphFromNetworkModel(networkModel);
-            
-            if(graph!=null){
+
+            if (graph != null) {
                 // init graph (set edit timestamp)
                 refreshUserInterfaceMainPanel(graph, networkModel, UserInterfaceMainPanelState.EDITOR, false);
 
                 // set saved timestamp
                 saveLoadManagerGraph.setLastSavedTimestamp();
+
+                // inform user
+                String file = saveLoadManagerGraph.getFile().getPath();
+                GlassPanelPainterSingleton.getInstance().
+                        addAnnouncement(dataLayer.getString("NETWORK_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
             }
         }
     }
@@ -417,7 +479,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
-            saveLoadManagerGraph.doSaveGraphAction();
+            boolean success = saveLoadManagerGraph.doSaveGraphAction();
+
+            // inform user
+            if (success) {
+                String file = saveLoadManagerGraph.getFile().getPath();
+                GlassPanelPainterSingleton.getInstance().
+                        addAnnouncement(dataLayer.getString("NETWORK_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
+            }
         }
     }
 
@@ -434,9 +503,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save As");
             boolean success = saveLoadManagerGraph.doSaveAsGraphAction();
-            
-            if(success){
-                GlassPanelPainterSingleton.getInstance().addAnnouncement("Save action", "Saved to file:", "filename");
+
+            // inform user
+            if (success) {
+                String file = saveLoadManagerGraph.getFile().getPath();
+                GlassPanelPainterSingleton.getInstance().
+                        addAnnouncement(dataLayer.getString("NETWORK_SAVE_AS_ACTION"), dataLayer.getString("SAVED_TO"), file);
             }
         }
     }
@@ -453,14 +525,14 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            if(!saveLoadManagerGraph.doCloseAction(jPanelUserInterfaceMain.getGraph())){
-                // turn off playing recording and etc
-                //jPanelUserInterfaceMain.stopSimulatorActivities();
-                
-                refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
-                
-                System.exit(0);
+            // if data can be lost after check
+            if (!checkDataLoss()) {
+                return;
             }
+
+            refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
+
+            System.exit(0);
         }
     }
 ////////------------ PRIVATE------------///////////
@@ -475,15 +547,15 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      * @param changingSimulatorEditor if true, the graph is kept untouched
      */
     private void refreshUserInterfaceMainPanel(Graph graph, NetworkModel networkModel, UserInterfaceMainPanelState userInterfaceState, boolean changingSimulatorEditor) {
-        
+
         // turn off playing recording and etc
         jPanelUserInterfaceMain.stopSimulatorActivities();
-        
-        if(!changingSimulatorEditor){
+
+        if (!changingSimulatorEditor) {
             // delete events from simulator
             jPanelUserInterfaceMain.init();
         }
-            
+
         switch (userInterfaceState) {
             case WELCOME:
                 // remove graph
@@ -524,8 +596,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // update buttons
         updateProjectRelatedButtons();
     }
-
-   
 
     private void updateProjectRelatedButtons() {
         if (!jPanelUserInterfaceMain.hasGraph()) {
@@ -593,7 +663,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jMenuBar.addUndoRedoActionListener(udnoListener);
         jToolBar.addUndoRedoActionListener(udnoListener);
 
-         // END add listeners to Menu Bar - EDIT
+        // END add listeners to Menu Bar - EDIT
 
         // add listeners to Menu Bar - VIEW
         ActionListener zoomListener = new JMenuItemZoomListener();
@@ -602,7 +672,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // END add listeners to Menu Bar - VIEW
 
         // add listeners to Menu Bar - OPTIONS
-        ActionListener preferencesListener = new PreferencesActionListener((MainWindowInnerInterface)this, dataLayer);
+        ActionListener preferencesListener = new PreferencesActionListener((MainWindowInnerInterface) this, dataLayer);
         jMenuBar.addPreferencesActionListener(preferencesListener);
         jToolBar.addPreferencesActionListener(preferencesListener);
 
@@ -622,5 +692,4 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         String os = System.getProperty("os.name").toLowerCase();
         return (os.indexOf("win") >= 0);
     }
-
 }
