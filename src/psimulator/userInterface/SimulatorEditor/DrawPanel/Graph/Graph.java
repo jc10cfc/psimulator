@@ -18,7 +18,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.CustomObservab
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class Graph extends JComponent implements GraphOuterInterface {
+public class Graph extends JComponent implements GraphOuterInterface, GraphBuilderInterface {
 
     private LinkedHashMap<Integer, HwComponentGraphic> componentsMap = new LinkedHashMap<>();
     private LinkedHashMap<Integer, CableGraphic> cablesMap = new LinkedHashMap<>();
@@ -30,7 +30,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
     private int widthDefault;
     private int heightDefault;
     //
-    private long lastEditTimestamp;
+    //private long lastEditTimestamp;
     //
     private CustomObservable customObservable = new CustomObservable();
     private NetworkFacade networkFacade;
@@ -187,8 +187,8 @@ public class Graph extends JComponent implements GraphOuterInterface {
      */
     @Override
     public void editHappend() {
-        //
-        lastEditTimestamp = System.currentTimeMillis();
+        // propagate edit happend to network
+        networkFacade.editHappend();
 
         // inform about graph change
         customObservable.notifyAllObservers(ObserverUpdateEventType.GRAPH_COMPONENT_CHANGED);
@@ -196,7 +196,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
 
     @Override
     public long getLastEditTimestamp() {
-        return lastEditTimestamp;
+        
+        return networkFacade.getLastEditTimestamp();
+        
+        //return lastEditTimestamp;
     }
 
     
@@ -263,6 +266,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      *
      * @param cable
      */
+    @Override
     public void addCableOnGraphBuild(CableGraphic cable) {
         addCable(cable, false);
 
@@ -293,8 +297,10 @@ public class Graph extends JComponent implements GraphOuterInterface {
         // add cable to hash map
         cablesMap.put(cable.getId().intValue(), cable);
 
-        // set timestamp of edit
-        editHappend();
+        if(propagateToNetwork){
+            // set timestamp of edit
+            editHappend();
+        }
     }
 
     @Override
@@ -358,6 +364,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * Use FROM BUILDER ONLY when components not initialized (do not have
      * references on zoom manager and etc.)
      */
+    @Override
     public void addHwComponentWithoutGraphSizeChange(HwComponentGraphic component) {
         componentsMap.put(component.getId().intValue(), component);
 
@@ -917,6 +924,7 @@ public class Graph extends JComponent implements GraphOuterInterface {
      * @param id
      * @return
      */
+    @Override
     public HwComponentGraphic getAbstractHwComponent(int id) {
         return componentsMap.get(id);
     }

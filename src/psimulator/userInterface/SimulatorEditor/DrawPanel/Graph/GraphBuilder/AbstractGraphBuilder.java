@@ -2,7 +2,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
 import psimulator.dataLayer.Network.Components.CableModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilderInterface;
 
 /**
  *
@@ -10,7 +10,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
  */
 public abstract class AbstractGraphBuilder {
     
-    public abstract Graph getResult();
+    public abstract GraphBuilderInterface getResult();
     
     public abstract void buildGraph();
     
