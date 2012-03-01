@@ -1,4 +1,4 @@
-package psimulator.userInterface;
+package psimulator.userInterface.SaveLoad;
 
 import java.awt.Component;
 import java.io.File;
@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
+import psimulator.userInterface.AbstractSaveLoadManager;
 
 /**
  *
