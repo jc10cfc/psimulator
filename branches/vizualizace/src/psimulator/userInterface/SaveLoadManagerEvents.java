@@ -50,8 +50,6 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.println("Opening file: " + selctedFile);
 
             // load events from file
             SimulatorEventsWrapper simulatorEvents= dataLayer.loadEventsFromFile(selctedFile);
@@ -75,8 +73,6 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.println("Saving as file: " + selctedFile);
 
             // check if overwrite
             if (selctedFile.exists()) {

@@ -9,7 +9,6 @@ import psimulator.dataLayer.Network.Components.HwComponentModel;
 import psimulator.dataLayer.SimulatorEvents.PacketType;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**
@@ -24,7 +23,6 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
     //
     private SimulatorManagerInterface simulatorManagerInterface;
     private Random tmpRandom = new Random();
-    private UserInterfaceOuterFacade userInterfaceOuterFacade;
     private DataLayerFacade dataLayer;
     //
     private long timeOfFirstEvent;
@@ -37,8 +35,6 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         this.dataLayer = dataLayer;
         this.simulatorManagerInterface = dataLayer.getSimulatorManager();
         this.isRecording = simulatorManagerInterface.isRecording();
-
-        this.userInterfaceOuterFacade = userInterfaceOuterFacade;
     }
     
     public void startThread(Thread t) {
@@ -77,8 +73,10 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                 if(isRecording){
                     if(DEBUG)System.out.println("Reciever recording " + tmpCounter++);
                     
-                    if(!thread.isInterrupted() && isRecording == true){
-                        simulatorManagerInterface.addSimulatorEvent(generateSimulatorEvent());
+                    SimulatorEvent simulatorEvent = generateSimulatorEvent();
+                    
+                    if(!thread.isInterrupted() && isRecording == true && simulatorEvent != null){
+                        simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
                     }
                     
                     int time = tmpRandom.nextInt(1) + 10; // 1000 + 100
@@ -134,15 +132,16 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
      * @return 
      */
     private SimulatorEvent generateSimulatorEvent() {
-        Graph graph = userInterfaceOuterFacade.getAnimationPanelOuterInterface().getGraph();
-        
-        // for now it is Random, the ids in parameter not valid
-        //List<HwComponentGraphic> list = new ArrayList<>(graph.getHwComponents());
-        //int componentCount = graph.getAbstractHwComponentsCount();
-
         List<HwComponentModel> list = new ArrayList<>(dataLayer.getNetworkFacade().getHwComponents());
         int componentCount = dataLayer.getNetworkFacade().getHwComponentsCount();
-
+        int cablesCount = dataLayer.getNetworkFacade().getCablesCount();
+        
+        // if no cable or less than two components, than no event can be generated
+        if(componentCount <2 || cablesCount < 1){
+            return null;
+        }
+        
+        
         HwComponentModel c1 = null;
         HwComponentModel c2 = null;
 
@@ -195,6 +194,10 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
             }
         }
 
+        // generation was not succesfull
+        if(cable == null || c1 == null || c2 == null || eth1 == null || eth2 == null){
+            return null;
+        }
 
         // if reset time
         if(simulatorManagerInterface.isTimeReset()){

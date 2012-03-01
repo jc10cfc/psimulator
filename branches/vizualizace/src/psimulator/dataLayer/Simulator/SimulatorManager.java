@@ -9,7 +9,6 @@ import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Network.Components.CableModel;
 import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
@@ -20,7 +19,7 @@ import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
  */
 public class SimulatorManager extends Observable implements SimulatorManagerInterface {
 
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     private DataLayerFacade dataLayerFacade;
     // player speeds
     public static final int SPEED_MIN = 10;
@@ -318,7 +317,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void addSimulatorEvent(final SimulatorEvent simulatorEvent) {
         
-         // set details to event
+        // set details to event
         addDetailToSimulatorEvent(simulatorEvent);
 
         // add to table

@@ -205,7 +205,7 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         
         boolean addToDragAllMarkedComponents = false;
         if (draggedComponents == null) {
-            draggedComponents = new ArrayList<HwComponentGraphic>();
+            draggedComponents = new ArrayList<>();
         } else {
             // if control not down, clear selection
         }

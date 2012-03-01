@@ -5,7 +5,7 @@ package psimulator.userInterface.GlassPane;
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public class Message {
-    
+
     private String title;
     private String messageName;
     private String messageValue;
@@ -26,5 +26,10 @@ public class Message {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public String toString() {
+        return "Title: " + title + ", message name: " + messageName + ", message value: " + messageValue;
     }
 }
