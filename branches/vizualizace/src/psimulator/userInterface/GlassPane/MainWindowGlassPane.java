@@ -1,11 +1,11 @@
 package psimulator.userInterface.GlassPane;
 
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
@@ -32,22 +32,24 @@ public class MainWindowGlassPane extends JPanel implements TimingTarget{
         
         // create animator
         f_animator = new Animator.Builder()
-                .setDuration(10, TimeUnit.SECONDS)
+                .setDuration(3, TimeUnit.SECONDS)
                 .setStartDirection(Animator.Direction.FORWARD)
                 .addTarget((TimingTarget)this).build();
 
         // create message displayer
         messageGraphic = new MessageGraphic();
+
         
-        // set layout
-        this.setLayout(new GridBagLayout());
-        c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.LAST_LINE_START;
+        JPanel bottom = new JPanel();
+        bottom.setAlignmentX(LEFT_ALIGNMENT);
+        bottom.setLayout(new BoxLayout(bottom, BoxLayout.LINE_AXIS));
+
+        bottom.add(messageGraphic);
         
-        this.add(messageGraphic, c);
-        
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+        this.add(Box.createVerticalGlue());
+        this.add(bottom);
+ 
         messageGraphic.setVisible(false);
     }
 
