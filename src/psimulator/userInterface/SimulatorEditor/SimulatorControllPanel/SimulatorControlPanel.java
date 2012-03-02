@@ -874,9 +874,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updatePacketDetailsAccordingToModel() {
-        // if some row selected
-        System.out.println("Is in the list:"+simulatorManagerInterface.isInTheList());
         
+        //System.out.println("Is in the list:"+simulatorManagerInterface.isInTheList());
+        
+        // if some row selected
         if (simulatorManagerInterface.isInTheList()) {
             SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
 

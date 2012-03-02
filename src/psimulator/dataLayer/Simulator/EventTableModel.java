@@ -124,6 +124,17 @@ public class EventTableModel extends AbstractTableModel {
             }
         }
     }
+    
+    public SimulatorEvent moveToLastEventAndReturn(){
+        synchronized (lock) {
+            if (eventList.size() > 0) {
+                currentPositionInList = eventList.size() - 1;
+                isInTheList = true;
+                return eventList.get(currentPositionInList);
+            }
+            return null;
+        }
+    }
 
     public void addSimulatorEvent(SimulatorEvent simulatorEvent) {
         synchronized (lock) {
