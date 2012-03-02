@@ -1,7 +1,6 @@
-package psimulator.dataLayer.interfaces;
+package psimulator.dataLayer.Simulator;
 
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.Simulator.EventTableModel;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 
@@ -11,7 +10,7 @@ import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
  */
 public interface SimulatorManagerInterface {
 
-    public void addSimulatorEvent(SimulatorEvent simulatorEvent);
+    public void addSimulatorEvent(SimulatorEvent simulatorEvent) throws ParseSimulatorEventException;
     public void deleteAllSimulatorEvents();
 
     public void doConnect();
@@ -39,7 +38,7 @@ public interface SimulatorManagerInterface {
     
    
     public SimulatorEventsWrapper getSimulatorEventsCopy();
-    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents);
+    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents) throws ParseSimulatorEventException;
     
     // -------------------- GETTERS --------------------------
     public EventTableModel getEventTableModel();
@@ -62,6 +61,6 @@ public interface SimulatorManagerInterface {
      
     public boolean isTimeReset();
     
-    
+    public boolean isInTheList();
     
 }

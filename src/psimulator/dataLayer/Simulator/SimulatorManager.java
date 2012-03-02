@@ -11,7 +11,6 @@ import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
-import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 
 /**
  *
@@ -32,7 +31,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private volatile boolean isPlaying = false;
     private volatile int currentSpeed = SPEED_INIT;
     //
-    private volatile int currentPositionInList = 0;
+    //private volatile int currentPositionInList = 0;
     //
     private EventTableModel eventTableModel;
 
@@ -49,7 +48,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void connected() {
         isConnectedToServer = true;
-        
+
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -97,16 +96,16 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void connectionFailed() {
         isConnectedToServer = false;
-        
+
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
                 // turn off recording and realtime
-                if(isRecording){
+                if (isRecording) {
                     setRecordingDeactivated();
                 }
-                if(isRealtime){
+                if (isRealtime) {
                     setRealtimeDeactivated();
                 }
                 // notify all observers
@@ -163,26 +162,16 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         switch (simulatorPlayerState) {
             case FIRST:
-                if (eventTableModel.getRowCount() >= 1) {
-                    currentPositionInList = 0;
-                }
+                eventTableModel.moveToFirstEvent();
                 break;
             case PREVIOUS:
-                // if not at the beginning of the list
-                if (currentPositionInList >= 1) {
-                    currentPositionInList--;
-                }
+                eventTableModel.moveToPreviousEvent();
                 break;
             case NEXT:
-                // if not at the end of the list
-                if (currentPositionInList < eventTableModel.getRowCount() - 1) {
-                    currentPositionInList++;
-                }
+                eventTableModel.moveToNextEvent();
                 break;
             case LAST:
-                if (eventTableModel.getRowCount() > 0) {
-                    currentPositionInList = eventTableModel.getRowCount() - 1;
-                }
+                eventTableModel.moveToLastEvent();
                 break;
         }
 
@@ -282,7 +271,8 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
     @Override
     public void setConcreteRawSelected(int row) {
-        currentPositionInList = row;
+        //currentPositionInList = row;
+        eventTableModel.setCurrentPositionInList(row);
 
         // notify all observers
         setChanged();
@@ -296,7 +286,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         // delete items
         eventTableModel.deleteAllSimulatorEvents();
-        currentPositionInList = 0;
+        //currentPositionInList = 0;
     }
 
     private void setNewPacketRecieved() {
@@ -315,35 +305,22 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * Used from another thread
      */
     @Override
-    public void addSimulatorEvent(final SimulatorEvent simulatorEvent) {
-        
+    public void addSimulatorEvent(final SimulatorEvent simulatorEvent) throws ParseSimulatorEventException {
+
         // set details to event
         addDetailToSimulatorEvent(simulatorEvent);
 
         // add to table
         eventTableModel.addSimulatorEvent(simulatorEvent);
-        
+
         // new packet recieved
         setNewPacketRecieved();
-        
-//        SwingUtilities.invokeLater(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                // set details to event
-//                addDetailToSimulatorEvent(simulatorEvent);
-//
-//                // add to table
-//                eventTableModel.addSimulatorEvent(simulatorEvent);
-//            }
-//        });
     }
 
     @Override
-    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents) {
+    public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents) throws ParseSimulatorEventException {
         // delete items
-        eventTableModel.deleteAllSimulatorEvents();
-        currentPositionInList = 0;
+        deleteAllSimulatorEvents();
 
         // get simulator event list
         List<SimulatorEvent> simulatorEventsList = simulatorEvents.getSimulatorEvents();
@@ -360,32 +337,29 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      */
     @Override
     public void moveToNextEvent() {
-        //if nothing else to play
-        if (currentPositionInList >= eventTableModel.getRowCount() - 1) {
+        if (eventTableModel.canMoveToNextEvent()) {
+            eventTableModel.moveToNextEvent();
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    // notify all observers
+                    setChanged();
+                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+                }
+            });
+        } else {
             isPlaying = false;
             if (DEBUG) {
                 System.out.println("Playing automaticly set to " + isPlaying);
             }
 
             SwingUtilities.invokeLater(new Runnable() {
-
                 @Override
                 public void run() {
                     // notify all observers
                     setChanged();
                     notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_STOP);
-                }
-            });
-        } else {
-            currentPositionInList++;
-
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    // notify all observers
-                    setChanged();
-                    notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
                 }
             });
         }
@@ -396,8 +370,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      */
     @Override
     public void moveToEvent(final int index) {
-        currentPositionInList = index;
-
+        eventTableModel.setCurrentPositionInList(index);
 
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -436,8 +409,8 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public synchronized int getCurrentPositionInList() {
-        return currentPositionInList;
+    public int getCurrentPositionInList() {
+        return eventTableModel.getCurrentPositionInList();
     }
 
     /**
@@ -470,6 +443,11 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isTimeReset() {
         return eventTableModel.isTimeReset();
     }
+    
+    @Override
+    public boolean isInTheList(){
+        return eventTableModel.isInTheList();
+    }
 
     @Override
     public SimulatorEventsWrapper getSimulatorEventsCopy() {
@@ -477,22 +455,34 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         return simulatorEvents;
     }
 
-    private void addDetailsToSimulatorEvents(List<SimulatorEvent> simulatorEvents) {
+    /**
+     * Throws exception if details could not be found in NetworkModel
+     *
+     * @param simulatorEvents
+     * @throws ParseSimulatorEventException
+     */
+    private void addDetailsToSimulatorEvents(List<SimulatorEvent> simulatorEvents) throws ParseSimulatorEventException {
         for (SimulatorEvent simulatorEvent : simulatorEvents) {
             addDetailToSimulatorEvent(simulatorEvent);
         }
     }
 
-    private void addDetailToSimulatorEvent(SimulatorEvent simulatorEvent) {
+    /**
+     * Throws exception if details could not be found in NetworkModel
+     *
+     * @param simulatorEvent
+     * @throws ParseSimulatorEventException
+     */
+    private void addDetailToSimulatorEvent(SimulatorEvent simulatorEvent) throws ParseSimulatorEventException {
         // set details to event
         HwComponentModel c1 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getSourcceId());
         HwComponentModel c2 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getDestId());
 
         CableModel cable = dataLayerFacade.getNetworkFacade().getCableModelById(simulatorEvent.getCableId());
 
-//        if (cable == null || c1 == null || c2 == null) {
-//            return;
-//        }
+        if (cable == null || c1 == null || c2 == null) {
+            throw new ParseSimulatorEventException();
+        }
 
         EthInterfaceModel eth1 = cable.getInterface1();
         EthInterfaceModel eth2 = cable.getInterface2();

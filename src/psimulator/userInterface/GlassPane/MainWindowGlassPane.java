@@ -98,14 +98,14 @@ public class MainWindowGlassPane extends JPanel implements TimingTarget{
         
         //System.out.println("Animation: "+currentGrahicMessage.getMessage());
         
-        System.out.println("Start Animation");
+        //System.out.println("Start Animation");
         f_animator.start();
     }
     
     private void stopAnimation(){
         animationInProgress = false;
         
-        System.out.println("Stop Animation");
+        //System.out.println("Stop Animation");
         f_animator.stop();
         
         // start next

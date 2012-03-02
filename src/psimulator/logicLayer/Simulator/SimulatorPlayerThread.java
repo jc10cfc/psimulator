@@ -5,8 +5,8 @@ import java.util.Observer;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
-import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
@@ -84,7 +84,11 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                 } else if (isPlaying) { // if in playing mode
                     //glassPanelPainter.doPaintRedDots(true);
 
-
+                    // if player not in the list, move to first event
+                    if(!simulatorManagerInterface.isInTheList()){
+                        simulatorManagerInterface.moveToNextEvent();
+                    }
+                    
                     SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                     if (DEBUG) {
                         System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);

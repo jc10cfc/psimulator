@@ -15,10 +15,11 @@ import javax.swing.event.ListSelectionListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
+import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.Simulator.SimulatorManager;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
-import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
@@ -172,6 +173,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
     ////////------------ PRIVATE------------///////////
     private void addListenersToComponents() {
+        /*
         jTableEventList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -179,23 +181,24 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 if (event.getValueIsAdjusting()) {
                     return;
                 }
-                
-                int rowNumber = jTableEventList.getSelectedRow();
-                
-                
-                if(rowNumber < 0){
+  
+                // if no rows
+                int rowCount = jTableEventList.getRowCount();
+                if(rowCount < 0){
                     return;
                 }
                 
+                int rowNumber = jTableEventList.getSelectedRow();
+
                 // if position not changed when this event fired, do nothing
-                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber){
+                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber && rowNumber !=0){
                     return;
                 }
                 
                 // set concrete row in model
                 simulatorManagerInterface.setConcreteRawSelected(rowNumber);
             }
-        });
+        });*/
 
         // LOAD button action listener
         jButtonLoadListFromFile.addActionListener(new ActionListener(){
@@ -225,8 +228,16 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 // stop recording  and realtime
                 simulatorManagerInterface.setRealtimeDeactivated();
                 
+                
                 // set events to simulator manager
-                simulatorManagerInterface.setSimulatorEvents(simulatorEventsWrapper);
+                try{
+                    simulatorManagerInterface.setSimulatorEvents(simulatorEventsWrapper);
+                } catch (ParseSimulatorEventException ex){
+                    showErrorDialog(dataLayer.getString("ERROR"), dataLayer.getString("ERROR_WHILE_PARSING_EVENT_LIST"));
+                }
+                
+                // update packet details
+                updatePacketDetailsAccordingToModel();
             }
         });
         
@@ -293,6 +304,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                     int i = showYesNoDialog(dataLayer.getString("WARNING"), dataLayer.getString("DELETING_EVENT_LIST_WARNING"));
                     // if YES
                     if (i == 0) {
+                        // turn off everything
+                        setTurnedOff();
+                        
                         simulatorManagerInterface.deleteAllSimulatorEvents();
 
                         // update packet details
@@ -860,10 +874,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updatePacketDetailsAccordingToModel() {
-        int row = simulatorManagerInterface.getCurrentPositionInList();
-
         // if some row selected
-        if (simulatorManagerInterface.getListSize() > 0 && row >= 0) {
+        System.out.println("Is in the list:"+simulatorManagerInterface.isInTheList());
+        
+        if (simulatorManagerInterface.isInTheList()) {
             SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
 
             String seconds = fmt.format(event.getTimeStamp() / 1000.0);
@@ -941,5 +955,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //custom title, warning icon
         JOptionPane.showMessageDialog(this,
                 message, title, JOptionPane.WARNING_MESSAGE);
+    }
+    
+    private void showErrorDialog(String title, String message) {
+        //custom title, warning icon
+        JOptionPane.showMessageDialog(this,
+                message, title, JOptionPane.ERROR_MESSAGE);
     }
 }

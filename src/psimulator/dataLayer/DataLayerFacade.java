@@ -8,7 +8,7 @@ import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.LanguageInterface;
 import psimulator.dataLayer.interfaces.PreferencesInterface;
-import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 
 
 /**

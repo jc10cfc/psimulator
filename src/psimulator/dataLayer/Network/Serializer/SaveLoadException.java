@@ -1,7 +1,5 @@
 package psimulator.dataLayer.Network.Serializer;
 
-import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionParametersWrapper;
-
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
