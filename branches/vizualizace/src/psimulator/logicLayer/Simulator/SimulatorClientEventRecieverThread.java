@@ -1,14 +1,18 @@
 package psimulator.logicLayer.Simulator;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Network.Components.CableModel;
 import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
+import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.SimulatorEvents.PacketType;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
-import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
+import psimulator.userInterface.GlassPane.GlassPanelPainterSingleton;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**
@@ -76,11 +80,15 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     SimulatorEvent simulatorEvent = generateSimulatorEvent();
                     
                     if(!thread.isInterrupted() && isRecording == true && simulatorEvent != null){
-                        simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
+                        try {
+                            simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
+                        } catch (ParseSimulatorEventException ex) {
+                            System.err.println("Přijatá událost nelze přehrát nad aktuální sítí");
+                        }
                     }
                     
-                    int time = tmpRandom.nextInt(1) + 10; // 1000 + 100
-                    //int time = tmpRandom.nextInt(1000) + 100;
+                    //int time = tmpRandom.nextInt(1) + 10; // 1000 + 100
+                    int time = tmpRandom.nextInt(1000) + 1000;
 
                     Thread.sleep(time);
                     //Thread.sleep(1);

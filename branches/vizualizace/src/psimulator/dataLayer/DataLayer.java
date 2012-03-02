@@ -16,7 +16,7 @@ import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializer
 import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializerXML;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
-import psimulator.dataLayer.interfaces.SimulatorManagerInterface;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
