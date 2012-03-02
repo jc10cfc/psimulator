@@ -56,6 +56,7 @@ public interface SimulatorManagerInterface {
     
     public void moveToNextEvent();
     public void moveToEvent(final int index);
+    public SimulatorEvent moveToLastEventAndReturn();
     
     public SimulatorEvent getSimulatorEventAtCurrentPosition();
      

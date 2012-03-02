@@ -56,13 +56,16 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     isNewPacket = false;
 
                     // get last event
-                    int index = simulatorManagerInterface.getListSize() - 1;
+                    //int index = simulatorManagerInterface.getListSize() - 1;
 
                     // move to the last event
-                    simulatorManagerInterface.moveToEvent(index);
+                    //simulatorManagerInterface.moveToEvent(index);
 
                     // get event
-                    SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+                    //SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+                    
+                    // move to last event in the list and get it
+                    SimulatorEvent event = simulatorManagerInterface.moveToLastEventAndReturn();
                     
                     //calculate speed coeficient
                     int speedCoeficient = calculateSpeedCoefifient();

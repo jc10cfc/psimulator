@@ -366,7 +366,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     /**
-     * Used from another thread
+     * used from Controll panel
      */
     @Override
     public void moveToEvent(final int index) {
@@ -381,6 +381,26 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
                 notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
             }
         });
+    }
+    
+    /**
+     * Used from another thread
+     */
+    @Override
+    public SimulatorEvent moveToLastEventAndReturn(){
+        SimulatorEvent simulatorEvent = eventTableModel.moveToLastEventAndReturn();
+        
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                // notify all observers
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
+            }
+        });
+        
+        return simulatorEvent;
     }
 
     @Override
