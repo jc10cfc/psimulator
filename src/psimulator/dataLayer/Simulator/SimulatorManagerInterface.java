@@ -2,8 +2,8 @@ package psimulator.dataLayer.Simulator;
 
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 
 /**
  *
@@ -68,5 +68,7 @@ public interface SimulatorManagerInterface {
     public boolean isTimeReset();
     
     public boolean isInTheList();
+    
+    public boolean hasAllEventsItsComponentsInModel();
     
 }

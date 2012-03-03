@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import psimulator.dataLayer.DataLayerFacade;
@@ -225,6 +226,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     @Override
     public void saveEventsAction(SimulatorEventsWrapper simulatorEventsWrapper) {
+        saveEventsAndInformAboutSuccess(simulatorEventsWrapper);
+    }
+    
+    private boolean saveEventsAndInformAboutSuccess(SimulatorEventsWrapper simulatorEventsWrapper){
         boolean success = saveLoadManagerEvents.doSaveAsEventsAction(simulatorEventsWrapper);
 
         if (success) {
@@ -233,6 +238,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             GlassPanelPainterSingleton.getInstance().
                     addAnnouncement(dataLayer.getString("EVENT_LIST_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
         }
+        
+        return success;
     }
 
     /**
@@ -332,6 +339,37 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     if (jPanelUserInterfaceMain.getUserInterfaceState() == UserInterfaceMainPanelState.SIMULATOR) {
                         return;
                     }
+                    
+                    // check if we can change to simulator (wrong events in list)
+                    if(!dataLayer.getSimulatorManager().hasAllEventsItsComponentsInModel()){
+                        // if there is a problem, ask user what to do
+                        int result = showWarningEventsInListHaventComponents(dataLayer.getString("WARNING"), dataLayer.getString("EVENTS_CANT_BE_APPLIED_WHAT_TO_DO"));
+
+                        if(result == 0){    // save events and celar list
+                            System.out.println("save events and celar list");
+                            // save events
+                            boolean success = saveEventsAndInformAboutSuccess(dataLayer.getSimulatorManager().getSimulatorEventsCopy());
+                            // if save wasnt succesfull
+                            if(!success){
+                                // go back to editor
+                                refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.EDITOR, true);
+                                return;
+                            }
+                            // if save succesfull clear list
+                            dataLayer.getSimulatorManager().deleteAllSimulatorEvents();
+                        } else if (result == 1){    // celar events
+                            System.out.println("Clear list");
+                            // clear list
+                            dataLayer.getSimulatorManager().deleteAllSimulatorEvents();
+                        } else {    // go back to editor
+                            System.out.println("Cancel");
+                            // get back to editor
+                            // change state to editor without changing or removing the graph
+                            refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.EDITOR, true);
+                            return;
+                        }     
+                    }
+                    
 
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.SIMULATOR, true);
@@ -340,7 +378,23 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             }
         }
     }
+    
+    private int showWarningEventsInListHaventComponents(String title, String message) {
+        //Object[] options = {dataLayer.getString("SAVE"), dataLayer.getString("DONT_SAVE"), dataLayer.getString("CANCEL")};
+        Object[] options = {dataLayer.getString("SAVE_EVENTS_AND_CLEAR_LIST"), 
+            dataLayer.getString("DELETE_EVENTS"),dataLayer.getString("GO_BACK_TO_EDITOR")};
+        int n = JOptionPane.showOptionDialog(this,
+                message,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null, //do not use a custom Icon
+                options, //the titles of buttons
+                options[0]); //default button title
 
+        return n;
+    }
+    
     /**
      * Returns true if checked and we should continue. False if do not continue.
      *

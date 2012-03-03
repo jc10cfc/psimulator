@@ -1,18 +1,15 @@
 package psimulator.logicLayer.Simulator;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Network.Components.CableModel;
 import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
-import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
-import psimulator.userInterface.GlassPane.GlassPanelPainterSingleton;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**
@@ -31,9 +28,9 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
     //
     private long timeOfFirstEvent;
     //
-    private boolean isRecording;
-    private boolean doConnect;
-    private boolean doDisconnect;
+    private volatile boolean isRecording;
+    private volatile boolean doConnect;
+    private volatile boolean doDisconnect;
 
     public SimulatorClientEventRecieverThread(DataLayerFacade dataLayer, UserInterfaceOuterFacade userInterfaceOuterFacade) {
         this.dataLayer = dataLayer;

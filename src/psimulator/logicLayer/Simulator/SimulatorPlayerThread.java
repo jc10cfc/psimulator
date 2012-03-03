@@ -21,11 +21,11 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     //
     private SimulatorManagerInterface simulatorManagerInterface;
     //
-    private int currentSpeed;
-    private boolean isPlaying;
-    private boolean isRealtime;
+    private volatile int currentSpeed;
+    private volatile boolean isPlaying;
+    private volatile boolean isRealtime;
     //
-    private boolean isNewPacket;
+    private volatile boolean isNewPacket;
     //
     private AnimationPanelOuterInterface animationPanelOuterInterface;
 
