@@ -14,6 +14,7 @@ import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.dataLayer.SimulatorEvents.Serializer.AbstractSimulatorEventsSaveLoadInterface;
 import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializer;
+import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializerXML;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
@@ -46,8 +47,8 @@ public class DataLayer extends DataLayerFacade {
         abstractNetworkSerializer = new NetworkModelSerializerXML();
         //abstractNetworkSerializer = new NetworkModelSerializer();
 
-        simulatorEventsSerializer = new SimulatorEventsSerializer();
-        //simulatorEventsSerializer = new SimulatorEventsSerializerXML();
+        //simulatorEventsSerializer = new SimulatorEventsSerializer();
+        simulatorEventsSerializer = new SimulatorEventsSerializerXML();
         
         // get instance to init imageFactory
         ImageFactorySingleton.getInstance();
