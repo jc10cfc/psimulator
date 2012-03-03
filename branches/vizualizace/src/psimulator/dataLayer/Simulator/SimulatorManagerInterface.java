@@ -37,6 +37,8 @@ public interface SimulatorManagerInterface {
     public void setPlayingActivated();
     public void setPlayingStopped();
     
+    public void setPlayingSequentially();
+    public void setPlayingByTimestamps();
    
     public SimulatorEventsWrapper getSimulatorEventsCopy();
     public void setSimulatorEvents(SimulatorEventsWrapper simulatorEvents) throws ParseSimulatorEventException;
@@ -49,6 +51,8 @@ public interface SimulatorManagerInterface {
     public boolean isRecording();
     public boolean isPlaying();
     public boolean isRealtime();
+    public boolean isPlayingSequentially();
+    public boolean isPlayingByTimestamps();
     
     public int getCurrentPositionInList();
     public int getListSize();

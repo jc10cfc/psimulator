@@ -18,8 +18,8 @@ import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
@@ -54,6 +54,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private JToggleButton jToggleButtonCapture;
     private JToggleButton jToggleButtonPlay;
     private JToggleButton jToggleButtonRealtime;
+    private JRadioButton jRadioButtonPlaySequentially;
+    private JRadioButton jRadioButtonPlayByTimestamps;
     // Event list panel
     private JPanel jPanelEventList;
     private JPanel jPanelEventListTable;
@@ -394,6 +396,28 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 }
             }
         });
+        
+        // -------- radio button SEQUENTIALL and ACCORDING TO TIMESTAMPS -------
+        jRadioButtonPlaySequentially.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if(jRadioButtonPlaySequentially.isSelected()){
+                    simulatorManagerInterface.setPlayingSequentially();
+                }
+            }
+        });
+
+        jRadioButtonPlayByTimestamps.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                if(jRadioButtonPlayByTimestamps.isSelected()){
+                    simulatorManagerInterface.setPlayingByTimestamps();
+                }
+            }
+        });
+        
     }
 
     private void initComponents() {
@@ -542,11 +566,33 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jLabelSliderFast = new JLabel();
         jSliderPlayerSpeed.setPaintLabels(true);
         //
+        JPanel jPanelPlayType = new JPanel();
+        jPanelPlayType.setLayout(new BoxLayout(jPanelPlayType, BoxLayout.Y_AXIS));
+        ButtonGroup buttonGroupPlayType = new ButtonGroup();
+        
+        jRadioButtonPlaySequentially = new JRadioButton();
+        buttonGroupPlayType.add(jRadioButtonPlaySequentially);
+        jPanelPlayType.add(jRadioButtonPlaySequentially);
+        
+        jRadioButtonPlayByTimestamps = new JRadioButton();
+        buttonGroupPlayType.add(jRadioButtonPlayByTimestamps);
+        jPanelPlayType.add(jRadioButtonPlayByTimestamps);
+        
+        if(simulatorManagerInterface.isPlayingSequentially()){
+            jRadioButtonPlaySequentially.setSelected(true);
+        }else {
+            jRadioButtonPlayByTimestamps.setSelected(true);
+        }
+        
+        
+        //
         jPanelPlayControlsSlider.add(Box.createRigidArea(new Dimension(7, 0)));
         jPanelPlayControlsSlider.add(jLabelSpeedName);
         jPanelPlayControlsSlider.add(Box.createRigidArea(new Dimension(7, 0)));
         jPanelPlayControlsSlider.add(jSliderPlayerSpeed);
         jPanelPlayControlsSlider.add(Box.createRigidArea(new Dimension(7, 0)));
+        jPanelPlayControlsSlider.add(jPanelPlayType);
+        
         //
         // Record panel
         jPanelPlayControlsRecordButtons = new JPanel();
@@ -780,7 +826,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonPrevious.setToolTipText(dataLayer.getString("SKIP_TO_PREV_EVENT"));
         jToggleButtonPlay.setToolTipText(dataLayer.getString("START_STOP_PLAYING"));
         //
-
+        jRadioButtonPlaySequentially.setText(dataLayer.getString("SEQUENTIALLY"));
+        jRadioButtonPlayByTimestamps.setText(dataLayer.getString("ACCORDING_TO_TIMESTAMPS"));
         //
         Hashtable labelTable = new Hashtable();
         labelTable.put(new Integer(SimulatorManager.SPEED_MIN), jLabelSliderSlow);
