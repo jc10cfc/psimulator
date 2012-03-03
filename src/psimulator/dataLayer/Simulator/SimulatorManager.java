@@ -80,6 +80,26 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * Used from another thread
      */
     @Override
+    public void recievedWrongPacket() {
+        this.isRealtime = false;
+        this.isRecording = false;
+        
+        // realtime turns of recording too
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setRealtimeDeactivated();
+                
+                setChanged();
+                notifyObservers(ObserverUpdateEventType.PACKET_RECIEVER_WRONG_PACKET);
+            }
+        });    
+    }
+
+    /**
+     * Used from another thread
+     */
+    @Override
     public void connectingFailed() {
         isConnectedToServer = false;
         SwingUtilities.invokeLater(new Runnable() {
@@ -344,6 +364,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             eventTableModel.moveToNextEvent();
 
             SwingUtilities.invokeLater(new Runnable() {
+
                 @Override
                 public void run() {
                     // notify all observers
@@ -358,6 +379,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             }
 
             SwingUtilities.invokeLater(new Runnable() {
+
                 @Override
                 public void run() {
                     // notify all observers
@@ -385,14 +407,14 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             }
         });
     }
-    
+
     /**
      * Used from another thread
      */
     @Override
-    public SimulatorEventWithDetails moveToLastEventAndReturn(){
+    public SimulatorEventWithDetails moveToLastEventAndReturn() {
         SimulatorEventWithDetails simulatorEvent = eventTableModel.moveToLastEventAndReturn();
-        
+
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
@@ -402,7 +424,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
                 notifyObservers(ObserverUpdateEventType.SIMULATOR_PLAYER_NEXT);
             }
         });
-        
+
         return simulatorEvent;
     }
 
@@ -456,14 +478,14 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isRealtime() {
         return isRealtime;
     }
-        
+
     @Override
-    public boolean isPlayingSequentially(){
+    public boolean isPlayingSequentially() {
         return isSequential;
     }
-    
+
     @Override
-    public boolean isPlayingByTimestamps(){
+    public boolean isPlayingByTimestamps() {
         return !isSequential;
     }
 
@@ -486,27 +508,27 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isTimeReset() {
         return eventTableModel.isTimeReset();
     }
-    
+
     @Override
-    public boolean isInTheList(){
+    public boolean isInTheList() {
         return eventTableModel.isInTheList();
     }
-    
+
     @Override
-    public boolean hasAllEventsItsComponentsInModel(){
+    public boolean hasAllEventsItsComponentsInModel() {
         return checkSimulatorEvents(eventTableModel.getEventListCopy());
     }
 
     @Override
     public SimulatorEventsWrapper getSimulatorEventsCopy() {
         List<SimulatorEvent> simulatorEvents = new ArrayList<>();
-        
-        for(SimulatorEventWithDetails eventWithDetails : eventTableModel.getEventListCopy()){
+
+        for (SimulatorEventWithDetails eventWithDetails : eventTableModel.getEventListCopy()) {
             simulatorEvents.add(eventWithDetails.getSimulatorEvent());
         }
-        
+
         SimulatorEventsWrapper simulatorEventsWrapper = new SimulatorEventsWrapper(simulatorEvents);
-        
+
         return simulatorEventsWrapper;
     }
 
@@ -517,12 +539,12 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * @throws ParseSimulatorEventException
      */
     private List<SimulatorEventWithDetails> createSimulatorEventsWithDetails(List<SimulatorEvent> simulatorEvents) throws ParseSimulatorEventException {
-        List<SimulatorEventWithDetails> simulatorEventsWithDetails= new ArrayList<>();
-        
+        List<SimulatorEventWithDetails> simulatorEventsWithDetails = new ArrayList<>();
+
         for (SimulatorEvent simulatorEvent : simulatorEvents) {
             simulatorEventsWithDetails.add(createSimulatorEventWithDetails(simulatorEvent));
         }
-        
+
         return simulatorEventsWithDetails;
     }
 
@@ -548,26 +570,26 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         return new SimulatorEventWithDetails(simulatorEvent, c1.getName(), c2.getName(), c1, c2, eth1, eth2);
     }
-    
+
     /**
-     * Checks if all simulator events has hw components and cables in NetworkModel
-     * 
+     * Checks if all simulator events has hw components and cables in
+     * NetworkModel
+     *
      * @param simulatorEventsWithDetails
      * @return true if OK, flase if ERROR
      */
-    private boolean checkSimulatorEvents(List<SimulatorEventWithDetails> simulatorEventsWithDetails){
-        for(SimulatorEventWithDetails eventWithDetails : simulatorEventsWithDetails){
-            if(dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getSourcceId()) == null){
+    private boolean checkSimulatorEvents(List<SimulatorEventWithDetails> simulatorEventsWithDetails) {
+        for (SimulatorEventWithDetails eventWithDetails : simulatorEventsWithDetails) {
+            if (dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getSourcceId()) == null) {
                 return false;
             }
-            if(dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getDestId()) == null){
+            if (dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getDestId()) == null) {
                 return false;
             }
-            if(dataLayerFacade.getNetworkFacade().getCableModelById(eventWithDetails.getCableId()) == null){
+            if (dataLayerFacade.getNetworkFacade().getCableModelById(eventWithDetails.getCableId()) == null) {
                 return false;
             }
         }
         return true;
     }
-
 }

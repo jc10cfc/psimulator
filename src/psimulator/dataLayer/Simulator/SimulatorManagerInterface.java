@@ -22,6 +22,8 @@ public interface SimulatorManagerInterface {
     public void connectingFailed();
     public void connectionFailed();
     
+    public void recievedWrongPacket();
+    
     // -------------------- SETTERS --------------------------
     public void setPlayerSpeed(int speed);
     

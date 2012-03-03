@@ -79,8 +79,17 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     if(!thread.isInterrupted() && isRecording == true && simulatorEvent != null){
                         try {
                             simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
+                            
+                            int tmp = tmpRandom.nextInt(100);
+                            if(tmp == 0){
+                                throw new ParseSimulatorEventException();
+                            }
                         } catch (ParseSimulatorEventException ex) {
-                            System.err.println("Přijatá událost nelze přehrát nad aktuální sítí");
+                            // inform simulator manager
+                            simulatorManagerInterface.recievedWrongPacket();
+                            
+                            // set recording false
+                            isRecording = false;
                         }
                     }
                     

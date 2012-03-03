@@ -169,6 +169,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 updatePositionInListAccordingToModel();
                 updatePacketDetailsAccordingToModel();
                 break;
+            case PACKET_RECIEVER_WRONG_PACKET:
+                showWarningDialog(dataLayer.getString("WARNING"), dataLayer.getString("REVIEVED_WRONG_EVENT"));
+                break;
 
         }
     }
