@@ -346,7 +346,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                         int result = showWarningEventsInListHaventComponents(dataLayer.getString("WARNING"), dataLayer.getString("EVENTS_CANT_BE_APPLIED_WHAT_TO_DO"));
 
                         if(result == 0){    // save events and celar list
-                            System.out.println("save events and celar list");
+                            //System.out.println("save events and celar list");
                             // save events
                             boolean success = saveEventsAndInformAboutSuccess(dataLayer.getSimulatorManager().getSimulatorEventsCopy());
                             // if save wasnt succesfull
@@ -358,11 +358,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                             // if save succesfull clear list
                             dataLayer.getSimulatorManager().deleteAllSimulatorEvents();
                         } else if (result == 1){    // celar events
-                            System.out.println("Clear list");
+                            //System.out.println("Clear list");
                             // clear list
                             dataLayer.getSimulatorManager().deleteAllSimulatorEvents();
                         } else {    // go back to editor
-                            System.out.println("Cancel");
+                            //System.out.println("Cancel");
                             // get back to editor
                             // change state to editor without changing or removing the graph
                             refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.EDITOR, true);
@@ -373,7 +373,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
                     // change state to editor without changing or removing the graph
                     refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.SIMULATOR, true);
-
                     break;
             }
         }
