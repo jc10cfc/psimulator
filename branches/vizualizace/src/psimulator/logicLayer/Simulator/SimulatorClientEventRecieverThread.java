@@ -74,21 +74,16 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                 if(isRecording){
                     if(DEBUG)System.out.println("Reciever recording " + tmpCounter++);
                     
-                    SimulatorEvent simulatorEvent = generateSimulatorEvent();
+                    SimulatorEvent simulatorEvent = generateSimulatorEvent(true, 100);
                     
                     if(!thread.isInterrupted() && isRecording == true && simulatorEvent != null){
                         try {
                             simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
-                            
-                            int tmp = tmpRandom.nextInt(100);
-                            if(tmp == 0){
-                                throw new ParseSimulatorEventException();
-                            }
                         } catch (ParseSimulatorEventException ex) {
                             // inform simulator manager
                             simulatorManagerInterface.recievedWrongPacket();
                             
-                            // set recording false
+                            // set recording false immedeately
                             isRecording = false;
                         }
                     }
@@ -145,7 +140,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
      * components connected with cable.
      * @return 
      */
-    private SimulatorEvent generateSimulatorEvent() {
+    private SimulatorEvent generateSimulatorEvent(boolean generateWrongOnes, int numberInProbability) {
         List<HwComponentModel> list = new ArrayList<>(dataLayer.getNetworkFacade().getHwComponents());
         int componentCount = dataLayer.getNetworkFacade().getHwComponentsCount();
         int cablesCount = dataLayer.getNetworkFacade().getCablesCount();
@@ -223,22 +218,27 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         PacketType packetType = PacketType.values()[index];
 
         // generate time
-        //int time = (int) (System.currentTimeMillis() % (86400000));
         int time = (int) (System.currentTimeMillis() - timeOfFirstEvent);
-        
-        //
-        int cableId;
-        if(cable != null){
-            cableId = cable.getId().intValue();
-        }else{
-            cableId = -1;
-        }
-        
+
         String detailsText = "A very long text to be displayed in onle line or even in two lines. "
                 + "This line should now skip to next line \n and this should be on the next line. "
                 + "Now two empty lines follows. And this is the end of our text area.";
 
-        SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1.getId(), c2.getId(), 
+        int c1Id = c1.getId();
+        int c2Id = c2.getId();
+        int cableId = cable.getId().intValue();
+        
+        if(generateWrongOnes){
+            int tmp = tmpRandom.nextInt(numberInProbability);
+            
+            if(tmp == 0){
+                c1Id = tmpRandom.nextInt(10000);
+                c2Id = tmpRandom.nextInt(10000);
+                cableId = tmpRandom.nextInt(10000);
+            }
+        }
+        
+        SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1Id, c2Id, 
                 cableId, packetType, detailsText);
         
         return simulatorEvent;
