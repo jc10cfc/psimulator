@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 
 /**
  *
@@ -12,14 +12,14 @@ import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
  */
 public class EventTableModel extends AbstractTableModel {
 
-    private List<SimulatorEvent> eventList;
+    private List<SimulatorEventWithDetails> eventList;
     private volatile boolean timeReset = true;
     private volatile int currentPositionInList;
     private volatile boolean isInTheList;
     private final Object lock = new Object();
 
     public EventTableModel() {
-        eventList = Collections.synchronizedList(new ArrayList<SimulatorEvent>());
+        eventList = Collections.synchronizedList(new ArrayList<SimulatorEventWithDetails>());
 
         isInTheList = false;
         currentPositionInList = 0;
@@ -125,7 +125,7 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
     
-    public SimulatorEvent moveToLastEventAndReturn(){
+    public SimulatorEventWithDetails moveToLastEventAndReturn(){
         synchronized (lock) {
             if (eventList.size() > 0) {
                 currentPositionInList = eventList.size() - 1;
@@ -136,7 +136,7 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
-    public void addSimulatorEvent(SimulatorEvent simulatorEvent) {
+    public void addSimulatorEvent(SimulatorEventWithDetails simulatorEvent) {
         synchronized (lock) {
             eventList.add(simulatorEvent);
             timeReset = false;
@@ -159,7 +159,7 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
-    public SimulatorEvent getSimulatorEvent(int i) {
+    public SimulatorEventWithDetails getSimulatorEvent(int i) {
         synchronized (lock) {
             return eventList.get(i);
         }
@@ -177,14 +177,14 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
-    public List<SimulatorEvent> getEventListCopy() {
+    public List<SimulatorEventWithDetails> getEventListCopy() {
         synchronized (lock) {
-            List<SimulatorEvent> copy = new ArrayList<>(eventList);
+            List<SimulatorEventWithDetails> copy = new ArrayList<>(eventList);
             return copy;
         }
     }
 
-    public void setEventList(List<SimulatorEvent> eventList) {
+    public void setEventList(List<SimulatorEventWithDetails> eventList) {
         synchronized (lock) {
             // set event list
             this.eventList = eventList;

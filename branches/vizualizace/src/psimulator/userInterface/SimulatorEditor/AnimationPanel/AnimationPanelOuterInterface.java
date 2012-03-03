@@ -2,7 +2,7 @@ package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
 import java.util.Observer;
 import javax.swing.JComponent;
-import psimulator.dataLayer.SimulatorEvents.PacketType;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**

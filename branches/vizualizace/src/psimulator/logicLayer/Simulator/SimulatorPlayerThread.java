@@ -6,7 +6,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
@@ -65,7 +65,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     //SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                     
                     // move to last event in the list and get it
-                    SimulatorEvent event = simulatorManagerInterface.moveToLastEventAndReturn();
+                    SimulatorEventWithDetails event = simulatorManagerInterface.moveToLastEventAndReturn();
                     
                     //calculate speed coeficient
                     int speedCoeficient = calculateSpeedCoefifient();
@@ -92,7 +92,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                         simulatorManagerInterface.moveToNextEvent();
                     }
                     
-                    SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+                    SimulatorEventWithDetails event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
                     if (DEBUG) {
                         System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
                     }

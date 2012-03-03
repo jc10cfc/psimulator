@@ -1,4 +1,4 @@
-package psimulator.dataLayer.SimulatorEvents;
+package psimulator.dataLayer.SimulatorEvents.SerializedComponents;
 
 /**
  *

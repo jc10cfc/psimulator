@@ -154,8 +154,8 @@ public class EditorToolBar extends JToolBar implements Observer {
     ////////------------ PRIVATE------------///////////
     private void setTextsToComponents() {
         // set text only to Tools that cant be changed
-        toggleButtonDragMove.setToolTipText(dataLayer.getString("DRAG_MOVE"));
-        toggleButtonHand.setToolTipText(dataLayer.getString("HAND"));
+        toggleButtonDragMove.setToolTipText(dataLayer.getString("DRAG_MOVE")+" (M)");
+        toggleButtonHand.setToolTipText(dataLayer.getString("HAND")+" (H)");
         toggleButtonRealPC.setToolTipText(dataLayer.getString("REAL_PC"));
         //toggleButtonCable.setToolTipText(dataLayer.getString("CABLE"));
         jButtonFitToSize.setToolTipText(dataLayer.getString("FIT_TO_SIZE"));

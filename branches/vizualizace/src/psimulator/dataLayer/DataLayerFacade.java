@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.Observer;
 import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.Network.NetworkFacade;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.dataLayer.interfaces.LanguageInterface;
 import psimulator.dataLayer.interfaces.PreferencesInterface;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
