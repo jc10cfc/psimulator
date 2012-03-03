@@ -491,6 +491,11 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isInTheList(){
         return eventTableModel.isInTheList();
     }
+    
+    @Override
+    public boolean hasAllEventsItsComponentsInModel(){
+        return checkSimulatorEvents(eventTableModel.getEventListCopy());
+    }
 
     @Override
     public SimulatorEventsWrapper getSimulatorEventsCopy() {
@@ -542,6 +547,27 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         EthInterfaceModel eth2 = cable.getInterface2();
 
         return new SimulatorEventWithDetails(simulatorEvent, c1.getName(), c2.getName(), c1, c2, eth1, eth2);
+    }
+    
+    /**
+     * Checks if all simulator events has hw components and cables in NetworkModel
+     * 
+     * @param simulatorEventsWithDetails
+     * @return true if OK, flase if ERROR
+     */
+    private boolean checkSimulatorEvents(List<SimulatorEventWithDetails> simulatorEventsWithDetails){
+        for(SimulatorEventWithDetails eventWithDetails : simulatorEventsWithDetails){
+            if(dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getSourcceId()) == null){
+                return false;
+            }
+            if(dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getDestId()) == null){
+                return false;
+            }
+            if(dataLayerFacade.getNetworkFacade().getCableModelById(eventWithDetails.getCableId()) == null){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

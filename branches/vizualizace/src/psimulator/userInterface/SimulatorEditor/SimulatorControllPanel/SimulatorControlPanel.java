@@ -192,8 +192,20 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 
                 int rowNumber = jTableEventList.getSelectedRow();
 
+                // if it is first click into table
+                /*
+                if(!simulatorManagerInterface.isInTheList()){
+                    
+                }else{
+                    // if position not changed when this event fired, do nothing
+                    if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber){
+                        System.out.println("Do nothing");
+                        return;
+                    }
+                }*/
+                
                 // if position not changed when this event fired, do nothing
-                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber || rowNumber < 0){
+                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber){
                     //System.out.println("Do nothing");
                     return;
                 }
