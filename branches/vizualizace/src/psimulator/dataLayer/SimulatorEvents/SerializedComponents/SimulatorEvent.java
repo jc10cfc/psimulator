@@ -24,7 +24,11 @@ public class SimulatorEvent implements Serializable{
         this.cableId = cableId;
         this.detailsText = detailsText;
     }
+
+    public SimulatorEvent() {
+    }
  
+    
 
     public PacketType getPacketType() {
         return packetType;
@@ -49,4 +53,31 @@ public class SimulatorEvent implements Serializable{
     public String getDetailsText() {
         return detailsText;
     }
+
+    public void setCableId(int cableId) {
+        this.cableId = cableId;
+    }
+
+    public void setDestId(int destId) {
+        this.destId = destId;
+    }
+
+    public void setDetailsText(String detailsText) {
+        this.detailsText = detailsText;
+    }
+
+    public void setPacketType(PacketType packetType) {
+        this.packetType = packetType;
+    }
+
+    public void setSourcceId(int sourcceId) {
+        this.sourcceId = sourcceId;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+    
+    
+    
 }

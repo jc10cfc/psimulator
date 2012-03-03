@@ -2,6 +2,11 @@ package psimulator.dataLayer.SimulatorEvents.Serializer;
 
 import java.io.File;
 import java.io.IOException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionType;
 import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionParametersWrapper;
@@ -33,13 +38,21 @@ public class SimulatorEventsSerializerXML implements AbstractSimulatorEventsSave
         }
         
         
-//        // save in autoclose stream
-//        try {
-//            // SAVE TO XML
-//        } catch (JAXBException ex) {
-//            // throw exception
-//            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_WRITING, fileName, true));
-//        }
+        // save in autoclose stream
+        try {
+            // SAVE TO XML
+            JAXBContext context = JAXBContext.newInstance(SimulatorEventsWrapper.class);
+
+            Marshaller marsh = context.createMarshaller();
+
+            // nastavení formátování
+            marsh.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            marsh.marshal(simulatorEvents, file);
+        } catch (JAXBException ex) {
+            // throw exception
+            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_WRITING, fileName, true));
+        }
     }
 
     @Override
@@ -59,16 +72,22 @@ public class SimulatorEventsSerializerXML implements AbstractSimulatorEventsSave
             throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.CANT_READ_FROM_FILE, fileName, false));
         }
         
-//        // try read
-//        try {
-//            // LOAD FROM XML
-//        } catch (JAXBException ex) {
-//            // if needed, uncomment this line:
-//            //Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
-//            
-//            // throw exception
-//            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_READING, fileName, false));
-//        }
+        // try read
+        try {
+            // LOAD FROM XML
+            
+            JAXBContext context = JAXBContext.newInstance(SimulatorEventsWrapper.class);
+
+            Unmarshaller unmarsh = context.createUnmarshaller();
+
+            simulatorEvents = (SimulatorEventsWrapper) unmarsh.unmarshal(file);
+        } catch (JAXBException ex) {
+            // if needed, uncomment this line:
+            //Logger.getLogger(AbstractNetworkAdapter.class.getName()).log(Level.SEVERE, null, ex);
+            
+            // throw exception
+            throw new SaveLoadException(new SaveLoadExceptionParametersWrapper(SaveLoadExceptionType.ERROR_WHILE_READING, fileName, false));
+        }
         
         return simulatorEvents;
     }
