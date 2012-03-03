@@ -190,33 +190,32 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 // if no rows
                 int rowCount = jTableEventList.getRowCount();
                 if(rowCount < 0){
+                    //System.out.println("Row count < 0");
                     return;
                 }
                 
-                int rowNumber = jTableEventList.getSelectedRow();
-
+                int selectedRowNumber = jTableEventList.getSelectedRow();
+                if(selectedRowNumber < 0){
+                    //System.out.println("Selected row number < 0");
+                    return;
+                }
+                
                 // if it is first click into table
-                /*
+                
                 if(!simulatorManagerInterface.isInTheList()){
-                    
+                    //System.out.println("get in the list");
                 }else{
                     // if position not changed when this event fired, do nothing
-                    if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber){
-                        System.out.println("Do nothing");
+                    if(simulatorManagerInterface.getCurrentPositionInList() == selectedRowNumber){
+                        //System.out.println("Do nothing");
                         return;
                     }
-                }*/
-                
-                // if position not changed when this event fired, do nothing
-                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber){
-                    //System.out.println("Do nothing");
-                    return;
                 }
-                
+               
                 
                 //System.out.println("Select concrete row");
                 // set concrete row in model
-                simulatorManagerInterface.setConcreteRawSelected(rowNumber);
+                simulatorManagerInterface.setConcreteRawSelected(selectedRowNumber);
                 
             }
         });
