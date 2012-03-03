@@ -18,8 +18,8 @@ import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**
@@ -883,7 +883,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         
         // if some row selected
         if (simulatorManagerInterface.isInTheList()) {
-            SimulatorEvent event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+            SimulatorEventWithDetails event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
 
             String seconds = fmt.format(event.getTimeStamp() / 1000.0);
             jLabelDetailsTimeValue.setText(seconds);

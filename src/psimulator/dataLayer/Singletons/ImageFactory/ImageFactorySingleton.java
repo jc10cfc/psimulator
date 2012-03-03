@@ -6,7 +6,7 @@ import java.awt.image.RescaleOp;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import psimulator.dataLayer.Network.Components.HwTypeEnum;
-import psimulator.dataLayer.SimulatorEvents.PacketType;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.SecondaryTool;

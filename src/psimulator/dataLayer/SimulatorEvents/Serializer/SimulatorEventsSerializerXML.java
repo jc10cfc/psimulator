@@ -5,7 +5,7 @@ import java.io.IOException;
 import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionType;
 import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.dataLayer.Network.Serializer.SaveLoadExceptionParametersWrapper;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 /**
  *

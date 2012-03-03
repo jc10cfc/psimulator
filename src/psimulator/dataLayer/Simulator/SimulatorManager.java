@@ -1,5 +1,6 @@
 package psimulator.dataLayer.Simulator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import javax.swing.SwingUtilities;
@@ -9,8 +10,9 @@ import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Network.Components.CableModel;
 import psimulator.dataLayer.Network.Components.EthInterfaceModel;
 import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 
 /**
  *
@@ -308,10 +310,10 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public void addSimulatorEvent(final SimulatorEvent simulatorEvent) throws ParseSimulatorEventException {
 
         // set details to event
-        addDetailToSimulatorEvent(simulatorEvent);
+        SimulatorEventWithDetails eventWithDetails = createSimulatorEventWithDetails(simulatorEvent);
 
         // add to table
-        eventTableModel.addSimulatorEvent(simulatorEvent);
+        eventTableModel.addSimulatorEvent(eventWithDetails);
 
         // new packet recieved
         setNewPacketRecieved();
@@ -326,10 +328,10 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         List<SimulatorEvent> simulatorEventsList = simulatorEvents.getSimulatorEvents();
 
         // add details to events
-        addDetailsToSimulatorEvents(simulatorEventsList);
+        List<SimulatorEventWithDetails> simulatorEventsWithDetails = createSimulatorEventsWithDetails(simulatorEventsList);
 
         // add events to table model
-        eventTableModel.setEventList(simulatorEvents.getSimulatorEvents());
+        eventTableModel.setEventList(simulatorEventsWithDetails);
     }
 
     /**
@@ -387,8 +389,8 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * Used from another thread
      */
     @Override
-    public SimulatorEvent moveToLastEventAndReturn(){
-        SimulatorEvent simulatorEvent = eventTableModel.moveToLastEventAndReturn();
+    public SimulatorEventWithDetails moveToLastEventAndReturn(){
+        SimulatorEventWithDetails simulatorEvent = eventTableModel.moveToLastEventAndReturn();
         
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -445,7 +447,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * Used from another thread
      */
     @Override
-    public SimulatorEvent getSimulatorEventAtCurrentPosition() {
+    public SimulatorEventWithDetails getSimulatorEventAtCurrentPosition() {
         return eventTableModel.getSimulatorEvent(getCurrentPositionInList());
     }
 
@@ -471,8 +473,15 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
     @Override
     public SimulatorEventsWrapper getSimulatorEventsCopy() {
-        SimulatorEventsWrapper simulatorEvents = new SimulatorEventsWrapper(eventTableModel.getEventListCopy());
-        return simulatorEvents;
+        List<SimulatorEvent> simulatorEvents = new ArrayList<>();
+        
+        for(SimulatorEventWithDetails eventWithDetails : eventTableModel.getEventListCopy()){
+            simulatorEvents.add(eventWithDetails.getSimulatorEvent());
+        }
+        
+        SimulatorEventsWrapper simulatorEventsWrapper = new SimulatorEventsWrapper(simulatorEvents);
+        
+        return simulatorEventsWrapper;
     }
 
     /**
@@ -481,10 +490,14 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * @param simulatorEvents
      * @throws ParseSimulatorEventException
      */
-    private void addDetailsToSimulatorEvents(List<SimulatorEvent> simulatorEvents) throws ParseSimulatorEventException {
+    private List<SimulatorEventWithDetails> createSimulatorEventsWithDetails(List<SimulatorEvent> simulatorEvents) throws ParseSimulatorEventException {
+        List<SimulatorEventWithDetails> simulatorEventsWithDetails= new ArrayList<>();
+        
         for (SimulatorEvent simulatorEvent : simulatorEvents) {
-            addDetailToSimulatorEvent(simulatorEvent);
+            simulatorEventsWithDetails.add(createSimulatorEventWithDetails(simulatorEvent));
         }
+        
+        return simulatorEventsWithDetails;
     }
 
     /**
@@ -493,7 +506,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * @param simulatorEvent
      * @throws ParseSimulatorEventException
      */
-    private void addDetailToSimulatorEvent(SimulatorEvent simulatorEvent) throws ParseSimulatorEventException {
+    private SimulatorEventWithDetails createSimulatorEventWithDetails(SimulatorEvent simulatorEvent) throws ParseSimulatorEventException {
         // set details to event
         HwComponentModel c1 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getSourcceId());
         HwComponentModel c2 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getDestId());
@@ -507,6 +520,6 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         EthInterfaceModel eth1 = cable.getInterface1();
         EthInterfaceModel eth2 = cable.getInterface2();
 
-        simulatorEvent.setDetails(c1.getName(), c2.getName(), c1, c2, eth1, eth2);
+        return new SimulatorEventWithDetails(simulatorEvent, c1.getName(), c2.getName(), c1, c2, eth1, eth2);
     }
 }

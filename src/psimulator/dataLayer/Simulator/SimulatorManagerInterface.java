@@ -1,8 +1,9 @@
 package psimulator.dataLayer.Simulator;
 
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEvent;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
+import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 /**
  *
@@ -56,9 +57,9 @@ public interface SimulatorManagerInterface {
     
     public void moveToNextEvent();
     public void moveToEvent(final int index);
-    public SimulatorEvent moveToLastEventAndReturn();
+    public SimulatorEventWithDetails moveToLastEventAndReturn();
     
-    public SimulatorEvent getSimulatorEventAtCurrentPosition();
+    public SimulatorEventWithDetails getSimulatorEventAtCurrentPosition();
      
     public boolean isTimeReset();
     

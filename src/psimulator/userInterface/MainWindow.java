@@ -1,9 +1,9 @@
 package psimulator.userInterface;
 
-import psimulator.userInterface.SaveLoad.SaveLoadManagerUserReaction;
-import psimulator.userInterface.SaveLoad.SaveLoadManagerNetworkModel;
-import psimulator.userInterface.SaveLoad.SaveLoadManagerEvents;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -16,12 +16,15 @@ import javax.swing.UnsupportedLookAndFeelException;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Network.Components.NetworkModel;
-import psimulator.dataLayer.SimulatorEvents.SimulatorEventsWrapper;
+import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
 import psimulator.userInterface.GlassPane.GlassPanelPainterSingleton;
 import psimulator.userInterface.GlassPane.MainWindowGlassPane;
+import psimulator.userInterface.SaveLoad.SaveLoadManagerEvents;
+import psimulator.userInterface.SaveLoad.SaveLoadManagerNetworkModel;
+import psimulator.userInterface.SaveLoad.SaveLoadManagerUserReaction;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
@@ -304,12 +307,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
 /////////////////////-----------------------------------////////////////////
     /**
-     * Action Listener for Zoom buttons
+     * Action Listener for Simulator and Editor buttons
      */
     class JMenuItemSimulatorEditorListener implements ActionListener {
 
         /**
-         * calls zoom operation on jPanelEditor according to actionCommand
+         * 
          */
         @Override
         public void actionPerformed(ActionEvent e) {
