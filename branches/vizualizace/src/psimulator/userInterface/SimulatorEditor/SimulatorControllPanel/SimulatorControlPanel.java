@@ -173,7 +173,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
     ////////------------ PRIVATE------------///////////
     private void addListenersToComponents() {
-        /*
+        
         jTableEventList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -181,7 +181,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 if (event.getValueIsAdjusting()) {
                     return;
                 }
-  
+
                 // if no rows
                 int rowCount = jTableEventList.getRowCount();
                 if(rowCount < 0){
@@ -191,14 +191,18 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 int rowNumber = jTableEventList.getSelectedRow();
 
                 // if position not changed when this event fired, do nothing
-                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber && rowNumber !=0){
+                if(simulatorManagerInterface.getCurrentPositionInList() == rowNumber || rowNumber < 0){
+                    //System.out.println("Do nothing");
                     return;
                 }
                 
+                
+                //System.out.println("Select concrete row");
                 // set concrete row in model
                 simulatorManagerInterface.setConcreteRawSelected(rowNumber);
+                
             }
-        });*/
+        });
 
         // LOAD button action listener
         jButtonLoadListFromFile.addActionListener(new ActionListener(){
@@ -851,7 +855,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     }
 
     private void updatePositionInListAccordingToModel() {
-        if (simulatorManagerInterface.getListSize() > 0) {
+        if (simulatorManagerInterface.isInTheList() && simulatorManagerInterface.getListSize() > 0) {
             int row = simulatorManagerInterface.getCurrentPositionInList();
             // if some row selected
             if (row >= 0) {
