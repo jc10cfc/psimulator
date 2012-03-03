@@ -31,6 +31,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private volatile boolean isRecording = false;
     private volatile boolean isRealtime = false;
     private volatile boolean isPlaying = false;
+    private volatile boolean isSequential = true;
     private volatile int currentSpeed = SPEED_INIT;
     //
     //private volatile int currentPositionInList = 0;
@@ -455,6 +456,26 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public boolean isRealtime() {
         return isRealtime;
     }
+        
+    @Override
+    public boolean isPlayingSequentially(){
+        return isSequential;
+    }
+    
+    @Override
+    public boolean isPlayingByTimestamps(){
+        return !isSequential;
+    }
+
+    @Override
+    public void setPlayingSequentially() {
+        isSequential = true;
+    }
+
+    @Override
+    public void setPlayingByTimestamps() {
+        isSequential = false;
+    }
 
     @Override
     public boolean hasEvents() {
@@ -522,4 +543,5 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         return new SimulatorEventWithDetails(simulatorEvent, c1.getName(), c2.getName(), c1, c2, eth1, eth2);
     }
+
 }
