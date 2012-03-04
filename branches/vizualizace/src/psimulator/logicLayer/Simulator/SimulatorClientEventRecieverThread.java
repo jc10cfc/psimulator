@@ -74,7 +74,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                 if(isRecording){
                     if(DEBUG)System.out.println("Reciever recording " + tmpCounter++);
                     
-                    SimulatorEvent simulatorEvent = generateSimulatorEvent(true, 100);
+                    SimulatorEvent simulatorEvent = generateSimulatorEvent(true, 10000);
                     
                     if(!thread.isInterrupted() && isRecording == true && simulatorEvent != null){
                         try {

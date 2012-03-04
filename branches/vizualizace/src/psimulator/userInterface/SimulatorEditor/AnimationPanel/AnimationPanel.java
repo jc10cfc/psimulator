@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingSource;
-import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
+import org.jdesktop.core.animation.timing.TimingSource.PostTickListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
+import psimulator.dataLayer.Singletons.TimerKeeperSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
@@ -29,7 +29,8 @@ import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInter
 public class AnimationPanel extends AnimationPanelOuterInterface implements AnimationPanelInnerInterface {
     //
 
-    private static final TimingSource f_repaintTimer = new SwingTimerTimingSource();
+    //private static final TimingSource f_repaintTimer = new SwingTimerTimingSource();
+    private PostTickListener postTickListener;
     //
     private DataLayerFacade dataLayer;
     private Graph graph;
@@ -42,8 +43,8 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         super();
         // set timing sourcce to Animator
-        Animator.setDefaultTimingSource(f_repaintTimer);
-
+        //Animator.setDefaultTimingSource(f_repaintTimer);
+       
         this.dataLayer = dataLayer;
 
         // set opacity
@@ -54,17 +55,13 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         //  - the array is small (or writes are very infrequent)
         animations = new CopyOnWriteArrayList<>();
 
-        // init timer
-        f_repaintTimer.init();
-
-        // add listener for tick
-        f_repaintTimer.addPostTickListener(new TimingSource.PostTickListener() {
-
+        // create post tick listener
+        postTickListener = new TimingSource.PostTickListener() {
             @Override
             public void timingSourcePostTick(TimingSource source, long nanoTime) {
                 repaint();
             }
-        });
+        };
 
         // add jPanelAnimation as observer to preferences manager
         dataLayer.addPreferencesObserver((Observer) this);
@@ -107,18 +104,27 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             case PACKET_IMAGE_TYPE_CHANGE:
                 // no need to react
                 break;
+            case SIMULATOR_PLAYER_PLAY:
+            case SIMULATOR_REALTIME_ON:
+                connectToTimer();
+                break;
             case SIMULATOR_PLAYER_STOP:
             case SIMULATOR_REALTIME_OFF:
                 removeAllAnimations();
+                disconnectFromTimer();
                 break;
-                /*
-            case SIMULATOR_REALTIME:
-                if (!dataLayer.getSimulatorManager().isRealtime()) {
-                    removeAllAnimations();
-                }
-                break;*/
-
         }
+    }
+    
+    private void connectToTimer(){
+        TimerKeeperSingleton.getInstance().getTimingSource().addPostTickListener(postTickListener);
+        //System.out.println("Connected to timer");
+    }
+    
+    private void disconnectFromTimer(){
+        TimerKeeperSingleton.getInstance().getTimingSource().removePostTickListener(postTickListener);
+        //System.out.println("Disconnected from timer");
+        this.repaint();
     }
 
     /**
@@ -227,4 +233,5 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     public boolean contains(int x, int y) {
         return false;
     }
+
 }
