@@ -104,44 +104,44 @@ public class DrawPanelListenerStrategyHand extends DrawPanelListenerStrategy {
         
         // if nothing clicked
         if (clickedComponent == null) {
-            System.out.println("Graph - " + graph.getHwComponents().size() + " components, " + graph.getCablesCount()
-                    + " cables and " + graph.getBundlesOfCables().size() + " bundles of cables");
-            
-            System.out.println("Network - " + graph.getNetworkFacade().getHwComponentsCount()+ " components, " 
-                    + graph.getNetworkFacade().getCablesCount()+ " cables");
-            
-            System.out.println("IDs graph:");
-            
-            Iterator <HwComponentGraphic> it = graph.getHwComponents().iterator();
-            
-            while(it.hasNext()){
-                System.out.println(it.next().getId()+"");
-            }
-            
-            System.out.println("IDs network:");
-            
-            Iterator <HwComponentModel> it2 = graph.getNetworkFacade().getHwComponents().iterator();
-            
-            while(it2.hasNext()){
-                System.out.println(it2.next().getId()+"");
-            }
-            
-            System.out.println("IDs Graph cables:");
-            
-            Iterator<CableGraphic> itc1 = graph.getCables().iterator();
-            
-            while(itc1.hasNext()){
-                System.out.println(itc1.next().getId()+"");
-            }
-            
-            
-            System.out.println("IDs Network cables:");
-            
-            Iterator<CableModel> itc2 = graph.getNetworkFacade().getCables().iterator();
-            
-            while(itc2.hasNext()){
-                System.out.println(itc2.next().getId()+"");
-            }
+//            System.out.println("Graph - " + graph.getHwComponents().size() + " components, " + graph.getCablesCount()
+//                    + " cables and " + graph.getBundlesOfCables().size() + " bundles of cables");
+//            
+//            System.out.println("Network - " + graph.getNetworkFacade().getHwComponentsCount()+ " components, " 
+//                    + graph.getNetworkFacade().getCablesCount()+ " cables");
+//            
+//            System.out.println("IDs graph:");
+//            
+//            Iterator <HwComponentGraphic> it = graph.getHwComponents().iterator();
+//            
+//            while(it.hasNext()){
+//                System.out.println(it.next().getId()+"");
+//            }
+//            
+//            System.out.println("IDs network:");
+//            
+//            Iterator <HwComponentModel> it2 = graph.getNetworkFacade().getHwComponents().iterator();
+//            
+//            while(it2.hasNext()){
+//                System.out.println(it2.next().getId()+"");
+//            }
+//            
+//            System.out.println("IDs Graph cables:");
+//            
+//            Iterator<CableGraphic> itc1 = graph.getCables().iterator();
+//            
+//            while(itc1.hasNext()){
+//                System.out.println(itc1.next().getId()+"");
+//            }
+//            
+//            
+//            System.out.println("IDs Network cables:");
+//            
+//            Iterator<CableModel> itc2 = graph.getNetworkFacade().getCables().iterator();
+//            
+//            while(itc2.hasNext()){
+//                System.out.println(itc2.next().getId()+"");
+//            }
             
             if (e.isControlDown()) {
                 // do nothing

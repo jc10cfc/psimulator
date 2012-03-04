@@ -427,6 +427,16 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
 
         return simulatorEvent;
     }
+    
+    /**
+     * used from another thread...player
+     * @return 
+     */
+    @Override
+    public SimulatorEventWithDetails getNextEvent(){
+        return eventTableModel.getNextEvent();
+    }
+            
 
     @Override
     public boolean isConnectedToServer() {

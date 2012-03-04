@@ -111,6 +111,25 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     // start animation
                     animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId());
 
+                    // if playing by timestamps, adjust sleep time
+                    if(simulatorManagerInterface.isPlayingByTimestamps()){
+                        SimulatorEventWithDetails nextEvent = simulatorManagerInterface.getNextEvent();
+                        if(nextEvent != null){
+                            long timestampCurrent = event.getTimeStamp();
+                            long timestampNext = nextEvent.getTimeStamp();
+                            
+                            // calculate sleep time
+                            int newTime = calculateSleepTimePlayingByTimestamps(timestampCurrent, timestampNext);
+                            
+                            // if new sleep time is not too long
+                            if(newTime < 5000){
+                                time = newTime;
+                            }else{
+                                time = 5000;
+                            }
+                        }
+                    }
+                    
                     // sleep thread for the same time as the animation takes
                     Thread.sleep(time);
 
@@ -134,6 +153,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
         }
 
+    }
+    
+    private int calculateSleepTimePlayingByTimestamps(long timestampCurrent, long timestampNext){
+        return (int) (timestampNext - timestampCurrent);
     }
     
     private int calculateSpeedCoefifient(){

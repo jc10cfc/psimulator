@@ -66,6 +66,8 @@ public interface SimulatorManagerInterface {
     public SimulatorEventWithDetails moveToLastEventAndReturn();
     
     public SimulatorEventWithDetails getSimulatorEventAtCurrentPosition();
+    
+    public SimulatorEventWithDetails getNextEvent();
      
     public boolean isTimeReset();
     
