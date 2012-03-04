@@ -1,9 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -52,12 +49,6 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         // set title
         this.setTitle(abstractHwComponent.getDeviceName());
 
-        // set minimum size
-        this.setMinimumSize(new Dimension(200, 100));
-
-        //this.setMaximumSize(new Dimension(400, 250));
-
-
         switch (abstractHwComponent.getHwType()) {
             case END_DEVICE_NOTEBOOK:
             case END_DEVICE_WORKSTATION:
@@ -80,7 +71,29 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
                 System.err.println("HwComponentProperties error1");
                 break;
         }
+        
+        
+        
 
+        if(showAddresses){
+            // set minimum size
+            this.setMinimumSize(new Dimension(550, 300));
+            // set preffered size
+            this.setPreferredSize(new Dimension(580, 350)); 
+        }else{
+            // set minimum size
+            this.setMinimumSize(new Dimension(450, 300));
+            // set preffered size
+            this.setPreferredSize(new Dimension(450, 350)); 
+        }
+        
+        // if real pc dialog
+        if(!showInterfaces){
+            this.setResizable(false);
+        }
+        
+        
+        
         //Make textField get the focus whenever frame is activated.
         this.addWindowFocusListener(new WindowAdapter() {
 
@@ -158,19 +171,38 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
     @Override
     protected JPanel createContentPanel() {
         JPanel mainPanel = new JPanel();
+        /*
         mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         mainPanel.add(createDevicePanel());
         mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
+        */
+        
+        mainPanel.setLayout(new GridBagLayout());
 
+        GridBagConstraints cons = new GridBagConstraints();
+        cons.fill = GridBagConstraints.HORIZONTAL; // natural height maximum width
+
+        cons.gridx = 0;
+        cons.gridy = 0;
+        mainPanel.add(createDevicePanel(), cons);
+        
+        cons.gridx = 0;
+        cons.gridy = 1;
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 6)), cons);
+
+        cons.gridx = 0;
+        cons.gridy = 2;
+        cons.weighty = 1.0;
+        cons.weightx = 1.0;
+        cons.fill = GridBagConstraints.BOTH; // both width and height max
+        
         if (showInterfaces) {
-            //mainPanel.add(createInterfacesPanel());
-            
-            mainPanel.add(createInterfaceTablePanel());
+            mainPanel.add(createInterfaceTablePanel(), cons);
         } else {
-            mainPanel.add(createRealPcPanel());
+            mainPanel.add(createRealPcPanel(), cons);
         }
         /*
          * mainPanel.add(Box.createRigidArea(new Dimension(0, 6)));
@@ -233,7 +265,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
     }
 
     private JPanel createInterfaceTablePanel() {
-        JPanel interfacesTablePanel = new JPanel();
+        JPanel interfacesTablePanel = new JPanel(new BorderLayout());
         // create border
         interfacesTablePanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("INTERFACES")));
 
@@ -247,6 +279,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         JScrollPane jScrollPane = new JScrollPane();
         jScrollPane.setViewportView(table);
 
+        /*
         if(showAddresses){
             jScrollPane.setMaximumSize(new Dimension(470,150));
             jScrollPane.setPreferredSize(new Dimension(470,150));
@@ -254,7 +287,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
             jScrollPane.setMaximumSize(new Dimension(300,150));
             jScrollPane.setPreferredSize(new Dimension(300,150));
             
-        }
+        }*/
             
         // set scrollbar policies
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -262,7 +295,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         
         
         // add scroll pane to panel
-        interfacesTablePanel.add(jScrollPane);
+        interfacesTablePanel.add(jScrollPane, BorderLayout.CENTER);
 
         return interfacesTablePanel;
     }

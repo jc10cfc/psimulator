@@ -311,7 +311,7 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
     }
 
     @Override
-    public void init() {
+    public void removeAllSimulatorEvents() {
         jPanelSimulator.clearEvents();
     }
 

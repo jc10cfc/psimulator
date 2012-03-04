@@ -33,16 +33,16 @@ public class InterfacesTableIpAddressCellEditor extends DefaultCellEditor {
         editor.setValue(value);
 
         // IP address column
-        if (column == 3) {
-            RegexFormatter ipMaskFormatter = new RegexFormatter(Validator.IP_WITH_MASK_PATTERN);
-            ipMaskFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
-            ipMaskFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
-            ipMaskFormatter.setOverwriteMode(false);        // do notoverwrite charracters
+        RegexFormatter ipMaskFormatter = new RegexFormatter(Validator.IP_WITH_MASK_PATTERN);
+        ipMaskFormatter.setAllowsInvalid(true);         // allow to enter invalid value for short time
+        ipMaskFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
+        ipMaskFormatter.setOverwriteMode(false);        // do notoverwrite charracters
 
-            editor.setFormatterFactory(new DefaultFormatterFactory(ipMaskFormatter));
-        }
+        editor.setFormatterFactory(new DefaultFormatterFactory(ipMaskFormatter));
+
 
         editor.addFocusListener(new FocusListener() {
+
             @Override
             public void focusGained(FocusEvent e) {
             }
@@ -58,7 +58,7 @@ public class InterfacesTableIpAddressCellEditor extends DefaultCellEditor {
         });
 
 
-        return new JLayer<JFormattedTextField>(editor, layerUI);
+        return new JLayer<>(editor, layerUI);
     }
 
     @Override

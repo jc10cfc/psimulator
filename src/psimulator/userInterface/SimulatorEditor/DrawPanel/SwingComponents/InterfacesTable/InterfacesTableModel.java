@@ -26,8 +26,8 @@ public class InterfacesTableModel extends AbstractTableModel {
         
         if(showAddresses){
             String[] names = {dataLayer.getString("INTERFACE"), dataLayer.getString("CONNECTED"),
-                dataLayer.getString("CONNECTED_TO"), dataLayer.getString("IP_ADDRESS_MASK"),
-                dataLayer.getString("MAC_ADDRESS")};
+                dataLayer.getString("CONNECTED_TO"), dataLayer.getString("IS_UP"), 
+                dataLayer.getString("IP_ADDRESS_MASK"), dataLayer.getString("MAC_ADDRESS")};
             columnNames = names;
         }else{
             String[] names = {dataLayer.getString("INTERFACE"), dataLayer.getString("CONNECTED"),
@@ -65,11 +65,15 @@ public class InterfacesTableModel extends AbstractTableModel {
             
             
             if(showAddresses){
+                //
+                // fill IS UP
+                data[i][3] = new Boolean(ethInterface.isIsUp());
+                
                 // fill IP addresses
-                data[i][3] = ethInterface.getIpAddress();
+                data[i][4] = ethInterface.getIpAddress();
 
                 // fill MAC addresses
-                data[i][4] = ethInterface.getMacAddress();
+                data[i][5] = ethInterface.getMacAddress();
             }
         }
         
@@ -122,13 +126,18 @@ public class InterfacesTableModel extends AbstractTableModel {
     public boolean hasChangesMade() {
         if (showAddresses) {
             for(int i=0;i<getRowCount();i++){
+                // if IS UP is different
+                if(!abstractHwComponent.getInterfaces().get(i).isIsUp() == (boolean)getValueAt(i, 3)){
+                    return true;
+                }
+                
                 // if IP address is different
-                if(!abstractHwComponent.getInterfaces().get(i).getIpAddress().equals(getValueAt(i, 3))){
+                if(!abstractHwComponent.getInterfaces().get(i).getIpAddress().equals(getValueAt(i, 4))){
                     return true;
                 }
                 
                 // if MAC address is different
-                if(!abstractHwComponent.getInterfaces().get(i).getMacAddress().equals(getValueAt(i, 4))){
+                if(!abstractHwComponent.getInterfaces().get(i).getMacAddress().equals(getValueAt(i, 5))){
                     return true;
                 }
                 
@@ -140,11 +149,14 @@ public class InterfacesTableModel extends AbstractTableModel {
     public void copyValuesFromLocalToGlobal() {
         if (showAddresses) {
             for(int i=0;i<getRowCount();i++){
+                // save IS UP
+                abstractHwComponent.getInterfaces().get(i).setIsUp((boolean)getValueAt(i,3));
+                
                 // save IP
-                abstractHwComponent.getInterfaces().get(i).setIpAddress(getValueAt(i,3).toString());
+                abstractHwComponent.getInterfaces().get(i).setIpAddress(getValueAt(i,4).toString());
                 
                 // save MAC
-                String mac = getValueAt(i,4).toString();
+                String mac = getValueAt(i,5).toString();
                 mac = mac.replaceAll(":", "-");
                 
                 abstractHwComponent.getInterfaces().get(i).setMacAddress(mac);

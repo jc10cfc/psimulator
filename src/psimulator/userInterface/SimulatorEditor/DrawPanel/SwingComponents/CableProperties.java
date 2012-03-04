@@ -46,6 +46,9 @@ public final class CableProperties extends AbstractPropertiesOkCancelDialog {
         // initialize
         initialize();
         
+        //
+        this.setResizable(false);
+        
         // set visible true
         this.setVisible(true);
     }

@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.InterfacesTable;
 
-import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -29,12 +28,12 @@ public class InterfacesTableCellRenderer extends JLabel implements TableCellRend
         }
 
         // IP address column
-        if (column == 3) {
+        if (column == 4) {
             setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 192.168.1.1/24 (IP/mask)");
         }
 
         // MAC address column
-        if (column == 4) {
+        if (column == 5) {
             setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)");
         }
 

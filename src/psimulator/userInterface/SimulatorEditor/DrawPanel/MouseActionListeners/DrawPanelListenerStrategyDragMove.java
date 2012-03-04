@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners;
 
-import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;

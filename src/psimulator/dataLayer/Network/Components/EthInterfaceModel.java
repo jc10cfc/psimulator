@@ -42,9 +42,14 @@ public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
      */
     private Integer id;
 
+    /**
+    * If interface is on/off.
+    */
+    private boolean isUp;
+
 
     public EthInterfaceModel(Integer id, HwTypeEnum hwType, HwComponentModel hwComponent, CableModel cable, 
-            String ipAddress, String macAddress, String interfaceName) {
+            String ipAddress, String macAddress, String interfaceName, boolean isUp) {
         
         // assign variables
         this.id = id;
@@ -54,6 +59,8 @@ public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
         this.interfaceName = interfaceName;
+        
+        this.isUp = isUp;
     }
 
     public EthInterfaceModel() {
@@ -193,6 +200,14 @@ public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
     @Override
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public boolean isIsUp() {
+        return isUp;
+    }
+
+    public void setIsUp(boolean isUp) {
+        this.isUp = isUp;
     }
 
     
