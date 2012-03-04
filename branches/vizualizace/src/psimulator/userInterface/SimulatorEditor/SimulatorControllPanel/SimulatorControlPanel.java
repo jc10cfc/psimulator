@@ -122,6 +122,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     public void clearEvents() {
         simulatorManagerInterface.deleteAllSimulatorEvents();
         //jTableEventList.getSelectionModel().clearSelection();
+        updatePacketDetailsAccordingToModel();
     }
 
     @Override
@@ -842,6 +843,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         //
         jRadioButtonPlaySequentially.setText(dataLayer.getString("SEQUENTIALLY"));
         jRadioButtonPlayByTimestamps.setText(dataLayer.getString("ACCORDING_TO_TIMESTAMPS"));
+        jRadioButtonPlaySequentially.setToolTipText(dataLayer.getString("SEQUENTIALLY_TOOL_TIP"));
+        jRadioButtonPlayByTimestamps.setToolTipText(dataLayer.getString("ACCORDING_TO_TIMESTAMPS_TOOL_TIP"));
         //
         Hashtable labelTable = new Hashtable();
         labelTable.put(new Integer(SimulatorManager.SPEED_MIN), jLabelSliderSlow);

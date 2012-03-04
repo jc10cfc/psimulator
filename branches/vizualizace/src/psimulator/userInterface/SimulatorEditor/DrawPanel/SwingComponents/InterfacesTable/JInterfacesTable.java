@@ -3,10 +3,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Inter
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 
@@ -30,16 +27,18 @@ public class JInterfacesTable extends JTable {
         
         // set custom cell renderer 
         this.getColumnModel().getColumn(0).setCellRenderer(new InterfacesTableCellRenderer(dataLayer));
+        this.getColumnModel().getColumn(1).setCellRenderer(new InterfacesTableCellRendererCheckBoxNotFocusable(dataLayer));
         this.getColumnModel().getColumn(2).setCellRenderer(new InterfacesTableCellRenderer(dataLayer));
         
         // if show ip addreses
         if(m.getColumnCount()>=4){
-            m.getColumn(3).setCellEditor(new InterfacesTableIpAddressCellEditor());
-            m.getColumn(4).setCellEditor(new InterfacesTableMacAddressCellEditor());
+            m.getColumn(4).setCellEditor(new InterfacesTableIpAddressCellEditor());
+            m.getColumn(5).setCellEditor(new InterfacesTableMacAddressCellEditor());
             
             // set custom cell renderer - for tool tips
-            this.getColumnModel().getColumn(3).setCellRenderer(new InterfacesTableCellRenderer(dataLayer));
+            this.getColumnModel().getColumn(3).setCellRenderer(new InterfacesTableCellRendererCheckBox(dataLayer));
             this.getColumnModel().getColumn(4).setCellRenderer(new InterfacesTableCellRenderer(dataLayer));
+            this.getColumnModel().getColumn(5).setCellRenderer(new InterfacesTableCellRenderer(dataLayer));
             
             // add tool tips to header
             this.setTableHeader(createTableHeader());
@@ -60,6 +59,7 @@ public class JInterfacesTable extends JTable {
                 null,
                 null,
                 null,
+                dataLayer.getString("SETS_THAT_INTERFACE_ON_OFF"),
                 dataLayer.getString("REQUIRED_FORMAT_IS") + " 192.168.1.1/24 (IP/mask)",
                 dataLayer.getString("REQUIRED_FORMAT_IS") + " HH-HH-HH-HH-HH-HH (H = hexadecimal n.)"};
 
@@ -88,15 +88,18 @@ public class JInterfacesTable extends JTable {
                     column.setPreferredWidth(90);
                     break;
                 case 1:
-                    column.setPreferredWidth(65);
+                    column.setPreferredWidth(60);
                     break;
                 case 2:
                     column.setPreferredWidth(75);
                     break;
                 case 3:
-                    column.setPreferredWidth(120);
+                    column.setPreferredWidth(65);
                     break;
                 case 4:
+                    column.setPreferredWidth(120);
+                    break;
+                case 5:
                     column.setPreferredWidth(120);
                     break;
                 default:

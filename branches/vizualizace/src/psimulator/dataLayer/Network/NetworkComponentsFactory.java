@@ -92,6 +92,7 @@ public class NetworkComponentsFactory {
     private EthInterfaceModel createEthInterface(String interfaceName, HwTypeEnum hwType) {
         String macAddress;
         String ipAddress;
+        boolean isUp = false;
 
         // do not generate MAC for switches and real pc
         switch (hwType) {
@@ -106,12 +107,29 @@ public class NetworkComponentsFactory {
                 ipAddress = "";
                 break;
         }
+        
+        switch (hwType) {
+            case LINUX_ROUTER:
+                isUp = true;
+                break;
+            case CISCO_ROUTER:
+                isUp = false;
+                break;
+            case END_DEVICE_WORKSTATION:
+            case END_DEVICE_NOTEBOOK:
+            case END_DEVICE_PC:
+                isUp = true;
+                break;
+            default: 
+                isUp = false;
+                break;
+        }
 
         Integer interfaceId = GeneratorSingleton.getInstance().getNextId();
         HwComponentModel hwComponentModel = null;
         CableModel cable = null;
 
-        EthInterfaceModel ethInterfaceModel = new EthInterfaceModel(interfaceId, hwType, hwComponentModel, cable, ipAddress, macAddress, interfaceName);
+        EthInterfaceModel ethInterfaceModel = new EthInterfaceModel(interfaceId, hwType, hwComponentModel, cable, ipAddress, macAddress, interfaceName, isUp);
 
         return ethInterfaceModel;
     }

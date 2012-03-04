@@ -29,7 +29,7 @@ public abstract class AbstractPropertiesDialog extends JDialog{
 
         // set of JDialog parameters
         this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        this.setResizable(false);
+        //this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
     

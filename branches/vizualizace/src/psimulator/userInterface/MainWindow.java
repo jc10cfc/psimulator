@@ -147,18 +147,19 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         this.setSize(new Dimension(1024, 768));
         this.setVisible(true);
 
-        // Get the size of the screen
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-
-        // Determine the new location of the window
-        int w = this.getSize().width;
-        int h = this.getSize().height;
-        int x = (dim.width - w) / 2;
-        int y = (dim.height - h) / 2;
-
-        // Move the window
-        this.setLocation(x, y);
-
+        
+//        // Get the size of the screen
+//        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+//
+//        // Determine the new location of the window
+//        int w = this.getSize().width;
+//        int h = this.getSize().height;
+//        int x = (dim.width - w) / 2;
+//        int y = (dim.height - h) / 2;
+//
+//        // Move the window
+//        this.setLocation(x, y);
+        
         this.setVisible(true);
     }
 
@@ -356,11 +357,11 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                                 return;
                             }
                             // if save succesfull clear list
-                            dataLayer.getSimulatorManager().deleteAllSimulatorEvents();
+                            jPanelUserInterfaceMain.removeAllSimulatorEvents();
                         } else if (result == 1){    // celar events
                             //System.out.println("Clear list");
                             // clear list
-                            dataLayer.getSimulatorManager().deleteAllSimulatorEvents();
+                            jPanelUserInterfaceMain.removeAllSimulatorEvents();
                         } else {    // go back to editor
                             //System.out.println("Cancel");
                             // get back to editor
@@ -512,7 +513,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             Graph graph = saveLoadManagerGraph.buildGraphFromNetworkModel(networkModel);
 
             if (graph != null) {
-                // init graph (set edit timestamp)
+                // removeAllSimulatorEvents graph (set edit timestamp)
                 refreshUserInterfaceMainPanel(graph, networkModel, UserInterfaceMainPanelState.EDITOR, false);
 
                 // set saved timestamp
@@ -612,7 +613,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
         if (!changingSimulatorEditor) {
             // delete events from simulator
-            jPanelUserInterfaceMain.init();
+            jPanelUserInterfaceMain.removeAllSimulatorEvents();
         }
 
         switch (userInterfaceState) {
