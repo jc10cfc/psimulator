@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlTransient;
+import psimulator.dataLayer.Network.Components.simulatorConfig.DeviceSettings;
 
 /**
  *
@@ -16,7 +17,6 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
      * LinkedHashMap of EthInterfaces that component owns. Key is the
      * ethInterface ID.
      */
-    
     private Map<Integer, EthInterfaceModel> interfacesMap;
     // -------------------------------------------------------
     /**
@@ -39,8 +39,13 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
      * Id of component
      */
     private Integer id;
+    /**
+     * Nastaveni pocitace pro potreby simulatoru.
+     */
+    private DeviceSettings devSettings;
 
-    public HwComponentModel(Integer id, HwTypeEnum hwType, String deviceName, List<EthInterfaceModel> ethInterfaces, int defaultZoomXPos, int defaultZoomYPos) {
+    public HwComponentModel(Integer id, HwTypeEnum hwType, String deviceName, List<EthInterfaceModel> ethInterfaces,
+            int defaultZoomXPos, int defaultZoomYPos, DeviceSettings devSettings) {
 
         // add values to variables
         this.id = id;
@@ -48,6 +53,8 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
         this.deviceName = deviceName;
         this.defaultZoomXPos = defaultZoomXPos;
         this.defaultZoomYPos = defaultZoomYPos;
+        this.devSettings = devSettings;
+
 
         // add interfaces to map
         this.setInterfacesAsList(ethInterfaces);
@@ -56,13 +63,14 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
     public HwComponentModel() {
         this.interfacesMap = new LinkedHashMap<Integer, EthInterfaceModel>();
     }
-    
-    @XmlAttribute @XmlID
-    public String getIDAsString(){
+
+    @XmlAttribute
+    @XmlID
+    public String getIDAsString() {
         return String.valueOf(this.id);
     }
-    
-    public void setIDAsString(String id){
+
+    public void setIDAsString(String id) {
         this.id = Integer.valueOf(id);
     }
 
@@ -197,7 +205,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
     public Map<Integer, EthInterfaceModel> getInterfacesMap() {
         return interfacesMap;
     }
-    
+
     public void setInterfacesMap(Map<Integer, EthInterfaceModel> interfacesMap) {
         this.interfacesMap = interfacesMap;
     }
@@ -236,6 +244,12 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
     public void setId(Integer id) {
         this.id = id;
     }
-    
-    
+
+    public DeviceSettings getDevSettings() {
+        return devSettings;
+    }
+
+    public void setDevSettings(DeviceSettings devSettings) {
+        this.devSettings = devSettings;
+    }
 }

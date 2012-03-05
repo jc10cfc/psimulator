@@ -79,7 +79,7 @@ public class NetworkComponentsFactory {
         }
 
         // create hw component
-        HwComponentModel hwComponent = new HwComponentModel(id, hwType, deviceName, ethInterfaces, defaultZoomXPos, defaultZoomYPos);
+        HwComponentModel hwComponent = new HwComponentModel(id, hwType, deviceName, ethInterfaces, defaultZoomXPos, defaultZoomYPos, null);
 
         // set HwComponent to ethInterfaces
         for (EthInterfaceModel ethInterface : ethInterfaces) {
