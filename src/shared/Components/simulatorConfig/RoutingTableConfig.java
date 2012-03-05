@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class RoutingTableConfig {
 
-	private List<Record> records = new ArrayList<>();	// podle Martina L. tohle marchaller umoznuje
+	private List<Record> records = new ArrayList<>();	// podle Martina L. tohle marshaller umoznuje
 
 	@XmlElement(name = "routingTableItem")
 	public List<Record> getRecords() {
