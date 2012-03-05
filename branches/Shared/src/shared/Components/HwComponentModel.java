@@ -45,7 +45,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
     private DeviceSettings devSettings;
 
     public HwComponentModel(Integer id, HwTypeEnum hwType, String deviceName, List<EthInterfaceModel> ethInterfaces,
-            int defaultZoomXPos, int defaultZoomYPos, DeviceSettings devSettings) {
+            int defaultZoomXPos, int defaultZoomYPos) {
 
         // add values to variables
         this.id = id;
@@ -53,8 +53,6 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
         this.deviceName = deviceName;
         this.defaultZoomXPos = defaultZoomXPos;
         this.defaultZoomYPos = defaultZoomYPos;
-        this.devSettings = devSettings;
-
 
         // add interfaces to map
         this.setInterfacesAsList(ethInterfaces);
