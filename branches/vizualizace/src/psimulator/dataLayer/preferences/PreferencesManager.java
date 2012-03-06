@@ -1,5 +1,7 @@
 package psimulator.dataLayer.preferences;
 
+import java.io.File;
+import java.util.List;
 import java.util.Observable;
 import java.util.prefs.Preferences;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
@@ -27,27 +29,37 @@ public final class PreferencesManager extends Observable implements SaveableInte
     //
     private static final String CONNECTION_IP_ADDRESS = "CONNECTION_IP_ADDRESS";
     private static final String CONNECTION_PORT = "CONNECTION_PORT";
+    //
+    private static final String RECENTLY_OPENED_FILES = "RECENTLY_OPENED_FILES";
     // 
     private Preferences prefs;
     // set to default
     private ToolbarIconSizeEnum toolbarIconSize = ToolbarIconSizeEnum.MEDIUM;
     private PacketImageType packageImageType = PacketImageType.CLASSIC;
+    private LevelOfDetailsMode levelOfDetails = LevelOfDetailsMode.MANUAL;
+    //
     private boolean viewDeviceNames = true;
     private boolean viewDeviceTypes = true;
     private boolean viewInterfaceNames = true;
     private boolean viewCableDelay = false;
     private boolean viewIpAddresses = true;
     private boolean viewMacAddresses = true;
-    private LevelOfDetailsMode levelOfDetails = LevelOfDetailsMode.MANUAL;
     //
     private String connectionIpAddress = "";
     private String connectionPort = "";
-    
+    private String recentlyOpenedFiles = "";
+    //
+    private RecentOpenedFilesManager recentOpenedFilesManager;
+    //
     public PreferencesManager() {
         // initialize preferences store
         prefs = Preferences.userNodeForPackage(this.getClass());
-
-        loadPreferences();
+        
+        // create recent opened files manager
+        recentOpenedFilesManager = new RecentOpenedFilesManager();
+        
+        // load preferences
+        loadPreferences();    
     }
 
     @Override
@@ -67,6 +79,11 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
         prefs.put(CONNECTION_IP_ADDRESS, connectionIpAddress);
         prefs.put(CONNECTION_PORT, connectionPort);
+        
+        // get string with filenames from recentOpenedFilesManager
+        recentlyOpenedFiles = recentOpenedFilesManager.createStringFromFiles();
+        
+        prefs.put(RECENTLY_OPENED_FILES, recentlyOpenedFiles);
     }
 
     @Override
@@ -86,6 +103,14 @@ public final class PreferencesManager extends Observable implements SaveableInte
         
         connectionIpAddress = prefs.get(CONNECTION_IP_ADDRESS, connectionIpAddress);
         connectionPort = prefs.get(CONNECTION_PORT, connectionPort);
+        
+        recentlyOpenedFiles = prefs.get(RECENTLY_OPENED_FILES, recentlyOpenedFiles);
+        
+        // let Recent opened files manager parse the saved files
+        recentOpenedFilesManager.parseFilesFromString(recentlyOpenedFiles);
+        
+        // clear non existing files
+        recentOpenedFilesManager.clearNotExistingFiles();
     }
 
     // GETTERS AND SETTERS
@@ -211,5 +236,17 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
     public void setConnectionPort(String connectionPort) {
         this.connectionPort = connectionPort;
+    }
+    
+    public List<File> getRecentOpenedFiles(){
+        return recentOpenedFilesManager.getRecentOpenedFiles();
+    }
+    
+    public void addRecentOpenedFile(File file){
+        recentOpenedFilesManager.addFile(file);
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.RECENT_OPENED_FILES_CHANGED);
     }
 }

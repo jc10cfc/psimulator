@@ -3,10 +3,13 @@ package psimulator.userInterface;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.io.File;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
@@ -18,7 +21,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 public class MenuBar extends JMenuBar implements Observer {
 
     private DataLayerFacade dataLayer;
-
+    //
     private JMenu jMenuFile;
     private JMenuItem jMenuItemNew;
     private JMenuItem jMenuItemClose;
@@ -26,20 +29,25 @@ public class MenuBar extends JMenuBar implements Observer {
     private JMenuItem jMenuItemSave;        
     private JMenuItem jMenuItemSaveAs;
     private JMenuItem jMenuItemExit;
-    
+    //
+    private JMenu jMenuRecentlyOpened;
+    private JMenuItem jMenuItemEmpty;
+    //
     private JMenu jMenuEdit;
     private JMenuItem jMenuItemUndo;        
     private JMenuItem jMenuItemRedo;
     private JMenuItem jMenuItemSelectAll;
     private JMenuItem jMenuItemDelete;
-    
+    //
     private JMenu jMenuView;
     private JMenuItem jMenuItemZoomIn;
     private JMenuItem jMenuItemZoomOut;
     private JMenuItem jMenuItemZoomReset;        
-    
+    //
     private JMenu jMenuOptions;
     private JMenuItem jMenuItemPreferences;
+    //
+    
 
     public MenuBar(DataLayerFacade dataLayer) {
         super();
@@ -47,6 +55,7 @@ public class MenuBar extends JMenuBar implements Observer {
 
         // add this MenuBar as observer to langage manager
         dataLayer.addLanguageObserver((Observer)this);
+        dataLayer.addPreferencesObserver((Observer)this);
         
         /* menu File */
         jMenuFile = new JMenu();
@@ -63,10 +72,16 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuItemSaveAs.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_FILESAVEAS_16_PATH));
         jMenuItemExit = new JMenuItem();
         
+        jMenuRecentlyOpened = new JMenu();
+        jMenuItemEmpty = new JMenuItem();
+        jMenuItemEmpty.setEnabled(false);
+        jMenuRecentlyOpened.add(jMenuItemEmpty);
+        //
         jMenuFile.add(jMenuItemNew);
         jMenuFile.add(jMenuItemClose);
         jMenuFile.addSeparator();
         jMenuFile.add(jMenuItemOpen);
+        jMenuFile.add(jMenuRecentlyOpened);
         jMenuFile.add(jMenuItemSave);
         jMenuFile.add(jMenuItemSaveAs);
         jMenuFile.addSeparator();
@@ -131,6 +146,9 @@ public class MenuBar extends JMenuBar implements Observer {
         /* set texts to menu items */
         setMnemonics();
         setTextsToComponents();
+        
+        // create menu with recently opened files
+        createRecentFilesJMenu();
     }
     
     private void setMnemonics(){
@@ -165,6 +183,8 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuItemNew.setText(dataLayer.getString("NEW_PROJECT"));
         jMenuItemClose.setText(dataLayer.getString("CLOSE"));
         jMenuItemOpen.setText(dataLayer.getString("OPEN"));
+        jMenuRecentlyOpened.setText(dataLayer.getString("OPEN_RECENT_FILE"));
+        jMenuItemEmpty.setText("<< "+dataLayer.getString("EMPTY")+" >>");
         jMenuItemSave.setText(dataLayer.getString("SAVE"));
         jMenuItemSaveAs.setText(dataLayer.getString("SAVE_AS"));
         jMenuItemExit.setText(dataLayer.getString("EXIT"));
@@ -194,15 +214,38 @@ public class MenuBar extends JMenuBar implements Observer {
         
         jMenuItemPreferences.setText(dataLayer.getString("PREFERENCES"));
         /* END menu Options */
-
-        
+      
     }
 
     @Override
     public void update(Observable o, Object o1) {
-        this.setTextsToComponents();
+        switch ((ObserverUpdateEventType) o1) {
+            case LANGUAGE:
+                this.setTextsToComponents();
+                break;
+            case RECENT_OPENED_FILES_CHANGED:
+                this.createRecentFilesJMenu();
+                break;
+            default:
+                break;
+        }
     }
     
+    private void createRecentFilesJMenu(){
+        List<File> filesList = dataLayer.getRecentOpenedFiles();
+        
+        jMenuRecentlyOpened.removeAll();
+        
+        // if no recent files, add only empty item to list
+        if(filesList.isEmpty()){
+            jMenuRecentlyOpened.add(jMenuItemEmpty);
+            return;
+        }
+
+        for(File file : filesList){
+            jMenuRecentlyOpened.add(new JMenuItem(file.getName()));
+        }        
+    }
     
     public void setUndoEnabled(boolean enabled){
         jMenuItemUndo.setEnabled(enabled);

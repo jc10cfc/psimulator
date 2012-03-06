@@ -1,6 +1,7 @@
 package psimulator.dataLayer;
 
 import java.io.File;
+import java.util.List;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
@@ -249,5 +250,13 @@ public class DataLayer extends DataLayerFacade {
         return networkFacade;
     }
 
+    @Override
+    public List<File> getRecentOpenedFiles() {
+        return preferencesManager.getRecentOpenedFiles();
+    }
 
+    @Override
+    public void addRecentOpenedFile(File file) {
+        preferencesManager.addRecentOpenedFile(file);
+    }
 }

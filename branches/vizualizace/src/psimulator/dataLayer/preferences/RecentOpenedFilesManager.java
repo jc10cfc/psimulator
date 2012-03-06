@@ -13,21 +13,46 @@ import java.util.List;
 public final class RecentOpenedFilesManager {
 
     private static final String DELIMITER = ";";
-    private static final int recentOpenedFilesMaxCount = 10;
+    public static final int MAX_COUNT = 10;
     private List<File> recentOpenedFiles;
 
-    public RecentOpenedFilesManager(String filesInString) {
-
+    public RecentOpenedFilesManager() {
+    }
+    
+    
+    public int getSize(){
+        return recentOpenedFiles.size();
+    }
+    
+    /**
+     * Creates files string from list of recent opened files
+     * @return 
+     */
+    public String createStringFromFiles(){
+        String s = "";
+        
+        for(File file : recentOpenedFiles){
+            s += file.getAbsolutePath() + ";";
+        }
+        
+        return s;
+    }
+    
+    /**
+     * Initializes RecentOpendFilesManager with files in parameter string
+     * @param filesInString 
+     */
+    public void parseFilesFromString(String filesInString){
         List<String> filePathsList = parseFilesStringToList(filesInString);
         recentOpenedFiles = createFilesList(filePathsList);
     }
 
+    /**
+     * Returns recent opend files list
+     * @return 
+     */
     public List<File> getRecentOpenedFiles() {
         return recentOpenedFiles;
-    }
-
-    public void setRecentOpenedFiles(List<File> recentOpenedFiles) {
-        this.recentOpenedFiles = recentOpenedFiles;
     }
 
     /**
@@ -35,32 +60,44 @@ public final class RecentOpenedFilesManager {
      * @param file 
      */
     public void addFile(File file){
+        File oldFileRecord = null;
+        
+        // find if file of this name is in the list
+        for(File f : recentOpenedFiles){
+            if(f.toString().equals(file.toString())){
+                oldFileRecord = f;
+            }
+        }
+        
+        // if it is in the list, remove it from the list
+        if(oldFileRecord != null){
+            recentOpenedFiles.remove(oldFileRecord);
+        }
+        
+        // add file to the beginning of the list
         recentOpenedFiles.add(0, file);
         
-        if(recentOpenedFiles.size() > recentOpenedFilesMaxCount){
-            int removeCount = recentOpenedFiles.size() - recentOpenedFilesMaxCount;
+        // if list size exceeds max count, remove exceeding file
+        if(recentOpenedFiles.size() > MAX_COUNT){
+            int removeCount = recentOpenedFiles.size() - MAX_COUNT;
             
             for(int i = 0; i < removeCount; i++){
-                recentOpenedFiles.remove(recentOpenedFilesMaxCount);
+                recentOpenedFiles.remove(MAX_COUNT);
             }
         }
     }
     
     /**
-     * Removes not existing files from list in parameter and returns new list
-     * without them.
-     * 
-     * @param files
-     * @return 
+     * Removes not existing files from list
      */
-    public List<File> cleanNotExistingFiles(List<File> files){
+    public void clearNotExistingFiles(){
         List<File> newFiles = new LinkedList<>();
-        for(File file : files){
+        for(File file : recentOpenedFiles){
             if (file.exists()) {
                 newFiles.add(file);
             }
         }
-        return newFiles;
+        recentOpenedFiles = newFiles;
     }
     
     /**
@@ -78,8 +115,7 @@ public final class RecentOpenedFilesManager {
     }
     
     /**
-     * Finds out whether exists files of filepaths in parameter. The ones that 
-     * exists are returned.
+     * Creates files list from path list
      * @param filePathsList
      * @return 
      */
@@ -87,11 +123,13 @@ public final class RecentOpenedFilesManager {
         List<File> files = new LinkedList<>();
         
         for(String str : filePathsList){
+            if(str.isEmpty()){
+                continue;
+            }
+            
             File tmpFile = new File(str);
             
-            if (tmpFile.exists()) {
-                files.add(tmpFile);
-            }
+            files.add(tmpFile);
         }
         return files;
     }
