@@ -5,8 +5,8 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Network.Serializer.SaveLoadException;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import shared.Serializer.SaveLoadException;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 /**
  *

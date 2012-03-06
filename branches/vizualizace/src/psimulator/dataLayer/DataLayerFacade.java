@@ -1,14 +1,14 @@
 package psimulator.dataLayer;
 
-import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import java.io.File;
 import java.util.Observer;
-import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.Network.NetworkFacade;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.interfaces.LanguageInterface;
 import psimulator.dataLayer.interfaces.PreferencesInterface;
-import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
+import shared.Components.NetworkModel;
+import shared.Serializer.SaveLoadException;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 
 /**

@@ -3,13 +3,13 @@ package psimulator.logicLayer.Simulator;
 import java.util.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.dataLayer.Network.Components.CableModel;
-import psimulator.dataLayer.Network.Components.EthInterfaceModel;
-import psimulator.dataLayer.Network.Components.HwComponentModel;
+import shared.Components.CableModel;
+import shared.Components.EthInterfaceModel;
+import shared.Components.HwComponentModel;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
+import shared.SimulatorEvents.SerializedComponents.PacketType;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 import psimulator.userInterface.UserInterfaceOuterFacade;
 
 /**

@@ -13,7 +13,7 @@ import org.jdesktop.core.animation.timing.TimingSource;
 import org.jdesktop.core.animation.timing.TimingSource.PostTickListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
+import shared.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.dataLayer.Singletons.TimerKeeperSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;

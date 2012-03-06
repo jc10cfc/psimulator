@@ -1,6 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
-import psimulator.dataLayer.Network.Components.NetworkModel;
+import shared.Components.NetworkModel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 
 /**

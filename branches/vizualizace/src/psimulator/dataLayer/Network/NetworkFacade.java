@@ -3,7 +3,7 @@ package psimulator.dataLayer.Network;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import psimulator.dataLayer.Network.Components.*;
+import shared.Components.*;
 
 /**
  *

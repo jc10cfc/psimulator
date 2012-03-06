@@ -1,7 +1,7 @@
 package psimulator.dataLayer;
 
 import java.awt.Color;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
+import shared.SimulatorEvents.SerializedComponents.PacketType;
 
 /**
  *

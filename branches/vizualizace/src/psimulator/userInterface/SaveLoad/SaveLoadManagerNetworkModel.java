@@ -5,10 +5,10 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Network.Components.NetworkModel;
-import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder.GraphBuilderFacade;
+import shared.Components.NetworkModel;
+import shared.Serializer.SaveLoadException;
 
 /**
  *

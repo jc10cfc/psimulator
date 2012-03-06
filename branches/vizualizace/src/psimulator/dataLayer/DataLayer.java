@@ -4,21 +4,20 @@ import java.io.File;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.Network.Components.NetworkModel;
 import psimulator.dataLayer.Network.NetworkFacade;
-import psimulator.dataLayer.Network.Serializer.AbstractNetworkSerializer;
-import psimulator.dataLayer.Network.Serializer.NetworkModelSerializerXML;
-import psimulator.dataLayer.Network.Serializer.SaveLoadException;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
-import psimulator.dataLayer.SimulatorEvents.Serializer.AbstractSimulatorEventsSaveLoadInterface;
-import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializer;
-import psimulator.dataLayer.SimulatorEvents.Serializer.SimulatorEventsSerializerXML;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
+import shared.Components.NetworkModel;
+import shared.Serializer.AbstractNetworkSerializer;
+import shared.Serializer.NetworkModelSerializerXML;
+import shared.Serializer.SaveLoadException;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import shared.SimulatorEvents.Serializer.AbstractSimulatorEventsSaveLoadInterface;
+import shared.SimulatorEvents.Serializer.SimulatorEventsSerializerXML;
 
 /**
  *
