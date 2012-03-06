@@ -2,10 +2,10 @@ package psimulator.dataLayer.SimulatorEvents;
 
 import java.awt.Color;
 import psimulator.dataLayer.ColorMixerSingleton;
-import psimulator.dataLayer.Network.Components.EthInterfaceModel;
-import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.PacketType;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
+import shared.Components.EthInterfaceModel;
+import shared.Components.HwComponentModel;
+import shared.SimulatorEvents.SerializedComponents.PacketType;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 
 /**
  *

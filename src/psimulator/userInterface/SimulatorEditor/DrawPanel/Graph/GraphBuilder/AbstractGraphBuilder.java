@@ -1,7 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
-import psimulator.dataLayer.Network.Components.CableModel;
-import psimulator.dataLayer.Network.Components.HwComponentModel;
+import shared.Components.CableModel;
+import shared.Components.HwComponentModel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilderInterface;
 
 /**

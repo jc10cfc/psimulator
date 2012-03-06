@@ -7,12 +7,12 @@ import javax.swing.SwingUtilities;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.Network.Components.CableModel;
-import psimulator.dataLayer.Network.Components.EthInterfaceModel;
-import psimulator.dataLayer.Network.Components.HwComponentModel;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import shared.Components.CableModel;
+import shared.Components.EthInterfaceModel;
+import shared.Components.HwComponentModel;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 /**
  *

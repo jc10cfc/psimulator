@@ -18,8 +18,8 @@ import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.userInterface.MainWindowInnerInterface;
 
 /**

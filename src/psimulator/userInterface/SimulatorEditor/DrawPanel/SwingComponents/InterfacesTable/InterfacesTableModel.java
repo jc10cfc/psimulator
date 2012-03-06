@@ -2,7 +2,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.Inter
 
 import javax.swing.table.AbstractTableModel;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Network.Components.EthInterfaceModel;
+import shared.Components.EthInterfaceModel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 
 /**

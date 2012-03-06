@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Network.Components.HwComponentModel;
+import shared.Components.HwComponentModel;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;

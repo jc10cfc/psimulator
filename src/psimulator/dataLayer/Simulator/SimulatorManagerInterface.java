@@ -1,9 +1,9 @@
 package psimulator.dataLayer.Simulator;
 
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEvent;
-import psimulator.dataLayer.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 /**
  *

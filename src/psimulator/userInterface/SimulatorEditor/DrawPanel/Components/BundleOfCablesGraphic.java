@@ -7,7 +7,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import psimulator.dataLayer.DataLayerFacade;
-import psimulator.dataLayer.Network.Components.HwTypeEnum;
+import shared.Components.HwTypeEnum;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 
 /**
