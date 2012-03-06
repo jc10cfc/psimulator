@@ -53,9 +53,9 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
             //return false;
             return SaveLoadManagerUserReaction.CANCEL;
         }
-        
+
         // if do not save
-        if( i == 1 ){
+        if (i == 1) {
             return SaveLoadManagerUserReaction.DO_NOT_SAVE;
         }
 
@@ -116,6 +116,16 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
         }
     }
 
+    public NetworkModel doLoadNetworkModel(String filePath) {
+        try {
+            File fileToOpen = new File(filePath);
+            return open(fileToOpen);
+        } catch (SaveLoadException ex) {
+            showWarningSaveLoadError(ex.getParametersWrapper());
+            return null;
+        }
+    }
+
     public Graph buildGraphFromNetworkModel(NetworkModel networkModel) {
         GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
         Graph graph = graphBuilderFacade.buildGraph(networkModel);
@@ -129,21 +139,25 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
 
-            // load network model
-            NetworkModel networkModel = dataLayer.loadNetworkModelFromFile(selctedFile);
-
-            // set saved timestamp and file name
-            setLastSavedFile(selctedFile);
-            
-            // add to recently opened
-            dataLayer.addRecentOpenedFile(file);
-            
-            // save preferences
-            dataLayer.savePreferences();
-
-            return networkModel;
+            return open(selctedFile);
         }
         return null;
+    }
+
+    private NetworkModel open(File fileToOpen) throws SaveLoadException {
+        // load network model
+        NetworkModel networkModel = dataLayer.loadNetworkModelFromFile(fileToOpen);
+
+        // set saved timestamp and file name
+        setLastSavedFile(fileToOpen);
+
+        // add to recently opened
+        dataLayer.addRecentOpenedFile(file);
+
+        // save preferences
+        dataLayer.savePreferences();
+
+        return networkModel;
     }
 
     /**
