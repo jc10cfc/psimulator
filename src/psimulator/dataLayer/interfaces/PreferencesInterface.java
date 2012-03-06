@@ -1,5 +1,7 @@
 package psimulator.dataLayer.interfaces;
 
+import java.io.File;
+import java.util.List;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
@@ -41,4 +43,7 @@ public interface PreferencesInterface {
     
     public void addPreferencesObserver(Observer observer);
     public void deletePreferencesObserver(Observer observer);
+    
+     public List<File> getRecentOpenedFiles();
+     public void addRecentOpenedFile(File file);
 }

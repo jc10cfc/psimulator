@@ -134,6 +134,12 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
 
             // set saved timestamp and file name
             setLastSavedFile(selctedFile);
+            
+            // add to recently opened
+            dataLayer.addRecentOpenedFile(file);
+            
+            // save preferences
+            dataLayer.savePreferences();
 
             return networkModel;
         }

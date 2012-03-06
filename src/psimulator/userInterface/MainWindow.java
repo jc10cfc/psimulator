@@ -3,7 +3,6 @@ package psimulator.userInterface;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -16,8 +15,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import shared.Components.NetworkModel;
-import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.logicLayer.ControllerFacade;
@@ -35,6 +32,8 @@ import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanel;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelState;
 import psimulator.userInterface.actionListerners.PreferencesActionListener;
+import shared.Components.NetworkModel;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 /**
  *
@@ -518,7 +517,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
                 // set saved timestamp
                 saveLoadManagerGraph.setLastSavedTimestamp();
-
+                
                 // inform user
                 String file = saveLoadManagerGraph.getFile().getPath();
                 GlassPanelPainterSingleton.getInstance().
