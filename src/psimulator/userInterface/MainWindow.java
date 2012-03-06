@@ -493,36 +493,62 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            // if data can be lost after check
-            if (!checkDataLoss()) {
-                return;
-            }
+            openAction(null);
+        }
+    }
+    
+        
+    /**
+     * Action Listener for Open recent file button
+     */
+    class JMenuItemOpenRecentFileListener implements ActionListener {
 
-            // turn off playing recording and etc
-            jPanelUserInterfaceMain.stopSimulatorActivities();
+        /**
+         *
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            openAction(e.getActionCommand());
+        }
+    }
+    
+    private void openAction(String filePath){
+        // if data can be lost after check
+        if (!checkDataLoss()) {
+            return;
+        }
 
-            // load network model
-            NetworkModel networkModel = saveLoadManagerGraph.doLoadNetworkModel();
+        // turn off playing recording and etc
+        jPanelUserInterfaceMain.stopSimulatorActivities();
 
-            if (networkModel == null) {
-                return;
-            }
+        
+        // load network model
+        NetworkModel networkModel;
+        
+        if(filePath == null){
+            networkModel = saveLoadManagerGraph.doLoadNetworkModel();
+        }else{
+            networkModel = saveLoadManagerGraph.doLoadNetworkModel(filePath);
+        }
 
-            // create graph from model
-            Graph graph = saveLoadManagerGraph.buildGraphFromNetworkModel(networkModel);
+        if (networkModel == null) {
+            return;
+        }
 
-            if (graph != null) {
-                // removeAllSimulatorEvents graph (set edit timestamp)
-                refreshUserInterfaceMainPanel(graph, networkModel, UserInterfaceMainPanelState.EDITOR, false);
+        // create graph from model
+        Graph graph = saveLoadManagerGraph.buildGraphFromNetworkModel(networkModel);
 
-                // set saved timestamp
-                saveLoadManagerGraph.setLastSavedTimestamp();
-                
-                // inform user
-                String file = saveLoadManagerGraph.getFile().getPath();
-                GlassPanelPainterSingleton.getInstance().
-                        addAnnouncement(dataLayer.getString("NETWORK_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
-            }
+        if (graph != null) {
+            // removeAllSimulatorEvents graph (set edit timestamp)
+            refreshUserInterfaceMainPanel(graph, networkModel, UserInterfaceMainPanelState.EDITOR, false);
+
+            // set saved timestamp
+            saveLoadManagerGraph.setLastSavedTimestamp();
+
+            // inform user
+            String file = saveLoadManagerGraph.getFile().getPath();
+            GlassPanelPainterSingleton.getInstance().
+                    addAnnouncement(dataLayer.getString("NETWORK_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
         }
     }
 
@@ -594,6 +620,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             System.exit(0);
         }
     }
+    
+    
 ////////------------ PRIVATE------------///////////
 
     /**
@@ -705,6 +733,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jMenuBar.addOpenActionListener(openListener);
         jToolBar.addOpenActionListener(openListener);
         jPanelUserInterfaceMain.addOpenProjectActionListener(openListener);
+        
+        ActionListener openRecentFileListener = new JMenuItemOpenRecentFileListener();
+        jMenuBar.addOpenRecentFileListener(openRecentFileListener);
 
         ActionListener saveListener = new JMenuItemSaveListener();
         jMenuBar.addSaveActionListener(saveListener);
@@ -740,6 +771,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // add listeners to ToolBar editor and simulator toggle buttons
         jToolBar.addSimulatorEditorActionListener(new JMenuItemSimulatorEditorListener());
         // END add listeners to ToolBar editor and simulator toggle buttons
+
     }
 
     /**

@@ -30,6 +30,7 @@ public class MenuBar extends JMenuBar implements Observer {
     private JMenuItem jMenuItemSaveAs;
     private JMenuItem jMenuItemExit;
     //
+    private ActionListener openRecentFileListener;
     private JMenu jMenuRecentlyOpened;
     private JMenuItem jMenuItemEmpty;
     //
@@ -146,9 +147,6 @@ public class MenuBar extends JMenuBar implements Observer {
         /* set texts to menu items */
         setMnemonics();
         setTextsToComponents();
-        
-        // create menu with recently opened files
-        createRecentFilesJMenu();
     }
     
     private void setMnemonics(){
@@ -243,7 +241,11 @@ public class MenuBar extends JMenuBar implements Observer {
         }
 
         for(File file : filesList){
-            jMenuRecentlyOpened.add(new JMenuItem(file.getName()));
+            JMenuItem jMenuItem = new JMenuItem(file.getName());
+            jMenuItem.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/xml.png")));
+            jMenuItem.setActionCommand(file.getAbsolutePath());
+            jMenuItem.addActionListener(openRecentFileListener);
+            jMenuRecentlyOpened.add(jMenuItem);
         }        
     }
     
@@ -355,4 +357,13 @@ public class MenuBar extends JMenuBar implements Observer {
     public void addDeleteListener(ActionListener listener){
         jMenuItemDelete.addActionListener(listener);
     }
+    
+    //
+    public void addOpenRecentFileListener(ActionListener listener){
+        openRecentFileListener = listener;
+        
+        // create menu with recently opened files - have to create it now, after the action listener is avaiable
+        createRecentFilesJMenu();
+    }
+    
 }
