@@ -22,7 +22,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
     /**
      * Device name.
      */
-    private String deviceName;
+    private String name;
     /**
      * X position of component in Default zoom
      */
@@ -50,7 +50,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
         // add values to variables
         this.id = id;
         this.hwType = hwType;
-        this.deviceName = deviceName;
+        this.name = deviceName;
         this.defaultZoomXPos = defaultZoomXPos;
         this.defaultZoomYPos = defaultZoomYPos;
 
@@ -171,7 +171,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
      */
     @Override
     public void setName(String name) {
-        this.deviceName = name;
+        this.name = name;
     }
 
     /**
@@ -181,7 +181,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
      */
     @Override
     public String getName() {
-        return this.deviceName;
+        return this.name;
     }
 
     /**
@@ -191,14 +191,7 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
         return interfacesMap.values();
     }
 
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
-
+    
     @XmlTransient // do not store as a map, we need a reference to this object for JAXB, storing as List
     public Map<Integer, EthInterfaceModel> getInterfacesMap() {
         return interfacesMap;

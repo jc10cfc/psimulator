@@ -23,7 +23,7 @@ public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
     /**
      * Name.
      */
-    private String interfaceName;
+    private String name;
     /**
      * Ip address of this eth interface
      */
@@ -58,7 +58,7 @@ public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
         this.cable = cable;
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
-        this.interfaceName = interfaceName;
+        this.name = interfaceName;
         
         this.isUp = isUp;
     }
@@ -166,21 +166,15 @@ public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
      */
     @Override
     public String getName() {
-        return interfaceName;
+        return name;
     }
 
     @Override
     public void setName(String name) {
-        this.interfaceName = name;
+        this.name = name;
     }
 
-    public String getInterfaceName() {
-        return interfaceName;
-    }
-
-    public void setInterfaceName(String interfaceName) {
-        this.interfaceName = interfaceName;
-    }
+    
 
     @Override
     public HwTypeEnum getHwType() {
