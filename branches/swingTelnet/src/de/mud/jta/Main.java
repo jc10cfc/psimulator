@@ -28,6 +28,7 @@ import de.mud.jta.event.FocusStatusListener;
 import de.mud.jta.event.OnlineStatusListener;
 import de.mud.jta.event.ReturnFocusRequest;
 import de.mud.jta.event.SocketRequest;
+import java.awt.BorderLayout;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -137,6 +138,7 @@ public class Main {
     port = options.getProperty("Socket.port");
 
     final JFrame frame = new JFrame("jta: " + host + (port.equals("23")?"":" " + port));
+    frame.setLayout(new BorderLayout());
 
     // setup language stuff
     String lang  = options.getProperty("lang");
@@ -197,7 +199,8 @@ public class Main {
       JComponent c = (JComponent) componentList.get(name);
       if (options.getProperty("layout." + name) == null) {
         System.err.println("jta: no layout property set for '" + name + "'");
-        frame.add("South", c);
+        //frame.add("South", c);
+        frame.add(c, BorderLayout.SOUTH);
       } else
         frame.getContentPane().add(options.getProperty("layout." + name), c);
     }
