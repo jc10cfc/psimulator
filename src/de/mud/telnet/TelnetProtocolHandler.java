@@ -212,7 +212,7 @@ public abstract class TelnetProtocolHandler {
     if(debug > 2) System.err.println("sending NAWS");
 
     if (receivedDX[TELOPT_NAWS] != DO) {
-    	System.err.println("not allowed to send NAWS? (DONT NAWS)");
+    	//System.err.println("not allowed to send NAWS? (DONT NAWS)");
 	return;
     }
     write(IAC);write(SB);write(TELOPT_NAWS);
