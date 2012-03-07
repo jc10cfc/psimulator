@@ -96,7 +96,7 @@ public class Main {
   }
   
   /**
-   * [-plugins pluginlist]  [-addplugin plugin] [-config url_or_file] [-lang cz] [-term id] [host [port]]
+   * [-lang cz/en] [host port]
    * @param args
    * @return
    */
