@@ -90,7 +90,9 @@ public class Main {
   private static ResourceBundle resBundle;
 
   public static void main(String args[]){
-      Main.run(args);
+     JFrame frame =  Main.run(args);
+     
+     frame.setVisible(true);
   }
   
   /**
@@ -318,7 +320,7 @@ public class Main {
     else
       frame.pack();
 
-    frame.setVisible(true);
+   // frame.setVisible(true);
 
     if(debug > 0) 
       System.err.println("host: '"+host+"', "+host.length());
