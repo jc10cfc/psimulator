@@ -99,6 +99,9 @@ public class Main {
    * @return
    */
   public static JFrame run(String args[]) {
+      if(args == null)
+          args = new String[0];
+      
     final Properties options = new Properties();
     try {
       options.load(Main.class.getResourceAsStream("/de/mud/jta/default.conf"));
@@ -135,7 +138,7 @@ public class Main {
 
     // setup language stuff
     String lang  = options.getProperty("lang");
-    if(lang.equalsIgnoreCase("cz"))
+    if(lang != null && lang.equalsIgnoreCase("cz"))
         resBundle = ResourceBundle.getBundle("de/resources/Czech", new Locale("cz", "CZ"));
     else
         resBundle = ResourceBundle.getBundle("de/resources/English", new Locale("en", "US"));      // DEFAULT LANGUAGE BUNDLE
@@ -204,7 +207,7 @@ public class Main {
           setup.broadcast(new SocketRequest());
           frame.setVisible(false);
           frame.dispose();
-          System.exit(0);
+          //System.exit(0);
         }
       });
 
