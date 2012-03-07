@@ -116,7 +116,7 @@ public class Main {
                          + "[-config url_or_file] "
                          + "[-lang cz/en]"
                          + "[-term id] [host [port]]");
-      System.exit(0);
+      return null;
     }
 
     String cfg = options.getProperty("Main.config");
@@ -265,7 +265,7 @@ public class Main {
       tmp.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
           frame.dispose();
-          System.exit(0);
+          //System.exit(0);
         }
       });
       mb.add(file);

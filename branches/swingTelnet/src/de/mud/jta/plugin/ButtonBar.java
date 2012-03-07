@@ -429,7 +429,7 @@ public class ButtonBar extends Plugin
       }
       if (function.equals("exit")) {
         try {
-          System.exit(0);
+         // System.exit(0);
         } catch (Exception e) {
           error("cannot exit: " + e);
         }
