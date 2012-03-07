@@ -124,7 +124,7 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
             });
             
             frame.setLocationRelativeTo(mainWindow.getMainWindowComponent());
-            frame.setSize(200,200);
+            frame.setResizable(false);
             frame.setVisible(true);
 
         }
