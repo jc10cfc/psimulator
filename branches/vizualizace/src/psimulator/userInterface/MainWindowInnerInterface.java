@@ -1,7 +1,7 @@
 package psimulator.userInterface;
 
 import java.awt.Component;
-import java.awt.Point;
+import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
@@ -33,4 +33,10 @@ public interface MainWindowInnerInterface {
     public void saveEventsAction(SimulatorEventsWrapper simulatorEventsWrapper);
     
     public SimulatorEventsWrapper loadEventsAction();
+    
+    // telnet windows add/remove
+    public void removeTelnetWindow(Integer key);
+    public void addTelnetWindow(Integer key, JFrame frame);
+    public boolean hasTelnetWindow(Integer key);
+    public JFrame getTelnetWindow(Integer key);
 }

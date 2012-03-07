@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFrame;
@@ -52,12 +54,13 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private MenuBar jMenuBar;
     private ToolBar jToolBar;
     private UserInterfaceMainPanelOuterInterface jPanelUserInterfaceMain;
-    //private JPanel glassPanel;
     /*
      * end of window components
      */
     private JFrame mainWindow;
     private MainWindowGlassPane glassPane;
+    //
+    private Map<Integer, JFrame> openedTelnetWindows;
     //private Component originalGlassPane;
 
     public MainWindow(DataLayerFacade dataLayer) {
@@ -74,6 +77,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }
 
+        openedTelnetWindows = new HashMap<>();
+        
         saveLoadManagerGraph = new SaveLoadManagerNetworkModel((Component) this, dataLayer);
         saveLoadManagerEvents = new SaveLoadManagerEvents((Component) this, dataLayer);
 
@@ -260,6 +265,26 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
 
         return simulatorEventsWrapper;
+    }
+
+    @Override
+    public void removeTelnetWindow(Integer key) {
+        openedTelnetWindows.remove(key);
+    }
+
+    @Override
+    public void addTelnetWindow(Integer key, JFrame frame) {
+        openedTelnetWindows.put(key, frame);
+    }
+
+    @Override
+    public boolean hasTelnetWindow(Integer key) {
+        return openedTelnetWindows.containsKey(key);
+    }
+
+    @Override
+    public JFrame getTelnetWindow(Integer key) {
+        return openedTelnetWindows.get(key);
     }
 
     /////////////////////-----------------------------------////////////////////

@@ -5,7 +5,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.undo.UndoManager;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.PopupMenuSimulatorComponent;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
@@ -37,9 +39,30 @@ public class DrawPanelListenerStrategySimulator extends DrawPanelListenerStrateg
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    /**
+     * When HwComponentGraphic clicked, the popup menu for component in Simulator is opened
+     * @param e 
+     */
     @Override
     public void mousePressedRight(MouseEvent e) {
-        // do nothing = do not change to HAND tool after right button pressed
+        // open popup menu
+        
+        // convert
+        e = convertMouseEvent(e);
+
+        // get clicked component
+        HwComponentGraphic clickedComponent = getClickedAbstractHwComponent(e.getPoint());
+
+         // if there is one marked component or no marked component and a component was clicked
+        if (clickedComponent != null) {
+
+            // show popup
+            PopupMenuSimulatorComponent popup = new PopupMenuSimulatorComponent(mainWindow, drawPanel, dataLayer, clickedComponent);
+            
+            popup.show(drawPanel, e.getPoint().x, e.getPoint().y);
+            
+            return;
+        }
     }
     
 }
