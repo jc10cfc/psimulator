@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
@@ -43,7 +44,7 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
 
         jItemOpenTelnet.addActionListener(new JMenuItemOpenTelnetListener());
         
-        //jItemComponentProperties.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_CONFIGURE_16_PATH));
+        jItemOpenTelnet.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_TELNET_16_PATH));
         
         this.add(jItemOpenTelnet);
     }
