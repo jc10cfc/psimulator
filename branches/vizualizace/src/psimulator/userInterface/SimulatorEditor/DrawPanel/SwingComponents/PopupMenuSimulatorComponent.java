@@ -80,9 +80,16 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
                 return;
             }
             
+            String [] args = {"-lang", "cz"};
             
-            final JFrame frame = new JFrame();
+            //final JFrame frame = new JFrame();
+            final JFrame frame = de.mud.jta.Main.run(args);
 
+            if(frame == null){
+                System.out.println("Nastala chyba, okno telnetu se nepodařilo vytvořit");
+                return;
+            }
+            
             frame.addWindowListener(new WindowListener() {
                 int id;
                 
