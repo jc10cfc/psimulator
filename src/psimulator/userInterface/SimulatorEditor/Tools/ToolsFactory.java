@@ -46,8 +46,8 @@ public class ToolsFactory {
                         toolChangeInterface,HwTypeEnum.CISCO_ROUTER, path, 4));
                 break;
             case ADD_SWITCH:
-                //path = AbstractImageFactory.TOOL_SWITCH_PATH;
-                path = ImageFactorySingleton.TOOL_SWITCH_LINUX_PATH;
+                path = ImageFactorySingleton.TOOL_SWITCH_PATH;
+                //path = ImageFactorySingleton.TOOL_SWITCH_LINUX_PATH;
                 
                 tools.add(new AddDeviceTool(tool, ImageFactorySingleton.getInstance().getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.LINUX_SWITCH, path, 4));
@@ -55,7 +55,7 @@ public class ToolsFactory {
                         toolChangeInterface, HwTypeEnum.LINUX_SWITCH, path, 8));
                 tools.add(new AddDeviceTool(tool, ImageFactorySingleton.getInstance().getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.LINUX_SWITCH, path, 16));
-                
+                /*
                 path = ImageFactorySingleton.TOOL_SWITCH_CISCO_PATH;
                 
                 tools.add(new AddDeviceTool(tool, ImageFactorySingleton.getInstance().getImageIconForToolbar(tool, path), 
@@ -63,7 +63,7 @@ public class ToolsFactory {
                 tools.add(new AddDeviceTool(tool,  ImageFactorySingleton.getInstance().getImageIconForToolbar(tool, path), 
                         toolChangeInterface, HwTypeEnum.CISCO_SWITCH, path, 8));
                 tools.add(new AddDeviceTool(tool, ImageFactorySingleton.getInstance().getImageIconForToolbar(tool, path), 
-                        toolChangeInterface, HwTypeEnum.CISCO_SWITCH, path, 16));
+                        toolChangeInterface, HwTypeEnum.CISCO_SWITCH, path, 16));*/
                 break;
             case ADD_END_DEVICE:
                 path = ImageFactorySingleton.TOOL_END_DEVICE_PC_PATH;

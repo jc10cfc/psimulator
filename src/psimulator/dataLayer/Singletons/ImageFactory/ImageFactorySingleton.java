@@ -565,7 +565,8 @@ public class ImageFactorySingleton {
             case CISCO_SWITCH:
                 return TOOL_SWITCH_CISCO_PATH;
             case LINUX_SWITCH:
-                return TOOL_SWITCH_LINUX_PATH;
+                //return TOOL_SWITCH_LINUX_PATH;
+                return TOOL_SWITCH_PATH;
             case END_DEVICE_PC:
                 return TOOL_END_DEVICE_PC_PATH;
             case END_DEVICE_NOTEBOOK:
