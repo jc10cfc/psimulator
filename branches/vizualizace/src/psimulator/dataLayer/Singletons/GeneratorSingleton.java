@@ -70,7 +70,7 @@ public class GeneratorSingleton {
             case END_DEVICE_PC:
             case END_DEVICE_WORKSTATION:
             case REAL_PC:
-                prefix = "Eth";
+                prefix = "eth";
                 break;
             case CISCO_ROUTER:
             case CISCO_SWITCH:
@@ -105,6 +105,12 @@ public class GeneratorSingleton {
 
         switch (hwType) {
             case LINUX_ROUTER:
+                prefix = "router";
+                // get number
+                number = networkCounterModel.getFromNumberMap(HwTypeEnum.LINUX_ROUTER).intValue();
+                // increase counter
+                networkCounterModel.putToNumberMap(HwTypeEnum.LINUX_ROUTER, new Integer(number + 1));
+                break;
             case CISCO_ROUTER:
                 prefix = "Router";
                 // get number
@@ -113,6 +119,12 @@ public class GeneratorSingleton {
                 networkCounterModel.putToNumberMap(HwTypeEnum.LINUX_ROUTER, new Integer(number + 1));
                 break;
             case LINUX_SWITCH:
+                prefix = "switch";
+                // get number
+                number = networkCounterModel.getFromNumberMap(HwTypeEnum.LINUX_SWITCH).intValue();
+                // increase counter
+                networkCounterModel.putToNumberMap(HwTypeEnum.LINUX_SWITCH, new Integer(number + 1));
+                break;
             case CISCO_SWITCH:
                 prefix = "Switch";
                 // get number
@@ -121,28 +133,28 @@ public class GeneratorSingleton {
                 networkCounterModel.putToNumberMap(HwTypeEnum.LINUX_SWITCH, new Integer(number + 1));
                 break;
             case END_DEVICE_NOTEBOOK:
-                prefix = "Notebook";
+                prefix = "notebook";
                 // get number
                 number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter
                 networkCounterModel.putToNumberMap(hwType, new Integer(number + 1));
                 break;
             case END_DEVICE_PC:
-                prefix = "PC";
+                prefix = "pc";
                 // get number
                 number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter
                 networkCounterModel.putToNumberMap(hwType, new Integer(number + 1));
                 break;
             case END_DEVICE_WORKSTATION:
-                prefix = "Workstation";
+                prefix = "workstation";
                 // get number
                 number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter
                 networkCounterModel.putToNumberMap(hwType, new Integer(number + 1));
                 break;
             case REAL_PC:
-                prefix = "RealPC";
+                prefix = "realpc";
                 // get number
                 number = networkCounterModel.getFromNumberMap(hwType).intValue();
                 // increase counter

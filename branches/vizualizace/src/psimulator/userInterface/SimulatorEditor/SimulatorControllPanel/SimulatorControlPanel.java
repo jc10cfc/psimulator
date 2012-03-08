@@ -672,23 +672,6 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         return jPanelEventList;
     }
 
-    /*
-     * private JPanel createDetailsPanel() { jPanelDetails = new JPanel();
-     * jPanelDetails.setLayout(new BoxLayout(jPanelDetails,
-     * BoxLayout.LINE_AXIS)); // jPanelLeftColumn = new JPanel();
-     * jPanelLeftColumn.setLayout(new BoxLayout(jPanelLeftColumn,
-     * BoxLayout.PAGE_AXIS)); // jPanelRightColumn = new JPanel();
-     * jPanelRightColumn.setLayout(new BoxLayout(jPanelRightColumn,
-     * BoxLayout.PAGE_AXIS)); // jCheckBoxPacketDetails = new JCheckBox();
-     * jCheckBoxPacketDetails.setAlignmentX(Component.LEFT_ALIGNMENT);
-     * jCheckBoxNamesOfDevices = new JCheckBox();
-     * jCheckBoxNamesOfDevices.setAlignmentX(Component.LEFT_ALIGNMENT); //
-     * jPanelLeftColumn.add(jCheckBoxPacketDetails);
-     * jPanelLeftColumn.add(jCheckBoxNamesOfDevices); //
-     * jPanelDetails.add(jPanelLeftColumn);
-     * jPanelDetails.add(jPanelRightColumn); // return jPanelDetails;
-    }
-     */
     private JPanel createPacketDetailsPanel() {
         jPanelPacketDetails = new JPanel();
         jPanelPacketDetails.setLayout(new BoxLayout(jPanelPacketDetails, BoxLayout.PAGE_AXIS));
