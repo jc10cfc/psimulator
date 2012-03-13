@@ -1,0 +1,34 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar></jar>
+  <outfile>..\PSImulatorUI.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon></icon>
+  <jre>
+    <path></path>
+    <minVersion>1.7.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.1.1.0</fileVersion>
+    <txtFileVersion>1.10.RC1</txtFileVersion>
+    <fileDescription>PSImualtorUI - GUI for PSImulator The network simualtor</fileDescription>
+    <copyright>Copyright (C) 2012. Martin �vihl�k</copyright>
+    <productVersion>1.1.1.0</productVersion>
+    <txtProductVersion>1.10.RC1</txtProductVersion>
+    <productName>PSImulatorUI</productName>
+    <companyName></companyName>
+    <internalName>PSImulatorUI</internalName>
+    <originalFilename>PSImulatorUI.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
