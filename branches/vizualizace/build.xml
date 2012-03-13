@@ -71,15 +71,10 @@
     nbproject/build-impl.xml file. 
 
     -->
-    
-    <target depends="init,compile,-pre-pre-jar,-pre-jar" name="fat-jar">
-        <property name="launch4j.dir" location="../launch4j" />
-
-        <taskdef name="launch4j"
-        classname="net.sf.launch4j.ant.Launch4jTask"
-        classpath="${launch4j.dir}/launch4j.jar
-            :${launch4j.dir}/lib/xstream.jar" />
-
-        <launch4j configFile="./launch4j/config.xml" jar="./dist/PSimulatorUI.jar"/> 
+    <target name="copy" depends="jar">
+        <copy todir="../Release" >  
+            <fileset dir="./dist" includes="**"/>  
+        </copy>
     </target>
+    
 </project>
