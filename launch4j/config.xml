@@ -1,8 +1,8 @@
 <launch4jConfig>
-  <dontWrapJar>false</dontWrapJar>
+  <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar></jar>
-  <outfile>..\PSImulatorUI.exe</outfile>
+  <jar>PSimulatorUI.jar</jar>
+  <outfile>C:\Users\Martin\Desktop\Diplomka\Release\PSImulatorUI.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>
@@ -12,7 +12,7 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon></icon>
+  <icon>C:\Users\Martin\Desktop\Diplomka\Release\PSImulatorUI.ico</icon>
   <jre>
     <path></path>
     <minVersion>1.7.0</minVersion>
