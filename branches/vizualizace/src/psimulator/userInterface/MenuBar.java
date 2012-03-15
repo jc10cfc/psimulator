@@ -3,10 +3,17 @@ package psimulator.userInterface;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
+import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
+import javax.help.CSH;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
+import javax.help.HelpSetException;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
@@ -47,6 +54,11 @@ public class MenuBar extends JMenuBar implements Observer {
     //
     private JMenu jMenuOptions;
     private JMenuItem jMenuItemPreferences;
+    //
+    private JMenu jMenuHelp;
+    private JMenuItem jMenuItemHelp;
+    private JMenuItem jMenuItemAbout;
+    private ActionListener helpActionListener;
     //
     
 
@@ -138,15 +150,26 @@ public class MenuBar extends JMenuBar implements Observer {
         /* END menu Options */
         
         
+        /* menu HELP */
+        jMenuHelp = new JMenu();
+        jMenuItemHelp = new JMenuItem();
+        jMenuItemAbout = new JMenuItem();
+        jMenuHelp.add(jMenuItemHelp);
+        jMenuHelp.addSeparator();
+        jMenuHelp.add(jMenuItemAbout);
+        /* END menu HELP */
+        
         /* add menus to menu bar */
         this.add(jMenuFile);
         this.add(jMenuEdit);
         this.add(jMenuView);
         this.add(jMenuOptions);
+        this.add(jMenuHelp);
 
         /* set texts to menu items */
         setMnemonics();
         setTextsToComponents();
+        updateHelpActionListener();
     }
     
     private void setMnemonics(){
@@ -173,6 +196,7 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuOptions.setMnemonic('O');
         jMenuItemPreferences.setAccelerator(KeyStroke.getKeyStroke('P', ActionEvent.CTRL_MASK));
         
+        jMenuItemHelp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1,0));
     }
 
     private void setTextsToComponents() {
@@ -213,6 +237,29 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuItemPreferences.setText(dataLayer.getString("PREFERENCES"));
         /* END menu Options */
       
+        
+        /* menu HELP */
+        jMenuHelp.setText(dataLayer.getString("HELP"));
+        jMenuItemHelp.setText(dataLayer.getString("HELP"));
+        jMenuItemAbout.setText(dataLayer.getString("ABOUT"));
+        /* END menu HELP */
+    }
+    
+    private void updateHelpActionListener(){
+        if(helpActionListener != null){
+            jMenuItemHelp.removeActionListener(helpActionListener);
+        }
+        
+        try {
+            Locale locale = new Locale("cz", "CZ");
+            URL url2 = HelpSet.findHelpSet(null, "resources/help/helpset.hs", locale);
+            HelpSet hs = new HelpSet(null, url2);
+            HelpBroker hb = hs.createHelpBroker();
+            helpActionListener = new CSH.DisplayHelpFromSource(hb);
+            jMenuItemHelp.addActionListener(helpActionListener);
+        } catch (HelpSetException ex) {
+            System.err.println("help system create error");
+        }
     }
 
     @Override
@@ -220,6 +267,7 @@ public class MenuBar extends JMenuBar implements Observer {
         switch ((ObserverUpdateEventType) o1) {
             case LANGUAGE:
                 this.setTextsToComponents();
+                this.updateHelpActionListener();
                 break;
             case RECENT_OPENED_FILES_CHANGED:
                 this.createRecentFilesJMenu();
