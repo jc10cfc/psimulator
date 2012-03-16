@@ -13,7 +13,7 @@
         <tocitem text="Placing components into board" target="item102" image="topic" />
         <tocitem text="Connecting components with cables" target="item103" image="topic" />
         <tocitem text="Network manipulation" target="item104" image="topic" />
-        <tocitem text="Setting network components properties" target="item105" image="topic" />
+        <tocitem text="Setting network components' properties" target="item105" image="topic" />
         <tocitem text="Viewed details settings" target="item106" image="topic" />
         <tocitem text="Saving the project" target="item107" image="topic" />
     </tocitem>
