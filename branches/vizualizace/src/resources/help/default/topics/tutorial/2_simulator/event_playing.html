@@ -3,78 +3,74 @@
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <meta name="Language" content="English" />
-      <title>Přehrávání událostí</title>
+      <title>Event playing</title>
   </head>
     <body>
         <div>
-            <h3>Tutorial 2: Simualční režim</h3>
+            <h3>Tutorial 2: Similator mode</h3>
             <ul>
-                <li><a href="./simulation_mode.html">Simulační režim</a></li>
-                <li><a href="./simulator_connecting.html">Připojení k simulátoru</a></li>
-                <li><a href="./event_recieve_list_move.html">Příjem událostí, pohyb v seznamu</a></li>
-                <li><a href="./event_playing.html">Přehrávání událostí</a></li>
-                <li><a href="./event_save_load.html">Uložení a načtení seznamu událostí</a></li>
+                <li><a href="./simulation_mode.html">Similator mode</a></li>
+                <li><a href="./simulator_connecting.html">Connecting to simulator</a></li>
+                <li><a href="./event_recieve_list_move.html">Event recieving, moving in event list</a></li>
+                <li><a href="./event_playing.html">Event playing</a></li>
+                <li><a href="./event_save_load.html">Save / Load event list</a></li>
             </ul>
             
             <hr>
             
-            <h1>Přehrávání událostí</h1>
+            <h1>Event playing</h1>
 
-            <h2>Přehrávání zachycených událostí</h2>
+            <h2>Playing captured events</h2>
             
-            <p>Přehrávání spustíte tlačítkem <b>Play</b> v panelu <b>Ovládání přehrávání</b>:</p>
-            
+            <p>Start playing with the <b>Play</b> button in <b>Controll panel</b>:</p>
             <img src="../../../../images/play_button_selected.png" >
             
-            <h3>Pohyb v seznamu událostí během přehrávání</h3>
+            <h3>Moving in the event list while playing</h3>
             
-            <p>Během přehrávání můžete volně přecházet na následující, či předchozí události tlačítky
-                v panelu <b>Ovládání přehrávání</b>, nebo <b>kliknutím myší</b> na konkrétní řádek v tabulce. </p>
-            
+            <p>You can move in the event list as you want during playing. Use the previous, next, first, last buttons
+                in <b>Play controls panel</b>, or use <b>mouse click</b> on table rows. </p>
+
             <img src="../../../../images/en/play_controls.png" >
             
-            <h3>Nastavení rychlosti</h3>
+            <h3>Speed setting</h3>
             
-            <p>Rychlost přehrávání se nastavuje posuvníkem v panelu <b>Ovládání přehrávání</b>. Nastavenou
-                rychlost bude mít vždy <b>další započatá animace</b>. Stávající animace doběhne beze změny
-                rychlosti.</p>
+            <p>Playing speed can be set with a slider in <b>Play controls panel</b>. New speed will be 
+                applied on next event that will be played. Current animation wil finnish in the original
+                speed.</p>
+
+            <h3>Sequentiall playing</h3>
             
+            <p>You can play events <b>sequentially</b> (one by one)</b>. This mode will give you time to observe
+                events. Duration of animation depends on <b>speed</b> and <b>cable delay</b>.</p>
+
+            <h3>Playing by timestamps</h3>
             
-            <h3>Sekvenční přehrávání</h3>
+            <p>Events can be allso played in recieved times (timestamps). In this mode the animation duration
+                depends also on speed and cable delay, but there could be <b>more animations in one time</b> 
+                , because they were recieved in short time intervals.</p>
+
+            <h2>Realtime mode</h2>
             
-            <p>Události je možné přehrávat <b>sekvenčně</b> (po sobě)</b> tak aby byla simulace přehledná. V tomto režimu
-                je doba trvání animace paketu závislá na <b>nastavené rychlosti</b> a <b>doby zpoždění</b> na kabelu.</p>
-            
-            <h3>Přehrávání podle časových značek</h3>
-            
-            <p>Události je také možné přehrávat v časech, v jakých byly zaznamenány, tzn. podle <b>časových značek</b>.
-                V tomto režimu závisí délka animace opět na nastavené rychlosti a doby zpoždění na kabelu, ale může se stát,
-                že uvidíte <b>více animací najednou</b>, protože přišly v krátkých časových rozestupech.</p>
-            
-            
-            <h2>Realtime režim</h2>
-            
-            <p><b>Realtime režim</b> je zvláštní způsob <b>zachytávání</b> a <b>přehrávání</b> událostí. Události
-                jsou přehrány v tom okamžiku, kdy jsou přijaty. V tomto režimu závisí délka animace opět na 
-                nastavené rychlosti a doby zpoždění na kabelu. Na následujícím obrázku je označené tlačítko 
-                pro suštění <b>Realtime režimu</b></p>
-            
+            <p>In <b>Realtime mode</b> packets are both <b>recieved</b> and <b>played</b>. Events are played 
+                immedeately when they are recieved. In this mode the duration of animation depends on speed 
+                and cable delay. You can see realtime running on next image:</p>
+       
             <img src="../../../../images/en/play_controls_realtime.png" >
 
             
-            <h2>Zachycená obrazovka animace</h2>
+            <h2>Screenshot of animation</h2>
             
-            <p>Animace může vypadat například takto:</p>
+            <p>Animation can look like this:</p>
             
             <img src="../../../../images/packet_visualization.png" >
             
-            <h2>Změna obrázku paketu</h2>
+            <h2>Changing the packet image</h2>
             
-            <p>V aplikaci je možné v <b>Nastavení</b> změnit typ obrázku paketu</p>
+            <p>In application <b>Properties</b> you can change the packet image</p>
             
             <img src="../../../../images/en/packet_image_change.png" >
             
-            <p>Next part of this tutorial is: <a href="./event_save_load.html">Uložení a načtení seznamu událostí</a>.</p>
+            <p>Next part of this tutorial is: <a href="./event_save_load.html">Save / Load event list</a>.</p>
         </div>
     </body>
 </html>

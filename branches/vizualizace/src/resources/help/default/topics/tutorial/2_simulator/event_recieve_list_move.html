@@ -3,75 +3,74 @@
   <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <meta name="Language" content="English" />
-      <title>Příjem událostí, pohyb v seznamu</title>
+      <title>Event recieving, moving in event list</title>
   </head>
     <body>
         <div>
-            <h3>Tutorial 2: Simualční režim</h3>
+            <h3>Tutorial 2: Similator mode</h3>
             <ul>
-                <li><a href="./simulation_mode.html">Simulační režim</a></li>
-                <li><a href="./simulator_connecting.html">Připojení k simulátoru</a></li>
-                <li><a href="./event_recieve_list_move.html">Příjem událostí, pohyb v seznamu</a></li>
-                <li><a href="./event_playing.html">Přehrávání událostí</a></li>
-                <li><a href="./event_save_load.html">Uložení a načtení seznamu událostí</a></li>
+                <li><a href="./simulation_mode.html">Similator mode</a></li>
+                <li><a href="./simulator_connecting.html">Connecting to simulator</a></li>
+                <li><a href="./event_recieve_list_move.html">Event recieving, moving in event list</a></li>
+                <li><a href="./event_playing.html">Event playing</a></li>
+                <li><a href="./event_save_load.html">Save / Load event list</a></li>
             </ul>
             
             <hr>
             
-            <h1>Příjem událostí, pohyb v seznamu</h1>
+            <h1>Event recieving, moving in event list</h1>
 
-            <h2>Příjem událostí</h2>
+            <h2>Event recieving</h2>
             
-            <p>Události začnete přijímat stisknutím tlačítka <b>Zachytávat</b> v ovládacím panelu:</p>
-
+            <p>Start recieving events with <b>Capture</b> button in controll panel:</p>
+            
             <img src="../../../../images/en/capture_press.png" >
 
-            <p>Poté se budou v seznamu událostí objevovat nové události tak, jak budou přicházet ze
-                síťového simulátoru.</p>
+            <p>Then new events will appear in event list as they are recieved from network
+                simulator.</p>
             
-            <h2>Popis seznamu událostí</h2>
+            <h2>Event list description</h2>
             
-            <p>Následuje ukázka zachycených událostí:</p>
+            <p>Next screenshot shows captured events:</p>
             
             <img src="../../../../images/en/event_list.png" >
             
-            <h3>Jednotlivé údaje v seznamu</h3>
+            <h3>Data in event list</h3>
             
-            <p>Každý řádek reprezentuje jednu zachycenou událost. Význam sloupečků je následující:</p>
+            <p>Each row represets one captured event. Column description follows:</p>
             
             <ul>
-                <li><b>Čas[s]</b> - časová značka zachycení paketu. Vždy se počítá od 0,00.</li>
-                <li><b>Z</b> - jméno zařízení odkud byl vyslán paket.</li>
-                <li><b>Do</b> - jméno zařízení, kam byl vyslán paket.</li>
-                <li><b>Typ</b> - typ paketu.</li>
-                <li><b>Info</b> - barva specifická pro typ paketu.</li>
+                <li><b>Time[s]</b> - timestamp of recieved packet. Always starts from 0,00.</li>
+                <li><b>From</b> - name of source device.</li>
+                <li><b>To</b> - name of destination device.</li>
+                <li><b>Type</b> - packet type.</li>
+                <li><b>Info</b> - color specific for packet type.</li>
             </ul>
             
-            <h2>Detail události</h2>
+            <h2>Event detail</h2>
             
-            <p>Pokud je v seznamu událostí nějaká událost označena, pak je její detail vidět v <b>Detailu paketu</b>
-                pod tabulkou:</p>
+            <p>When some row in event list marked, its detail is under table:</p>
             
             <img src="../../../../images/en/packet_detail.png" >
             
-            <p>V detailu jsou navíc informace o <b>rozhraních</b> zdrojové a cílové komponenty a <b>detailnější popis</b>.</p>
+            <p>There is info about <b>interfaces</b> of source and destination and <b>detialed description</b>.</p>
       
-            <h2>Pohyb v seznamu událostí</h2>
+            <h2>Move in the event list</h2>
 
-            <p>Do seznamu událostí se dostaneme klikem myši na některou událost. Dále se můžeme v seznamu
-                pohybovat <b>šipkami nahoru/doů</b>, či <b>tlačítky pro přehrávání</b>:</p>
+            <p>You can enter event list with mouse click on some event. Than you can move in the list
+                with <b>up/down arrows</b> or <b>play buttons</b>:</p>
             
             <img src="../../../../images/play_controls.png" >
             
-            <p>Při změně aktuálního řádku se změní i detail paketu pod tabulkou.</p>          
+            <p>When row is selected than packet detail changes accordingly.</p>          
             
-            <h2>Smazání událostí</h2>
+            <h2>Delete events</h2>
             
-            <p>Seznam zachycených událostí je kdykoliv možné smazat tlačítkem <b>Smazat události</b>.</p>
+            <p>Events can be deleted with <b>Delete events button</b>.</p>
             
             <img src="../../../../images/en/event_list.png" >
             
-            <p>Next part of this tutorial is: <a href="./event_playing.html">Přehrávání událostí</a>.</p>
+            <p>Next part of this tutorial is: <a href="./event_playing.html">Event playing</a>.</p>
         </div>
     </body>
 </html>
