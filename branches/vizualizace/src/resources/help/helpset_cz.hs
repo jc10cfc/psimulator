@@ -2,7 +2,7 @@
 <!DOCTYPE helpset
   PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp HelpSet Version 1.0//EN"
          "http://java.sun.com/products/javahelp/helpset_1_0.dtd">
-<helpset version="1.0" xml:lang="cz">
+<helpset version="1.0" xml:lang="cz-CZ">
    <!-- title -->
    <title>Nápověda</title>
 
@@ -20,7 +20,7 @@
       <data>cz/help_toc.xml</data>
    </view>
 
-   <view xml:lang="cz">
+   <view xml:lang="cz-CZ">
      <name>Search</name>
      <label>Vyhledávání</label>
      <type>javax.help.SearchView</type>

@@ -255,7 +255,7 @@ public class MenuBar extends JMenuBar implements Observer {
             if(dataLayer.getString("BUNDLE_LANGUAGE_NAME").equals("Čeština")){
                 locale = new Locale("cz", "CZ");
             }else{
-                locale = new Locale("en", "EN");
+                locale = new Locale("en", "US");
             }
             URL url2 = HelpSet.findHelpSet(null, "resources/help/helpset.hs", locale);
             HelpSet hs = new HelpSet(null, url2);
