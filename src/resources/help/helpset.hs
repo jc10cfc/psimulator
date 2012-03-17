@@ -2,7 +2,7 @@
 <!DOCTYPE helpset
   PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp HelpSet Version 1.0//EN"
          "http://java.sun.com/products/javahelp/helpset_1_0.dtd">
-<helpset version="1.0" xml:lang="en">
+<helpset version="1.0" xml:lang="en-US">
    <!-- title -->
    <title>Help</title>
 
@@ -20,7 +20,7 @@
       <data>default/help_toc.xml</data>
    </view>
 
-   <view>
+   <view xml:lang="en-US">
      <name>Search</name>
      <label>Search</label>
      <type>javax.help.SearchView</type>
