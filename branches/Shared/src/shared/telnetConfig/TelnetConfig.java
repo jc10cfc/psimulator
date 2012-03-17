@@ -3,12 +3,13 @@
 package shared.telnetConfig;
 
 import java.util.Map;
+import shared.NetworkObject;
 
 /**
  *
  * @author Martin Lukáš <lukasma1@fit.cvut.cz>
  */
-public class TelnetConfig {
+public class TelnetConfig implements NetworkObject{
     
     /**
      * key is a componentID
