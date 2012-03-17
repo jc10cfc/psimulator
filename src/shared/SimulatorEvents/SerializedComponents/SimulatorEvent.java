@@ -1,12 +1,13 @@
 package shared.SimulatorEvents.SerializedComponents;
 
 import java.io.Serializable;
+import shared.NetworkObject;
 
 /**
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class SimulatorEvent implements Serializable{
+public class SimulatorEvent implements Serializable, NetworkObject{
     // those variables has to be loaded from file / recieved via TCP connection, SAVE THEM
     private long timeStamp;
     private int sourcceId;
