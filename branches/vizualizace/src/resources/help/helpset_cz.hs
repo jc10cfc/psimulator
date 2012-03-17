@@ -26,13 +26,9 @@
      <type>javax.help.SearchView</type>
      <data engine="com.sun.java.help.search.DefaultSearchEngine">JavaHelpSearch</data>
   </view>
-<!--
-  <presentation>
-      <toolbar>
-          <helpaction>javax.help.BackAction</helpaction>
-          <helpaction>javax.help.ForwardAction</helpaction>
-          <helpaction image="homeicon">javax.help.HomeAction</helpaction>
-      </toolbar>
+
+  <presentation default="true">
+      <size width="800" height="600" />
   </presentation>
--->
+
 </helpset>

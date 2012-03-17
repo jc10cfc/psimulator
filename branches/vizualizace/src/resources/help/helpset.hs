@@ -27,4 +27,8 @@
      <data engine="com.sun.java.help.search.DefaultSearchEngine">JavaHelpSearch</data>
   </view>
 
+  <presentation default="true">
+      <size width="800" height="600" />
+  </presentation>
+
 </helpset>
