@@ -2,6 +2,7 @@
 
 package shared.telnetConfig;
 
+import java.util.HashMap;
 import java.util.Map;
 import shared.NetworkObject;
 
@@ -17,6 +18,7 @@ public class TelnetConfig implements NetworkObject{
     Map<Integer,ConfigRecord> configRecords;
 
     public TelnetConfig() {
+        this.configRecords = new HashMap<>();
     }
 
     public Map<Integer, ConfigRecord> getConfigRecords() {
@@ -29,8 +31,8 @@ public class TelnetConfig implements NetworkObject{
 
     /**
      * 
-     * @param key compnent ID
-     * @param value
+     * @param key compnent ID / DeviceID
+     * @param value {@link ConfigRecord}
      * @return 
      */
     public ConfigRecord put(Integer key, ConfigRecord value) {
