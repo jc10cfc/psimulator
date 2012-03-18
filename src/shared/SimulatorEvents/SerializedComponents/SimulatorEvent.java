@@ -78,6 +78,12 @@ public class SimulatorEvent implements Serializable, NetworkObject{
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
     }
+
+    @Override
+    public String toString() {
+        return "src:" + this.getSourcceId() + " dst:" + this.getDestId() + " type" + this.getPacketType().toString() + " " + this.getDetailsText();
+    }
+    
     
     
     

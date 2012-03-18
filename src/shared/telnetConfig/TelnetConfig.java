@@ -38,6 +38,21 @@ public class TelnetConfig implements NetworkObject{
     public ConfigRecord put(Integer key, ConfigRecord value) {
         return configRecords.put(key, value);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(200);
+        
+        for (Map.Entry<Integer, ConfigRecord> entry : configRecords.entrySet()) {
+            Integer integer = entry.getKey();
+            ConfigRecord configRecord = entry.getValue();
+            
+            sb.append("ComponentID: ").append(configRecord.getComponentId()).append(" port:").append(configRecord.getPort()).append("\n");
+        }
+        
+        
+        return sb.toString();
+    }
     
     
     
