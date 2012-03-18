@@ -2,6 +2,7 @@
 
 package shared.telnetConfig;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import shared.NetworkObject;
@@ -10,7 +11,7 @@ import shared.NetworkObject;
  *
  * @author Martin Lukáš <lukasma1@fit.cvut.cz>
  */
-public class TelnetConfig implements NetworkObject{
+public class TelnetConfig implements NetworkObject, Serializable{
     
     /**
      * key is a componentID

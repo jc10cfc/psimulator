@@ -2,11 +2,13 @@
 
 package shared.telnetConfig;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Martin Lukáš <lukasma1@fit.cvut.cz>
  */
-public class ConfigRecord {
+public class ConfigRecord implements Serializable{
 
     /**
      * telnet port
