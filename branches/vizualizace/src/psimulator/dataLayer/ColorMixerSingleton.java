@@ -44,6 +44,9 @@ public class ColorMixerSingleton {
                 return Color.GRAY;
             case ARP:
                 return Color.YELLOW;
+            case IP:
+            case ETHERNET:
+                return Color.BLACK;
             case GENERIC:
             default:
                 return Color.PINK;
