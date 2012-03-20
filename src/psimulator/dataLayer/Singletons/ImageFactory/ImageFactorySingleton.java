@@ -536,6 +536,10 @@ public class ImageFactorySingleton {
             case UDP:
                 suffix = "blue.png";
                 break;
+            case IP:
+            case ETHERNET:
+                suffix = "black.png";
+                break;
             case GENERIC:
             default:
                 suffix = "pink.png";
