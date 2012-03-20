@@ -9,5 +9,7 @@ public enum PacketType {
     UDP,        // blue
     ICMP,       // gray
     ARP,        // yellow
-    GENERIC;    // pink
+    GENERIC,    // pink
+	ETHERNET,	// shouldn't happen
+	IP;		    // shouldn't happen
 }
