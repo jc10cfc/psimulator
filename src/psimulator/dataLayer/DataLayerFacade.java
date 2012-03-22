@@ -9,6 +9,7 @@ import psimulator.dataLayer.interfaces.PreferencesInterface;
 import shared.Components.NetworkModel;
 import shared.Serializer.SaveLoadException;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import shared.telnetConfig.TelnetConfig;
 
 
 /**
@@ -27,4 +28,7 @@ public abstract class DataLayerFacade implements PreferencesInterface, LanguageI
     public abstract SimulatorEventsWrapper loadEventsFromFile(File file) throws SaveLoadException;
     
     public abstract NetworkFacade getNetworkFacade();
+    
+    public abstract void setTelnetConfig(TelnetConfig telnetConfig);
+    public abstract TelnetConfig getTelnetConfig();
 }

@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.nio.channels.SocketChannel;
 import java.util.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
@@ -19,6 +18,7 @@ import shared.Components.HwComponentModel;
 import shared.NetworkObject;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
+import shared.telnetConfig.TelnetConfig;
 
 /**
  *
@@ -27,7 +27,7 @@ import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
     private static boolean SIMULATE_SERVER_EVENTS = false;
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     //
     private Thread thread;
     //
@@ -232,10 +232,10 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
         try {
             while (true) {
-                NetworkObject networkObject = (NetworkObject) inputStream.readObject();
+                TelnetConfig telnetConfig = (TelnetConfig) inputStream.readObject();
 
                 // if read timeouted
-                if (networkObject == null) {
+                if (telnetConfig == null) {
                     // if final timeout
                     if (times > repeatReadTimes) {
                         return false;
@@ -245,8 +245,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
                     }
 
                 } else { // process object
-
-                    System.out.println(networkObject);
+                    simulatorManagerInterface.setTelnetConfig(telnetConfig);
                     // exit while loop
                     return true;
                 }
