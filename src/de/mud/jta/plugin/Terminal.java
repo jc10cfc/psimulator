@@ -297,14 +297,14 @@ public class Terminal extends Plugin
     terminal.addFocusListener(new FocusListener() {
       public void focusGained(FocusEvent evt) {
         if (debug > 0)
-          System.err.println("Terminal: focus gained");
+          de.mud.jta.OutputSingleton.err.println("Terminal: focus gained");
         terminal.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         bus.broadcast(new FocusStatus(Terminal.this, evt));
       }
 
       public void focusLost(FocusEvent evt) {
         if (debug > 0)
-          System.err.println("Terminal: focus lost");
+          de.mud.jta.OutputSingleton.err.println("Terminal: focus lost");
         terminal.setCursor(Cursor.getDefaultCursor());
         bus.broadcast(new FocusStatus(Terminal.this, evt));
       }
@@ -313,9 +313,9 @@ public class Terminal extends Plugin
     // get a reference to the system clipboard.  
     try {
       clipboard = tPanel.getToolkit().getSystemClipboard();
-      System.out.println("Got the clipboard reference ok - copy & paste enabled");
+      de.mud.jta.OutputSingleton.out.println("Got the clipboard reference ok - copy & paste enabled");
     } catch(Exception ex) {
-      System.out.println("Failed to get clipboard - copy and paste will not work");
+      de.mud.jta.OutputSingleton.out.println("Failed to get clipboard - copy and paste will not work");
       /* ex.printStackTrace(); */
     }
     
@@ -332,20 +332,20 @@ public class Terminal extends Plugin
       }
       public void mouseExited(MouseEvent arg0) {}
       public void mousePressed(MouseEvent arg0) {
-        // System.out.println(">>>>MOUSE pressed");
+        // de.mud.jta.OutputSingleton.out.println(">>>>MOUSE pressed");
       }
       public void mouseReleased(MouseEvent me) {
         //make sure it only does the copy on button 1 (left mouse)
-        //System.out.println(">>>>MOUSE RELEASED");
+        //de.mud.jta.OutputSingleton.out.println(">>>>MOUSE RELEASED");
         if (me.getButton() == me.BUTTON1 && clipboard != null) {
           String selection = terminal.getSelection();
-          // System.out.println(">>>>SELECTION = " + selection);
+          // de.mud.jta.OutputSingleton.out.println(">>>>SELECTION = " + selection);
           if (selection != null && selection.trim().length() > 0){
             copy(clipboard);
           }
         } else {
           //not left mouse
-          // System.out.println("NOT BUTTON 1(left mouse): " + me.getButton());
+          // de.mud.jta.OutputSingleton.out.println("NOT BUTTON 1(left mouse): " + me.getButton());
         }
       }
       public void mouseEntered(MouseEvent arg0) {}
@@ -354,7 +354,7 @@ public class Terminal extends Plugin
     // register an online status listener
     bus.registerPluginListener(new OnlineStatusListener() {
       public void online() {
-        if (debug > 0) System.err.println("Terminal: online " + reader);
+        if (debug > 0) de.mud.jta.OutputSingleton.err.println("Terminal: online " + reader);
         if (reader == null) {
           reader = new Thread(Terminal.this);
           reader.start();
@@ -362,7 +362,7 @@ public class Terminal extends Plugin
       }
 
       public void offline() {
-        if (debug > 0) System.err.println("Terminal: offline");
+        if (debug > 0) de.mud.jta.OutputSingleton.err.println("Terminal: offline");
         if (reader != null)
           reader = null;
       }
@@ -415,9 +415,9 @@ public class Terminal extends Plugin
         error("Terminal.color.print: must be either true or false, not " + tmp);
       }
 
-    System.err.print("colorSet: ");
+    de.mud.jta.OutputSingleton.err.print("colorSet: ");
     if ((tmp = cfg.getProperty("Terminal", id, "colorSet")) != null) {
-      System.err.println(tmp);
+      de.mud.jta.OutputSingleton.err.println(tmp);
       Properties colorSet = new Properties();
 
       try {
@@ -590,7 +590,7 @@ public class Terminal extends Plugin
       try {
         n = read(b);
         if (debug > 1 && n > 0)
-          System.err.println("Terminal: \"" + (new String(b, 0, n, encoding)) + "\"");
+          de.mud.jta.OutputSingleton.err.println("Terminal: \"" + (new String(b, 0, n, encoding)) + "\"");
         if (n > 0) emulation.putString(new String(b, 0, n, encoding));
         tPanel.repaint();
       } catch (IOException e) {
@@ -602,7 +602,7 @@ public class Terminal extends Plugin
   protected FilterPlugin source;
 
   public void setFilterSource(FilterPlugin source) {
-    if (debug > 0) System.err.println("Terminal: connected to: " + source);
+    if (debug > 0) de.mud.jta.OutputSingleton.err.println("Terminal: connected to: " + source);
     this.source = source;
   }
 
@@ -642,7 +642,7 @@ public class Terminal extends Plugin
       InputStream is =
         (InputStream)t.getTransferData(DataFlavor.plainTextFlavor);
       if(debug > 0)
-        System.out.println("Clipboard: available: "+is.available());
+        de.mud.jta.OutputSingleton.out.println("Clipboard: available: "+is.available());
       byte buffer[] = new byte[is.available()];
       is.read(buffer);
       is.close();

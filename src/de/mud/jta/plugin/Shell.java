@@ -61,9 +61,9 @@ public class Shell extends Plugin implements FilterPlugin {
         String tmp;
 	if((tmp = cfg.getProperty("Shell", id, "command")) != null) {
 	  shellCommand = tmp;
-	  // System.out.println("Shell: Setting config " + tmp); // P3
+	  // de.mud.jta.OutputSingleton.out.println("Shell: Setting config " + tmp); // P3
         } else {
-	  // System.out.println("Shell: Not setting config"); // P3
+	  // de.mud.jta.OutputSingleton.out.println("Shell: Not setting config"); // P3
 	  shellCommand = "/bin/sh";
         }
       }

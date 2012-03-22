@@ -55,7 +55,7 @@ public class Help {
 
   public static void show(Component parent, String url) {
     BufferedReader reader = null;
-    System.err.println("Help: " + url);
+    de.mud.jta.OutputSingleton.err.println("Help: " + url);
 
     try {
       helpText.setPage(Help.class.getResource(url));
@@ -65,7 +65,7 @@ public class Help {
       }
       catch (Exception ee)
       {
-        System.err.println("unable to load help");
+        de.mud.jta.OutputSingleton.err.println("unable to load help");
         JOptionPane.showMessageDialog(parent, "JTA - Telnet/SSH for the JAVA(tm) platform\r\n(c) 1996-2005 Matthias L. Jugel, Marcus Meißner\r\n\r\n",
                 "jta", JOptionPane.INFORMATION_MESSAGE);
         return;

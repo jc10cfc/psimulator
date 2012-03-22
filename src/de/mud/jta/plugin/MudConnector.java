@@ -271,7 +271,7 @@ public class MudConnector
       } catch (NumberFormatException nfe) {
         error("number of muds: " + nfe);
       }
-      System.out.println("MudConnector: expecting " + mudCount + " mud entries");
+      de.mud.jta.OutputSingleton.out.println("MudConnector: expecting " + mudCount + " mud entries");
       progress.setMax(mudCount);
 
       StreamTokenizer ts = new StreamTokenizer(r);
@@ -325,7 +325,7 @@ public class MudConnector
       List list = new ArrayList(mudList.keySet());
       Collections.sort(list);
       mudListSelector.setListData(list.toArray());
-      System.out.println("MudConnector: found " + mudList.size() + " entries");
+      de.mud.jta.OutputSingleton.out.println("MudConnector: found " + mudList.size() + " entries");
     } catch (Exception e) {
       error("error: " + e);
       errorLabel.setText("Error: " + e);

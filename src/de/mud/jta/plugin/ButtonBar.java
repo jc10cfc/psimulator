@@ -264,11 +264,11 @@ public class ButtonBar extends Plugin
                     } else {
                       String value = setup.sval;
                       if (isKeyword(value)) {   // Missing command - complain but continue
-                        System.err.println(descr + ": missing choice command");
+                        de.mud.jta.OutputSingleton.err.println(descr + ": missing choice command");
                         setup.pushBack();
                         break;
                       }
-                      System.out.println("choice: name='" + descr + "', value='" + value);
+                      de.mud.jta.OutputSingleton.out.println("choice: name='" + descr + "', value='" + value);
                       list.add(descr, new JLabel(descr));
                       choices.put(ident + descr, value);
                     }

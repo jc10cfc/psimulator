@@ -186,7 +186,7 @@ public class SwingTerminal extends Component
         SwingTerminal.class.getMethod("setFocusable", params).invoke(this, new Object[]{new Boolean(true)});
         SwingTerminal.class.getMethod("setFocusTraversalKeysEnabled", params).invoke(this, new Object[]{new Boolean(false)});
       } catch (Exception e) {
-        System.err.println("vt320: unable to reset focus handling for java version " + version);
+        de.mud.jta.OutputSingleton.err.println("vt320: unable to reset focus handling for java version " + version);
         e.printStackTrace();
       }
     }
@@ -329,7 +329,7 @@ public class SwingTerminal extends Component
   }
 
   protected void redraw(Graphics g) {
-    if (debug > 0) System.err.println("redraw()");
+    if (debug > 0) de.mud.jta.OutputSingleton.err.println("redraw()");
 
     int xoffset = (super.getSize().width - buffer.width * charWidth) / 2;
     int yoffset = (super.getSize().height - buffer.height * charHeight) / 2;
@@ -345,13 +345,13 @@ public class SwingTerminal extends Component
 
     /* for debug only
      if (update[0]) {
-         System.err.println("Redrawing all");
+         de.mud.jta.OutputSingleton.err.println("Redrawing all");
      } else {
      for (int l = 1; l < size.height+1; l++) {
          if (update[l]) {
              for (int c = 0; c < size.height-l;c++) {
              if (!update[c+l]) {
-             System.err.println("Redrawing "+(l-1)+" - "+(l+c-2));
+             de.mud.jta.OutputSingleton.err.println("Redrawing "+(l-1)+" - "+(l+c-2));
              l=l+c;
              break;
              }
@@ -364,7 +364,7 @@ public class SwingTerminal extends Component
     for (int l = 0; l < buffer.height; l++) {
       if (!buffer.update[0] && !buffer.update[l + 1]) continue;
       buffer.update[l + 1] = false;
-      if (debug > 2) System.err.println("redraw(): line " + l);
+      if (debug > 2) de.mud.jta.OutputSingleton.err.println("redraw(): line " + l);
       for (int c = 0; c < buffer.width; c++) {
         int addr = 0;
         int currAttr = buffer.charAttributes[buffer.windowBase + l][c];
@@ -474,7 +474,7 @@ public class SwingTerminal extends Component
           selectEnd.x) : buffer.width);
         if (selectStartColumn != selectEndColumn) {
           if (debug > 0)
-            System.err.println("select(" + selectStartColumn + "-"
+            de.mud.jta.OutputSingleton.err.println("select(" + selectStartColumn + "-"
                                + selectEndColumn + ")");
           g.setXORMode(bg);
           g.fillRect(selectStartColumn * charWidth + xoffset,
@@ -527,7 +527,7 @@ public class SwingTerminal extends Component
     }
 
     if (debug > 1)
-      System.err.println("Clip region: " + g.getClipBounds());
+      de.mud.jta.OutputSingleton.err.println("Clip region: " + g.getClipBounds());
 
     g.drawImage(backingStore, 0, 0, this);
   }
@@ -552,7 +552,7 @@ public class SwingTerminal extends Component
   }
 
   public void print(Graphics g) {
-    if (debug > 0) System.err.println("DEBUG: print()");
+    if (debug > 0) de.mud.jta.OutputSingleton.err.println("DEBUG: print()");
     for (int i = 0; i <= buffer.height; i++) buffer.update[i] = true;
     Color fg = null, bg = null, colorSave[] = null;
     if (!colorPrinting) {
@@ -630,7 +630,7 @@ public class SwingTerminal extends Component
    */
   public void setBounds(int x, int y, int w, int h) {
     if (debug > 0)
-      System.err.println("VDU: setBounds(" + x + "," + y + "," + w + "," + h + ")");
+      de.mud.jta.OutputSingleton.err.println("VDU: setBounds(" + x + "," + y + "," + w + "," + h + ")");
 
     super.setBounds(x, y, w, h);
 
@@ -645,7 +645,7 @@ public class SwingTerminal extends Component
     }
 
     if (debug > 0)
-      System.err.println("VDU: looking for better match for " + normalFont);
+      de.mud.jta.OutputSingleton.err.println("VDU: looking for better match for " + normalFont);
 
     Font tmpFont = normalFont;
     String fontName = tmpFont.getName();
@@ -684,9 +684,9 @@ public class SwingTerminal extends Component
             fm.charWidth('@') > width));
 
         if (charHeight <= 1) {
-          System.err.println("VDU: error during resize, resetting");
+          de.mud.jta.OutputSingleton.err.println("VDU: error during resize, resetting");
           normalFont = tmpFont;
-          System.err.println("VDU: disabling font/screen resize");
+          de.mud.jta.OutputSingleton.err.println("VDU: disabling font/screen resize");
           resizeStrategy = RESIZE_NONE;
         }
 
@@ -701,7 +701,7 @@ public class SwingTerminal extends Component
         break;
     }
     if (debug > 0) {
-      System.err.println("VDU: charWidth=" + charWidth + ", " +
+      de.mud.jta.OutputSingleton.err.println("VDU: charWidth=" + charWidth + ", " +
                          "charHeight=" + charHeight + ", " +
                          "charDescent=" + charDescent);
     }
@@ -783,7 +783,7 @@ public class SwingTerminal extends Component
       if (oldx != x || oldy != y) {
         buffer.update[0] = true;
         if (debug > 0)
-          System.err.println("select([" + selectBegin.x + "," + selectBegin.y + "]," +
+          de.mud.jta.OutputSingleton.err.println("select([" + selectBegin.x + "," + selectBegin.y + "]," +
                              "[" + selectEnd.x + "," + selectEnd.y + "])");
         redraw();
       }

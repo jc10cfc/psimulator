@@ -113,7 +113,7 @@ The telnet ssh is a sample class for how to use the SSH protocol
      ssh.setPrompt("user@host");
      ssh.waitfor("Terminal type?");
      ssh.send("dumb");
-     System.out.println(ssh.send("ls -l"));
+     de.mud.jta.OutputSingleton.out.println(ssh.send("ls -l"));
    } catch(java.io.IOException e) {
      e.printStackTrace();
    }

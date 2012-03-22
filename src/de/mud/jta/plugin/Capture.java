@@ -187,7 +187,7 @@ public class Capture extends Plugin
       start = new JMenuItem("Start");
       start.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          if (debug > 0) System.out.println("Capture: start capturing");
+          if (debug > 0) de.mud.jta.OutputSingleton.out.println("Capture: start capturing");
           captureEnabled = true;
           start.setEnabled(false);
           stop.setEnabled(true);
@@ -198,7 +198,7 @@ public class Capture extends Plugin
       stop = new JMenuItem("Stop");
       stop.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          if (debug > 0) System.out.println("Capture: stop capturing");
+          if (debug > 0) de.mud.jta.OutputSingleton.out.println("Capture: stop capturing");
           captureEnabled = false;
           start.setEnabled(true);
           stop.setEnabled(false);
@@ -211,7 +211,7 @@ public class Capture extends Plugin
       clear = new JMenuItem("Clear");
       clear.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          if (debug > 0) System.out.println("Capture: cleared captured text");
+          if (debug > 0) de.mud.jta.OutputSingleton.out.println("Capture: cleared captured text");
           textArea.setText("");
         }
       });
@@ -221,7 +221,7 @@ public class Capture extends Plugin
       JMenuItem view = new JMenuItem("View/Hide Text");
       view.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          if (debug > 0) System.out.println("view/hide text: " + frame.isVisible());
+          if (debug > 0) de.mud.jta.OutputSingleton.out.println("view/hide text: " + frame.isVisible());
           if (frame.isVisible()) {
             frame.setVisible(false);
             frame.hide();
@@ -259,7 +259,7 @@ public class Capture extends Plugin
             });
             save.setActionCommand("URL.file");
           } catch (MalformedURLException e) {
-            System.err.println("capture url invalid: " + e);
+            de.mud.jta.OutputSingleton.err.println("capture url invalid: " + e);
           }
 
         } else {
@@ -289,7 +289,7 @@ public class Capture extends Plugin
             // count up
             i++;
           } catch (MalformedURLException e) {
-            System.err.println("capture url invalid: " + e);
+            de.mud.jta.OutputSingleton.err.println("capture url invalid: " + e);
           }
         }
       }
@@ -302,7 +302,7 @@ public class Capture extends Plugin
   public void actionPerformed(ActionEvent e) {
     String urlID = e.getActionCommand();
     if (debug > 0)
-      System.err.println("Capture: storing text: "
+      de.mud.jta.OutputSingleton.err.println("Capture: storing text: "
                          + urlID + ": "
                          + remoteUrlList.get(urlID));
     saveFile(urlID);
@@ -330,17 +330,17 @@ public class Capture extends Plugin
       out = new DataOutputStream(urlConnection.getOutputStream());
       String content = (String) remoteUrlList.get(urlID + ".params");
       content = (content == null ? "" : content + "&") + "content=" + URLEncoder.encode(textArea.getText());
-      if (debug > 0) System.err.println("Capture: " + content);
+      if (debug > 0) de.mud.jta.OutputSingleton.err.println("Capture: " + content);
       out.writeBytes(content);
       out.flush();
       out.close();
 
       // retrieve response from the remote host and display it.
-      if (debug > 0) System.err.println("Capture: reading response");
+      if (debug > 0) de.mud.jta.OutputSingleton.err.println("Capture: reading response");
       in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
       String str;
       while (null != ((str = in.readLine()))) {
-        System.out.println("Capture: " + str);
+        de.mud.jta.OutputSingleton.out.println("Capture: " + str);
       }
       in.close();
 
@@ -348,7 +348,7 @@ public class Capture extends Plugin
       doneDialog.setVisible(true);
 
     } catch (IOException ioe) {
-      System.err.println("Capture: cannot store text on remote server: " + url);
+      de.mud.jta.OutputSingleton.err.println("Capture: cannot store text on remote server: " + url);
       ioe.printStackTrace();
       JTextArea errorMsg = new JTextArea(ioe.toString(), 5, 30);
       errorMsg.setEditable(false);
@@ -356,7 +356,7 @@ public class Capture extends Plugin
       errorDialog.pack();
       errorDialog.setVisible(true);
     }
-    if (debug > 0) System.err.println("Capture: storage complete: " + url);
+    if (debug > 0) de.mud.jta.OutputSingleton.err.println("Capture: storage complete: " + url);
   }
 
   // this is where we get the data from (left side in plugins list)
@@ -368,7 +368,7 @@ public class Capture extends Plugin
    * @param source the next plugin
    */
   public void setFilterSource(FilterPlugin source) {
-    if (debug > 0) System.err.println("Capture: connected to: " + source);
+    if (debug > 0) de.mud.jta.OutputSingleton.err.println("Capture: connected to: " + source);
     this.source = source;
   }
 

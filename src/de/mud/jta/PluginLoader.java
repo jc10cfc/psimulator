@@ -94,7 +94,7 @@ public class PluginLoader implements PluginBus {
 
     // nothing found, tell the user
     if (plugin == null) {
-      System.err.println("plugin loader: plugin '" + name + "' was not found!");
+      de.mud.jta.OutputSingleton.err.println("plugin loader: plugin '" + name + "' was not found!");
       return null;
     }
 
@@ -176,9 +176,9 @@ public class PluginLoader implements PluginBus {
       return plugin;
     } catch (ClassNotFoundException ce) {
       if (debug > 0)
-        System.err.println("plugin loader: plugin not found: " + fullClassName);
+        de.mud.jta.OutputSingleton.err.println("plugin loader: plugin not found: " + fullClassName);
     } catch (Exception e) {
-      System.err.println("plugin loader: can't load plugin: " + fullClassName);
+      de.mud.jta.OutputSingleton.err.println("plugin loader: can't load plugin: " + fullClassName);
       e.printStackTrace();
     }
 
@@ -204,7 +204,7 @@ public class PluginLoader implements PluginBus {
    * @return the answer to the sent message
    */
   public Object broadcast(PluginMessage message) {
-    if (debug > 0) System.err.println("broadcast(" + message + ")");
+    if (debug > 0) de.mud.jta.OutputSingleton.err.println("broadcast(" + message + ")");
     if (message == null || listener == null)
       return null;
     Enumeration e = listener.elements();

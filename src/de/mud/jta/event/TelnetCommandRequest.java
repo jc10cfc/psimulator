@@ -53,7 +53,7 @@ public class TelnetCommandRequest implements PluginMessage {
       try {
 	  ((TelnetCommandListener)pl).sendTelnetCommand(cmd);
       } catch (IOException io) {
-      	System.err.println("io exception caught:"+io);
+      	de.mud.jta.OutputSingleton.err.println("io exception caught:"+io);
 	io.printStackTrace();
       }
     }

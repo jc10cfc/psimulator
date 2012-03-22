@@ -49,7 +49,7 @@ import de.mud.jta.Wrapper;
  *     telnet.setPrompt("user@host");
  *     telnet.waitfor("Terminal type?");
  *     telnet.send("dumb");
- *     System.out.println(telnet.send("ls -l"));
+ *     de.mud.jta.OutputSingleton.out.println(telnet.send("ls -l"));
  *   } catch(java.io.IOException e) {
  *     e.printStackTrace();
  *   }

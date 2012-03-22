@@ -114,7 +114,7 @@ public class Telnet extends Plugin implements FilterPlugin {
         try {
 	  handler.setWindowSize(columns,rows);
         } catch (java.io.IOException e) {
-          System.err.println("IO Exception in set window size");
+          de.mud.jta.OutputSingleton.err.println("IO Exception in set window size");
         }
       }
     });
@@ -141,7 +141,7 @@ public class Telnet extends Plugin implements FilterPlugin {
   }
 
   public void setFilterSource(FilterPlugin source) {
-    if(debug>0) System.err.println("Telnet: connected to: "+source);
+    if(debug>0) de.mud.jta.OutputSingleton.err.println("Telnet: connected to: "+source);
     this.source = source;
   }
 
