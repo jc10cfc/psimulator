@@ -8,6 +8,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import psimulator.logicLayer.Simulator.ConnectionFailtureReason;
 import shared.Components.CableModel;
 import shared.Components.EthInterfaceModel;
 import shared.Components.HwComponentModel;
@@ -117,7 +118,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * Used from another thread
      */
     @Override
-    public void connectionFailed() {
+    public void connectionFailed(ConnectionFailtureReason connectionFailtureReason) {
         isConnectedToServer = false;
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -438,6 +439,10 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
             
 
+    /**
+     * used from another thread...player
+     * @return 
+     */
     @Override
     public boolean isConnectedToServer() {
         return isConnectedToServer;
