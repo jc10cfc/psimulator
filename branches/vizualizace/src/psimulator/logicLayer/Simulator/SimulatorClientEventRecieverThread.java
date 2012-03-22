@@ -6,20 +6,19 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.nio.channels.SocketChannel;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
+import psimulator.userInterface.UserInterfaceOuterFacade;
 import shared.Components.CableModel;
 import shared.Components.EthInterfaceModel;
 import shared.Components.HwComponentModel;
-import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
-import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
+import shared.NetworkObject;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
-import psimulator.userInterface.UserInterfaceOuterFacade;
-import shared.NetworkObject;
 
 /**
  *
@@ -57,6 +56,107 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
         t.start();
     }
 
+
+    @Override
+    public void run() {
+        int tmpCounter = 0;
+
+        while (true) {
+            try {
+                // if connect
+                if (doConnect) {
+                    doConnect();
+                    // if disconnect
+                } else if (doDisconnect) {
+                    doDisconnect();
+                }
+
+                SimulatorEvent simulatorEvent = null;
+
+                // if connected, recieve packet
+                if (simulatorManagerInterface.isConnectedToServer()) {
+                    // recieve event
+                    try {
+                        simulatorEvent = getEventFromServer();
+                    } catch (ClientConnectionFailException ex) {
+                        // connection broke down
+                        simulatorManagerInterface.connectionFailed(ex.getConnectionFailtureReason());
+
+                        // set recording false immedeately
+                        isRecording = false;
+                    }
+
+                    // event wasnt recieved, go next round
+                    if (simulatorEvent == null) {
+                        if (DEBUG) System.out.println("Nepodarilo se nacist eventu");
+                        continue;
+                    }else{
+                        if (DEBUG) System.out.println("Nactena eventa" + tmpCounter++);
+                    }
+
+                    // if in recording mode, try to add packet to event table
+                    if (isRecording == true) {
+                        if (DEBUG) {
+                            System.out.println("Adding packet " + tmpCounter++);
+                        }
+                        try {
+                            simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
+                            if (DEBUG) {
+                                System.out.println("Packet added " + tmpCounter++);
+                            }
+                        } catch (ParseSimulatorEventException ex) {
+                            // inform simulator manager
+                            simulatorManagerInterface.recievedWrongPacket();
+
+                            // set recording false immedeately
+                            isRecording = false;
+                        }
+                    }
+                } else {
+                    if (DEBUG) {
+                        System.out.println("Reciever going to long sleep " + tmpCounter++);
+                    }
+                    // sleep for a long time
+                    Thread.sleep(Long.MAX_VALUE);
+                }
+            } catch (InterruptedException ex) {
+                if (DEBUG) {
+                    System.out.println("Reciever interrupted");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object o1) {
+        switch ((ObserverUpdateEventType) o1) {
+            case CONNECTION_DO_CONNECT:
+                if (DEBUG) {
+                    System.out.println("Event reciever: DO_CONNECT");
+                }
+                this.doConnect = true;
+                break;
+            case CONNECTION_DO_DISCONNECT:
+                if (DEBUG) {
+                    System.out.println("Event reciever: DO_DISCONNECT");
+                }
+                this.doDisconnect = true;
+                break;
+            case SIMULATOR_RECORDER_ON:
+            case SIMULATOR_RECORDER_OFF:
+                if (DEBUG) {
+                    System.out.println("Event reciever: RECORDER");
+                }
+                this.isRecording = simulatorManagerInterface.isRecording();
+                break;
+            default:
+                return;
+        }
+        thread.interrupt();
+    }
+    
+    
+    
     private void connectToServer() throws UnknownHostException, IOException, NumberFormatException {
         String ipAddress = dataLayer.getConnectionIpAddress();
         String port = dataLayer.getConnectionPort();
@@ -163,217 +263,92 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
         return false;
     }
-    
-    private SimulatorEvent getEventFromServer(){
-        
+
+    private SimulatorEvent getEventFromServer() throws ClientConnectionFailException {
+
         // if reset time
         if (simulatorManagerInterface.isTimeReset()) {
             timeOfFirstEvent = System.currentTimeMillis();
         }
-        
+
         try {
             NetworkObject networkObject = (NetworkObject) inputStream.readObject();
 
             SimulatorEvent simulatorEvent = (SimulatorEvent) networkObject;
-            
+
             // generate time
             int time = (int) (System.currentTimeMillis() - timeOfFirstEvent);
             simulatorEvent.setTimeStamp(time);
-            
+
             return simulatorEvent;
         } catch (SocketTimeoutException timeout) {
             // its ok.. no need to be handled, just check if object is not null
-            System.out.println("Socket timeout exception during get simulator event");
+            if (DEBUG) System.out.println("Socket timeout exception during get simulator event");
             return null;
         } catch (IOException ex) {
-            //Logger.getLogger(SimulatorClientEventRecieverThread.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("IOException during get simulator event");
-            return null;
+            if (DEBUG)System.out.println("IOException during get simulator event");
+            throw new ClientConnectionFailException(ConnectionFailtureReason.SERVER_DISCONNECTED);
         } catch (ClassNotFoundException ex) {
-            //Logger.getLogger(SimulatorClientEventRecieverThread.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Class cast exception during get simulator event");
-            return null;
+            if (DEBUG)System.out.println("Class cast exception during get simulator event");
+            throw new ClientConnectionFailException(ConnectionFailtureReason.SERVER_SENT_WRONG_OBJECT);
         }
     }
 
-    @Override
-    public void run() {
-        int tmpCounter = 0;
+    private void doConnect() {
+        doConnect = false;
 
-        while (true) {
+        if (DEBUG) {
+            System.out.println("Reciever do connect ");
+        }
+
+        try {
             try {
-                if (doConnect) {
-                    doConnect = false;
-
-                    if (DEBUG) System.out.println("Reciever do connect " + tmpCounter++);
-                    
-
-                    try {
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException ex) {
-                            // nothing to do
-                        }
-
-                        // connect to server
-                        connectToServer();
-                        if (DEBUG)  System.out.println("Connected");
-                        
-                        // if connecting succesfull
-                        simulatorManagerInterface.connected();
-                        
-                        // recieve table with telnet ports
-                        boolean successs = recieveTableWithTelnetPorts();
-                        
-                        // if table not recieved
-                        if(!successs){
-                            // disconnect
-                            disconnectFromServer();
-                            // inform about connection fail
-                            simulatorManagerInterface.connectionFailed();
-                        }
-                    } catch (UnknownHostException | NumberFormatException e) {
-                        System.out.println("Unknown host or number format ex");
-                        disconnectFromServer();
-                        simulatorManagerInterface.connectingFailed();
-                    } catch (IOException ex) {
-                        System.out.println("IOEx");
-                        disconnectFromServer();
-                        simulatorManagerInterface.connectingFailed();
-                    }
-
-                } else if (doDisconnect) {
-                    doDisconnect = false;
-                    //
-                    if (DEBUG) {
-                        System.out.println("Reciever do disconnect " + tmpCounter++);
-                    }
-
-                    disconnectFromServer();
-                    simulatorManagerInterface.disconnected();
-                }
-
-                if (isRecording) {
-                    if (DEBUG) {
-                        System.out.println("Reciever recording " + tmpCounter++);
-                    }
-
-                    //SimulatorEvent simulatorEvent = generateSimulatorEvent(true, 10000);
-                    SimulatorEvent simulatorEvent = getEventFromServer();
-                    
-                    if(simulatorEvent == null){
-                        System.out.println("Nepodarilo se nacist eventu");
-                        continue;
-                    }
-
-                    if (!thread.isInterrupted() && isRecording == true && simulatorEvent != null) {
-                        try {
-                            simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
-                        } catch (ParseSimulatorEventException ex) {
-                            // inform simulator manager
-                            simulatorManagerInterface.recievedWrongPacket();
-
-                            // set recording false immedeately
-                            isRecording = false;
-                        }
-                    }
-
-                    //int time = tmpRandom.nextInt(1) + 10; // 1000 + 100
-                    int time = tmpRandom.nextInt(100) + 100;
-
-                    Thread.sleep(time);
-                    //Thread.sleep(1);
-
-                } else {
-                    if (DEBUG) {
-                        System.out.println("Reciever going to long sleep " + tmpCounter++);
-                    }
-                    // sleep for a long time
-                    Thread.sleep(Long.MAX_VALUE);
-                }
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
-                if (DEBUG) {
-                    System.out.println("Reciever interrupted");
-                }
+                // nothing to do
             }
 
+            // connect to server
+            connectToServer();
+            if (DEBUG) {
+                System.out.println("Connected");
+            }
+
+            // if connecting succesfull
+            simulatorManagerInterface.connected();
+
+            // recieve table with telnet ports
+            boolean successs = recieveTableWithTelnetPorts();
+
+            // if table not recieved
+            if (!successs) {
+                // disconnect
+                disconnectFromServer();
+                // inform about connection fail
+                simulatorManagerInterface.connectionFailed(ConnectionFailtureReason.TABLE_WITH_TELNET_NOT_RECIEVED);
+            }
+        } catch (UnknownHostException | NumberFormatException e) {
+            if (DEBUG)System.out.println("Unknown host or number format ex");
+            disconnectFromServer();
+            simulatorManagerInterface.connectingFailed();
+        } catch (IOException ex) {
+            if (DEBUG)System.out.println("IOEx");
+            disconnectFromServer();
+            simulatorManagerInterface.connectingFailed();
+        }
+    }
+
+    private void doDisconnect() {
+        doDisconnect = false;
+        //
+        if (DEBUG) {
+            System.out.println("Reciever do disconnect ");
         }
 
-
+        disconnectFromServer();
+        simulatorManagerInterface.disconnected();
     }
-    /*
-     * @Override public void run() { int tmpCounter = 0;
-     *
-     * while(true){ try{ if(doConnect){ doConnect = false;
-     *
-     * if(DEBUG)System.out.println("Reciever do connect " + tmpCounter++);
-     *
-     * int i = tmpRandom.nextInt(10);
-     *
-     * if(i==3){ Thread.sleep(3000);
-     * simulatorManagerInterface.connectingFailed(); }else{ Thread.sleep(2000);
-     * simulatorManagerInterface.connected(); } }else if (doDisconnect){
-     * doDisconnect = false; // if(DEBUG)System.out.println("Reciever do
-     * disconnect " + tmpCounter++);
-     *
-     * simulatorManagerInterface.disconnected(); }
-     *
-     * if(isRecording){ if(DEBUG)System.out.println("Reciever recording " +
-     * tmpCounter++);
-     *
-     * SimulatorEvent simulatorEvent = generateSimulatorEvent(true, 10000);
-     *
-     * if(!thread.isInterrupted() && isRecording == true && simulatorEvent !=
-     * null){ try { simulatorManagerInterface.addSimulatorEvent(simulatorEvent);
-     * } catch (ParseSimulatorEventException ex) { // inform simulator manager
-     * simulatorManagerInterface.recievedWrongPacket();
-     *
-     * // set recording false immedeately isRecording = false; } }
-     *
-     * //int time = tmpRandom.nextInt(1) + 10; // 1000 + 100 int time =
-     * tmpRandom.nextInt(100) + 100;
-     *
-     * Thread.sleep(time); //Thread.sleep(1);
-     *
-     * } else{ if(DEBUG)System.out.println("Reciever going to long sleep " +
-     * tmpCounter++); // sleep for a long time Thread.sleep(Long.MAX_VALUE); } }
-     * catch (InterruptedException ex) { if(DEBUG)System.out.println("Reciever
-     * interrupted"); }
-     *
-     * }
-     * }
-     */
-
-    @Override
-    public void update(Observable o, Object o1) {
-        switch ((ObserverUpdateEventType) o1) {
-            case CONNECTION_DO_CONNECT:
-                if (DEBUG) {
-                    System.out.println("Event reciever: DO_CONNECT");
-                }
-                this.doConnect = true;
-                break;
-            case CONNECTION_DO_DISCONNECT:
-                if (DEBUG) {
-                    System.out.println("Event reciever: DO_DISCONNECT");
-                }
-                this.doDisconnect = true;
-                break;
-            case SIMULATOR_RECORDER_ON:
-            case SIMULATOR_RECORDER_OFF:
-                if (DEBUG) {
-                    System.out.println("Event reciever: RECORDER");
-                }
-                this.isRecording = simulatorManagerInterface.isRecording();
-                break;
-            default:
-                return;
-        }
-
-        //System.out.println("Event reciever: recording=" + isRecording);
-
-        thread.interrupt();
-    }
+    
 
     /**
      * Generates simulator event from real graph. It tries to create event with

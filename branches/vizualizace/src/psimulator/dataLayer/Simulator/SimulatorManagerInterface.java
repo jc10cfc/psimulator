@@ -2,6 +2,7 @@ package psimulator.dataLayer.Simulator;
 
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import psimulator.logicLayer.Simulator.ConnectionFailtureReason;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
@@ -20,7 +21,7 @@ public interface SimulatorManagerInterface {
     public void connected();
     public void disconnected();
     public void connectingFailed();
-    public void connectionFailed();
+    public void connectionFailed(ConnectionFailtureReason connectionFailtureReason);
     
     public void recievedWrongPacket();
     
