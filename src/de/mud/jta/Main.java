@@ -230,10 +230,16 @@ public class Main {
       tmp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.SHIFT_MASK | KeyEvent.CTRL_MASK));
       tmp.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent evt) {
+            
+            StringBuilder initValue = new StringBuilder();
+            if(!host.isEmpty() && !port.isEmpty())
+                initValue.append(host).append(" ").append(port);
+            
+            
           String destination =
                   JOptionPane.showInputDialog(frame,
                                               new JLabel(resBundle.getString("DIALOG_HOST_PORT")),
-                                              resBundle.getString("CONNECT"), JOptionPane.QUESTION_MESSAGE
+                                               initValue.toString()
                   );
           if (destination != null) {
             int sep = 0;
