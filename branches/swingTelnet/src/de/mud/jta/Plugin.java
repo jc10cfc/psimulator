@@ -73,6 +73,6 @@ public class Plugin {
   public void error(String msg) {
     String name = getClass().toString();
     name = name.substring(name.lastIndexOf('.') + 1);
-    System.err.println(name + (id != null ? "(" + id + ")" : "") + ": " + msg);
+    de.mud.jta.OutputSingleton.err.println(name + (id != null ? "(" + id + ")" : "") + ": " + msg);
   }
 }

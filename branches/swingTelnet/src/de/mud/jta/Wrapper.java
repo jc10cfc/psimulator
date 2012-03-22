@@ -48,7 +48,7 @@ import de.mud.telnet.ScriptHandler;
  *     telnet.setPrompt("user@host");
  *     telnet.waitfor("Terminal type?");
  *     telnet.send("dumb");
- *     System.out.println(telnet.send("ls -l"));
+ *     de.mud.jta.OutputSingleton.out.println(telnet.send("ls -l"));
  *   } catch(java.io.IOException e) {
  *     e.printStackTrace();
  *   }
@@ -81,13 +81,13 @@ public class Wrapper {
 
   /** Connect the socket and open the connection. */
   public void connect(String host, int port) throws IOException {
-    if(debug>0) System.err.println("Wrapper: connect("+host+","+port+")");
+    if(debug>0) de.mud.jta.OutputSingleton.err.println("Wrapper: connect("+host+","+port+")");
     try {
       socket = new java.net.Socket(host, port);
       in = socket.getInputStream();
       out = socket.getOutputStream();
     } catch(Exception e) {
-      System.err.println("Wrapper: "+e);
+      de.mud.jta.OutputSingleton.err.println("Wrapper: "+e);
       disconnect();
       throw ((IOException)e);
     }
@@ -95,7 +95,7 @@ public class Wrapper {
  
   /** Disconnect the socket and close the connection. */
   public void disconnect() throws IOException {
-    if(debug>0) System.err.println("Wrapper: disconnect()");
+    if(debug>0) de.mud.jta.OutputSingleton.err.println("Wrapper: disconnect()");
     if (socket != null)
 	socket.close();
   }
@@ -160,7 +160,7 @@ public class Wrapper {
       if(n > 0) {
 	current = new String( b1, 0, n );
 	if (debug > 0)
-	  System.err.print( current );
+	  de.mud.jta.OutputSingleton.err.print( current );
 	ret.append( current );
 	for ( int i = 0; i < handlers.length ; i++ ) {
 	  if ( handlers[i].match( ret.toString().getBytes(), ret.length() ) ) {
@@ -205,6 +205,6 @@ public class Wrapper {
 
   public void setLocalEcho(boolean echo) {
     if(debug > 0)
-      System.err.println("local echo "+(echo ? "on" : "off"));
+      de.mud.jta.OutputSingleton.err.println("local echo "+(echo ? "on" : "off"));
   }
 }

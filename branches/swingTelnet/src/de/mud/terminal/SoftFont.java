@@ -1082,7 +1082,7 @@ public class SoftFont {
 
 		insoftfont = (null!=font.get(new Integer(c)));
 		if (!insoftfont && (int)c>=0x100) {
-			System.out.println("Character "+((int)c)+" not in softfont");
+			de.mud.jta.OutputSingleton.out.println("Character "+((int)c)+" not in softfont");
 		}
 		return insoftfont;
 	}

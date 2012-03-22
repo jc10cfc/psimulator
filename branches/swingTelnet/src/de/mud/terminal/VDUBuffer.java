@@ -336,7 +336,7 @@ public class VDUBuffer {
             (topMargin > 0 ?
             topMargin - 1 : 0) : bottomMargin));
 
-    // System.out.println("l is "+l+", top is "+top+", bottom is "+bottom+", bottomargin is "+bottomMargin+", topMargin is "+topMargin);
+    // de.mud.jta.OutputSingleton.out.println("l is "+l+", top is "+top+", bottom is "+bottom+", bottomargin is "+bottomMargin+", topMargin is "+topMargin);
 
     if (scrollDown) {
       if (n > (bottom - top)) n = (bottom - top);
@@ -429,18 +429,18 @@ public class VDUBuffer {
         // here in case something happens anyway. That code above is
         // so complex I always have a hard time understanding what
         // I did, even though there are comments
-        System.err.println("*** Error while scrolling up:");
-        System.err.println("--- BEGIN STACK TRACE ---");
+        de.mud.jta.OutputSingleton.err.println("*** Error while scrolling up:");
+        de.mud.jta.OutputSingleton.err.println("--- BEGIN STACK TRACE ---");
         e.printStackTrace();
-        System.err.println("--- END STACK TRACE ---");
-        System.err.println("bufSize=" + bufSize + ", maxBufSize=" + maxBufSize);
-        System.err.println("top=" + top + ", bottom=" + bottom);
-        System.err.println("n=" + n + ", l=" + l);
-        System.err.println("screenBase=" + screenBase + ", windowBase=" + windowBase);
-        System.err.println("oldBase=" + oldBase);
-        System.err.println("size.width=" + width + ", size.height=" + height);
-        System.err.println("abuf.length=" + abuf.length + ", cbuf.length=" + cbuf.length);
-        System.err.println("*** done dumping debug information");
+        de.mud.jta.OutputSingleton.err.println("--- END STACK TRACE ---");
+        de.mud.jta.OutputSingleton.err.println("bufSize=" + bufSize + ", maxBufSize=" + maxBufSize);
+        de.mud.jta.OutputSingleton.err.println("top=" + top + ", bottom=" + bottom);
+        de.mud.jta.OutputSingleton.err.println("n=" + n + ", l=" + l);
+        de.mud.jta.OutputSingleton.err.println("screenBase=" + screenBase + ", windowBase=" + windowBase);
+        de.mud.jta.OutputSingleton.err.println("oldBase=" + oldBase);
+        de.mud.jta.OutputSingleton.err.println("size.width=" + width + ", size.height=" + height);
+        de.mud.jta.OutputSingleton.err.println("abuf.length=" + abuf.length + ", cbuf.length=" + cbuf.length);
+        de.mud.jta.OutputSingleton.err.println("*** done dumping debug information");
       }
     }
 
@@ -698,7 +698,7 @@ public class VDUBuffer {
     if (w < 1 || h < 1) return;
 
     if (debug > 0)
-      System.err.println("VDU: screen size [" + w + "," + h + "]");
+      de.mud.jta.OutputSingleton.err.println("VDU: screen size [" + w + "," + h + "]");
 
     if (h > maxBufSize)
       maxBufSize = h;

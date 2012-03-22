@@ -113,7 +113,7 @@ The telnet wrapper is a sample class for how to use the telnet protocol
      telnet.setPrompt("user@host");
      telnet.waitfor("Terminal type?");
      telnet.send("dumb");
-     System.out.println(telnet.send("ls -l"));
+     de.mud.jta.OutputSingleton.out.println(telnet.send("ls -l"));
    } catch(java.io.IOException e) {
      e.printStackTrace();
    }

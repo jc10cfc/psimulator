@@ -53,23 +53,23 @@ public class Common extends PluginLoader {
     // configure the plugin path
     super(getPluginPath(config.getProperty("pluginPath")));
 
-    System.out.println("** JTA - Telnet/SSH for the JAVA(tm) platform");
-    System.out.println("** Version 2.6 for Java 2+");
-    System.out.println("** Copyright (c) 1996-2005 Matthias L. Jugel, "
+    de.mud.jta.OutputSingleton.out.println("** JTA - Telnet/SSH for the JAVA(tm) platform");
+    de.mud.jta.OutputSingleton.out.println("** Version 2.6 for Java 2+");
+    de.mud.jta.OutputSingleton.out.println("** Copyright (c) 1996-2005 Matthias L. Jugel, "
                        + "Marcus Meissner");
 
     try {
       Version build =
               (Version) Class.forName("de.mud.jta.Build").newInstance();
-      System.out.println("** Build: " + build.getDate());
+      de.mud.jta.OutputSingleton.out.println("** Build: " + build.getDate());
     } catch (Exception e) {
-      System.out.println("** Build: patched or selfmade, no date");
-      System.err.println(e);
+      de.mud.jta.OutputSingleton.out.println("** Build: patched or selfmade, no date");
+      de.mud.jta.OutputSingleton.err.println(e);
     }
 
     Vector names = split(config.getProperty("plugins"), ',');
     if (names == null) {
-      System.err.println("jta: no plugins found! aborting ...");
+      de.mud.jta.OutputSingleton.err.println("jta: no plugins found! aborting ...");
       return;
     }
 
@@ -82,15 +82,15 @@ public class Common extends PluginLoader {
         if (name.indexOf(")", idx) > idx)
           id = name.substring(idx + 1, name.indexOf(")", idx));
         else
-          System.err.println("jta: missing ')' for plugin '" + name + "'");
+          de.mud.jta.OutputSingleton.err.println("jta: missing ')' for plugin '" + name + "'");
         name = name.substring(0, idx);
       }
-      System.out.println("jta: loading plugin '" + name + "'"
+      de.mud.jta.OutputSingleton.out.println("jta: loading plugin '" + name + "'"
                          + (id != null && id.length() > 0 ?
                             ", ID: '" + id + "'" : ""));
       Plugin plugin = addPlugin(name, id);
       if (plugin == null) {
-        System.err.println("jta: ignoring plugin '" + name + "'"
+        de.mud.jta.OutputSingleton.err.println("jta: ignoring plugin '" + name + "'"
                            + (id != null && id.length() > 0 ?
                               ", ID: '" + id + "'" : ""));
         continue;

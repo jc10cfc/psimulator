@@ -65,12 +65,12 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
    */
   public void putString(String s) {
     int len = s.length();
-    // System.err.println("'"+s+"'");
+    // de.mud.jta.OutputSingleton.err.println("'"+s+"'");
 
     if (len > 0) {
       markLine(R, 1);
       for (int i = 0; i < len; i++) {
-        // System.err.print(s.charAt(i)+"("+(int)s.charAt(i)+")");
+        // de.mud.jta.OutputSingleton.err.print(s.charAt(i)+"("+(int)s.charAt(i)+")");
         putChar(s.charAt(i), false);
       }
       setCursorPosition(C, R);
@@ -91,7 +91,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   public void setScreenSize(int c, int r, boolean broadcast) {
     int oldrows = getRows(), oldcols = getColumns();
 
-    if (debug>2) System.err.println("setscreensize ("+c+","+r+","+broadcast+")");
+    if (debug>2) de.mud.jta.OutputSingleton.err.println("setscreensize ("+c+","+r+","+broadcast+")");
 
     super.setScreenSize(c,r,false);
 
@@ -437,7 +437,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
    * @param s the string to be sent
    */
   private boolean write(String s, boolean doecho) {
-    if (debug > 2) System.out.println("write(|" + s + "|," + doecho);
+    if (debug > 2) de.mud.jta.OutputSingleton.out.println("write(|" + s + "|," + doecho);
     if (s == null) // aka the empty string.
       return true;
     /* NOTE: getBytes() honours some locale, it *CONVERTS* the string.
@@ -617,7 +617,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   static String unEscape(String tmp) {
     int idx = 0, oldidx = 0;
     String cmd;
-    // System.err.println("unescape("+tmp+")");
+    // de.mud.jta.OutputSingleton.err.println("unescape("+tmp+")");
     cmd = "";
     while ((idx = tmp.indexOf('\\', oldidx)) >= 0 &&
             ++idx <= tmp.length()) {
@@ -701,7 +701,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
     boolean shift = (modifiers & VDUInput.KEY_SHIFT) != 0;
     boolean alt = (modifiers & VDUInput.KEY_ALT) != 0;
 
-    if (debug > 1) System.out.println("keyPressed("+keyCode+", "+(int)keyChar+", "+modifiers+")");
+    if (debug > 1) de.mud.jta.OutputSingleton.out.println("keyPressed("+keyCode+", "+(int)keyChar+", "+modifiers+")");
 
     int xind;
     String fmap[];
@@ -821,7 +821,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   }
 
   public void keyReleased(KeyEvent evt) {
-    if (debug > 1) System.out.println("keyReleased("+evt+")");
+    if (debug > 1) de.mud.jta.OutputSingleton.out.println("keyReleased("+evt+")");
     // ignore
   }
 
@@ -834,7 +834,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
     boolean shift = (modifiers & VDUInput.KEY_SHIFT) != 0;
     boolean alt = (modifiers & VDUInput.KEY_ALT) != 0;
 
-    if (debug > 1) System.out.println("keyTyped("+keyCode+", "+(int)keyChar+", "+modifiers+")");
+    if (debug > 1) de.mud.jta.OutputSingleton.out.println("keyTyped("+keyCode+", "+(int)keyChar+", "+modifiers+")");
 
     if (keyChar == '\t') {
       if (shift) {
@@ -865,7 +865,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
     }
 
     if ((keyCode == 10) && !control) {
-      System.out.println("Sending \\r");
+      de.mud.jta.OutputSingleton.out.println("Sending \\r");
       write("\r", false);
       return;
     }
@@ -1018,11 +1018,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
   }
 
   private void handle_dcs(String dcs) {
-    System.out.println("DCS: " + dcs);
+    de.mud.jta.OutputSingleton.out.println("DCS: " + dcs);
   }
 
   private void handle_osc(String osc) {
-    System.out.println("OSC: " + osc);
+    de.mud.jta.OutputSingleton.out.println("OSC: " + osc);
   }
 
   private final static char unimap[] = {
@@ -1330,11 +1330,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
     // byte msg[];
     boolean mapped = false;
 
-    if (debug > 4) System.out.println("putChar(" + c + " [" + ((int) c) + "]) at R=" + R + " , C=" + C + ", columns=" + columns + ", rows=" + rows);
+    if (debug > 4) de.mud.jta.OutputSingleton.out.println("putChar(" + c + " [" + ((int) c) + "]) at R=" + R + " , C=" + C + ", columns=" + columns + ", rows=" + rows);
     markLine(R, 1);
     if (c > 255) {
       if (debug > 0)
-        System.out.println("char > 255:" + (int) c);
+        de.mud.jta.OutputSingleton.out.println("char > 255:" + (int) c);
       //return;
     }
 
@@ -1357,17 +1357,17 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               else
                 insertLine(R, 1, SCROLL_DOWN);
               if (debug > 1)
-                System.out.println("RI");
+                de.mud.jta.OutputSingleton.out.println("RI");
               break;
             case IND:
               if (debug > 2)
-                System.out.println("IND at " + R + ", tm is " + tm + ", bm is " + bm);
+                de.mud.jta.OutputSingleton.out.println("IND at " + R + ", tm is " + tm + ", bm is " + bm);
               if (R == bm || R == rows - 1)
                 insertLine(R, 1, SCROLL_UP);
               else
                 R++;
               if (debug > 1)
-                System.out.println("IND (at " + R + " )");
+                de.mud.jta.OutputSingleton.out.println("IND (at " + R + " )");
               break;
             case NEL:
               if (R == bm || R == rows - 1)
@@ -1376,12 +1376,12 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                 R++;
               C = 0;
               if (debug > 1)
-                System.out.println("NEL (at " + R + " )");
+                de.mud.jta.OutputSingleton.out.println("NEL (at " + R + " )");
               break;
             case HTS:
               Tabs[C] = 1;
               if (debug > 1)
-                System.out.println("HTS");
+                de.mud.jta.OutputSingleton.out.println("HTS");
               break;
             case DCS:
               dcs = "";
@@ -1438,7 +1438,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             break;
           case '\n':
             if (debug > 3)
-              System.out.println("R= " + R + ", bm " + bm + ", tm=" + tm + ", rows=" + rows);
+              de.mud.jta.OutputSingleton.out.println("R= " + R + ", bm " + bm + ", tm=" + tm + ", rows=" + rows);
             if (!vms) {
               if (lastwaslf != 0 && lastwaslf != c)   //  Ray: I do not understand this logic.
                 break;
@@ -1475,7 +1475,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               if (c < 32) {
                 if (c != 0)
                   if (debug > 0)
-                    System.out.println("TSTATE_DATA char: " + ((int) c));
+                    de.mud.jta.OutputSingleton.out.println("TSTATE_DATA char: " + ((int) c));
                 /*break; some BBS really want those characters, like hearst etc. */
                 if (c == 0) /* print 0 ... you bet */
                   break;
@@ -1522,7 +1522,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                       mapped = true;
                       break;
                     default:
-                      System.out.println("Unsupported GL mapping: " + gx[thisgl]);
+                      de.mud.jta.OutputSingleton.out.println("Unsupported GL mapping: " + gx[thisgl]);
                       break;
                   }
                 }
@@ -1540,7 +1540,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                       mapped = true;
                       break;
                     default:
-                      System.out.println("Unsupported GR mapping: " + gx[gr]);
+                      de.mud.jta.OutputSingleton.out.println("Unsupported GR mapping: " + gx[gr]);
                       break;
                   }
                 }
@@ -1592,7 +1592,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             output8bit = true;
             break;
           default:
-            System.out.println("ESC <space> " + c + " unhandled.");
+            de.mud.jta.OutputSingleton.out.println("ESC <space> " + c + " unhandled.");
         }
         break;
       case TSTATE_ESC:
@@ -1660,7 +1660,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               R++;
             C = 0;
             if (debug > 1)
-              System.out.println("ESC E (at " + R + ")");
+              de.mud.jta.OutputSingleton.out.println("ESC E (at " + R + ")");
             break;
           case 'D': /* IND */
             if (R == bm || R == rows - 1)
@@ -1668,7 +1668,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             else
               R++;
             if (debug > 1)
-              System.out.println("ESC D (at " + R + " )");
+              de.mud.jta.OutputSingleton.out.println("ESC D (at " + R + " )");
             break;
           case 'J': /* erase to end of screen */
             if (R < rows - 1)
@@ -1681,7 +1681,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               deleteArea(C, R, columns - C, 1, attributes);
             break;
           case 'M': // RI
-            System.out.println("ESC M : R is "+R+", tm is "+tm+", bm is "+bm);
+            de.mud.jta.OutputSingleton.out.println("ESC M : R is "+R+", tm is "+tm+", bm is "+bm);
             if (R > bm) // outside scrolling region
               break;
             if (R > tm) { // just go up 1 line.
@@ -1691,11 +1691,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             }
             /* else do nothing ; */
             if (debug > 2)
-              System.out.println("ESC M ");
+              de.mud.jta.OutputSingleton.out.println("ESC M ");
             break;
           case 'H':
             if (debug > 1)
-              System.out.println("ESC H at " + C);
+              de.mud.jta.OutputSingleton.out.println("ESC H at " + C);
             /* right border probably ...*/
             if (C >= columns)
               C = columns - 1;
@@ -1710,7 +1710,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
           case '=':
             /*application keypad*/
             if (debug > 0)
-              System.out.println("ESC =");
+              de.mud.jta.OutputSingleton.out.println("ESC =");
             keypadmode = true;
             break;
           case '<': /* vt52 mode off */
@@ -1718,7 +1718,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             break;
           case '>': /*normal keypad*/
             if (debug > 0)
-              System.out.println("ESC >");
+              de.mud.jta.OutputSingleton.out.println("ESC >");
             keypadmode = false;
             break;
           case '7': /*save cursor, attributes, margins */
@@ -1732,7 +1732,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             Stm = getTopMargin();
             Sbm = getBottomMargin();
             if (debug > 1)
-              System.out.println("ESC 7");
+              de.mud.jta.OutputSingleton.out.println("ESC 7");
             break;
           case '8': /*restore cursor, attributes, margins */
             C = Sc;
@@ -1744,7 +1744,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             setBottomMargin(Sbm);
             attributes = Sa;
             if (debug > 1)
-              System.out.println("ESC 8");
+              de.mud.jta.OutputSingleton.out.println("ESC 8");
             break;
           case '(': /* Designate G0 Character set (ISO 2022) */
             term_state = TSTATE_SETG0;
@@ -1786,7 +1786,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             term_state = TSTATE_VT52Y;
             break;
           default:
-            System.out.println("ESC unknown letter: " + c + " (" + ((int) c) + ")");
+            de.mud.jta.OutputSingleton.out.println("ESC unknown letter: " + c + " (" + ((int) c) + ")");
             break;
         }
         break;
@@ -1800,36 +1800,36 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
         break;
       case TSTATE_SETG0:
         if (c != '0' && c != 'A' && c != 'B' && c != '<')
-          System.out.println("ESC ( " + c + ": G0 char set?  (" + ((int) c) + ")");
+          de.mud.jta.OutputSingleton.out.println("ESC ( " + c + ": G0 char set?  (" + ((int) c) + ")");
         else {
-          if (debug > 2) System.out.println("ESC ( : G0 char set  (" + c + " " + ((int) c) + ")");
+          if (debug > 2) de.mud.jta.OutputSingleton.out.println("ESC ( : G0 char set  (" + c + " " + ((int) c) + ")");
           gx[0] = c;
         }
         term_state = TSTATE_DATA;
         break;
       case TSTATE_SETG1:
         if (c != '0' && c != 'A' && c != 'B' && c != '<') {
-          System.out.println("ESC ) " + c + " (" + ((int) c) + ") :G1 char set?");
+          de.mud.jta.OutputSingleton.out.println("ESC ) " + c + " (" + ((int) c) + ") :G1 char set?");
         } else {
-          if (debug > 2) System.out.println("ESC ) :G1 char set  (" + c + " " + ((int) c) + ")");
+          if (debug > 2) de.mud.jta.OutputSingleton.out.println("ESC ) :G1 char set  (" + c + " " + ((int) c) + ")");
           gx[1] = c;
         }
         term_state = TSTATE_DATA;
         break;
       case TSTATE_SETG2:
         if (c != '0' && c != 'A' && c != 'B' && c != '<')
-          System.out.println("ESC*:G2 char set?  (" + ((int) c) + ")");
+          de.mud.jta.OutputSingleton.out.println("ESC*:G2 char set?  (" + ((int) c) + ")");
         else {
-          if (debug > 2) System.out.println("ESC*:G2 char set  (" + c + " " + ((int) c) + ")");
+          if (debug > 2) de.mud.jta.OutputSingleton.out.println("ESC*:G2 char set  (" + c + " " + ((int) c) + ")");
           gx[2] = c;
         }
         term_state = TSTATE_DATA;
         break;
       case TSTATE_SETG3:
         if (c != '0' && c != 'A' && c != 'B' && c != '<')
-          System.out.println("ESC+:G3 char set?  (" + ((int) c) + ")");
+          de.mud.jta.OutputSingleton.out.println("ESC+:G3 char set?  (" + ((int) c) + ")");
         else {
-          if (debug > 2) System.out.println("ESC+:G3 char set  (" + c + " " + ((int) c) + ")");
+          if (debug > 2) de.mud.jta.OutputSingleton.out.println("ESC+:G3 char set  (" + c + " " + ((int) c) + ")");
           gx[3] = c;
         }
         term_state = TSTATE_DATA;
@@ -1842,7 +1842,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                 putChar(i, j, 'E', 0);
             break;
           default:
-            System.out.println("ESC # " + c + " not supported.");
+            de.mud.jta.OutputSingleton.out.println("ESC # " + c + " not supported.");
             break;
         }
         term_state = TSTATE_DATA;
@@ -1879,11 +1879,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             break;
           case 's': // XTERM_SAVE missing!
             if (true || debug > 1)
-              System.out.println("ESC [ ? " + DCEvars[0] + " s unimplemented!");
+              de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " s unimplemented!");
             break;
           case 'r': // XTERM_RESTORE
             if (true || debug > 1)
-              System.out.println("ESC [ ? " + DCEvars[0] + " r");
+              de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " r");
             /* DEC Mode reset */
             for (int i = 0; i <= DCEvar; i++) {
               switch (DCEvars[i]) {
@@ -1910,13 +1910,13 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                   mouserpt = DCEvars[i];
                   break;
                 default:
-                  System.out.println("ESC [ ? " + DCEvars[0] + " r, unimplemented!");
+                  de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " r, unimplemented!");
               }
             }
             break;
           case 'h': // DECSET
             if (debug > 0)
-              System.out.println("ESC [ ? " + DCEvars[0] + " h");
+              de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " h");
             /* DEC Mode set */
             for (int i = 0; i <= DCEvar; i++) {
               switch (DCEvars[i]) {
@@ -1956,7 +1956,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                   /* 18 - DECPFF - Printer Form Feed Mode -> On */
                   /* 19 - DECPEX - Printer Extent Mode -> Screen */
                 default:
-                  System.out.println("ESC [ ? " + DCEvars[0] + " h, unsupported.");
+                  de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " h, unsupported.");
                   break;
               }
             }
@@ -1969,22 +1969,22 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             switch (DCEvars[0]) {
               case 1:
                 if (debug > 1)
-                  System.out.println("CSI ? 1 i : Print line containing cursor");
+                  de.mud.jta.OutputSingleton.out.println("CSI ? 1 i : Print line containing cursor");
                 break;
               case 4:
                 if (debug > 1)
-                  System.out.println("CSI ? 4 i : Start passthrough printing");
+                  de.mud.jta.OutputSingleton.out.println("CSI ? 4 i : Start passthrough printing");
                 break;
               case 5:
                 if (debug > 1)
-                  System.out.println("CSI ? 4 i : Stop passthrough printing");
+                  de.mud.jta.OutputSingleton.out.println("CSI ? 4 i : Stop passthrough printing");
                 break;
             }
             break;
           case 'l':	//DECRST
             /* DEC Mode reset */
             if (debug > 0)
-              System.out.println("ESC [ ? " + DCEvars[0] + " l");
+              de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " l");
             for (int i = 0; i <= DCEvar; i++) {
               switch (DCEvars[i]) {
                 case 1:  /* Application cursor keys */
@@ -2023,27 +2023,27 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                   mouserpt = 0;
                   break;
                 default:
-                  System.out.println("ESC [ ? " + DCEvars[0] + " l, unsupported.");
+                  de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " l, unsupported.");
                   break;
               }
             }
             break;
           case 'n':
             if (debug > 0)
-              System.out.println("ESC [ ? " + DCEvars[0] + " n");
+              de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " n");
             switch (DCEvars[0]) {
               case 15:
                 /* printer? no printer. */
                 write(((char) ESC) + "[?13n", false);
-                System.out.println("ESC[5n");
+                de.mud.jta.OutputSingleton.out.println("ESC[5n");
                 break;
               default:
-                System.out.println("ESC [ ? " + DCEvars[0] + " n, unsupported.");
+                de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " n, unsupported.");
                 break;
             }
             break;
           default:
-            System.out.println("ESC [ ? " + DCEvars[0] + " " + c + ", unsupported.");
+            de.mud.jta.OutputSingleton.out.println("ESC [ ? " + DCEvars[0] + " " + c + ", unsupported.");
             break;
         }
         break;
@@ -2054,7 +2054,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             term_state = TSTATE_ESC;
             break;
           default:
-            System.out.println("Unknown character ESC[! character is " + (int) c);
+            de.mud.jta.OutputSingleton.out.println("Unknown character ESC[! character is " + (int) c);
             break;
         }
         break;
@@ -2062,7 +2062,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
         term_state = TSTATE_DATA;
         switch (c) {
           case 'p':
-            System.out.println("Conformance level: " + DCEvars[0] + " (unsupported)," + DCEvars[1]);
+            de.mud.jta.OutputSingleton.out.println("Conformance level: " + DCEvars[0] + " (unsupported)," + DCEvars[1]);
             if (DCEvars[0] == 61) {
               output8bit = false;
               break;
@@ -2074,7 +2074,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             }
             break;
           default:
-            System.out.println("Unknown ESC [...  \"" + c);
+            de.mud.jta.OutputSingleton.out.println("Unknown ESC [...  \"" + c);
             break;
         }
         break;
@@ -2104,7 +2104,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	  {
 	    int newcolor;
 
-            System.out.println("ESC [ = "+DCEvars[0]+" F");
+            de.mud.jta.OutputSingleton.out.println("ESC [ = "+DCEvars[0]+" F");
 
             attributes &= ~COLOR_FG;
 	    newcolor =	((DCEvars[0] & 1) << 2)	|
@@ -2118,7 +2118,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
 	  {
 	    int newcolor;
 
-            System.out.println("ESC [ = "+DCEvars[0]+" G");
+            de.mud.jta.OutputSingleton.out.println("ESC [ = "+DCEvars[0]+" G");
 
             attributes &= ~COLOR_BG;
 	    newcolor =	((DCEvars[0] & 1) << 2)	|
@@ -2129,10 +2129,10 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
           }
 
           default:
-            System.out.print("Unknown ESC [ = ");
+            de.mud.jta.OutputSingleton.out.print("Unknown ESC [ = ");
 	    for (int i=0;i<=DCEvar;i++)
-		System.out.print(DCEvars[i]+",");
-	    System.out.println("" + c);
+		de.mud.jta.OutputSingleton.out.print(DCEvars[i]+",");
+	    de.mud.jta.OutputSingleton.out.println("" + c);
             break;
         }
         break;
@@ -2140,19 +2140,19 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
         term_state = TSTATE_DATA;
         switch (c) {
           case '}':
-            System.out.println("Active Status Display now " + DCEvars[0]);
+            de.mud.jta.OutputSingleton.out.println("Active Status Display now " + DCEvars[0]);
             statusmode = DCEvars[0];
             break;
             /* bad documentation?
                case '-':
-               System.out.println("Set Status Display now "+DCEvars[0]);
+               de.mud.jta.OutputSingleton.out.println("Set Status Display now "+DCEvars[0]);
                break;
             */
           case '~':
-            System.out.println("Status Line mode now " + DCEvars[0]);
+            de.mud.jta.OutputSingleton.out.println("Status Line mode now " + DCEvars[0]);
             break;
           default:
-            System.out.println("UNKNOWN Status Display code " + c + ", with Pn=" + DCEvars[0]);
+            de.mud.jta.OutputSingleton.out.println("UNKNOWN Status Display code " + c + ", with Pn=" + DCEvars[0]);
             break;
         }
         break;
@@ -2203,11 +2203,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             if (terminalID.equals("vt100")) subcode = "61;";
             write(((char) ESC) + "[?" + subcode + "1;2c", false);
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " c");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " c");
             break;
           case 'q':
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " q");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " q");
             break;
           case 'g':
             /* used for tabsets */
@@ -2220,7 +2220,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                 break;
             }
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " g");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " g");
             break;
           case 'h':
             switch (DCEvars[0]) {
@@ -2228,15 +2228,15 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                 insertmode = 1;
                 break;
               case 20:
-                System.out.println("Setting CRLF to TRUE");
+                de.mud.jta.OutputSingleton.out.println("Setting CRLF to TRUE");
                 sendcrlf = true;
                 break;
               default:
-                System.out.println("unsupported: ESC [ " + DCEvars[0] + " h");
+                de.mud.jta.OutputSingleton.out.println("unsupported: ESC [ " + DCEvars[0] + " h");
                 break;
             }
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " h");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " h");
             break;
           case 'i': // Printer Controller mode.
             // "Transparent printing sends all output, except the CSI 4 i
@@ -2248,18 +2248,18 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             switch (DCEvars[0]) {
               case 0:
                 if (debug > 1)
-                  System.out.println("CSI 0 i:  Print Screen, not implemented.");
+                  de.mud.jta.OutputSingleton.out.println("CSI 0 i:  Print Screen, not implemented.");
                 break;
               case 4:
                 if (debug > 1)
-                  System.out.println("CSI 4 i:  Enable Transparent Printing, not implemented.");
+                  de.mud.jta.OutputSingleton.out.println("CSI 4 i:  Enable Transparent Printing, not implemented.");
                 break;
               case 5:
                 if (debug > 1)
-                  System.out.println("CSI 4/5 i:  Disable Transparent Printing, not implemented.");
+                  de.mud.jta.OutputSingleton.out.println("CSI 4/5 i:  Disable Transparent Printing, not implemented.");
                 break;
               default:
-                System.out.println("ESC [ " + DCEvars[0] + " i, unimplemented!");
+                de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " i, unimplemented!");
             }
             break;
           case 'l':
@@ -2268,11 +2268,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                 insertmode = 0;
                 break;
               case 20:
-                System.out.println("Setting CRLF to FALSE");
+                de.mud.jta.OutputSingleton.out.println("Setting CRLF to FALSE");
                 sendcrlf = false;
                 break;
               default:
-                System.out.println("ESC [ " + DCEvars[0] + " l, unimplemented!");
+                de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " l, unimplemented!");
                 break;
             }
             break;
@@ -2293,7 +2293,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               if (R < limit)
                 R = limit;
               if (debug > 1)
-                System.out.println("ESC [ " + DCEvars[0] + " A");
+                de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " A");
               break;
             }
           case 'B':	// CUD
@@ -2313,11 +2313,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               if (R > limit)
                 R = limit;
               else {
-                if (debug > 2) System.out.println("Not limited.");
+                if (debug > 2) de.mud.jta.OutputSingleton.out.println("Not limited.");
               }
-              if (debug > 2) System.out.println("to: " + R);
+              if (debug > 2) de.mud.jta.OutputSingleton.out.println("to: " + R);
               if (debug > 1)
-                System.out.println("ESC [ " + DCEvars[0] + " B (at C=" + C + ")");
+                de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " B (at C=" + C + ")");
               break;
             }
           case 'C':
@@ -2328,12 +2328,12 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             if (C > columns - 1)
               C = columns - 1;
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " C");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " C");
             break;
           case 'd': // CVA
             R = DCEvars[0];
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " d");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " d");
             break;
           case 'D':
             if (DCEvars[0] == 0)
@@ -2342,7 +2342,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               C -= DCEvars[0];
             if (C < 0) C = 0;
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " D");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " D");
             break;
           case 'r': // DECSTBM
             if (DCEvar > 0)   //  Ray:  Any argument is optional
@@ -2364,18 +2364,18 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             setTopMargin(R);
             _SetCursor(0, 0);
             if (debug > 1)
-              System.out.println("ESC [" + DCEvars[0] + " ; " + DCEvars[1] + " r");
+              de.mud.jta.OutputSingleton.out.println("ESC [" + DCEvars[0] + " ; " + DCEvars[1] + " r");
             break;
           case 'G':  /* CUP  / cursor absolute column */
             C = DCEvars[0];
-            if (debug > 1) System.out.println("ESC [ " + DCEvars[0] + " G");
+            if (debug > 1) de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " G");
             break;
           case 'H':  /* CUP  / cursor position */
             /* gets 2 arguments */
             _SetCursor(DCEvars[0] - 1, DCEvars[1] - 1);
             if (debug > 2) {
-              System.out.println("ESC [ " + DCEvars[0] + ";" + DCEvars[1] + " H, moveoutsidemargins " + moveoutsidemargins);
-              System.out.println("	-> R now " + R + ", C now " + C);
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + ";" + DCEvars[1] + " H, moveoutsidemargins " + moveoutsidemargins);
+              de.mud.jta.OutputSingleton.out.println("	-> R now " + R + ", C now " + C);
             }
             break;
           case 'f':  /* move cursor 2 */
@@ -2385,7 +2385,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             if (C < 0) C = 0;
             if (R < 0) R = 0;
             if (debug > 2)
-              System.out.println("ESC [ " + DCEvars[0] + ";" + DCEvars[1] + " f");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + ";" + DCEvars[1] + " f");
             break;
           case 'S': /* ind aka 'scroll forward' */
             if (DCEvars[0] == 0)
@@ -2400,7 +2400,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             else
               insertLine(R, DCEvars[0], SCROLL_DOWN);
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + "" + (c) + " (at R " + R + ")");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + "" + (c) + " (at R " + R + ")");
             break;
           case 'T': /* 'ri' aka scroll backward */
             if (DCEvars[0] == 0)
@@ -2410,7 +2410,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             break;
           case 'M':
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + "" + (c) + " at R=" + R);
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + "" + (c) + " at R=" + R);
             if (DCEvars[0] == 0)
               deleteLine(R);
             else
@@ -2419,7 +2419,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             break;
           case 'K':
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " K");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " K");
             /* clear in line */
             switch (DCEvars[0]) {
               case 6: /* 97801 uses ESC[6K for delete to end of line */
@@ -2456,11 +2456,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                 break;
             }
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " J");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " J");
             break;
           case '@':
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " @");
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " @");
             for (int i = 0; i < DCEvars[0]; i++)
               insertChar(C, R, ' ', attributes);
             break;
@@ -2468,7 +2468,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             {
               int toerase = DCEvars[0];
               if (debug > 1)
-                System.out.println("ESC [ " + DCEvars[0] + " X, C=" + C + ",R=" + R);
+                de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " X, C=" + C + ",R=" + R);
               if (toerase == 0)
                 toerase = 1;
               if (toerase + C > columns)
@@ -2479,7 +2479,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             }
           case 'P':
             if (debug > 1)
-              System.out.println("ESC [ " + DCEvars[0] + " P, C=" + C + ",R=" + R);
+              de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " P, C=" + C + ",R=" + R);
             if (DCEvars[0] == 0) DCEvars[0] = 1;
             for (int i = 0; i < DCEvars[0]; i++)
               deleteChar(C, R);
@@ -2489,7 +2489,7 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
               case 5: /* malfunction? No malfunction. */
                 writeSpecial(((char) ESC) + "[0n");
                 if (debug > 1)
-                  System.out.println("ESC[5n");
+                  de.mud.jta.OutputSingleton.out.println("ESC[5n");
                 break;
               case 6:
                 // DO NOT offset R and C by 1! (checked against /usr/X11R6/bin/resize
@@ -2497,11 +2497,11 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                 // FIXME: but vttest thinks different???
                 writeSpecial(((char) ESC) + "[" + R + ";" + C + "R");
                 if (debug > 1)
-                  System.out.println("ESC[6n");
+                  de.mud.jta.OutputSingleton.out.println("ESC[6n");
                 break;
               default:
                 if (debug > 0)
-                  System.out.println("ESC [ " + DCEvars[0] + " n??");
+                  de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[0] + " n??");
                 break;
             }
             break;
@@ -2510,18 +2510,18 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
             Sr = R;
             Sa = attributes;
             if (debug > 3)
-              System.out.println("ESC[s");
+              de.mud.jta.OutputSingleton.out.println("ESC[s");
             break;
           case 'u': /* DECRC - restore cursor */
             C = Sc;
             R = Sr;
             attributes = Sa;
             if (debug > 3)
-              System.out.println("ESC[u");
+              de.mud.jta.OutputSingleton.out.println("ESC[u");
             break;
           case 'm':  /* attributes as color, bold , blink,*/
             if (debug > 3)
-              System.out.print("ESC [ ");
+              de.mud.jta.OutputSingleton.out.print("ESC [ ");
             if (DCEvar == 0 && DCEvars[0] == 0)
               attributes = 0;
             for (int i = 0; i <= DCEvar; i++) {
@@ -2629,17 +2629,17 @@ public abstract class vt320 extends VDUBuffer implements VDUInput {
                   break;
 
                 default:
-                  System.out.println("ESC [ " + DCEvars[i] + " m unknown...");
+                  de.mud.jta.OutputSingleton.out.println("ESC [ " + DCEvars[i] + " m unknown...");
                   break;
               }
               if (debug > 3)
-                System.out.print("" + DCEvars[i] + ";");
+                de.mud.jta.OutputSingleton.out.print("" + DCEvars[i] + ";");
             }
             if (debug > 3)
-              System.out.print(" (attributes = " + attributes + ")m \n");
+              de.mud.jta.OutputSingleton.out.print(" (attributes = " + attributes + ")m \n");
             break;
           default:
-            System.out.println("ESC [ unknown letter:" + c + " (" + ((int) c) + ")");
+            de.mud.jta.OutputSingleton.out.println("ESC [ unknown letter:" + c + " (" + ((int) c) + ")");
             break;
         }
         break;

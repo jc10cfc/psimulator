@@ -102,6 +102,11 @@ public class Main {
    * @return
    */
   public static JFrame run(String args[]) {
+      
+      // DELEGATE STD AND ERR OUTPUT ?
+      OutputSingleton.out = new DelegatePrintStream(System.out, false);
+      OutputSingleton.err = new DelegatePrintStream(System.err, false);
+      
       if(args == null)
           args = new String[0];
       
@@ -109,12 +114,12 @@ public class Main {
     try {
       options.load(Main.class.getResourceAsStream("/de/mud/jta/default.conf"));
     } catch (IOException e) {
-      System.err.println("jta: cannot load default.conf");
+      de.mud.jta.OutputSingleton.err.println("jta: cannot load default.conf");
     }
     String error = parseOptions(options, args);
     if (error != null) {
-      System.err.println(error);
-      System.err.println("usage: de.mud.jta.Main [-plugins pluginlist] "
+      de.mud.jta.OutputSingleton.err.println(error);
+      de.mud.jta.OutputSingleton.err.println("usage: de.mud.jta.Main [-plugins pluginlist] "
                          + "[-addplugin plugin] "
                          + "[-config url_or_file] "
                          + "[-lang cz/en]"
@@ -130,7 +135,7 @@ public class Main {
         try {
           options.load(new FileInputStream(cfg));
         } catch (Exception fe) {
-          System.err.println("jta: cannot load " + cfg);
+          de.mud.jta.OutputSingleton.err.println("jta: cannot load " + cfg);
         }
       }
 
@@ -151,8 +156,8 @@ public class Main {
     try {
       clipboard = frame.getToolkit().getSystemClipboard();
     } catch (Exception e) {
-      System.err.println(resBundle.getString("CLIPBOARD_ACCESS_DENIED")); 
-      System.err.println(resBundle.getString("CLIPBOARD_COPY_PASTE_RESTRICTION"));
+      de.mud.jta.OutputSingleton.err.println(resBundle.getString("CLIPBOARD_ACCESS_DENIED")); 
+      de.mud.jta.OutputSingleton.err.println(resBundle.getString("CLIPBOARD_COPY_PASTE_RESTRICTION"));
       clipboard = new Clipboard("de.mud.jta.Main");
     }
 
@@ -181,14 +186,14 @@ public class Main {
     setup.registerPluginListener(new FocusStatusListener() {
       public void pluginGainedFocus(Plugin plugin) {
         if (Main.debug > 0)
-          System.err.println("Main: " + plugin + " got focus");
+          de.mud.jta.OutputSingleton.err.println("Main: " + plugin + " got focus");
         focussedPlugin = plugin;
       }
 
       public void pluginLostFocus(Plugin plugin) {
         // we ignore the lost focus
         if (Main.debug > 0)
-          System.err.println("Main: " + plugin + " lost focus");
+          de.mud.jta.OutputSingleton.err.println("Main: " + plugin + " lost focus");
       }
     });
 
@@ -198,7 +203,7 @@ public class Main {
       String name = (String) names.next();
       JComponent c = (JComponent) componentList.get(name);
       if (options.getProperty("layout." + name) == null) {
-        System.err.println("jta: no layout property set for '" + name + "'");
+        de.mud.jta.OutputSingleton.err.println("jta: no layout property set for '" + name + "'");
         frame.add("South", c);
         //frame.add(c, BorderLayout.SOUTH);
       } else
@@ -326,7 +331,7 @@ public class Main {
    // frame.setVisible(true);
 
     if(debug > 0) 
-      System.err.println("host: '"+host+"', "+host.length());
+      de.mud.jta.OutputSingleton.err.println("host: '"+host+"', "+host.length());
     if (host != null && host.length() > 0) {
       setup.broadcast(new SocketRequest(host, Integer.parseInt(port)));
     }

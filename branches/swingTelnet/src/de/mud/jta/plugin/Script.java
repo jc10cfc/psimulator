@@ -94,10 +94,10 @@ public class Script extends Plugin implements FilterPlugin {
 	    if(pair == null) {
 	      pair = new String[2];
               pair[0] = s.substring(old + 1, idx);
-	      if(debug > 0) System.out.print("match("+pair[0]+") -> ");
+	      if(debug > 0) de.mud.jta.OutputSingleton.out.print("match("+pair[0]+") -> ");
 	    } else {
               pair[1] = s.substring(old + 1, idx)+"\n";
-	      if(debug > 0) System.out.print(pair[1]);
+	      if(debug > 0) de.mud.jta.OutputSingleton.out.print(pair[1]);
 	      savedScript.addElement(pair);
 	      pair = null;
 	    }
@@ -107,7 +107,7 @@ public class Script extends Plugin implements FilterPlugin {
           if(pair != null) {
 	    pair[1] = s.substring(old + 1)+"\n";
 	    savedScript.addElement(pair);
-	    if(debug > 0) System.out.print(pair[1]);
+	    if(debug > 0) de.mud.jta.OutputSingleton.out.print(pair[1]);
 	  } else
 	    Script.this.error("unmatched pairs of script elements");
 	   // set up the script
@@ -169,7 +169,7 @@ public class Script extends Plugin implements FilterPlugin {
     // clone script to make sure we do not change the original
     this.script = (Vector)script.clone();
     if(debug > 0) 
-      System.err.println("Script: script contains "+script.size()+" elements");
+      de.mud.jta.OutputSingleton.err.println("Script: script contains "+script.size()+" elements");
 
     // If the first element is empty, just send the value string.
     match = ((String[])this.script.firstElement())[0].getBytes();
@@ -211,7 +211,7 @@ public class Script extends Plugin implements FilterPlugin {
    * @return the answer to the found match
    */
   private byte[] found() {
-    if(debug > 0) System.err.println("Script: found '"+new String(match)+"'");
+    if(debug > 0) de.mud.jta.OutputSingleton.err.println("Script: found '"+new String(match)+"'");
     // we have matched the string, so remember the answer ...
     byte[] answer = ((String[])script.firstElement())[1].getBytes();
     // remove the matched element
