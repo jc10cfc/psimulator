@@ -14,6 +14,7 @@ import shared.Components.EthInterfaceModel;
 import shared.Components.HwComponentModel;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import shared.telnetConfig.TelnetConfig;
 
 /**
  *
@@ -606,5 +607,13 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             }
         }
         return true;
+    }
+
+    /**
+     * Used from another thread - player
+     */
+    @Override
+    public void setTelnetConfig(TelnetConfig telnetConfig) {
+        dataLayerFacade.setTelnetConfig(telnetConfig);
     }
 }

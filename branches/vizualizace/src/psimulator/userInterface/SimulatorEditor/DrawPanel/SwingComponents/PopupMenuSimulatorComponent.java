@@ -13,6 +13,7 @@ import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
+import shared.telnetConfig.TelnetConfig;
 
 /**
  *
@@ -75,13 +76,43 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
                 
                 // set focus to opened telnet window
                 JFrame existingFrame = mainWindow.getTelnetWindow(hwComponentGraphics.getId().intValue());
+                if(existingFrame.isShowing()){
+                    System.out.println("window showing");
+                }
                 existingFrame.requestFocus();
                 
                 return;
             }
             
-            String [] args = {"-lang", "cz"};
             
+            // Set Language
+            String language;
+            if(dataLayer.getString("BUNDLE_LANGUAGE_NAME").equals("Čeština")){
+                language = "cz";
+            }else{
+                language = "en";
+            }
+            
+
+            String [] args;
+            
+            // set HOST and PORT
+            TelnetConfig telnetConfig = dataLayer.getTelnetConfig();
+            if(telnetConfig != null && telnetConfig.getConfigRecords().containsKey(hwComponentGraphics.getId().intValue())){
+                String host = dataLayer.getConnectionIpAddress();
+                String port = ""+telnetConfig.getConfigRecords().get(hwComponentGraphics.getId().intValue()).getPort();
+                
+                args = new String[4];
+                
+                args[2] = host;
+                args[3] = port;
+            }else{
+                args = new String[2];
+            }
+            
+            args[0] = "-lang";
+            args[1] = language;
+
             //final JFrame frame = new JFrame();
             final JFrame frame = de.mud.jta.Main.run(args);
 
@@ -108,6 +139,7 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
 
                 @Override
                 public void windowClosed(WindowEvent we) {
+                    mainWindow.removeTelnetWindow(id);
                 }
                 @Override
                 public void windowIconified(WindowEvent we) {

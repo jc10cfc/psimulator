@@ -5,6 +5,7 @@ import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 import psimulator.logicLayer.Simulator.ConnectionFailtureReason;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
+import shared.telnetConfig.TelnetConfig;
 
 /**
  *
@@ -75,5 +76,6 @@ public interface SimulatorManagerInterface {
     public boolean isInTheList();
     
     public boolean hasAllEventsItsComponentsInModel();
-    
+
+    public void setTelnetConfig(TelnetConfig telnetConfig);
 }

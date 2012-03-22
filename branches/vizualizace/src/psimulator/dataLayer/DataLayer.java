@@ -19,6 +19,7 @@ import shared.Serializer.SaveLoadException;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import shared.SimulatorEvents.Serializer.AbstractSimulatorEventsSaveLoadInterface;
 import shared.SimulatorEvents.Serializer.SimulatorEventsSerializerXML;
+import shared.telnetConfig.TelnetConfig;
 
 /**
  *
@@ -35,6 +36,9 @@ public class DataLayer extends DataLayerFacade {
     private AbstractSimulatorEventsSaveLoadInterface simulatorEventsSerializer;
     //
     private NetworkFacade networkFacade;
+    //
+    private TelnetConfig telnetConfig;
+    
     
 
     public DataLayer() {
@@ -259,4 +263,16 @@ public class DataLayer extends DataLayerFacade {
     public void addRecentOpenedFile(File file) {
         preferencesManager.addRecentOpenedFile(file);
     }
+
+    @Override
+    public void setTelnetConfig(TelnetConfig telnetConfig) {
+        this.telnetConfig = telnetConfig;
+    }
+
+    @Override
+    public TelnetConfig getTelnetConfig() {
+        return telnetConfig;
+    }
+    
+    
 }
