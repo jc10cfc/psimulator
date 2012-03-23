@@ -89,7 +89,10 @@ public class Main {
   private static String host, port;
   
   private static ResourceBundle resBundle;
-
+  
+  public static int defaultColumns = 100;
+  public static int defaultRows = 50;
+  
   public static void main(String args[]){
      JFrame frame =  Main.run(args);
      
@@ -126,6 +129,8 @@ public class Main {
                          + "[-term id] [host [port]]");
       return null;
     }
+    
+    options.setProperty("Terminal.size", "["+defaultColumns +","+defaultRows+"]");
 
     String cfg = options.getProperty("Main.config");
     if (cfg != null)
