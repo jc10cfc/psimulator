@@ -734,21 +734,21 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelFrom.add(jLabelDetailsFromValue);
 
         jPanelLeftColumn.add(jPanelFrom);
-
-        JPanel jPanelFromInterface = new JPanel();
-        jPanelFromInterface.setLayout(new BoxLayout(jPanelFromInterface, BoxLayout.LINE_AXIS));
-        jPanelFromInterface.setAlignmentX(Component.LEFT_ALIGNMENT);
-        jLabelDetailsFromInterfaceName = new JLabel();
-        jLabelDetailsFromInterfaceName.setFont(boldFont);
-        jLabelDetailsFromInterfaceValue = new JLabel();
-
-        jPanelFromInterface.add(Box.createRigidArea(new Dimension(5, 0)));
-        jPanelFromInterface.add(jLabelDetailsFromInterfaceName);
-        jPanelFromInterface.add(Box.createRigidArea(new Dimension(5, 0)));
-        jPanelFromInterface.add(jLabelDetailsFromInterfaceValue);
-
-        jPanelRightColumn.add(jPanelFromInterface);
-
+        
+//        JPanel jPanelFromInterface = new JPanel();
+//        jPanelFromInterface.setLayout(new BoxLayout(jPanelFromInterface, BoxLayout.LINE_AXIS));
+//        jPanelFromInterface.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        jLabelDetailsFromInterfaceName = new JLabel();
+//        jLabelDetailsFromInterfaceName.setFont(boldFont);
+//        jLabelDetailsFromInterfaceValue = new JLabel();
+//
+//        jPanelFromInterface.add(Box.createRigidArea(new Dimension(5, 0)));
+//        jPanelFromInterface.add(jLabelDetailsFromInterfaceName);
+//        jPanelFromInterface.add(Box.createRigidArea(new Dimension(5, 0)));
+//        jPanelFromInterface.add(jLabelDetailsFromInterfaceValue);
+//
+//        jPanelRightColumn.add(jPanelFromInterface);
+        
         //
         JPanel jPanelTo = new JPanel();
         jPanelTo.setLayout(new BoxLayout(jPanelTo, BoxLayout.LINE_AXIS));
@@ -763,36 +763,36 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelTo.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelTo.add(jLabelDetailsToValue);
 
-        jPanelLeftColumn.add(jPanelTo);
+        jPanelRightColumn.add(jPanelTo);
 
-        JPanel jPanelToInterface = new JPanel();
-        jPanelToInterface.setLayout(new BoxLayout(jPanelToInterface, BoxLayout.LINE_AXIS));
-        jPanelToInterface.setAlignmentX(Component.LEFT_ALIGNMENT);
-        jLabelDetailsToInterfaceName = new JLabel();
-        jLabelDetailsToInterfaceName.setFont(boldFont);
-        jLabelDetailsToInterfaceName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        jLabelDetailsToInterfaceValue = new JLabel();
-
-        jPanelToInterface.add(Box.createRigidArea(new Dimension(5, 0)));
-        jPanelToInterface.add(jLabelDetailsToInterfaceName);
-        jPanelToInterface.add(Box.createRigidArea(new Dimension(5, 0)));
-        jPanelToInterface.add(jLabelDetailsToInterfaceValue);
-
-        jPanelRightColumn.add(jPanelToInterface);
+//        JPanel jPanelToInterface = new JPanel();
+//        jPanelToInterface.setLayout(new BoxLayout(jPanelToInterface, BoxLayout.LINE_AXIS));
+//        jPanelToInterface.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        jLabelDetailsToInterfaceName = new JLabel();
+//        jLabelDetailsToInterfaceName.setFont(boldFont);
+//        jLabelDetailsToInterfaceName.setAlignmentX(Component.LEFT_ALIGNMENT);
+//        jLabelDetailsToInterfaceValue = new JLabel();
+//
+//        jPanelToInterface.add(Box.createRigidArea(new Dimension(5, 0)));
+//        jPanelToInterface.add(jLabelDetailsToInterfaceName);
+//        jPanelToInterface.add(Box.createRigidArea(new Dimension(5, 0)));
+//        jPanelToInterface.add(jLabelDetailsToInterfaceValue);
+//
+//        jPanelRightColumn.add(jPanelToInterface);
 
         //
         JPanel jPanelTextArea = new JPanel();
         jPanelTextArea.setLayout(new BoxLayout(jPanelTextArea, BoxLayout.PAGE_AXIS));
 
-        jTextAreaPacketDetails = new JTextArea(5, 20);
-        jTextAreaPacketDetails.setFont(new Font("Courier", Font.PLAIN, 10));
+        jTextAreaPacketDetails = new JTextArea(7, 20);
+        
         JScrollPane scrollPane = new JScrollPane(jTextAreaPacketDetails);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setMinimumSize(new Dimension(100, 80));
+        scrollPane.setMinimumSize(new Dimension(100, 120));
         //scrollPane.setMaximumSize(new Dimension(500, 150));
 
-        jTextAreaPacketDetails.setFont(new Font(boldFont.getName(), Font.PLAIN, boldFont.getSize()));
+        jTextAreaPacketDetails.setFont(new Font("Monospaced", Font.PLAIN, 11));
         jTextAreaPacketDetails.setLineWrap(true);
         jTextAreaPacketDetails.setWrapStyleWord(true);
         jTextAreaPacketDetails.setEditable(false);
@@ -847,9 +847,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelPacketDetails.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("SELECTED_PACKET_DETAILS")));
         jLabelDetailsTimeName.setText(dataLayer.getString("TIME") + ":");
         jLabelDetailsFromName.setText(dataLayer.getString("FROM") + ":");
-        jLabelDetailsFromInterfaceName.setText(dataLayer.getString("INTERFACE") + ":");
+//        jLabelDetailsFromInterfaceName.setText(dataLayer.getString("INTERFACE") + ":");
         jLabelDetailsToName.setText(dataLayer.getString("TO") + ":");
-        jLabelDetailsToInterfaceName.setText(dataLayer.getString("INTERFACE") + ":");
+//        jLabelDetailsToInterfaceName.setText(dataLayer.getString("INTERFACE") + ":");
         jLabelDetailsTypeName.setText(dataLayer.getString("TYPE") + ":");
         //
         updateConnectionInfoAccordingToModel();
@@ -935,19 +935,19 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jLabelDetailsTimeValue.setText(seconds);
             jLabelDetailsTypeValue.setText(event.getPacketType().toString());
             //
-            jLabelDetailsFromValue.setText(event.getComponent1().getName());
-            jLabelDetailsFromInterfaceValue.setText(event.getEth1().getName());
+            jLabelDetailsFromValue.setText(event.getComponent1().getName()+":"+event.getEth1().getName());
+            //jLabelDetailsFromInterfaceValue.setText(event.getEth1().getName());
             //
-            jLabelDetailsToValue.setText(event.getComponent2().getName());
-            jLabelDetailsToInterfaceValue.setText(event.getEth2().getName());
+            jLabelDetailsToValue.setText(event.getComponent2().getName()+":"+event.getEth2().getName());
+            //jLabelDetailsToInterfaceValue.setText(event.getEth2().getName());
             //
             jTextAreaPacketDetails.setText(event.getDetailsText());
         } else {
             jLabelDetailsTimeValue.setText("");
             jLabelDetailsFromValue.setText("");
-            jLabelDetailsFromInterfaceValue.setText("");
+            //jLabelDetailsFromInterfaceValue.setText("");
             jLabelDetailsToValue.setText("");
-            jLabelDetailsToInterfaceValue.setText("");
+            //jLabelDetailsToInterfaceValue.setText("");
             jLabelDetailsTypeValue.setText("");
             jTextAreaPacketDetails.setText("");
         }
