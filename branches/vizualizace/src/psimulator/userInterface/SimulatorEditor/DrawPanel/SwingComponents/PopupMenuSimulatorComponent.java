@@ -71,18 +71,18 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
         @Override
         public void actionPerformed(ActionEvent e) {
             // check if telnet window allready opened
-            if(mainWindow.hasTelnetWindow(hwComponentGraphics.getId().intValue())){
-                //System.out.println("Window allready opened");
-                
-                // set focus to opened telnet window
-                JFrame existingFrame = mainWindow.getTelnetWindow(hwComponentGraphics.getId().intValue());
-                if(existingFrame.isShowing()){
-                    System.out.println("window showing");
-                }
-                existingFrame.requestFocus();
-                
-                return;
-            }
+//            if(mainWindow.hasTelnetWindow(hwComponentGraphics.getId().intValue())){
+//                //System.out.println("Window allready opened");
+//                
+//                // set focus to opened telnet window
+//                JFrame existingFrame = mainWindow.getTelnetWindow(hwComponentGraphics.getId().intValue());
+//                if(existingFrame.isShowing()){
+//                    System.out.println("window showing");
+//                }
+//                existingFrame.requestFocus();
+//                
+//                return;
+//            }
             
             
             // Set Language
@@ -121,39 +121,39 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
                 return;
             }
             
-            frame.addWindowListener(new WindowListener() {
-                int id;
-                
-                @Override
-                public void windowOpened(WindowEvent we) {
-                    //System.out.println("Window ");
-                    id = hwComponentGraphics.getId().intValue();
-                    mainWindow.addTelnetWindow(id, frame);
-                }
-
-                @Override
-                public void windowClosing(WindowEvent we) {
-                    //System.out.println("Window closing");
-                    mainWindow.removeTelnetWindow(id);
-                }
-
-                @Override
-                public void windowClosed(WindowEvent we) {
-                    mainWindow.removeTelnetWindow(id);
-                }
-                @Override
-                public void windowIconified(WindowEvent we) {
-                }
-                @Override
-                public void windowDeiconified(WindowEvent we) {
-                }
-                @Override
-                public void windowActivated(WindowEvent we) {
-                }
-                @Override
-                public void windowDeactivated(WindowEvent we) {
-                }
-            });
+//            frame.addWindowListener(new WindowListener() {
+//                int id;
+//                
+//                @Override
+//                public void windowOpened(WindowEvent we) {
+//                    //System.out.println("Window ");
+//                    id = hwComponentGraphics.getId().intValue();
+//                    mainWindow.addTelnetWindow(id, frame);
+//                }
+//
+//                @Override
+//                public void windowClosing(WindowEvent we) {
+//                    //System.out.println("Window closing");
+//                    mainWindow.removeTelnetWindow(id);
+//                }
+//
+//                @Override
+//                public void windowClosed(WindowEvent we) {
+//                    mainWindow.removeTelnetWindow(id);
+//                }
+//                @Override
+//                public void windowIconified(WindowEvent we) {
+//                }
+//                @Override
+//                public void windowDeiconified(WindowEvent we) {
+//                }
+//                @Override
+//                public void windowActivated(WindowEvent we) {
+//                }
+//                @Override
+//                public void windowDeactivated(WindowEvent we) {
+//                }
+//            });
             
             frame.setLocationRelativeTo(mainWindow.getMainWindowComponent());
             frame.setResizable(false);

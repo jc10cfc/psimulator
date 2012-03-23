@@ -1,6 +1,7 @@
 package psimulator.logicLayer;
 
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.logicLayer.Simulator.SimulatorClientEventRecieverMockupThread;
 import psimulator.logicLayer.Simulator.SimulatorClientEventRecieverThread;
 import psimulator.logicLayer.Simulator.SimulatorPlayerThread;
 import psimulator.userInterface.UserInterfaceOuterFacade;
@@ -21,12 +22,12 @@ public class Controller implements ControllerFacade{
 
         view.initView((ControllerFacade)this);
         
-        SimulatorClientEventRecieverThread eventReciever = new SimulatorClientEventRecieverThread(model, view);
-        //new Thread(eventReciever).start();
+        //SimulatorClientEventRecieverThread eventReciever = new SimulatorClientEventRecieverThread(model, view);
+        SimulatorClientEventRecieverMockupThread eventReciever = new SimulatorClientEventRecieverMockupThread(model, view);
         eventReciever.startThread(new Thread(eventReciever));
  
+        
         SimulatorPlayerThread simulatorPlayer = new SimulatorPlayerThread(model, view);
-        //new Thread(simulatorPlayer).start();
         simulatorPlayer.startThread(new Thread(simulatorPlayer));
         
         model.addSimulatorObserver(eventReciever);

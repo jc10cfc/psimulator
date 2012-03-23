@@ -35,8 +35,8 @@ public interface MainWindowInnerInterface {
     public SimulatorEventsWrapper loadEventsAction();
     
     // telnet windows add/remove
-    public void removeTelnetWindow(Integer key);
-    public void addTelnetWindow(Integer key, JFrame frame);
-    public boolean hasTelnetWindow(Integer key);
-    public JFrame getTelnetWindow(Integer key);
+//    public void removeTelnetWindow(Integer key);
+//    public void addTelnetWindow(Integer key, JFrame frame);
+//    public boolean hasTelnetWindow(Integer key);
+//    public JFrame getTelnetWindow(Integer key);
 }
