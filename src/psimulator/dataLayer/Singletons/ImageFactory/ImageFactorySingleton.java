@@ -551,8 +551,11 @@ public class ImageFactorySingleton {
                 middle = "delivery_truck";
                 break;
             case CLASSIC:
-            default:
                 middle = "package";
+                break;
+            case ENVELOPE:
+            default:
+                middle = "envelope";
                 break;
         }
 
