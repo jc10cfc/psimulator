@@ -15,7 +15,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
 public class ZoomManagerSingleton extends Observable{
     
     private int hwIconWidth = 140;
-    private int packageIconWidth = 120;
+    private int packageIconWidth = 80;
     //
     private int defaultScale = 8;
     private int scale = defaultScale;

@@ -115,8 +115,6 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         }
         
         // can stay connected
-
-
     }
 
     public void clearEvents() {
@@ -326,7 +324,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                     // if YES
                     if (i == 0) {
                         // turn off everything
-                        setTurnedOff();
+                        //setTurnedOff();
                         
                         simulatorManagerInterface.deleteAllSimulatorEvents();
 
@@ -787,6 +785,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelTextArea.setLayout(new BoxLayout(jPanelTextArea, BoxLayout.PAGE_AXIS));
 
         jTextAreaPacketDetails = new JTextArea(5, 20);
+        jTextAreaPacketDetails.setFont(new Font("Courier", Font.PLAIN, 10));
         JScrollPane scrollPane = new JScrollPane(jTextAreaPacketDetails);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);

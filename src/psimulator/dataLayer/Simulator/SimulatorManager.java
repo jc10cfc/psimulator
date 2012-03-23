@@ -307,7 +307,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public void deleteAllSimulatorEvents() {
         // stop playing and notify all observers
-        setPlayingStopped();
+        //setPlayingStopped();
 
         // delete items
         eventTableModel.deleteAllSimulatorEvents();

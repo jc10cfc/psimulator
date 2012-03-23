@@ -66,6 +66,9 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     
                     // move to last event in the list and get it
                     SimulatorEventWithDetails event = simulatorManagerInterface.moveToLastEventAndReturn();
+                    if(event == null){
+                        continue;
+                    }
                     
                     //calculate speed coeficient
                     int speedCoeficient = calculateSpeedCoefifient();
