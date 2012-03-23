@@ -2,8 +2,6 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -114,6 +112,8 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
             args[1] = language;
 
             //final JFrame frame = new JFrame();
+            de.mud.jta.Main.defaultRows =  30;
+            de.mud.jta.Main.defaultColumns = 100;
             final JFrame frame = de.mud.jta.Main.run(args);
 
             if(frame == null){

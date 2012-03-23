@@ -171,7 +171,11 @@ public class EventTableModel extends AbstractTableModel {
 
     public SimulatorEventWithDetails getSimulatorEvent(int i) {
         synchronized (lock) {
-            return eventList.get(i);
+            if(eventList.size()>i){
+                return eventList.get(i);
+            }else{
+                return null;
+            }
         }
     }
 

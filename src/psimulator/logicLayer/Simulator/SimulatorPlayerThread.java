@@ -96,6 +96,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     }
                     
                     SimulatorEventWithDetails event = simulatorManagerInterface.getSimulatorEventAtCurrentPosition();
+                    if(event == null){
+                        continue;
+                    }
+                    
                     if (DEBUG) {
                         System.out.println("Player alive " + tmpCounter++ + ", Playing=" + isPlaying + ", speed=" + currentSpeed);
                     }
