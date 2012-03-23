@@ -262,7 +262,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
         ImageFactorySingleton.getInstance().clearTextBuffers();
 
         undoManager.discardAllEdits();
-        ZoomManagerSingleton.getInstance().zoomReset();
+        //ZoomManagerSingleton.getInstance().zoomReset();
         return tmp;
     }
 
