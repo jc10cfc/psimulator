@@ -35,7 +35,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private Preferences prefs;
     // set to default
     private ToolbarIconSizeEnum toolbarIconSize = ToolbarIconSizeEnum.MEDIUM;
-    private PacketImageType packageImageType = PacketImageType.CLASSIC;
+    private PacketImageType packageImageType = PacketImageType.ENVELOPE;
     private LevelOfDetailsMode levelOfDetails = LevelOfDetailsMode.MANUAL;
     //
     private boolean viewDeviceNames = true;

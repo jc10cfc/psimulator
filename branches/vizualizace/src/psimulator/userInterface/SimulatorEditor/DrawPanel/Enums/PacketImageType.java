@@ -6,5 +6,6 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.Enums;
  */
 public enum PacketImageType {
     CLASSIC,
-    CAR;
+    CAR,
+    ENVELOPE;
 }

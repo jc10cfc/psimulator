@@ -36,6 +36,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
     private JRadioButton jRadioButtonManualLOD;
     private JRadioButton jRadioButtonAutoLOD;
     //
+    private JRadioButton envelopePacketIconButton;
     private JRadioButton classicPacketIconButton;
     private JRadioButton carPacketIconButton;
     private JLabel packetImageTypePicture;
@@ -453,6 +454,10 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         ButtonGroup buttonGroup = new ButtonGroup();
         ActionListener packetImageTypeListener = new PacketImageTypeListener();
 
+        envelopePacketIconButton = new JRadioButton(dataLayer.getString("ENVELOPE"));
+        envelopePacketIconButton.setActionCommand(PacketImageType.ENVELOPE.toString());
+        envelopePacketIconButton.addActionListener(packetImageTypeListener);
+        
         classicPacketIconButton = new JRadioButton(dataLayer.getString("CLASSIC"));
         classicPacketIconButton.setActionCommand(PacketImageType.CLASSIC.toString());
         classicPacketIconButton.addActionListener(packetImageTypeListener);
@@ -461,10 +466,12 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         carPacketIconButton.setActionCommand(PacketImageType.CAR.toString());
         carPacketIconButton.addActionListener(packetImageTypeListener);
 
+        buttonGroup.add(envelopePacketIconButton);
         buttonGroup.add(classicPacketIconButton);
         buttonGroup.add(carPacketIconButton);
 
         JPanel buttonPanel = new JPanel(new GridLayout(0, 1));
+        buttonPanel.add(envelopePacketIconButton);
         buttonPanel.add(classicPacketIconButton);
         buttonPanel.add(carPacketIconButton);
 
@@ -554,6 +561,10 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
 
     private void setPacketIconType() {
         switch (packetImageType) {
+            case ENVELOPE:
+                envelopePacketIconButton.setSelected(true);
+                packetImageTypePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/simulator/packages/envelope_pink_48.png")));
+                break;
             case CLASSIC:
                 classicPacketIconButton.setSelected(true);
                 packetImageTypePicture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/simulator/packages/package_pink_48.png")));
