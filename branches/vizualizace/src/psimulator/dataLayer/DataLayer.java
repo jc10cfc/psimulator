@@ -9,6 +9,7 @@ import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
+import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
@@ -76,6 +77,8 @@ public class DataLayer extends DataLayerFacade {
     @Override
     public void savePreferences() {
         preferencesManager.savePreferences();
+        languageManager.savePreferences();
+        ZoomManagerSingleton.getInstance().savePreferences();
     }
 
     @Override
@@ -273,6 +276,4 @@ public class DataLayer extends DataLayerFacade {
     public TelnetConfig getTelnetConfig() {
         return telnetConfig;
     }
-    
-    
 }

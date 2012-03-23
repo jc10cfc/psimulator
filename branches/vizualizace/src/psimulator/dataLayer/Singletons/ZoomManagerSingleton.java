@@ -3,7 +3,9 @@ package psimulator.dataLayer.Singletons;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Observable;
+import java.util.prefs.Preferences;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.interfaces.SaveableInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.LevelOfDetail;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.ZoomType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
@@ -12,8 +14,10 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.ZoomEventWrapper;
  *
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
-public class ZoomManagerSingleton extends Observable{
-    
+public final class ZoomManagerSingleton extends Observable implements SaveableInterface{
+    private static final String ZOOM_SCALE = "ZOOM_SCALE";
+    private Preferences prefs;
+    //
     private int hwIconWidth = 140;
     private int packageIconWidth = 80;
     //
@@ -31,10 +35,29 @@ public class ZoomManagerSingleton extends Observable{
     private ZoomEventWrapper zoomEventWrapper;
     
     private ZoomManagerSingleton() {
+        // initialize preferences store
+        prefs = Preferences.userNodeForPackage(this.getClass());
+        
+        // load preferences
+        loadPreferences();    
     }
     
     public static ZoomManagerSingleton getInstance() {
         return ZoomManagerSingletonHolder.INSTANCE;
+    }
+
+    @Override
+    public void savePreferences() {
+        prefs.putInt(ZOOM_SCALE, scale);
+    }
+
+    @Override
+    public void loadPreferences() {
+        scale = prefs.getInt(ZOOM_SCALE, scale);
+        
+        if(scale< minScale || scale > maxScale){
+            scale = defaultScale;
+        }
     }
     
     private static class ZoomManagerSingletonHolder {
@@ -45,7 +68,7 @@ public class ZoomManagerSingleton extends Observable{
     public ZoomEventWrapper getZoomEventWrapper() {
         return zoomEventWrapper;
     }
-    
+       
     /**
      * returns Icon size according to scale and default icon size
      * @return 
@@ -268,7 +291,7 @@ public class ZoomManagerSingleton extends Observable{
     
     private double getScale(int scale){
         return (double)(scale / 10.0);
-    }
+    }  
     
     /**
      * calls setChanged and notifyObservers

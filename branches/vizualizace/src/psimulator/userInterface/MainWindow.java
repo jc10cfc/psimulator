@@ -139,6 +139,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 
                 refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
 
+                dataLayer.savePreferences();
+                
                 System.exit(0);
             }
         });
@@ -641,6 +643,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
 
+            dataLayer.savePreferences();
+            
             System.exit(0);
         }
     }
