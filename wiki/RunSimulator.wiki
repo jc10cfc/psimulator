@@ -1,5 +1,5 @@
-#summary [psimulator1] Instructions for simulator initiation (starting a server, connecting clients to server)
-#labels Phase-Support,Deprecated,psimulator1.0
+#summary Instructions for simulator initiation (starting a server, connecting clients to server)
+#labels Phase-Support,Deprecated,psimulator1
 
 = WARNING: these informations are for old psimulator1 project =
 
