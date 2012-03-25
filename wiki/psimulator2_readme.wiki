@@ -4,7 +4,7 @@
 = System requirements =
 
  * *Java Runtime Environment version 7+*
- download: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+ download: http://www.oracle.com/technetwork/java/javase/downloads/
 
  * *Telnet client*
  It is not neccesary, you can use the build-in client, but for easy use download putty (http://www.putty.org/) on Windows or telnet on unix systems.
@@ -25,4 +25,3 @@ To run the the simulator frontend (GUI) type in the command line java -jar psimu
 To run the simulator backend (simulation server) type java -jar psimulator2_frontend.jar (with the correct path to the jar file). The program print on startup telnet ports of all virtual network devices you can connect to.
 
 To connect to virtual network device type in linux command line: telnet localhost <port of the requested device>, on windows use putty with telnet protocol and port of the requested device.
-
