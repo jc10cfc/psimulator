@@ -21,15 +21,16 @@ public class GeneratorSingleton {
     }
 
     private static class IdGeneratorSingletonHolder {
+
         private static final GeneratorSingleton INSTANCE = new GeneratorSingleton();
     }
-    
+
     /**
-     * 
+     *
      */
-    public void initialize(NetworkCounterModel networkCounterModel){
+    public void initialize(NetworkCounterModel networkCounterModel) {
         this.networkCounterModel = networkCounterModel;
-     }
+    }
 
     /**
      * Returns free id and incremets id by 1.
@@ -39,12 +40,12 @@ public class GeneratorSingleton {
     public int getNextId() {
         return networkCounterModel.getNextId();
     }
-    
-    public int getCurrentId(){
+
+    public int getCurrentId() {
         return networkCounterModel.getCurrentId();
     }
-    
-    public int getCurrentMacAddress(){
+
+    public int getCurrentMacAddress() {
         return networkCounterModel.getCurrentMacAddress();
     }
 
@@ -176,36 +177,68 @@ public class GeneratorSingleton {
      *
      * @return Generated mac address
      */
-    public String getNextMacAddress() {
-        String macAddress;
+//    public String getNextMacAddress() {
+//        String macAddress;
+//
+//        String macAddressManufacturerPrefix = "AA-11-E0-";
+//        String macAddressDeviceSuffix = "";
+//
+//        String tmp = Integer.toHexString(networkCounterModel.getCurrentMacAddress()).toUpperCase();
+//
+//        // fill the rest of address
+//        for (int i = 0; i < 6; i++) {
+//            // insert zeros until tmp hit
+//            if (6 - i <= tmp.length()) {
+//                macAddressDeviceSuffix += tmp.charAt(tmp.length() - (6 - i));
+//            } else {
+//                macAddressDeviceSuffix += "0";
+//            }
+//
+//            // if we have to make dash
+//            if (i % 2 == 1 && i < 6 - 1) {
+//                macAddressDeviceSuffix += "-";
+//            }
+//        }
+//
+//        // increase counter
+//        //nextMacAddress++;
+//        networkCounterModel.increaseMacAddressCounter();
+//
+//        // glue two parts together
+//        macAddress = macAddressManufacturerPrefix + macAddressDeviceSuffix;
+//
+//        return macAddress;
+//    }
 
-        String macAddressManufacturerPrefix = "AA-11-E0-";
-        String macAddressDeviceSuffix = "";
-
-        String tmp = Integer.toHexString(networkCounterModel.getCurrentMacAddress()).toUpperCase();
-
-        // fill the rest of address
+    public static String getNextMacAddress() {
+        byte[] representation = new byte[6];
         for (int i = 0; i < 6; i++) {
-            // insert zeros until tmp hit
-            if (6 - i <= tmp.length()) {
-                macAddressDeviceSuffix += tmp.charAt(tmp.length() - (6 - i));
-            } else {
-                macAddressDeviceSuffix += "0";
-            }
+            representation[i] = (byte) (Math.random() * 256);
+        }
 
-            // if we have to make dash
-            if (i % 2 == 1 && i < 6 - 1) {
-                macAddressDeviceSuffix += "-";
+        boolean broadcast = true;
+        for (int i = 0; i < representation.length; i++) { // kontrola, ze to neni broadcast
+            if ((int) representation[i] != -1) { // == 255
+                broadcast = false && broadcast;
             }
         }
 
-        // increase counter
-        //nextMacAddress++;
-        networkCounterModel.increaseMacAddressCounter();
+        if (broadcast) {
+            return getNextMacAddress();
+        }
 
-        // glue two parts together
-        macAddress = macAddressManufacturerPrefix + macAddressDeviceSuffix;
-
-        return macAddress;
+        String ret = "";
+        for (int i = 0; i < 6; i++) {
+            String v = Integer.toHexString(representation[i] & 0xff);
+            if (v.length() < 2) {
+                v = "0" + v;
+            }
+            ret += v;
+            ret += "-";
+        }
+        
+        ret = ret.toUpperCase();
+        
+        return ret.substring(0, ret.length() - 1);//aby se odmazala ta posledni dvojtecka
     }
 }

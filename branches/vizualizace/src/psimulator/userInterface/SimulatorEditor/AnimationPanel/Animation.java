@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.TimingTarget;
 import psimulator.dataLayer.DataLayerFacade;
-import shared.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import shared.SimulatorEvents.SerializedComponents.PacketType;
 
 /**
  *
@@ -34,17 +34,22 @@ public class Animation implements TimingTarget {
     //
     private double defautlZoomWidthDifference =0.0;
     private double defautlZoomHeightDifference =0.0;
+    //
+    private boolean successful;
+    //
+    private double fraction;
 
     public Animation(final AnimationPanelInnerInterface animationPanelInnerInterface,
             DataLayerFacade dataLayer,
             PacketType packetType, Point defaultZoomSource, Point defaultZoomDest, 
-            int durationInMilliseconds) {
-
+            int durationInMilliseconds,
+            boolean successful) {
+        
         this.dataLayer = dataLayer;
         this.animationPanelInnerInterface = animationPanelInnerInterface;
         //
         this.packetType = packetType;
-        
+        this.successful = successful;
         
         // get image
         image = ImageFactorySingleton.getInstance().getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
@@ -63,15 +68,7 @@ public class Animation implements TimingTarget {
                 setDuration(durationInMilliseconds, TimeUnit.MILLISECONDS).
                 setStartDirection(Animator.Direction.FORWARD).
                 addTarget((TimingTarget)this).build();
-        
-        // loop
-//        animator = new Animator.Builder().
-//                setDuration(durationInMilliseconds, TimeUnit.MILLISECONDS).
-//                setRepeatCount(Animator.INFINITE).
-//                setStartDirection(Animator.Direction.FORWARD).
-//                addTarget((TimingTarget)this).build();
-        
-        // start animation
+
         animator.start();
     }
 
@@ -117,12 +114,35 @@ public class Animation implements TimingTarget {
     }
 
     /**
+     * Gets current fraction of animation <0,1>
+     */
+    public double getFraction() {
+        return fraction;
+    }
+
+    /**
+     * Gets if this animation should end normally (true), or has to end in the
+     * middle because the pacekt was lost (false)
+     */
+    public boolean isSuccessful() {
+        return successful;
+    }
+    
+    
+
+    /**
      * Moves image coordinates according to elapsed fraction of time.
      * @param fraction 
      */
     private void move(double fraction) {
         defautlZoomWidthDifference = (defaultZoomEndX - defaultZoomStartX) * fraction;
         defautlZoomHeightDifference = (defaultZoomEndY - defaultZoomStartY) * fraction;
+        this.fraction = fraction;
+        
+        if(!successful && fraction > 0.5){
+            defautlZoomWidthDifference = (defaultZoomEndX - defaultZoomStartX) * 0.5;
+            defautlZoomHeightDifference = (defaultZoomEndY - defaultZoomStartY) * 0.5;
+        }
     }
 
     // ---------- TimingTarget implementation ------------------- //

@@ -1,9 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -82,7 +79,25 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         Iterator<Animation> it = animations.iterator();
         while (it.hasNext()) {
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
+            Composite tmpComposite = g2.getComposite();
+            if(animation.getFraction()>0.5 && !animation.isSuccessful()){
+                int rule = AlphaComposite.SRC_OVER;
+                //float alpha = (float)animation.getFraction()*2;
+                float alpha = (float)(-2 * animation.getFraction() + 2);
+                if (alpha > 1f) {
+                    alpha = 1f;
+                }
+                if(alpha < 0f){
+                    alpha = 0f;
+                }
+
+                Composite comp = AlphaComposite.getInstance(rule , alpha );
+                g2.setComposite(comp );
+
+            }
             g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
+            
+            g2.setComposite(tmpComposite);
         }
         /*
         g2.setColor(Color.BLACK);
@@ -193,7 +208,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      * @param idDestination
      */
     @Override
-    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination) {
+    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination, boolean successful) {
         // points in Default zoom
         Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
         Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
@@ -202,7 +217,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         // create new animation
         Animation anim = new Animation(this, dataLayer,
-                packetType, src, dest, timeInMiliseconds);
+                packetType, src, dest, timeInMiliseconds, successful);
 
         // add animation to animations list
         animations.add(anim);

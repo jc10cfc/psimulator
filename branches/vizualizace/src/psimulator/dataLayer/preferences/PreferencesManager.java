@@ -45,8 +45,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private boolean viewIpAddresses = true;
     private boolean viewMacAddresses = true;
     //
-    private String connectionIpAddress = "";
-    private String connectionPort = "";
+    private String connectionIpAddress = "127.0.0.1";
+    private String connectionPort = "12000";
     private String recentlyOpenedFiles = "";
     //
     private RecentOpenedFilesManager recentOpenedFilesManager;

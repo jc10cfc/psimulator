@@ -1,4 +1,4 @@
-package psimulator.dataLayer;
+package psimulator.dataLayer.Singletons;
 
 import java.awt.Color;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
@@ -14,6 +14,10 @@ public class ColorMixerSingleton {
     //public static Color editToolbarColor = new Color(213, 129, 129);
     public static Color editToolbarColor = Color.LIGHT_GRAY;
     public static Color drawPanelColor = Color.WHITE;
+    
+    public static Color tableLostEventColor = new Color(255, 83, 83);
+    public static Color tableLostEventMarkedColor = new Color(150, 6, 8);
+    
     
     private static ColorMixerSingleton colorMixerSignletonObject;
 
