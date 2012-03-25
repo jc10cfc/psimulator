@@ -7,21 +7,21 @@
  http://www.oracle.com/technetwork/java/javase/downloads/
 
  * *Telnet client*
- It is not neccesary, you can use the build-in client, but for easy use download putty (http://www.putty.org/) on Windows or telnet on unix systems.
+ You can use the built-in client but if you don't like it you can download putty (http://www.putty.org/) on Windows or just use telnet in case of linux/unix system.
 
  * *Connection to real network*
- This connection is possible only on unix systems. You must instal the libpcap library (from repository), the jNetPcapLibrary (http://jnetpcap.com/download) and the virtual switch VDE (from repository). To run connection to real network see the "Real nework connection" section of this page. WARNING: This functionality is not implemented yet.
+ This connection is possible only on unix systems. You must install the libpcap library (from repository), the jNetPcapLibrary (http://jnetpcap.com/download) and the virtual switch VDE (from repository). To run connection to real network see the "Real nework connection" section of this page. WARNING: This functionality is not yet completed.
 
 
-= Instructions to install psimulator = 
+= Instructions for installing psimulator2 = 
 
-Download it from downloads section and unzip.
+Download it from [http://code.google.com/p/psimulator/downloads/list downloads] section and unzip.
 
 
-= Instructions to run Psimulator =
+= Instructions for running psimulator2 =
 
 To run the the simulator frontend (GUI) type in the command line java -jar psimulator2_frontend.jar (with the correct path to the jar file).
 
-To run the simulator backend (simulation server) type java -jar psimulator2_frontend.jar (with the correct path to the jar file). The program print on startup telnet ports of all virtual network devices you can connect to.
+To run the simulator backend (simulation server) type java -jar psimulator2_backend.jar (with the correct path to the jar file). The program prints on startup telnet ports of all virtual network devices you can connect to.
 
 To connect to virtual network device type in linux command line: telnet localhost <port of the requested device>, on windows use putty with telnet protocol and port of the requested device.
