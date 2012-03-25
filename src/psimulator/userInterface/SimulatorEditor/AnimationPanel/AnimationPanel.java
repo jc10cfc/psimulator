@@ -80,6 +80,8 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         while (it.hasNext()) {
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             Composite tmpComposite = g2.getComposite();
+            
+            // if packet is lost and reached half-way
             if(animation.getFraction()>0.5 && !animation.isSuccessful()){
                 int rule = AlphaComposite.SRC_OVER;
                 //float alpha = (float)animation.getFraction()*2;
@@ -92,12 +94,18 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
                 }
 
                 Composite comp = AlphaComposite.getInstance(rule , alpha );
+                // set transparency
                 g2.setComposite(comp );
-
+                // paint image
+                g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
+                // set original transparency
+                g2.setComposite(tmpComposite);
+            }else{
+                g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
             }
-            g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
             
-            g2.setComposite(tmpComposite);
+            
+            
         }
         /*
         g2.setColor(Color.BLACK);
