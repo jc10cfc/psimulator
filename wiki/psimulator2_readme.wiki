@@ -1,4 +1,5 @@
 #summary system requirements and instructions
+#labels psimulator2,Phase-Requirements,Phase-Deploy
 
 
 = System requirements =
