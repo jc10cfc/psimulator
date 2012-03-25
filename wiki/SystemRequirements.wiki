@@ -1,5 +1,5 @@
-#summary [psimularor1] System requirements for simulator
-#labels Phase-Deploy,Deprecated,psimulator1.0
+#summary System requirements for simulator
+#labels Phase-Deploy,Deprecated,psimulator1
 
 = WARNING: these informations are for old psimulator1 project =
 
