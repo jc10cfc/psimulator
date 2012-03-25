@@ -1,5 +1,5 @@
 #summary Architecture of psimulator applications and comunication subsystem
-#labels Deprecated
+#labels Deprecated,psimulator1
 
 = Introduction =
 
