@@ -4,7 +4,7 @@
 = System requirements =
 
  * *Java Runtime Environment version 7+*
- download: http://www.oracle.com/technetwork/java/javase/downloads/
+ http://www.oracle.com/technetwork/java/javase/downloads/
 
  * *Telnet client*
  It is not neccesary, you can use the build-in client, but for easy use download putty (http://www.putty.org/) on Windows or telnet on unix systems.
