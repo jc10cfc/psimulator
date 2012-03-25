@@ -1,4 +1,5 @@
 #summary Architecture of psimulator applications and comunication subsystem
+#labels Deprecated
 
 = Introduction =
 
@@ -16,4 +17,3 @@ Also, there is minimal dependency with telnetd2 library(practicaly just BasicTer
 
 
 http://psimulator.googlecode.com/svn/bp_psi/images/Architecture.png
-
