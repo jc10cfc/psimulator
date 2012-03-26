@@ -15,7 +15,10 @@ public class SimulatorEvent implements Serializable, NetworkObject{
     private int cableId;
     private PacketType packetType;
     private String detailsText;
-    private boolean successful;
+    /**
+     * Default is true until event create changed in PSImulator
+     */
+    private boolean successful = true;
     
     public SimulatorEvent(long timeStamp, int sourcceId, int destId, int cableId,
             PacketType packetType, String detailsText, boolean successful) {
