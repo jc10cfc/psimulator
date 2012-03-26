@@ -15,15 +15,17 @@ public class SimulatorEvent implements Serializable, NetworkObject{
     private int cableId;
     private PacketType packetType;
     private String detailsText;
-
+    private boolean successful;
+    
     public SimulatorEvent(long timeStamp, int sourcceId, int destId, int cableId,
-            PacketType packetType, String detailsText) {
+            PacketType packetType, String detailsText, boolean successful) {
         this.timeStamp = timeStamp;
         this.packetType = packetType;
         this.sourcceId = sourcceId;
         this.destId = destId;
         this.cableId = cableId;
         this.detailsText = detailsText;
+        this.successful = successful;
     }
 
     public SimulatorEvent() {
@@ -77,6 +79,14 @@ public class SimulatorEvent implements Serializable, NetworkObject{
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public boolean isSuccessful() {
+        return successful;
+    }
+
+    public void setSuccessful(boolean successful) {
+        this.successful = successful;
     }
 
     @Override
