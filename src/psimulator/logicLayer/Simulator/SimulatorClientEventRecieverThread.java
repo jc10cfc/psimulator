@@ -6,17 +6,15 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Random;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.userInterface.UserInterfaceOuterFacade;
-import shared.Components.CableModel;
-import shared.Components.EthInterfaceModel;
-import shared.Components.HwComponentModel;
 import shared.NetworkObject;
-import shared.SimulatorEvents.SerializedComponents.PacketType;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 import shared.telnetConfig.TelnetConfig;
 
@@ -346,116 +344,5 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
         disconnectFromServer();
         simulatorManagerInterface.disconnected();
-    }
-    
-
-    /**
-     * Generates simulator event from real graph. It tries to create event with
-     * random components connected with cable.
-     *
-     * @return
-     */
-    private SimulatorEvent generateSimulatorEvent(boolean generateWrongOnes, int numberInProbability) {
-        List<HwComponentModel> list = new ArrayList<>(dataLayer.getNetworkFacade().getHwComponents());
-        int componentCount = dataLayer.getNetworkFacade().getHwComponentsCount();
-        int cablesCount = dataLayer.getNetworkFacade().getCablesCount();
-
-        // if no cable or less than two components, than no event can be generated
-        if (componentCount < 2 || cablesCount < 1) {
-            return null;
-        }
-
-
-        HwComponentModel c1 = null;
-        HwComponentModel c2 = null;
-
-        EthInterfaceModel eth1 = null;
-        EthInterfaceModel eth2 = null;
-
-        CableModel cable = null;
-
-        int i1;
-        int i2;
-
-        // find connected components
-        int counter = 0;
-        while (counter < 100) {
-            i1 = tmpRandom.nextInt(componentCount);
-            i2 = tmpRandom.nextInt(componentCount);
-
-            if (i1 == i2) {
-                continue;
-            }
-
-            c1 = list.get(i1);
-            c2 = list.get(i2);
-
-
-            List<EthInterfaceModel> eth1list = new ArrayList<>(c1.getEthInterfaces());
-            List<EthInterfaceModel> eth2list = new ArrayList<>(c2.getEthInterfaces());
-
-            for (EthInterfaceModel tmp1 : eth1list) {
-                if (!tmp1.hasCable()) {
-                    continue;
-                }
-                for (EthInterfaceModel tmp2 : eth2list) {
-                    if (!tmp2.hasCable()) {
-                        continue;
-                    }
-                    if (tmp1.getCable().getId().intValue() == tmp2.getCable().getId().intValue()) {
-                        cable = tmp1.getCable();
-                        eth1 = tmp1;
-                        eth2 = tmp2;
-                        break;
-                    }
-                }
-                if (cable != null) {
-                    break;
-                }
-            }
-            if (cable != null) {
-                break;
-            }
-        }
-
-        // generation was not succesfull
-        if (cable == null || c1 == null || c2 == null || eth1 == null || eth2 == null) {
-            return null;
-        }
-
-        // if reset time
-        if (simulatorManagerInterface.isTimeReset()) {
-            timeOfFirstEvent = System.currentTimeMillis();
-        }
-
-        // generate packet type
-        int index = tmpRandom.nextInt(PacketType.values().length);
-        PacketType packetType = PacketType.values()[index];
-
-        // generate time
-        int time = (int) (System.currentTimeMillis() - timeOfFirstEvent);
-
-        String detailsText = "A very long text to be displayed in onle line or even in two lines. "
-                + "This line should now skip to next line \n and this should be on the next line. "
-                + "Now two empty lines follows. And this is the end of our text area.";
-
-        int c1Id = c1.getId();
-        int c2Id = c2.getId();
-        int cableId = cable.getId().intValue();
-
-        if (generateWrongOnes) {
-            int tmp = tmpRandom.nextInt(numberInProbability);
-
-            if (tmp == 0) {
-                c1Id = tmpRandom.nextInt(10000);
-                c2Id = tmpRandom.nextInt(10000);
-                cableId = tmpRandom.nextInt(10000);
-            }
-        }
-
-        SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1Id, c2Id,
-                cableId, packetType, detailsText);
-
-        return simulatorEvent;
     }
 }

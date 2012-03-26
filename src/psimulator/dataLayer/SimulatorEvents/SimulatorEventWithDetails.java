@@ -22,7 +22,6 @@ public class SimulatorEventWithDetails {
     private transient EthInterfaceModel eth2;
     private transient Object[] list;
     private transient SimulatorEvent simulatorEvent;
-    private transient boolean successful = false;
 
     public SimulatorEventWithDetails(SimulatorEvent simulatorEvent, String from, String to,
             HwComponentModel component1, HwComponentModel component2,
@@ -39,16 +38,10 @@ public class SimulatorEventWithDetails {
 
         Object[] tmp = {simulatorEvent.getTimeStamp(), from, to, simulatorEvent.getPacketType(), color};
         list = tmp;
-
-        if (Math.random() > 0.5) {
-            successful = true;
-        }else{
-            successful = false;
-        }
     }
 
     public boolean isSuccessful() {
-        return successful;
+        return simulatorEvent.isSuccessful();
     }
 
     public Object getValueAt(int i) {
