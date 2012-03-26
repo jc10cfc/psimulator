@@ -1,6 +1,7 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
 import java.awt.*;
+import java.awt.geom.GeneralPath;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -41,7 +42,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         super();
         // set timing sourcce to Animator
         //Animator.setDefaultTimingSource(f_repaintTimer);
-       
+
         this.dataLayer = dataLayer;
 
         // set opacity
@@ -54,6 +55,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         // create post tick listener
         postTickListener = new TimingSource.PostTickListener() {
+
             @Override
             public void timingSourcePostTick(TimingSource source, long nanoTime) {
                 repaint();
@@ -80,37 +82,73 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         while (it.hasNext()) {
             Animation animation = it.next(); // convert X and Yto actual using zoom manager 
             Composite tmpComposite = g2.getComposite();
-            
+
             // if packet is lost and reached half-way
-            if(animation.getFraction()>0.5 && !animation.isSuccessful()){
+            if (animation.getFraction() > 0.5 && !animation.isSuccessful()) {
                 int rule = AlphaComposite.SRC_OVER;
                 //float alpha = (float)animation.getFraction()*2;
-                float alpha = (float)(-2 * animation.getFraction() + 2);
+                float alpha = (float) (-2 * animation.getFraction() + 2);
                 if (alpha > 1f) {
                     alpha = 1f;
                 }
-                if(alpha < 0f){
+                if (alpha < 0f) {
                     alpha = 0f;
                 }
+                
+                // set antialiasing
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
 
-                Composite comp = AlphaComposite.getInstance(rule , alpha );
+                int width = (int) (animation.getImage().getWidth(null) * 0.7);
+                int height = (int) (animation.getImage().getHeight(null) * 0.7);
+
+                int x = (int) (animation.getX() + animation.getImage().getWidth(null) * 0.15);
+                int y = (int) (animation.getY() + animation.getImage().getHeight(null) * 0.15);
+                
+                // create cross shape
+                GeneralPath shape = new GeneralPath();
+                shape.moveTo(x, y);
+                shape.lineTo(x + width, y + height);
+                shape.moveTo(x, y + height);
+                shape.lineTo(x + width, y);
+
+                // create stroke
+                float strokeWidth = animation.getImage().getWidth(null) / 5;
+                BasicStroke stroke = new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+
+                Composite comp = AlphaComposite.getInstance(rule, alpha);
                 // set transparency
-                g2.setComposite(comp );
+                g2.setComposite(comp);
                 // paint image
                 g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
                 // set original transparency
                 g2.setComposite(tmpComposite);
-            }else{
+
+                // save old stroke and color
+                Stroke tmpStroke = g2.getStroke();
+                Color tmpColor = g2.getColor();
+
+                // set stroke and color
+                g2.setStroke(stroke);
+                g2.setColor(Color.RED);
+
+                // paint red cross
+                g2.draw(shape);
+
+                // restore old stroke and color
+                g2.setColor(tmpColor);
+                g2.setStroke(tmpStroke);
+            } else {
                 g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
             }
-            
-            
-            
+
+
+
         }
         /*
-        g2.setColor(Color.BLACK);
-        g2.drawRect(1, 1, getWidth() - 3, getHeight() - 3);
-        */
+         * g2.setColor(Color.BLACK); g2.drawRect(1, 1, getWidth() - 3,
+         * getHeight() - 3);
+         */
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
     }
@@ -138,13 +176,13 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
                 break;
         }
     }
-    
-    private void connectToTimer(){
+
+    private void connectToTimer() {
         TimerKeeperSingleton.getInstance().getTimingSource().addPostTickListener(postTickListener);
         //System.out.println("Connected to timer");
     }
-    
-    private void disconnectFromTimer(){
+
+    private void disconnectFromTimer() {
         TimerKeeperSingleton.getInstance().getTimingSource().removePostTickListener(postTickListener);
         //System.out.println("Disconnected from timer");
         this.repaint();
@@ -256,5 +294,4 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     public boolean contains(int x, int y) {
         return false;
     }
-
 }
