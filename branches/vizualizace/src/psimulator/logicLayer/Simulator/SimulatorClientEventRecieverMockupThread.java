@@ -238,8 +238,15 @@ public class SimulatorClientEventRecieverMockupThread implements Runnable, Obser
             }
         }
         
+        boolean successful;
+        if (Math.random() > 0.3) {
+            successful = true;
+        }else{
+            successful = false;
+        }
+        
         SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1Id, c2Id, 
-                cableId, packetType, detailsText);
+                cableId, packetType, detailsText, successful);
         
         return simulatorEvent;
     }
