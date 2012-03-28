@@ -24,7 +24,7 @@
      <name>Search</name>
      <label>Vyhledávání</label>
      <type>javax.help.SearchView</type>
-     <data engine="com.sun.java.help.search.DefaultSearchEngine">JavaHelpSearch</data>
+     <data engine="com.sun.java.help.search.DefaultSearchEngine">JavaHelpSearch/cz</data>
   </view>
 
   <presentation default="true">
