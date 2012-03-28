@@ -29,7 +29,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     private DrawPanelOuterInterface jPanelDraw; // draw panel
     private AnimationPanelOuterInterface jPanelAnimation; // animation panel
     //
-    private MainWindowInnerInterface mainWindow;
+    //private MainWindowInnerInterface mainWindow;
     private UserInterfaceMainPanelInnerInterface userInterface;
     //
     private Dimension defaultZoomAreaMin = new Dimension(800, 600);
@@ -40,7 +40,7 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
             DataLayerFacade dataLayer) {
 
         //
-        this.mainWindow = mainWindow;
+        //this.mainWindow = mainWindow;
         this.userInterface = userInterface;
         
         //
