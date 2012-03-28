@@ -26,3 +26,5 @@ To run the the simulator frontend (GUI) type in the command line java -jar psimu
 To run the simulator backend (simulation server) type java -jar psimulator2_backend.jar (with the correct path to the jar file). The program prints on startup telnet ports of all virtual network devices you can connect to.
 
 To connect to virtual network device type in linux command line: telnet localhost <port of the requested device>, on windows use putty with telnet protocol and port of the requested device.
+
+When frontend and backend are started and frontend is connected to backend (top left button - "Simulator" and then "Connect to server" localhost:12000) there is a possibility to connect to virtual device through fronted with right-click on device and "Open telnet".
