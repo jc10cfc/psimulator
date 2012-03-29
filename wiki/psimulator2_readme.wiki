@@ -21,12 +21,20 @@ Download it from [http://code.google.com/p/psimulator/downloads/list downloads] 
 
 = Instructions for running psimulator2 =
 
-To run psimulator you must at first build the simulated network with simulator frontend (GUI) and save it to configuration XML file. Than you can run the simulator backend (simulation server) with the created XML configuration file.
+To run psimulator you must at first build the network topology with simulator frontend (GUI) and save it to XML configuration file. Than you can run the simulator backend (simulation server) with the created XML configuration file.
 
 To run the the simulator frontend (GUI) type in the command line java -jar psimulator2_frontend.jar (with the correct path to the jar file).
 
-To run the simulator backend (simulation server) type "java -jar psimulator2_backend.jar path_to_the_config_file.xml" (with the correct path to the jar file). The program prints on startup telnet ports of all virtual network devices you can connect to (typically started on 11000 and the telnet port on which can be connected the frontend to listen simulator events (typically on 12000).
+To run the simulator backend (simulation server) type 
+{{{
+java -jar psimulator2_backend.jar path_to_the_config_file.xml
+}}}
+(with the correct path to the jar file). The program prints on startup telnet ports of all virtual network devices you can connect to (typically started on 11000 and the telnet port on which can be connected the frontend to listen simulator events (typically on 12000).
 
-To connect to virtual network device type in linux command line: telnet localhost <port of the requested device>, on windows use putty with telnet protocol and port of the requested device.
+To connect to virtual network device type in linux command line: 
+{{{
+telnet localhost <port of the requested device>
+}}}
+ on windows use putty with telnet protocol and port of the requested device.
 
 When frontend and backend are started and frontend is connected to backend (top left button - "Simulator" and then "Connect to server" localhost:12000) there is a possibility to connect to virtual device through fronted with right-click on device and "Open telnet".
