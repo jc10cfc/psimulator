@@ -20,7 +20,7 @@ Download it from [http://code.google.com/p/psimulator/downloads/list downloads] 
 
 
 = Instructions for running psimulator2 =
-Frontned contains manual Help -> Help, or just F1.
+Frontend contains manual Help -> Help, or just F1.
 
 == Build network topology ==
 To run psimulator you must at first build the network topology with simulator frontend (GUI) and save it to XML configuration file. Than you can run the simulator backend (simulation server) with the created XML configuration file.
