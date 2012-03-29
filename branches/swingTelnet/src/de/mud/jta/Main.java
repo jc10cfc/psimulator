@@ -92,6 +92,7 @@ public class Main {
   
   public static int defaultColumns = 100;
   public static int defaultRows = 50;
+  public static String hostName = null;
   
   public static void main(String args[]){
      JFrame frame =  Main.run(args);
@@ -177,13 +178,29 @@ public class Main {
       }
     }
 
+    
+    final String usedHostName;
+    
+    if(hostName == null)
+        usedHostName="jta:";
+    else{
+        usedHostName=hostName;
+        hostName = null;  // null static hostName
+    }
+    
+    
     setup.registerPluginListener(new OnlineStatusListener() {
+        
+      String localHostName = usedHostName;
+        
       public void online() {
-        frame.setTitle("jta: " + host + (port.equals("23")?"":" " + port));
+        frame.setTitle(localHostName + host + (port.equals("23")?"":" " + port));
+        
       }
 
       public void offline() {
         frame.setTitle("jta: offline");
+        this.localHostName = "";
       }
     });
 
