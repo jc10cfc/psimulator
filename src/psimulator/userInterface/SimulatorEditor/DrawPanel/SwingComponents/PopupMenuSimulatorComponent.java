@@ -114,6 +114,11 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
             //final JFrame frame = new JFrame();
             de.mud.jta.Main.defaultRows =  30;
             de.mud.jta.Main.defaultColumns = 100;
+            
+            // set name of device to telnet window
+            de.mud.jta.Main.hostName = hwComponentGraphics.getDeviceName()+": ";
+            
+            
             final JFrame frame = de.mud.jta.Main.run(args);
 
             if(frame == null){

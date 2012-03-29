@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
@@ -24,7 +26,6 @@ import shared.telnetConfig.TelnetConfig;
  */
 public class SimulatorClientEventRecieverThread implements Runnable, Observer {
 
-    private static boolean SIMULATE_SERVER_EVENTS = false;
     private static boolean DEBUG = false;
     //
     private Thread thread;
@@ -284,6 +285,7 @@ public class SimulatorClientEventRecieverThread implements Runnable, Observer {
             return null;
         } catch (IOException ex) {
             if (DEBUG)System.out.println("IOException during get simulator event");
+            //Logger.getLogger(SimulatorClientEventRecieverThread.class.getName()).log(Level.SEVERE, null, ex);
             throw new ClientConnectionFailException(ConnectionFailtureReason.SERVER_DISCONNECTED);
         } catch (ClassNotFoundException ex) {
             if (DEBUG)System.out.println("Class cast exception during get simulator event");
