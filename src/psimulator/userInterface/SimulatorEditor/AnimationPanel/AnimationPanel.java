@@ -14,6 +14,10 @@ import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.dataLayer.Singletons.TimerKeeperSingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.Animations.AbstractAnimation;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.Animations.AnimationLostInCable;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.Animations.AnimationLostInDevice;
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.Animations.AnimationSuccessful;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
@@ -34,7 +38,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     private DataLayerFacade dataLayer;
     private Graph graph;
     //
-    private List<Animation> animations;
+    private List<AbstractAnimation> animations;
     //
 
     public AnimationPanel(MainWindowInnerInterface mainWindow, UserInterfaceMainPanelInnerInterface editorPanel,
@@ -79,80 +83,15 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         Graphics2D g2 = (Graphics2D) g;
 
-        Iterator<Animation> it = animations.iterator();
+        Iterator<AbstractAnimation> it = animations.iterator();
         while (it.hasNext()) {
-            Animation animation = it.next(); // convert X and Yto actual using zoom manager 
-            Composite tmpComposite = g2.getComposite();
-
-            // if packet is lost and reached half-way
-//            if (animation.getFraction() > 0.5 && !animation.isSuccessful()) {
-//                int rule = AlphaComposite.SRC_OVER;
-//                //float alpha = (float)animation.getFraction()*2;
-//                float alpha = (float) (-2 * animation.getFraction() + 2);
-//                if (alpha > 1f) {
-//                    alpha = 1f;
-//                }
-//                if (alpha < 0f) {
-//                    alpha = 0f;
-//                }
-//                
-//                // set antialiasing
-//                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-//                        RenderingHints.VALUE_ANTIALIAS_ON);
-//
-//                int width = (int) (animation.getImage().getWidth(null) * 0.7);
-//                int height = (int) (animation.getImage().getHeight(null) * 0.7);
-//
-//                int x = (int) (animation.getX() + animation.getImage().getWidth(null) * 0.15);
-//                int y = (int) (animation.getY() + animation.getImage().getHeight(null) * 0.15);
-//                
-//                // create cross shape
-//                GeneralPath shape = new GeneralPath();
-//                shape.moveTo(x, y);
-//                shape.lineTo(x + width, y + height);
-//                shape.moveTo(x, y + height);
-//                shape.lineTo(x + width, y);
-//
-//                // create stroke
-//                float strokeWidth = animation.getImage().getWidth(null) / 5;
-//                BasicStroke stroke = new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-//
-//                Composite comp = AlphaComposite.getInstance(rule, alpha);
-//                // set transparency
-//                g2.setComposite(comp);
-//                // paint image
-//                g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
-//                // set original transparency
-//                g2.setComposite(tmpComposite);
-//
-//                // save old stroke and color
-//                Stroke tmpStroke = g2.getStroke();
-//                Color tmpColor = g2.getColor();
-//
-//                // set stroke and color
-//                g2.setStroke(stroke);
-//                g2.setColor(Color.RED);
-//
-//                // paint red cross
-//                g2.draw(shape);
-//
-//                // restore old stroke and color
-//                g2.setColor(tmpColor);
-//                g2.setStroke(tmpStroke);
-//            } else {
-                g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
-//            }
-
-
-
+            AbstractAnimation animation = it.next();
+            animation.paintComponent(g2);
         }
-        /*
-         * g2.setColor(Color.BLACK); g2.drawRect(1, 1, getWidth() - 3,
-         * getHeight() - 3);
-         */
+
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
-    }
+    }   
 
     @Override
     public void update(Observable o, Object o1) {
@@ -193,9 +132,9 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      * Removes all animations from list
      */
     private void removeAllAnimations() {
-        Iterator<Animation> it = animations.iterator();
+        Iterator<AbstractAnimation> it = animations.iterator();
         while (it.hasNext()) {
-            Animation animation = it.next(); // convert X and Yto actual using zoom manager 
+            AbstractAnimation animation = it.next(); // convert X and Yto actual using zoom manager 
             animation.stopAnimator();
         }
 
@@ -208,7 +147,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      * @param animation
      */
     @Override
-    public void removeAnimation(Animation animation) {
+    public void removeAnimation(AbstractAnimation animation) {
         animations.remove(animation);
     }
 
@@ -250,6 +189,8 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      * Creates animation of given timeInMiliseconds from AbstractHwComponent
      * idSource to AbstractHwComponent idDestination.
      *
+     * If EventType is LOST_IN_DEVICE, than idDestination doesnt have to be set.
+     * 
      * @param timeInMiliseconds
      * @param idSource
      * @param idDestination
@@ -257,17 +198,44 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
     @Override
     public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination, EventType eventType) {
         // points in Default zoom
-        Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
-        Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
+        Point src;
+        Point dest;
+        
+        // calculate start and end points of animation
+        switch(eventType){
+            case LOST_IN_DEVICE:
+                // destination is near the component
+                src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
+                dest = new Point(src.x+50,src.y+50);
+                break;
+            case SUCCESSFULLY_TRANSMITTED:
+            case LOST_IN_CABLE:
+            default:
+                src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
+                dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
+                break;
+         }
 
-        //System.out.println("Src= "+src+", dest= "+dest);
-
-        // create new animation
-        Animation anim = new Animation(this, dataLayer,
-                packetType, src, dest, timeInMiliseconds, eventType);
-
+        // create animation
+        AbstractAnimation animation;
+        switch(eventType){
+            case SUCCESSFULLY_TRANSMITTED:
+                animation = new AnimationSuccessful(this, dataLayer, packetType, src, dest, 
+                        timeInMiliseconds, eventType);
+                break;
+            case LOST_IN_CABLE:
+                animation = new AnimationLostInCable(this, dataLayer, packetType, src, dest, 
+                        timeInMiliseconds, eventType);
+                break;
+            case LOST_IN_DEVICE:
+            default:
+                animation = new AnimationLostInDevice(this, dataLayer, packetType, src, dest, 
+                        timeInMiliseconds, eventType);
+                break;
+        }
+        
         // add animation to animations list
-        animations.add(anim);
+        animations.add(animation);
     }
 
     /**
@@ -279,6 +247,12 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      */
     @Override
     public int getAnimationDuration(int cableId, int speedCoeficient) {
+        // if cable not known
+        if(cableId < 0){
+            return 10 * speedCoeficient * 50;
+        }
+        
+        // if we know id of cable
         CableGraphic cable = graph.getCable(cableId);
 
         int delay = cable.getDelay();

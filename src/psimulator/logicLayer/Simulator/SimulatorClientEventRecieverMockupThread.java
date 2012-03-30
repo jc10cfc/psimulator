@@ -3,15 +3,15 @@ package psimulator.logicLayer.Simulator;
 import java.util.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
+import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
+import psimulator.userInterface.UserInterfaceOuterFacade;
 import shared.Components.CableModel;
 import shared.Components.EthInterfaceModel;
 import shared.Components.HwComponentModel;
-import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
-import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
-import psimulator.userInterface.UserInterfaceOuterFacade;
-import shared.SimulatorEvents.SerializedComponents.EventType;
 
 /**
  *
@@ -244,8 +244,10 @@ public class SimulatorClientEventRecieverMockupThread implements Runnable, Obser
         double tmp = Math.random();
         if (tmp < 0.5) {
             eventType = EventType.SUCCESSFULLY_TRANSMITTED;
-        }else if (tmp < 0.8){
+        }else if (tmp < 0.9){
             eventType = EventType.LOST_IN_DEVICE;
+            c2Id = -1;
+            cableId = -1;
         }else{
             eventType = EventType.LOST_IN_CABLE;
         }

@@ -74,6 +74,9 @@ public class SimulatorEventWithDetails {
     }
 
     public String getDetailsText() {
+        if(simulatorEvent.getDetailsText() == null){
+            return "";
+        }
         return simulatorEvent.getDetailsText();
     }
 
@@ -91,6 +94,28 @@ public class SimulatorEventWithDetails {
 
     public EthInterfaceModel getEth2() {
         return eth2;
+    }
+    
+    public String getComponent1NameAndInterface(){
+        if(getComponent1()!=null && getEth1() != null){
+            return getComponent1().getName()+":"+getEth1().getName();
+        }else{
+            if(getComponent1()!=null){
+                return getComponent1().getName();
+            }
+        }
+        return "";
+    }
+    
+    public String getComponent2NameAndInterface(){
+        if(getComponent2()!=null && getEth2() != null){
+            return getComponent2().getName()+":"+getEth2().getName();
+        }else{
+            if(getComponent2()!=null){
+                return getComponent2().getName();
+            }
+        }
+        return "";
     }
 
     @Override
