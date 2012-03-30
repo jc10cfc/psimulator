@@ -16,19 +16,19 @@ public class SimulatorEvent implements Serializable, NetworkObject{
     private PacketType packetType;
     private String detailsText;
     /**
-     * Default is true until event create changed in PSImulator
+     * Default is successful until event create changed in PSImulator
      */
-    private boolean successful = true;
+    private EventType eventType = EventType.SUCCESSFULLY_TRANSMITTED;
     
     public SimulatorEvent(long timeStamp, int sourcceId, int destId, int cableId,
-            PacketType packetType, String detailsText, boolean successful) {
+            PacketType packetType, String detailsText, EventType eventType) {
         this.timeStamp = timeStamp;
         this.packetType = packetType;
         this.sourcceId = sourcceId;
         this.destId = destId;
         this.cableId = cableId;
         this.detailsText = detailsText;
-        this.successful = successful;
+        this.eventType = eventType;
     }
 
     public SimulatorEvent() {
@@ -84,14 +84,14 @@ public class SimulatorEvent implements Serializable, NetworkObject{
         this.timeStamp = timeStamp;
     }
 
-    public boolean isSuccessful() {
-        return successful;
+    public EventType getEventType() {
+        return eventType;
     }
 
-    public void setSuccessful(boolean successful) {
-        this.successful = successful;
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
     }
-
+    
     @Override
     public String toString() {
         return "src:" + this.getSourcceId() + " dst:" + this.getDestId() + " type" + this.getPacketType().toString() + " " + this.getDetailsText();
