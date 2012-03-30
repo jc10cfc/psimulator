@@ -12,6 +12,7 @@ import psimulator.logicLayer.Simulator.ConnectionFailtureReason;
 import shared.Components.CableModel;
 import shared.Components.EthInterfaceModel;
 import shared.Components.HwComponentModel;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import shared.telnetConfig.TelnetConfig;
@@ -571,6 +572,17 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
      * @throws ParseSimulatorEventException
      */
     private SimulatorEventWithDetails createSimulatorEventWithDetails(SimulatorEvent simulatorEvent) throws ParseSimulatorEventException {
+        if(simulatorEvent.getEventType() == EventType.LOST_IN_DEVICE){
+            HwComponentModel c1 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getSourcceId());
+            
+            if (c1 == null) {
+                throw new ParseSimulatorEventException();
+            }
+            
+            return new SimulatorEventWithDetails(simulatorEvent, c1.getName(), "", c1, null, null, null);
+        }
+        
+        
         // set details to event
         HwComponentModel c1 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getSourcceId());
         HwComponentModel c2 = dataLayerFacade.getNetworkFacade().getHwComponentModelById(simulatorEvent.getDestId());
@@ -599,11 +611,14 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
             if (dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getSourcceId()) == null) {
                 return false;
             }
-            if (dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getDestId()) == null) {
-                return false;
-            }
-            if (dataLayerFacade.getNetworkFacade().getCableModelById(eventWithDetails.getCableId()) == null) {
-                return false;
+            
+            if(eventWithDetails.getEventType() != EventType.LOST_IN_DEVICE){
+                if (dataLayerFacade.getNetworkFacade().getHwComponentModelById(eventWithDetails.getDestId()) == null) {
+                    return false;
+                }
+                if (dataLayerFacade.getNetworkFacade().getCableModelById(eventWithDetails.getCableId()) == null) {
+                    return false;
+                }
             }
         }
         return true;

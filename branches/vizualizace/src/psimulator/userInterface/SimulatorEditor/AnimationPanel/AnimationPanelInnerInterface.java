@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.AnimationPanel;
 
+import psimulator.userInterface.SimulatorEditor.AnimationPanel.Animations.AbstractAnimation;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
@@ -8,7 +9,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
  */
 public interface AnimationPanelInnerInterface {
     
-    public void removeAnimation(Animation animation);
+    public void removeAnimation(AbstractAnimation animation);
     
     public PacketImageType getPacketImageType();
 }
