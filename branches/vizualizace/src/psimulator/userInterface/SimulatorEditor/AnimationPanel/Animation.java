@@ -8,6 +8,7 @@ import org.jdesktop.core.animation.timing.TimingTarget;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 
 /**
@@ -35,7 +36,7 @@ public class Animation implements TimingTarget {
     private double defautlZoomWidthDifference =0.0;
     private double defautlZoomHeightDifference =0.0;
     //
-    private boolean successful;
+    private  EventType eventType;
     //
     private double fraction;
 
@@ -43,13 +44,13 @@ public class Animation implements TimingTarget {
             DataLayerFacade dataLayer,
             PacketType packetType, Point defaultZoomSource, Point defaultZoomDest, 
             int durationInMilliseconds,
-            boolean successful) {
+             EventType eventType) {
         
         this.dataLayer = dataLayer;
         this.animationPanelInnerInterface = animationPanelInnerInterface;
         //
         this.packetType = packetType;
-        this.successful = successful;
+        this.eventType = eventType;
         
         // get image
         image = ImageFactorySingleton.getInstance().getPacketImage(packetType, animationPanelInnerInterface.getPacketImageType(), 
@@ -120,15 +121,15 @@ public class Animation implements TimingTarget {
         return fraction;
     }
 
+    
+
     /**
-     * Gets if this animation should end normally (true), or has to end in the
-     * middle because the pacekt was lost (false)
+     * Gets if this animation should end normally, or has to end in the
+     * middle because the pacekt was lost
      */
-    public boolean isSuccessful() {
-        return successful;
+    public EventType getEventType() {
+        return eventType;
     }
-    
-    
 
     /**
      * Moves image coordinates according to elapsed fraction of time.
@@ -139,10 +140,11 @@ public class Animation implements TimingTarget {
         defautlZoomHeightDifference = (defaultZoomEndY - defaultZoomStartY) * fraction;
         this.fraction = fraction;
         
+        /*
         if(!successful && fraction > 0.5){
             defautlZoomWidthDifference = (defaultZoomEndX - defaultZoomStartX) * 0.5;
             defautlZoomHeightDifference = (defaultZoomEndY - defaultZoomStartY) * 0.5;
-        }
+        }*/
     }
 
     // ---------- TimingTarget implementation ------------------- //

@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.SimulatorControllPanel;
 
-import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -8,6 +7,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import psimulator.dataLayer.Simulator.EventTableModel;
 import psimulator.dataLayer.Singletons.ColorMixerSingleton;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 
 /**
  *
@@ -49,7 +49,7 @@ public class JTableEventList extends JTable {
             c.setBackground(getBackground());
         }
         
-        if (!tableModel.getSimulatorEvent(row).isSuccessful()){
+        if(tableModel.getSimulatorEvent(row).getEventType() != EventType.SUCCESSFULLY_TRANSMITTED){
             if (!isRowSelected(row)) {
                 c.setBackground(ColorMixerSingleton.tableLostEventColor);
             }else{
