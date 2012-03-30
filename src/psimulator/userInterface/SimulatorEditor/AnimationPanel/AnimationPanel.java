@@ -19,6 +19,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelOuterInterfac
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.UserInterfaceMainPanelInnerInterface;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 
 /**
  *
@@ -84,63 +85,63 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
             Composite tmpComposite = g2.getComposite();
 
             // if packet is lost and reached half-way
-            if (animation.getFraction() > 0.5 && !animation.isSuccessful()) {
-                int rule = AlphaComposite.SRC_OVER;
-                //float alpha = (float)animation.getFraction()*2;
-                float alpha = (float) (-2 * animation.getFraction() + 2);
-                if (alpha > 1f) {
-                    alpha = 1f;
-                }
-                if (alpha < 0f) {
-                    alpha = 0f;
-                }
-                
-                // set antialiasing
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-
-                int width = (int) (animation.getImage().getWidth(null) * 0.7);
-                int height = (int) (animation.getImage().getHeight(null) * 0.7);
-
-                int x = (int) (animation.getX() + animation.getImage().getWidth(null) * 0.15);
-                int y = (int) (animation.getY() + animation.getImage().getHeight(null) * 0.15);
-                
-                // create cross shape
-                GeneralPath shape = new GeneralPath();
-                shape.moveTo(x, y);
-                shape.lineTo(x + width, y + height);
-                shape.moveTo(x, y + height);
-                shape.lineTo(x + width, y);
-
-                // create stroke
-                float strokeWidth = animation.getImage().getWidth(null) / 5;
-                BasicStroke stroke = new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-
-                Composite comp = AlphaComposite.getInstance(rule, alpha);
-                // set transparency
-                g2.setComposite(comp);
-                // paint image
+//            if (animation.getFraction() > 0.5 && !animation.isSuccessful()) {
+//                int rule = AlphaComposite.SRC_OVER;
+//                //float alpha = (float)animation.getFraction()*2;
+//                float alpha = (float) (-2 * animation.getFraction() + 2);
+//                if (alpha > 1f) {
+//                    alpha = 1f;
+//                }
+//                if (alpha < 0f) {
+//                    alpha = 0f;
+//                }
+//                
+//                // set antialiasing
+//                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+//                        RenderingHints.VALUE_ANTIALIAS_ON);
+//
+//                int width = (int) (animation.getImage().getWidth(null) * 0.7);
+//                int height = (int) (animation.getImage().getHeight(null) * 0.7);
+//
+//                int x = (int) (animation.getX() + animation.getImage().getWidth(null) * 0.15);
+//                int y = (int) (animation.getY() + animation.getImage().getHeight(null) * 0.15);
+//                
+//                // create cross shape
+//                GeneralPath shape = new GeneralPath();
+//                shape.moveTo(x, y);
+//                shape.lineTo(x + width, y + height);
+//                shape.moveTo(x, y + height);
+//                shape.lineTo(x + width, y);
+//
+//                // create stroke
+//                float strokeWidth = animation.getImage().getWidth(null) / 5;
+//                BasicStroke stroke = new BasicStroke(strokeWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+//
+//                Composite comp = AlphaComposite.getInstance(rule, alpha);
+//                // set transparency
+//                g2.setComposite(comp);
+//                // paint image
+//                g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
+//                // set original transparency
+//                g2.setComposite(tmpComposite);
+//
+//                // save old stroke and color
+//                Stroke tmpStroke = g2.getStroke();
+//                Color tmpColor = g2.getColor();
+//
+//                // set stroke and color
+//                g2.setStroke(stroke);
+//                g2.setColor(Color.RED);
+//
+//                // paint red cross
+//                g2.draw(shape);
+//
+//                // restore old stroke and color
+//                g2.setColor(tmpColor);
+//                g2.setStroke(tmpStroke);
+//            } else {
                 g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
-                // set original transparency
-                g2.setComposite(tmpComposite);
-
-                // save old stroke and color
-                Stroke tmpStroke = g2.getStroke();
-                Color tmpColor = g2.getColor();
-
-                // set stroke and color
-                g2.setStroke(stroke);
-                g2.setColor(Color.RED);
-
-                // paint red cross
-                g2.draw(shape);
-
-                // restore old stroke and color
-                g2.setColor(tmpColor);
-                g2.setStroke(tmpStroke);
-            } else {
-                g2.drawImage(animation.getImage(), animation.getX(), animation.getY(), null);
-            }
+//            }
 
 
 
@@ -254,7 +255,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
      * @param idDestination
      */
     @Override
-    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination, boolean successful) {
+    public void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination, EventType eventType) {
         // points in Default zoom
         Point src = graph.getAbstractHwComponent(idSource).getCenterLocationDefaultZoom();
         Point dest = graph.getAbstractHwComponent(idDestination).getCenterLocationDefaultZoom();
@@ -263,7 +264,7 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
 
         // create new animation
         Animation anim = new Animation(this, dataLayer,
-                packetType, src, dest, timeInMiliseconds, successful);
+                packetType, src, dest, timeInMiliseconds, eventType);
 
         // add animation to animations list
         animations.add(anim);

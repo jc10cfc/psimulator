@@ -4,6 +4,7 @@ import java.awt.Color;
 import psimulator.dataLayer.Singletons.ColorMixerSingleton;
 import shared.Components.EthInterfaceModel;
 import shared.Components.HwComponentModel;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 
@@ -40,8 +41,8 @@ public class SimulatorEventWithDetails {
         list = tmp;
     }
 
-    public boolean isSuccessful() {
-        return simulatorEvent.isSuccessful();
+    public EventType getEventType(){
+        return simulatorEvent.getEventType();
     }
 
     public Object getValueAt(int i) {

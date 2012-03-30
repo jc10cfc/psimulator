@@ -11,6 +11,7 @@ import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEvent;
 import psimulator.userInterface.UserInterfaceOuterFacade;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 
 /**
  *
@@ -238,15 +239,19 @@ public class SimulatorClientEventRecieverMockupThread implements Runnable, Obser
             }
         }
         
-        boolean successful;
-        if (Math.random() > 0.3) {
-            successful = true;
+        EventType eventType;
+        
+        double tmp = Math.random();
+        if (tmp < 0.5) {
+            eventType = EventType.SUCCESSFULLY_TRANSMITTED;
+        }else if (tmp < 0.8){
+            eventType = EventType.LOST_IN_DEVICE;
         }else{
-            successful = false;
+            eventType = EventType.LOST_IN_CABLE;
         }
         
         SimulatorEvent simulatorEvent = new SimulatorEvent(time, c1Id, c2Id, 
-                cableId, packetType, detailsText, successful);
+                cableId, packetType, detailsText, eventType);
         
         return simulatorEvent;
     }

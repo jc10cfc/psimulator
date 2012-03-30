@@ -4,6 +4,7 @@ import java.util.Observer;
 import javax.swing.JComponent;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
+import shared.SimulatorEvents.SerializedComponents.EventType;
 
 /**
  *
@@ -31,7 +32,7 @@ public abstract class AnimationPanelOuterInterface extends JComponent implements
     //@Override
     //public abstract Dimension getPreferredSize();
     
-    public abstract void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination, boolean successful);
+    public abstract void createAnimation(PacketType packetType, int timeInMiliseconds, int idSource, int idDestination, EventType eventType);
     
     public abstract int getAnimationDuration(int cableId, int speedCoeficient);
 }

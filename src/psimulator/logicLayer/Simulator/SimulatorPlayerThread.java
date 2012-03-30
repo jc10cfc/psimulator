@@ -77,7 +77,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     int time = animationPanelOuterInterface.getAnimationDuration(event.getCableId(), speedCoeficient);
                     
                     // start animation
-                    animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId(), event.isSuccessful());
+                    animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId(), event.getEventType());
 
                     // play event
                     if (DEBUG) {
@@ -116,7 +116,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                     int time = animationPanelOuterInterface.getAnimationDuration(event.getCableId(), speedCoeficient);
 
                     // start animation
-                    animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId(),  event.isSuccessful());
+                    animationPanelOuterInterface.createAnimation(event.getPacketType(), time, event.getSourcceId(), event.getDestId(),  event.getEventType());
 
                     // if playing by timestamps, adjust sleep time
                     if(simulatorManagerInterface.isPlayingByTimestamps()){
