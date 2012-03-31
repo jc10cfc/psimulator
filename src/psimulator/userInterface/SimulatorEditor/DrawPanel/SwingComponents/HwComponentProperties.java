@@ -226,14 +226,14 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         jLabelName.setFont(fontBold);
         devicePanel.add(jLabelName);
 
-        RegexFormatter deviceNameFormatter = new RegexFormatter(Validator.NAME_PATTERN);
-        deviceNameFormatter.setAllowsInvalid(false);        // allow to enter invalid value for short time
+        RegexFormatter deviceNameFormatter = new RegexFormatter(Validator.NAME_PATTERN_NOT_EMPTY);
+        deviceNameFormatter.setAllowsInvalid(true);        // allow to enter invalid value for short time
         deviceNameFormatter.setCommitsOnValidEdit(true);    // value is immedeatly published to textField
         deviceNameFormatter.setOverwriteMode(false);        // do not overwrite charracters
 
 
         jTextFieldDeviceName = new JFormattedTextField(deviceNameFormatter);
-        jTextFieldDeviceName.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 0-15 " + dataLayer.getString("CHARACTERS"));
+        jTextFieldDeviceName.setToolTipText(dataLayer.getString("REQUIRED_FORMAT_IS") + " 1-15 " + dataLayer.getString("CHARACTERS"));
         jTextFieldDeviceName.setText(abstractHwComponent.getDeviceName());
         // add decorator that paints wrong input icon
         devicePanel.add(new JLayer<JFormattedTextField>(jTextFieldDeviceName, layerUI));
@@ -314,7 +314,9 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
 
     @Override
     protected void windowClosing() {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        jButtonCancel.requestFocusInWindow();
+
+        jTextFieldDeviceName.setValue(jTextFieldDeviceName.getValue());
     }
 
     /////////////////////-----------------------------------////////////////////

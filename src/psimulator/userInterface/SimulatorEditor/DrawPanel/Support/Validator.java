@@ -38,6 +38,9 @@ public class Validator {
             "^(((\\w)|(\\W)){0,15})$";
             //"^(\\w{0,15})$";
     
+    public static final String NAME_PATTERN_NOT_EMPTY =
+            "^(((\\w)|(\\W)){1,15})$";
+    
     //public static final String MAC_PATTERN = 
     //        "^([0-9A-F][0-9A-F]-){5}([0-9A-F][0-9A-F])$";
     
