@@ -11,10 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
@@ -98,7 +95,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
 
-        this.setIconImage(ImageFactorySingleton.getInstance().getImageIconForToolbar(MainTool.ADD_REAL_PC).getImage());
+        this.setIconImage(new ImageIcon(getClass().getResource(ImageFactorySingleton.ICON_HOME_48_PATH)).getImage());
 
 
         // create glass pane and glass pane painter

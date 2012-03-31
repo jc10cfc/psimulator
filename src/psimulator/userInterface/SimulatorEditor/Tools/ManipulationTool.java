@@ -11,8 +11,8 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
  */
 public class ManipulationTool extends AbstractTool{
 
-    public ManipulationTool(MainTool tool, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface) {
-        super(tool, imageIcon, toolChangeInterface);
+    public ManipulationTool(MainTool tool, String path, DrawPanelToolChangeOuterInterface toolChangeInterface) {
+        super(tool, path, toolChangeInterface);
     }
 
     @Override

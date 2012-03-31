@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.Tools;
 
-import javax.swing.ImageIcon;
 import shared.Components.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
@@ -14,8 +13,8 @@ public class AddDeviceTool extends AbstractCreationTool{
 
     protected int interfaces;
     
-    public AddDeviceTool(MainTool tool, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, String imagePath, int interfaces) {
-        super(tool, imageIcon, toolChangeInterface, hwType, imagePath);
+    public AddDeviceTool(MainTool tool, String path, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, int interfaces) {
+        super(tool, path, toolChangeInterface, hwType);
         this.interfaces = interfaces;
     }
 
@@ -37,5 +36,4 @@ public class AddDeviceTool extends AbstractCreationTool{
     public String getToolTip(DataLayerFacade dataLayer) {
         return getTranslatedName(dataLayer) + " - "+ dataLayer.getString("INTERFACES") +": " + getParameter();
     }
-    
 }

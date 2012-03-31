@@ -458,7 +458,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         envelopePacketIconButton.setActionCommand(PacketImageType.ENVELOPE.toString());
         envelopePacketIconButton.addActionListener(packetImageTypeListener);
         
-        classicPacketIconButton = new JRadioButton(dataLayer.getString("CLASSIC"));
+        classicPacketIconButton = new JRadioButton(dataLayer.getString("PACKAGE"));
         classicPacketIconButton.setActionCommand(PacketImageType.CLASSIC.toString());
         classicPacketIconButton.addActionListener(packetImageTypeListener);
 

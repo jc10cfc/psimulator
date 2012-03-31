@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.userInterface.SimulatorEditor.Tools.AbstractTool;
 
 /**
@@ -98,7 +99,7 @@ public class MenuToggleButton extends JToggleButton {
         //this.setToolTipText(tool.getName());
         updateToolTip();
         // set Image icon of this MenuToggleButton
-        this.setIcon(currentTool.getImageIcon());
+        this.setIcon(currentTool.getImageIcon(dataLayer));
         // enable current tool in 
         setCurrentToolEnabled();
         // set toggle button selected
@@ -111,6 +112,15 @@ public class MenuToggleButton extends JToggleButton {
         // upadte tool tips in popup menu that belongs to this jToggleButton
         if (pop != null) {
             pop.updateToolNames(dataLayer);
+        }
+    }
+    
+    public final void updateIconSize(){
+        this.setIcon(currentTool.getImageIcon(dataLayer));
+        
+        // upadte tool tips in popup menu that belongs to this jToggleButton
+        if (pop != null) {
+            pop.updateIconSize(dataLayer);
         }
     }
 

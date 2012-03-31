@@ -14,8 +14,8 @@ public class CreateCableTool extends AbstractCreationTool{
 
     protected int delay;
     
-    public CreateCableTool(MainTool tool, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, String imagePath, int delay) {
-        super(tool, imageIcon, toolChangeInterface, hwType, imagePath);
+    public CreateCableTool(MainTool tool, String path, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, int delay) {
+        super(tool, path, toolChangeInterface, hwType);
         
         this.delay = delay;
     }

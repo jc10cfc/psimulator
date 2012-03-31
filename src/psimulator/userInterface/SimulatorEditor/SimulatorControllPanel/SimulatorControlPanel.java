@@ -784,7 +784,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jSliderPlayerSpeed.setToolTipText(dataLayer.getString("SPEED_CONTROL"));
         jLabelSpeedName.setText(dataLayer.getString("SPEED_COLON"));
         jLabelSliderSlow.setText(dataLayer.getString("SLOW"));
-        jLabelSliderMedium.setText(dataLayer.getString("MEDIUM"));
+        jLabelSliderMedium.setText(dataLayer.getString("MEDIUM_SPEED"));
         jLabelSliderFast.setText(dataLayer.getString("FAST"));
         jButtonFirst.setToolTipText(dataLayer.getString("SKIP_TO_FIRST_EVENT"));
         jButtonLast.setToolTipText(dataLayer.getString("SKIP_TO_LAST_EVENT"));

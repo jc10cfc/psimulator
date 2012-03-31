@@ -2,15 +2,15 @@ package psimulator.userInterface.SimulatorEditor;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JToolBar;
-import psimulator.dataLayer.Singletons.ColorMixerSingleton;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ObserverUpdateEventType;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Singletons.ColorMixerSingleton;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
@@ -45,6 +45,8 @@ public class EditorToolBar extends JToolBar implements Observer {
         
         // add this ToolBar as observer to languageManager
         dataLayer.addLanguageObserver((Observer)this);
+        
+        dataLayer.addPreferencesObserver((Observer)this);
 
         // tool bar is not possible to move
         this.setFloatable(false);
@@ -56,10 +58,10 @@ public class EditorToolBar extends JToolBar implements Observer {
         this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         // BUTTONS
-        jButtonFitToSize = new JButton(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.FIT_TO_SIZE));
+        jButtonFitToSize = new JButton();
         jButtonFitToSize.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         
-        jButtonAlignToGrid = new JButton(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.ALIGN_TO_GRID));
+        jButtonAlignToGrid = new JButton();
         jButtonAlignToGrid.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         
         toolsButtonGroup = new ButtonGroup();
@@ -107,6 +109,7 @@ public class EditorToolBar extends JToolBar implements Observer {
             c.setFocusable(false);
         }
 
+        updateIconSize(dataLayer.getToolbarIconSize());
     }
  
     /**
@@ -114,9 +117,33 @@ public class EditorToolBar extends JToolBar implements Observer {
      */ 
     @Override
     public void update(Observable o, Object o1) {
-        setTextsToComponents();
+        switch ((ObserverUpdateEventType) o1) {
+            case LANGUAGE:
+                setTextsToComponents();
+                break;
+            case ICON_SIZE:
+                updateIconSize(dataLayer.getToolbarIconSize());
+                break;
+        }
     }
 
+    /**
+     * Updates images on toolbar buttons according to size
+     * @param size 
+     */
+    public final void updateIconSize(ToolbarIconSizeEnum size){
+        jButtonFitToSize.setIcon(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.FIT_TO_SIZE, dataLayer.getToolbarIconSize()));
+        jButtonAlignToGrid.setIcon(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.ALIGN_TO_GRID, dataLayer.getToolbarIconSize()));
+        
+        toggleButtonDragMove.updateIconSize();
+        toggleButtonHand.updateIconSize();
+        toggleButtonEndDevices.updateIconSize();
+        toggleButtonRouters.updateIconSize();
+        toggleButtonSwitches.updateIconSize();
+        toggleButtonRealPC.updateIconSize();
+        toggleButtonCable.updateIconSize();
+    }
+    
     /**
      * Enables deafult tool of this toolbar
      */
