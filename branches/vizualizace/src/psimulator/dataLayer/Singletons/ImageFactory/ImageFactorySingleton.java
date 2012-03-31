@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
 import javax.swing.ImageIcon;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import shared.Components.HwTypeEnum;
 import shared.SimulatorEvents.SerializedComponents.PacketType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
@@ -22,6 +23,8 @@ public class ImageFactorySingleton {
     //
     public static final int ICON_SIZE_MENU_BAR = 48;
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
+    //
+    public static final String ICON_HOME_48_PATH = "/resources/toolbarIcons/48/home.png";
     //
     public static final String TOOL_DRAG_MOVE_PATH = "/resources/toolbarIcons/editor_toolbar/move.png";
     public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";
@@ -386,14 +389,18 @@ public class ImageFactorySingleton {
      * @param path
      * @return ImageIcon with ICON_SIZE_MENU_BAR size.
      */
-    public ImageIcon getImageIconForToolbar(MainTool tool, String path) {
+    public ImageIcon getImageIconForToolbar(MainTool tool, String path, ToolbarIconSizeEnum size, boolean popup) {
         ImageIcon icon = null;
+        
+        int iconSize = getIconSizeForEditorToolBar(size, popup);
+        
+        
+        
         if (path == null) {
             icon = getImageIconForToolbar(tool);
         } else {
             try {
-                //icon = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
-                icon = createSquareImage(getScaledImage(path, ICON_SIZE_MENU_BAR));
+                icon = createSquareImage(getScaledImage(path, iconSize));
             } catch (Exception e) {
                 System.out.println("chyba pri nacitani obrazku");
                 icon = getImageIconForToolbar(tool);
@@ -403,8 +410,36 @@ public class ImageFactorySingleton {
         return icon;
     }
 
-    public ImageIcon getImageIconForToolbar(SecondaryTool tool) {
+    private int getIconSizeForEditorToolBar(ToolbarIconSizeEnum size, boolean popup){
+        int iconSize;
+        
+        switch(size){
+            case TINY:
+                iconSize = 22;
+                break;
+            case SMALL:
+                iconSize = 32;
+                break;
+            case MEDIUM:
+                iconSize = 48;
+                break;
+            case LARGE:
+            default:
+                iconSize = 60;
+                break;
+        }
+        
+        if(popup){
+            iconSize = iconSize - (int)(iconSize*0.3);
+        }
+        
+        return iconSize;
+    }
+    
+    public ImageIcon getImageIconForToolbar(SecondaryTool tool, ToolbarIconSizeEnum size) {
         String path;
+        
+        int iconSize = getIconSizeForEditorToolBar(size, false);
 
         switch (tool) {
             case ALIGN_TO_GRID:
@@ -421,7 +456,7 @@ public class ImageFactorySingleton {
         // load image
         try {
             //tmp = new ImageIcon(getScaledImage(path, ICON_SIZE_MENU_BAR));
-            tmp = createSquareImage(getScaledImage(path, ICON_SIZE_MENU_BAR));
+            tmp = createSquareImage(getScaledImage(path, iconSize));
         } catch (IOException ex) {
             // should never happen, all hwComponentType default icons are in .jar as a resource
         }

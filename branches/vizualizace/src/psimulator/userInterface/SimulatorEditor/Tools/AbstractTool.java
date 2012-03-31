@@ -3,6 +3,8 @@ package psimulator.userInterface.SimulatorEditor.Tools;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.DrawPanelListenerStrategy;
@@ -14,29 +16,31 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.MouseActionListeners.D
 public abstract class AbstractTool {
     
     protected MainTool tool;
-    protected ImageIcon imageIcon;
+    protected String path;
     protected DrawPanelToolChangeOuterInterface toolChangeInterface;
     
-    public AbstractTool(MainTool tool, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface) {
+    public AbstractTool(MainTool tool, String path, DrawPanelToolChangeOuterInterface toolChangeInterface) {
         this.tool = tool;
-        this.imageIcon = imageIcon;
+        this.path = path;
         this.toolChangeInterface = toolChangeInterface;
     }
 
-     public abstract String getTranslatedName(DataLayerFacade dataLayer);
+    public abstract String getTranslatedName(DataLayerFacade dataLayer);
     
     public abstract String getToolTip(DataLayerFacade dataLayer);
 
     public MainTool getTool() {
         return tool;
     }
-
-    public ImageIcon getImageIcon() {
-        return imageIcon;
+    
+    public ImageIcon getImageIcon(DataLayerFacade dataLayer) {
+        ToolbarIconSizeEnum iconSize = dataLayer.getToolbarIconSize();
+        return ImageFactorySingleton.getInstance().getImageIconForToolbar(tool, path, iconSize, false);
     }
     
-    public ImageIcon getImageIcon(int size) {
-        return (new ImageIcon(imageIcon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH)));
+    public ImageIcon getImageIconForPopup(DataLayerFacade dataLayer) {
+        ToolbarIconSizeEnum iconSize = dataLayer.getToolbarIconSize();
+        return ImageFactorySingleton.getInstance().getImageIconForToolbar(tool, path, iconSize, true);
     }
  
     /**

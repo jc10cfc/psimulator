@@ -28,7 +28,7 @@ public class ToolPopupMenu extends JPopupMenu{
         this.toggleButton = toggleButton;
         this.tools = tools;
      
-        jMenuItems = new ArrayList<JRadioButtonMenuItem>();
+        jMenuItems = new ArrayList<>();
         toolsButtonGroup = new ButtonGroup();
         
         for (final AbstractTool tool : tools) {
@@ -36,8 +36,7 @@ public class ToolPopupMenu extends JPopupMenu{
             AbstractCreationTool tmp = (AbstractCreationTool)tool;
 
             // create menu item for tool
-            JRadioButtonMenuItem mi = new JRadioButtonMenuItem(/*tmp.getName() + tmp.getParameterLabel() + tmp.getParameter(), */
-                    tmp.getImageIcon(ImageFactorySingleton.ICON_SIZE_MENU_BAR_POPUP));
+            JRadioButtonMenuItem mi = new JRadioButtonMenuItem();
             
             jMenuItems.add(mi);
             
@@ -59,9 +58,6 @@ public class ToolPopupMenu extends JPopupMenu{
     
     @Override
     public void show(Component cmpnt, int x , int y){
-        // set selected menu item
-        //setCurrentToolSelected(toggleButton.getSelectedTool());
-        
         // show
         super.show(cmpnt, x, y);
     }
@@ -69,6 +65,13 @@ public class ToolPopupMenu extends JPopupMenu{
     public void updateToolNames(DataLayerFacade dataLayer){
         for (int i=0;i<jMenuItems.size();i++) {
             jMenuItems.get(i).setText(tools.get(i).getToolTip(dataLayer));
+        }
+    }
+    
+    public final void updateIconSize(DataLayerFacade dataLayer){
+        for (int i=0;i<jMenuItems.size();i++) {
+            ImageIcon icon = tools.get(i).getImageIconForPopup(dataLayer);
+            jMenuItems.get(i).setIcon(icon);
         }
     }
     

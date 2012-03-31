@@ -1,6 +1,5 @@
 package psimulator.userInterface.SimulatorEditor.Tools;
 
-import javax.swing.ImageIcon;
 import shared.Components.HwTypeEnum;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelToolChangeOuterInterface;
@@ -12,12 +11,10 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
  */
 public abstract class AbstractCreationTool extends AbstractTool{
     protected HwTypeEnum hwType;
-    protected String imagePath;
 
-    public AbstractCreationTool(MainTool tool, ImageIcon imageIcon, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType, String imagePath) {
-        super(tool, imageIcon, toolChangeInterface);
+    public AbstractCreationTool(MainTool tool, String path, DrawPanelToolChangeOuterInterface toolChangeInterface, HwTypeEnum hwType) {
+        super(tool, path, toolChangeInterface);
         this.hwType = hwType;
-        this.imagePath = imagePath;
     }
 
     public HwTypeEnum getHwType() {
@@ -25,7 +22,7 @@ public abstract class AbstractCreationTool extends AbstractTool{
     }
 
     public String getImagePath() {
-        return imagePath;
+        return path;
     }
     
     @Override
