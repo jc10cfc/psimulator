@@ -543,7 +543,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelConnectSaveLoad.setLayout(new BoxLayout(jPanelConnectSaveLoad, BoxLayout.Y_AXIS));
         //
         jPanelConnectSaveLoadButtons = new JPanel();
-        jPanelConnectSaveLoadButtons.setLayout(new BoxLayout(jPanelConnectSaveLoadButtons, BoxLayout.X_AXIS));
+        //jPanelConnectSaveLoadButtons.setLayout(new BoxLayout(jPanelConnectSaveLoadButtons, BoxLayout.X_AXIS));
+        GridLayout jPanelConnectSaveLoadButtonsLayout = new GridLayout(1,3);
+        jPanelConnectSaveLoadButtonsLayout.setHgap(4);
+        jPanelConnectSaveLoadButtons.setLayout(jPanelConnectSaveLoadButtonsLayout);
         //
         jButtonSaveListToFile = new JButton();
         jButtonSaveListToFile.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -558,13 +561,13 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonConnectToServer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonConnectToServer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         //
-        jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(10, 0)));
+        //jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(10, 0)));
         jPanelConnectSaveLoadButtons.add(jButtonConnectToServer);
-        jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(7, 0)));
+        //jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(7, 0)));
         jPanelConnectSaveLoadButtons.add(jButtonLoadListFromFile);
-        jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(7, 0)));
+        //jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(7, 0)));
         jPanelConnectSaveLoadButtons.add(jButtonSaveListToFile);
-        jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(10, 0)));
+        //jPanelConnectSaveLoadButtons.add(Box.createRigidArea(new Dimension(10, 0)));
         //
         jPanelConnectSaveLoadStatus = new JPanel();
         jPanelConnectSaveLoadStatus.setLayout(new BoxLayout(jPanelConnectSaveLoadStatus, BoxLayout.X_AXIS));
