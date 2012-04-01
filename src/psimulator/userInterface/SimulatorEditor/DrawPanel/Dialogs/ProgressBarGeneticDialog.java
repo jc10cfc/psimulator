@@ -51,7 +51,7 @@ public class ProgressBarGeneticDialog extends JDialog implements ActionListener,
         super((JFrame) mainWindow, dataLayer.getString("GENETIC_ALGORITHM_RUNNING"), ModalityType.APPLICATION_MODAL);
 
         // create genetic graph from graph
-        this.geneticGraph = new GeneticGraph(graph, graph.getAbstractHwComponentsCount() * 2);
+        this.geneticGraph = new GeneticGraph(graph, graph.getAbstractHwComponentsCount()); //graph.getAbstractHwComponentsCount() * 2
 
         this.dataLayer = dataLayer;
 

@@ -33,9 +33,25 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
     private double fitness;
     private int score;
 
-    public GeneticGraph(Graph graph, int gridSize) {
+    public GeneticGraph(Graph graph, int numberOfDevices) {
 
-        this.gridSize = gridSize;
+        /*
+        if(numberOfDevices < 5){
+            gridSize = (int) (numberOfDevices*1.5);
+        }else if(numberOfDevices < 8){
+            gridSize = numberOfDevices;
+        }else if(numberOfDevices < 20){
+            gridSize = (int) (numberOfDevices /1.5);
+        } else if(numberOfDevices < 50){
+            gridSize = (int) (numberOfDevices / 2);
+        } else {
+            gridSize = (int) (numberOfDevices / (numberOfDevices / 25.0));
+        }*/
+        gridSize = numberOfDevices * 2;
+        
+        //System.out.println("Grid size = "+gridSize);
+        
+        //this.gridSize = gridSize;
 
         List<HwComponentGraphic> tmpList = new ArrayList(graph.getHwComponents());
         
@@ -57,7 +73,7 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
 
         nodeWithMaxNeighbours = getNodeWithMostNeighbours();
         //System.out.println("Node with max neighbours = " + nodeWithMaxNeighbours);
-
+        
         // fill nodes randomly
         placeNodesRandomly();
     }
@@ -193,12 +209,18 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
             int p1x = this.nodes[i][0];
             int p1y = this.nodes[i][1];
 
-            if(!checkIfXPossible(offspring1, p1x)){
-                p1x = getRandomFreeX(offspring1);
-            }
+//            if(!checkIfXPossible(offspring1, p1x)){
+//                p1x = getRandomFreeX(offspring1);
+//            }
+//            
+//            if(!checkIfYPossible(offspring1, p1y)){
+//                p1y = getRandomFreeY(offspring1);
+//            }
             
-            if(!checkIfYPossible(offspring1, p1y)){
-                p1y = getRandomFreeY(offspring1);
+            if(!checkIfPointPossible(offspring1, new Point(p1x, p1y))){
+                Point p1 = getRandomFreePoint(offspring1);
+                p1x = p1.getX();
+                p1y = p1.getY();
             }
             
             offspring1.nodes[i][0] = p1x;
@@ -209,12 +231,18 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
             int p2x = second.nodes[i][0];
             int p2y = second.nodes[i][1];
             
-            if(!checkIfXPossible(offspring2, p2x)){
-                p2x = getRandomFreeX(offspring2);
-            }
+//            if(!checkIfXPossible(offspring2, p2x)){
+//                p2x = getRandomFreeX(offspring2);
+//            }
+//            
+//            if(!checkIfYPossible(offspring2, p2y)){
+//                p2y = getRandomFreeY(offspring2);
+//            }
             
-            if(!checkIfYPossible(offspring2, p2y)){
-                p2y = getRandomFreeY(offspring2);
+            if(!checkIfPointPossible(offspring2, new Point(p2x, p2y))){
+                Point p2 = getRandomFreePoint(offspring1);
+                p2x = p2.getX();
+                p2y = p2.getY();
             }
             
             offspring2.nodes[i][0] = p2x;
@@ -225,31 +253,41 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
         return array;
     }
 
-    private boolean checkIfXPossible(GeneticGraph graph, int p1x) {
+    private boolean checkIfPointPossible(GeneticGraph graph, Point p){
         for (int j = 0; j < graph.nodes.length; j++) {
-            if (graph.nodes[j][0] == p1x) {
+            if (graph.nodes[j][0] == p.getX() && graph.nodes[j][1] == p.getY()) {
                 return false;
             }
         }
         return true;
     }
     
-    private boolean checkIfYPossible(GeneticGraph graph, int p1y) {
-        for (int j = 0; j < graph.nodes.length; j++) {
-            if (graph.nodes[j][1] == p1y) {
-                return false;
-            }
-        }
-        return true;
-    }
+//    private boolean checkIfXPossible(GeneticGraph graph, int p1x) {
+//        for (int j = 0; j < graph.nodes.length; j++) {
+//            if (graph.nodes[j][0] == p1x) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//    
+//    private boolean checkIfYPossible(GeneticGraph graph, int p1y) {
+//        for (int j = 0; j < graph.nodes.length; j++) {
+//            if (graph.nodes[j][1] == p1y) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     /**
      * random change of node position
      */
     public void singleNodeMutate() {
         int nodePos = random.nextInt(nodes.length);
-        nodes[nodePos][0] = getRandomFreeX(this);
-        nodes[nodePos][1] = getRandomFreeY(this);
+        Point p = getRandomFreePoint(this);
+        nodes[nodePos][0] = p.getX();
+        nodes[nodePos][1] = p.getY();
     }
 
     /**
@@ -258,11 +296,13 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
     public void singleEdgeMutate1() {
         int edgePos = random.nextInt(edges.length);
 
-        nodes[edges[edgePos][0]][0] = getRandomFreeX(this);
-        nodes[edges[edgePos][0]][1] = getRandomFreeY(this);
+        Point p1 = getRandomFreePoint(this);
+        nodes[edges[edgePos][0]][0] = p1.getX();
+        nodes[edges[edgePos][0]][1] = p1.getY();
 
-        nodes[edges[edgePos][1]][0] = getRandomFreeX(this);
-        nodes[edges[edgePos][1]][1] = getRandomFreeY(this);
+        Point p2 = getRandomFreePoint(this);
+        nodes[edges[edgePos][1]][0] = p2.getX();
+        nodes[edges[edgePos][1]][1] = p2.getY();
     }
 
     /**
@@ -282,32 +322,26 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
             height = gridSize - 1;
         }
 
-        nodes[edges[edgePos][0]][0] = getRandomFreeX(this);
-        nodes[edges[edgePos][0]][1] = getRandomFreeY(this);
+        Point p1 = getRandomFreePoint(this);
+        nodes[edges[edgePos][0]][0] = p1.getX();
+        nodes[edges[edgePos][0]][1] = p1.getY();
 
         int p2x = nodes[edges[edgePos][0]][0] + width;
         int p2y = nodes[edges[edgePos][0]][1] + height;
 
-        /*
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i][0] == p2x) {
-                p2x = getRandomFreeX(this);
-                break;
-            }
-        }*/
-        if(!checkIfXPossible(this, p2x)){
-            p2x = getRandomFreeX(this);
-        }
-        /*
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i][1] == p2y) {
-                p2y = getRandomFreeY(this);
-                break;
-            }
-        }*/
+//        if(!checkIfXPossible(this, p2x)){
+//            p2x = getRandomFreeX(this);
+//        }
+
+//        
+//        if(!checkIfYPossible(this, p2y)){
+//            p2y = getRandomFreeY(this);
+//        }
         
-        if(!checkIfYPossible(this, p2y)){
-            p2y = getRandomFreeY(this);
+        if(!checkIfPointPossible(this, new Point(p2x, p2y))){
+            Point p2 = getRandomFreePoint(this);
+            p2x = p2.getX();
+            p2y = p2.getY();
         }
 
         nodes[edges[edgePos][1]][0] = p2x;
@@ -317,8 +351,9 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
     public void nodeWithMostNeighboursMutate() {
         int node = nodeWithMaxNeighbours;
 
-        nodes[node][0] = getRandomFreeX(this);
-        nodes[node][1] = getRandomFreeY(this);
+        Point p = getRandomFreePoint(this);
+        nodes[node][0] = p.getX();
+        nodes[node][1] = p.getY();
 
     }
 
@@ -336,8 +371,9 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
 
     public final void placeNodesRandomly() {
         for (int i = 0; i < nodes.length; i++) {
-            nodes[i][0] = getRandomFreeX(this);
-            nodes[i][1] = getRandomFreeY(this);
+            Point p = getRandomFreePoint(this);
+            nodes[i][0] = p.getX();
+            nodes[i][1] = p.getY();
         }
     }
 
@@ -447,37 +483,20 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
         }
         return crossings;
     }
-
-    private int getRandomFreeX(GeneticGraph graph) {
+    
+    private Point getRandomFreePoint(GeneticGraph graph){
         int randomX = 0;
+        int randomY = 0;
+        
         boolean success = false;
         while (!success) {
             randomX = random.nextInt(graph.gridSize);
-
-            boolean isPossible = true;
-            for (int i = 0; i < graph.nodes.length; i++) {
-                if (graph.nodes[i][0] == randomX) {
-                    isPossible = false;
-                    break;
-                }
-            }
-            if (isPossible == true) {
-                success = true;
-            }
-
-        }
-        return randomX;
-    }
-
-    private int getRandomFreeY(GeneticGraph graph) {
-        int randomY = 0;
-        boolean success = false;
-        while (!success) {
             randomY = random.nextInt(graph.gridSize);
-
+            
             boolean isPossible = true;
+            // check if it is empty field
             for (int i = 0; i < graph.nodes.length; i++) {
-                if (graph.nodes[i][1] == randomY) {
+                if (graph.nodes[i][0] == randomX && graph.nodes[i][1] == randomY) {
                     isPossible = false;
                     break;
                 }
@@ -486,8 +505,49 @@ public class GeneticGraph implements Comparable<GeneticGraph> {
                 success = true;
             }
         }
-        return randomY;
+        return new Point(randomX, randomY);
     }
+
+//    private int getRandomFreeX(GeneticGraph graph) {
+//        int randomX = 0;
+//        boolean success = false;
+//        while (!success) {
+//            randomX = random.nextInt(graph.gridSize);
+//
+//            boolean isPossible = true;
+//            for (int i = 0; i < graph.nodes.length; i++) {
+//                if (graph.nodes[i][0] == randomX) {
+//                    isPossible = false;
+//                    break;
+//                }
+//            }
+//            if (isPossible == true) {
+//                success = true;
+//            }
+//
+//        }
+//        return randomX;
+//    }
+
+//    private int getRandomFreeY(GeneticGraph graph) {
+//        int randomY = 0;
+//        boolean success = false;
+//        while (!success) {
+//            randomY = random.nextInt(graph.gridSize);
+//
+//            boolean isPossible = true;
+//            for (int i = 0; i < graph.nodes.length; i++) {
+//                if (graph.nodes[i][1] == randomY) {
+//                    isPossible = false;
+//                    break;
+//                }
+//            }
+//            if (isPossible == true) {
+//                success = true;
+//            }
+//        }
+//        return randomY;
+//    }
 
     public int[][] getEdges() {
         return edges;
