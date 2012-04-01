@@ -28,6 +28,7 @@ public interface SimulatorManagerInterface {
     
     // -------------------- SETTERS --------------------------
     public void setPlayerSpeed(int speed);
+    public void setDelayLength(int delay);
     
     public void setPlayerFunctionActivated(SimulatorPlayerCommand simulatorPlayerState);
     public void setConcreteRawSelected(int row);
@@ -52,6 +53,7 @@ public interface SimulatorManagerInterface {
     public boolean isConnectedToServer();
     //
     public int getSimulatorPlayerSpeed();
+    public int getSimulatorDelayLength();
     public boolean isRecording();
     public boolean isPlaying();
     public boolean isRealtime();
