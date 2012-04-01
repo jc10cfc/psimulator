@@ -535,6 +535,24 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
     }
     
+      
+        ////////////////////////////////////////// JMenuItemAboutListener
+    class JMenuItemAboutListener implements ActionListener {
+        /**
+         * Opens about dialog
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            final String ABOUT =
+                "<HTML>" +
+                "<B>"+dataLayer.getString("WINDOW_TITLE")+"</B></BR>" +
+                "<P><BR>"+dataLayer.getString("ABOUT_author")+": <FONT COLOR=\"#0000ff\">Martin Švihlík</FONT></P>" +
+                "<P><BR></P>"+dataLayer.getString("ABOUT_text")+
+                "</HTML>";
+            JOptionPane.showMessageDialog(mainWindow, ABOUT, dataLayer.getString("ABOUT_aboutProgram"), JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
     private void openAction(String filePath){
         // if data can be lost after check
         if (!checkDataLoss()) {
@@ -792,6 +810,12 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         jToolBar.addPreferencesActionListener(preferencesListener);
 
         // END add listeners to Menu Bar - OPTIONS
+        
+        // add listeners to Menu Bar - HELP
+        ActionListener aboutListener = new JMenuItemAboutListener();
+        jMenuBar.addAboutListener(aboutListener);
+        
+        // END add listeners to Menu Bar - HELP
 
         // add listeners to ToolBar editor and simulator toggle buttons
         jToolBar.addSimulatorEditorActionListener(new JMenuItemSimulatorEditorListener());

@@ -144,7 +144,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                         // if delay is set longer than time difference between two events
                         if(currentDelay > time){
                             // set delay
-                            time = currentDelay;
+                            time = currentDelay + time;
                         }
                     }
                     
