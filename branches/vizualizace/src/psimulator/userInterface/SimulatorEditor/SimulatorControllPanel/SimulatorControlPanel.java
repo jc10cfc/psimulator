@@ -15,10 +15,12 @@ import javax.swing.event.ListSelectionListener;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.SimulatorPlayerCommand;
+import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Simulator.ParseSimulatorEventException;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.userInterface.MainWindowInnerInterface;
 
@@ -133,6 +135,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         switch ((ObserverUpdateEventType) o1) {
             case LANGUAGE:
                 setTextsToComponents();
+                break;
+            case ICON_SIZE:
+                updateIconSize(dataLayer.getToolbarIconSize());
                 break;
             case CONNECTION_CONNECTING_FAILED:  // ony during connection establishing
                 if (connectToServerDialog != null) {
@@ -444,11 +449,43 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             @Override
             public void stateChanged(ChangeEvent ce) {
                 // set the speed in model
-                //simulatorManagerInterface.setPlayerSpeed(jSliderPlayerSpeed.getValue());
-                System.out.println("Delay = "+jSliderDelayLength.getValue());
                 simulatorManagerInterface.setDelayLength(jSliderDelayLength.getValue());
             }
         });
+    }
+    
+    /**
+     * Updates images on toolbar buttons according to size
+     * @param size 
+     */
+    public final void updateIconSize(ToolbarIconSizeEnum size){
+        //jButtonFitToSize.setIcon(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.FIT_TO_SIZE, dataLayer.getToolbarIconSize()));
+        //jButtonAlignToGrid.setIcon(ImageFactorySingleton.getInstance().getImageIconForToolbar(SecondaryTool.ALIGN_TO_GRID, dataLayer.getToolbarIconSize()));
+        
+        int imageSize = size.size();
+        if(imageSize>32){
+            imageSize = 32;
+        }
+        
+        String prefix = "/resources/toolbarIcons/"+imageSize+"/";
+
+        jButtonSaveListToFile.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"filesave.png")); // NOI18N
+        jButtonLoadListFromFile.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"folder_blue_open.png")); // NOI18N
+        jButtonConnectToServer.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"kwifimanager.png")); // NOI18N
+        jButtonFirst.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"player_start.png")); // NOI18N
+        jButtonPrevious.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"player_rew.png")); // NOI18N
+        jButtonNext.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"player_fwd.png")); // NOI18N
+        jButtonLast.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"player_next.png")); // NOI18N
+        jToggleButtonPlay.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"player_play.png")); // NOI18N
+        jToggleButtonPlay.setSelectedIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"player_stop.png")); // NOI18N
+        jToggleButtonRealtime.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"realtime_play.png")); // NOI18N
+        jToggleButtonRealtime.setSelectedIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"realtime_stop.png")); // NOI18N
+        jToggleButtonCapture.setIcon(ImageFactorySingleton.getInstance().getImageIcon(prefix+"record_button.png")); // NOI18N
+        jButtonDeleteEvents.setIcon(ImageFactorySingleton.getInstance().getImageIcon("/resources/toolbarIcons/16/trashcan_full.png")); // NOI18N
+    
+        
+        //jLabelConnectionStatusValue.setIcon(ImageFactorySingleton.getInstance().getImageIcon("/resources/toolbarIcons/16/button_cancel.png")); // NOI18N
+        
     }
 
     private void initComponents() {
@@ -494,8 +531,10 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         this.add(Box.createRigidArea(new Dimension(0, 6)), cons);
 
 
-        // end Connect / Save / Load panel
         setTextsToComponents();
+        
+        // update icon size
+        updateIconSize(dataLayer.getToolbarIconSize());
     }
 
     private JPanel createConnectSaveLoadPanel() {
@@ -507,18 +546,15 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelConnectSaveLoadButtons.setLayout(new BoxLayout(jPanelConnectSaveLoadButtons, BoxLayout.X_AXIS));
         //
         jButtonSaveListToFile = new JButton();
-        jButtonSaveListToFile.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/filesave.png"))); // NOI18N
         jButtonSaveListToFile.setHorizontalTextPosition(SwingConstants.CENTER);
         //jButtonSaveListToFile.setRequestFocusEnabled(false);
         jButtonSaveListToFile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         //
         jButtonLoadListFromFile = new JButton();
-        jButtonLoadListFromFile.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/folder_blue_open.png"))); // NOI18N
         jButtonLoadListFromFile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonLoadListFromFile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         //
         jButtonConnectToServer = new JButton();
-        jButtonConnectToServer.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/kwifimanager.png"))); // NOI18N
         jButtonConnectToServer.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonConnectToServer.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         //
@@ -535,7 +571,6 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jLabelConnectionStatusName = new JLabel();
         jLabelConnectionStatusValue = new JLabel();
         jLabelConnectionStatusValue.setFont(new Font("Tahoma", 1, 11)); // NOI18N
-        jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png"))); // NOI18N
         //
         jPanelConnectSaveLoadStatus.add(Box.createRigidArea(new Dimension(10, 0)));
         jPanelConnectSaveLoadStatus.add(jLabelConnectionStatusName);
@@ -559,17 +594,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelPlayControlsPlayButtons.setLayout(new BoxLayout(jPanelPlayControlsPlayButtons, BoxLayout.X_AXIS));
         //
         jButtonFirst = new JButton();
-        jButtonFirst.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_start.png"))); // NOI18N
         jButtonPrevious = new JButton();
-        jButtonPrevious.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_rew.png"))); // NOI18N
         jButtonNext = new JButton();
-        jButtonNext.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_fwd.png"))); // NOI18N
         jButtonLast = new JButton();
-        jButtonLast.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_next.png"))); // NOI18N
         //
         jToggleButtonPlay = new JToggleButton();
-        jToggleButtonPlay.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_play.png"))); // NOI18N
-        jToggleButtonPlay.setSelectedIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/player_stop.png"))); // NOI18N
         //
         jPanelPlayControlsPlayButtons.add(Box.createRigidArea(new Dimension(5, 0)));
         jPanelPlayControlsPlayButtons.add(jButtonFirst);
@@ -647,11 +676,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelPlayControlsRecordButtons.setLayout(new BoxLayout(jPanelPlayControlsRecordButtons, BoxLayout.X_AXIS));
         //
         jToggleButtonCapture = new JToggleButton();
-        jToggleButtonCapture.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/record_button.png"))); // NOI18N
         //
         jToggleButtonRealtime = new JToggleButton();
-        jToggleButtonRealtime.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/realtime_play.png"))); // NOI18N
-        jToggleButtonRealtime.setSelectedIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/realtime_stop.png"))); // NOI18N
         //
         jPanelPlayControlsRecordButtons.add(jToggleButtonCapture);
         jPanelPlayControlsRecordButtons.add(jToggleButtonRealtime);
@@ -693,8 +719,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
         jButtonDeleteEvents = new JButton();
         jButtonDeleteEvents.setAlignmentX(Component.LEFT_ALIGNMENT);
-        jButtonDeleteEvents.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/trashcan_full.png"))); // NOI18N
-
+        
         //jPanelEventListButtons.add(Box.createRigidArea(new Dimension(0, 7)));
         jPanelEventListButtons.add(jButtonDeleteEvents);
         //
@@ -866,7 +891,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
 
     private void updateConnectionInfoAccordingToModel() {
         if (simulatorManagerInterface.isConnectedToServer()) {
-            jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_ok.png"))); // NOI18N
+            jLabelConnectionStatusValue.setIcon(ImageFactorySingleton.getInstance().getImageIcon("/resources/toolbarIcons/16/button_ok.png")); // NOI18N
             jLabelConnectionStatusValue.setText(dataLayer.getString("CONNECTED"));
             //
             jToggleButtonCapture.setEnabled(true);
@@ -875,7 +900,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             jButtonConnectToServer.setText(dataLayer.getString("DISCONNECT_FROM_SERVER"));
             jButtonConnectToServer.setToolTipText(dataLayer.getString("DISCONNECT_FROM_SERVER_TOOL_TIP"));
         } else {
-            jLabelConnectionStatusValue.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/button_cancel.png"))); // NOI18N
+            jLabelConnectionStatusValue.setIcon(ImageFactorySingleton.getInstance().getImageIcon("/resources/toolbarIcons/16/button_cancel.png")); // NOI18N
             jLabelConnectionStatusValue.setText(dataLayer.getString("DISCONNECTED"));
             //
             jToggleButtonCapture.setEnabled(false);
