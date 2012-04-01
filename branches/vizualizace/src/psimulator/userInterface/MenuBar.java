@@ -154,6 +154,7 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuHelp = new JMenu();
         jMenuItemHelp = new JMenuItem();
         jMenuItemAbout = new JMenuItem();
+        jMenuItemAbout.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_INFO_16_PATH));
         jMenuHelp.add(jMenuItemHelp);
         jMenuHelp.addSeparator();
         jMenuHelp.add(jMenuItemAbout);
@@ -419,4 +420,8 @@ public class MenuBar extends JMenuBar implements Observer {
         createRecentFilesJMenu();
     }
     
+    public void addAboutListener(ActionListener listener){
+        jMenuItemAbout.addActionListener(listener);
+    }
+
 }

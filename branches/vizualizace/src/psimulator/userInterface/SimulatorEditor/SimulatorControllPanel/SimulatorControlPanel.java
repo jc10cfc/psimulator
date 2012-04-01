@@ -21,8 +21,8 @@ import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
-import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 import psimulator.userInterface.MainWindowInnerInterface;
+import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
 /**
  *
@@ -619,7 +619,8 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jLabelSpeedName = new JLabel();
         jSliderPlayerSpeed = new JSlider(JSlider.HORIZONTAL, SimulatorManager.SPEED_MIN, SimulatorManager.SPEED_MAX, SimulatorManager.SPEED_INIT);
         jSliderPlayerSpeed.setPaintTicks(true);
-        jSliderPlayerSpeed.setMajorTickSpacing(10);
+        jSliderPlayerSpeed.setMajorTickSpacing(25);
+        jSliderPlayerSpeed.setMinorTickSpacing(5);
         //
         jLabelSliderSlow = new JLabel();
         jLabelSliderMedium = new JLabel();

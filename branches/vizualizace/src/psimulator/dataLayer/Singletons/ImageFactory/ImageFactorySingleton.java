@@ -60,6 +60,7 @@ public class ImageFactorySingleton {
     public static final String ICON_FILESAVE_16_PATH = "/resources/toolbarIcons/16/filesave.png";
     public static final String ICON_FILESAVEAS_16_PATH = "/resources/toolbarIcons/16/filesaveas.png";
     public static final String ICON_TELNET_16_PATH = "/resources/toolbarIcons/16/terminal.png";
+    public static final String ICON_INFO_16_PATH = "/resources/toolbarIcons/16/messagebox_info.png";
     //
     public static final String PACKAGE_PREFIX_PATH = "/resources/toolbarIcons/simulator/packages/";
     //
