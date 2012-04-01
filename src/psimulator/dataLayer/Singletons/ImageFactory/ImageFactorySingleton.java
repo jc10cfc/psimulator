@@ -54,7 +54,6 @@ public class ImageFactorySingleton {
     public static final String ICON_SELECT_ALL_16_PATH = "/resources/toolbarIcons/16/select_all.png";
     public static final String ICON_FIT_TO_SIZE_16_PATH = "/resources/toolbarIcons/16/fit_to_size.png";
     public static final String ICON_STOCK_ALIGNMENT_16_PATH = "/resources/toolbarIcons/16/stock_alignment.png";
-    
     public static final String ICON_FILENEW_16_PATH = "/resources/toolbarIcons/16/filenew.png";
     public static final String ICON_FILECLOSE_16_PATH = "/resources/toolbarIcons/16/fileclose.png";
     public static final String ICON_OPEN_GREEN_16_PATH = "/resources/toolbarIcons/16/folder_green_open.png";
@@ -74,7 +73,7 @@ public class ImageFactorySingleton {
     private ImageFactorySingleton() {
         this.imageBuffer = new ImageBuffer();
         this.bufferedImageLoader = new BufferedImageLoader();
-    
+
         // preload images from file
         preLoadAllImagesFromFiles();
 
@@ -129,8 +128,9 @@ public class ImageFactorySingleton {
 
     /**
      * Gets image icon from path.
+     *
      * @param path
-     * @return 
+     * @return
      */
     public ImageIcon getImageIcon(String path) {
         ImageIcon image = bufferedImageLoader.getImageIcon(path);
@@ -391,11 +391,11 @@ public class ImageFactorySingleton {
      */
     public ImageIcon getImageIconForToolbar(MainTool tool, String path, ToolbarIconSizeEnum size, boolean popup) {
         ImageIcon icon = null;
-        
+
         int iconSize = getIconSizeForEditorToolBar(size, popup);
-        
-        
-        
+
+
+
         if (path == null) {
             icon = getImageIconForToolbar(tool);
         } else {
@@ -410,10 +410,10 @@ public class ImageFactorySingleton {
         return icon;
     }
 
-    private int getIconSizeForEditorToolBar(ToolbarIconSizeEnum size, boolean popup){
+    private int getIconSizeForEditorToolBar(ToolbarIconSizeEnum size, boolean popup) {
         int iconSize;
-        
-        switch(size){
+
+        switch (size) {
             case TINY:
                 iconSize = 22;
                 break;
@@ -428,17 +428,17 @@ public class ImageFactorySingleton {
                 iconSize = 60;
                 break;
         }
-        
-        if(popup){
-            iconSize = iconSize - (int)(iconSize*0.3);
+
+        if (popup) {
+            iconSize = iconSize - (int) (iconSize * 0.3);
         }
-        
+
         return iconSize;
     }
-    
+
     public ImageIcon getImageIconForToolbar(SecondaryTool tool, ToolbarIconSizeEnum size) {
         String path;
-        
+
         int iconSize = getIconSizeForEditorToolBar(size, false);
 
         switch (tool) {

@@ -118,6 +118,9 @@ public class UserInterfaceMainPanel extends UserInterfaceMainPanelOuterInterface
         // add as a simulator observer
         dataLayer.addSimulatorObserver((Observer) jPanelSimulator);
 
+        // add as an icon size observer
+        dataLayer.addPreferencesObserver((Observer) jPanelSimulator);
+        
 
         // ----------- WELCOME STUFF CREATION -----------------------
         // create welcome panel
