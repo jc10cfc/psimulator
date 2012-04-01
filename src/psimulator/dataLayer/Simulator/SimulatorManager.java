@@ -29,6 +29,10 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     public static final int SPEED_MIN = 10;
     public static final int SPEED_MAX = 100;
     public static final int SPEED_INIT = 50;
+    // delay lengths
+    public static final int DELAY_MIN = 0;
+    public static final int DELAY_MAX = 4000;
+    public static final int DELAY_INIT = 1000;
     // simulator state variables
     private volatile boolean isConnectedToServer = false;
     private volatile boolean isRecording = false;
@@ -36,6 +40,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     private volatile boolean isPlaying = false;
     private volatile boolean isSequential = true;
     private volatile int currentSpeed = SPEED_INIT;
+    private volatile int currentDelay = DELAY_INIT;
     //
     //private volatile int currentPositionInList = 0;
     //
@@ -176,6 +181,15 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
         // notify all observers
         setChanged();
         notifyObservers(ObserverUpdateEventType.SIMULATOR_SPEED);
+    }
+    
+    @Override
+    public void setDelayLength(int delay){
+        currentDelay = delay;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.SIMULATOR_DELAY);
     }
 
     @Override
@@ -458,6 +472,11 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     @Override
     public int getSimulatorPlayerSpeed() {
         return currentSpeed;
+    }
+
+    @Override
+    public int getSimulatorDelayLength(){
+        return currentDelay;
     }
 
     @Override

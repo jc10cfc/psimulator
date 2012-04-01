@@ -56,6 +56,11 @@ public class SimulatorControlPanel extends JPanel implements Observer {
     private JToggleButton jToggleButtonRealtime;
     private JRadioButton jRadioButtonPlaySequentially;
     private JRadioButton jRadioButtonPlayByTimestamps;
+    //
+    private JPanel jPanelPlayControlsDelaySlider;
+    private JLabel jLabelDelayName;
+    private JSlider jSliderDelayLength;
+    
     // Event list panel
     private JPanel jPanelEventList;
     private JPanel jPanelEventListTable;
@@ -417,6 +422,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if(jRadioButtonPlaySequentially.isSelected()){
                     simulatorManagerInterface.setPlayingSequentially();
+                    jPanelPlayControlsDelaySlider.setVisible(false);
                 }
             }
         });
@@ -427,10 +433,22 @@ public class SimulatorControlPanel extends JPanel implements Observer {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 if(jRadioButtonPlayByTimestamps.isSelected()){
                     simulatorManagerInterface.setPlayingByTimestamps();
+                    jPanelPlayControlsDelaySlider.setVisible(true);
                 }
             }
         });
         
+        // jSliderPlayerSpeed state change listener
+        jSliderDelayLength.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                // set the speed in model
+                //simulatorManagerInterface.setPlayerSpeed(jSliderPlayerSpeed.getValue());
+                System.out.println("Delay = "+jSliderDelayLength.getValue());
+                simulatorManagerInterface.setDelayLength(jSliderDelayLength.getValue());
+            }
+        });
     }
 
     private void initComponents() {
@@ -607,6 +625,23 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelPlayControlsSlider.add(jPanelPlayType);
         
         //
+        jPanelPlayControlsDelaySlider = new JPanel();
+        jPanelPlayControlsDelaySlider.setLayout(new BoxLayout(jPanelPlayControlsDelaySlider, BoxLayout.X_AXIS));
+        
+        jLabelDelayName = new JLabel();
+        jSliderDelayLength = new JSlider(JSlider.HORIZONTAL, SimulatorManager.DELAY_MIN, SimulatorManager.DELAY_MAX, SimulatorManager.DELAY_INIT);
+        jSliderDelayLength.setPaintTicks(true);
+        jSliderDelayLength.setMajorTickSpacing(500);
+        jSliderDelayLength.setMinorTickSpacing(100);
+        jSliderDelayLength.setPaintLabels(true);
+        
+        jPanelPlayControlsDelaySlider.add(Box.createRigidArea(new Dimension(7, 0)));
+        jPanelPlayControlsDelaySlider.add(jLabelDelayName);
+        jPanelPlayControlsDelaySlider.add(Box.createRigidArea(new Dimension(7, 0)));
+        jPanelPlayControlsDelaySlider.add(jSliderDelayLength);
+        jPanelPlayControlsDelaySlider.add(Box.createRigidArea(new Dimension(7, 0)));
+        
+        jPanelPlayControlsDelaySlider.setVisible(false);
         // Record panel
         jPanelPlayControlsRecordButtons = new JPanel();
         jPanelPlayControlsRecordButtons.setLayout(new BoxLayout(jPanelPlayControlsRecordButtons, BoxLayout.X_AXIS));
@@ -625,6 +660,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jPanelPlayControls.add(jPanelPlayControlsPlayButtons);
         jPanelPlayControls.add(Box.createRigidArea(new Dimension(0, 7)));
         jPanelPlayControls.add(jPanelPlayControlsSlider);
+        jPanelPlayControls.add(jPanelPlayControlsDelaySlider);
         jPanelPlayControls.add(Box.createRigidArea(new Dimension(0, 7)));
         jPanelPlayControls.add(jPanelPlayControlsRecordButtons);
         //
@@ -791,6 +827,9 @@ public class SimulatorControlPanel extends JPanel implements Observer {
         jButtonNext.setToolTipText(dataLayer.getString("SKIP_TO_NEXT_EVENT"));
         jButtonPrevious.setToolTipText(dataLayer.getString("SKIP_TO_PREV_EVENT"));
         jToggleButtonPlay.setToolTipText(dataLayer.getString("START_STOP_PLAYING"));
+        //
+        jLabelDelayName.setText(dataLayer.getString("DELAY_COLON"));
+        jSliderDelayLength.setToolTipText(dataLayer.getString("DELAY_CONTROL"));
         //
         jRadioButtonPlaySequentially.setText(dataLayer.getString("SEQUENTIALLY"));
         jRadioButtonPlayByTimestamps.setText(dataLayer.getString("ACCORDING_TO_TIMESTAMPS"));

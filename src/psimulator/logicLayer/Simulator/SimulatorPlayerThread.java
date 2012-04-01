@@ -22,6 +22,7 @@ public class SimulatorPlayerThread implements Runnable, Observer {
     private SimulatorManagerInterface simulatorManagerInterface;
     //
     private volatile int currentSpeed;
+    private volatile int currentDelay;
     private volatile boolean isPlaying;
     private volatile boolean isRealtime;
     //
@@ -34,6 +35,9 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
         // set speed according to model
         currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
+        
+        // set delay according to model
+        currentDelay = simulatorManagerInterface.getSimulatorDelayLength();
 
         // getn animation panel
         animationPanelOuterInterface = view.getAnimationPanelOuterInterface();
@@ -127,13 +131,20 @@ public class SimulatorPlayerThread implements Runnable, Observer {
                             
                             // calculate sleep time
                             int newTime = calculateSleepTimePlayingByTimestamps(timestampCurrent, timestampNext);
-                            
+
                             // if new sleep time is not too long
                             if(newTime < 5000){
                                 time = newTime;
                             }else{
                                 time = 5000;
                             }
+                        }
+                        
+                                                    
+                        // if delay is set longer than time difference between two events
+                        if(currentDelay > time){
+                            // set delay
+                            time = currentDelay;
                         }
                     }
                     
@@ -203,6 +214,10 @@ public class SimulatorPlayerThread implements Runnable, Observer {
 
             case SIMULATOR_SPEED:
                 currentSpeed = simulatorManagerInterface.getSimulatorPlayerSpeed();
+                // do not interrupt
+                return;
+            case SIMULATOR_DELAY:
+                currentDelay = simulatorManagerInterface.getSimulatorDelayLength();
                 // do not interrupt
                 return;
             case SIMULATOR_NEW_PACKET:
