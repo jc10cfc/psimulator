@@ -12,10 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -97,7 +93,8 @@ public class ArchiveFileSystem implements FileSystem {
 
     @Override
     public boolean exists(String path) {
-        return new TFile(path).exists();
+        
+        return new TFile(pathToFileSystem+path).exists();
     }
 
     @Override
