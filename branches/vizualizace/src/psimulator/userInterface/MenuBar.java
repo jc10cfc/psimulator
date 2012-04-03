@@ -299,6 +299,7 @@ public class MenuBar extends JMenuBar implements Observer {
             JMenuItem jMenuItem = new JMenuItem(file.getName());
             jMenuItem.setIcon(new ImageIcon(getClass().getResource("/resources/toolbarIcons/16/xml.png")));
             jMenuItem.setActionCommand(file.getAbsolutePath());
+            jMenuItem.setToolTipText(file.getAbsolutePath());
             jMenuItem.addActionListener(openRecentFileListener);
             jMenuRecentlyOpened.add(jMenuItem);
         }        
