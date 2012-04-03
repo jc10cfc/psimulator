@@ -29,6 +29,7 @@
     <tocitem text="3. Pokročilé funkce" image="chapter" > 
         <tocitem text="Automatické rozmístění" target="item301" image="topic" />
         <tocitem text="Telnet přístup k virtuálním zařízením" target="item302" image="topic" />
+        <tocitem text="Přidání nového jazyka" target="item303" image="topic" />
     </tocitem>
 
 </tocitem>
