@@ -22,6 +22,7 @@
 
    <mapID target="item301" url="topics/tutorial/3_advanced/advanced_features.html" />
    <mapID target="item302" url="topics/tutorial/3_advanced/telnet.html" />
+   <mapID target="item303" url="topics/tutorial/3_advanced/adding_new_language.html" />
 
    <mapID target="item401" url="topics/PSImulatorUI.html" />
 
