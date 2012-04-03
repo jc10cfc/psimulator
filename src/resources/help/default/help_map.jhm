@@ -25,4 +25,5 @@
 
    <mapID target="item401" url="topics/PSImulatorUI.html" />
 
+   <mapID target="image001" url="../images/window_icon.png" />
 </map>
