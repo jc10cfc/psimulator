@@ -2,10 +2,7 @@ package psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
+import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.MainWindowInnerInterface;
@@ -121,6 +118,8 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
             
             final JFrame frame = de.mud.jta.Main.run(args);
 
+            frame.setIconImage(new ImageIcon(getClass().getResource(ImageFactorySingleton.ICON_TERMINAL_32_PATH)).getImage());
+            
             if(frame == null){
                 System.out.println("Nastala chyba, okno telnetu se nepodařilo vytvořit");
                 return;

@@ -41,7 +41,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private boolean viewDeviceNames = true;
     private boolean viewDeviceTypes = true;
     private boolean viewInterfaceNames = true;
-    private boolean viewCableDelay = false;
+    private boolean viewCableDelay = true;
     private boolean viewIpAddresses = true;
     private boolean viewMacAddresses = true;
     //

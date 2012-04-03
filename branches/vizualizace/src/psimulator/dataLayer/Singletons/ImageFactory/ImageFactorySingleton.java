@@ -25,6 +25,7 @@ public class ImageFactorySingleton {
     public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
     //
     public static final String ICON_HOME_48_PATH = "/resources/toolbarIcons/48/home.png";
+    public static final String ICON_TERMINAL_32_PATH = "/resources/toolbarIcons/32/terminal.png";
     //
     public static final String TOOL_DRAG_MOVE_PATH = "/resources/toolbarIcons/editor_toolbar/move.png";
     public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";

@@ -29,6 +29,7 @@
 
   <presentation default="true">
       <size width="800" height="600" />
+      <image>image001</image>
   </presentation>
 
 </helpset>
