@@ -197,6 +197,7 @@ public class MenuBar extends JMenuBar implements Observer {
         jMenuOptions.setMnemonic('O');
         jMenuItemPreferences.setAccelerator(KeyStroke.getKeyStroke('P', ActionEvent.CTRL_MASK));
         
+        jMenuHelp.setMnemonic('H');
         jMenuItemHelp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1,0));
     }
 
