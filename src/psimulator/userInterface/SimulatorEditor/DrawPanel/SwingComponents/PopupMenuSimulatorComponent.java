@@ -24,6 +24,9 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
     //
     private JMenuItem jItemComponentProperties;
     private JMenuItem jItemOpenTelnet;
+    
+    // menu item dousent support telnet
+    private JMenuItem jItemNoTelnet;
 
     public PopupMenuSimulatorComponent(MainWindowInnerInterface mainWindow, DrawPanelInnerInterface drawPanel, DataLayerFacade dataLayer, HwComponentGraphic hwComponentGraphics) {
         this.dataLayer = dataLayer;
@@ -35,7 +38,26 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
     }
 
     private void initComponents() {
-        //jItemComponentProperties = new JMenuItem(dataLayer.getString("PROPERTIES"));
+
+        // add menu items for device
+        switch(hwComponentGraphics.getHwType()){
+            case END_DEVICE_NOTEBOOK:
+            case END_DEVICE_PC:
+            case END_DEVICE_WORKSTATION:
+            case LINUX_ROUTER:
+            case CISCO_ROUTER:
+                addOpenTelnetMenuItem();
+                break;
+            default:
+                addDoesntSupportTelentMenuItem();
+                break;
+        }
+    }
+    
+    /**
+     * Adds telnet menu item to this
+     */
+    private void addOpenTelnetMenuItem(){
         jItemOpenTelnet = new JMenuItem(dataLayer.getString("OPEN_TELNET"));
 
         jItemOpenTelnet.addActionListener(new JMenuItemOpenTelnetListener());
@@ -43,6 +65,14 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
         jItemOpenTelnet.setIcon(ImageFactorySingleton.getInstance().getImageIcon(ImageFactorySingleton.ICON_TELNET_16_PATH));
         
         this.add(jItemOpenTelnet);
+    }
+    
+    private void addDoesntSupportTelentMenuItem(){
+        jItemNoTelnet = new JMenuItem();
+        jItemNoTelnet.setEnabled(false);
+        jItemNoTelnet.setText(dataLayer.getString("NO_TELNET"));
+        
+        this.add(jItemNoTelnet);
     }
     
     /**
@@ -163,22 +193,6 @@ public class PopupMenuSimulatorComponent extends JPopupMenu {
             frame.setResizable(false);
             frame.setVisible(true);
 
-        }
-    }
-    
-    
-    /**
-     * Action Listener for Properties button
-     */
-    class JMenuItemPropertiesListener implements ActionListener {
-
-        /**
-         *
-         */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // open properties window
-            HwComponentProperties hwComponentProperties = new HwComponentProperties(mainWindow.getMainWindowComponent(), dataLayer, drawPanel, hwComponentGraphics);
         }
     }
 }
