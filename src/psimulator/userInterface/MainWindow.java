@@ -585,6 +585,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
 
         if (networkModel == null) {
+            this.setCursor(tmpCursor);
             return;
         }
 
