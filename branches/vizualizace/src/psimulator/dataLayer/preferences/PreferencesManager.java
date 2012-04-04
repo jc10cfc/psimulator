@@ -31,6 +31,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private static final String CONNECTION_PORT = "CONNECTION_PORT";
     //
     private static final String RECENTLY_OPENED_FILES = "RECENTLY_OPENED_FILES";
+    private static final String RECENTLY_OPENED_DIRECTORY = "RECENTLY_OPENED_DIRECTORY";
     // 
     private Preferences prefs;
     // set to default
@@ -48,6 +49,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private String connectionIpAddress = "127.0.0.1";
     private String connectionPort = "12000";
     private String recentlyOpenedFiles = "";
+    private String recentlyOpenedDirectory = "";
     //
     private RecentOpenedFilesManager recentOpenedFilesManager;
     //
@@ -84,6 +86,9 @@ public final class PreferencesManager extends Observable implements SaveableInte
         recentlyOpenedFiles = recentOpenedFilesManager.createStringFromFiles();
         
         prefs.put(RECENTLY_OPENED_FILES, recentlyOpenedFiles);
+        
+        // save last directory
+        prefs.put(RECENTLY_OPENED_DIRECTORY, recentlyOpenedDirectory);
     }
 
     @Override
@@ -111,6 +116,9 @@ public final class PreferencesManager extends Observable implements SaveableInte
         
         // clear non existing files
         recentOpenedFilesManager.clearNotExistingFiles();
+        
+        // load last directory
+        recentlyOpenedDirectory = prefs.get(RECENTLY_OPENED_DIRECTORY,  recentlyOpenedDirectory);
     }
 
     // GETTERS AND SETTERS
@@ -249,4 +257,24 @@ public final class PreferencesManager extends Observable implements SaveableInte
         setChanged();
         notifyObservers(ObserverUpdateEventType.RECENT_OPENED_FILES_CHANGED);
     }
+    
+    public void setRecentlyOpenedDirectory(File file){
+        recentlyOpenedDirectory = file.getAbsolutePath();
+    }
+    
+    public File getRecentOpenedDirectory(){
+        if(recentlyOpenedDirectory.equals("")){
+            return null;
+        }
+        
+        File file = new File(recentlyOpenedDirectory);
+        
+        if(file.exists() && file.isDirectory() && file.canRead() && file.canWrite()){
+            return file;
+        }
+        
+        return null;
+    }
+    
+    
 }

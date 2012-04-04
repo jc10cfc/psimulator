@@ -276,4 +276,14 @@ public class DataLayer extends DataLayerFacade {
     public TelnetConfig getTelnetConfig() {
         return telnetConfig;
     }
+
+    @Override
+    public void setRecentlyOpenedDirectory(File file) {
+        preferencesManager.setRecentlyOpenedDirectory(file);
+    }
+
+    @Override
+    public File getRecentOpenedDirectory() {
+        return preferencesManager.getRecentOpenedDirectory();
+    }
 }

@@ -1,6 +1,7 @@
 package psimulator.userInterface.SaveLoad;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -134,10 +135,19 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
     }
 
     private NetworkModel open() throws SaveLoadException {
+        File recentDir = dataLayer.getRecentOpenedDirectory();
+        if(recentDir != null){
+            fileChooser.setCurrentDirectory(recentDir);
+        }
+        
         int returnVal = fileChooser.showOpenDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
+
+            // save current directory
+            recentDir = fileChooser.getCurrentDirectory();
+            dataLayer.setRecentlyOpenedDirectory(recentDir);
 
             return open(selctedFile);
         }
@@ -145,6 +155,10 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
     }
 
     private NetworkModel open(File fileToOpen) throws SaveLoadException {
+        // set wait cursor
+        parentComponent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            
+        
         // load network model
         NetworkModel networkModel = dataLayer.loadNetworkModelFromFile(fileToOpen);
 
@@ -168,10 +182,19 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
      * @throws SaveLoadException
      */
     private boolean saveAs() throws SaveLoadException {
+        File recentDir = dataLayer.getRecentOpenedDirectory();
+        if(recentDir != null){
+            fileChooser.setCurrentDirectory(recentDir);
+        }
+        
         int returnVal = fileChooser.showSaveDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
+            
+            // save current directory
+            recentDir = fileChooser.getCurrentDirectory();
+            dataLayer.setRecentlyOpenedDirectory(recentDir);
 
             // check if overwrite
             if (selctedFile.exists()) {
@@ -201,6 +224,9 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
     }
 
     private void save(File file) throws SaveLoadException {
+        // set wait cursor
+        parentComponent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        
         // save graph
         //dataLayer.saveGraphToFile(graph, file);
         dataLayer.saveNetworkModelToFile(file);
