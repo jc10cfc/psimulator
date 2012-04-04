@@ -44,6 +44,9 @@ public interface PreferencesInterface {
     public void addPreferencesObserver(Observer observer);
     public void deletePreferencesObserver(Observer observer);
     
-     public List<File> getRecentOpenedFiles();
-     public void addRecentOpenedFile(File file);
+    public List<File> getRecentOpenedFiles();
+    public void addRecentOpenedFile(File file);
+     
+    public void setRecentlyOpenedDirectory(File file);
+    public File getRecentOpenedDirectory();
 }

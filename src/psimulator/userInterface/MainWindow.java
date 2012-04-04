@@ -2,6 +2,7 @@ package psimulator.userInterface;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -233,6 +234,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
     
     private boolean saveEventsAndInformAboutSuccess(SimulatorEventsWrapper simulatorEventsWrapper){
+        // save old cursor
+        Cursor tmpCursor = this.getCursor();
+        
         boolean success = saveLoadManagerEvents.doSaveAsEventsAction(simulatorEventsWrapper);
 
         if (success) {
@@ -242,6 +246,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     addAnnouncement(dataLayer.getString("EVENT_LIST_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
         }
         
+        this.setCursor(tmpCursor);
         return success;
     }
 
@@ -253,6 +258,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     @Override
     public SimulatorEventsWrapper loadEventsAction() {
+        // save old cursor
+        Cursor tmpCursor = this.getCursor();
+        
         SimulatorEventsWrapper simulatorEventsWrapper = saveLoadManagerEvents.doLoadEventsAction();
 
         if (simulatorEventsWrapper != null) {
@@ -262,6 +270,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     addAnnouncement(dataLayer.getString("EVENT_LIST_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
         }
 
+        this.setCursor(tmpCursor);
         return simulatorEventsWrapper;
     }
     
@@ -559,6 +568,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             return;
         }
 
+        // save old cursor
+        Cursor tmpCursor = this.getCursor();
+        
         // turn off playing recording and etc
         jPanelUserInterfaceMain.stopSimulatorActivities();
 
@@ -576,6 +588,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             return;
         }
 
+        // set wait cursor
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    
         // create graph from model
         Graph graph = saveLoadManagerGraph.buildGraphFromNetworkModel(networkModel);
 
@@ -591,6 +606,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
             GlassPanelPainterSingleton.getInstance().
                     addAnnouncement(dataLayer.getString("NETWORK_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
         }
+        
+        this.setCursor(tmpCursor);
     }
 
 /////////////////////-----------------------------------////////////////////
@@ -605,6 +622,9 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         @Override
         public void actionPerformed(ActionEvent e) {
             //System.out.println("LISTENER Save");
+            // save old cursor
+            Cursor tmpCursor = mainWindow.getCursor();
+            
             boolean success = saveLoadManagerGraph.doSaveGraphAction();
 
             // inform user
@@ -613,6 +633,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 GlassPanelPainterSingleton.getInstance().
                         addAnnouncement(dataLayer.getString("NETWORK_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
             }
+            
+            mainWindow.setCursor(tmpCursor);
         }
     }
 
@@ -627,6 +649,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
+            Cursor tmpCursor = mainWindow.getCursor();
+            
             //System.out.println("LISTENER Save As");
             boolean success = saveLoadManagerGraph.doSaveAsGraphAction();
 
@@ -636,6 +660,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                 GlassPanelPainterSingleton.getInstance().
                         addAnnouncement(dataLayer.getString("NETWORK_SAVE_AS_ACTION"), dataLayer.getString("SAVED_TO"), file);
             }
+            
+            mainWindow.setCursor(tmpCursor);
         }
     }
 

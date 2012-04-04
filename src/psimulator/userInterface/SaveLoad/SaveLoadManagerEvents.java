@@ -1,6 +1,7 @@
 package psimulator.userInterface.SaveLoad;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -46,11 +47,23 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
     
     
     private SimulatorEventsWrapper load() throws SaveLoadException {
+        File recentDir = dataLayer.getRecentOpenedDirectory();
+        if(recentDir != null){
+            fileChooser.setCurrentDirectory(recentDir);
+        }
+        
         int returnVal = fileChooser.showOpenDialog(parentComponent);
 
+        // save current directory
+        recentDir = fileChooser.getCurrentDirectory();
+        dataLayer.setRecentlyOpenedDirectory(recentDir);
+        
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
-
+            
+            // set wait cursor
+            parentComponent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            
             // load events from file
             SimulatorEventsWrapper simulatorEvents= dataLayer.loadEventsFromFile(selctedFile);
 
@@ -69,11 +82,20 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
      * Returns true if success
      */
     private boolean saveAsEvents(SimulatorEventsWrapper simulatorEvents) throws SaveLoadException {
+        File recentDir = dataLayer.getRecentOpenedDirectory();
+        if(recentDir != null){
+            fileChooser.setCurrentDirectory(recentDir);
+        }
+        
         int returnVal = fileChooser.showSaveDialog(parentComponent);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
 
+            // save current directory
+            recentDir = fileChooser.getCurrentDirectory();
+            dataLayer.setRecentlyOpenedDirectory(recentDir);
+            
             // check if overwrite
             if (selctedFile.exists()) {
                 int i = showWarningPossibleOverwriteDialog(dataLayer.getString("WINDOW_TITLE"), dataLayer.getString("DO_YOU_WANT_TO_OVERWRITE"));
@@ -102,6 +124,9 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
     }
     
     private void saveEvents(File file, SimulatorEventsWrapper simulatorEvents) throws SaveLoadException {
+        // set wait cursor
+        parentComponent.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        
         // save events
         dataLayer.saveEventsToFile(simulatorEvents, file);
 
