@@ -213,9 +213,9 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
         for (EthInterfaceModel eth : ethInterfaces) {
             interfacesMap.put(eth.getId(), eth);
         }
-
+        
     }
-
+    
     @Override
     public HwTypeEnum getHwType() {
         return hwType;
@@ -242,5 +242,42 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
 
     public void setDevSettings(DeviceSettings devSettings) {
         this.devSettings = devSettings;
+    }
+    
+        /**
+     * Removes interface with specified ID
+     * @param id 
+     */
+    public void removeInterface(EthInterfaceModel eth){
+        interfacesMap.remove(eth.getId());
+    }
+
+    /**
+     * Adds interface in parameter to interfaces map
+     * @param eth 
+     */
+    public void addInterface(EthInterfaceModel eth){
+        interfacesMap.put(eth.getId(), eth);
+    }
+    
+    /**
+     * Returns minimum interface count for component
+     * @return 
+     */
+    public int getMinInterfaceCount(){
+        switch(hwType){
+            case CISCO_ROUTER:
+            case CISCO_SWITCH:
+            case LINUX_ROUTER:
+            case LINUX_SWITCH:
+                return 2;
+            case END_DEVICE_NOTEBOOK:
+            case END_DEVICE_PC:
+            case END_DEVICE_WORKSTATION:
+            case REAL_PC:
+                return 1;
+            default:
+                return 0;
+        }
     }
 }
