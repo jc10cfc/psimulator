@@ -58,9 +58,26 @@ public class GeneratorSingleton {
      * @return List with generated names.
      */
     public List<String> getInterfaceNames(HwTypeEnum hwType, int count) {
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
 
         int counter = 0;
+
+        for (int i = 0; i < count; i++) {
+            String name = getInterfaceName(hwType, counter);
+            names.add(name);
+            counter++;
+        }
+
+        return names;
+    }
+    
+    /**
+     * Creates single interface name according to hwType and sequence number.
+     * @param hwType HwType for wich the name is generated.
+     * @param sequence Sequence number of interface
+     * @return Generated interface name
+     */
+    public String getInterfaceName(HwTypeEnum hwType, int sequence){
         String prefix = "";
         String suffix = "";
 
@@ -81,13 +98,8 @@ public class GeneratorSingleton {
                 // this should never happen
                 System.err.println("error in GeneratorSingleton2");
         }
-
-        for (int i = 0; i < count; i++) {
-            names.add(prefix + counter + suffix);
-            counter++;
-        }
-
-        return names;
+        
+        return (prefix + sequence + suffix);
     }
 
     /**

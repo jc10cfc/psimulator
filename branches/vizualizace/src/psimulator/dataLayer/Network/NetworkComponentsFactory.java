@@ -72,7 +72,7 @@ public class NetworkComponentsFactory {
         List<String> ethInterfaceNames = GeneratorSingleton.getInstance().getInterfaceNames(hwType, interfacesCount);
 
         // create interfaces
-        List<EthInterfaceModel> ethInterfaces = new ArrayList<EthInterfaceModel>();
+        List<EthInterfaceModel> ethInterfaces = new ArrayList<>();
 
         for (int i = 0; i < interfacesCount; i++) {
             ethInterfaces.add(createEthInterface(ethInterfaceNames.get(i), hwType));
@@ -132,5 +132,23 @@ public class NetworkComponentsFactory {
         EthInterfaceModel ethInterfaceModel = new EthInterfaceModel(interfaceId, hwType, hwComponentModel, cable, ipAddress, macAddress, interfaceName, isUp);
 
         return ethInterfaceModel;
+    }
+    
+    /**
+     * Creates next eth interface for component
+     * @param component
+     * @return 
+     */
+    public EthInterfaceModel createNextEthInterface(HwComponentModel component, int sequence){
+        HwTypeEnum hwType = component.getHwType();
+        // generate interface name
+        String interfaceName = GeneratorSingleton.getInstance().getInterfaceName(hwType, sequence);
+        
+        // create interface
+        EthInterfaceModel ethInterface = createEthInterface(interfaceName, hwType);
+        
+        // Component is NOT SET to interface, will be set when it is really added to component
+        
+        return ethInterface;
     }
 }

@@ -74,7 +74,24 @@ public final class HwComponentGraphic extends AbstractComponentGraphic {
     public Integer getId() {
         return hwComponentModel.getId();
     }
-
+    
+    /**
+     * Adds new interface to the component
+     */
+    public void addInterface(EthInterfaceModel ethInterface){
+        // add interface
+        hwComponentModel.addInterface(ethInterface);
+    }
+    
+    /**
+     * Removes last interface from component if interface does not have cable and has more
+     * interfaces than minimum
+     */
+    public void removeInterface(EthInterfaceModel ethInterface){
+        // remove interface
+        getHwComponentModel().removeInterface(ethInterface);    
+    }
+    
     /**
      * Changes position by offset in parameter adding it to default zoom
      *

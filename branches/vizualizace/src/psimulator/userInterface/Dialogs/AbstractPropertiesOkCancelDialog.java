@@ -37,7 +37,7 @@ public abstract class AbstractPropertiesOkCancelDialog extends AbstractPropertie
         return mainPanel;
     }
 
-    private JPanel createOkCancelPanel() {
+    public JPanel createOkCancelPanel() {
         JPanel buttonPane = new JPanel();
 
         jButtonOk = new JButton(dataLayer.getString("SAVE"));
@@ -67,7 +67,7 @@ public abstract class AbstractPropertiesOkCancelDialog extends AbstractPropertie
     /**
      * Action Listener for JComboBoxInterface
      */
-    class JButtonOkListener implements ActionListener {
+    public class JButtonOkListener implements ActionListener {
 
         /**
          *

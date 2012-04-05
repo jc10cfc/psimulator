@@ -13,6 +13,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterfac
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.InterfacesTable.InterfacesTableModel;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.InterfacesTable.JInterfacesTable;
+import shared.Components.EthInterfaceModel;
 
 /**
  *
@@ -27,6 +28,8 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
      */
     private JFormattedTextField jTextFieldDeviceName;
 
+    private JButton jButtonAddInterface;
+    private JButton jButtonRemoveInterface;
     /*
      * END of window components
      */
@@ -34,6 +37,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
     private boolean showAddresses = true;
     private boolean showInterfaces = true;
     private boolean viewUniqueId = true;
+    private boolean allowInterfaceCountChange = true;
     //
     private String deviceName;
     //
@@ -57,15 +61,18 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
             case CISCO_ROUTER:
                 showAddresses = true;
                 showInterfaces = true;
+                allowInterfaceCountChange = true;
                 break;
             case LINUX_SWITCH:
             case CISCO_SWITCH:
                 showAddresses = false;
                 showInterfaces = true;
+                allowInterfaceCountChange = true;
                 break;
             case REAL_PC:
                 showAddresses = false;
                 showInterfaces = false;
+                allowInterfaceCountChange = false;
                 break;
             default:
                 System.err.println("HwComponentProperties error1");
@@ -313,6 +320,41 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
     }
 
     @Override
+    public JPanel createOkCancelPanel() {
+        JPanel buttonPane = new JPanel();
+
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+        buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
+        
+        if(allowInterfaceCountChange){
+            jButtonAddInterface = new JButton(dataLayer.getString("ADD_INTERFACE"));
+            jButtonAddInterface.addActionListener(new JButtonAddInterfaceListener());
+            jButtonAddInterface.setToolTipText(dataLayer.getString("ADDS_INTERFACE_TO_LIST_END"));
+            buttonPane.add(jButtonAddInterface);
+            
+            jButtonRemoveInterface = new JButton(dataLayer.getString("REMOVE_INTERFACE"));
+            jButtonRemoveInterface.addActionListener(new JButtonRemoveInterfaceListener());
+            jButtonRemoveInterface.setToolTipText(dataLayer.getString("REMOVES_LAST_INTERFACE_FROM_LIST"));
+            buttonPane.add(jButtonRemoveInterface);
+        }
+        
+        jButtonOk = new JButton(dataLayer.getString("SAVE"));
+        jButtonOk.addActionListener(new AbstractPropertiesOkCancelDialog.JButtonOkListener());
+
+        jButtonCancel = new JButton(dataLayer.getString("CANCEL"));
+        jButtonCancel.addActionListener(new JButtonCancelListener());
+
+        buttonPane.add(Box.createHorizontalGlue());
+        buttonPane.add(jButtonOk);
+        buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
+        buttonPane.add(jButtonCancel);
+        buttonPane.add(Box.createRigidArea(new Dimension(3, 0)));
+
+        return buttonPane;
+    }
+    
+
+    @Override
     protected void windowClosing() {
         jButtonCancel.requestFocusInWindow();
 
@@ -332,5 +374,84 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         public void actionPerformed(ActionEvent e) {
             copyValuesFromFieldsToLocal();
         }
+    }
+    
+    /////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for JComboBoxInterface
+     */
+    class JButtonAddInterfaceListener implements ActionListener {
+
+        /**
+         *
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            EthInterfaceModel ethInterface = dataLayer.getNetworkFacade().createEthInterface(abstractHwComponent.getHwComponentModel(), tableInterfacesModel.getRowCount());
+            
+            // add interface to table
+            tableInterfacesModel.addInterface(ethInterface);
+        }
+    }
+    
+    /////////////////////-----------------------------------////////////////////
+    /**
+     * Action Listener for JComboBoxInterface
+     */
+    class JButtonRemoveInterfaceListener implements ActionListener {
+
+        /**
+         *
+         */
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // get index of interface that should be removed
+            int index = tableInterfacesModel.getRowCount()-1;
+            // get id of interface
+            int id = tableInterfacesModel.getEthInterfaceId(index);
+            
+            // try to get eth interface from model, it can return null when interface not found
+            EthInterfaceModel ethInterface = abstractHwComponent.getHwComponentModel().getEthInterface(id);
+            
+            boolean hasCable = false;
+            
+            // if not null, find out if is connected to cable
+            if(ethInterface != null){
+                hasCable = ethInterface.hasCable();
+            }
+
+            if(tableInterfacesModel.getRowCount() <= abstractHwComponent.getHwComponentModel().getMinInterfaceCount()){
+                // inform user that no more interfaces can be removed
+                showWarningDialog(dataLayer.getString("WARNING"), dataLayer.getString("NO_MORE_INTERFACES_CAN_BE_REMOVED"));
+                
+                return;
+            }
+            
+            if(hasCable){
+                // inform user that remove is not possible when cable connected
+                showWarningDialog(dataLayer.getString("WARNING"), dataLayer.getString("INTERFACE_WITH_CABLE_CANT_BE_REMOVED"));
+                
+                return;
+            }
+            
+            if(ethInterface != null){
+                // remove interface from component later
+                tableInterfacesModel.removeInterface(ethInterface);
+            }else{
+                // do not remove from component later, just remove it from added interface, because
+                //      it was added
+                tableInterfacesModel.removeInterface();
+            }
+
+            //
+            return;
+        }
+    }
+    
+    
+    private void showWarningDialog(String title, String message) {
+        //custom title, warning icon
+        JOptionPane.showMessageDialog(this,
+                message, title, JOptionPane.WARNING_MESSAGE);
     }
 }
