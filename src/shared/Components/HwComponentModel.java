@@ -1,11 +1,11 @@
 package shared.Components;
 
-import shared.Components.simulatorConfig.DeviceSettings;
 import java.util.*;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlTransient;
+import shared.Components.simulatorConfig.DeviceSettings;
 
 /**
  *
@@ -250,6 +250,9 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
      */
     public void removeInterface(EthInterfaceModel eth){
         interfacesMap.remove(eth.getId());
+        
+        // unbind eth interface and component
+        eth.setHwComponent(null);
     }
 
     /**
@@ -257,6 +260,9 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
      * @param eth 
      */
     public void addInterface(EthInterfaceModel eth){
+        // bind eth interface and component together
+        eth.setHwComponent(this);
+        
         interfacesMap.put(eth.getId(), eth);
     }
     
