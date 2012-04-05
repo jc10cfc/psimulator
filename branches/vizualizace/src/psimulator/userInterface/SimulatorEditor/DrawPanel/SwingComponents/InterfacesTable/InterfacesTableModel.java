@@ -104,7 +104,7 @@ public class InterfacesTableModel extends AbstractTableModel {
 
         // ADD NEW INTERFACE TO DATA ARRAY 
         int i = data.length - 1;
-        
+
         // add interface to array
         addInterfaceToArray(data, i, ethInterface);
 
@@ -146,18 +146,19 @@ public class InterfacesTableModel extends AbstractTableModel {
 
     /**
      * Gets ID of ethInterface at row position
+     *
      * @param row
-     * @return 
+     * @return
      */
-    public int getEthInterfaceId(int row){
-        return (Integer)(data[row][columnNames.length]);
+    public int getEthInterfaceId(int row) {
+        return (Integer) (data[row][columnNames.length]);
     }
-    
+
     public boolean hasChangesMade() {
         if (!addedInterfaces.isEmpty()) {
             return true;
         }
-        
+
         if (!removedInterfaces.isEmpty()) {
             return true;
         }
@@ -185,22 +186,21 @@ public class InterfacesTableModel extends AbstractTableModel {
     }
 
     public void copyValuesFromLocalToGlobal() {
+        // add added interfaces to model
+        if (!addedInterfaces.isEmpty()) {
+            for (EthInterfaceModel ethInterface : addedInterfaces) {
+                abstractHwComponent.addInterface(ethInterface);
+            }
+        }
+
+        // remove removed interfaces from model
+        if (!removedInterfaces.isEmpty()) {
+            for (EthInterfaceModel ethInterface : removedInterfaces) {
+                abstractHwComponent.removeInterface(ethInterface);
+            }
+        }
+
         if (showAddresses) {
-            // add added interfaces to model
-            if (!addedInterfaces.isEmpty()) {
-                for (EthInterfaceModel ethInterface : addedInterfaces) {
-                    abstractHwComponent.addInterface(ethInterface);
-                }
-            }
-
-            // remove removed interfaces from model
-            if (!removedInterfaces.isEmpty()) {
-                for (EthInterfaceModel ethInterface : removedInterfaces) {
-                    abstractHwComponent.removeInterface(ethInterface);
-                }
-            }
-
-
             for (int i = 0; i < getRowCount(); i++) {
                 // save IS UP
                 abstractHwComponent.getInterfaces().get(i).setIsUp((boolean) getValueAt(i, 3));
@@ -248,14 +248,14 @@ public class InterfacesTableModel extends AbstractTableModel {
 
             // fill MAC addresses
             array[i][5] = ethInterface.getMacAddress();
-            
+
             // fill ID
         }
-        
+
         // fill ID in the last slot
         array[i][columnNames.length] = ethInterface.getId().intValue();
-        
-        
+
+
     }
 
     private Object[][] copyRowsToNewArray(Object[][] old, int rowsNumberOfNewArray, int rowsNumberToCopy) {
