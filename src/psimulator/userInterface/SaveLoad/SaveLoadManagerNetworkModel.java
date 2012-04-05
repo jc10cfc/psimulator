@@ -205,6 +205,10 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
                 if (i == JOptionPane.OK_OPTION) {
                     // save
                     save(selctedFile);
+                    
+                    // add to recently opened
+                    dataLayer.addRecentOpenedFile(file);
+                    
                     return true;
                 }
 
@@ -218,6 +222,10 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
             } else {
                 // save
                 save(selctedFile);
+                
+                // add to recently opened
+                dataLayer.addRecentOpenedFile(file);
+                    
                 return true;
             }
         }
