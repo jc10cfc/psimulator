@@ -139,10 +139,8 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         abstractHwComponent.setDeviceName(deviceName);
 
         // if interfaces has addreses than save addreses
-        if (showAddresses) {
-            tableInterfacesModel.copyValuesFromLocalToGlobal();
-        }
-
+        tableInterfacesModel.copyValuesFromLocalToGlobal();
+        
         // fire edit happend on graph
         drawPanel.getGraphOuterInterface().editHappend();
     }
@@ -166,10 +164,8 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
             return true;
         }
 
-        if (showAddresses) {
-            if(tableInterfacesModel.hasChangesMade()){
-                return true;
-            }
+        if(tableInterfacesModel.hasChangesMade()){
+            return true;
         }
 
         return false;
@@ -438,8 +434,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
                 // remove interface from component later
                 tableInterfacesModel.removeInterface(ethInterface);
             }else{
-                // do not remove from component later, just remove it from added interface, because
-                //      it was added
+                // do not remove from component later, just remove it from added interface, because it was added
                 tableInterfacesModel.removeInterface();
             }
 
