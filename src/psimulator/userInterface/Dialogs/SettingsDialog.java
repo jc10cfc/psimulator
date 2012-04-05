@@ -7,7 +7,7 @@ import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
-import psimulator.dataLayer.interfaces.ViewDetailsType;
+import psimulator.dataLayer.Enums.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.RegexFormatter;

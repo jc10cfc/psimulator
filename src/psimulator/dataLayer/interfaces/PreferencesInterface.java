@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
+import psimulator.dataLayer.Enums.RecentlyOpenedDirectoryType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Enums.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
@@ -36,7 +38,7 @@ public interface PreferencesInterface {
     
     public List<File> getRecentOpenedFiles();
     public void addRecentOpenedFile(File file);
-     
-    public void setRecentlyOpenedDirectory(File file);
-    public File getRecentOpenedDirectory();
+    
+    public void setRecentDirectory(RecentlyOpenedDirectoryType directoryType, File file);
+    public File getRecentDirectory(RecentlyOpenedDirectoryType directoryType);
 }

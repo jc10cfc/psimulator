@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.RecentlyOpenedDirectoryType;
 import shared.Serializer.SaveLoadException;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
 
@@ -47,7 +48,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
     
     
     private SimulatorEventsWrapper load() throws SaveLoadException {
-        File recentDir = dataLayer.getRecentOpenedDirectory();
+        File recentDir = dataLayer.getRecentDirectory(RecentlyOpenedDirectoryType.EVENTS_DIR);
         if(recentDir != null){
             fileChooser.setCurrentDirectory(recentDir);
         }
@@ -56,7 +57,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
 
         // save current directory
         recentDir = fileChooser.getCurrentDirectory();
-        dataLayer.setRecentlyOpenedDirectory(recentDir);
+        dataLayer.setRecentDirectory(RecentlyOpenedDirectoryType.EVENTS_DIR, recentDir);
         
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File selctedFile = fileChooser.getSelectedFile();
@@ -82,7 +83,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
      * Returns true if success
      */
     private boolean saveAsEvents(SimulatorEventsWrapper simulatorEvents) throws SaveLoadException {
-        File recentDir = dataLayer.getRecentOpenedDirectory();
+        File recentDir = dataLayer.getRecentDirectory(RecentlyOpenedDirectoryType.EVENTS_DIR);
         if(recentDir != null){
             fileChooser.setCurrentDirectory(recentDir);
         }
@@ -94,7 +95,7 @@ public class SaveLoadManagerEvents extends AbstractSaveLoadManager{
 
             // save current directory
             recentDir = fileChooser.getCurrentDirectory();
-            dataLayer.setRecentlyOpenedDirectory(recentDir);
+            dataLayer.setRecentDirectory(RecentlyOpenedDirectoryType.EVENTS_DIR, recentDir);
             
             // check if overwrite
             if (selctedFile.exists()) {

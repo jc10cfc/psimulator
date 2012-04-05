@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Enums.RecentlyOpenedDirectoryType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder.GraphBuilderFacade;
 import shared.Components.NetworkModel;
@@ -135,7 +136,7 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
     }
 
     private NetworkModel open() throws SaveLoadException {
-        File recentDir = dataLayer.getRecentOpenedDirectory();
+        File recentDir = dataLayer.getRecentDirectory(RecentlyOpenedDirectoryType.NETWORKS_DIR);
         if(recentDir != null){
             fileChooser.setCurrentDirectory(recentDir);
         }
@@ -147,7 +148,7 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
 
             // save current directory
             recentDir = fileChooser.getCurrentDirectory();
-            dataLayer.setRecentlyOpenedDirectory(recentDir);
+            dataLayer.setRecentDirectory(RecentlyOpenedDirectoryType.NETWORKS_DIR, recentDir);
 
             return open(selctedFile);
         }
@@ -182,7 +183,7 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
      * @throws SaveLoadException
      */
     private boolean saveAs() throws SaveLoadException {
-        File recentDir = dataLayer.getRecentOpenedDirectory();
+        File recentDir = dataLayer.getRecentDirectory(RecentlyOpenedDirectoryType.NETWORKS_DIR);
         if(recentDir != null){
             fileChooser.setCurrentDirectory(recentDir);
         }
@@ -194,7 +195,7 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
             
             // save current directory
             recentDir = fileChooser.getCurrentDirectory();
-            dataLayer.setRecentlyOpenedDirectory(recentDir);
+            dataLayer.setRecentDirectory(RecentlyOpenedDirectoryType.NETWORKS_DIR, recentDir);
 
             // check if overwrite
             if (selctedFile.exists()) {

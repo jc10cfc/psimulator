@@ -4,13 +4,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Observer;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
+import psimulator.dataLayer.Enums.RecentlyOpenedDirectoryType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Enums.ViewDetailsType;
 import psimulator.dataLayer.Network.NetworkFacade;
 import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
@@ -219,16 +220,6 @@ public class DataLayer extends DataLayerFacade {
     }
 
     @Override
-    public void setRecentlyOpenedDirectory(File file) {
-        preferencesManager.setRecentlyOpenedDirectory(file);
-    }
-
-    @Override
-    public File getRecentOpenedDirectory() {
-        return preferencesManager.getRecentOpenedDirectory();
-    }
-
-    @Override
     public void setViewDetails(ViewDetailsType viewDetailsType, boolean value) {
         preferencesManager.setViewDetails(viewDetailsType, value);
     }
@@ -236,5 +227,15 @@ public class DataLayer extends DataLayerFacade {
     @Override
     public boolean isViewDetails(ViewDetailsType viewDetailsType) {
         return preferencesManager.isViewDetails(viewDetailsType);
+    }
+
+    @Override
+    public void setRecentDirectory(RecentlyOpenedDirectoryType directoryType, File file) {
+        preferencesManager.setRecentDirectory(directoryType, file);
+    }
+
+    @Override
+    public File getRecentDirectory(RecentlyOpenedDirectoryType directoryType) {
+        return preferencesManager.getRecentDirectory(directoryType);
     }
 }

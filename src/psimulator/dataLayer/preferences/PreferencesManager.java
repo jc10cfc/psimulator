@@ -4,11 +4,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Observable;
 import java.util.prefs.Preferences;
-import psimulator.dataLayer.Enums.LevelOfDetailsMode;
-import psimulator.dataLayer.Enums.ObserverUpdateEventType;
-import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.Enums.*;
 import psimulator.dataLayer.interfaces.SaveableInterface;
-import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
@@ -34,7 +31,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private static final String CONNECTION_PORT = "CONNECTION_PORT";
     //
     private static final String RECENTLY_OPENED_FILES = "RECENTLY_OPENED_FILES";
-    private static final String RECENTLY_OPENED_DIRECTORY = "RECENTLY_OPENED_DIRECTORY";
+    private static final String RECENTLY_OPENED_NETWORK_DIR = "RECENTLY_OPENED_NETWORK_DIR";
+    private static final String RECENTLY_OPENED_EVENT_DIR = "RECENTLY_OPENED_EVENT_DIR";
     // 
     private Preferences prefs;
     // set to default
@@ -54,19 +52,21 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private String connectionIpAddress = "127.0.0.1";
     private String connectionPort = "12000";
     private String recentlyOpenedFiles = "";
-    private String recentlyOpenedDirectory = "";
+    private String recentlyOpenedNetworkDir = "";
+    private String recentlyOpenedEventDir = "";
     //
     private RecentOpenedFilesManager recentOpenedFilesManager;
     //
+
     public PreferencesManager() {
         // initialize preferences store
         prefs = Preferences.userNodeForPackage(this.getClass());
-        
+
         // create recent opened files manager
         recentOpenedFilesManager = new RecentOpenedFilesManager();
-        
+
         // load preferences
-        loadPreferences();    
+        loadPreferences();
     }
 
     @Override
@@ -83,19 +83,20 @@ public final class PreferencesManager extends Observable implements SaveableInte
         prefs.putBoolean(VIEW_MAC_ADDRESSES, viewMacAddresses);
 
         prefs.putBoolean(VIEW_NETWORK_BOUNDS, viewNetworkBounds);
-        
+
         prefs.put(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString());
 
         prefs.put(CONNECTION_IP_ADDRESS, connectionIpAddress);
         prefs.put(CONNECTION_PORT, connectionPort);
-        
+
         // get string with filenames from recentOpenedFilesManager
         recentlyOpenedFiles = recentOpenedFilesManager.createStringFromFiles();
-        
+
         prefs.put(RECENTLY_OPENED_FILES, recentlyOpenedFiles);
-        
+
         // save last directory
-        prefs.put(RECENTLY_OPENED_DIRECTORY, recentlyOpenedDirectory);
+        prefs.put(RECENTLY_OPENED_NETWORK_DIR, recentlyOpenedNetworkDir);
+        prefs.put(RECENTLY_OPENED_EVENT_DIR, recentlyOpenedEventDir);
     }
 
     @Override
@@ -112,22 +113,23 @@ public final class PreferencesManager extends Observable implements SaveableInte
         viewMacAddresses = prefs.getBoolean(VIEW_MAC_ADDRESSES, viewMacAddresses);
 
         viewNetworkBounds = prefs.getBoolean(VIEW_NETWORK_BOUNDS, viewNetworkBounds);
-        
+
         levelOfDetails = LevelOfDetailsMode.valueOf(prefs.get(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString()));
-        
+
         connectionIpAddress = prefs.get(CONNECTION_IP_ADDRESS, connectionIpAddress);
         connectionPort = prefs.get(CONNECTION_PORT, connectionPort);
-        
+
         recentlyOpenedFiles = prefs.get(RECENTLY_OPENED_FILES, recentlyOpenedFiles);
-        
+
         // let Recent opened files manager parse the saved files
         recentOpenedFilesManager.parseFilesFromString(recentlyOpenedFiles);
-        
+
         // clear non existing files
         recentOpenedFilesManager.clearNotExistingFiles();
-        
+
         // load last directory
-        recentlyOpenedDirectory = prefs.get(RECENTLY_OPENED_DIRECTORY,  recentlyOpenedDirectory);
+        recentlyOpenedNetworkDir = prefs.get(RECENTLY_OPENED_NETWORK_DIR, recentlyOpenedNetworkDir);
+        recentlyOpenedEventDir = prefs.get(RECENTLY_OPENED_EVENT_DIR, recentlyOpenedEventDir);
     }
 
     // GETTERS AND SETTERS
@@ -245,7 +247,7 @@ public final class PreferencesManager extends Observable implements SaveableInte
 
     public void setViewNetworkBounds(boolean viewNetworkBounds) {
         this.viewNetworkBounds = viewNetworkBounds;
-        
+
         // notify all observers
         setChanged();
         notifyObservers(ObserverUpdateEventType.NETWORK_BOUNDS);
@@ -266,40 +268,71 @@ public final class PreferencesManager extends Observable implements SaveableInte
     public void setConnectionPort(String connectionPort) {
         this.connectionPort = connectionPort;
     }
-    
-    public List<File> getRecentOpenedFiles(){
+
+    public List<File> getRecentOpenedFiles() {
         return recentOpenedFilesManager.getRecentOpenedFiles();
     }
-    
-    public void addRecentOpenedFile(File file){
+
+    public void addRecentOpenedFile(File file) {
         recentOpenedFilesManager.addFile(file);
-        
+
         // notify all observers
         setChanged();
         notifyObservers(ObserverUpdateEventType.RECENT_OPENED_FILES_CHANGED);
     }
-    
-    public void setRecentlyOpenedDirectory(File file){
-        recentlyOpenedDirectory = file.getAbsolutePath();
+
+    /**
+     * Saves directory of type into preferences
+     * @param directoryType
+     * @param file 
+     */
+    public void setRecentDirectory(RecentlyOpenedDirectoryType directoryType, File file) {
+        switch (directoryType) {
+            case NETWORKS_DIR:
+                recentlyOpenedNetworkDir = file.getAbsolutePath();
+                break;
+            case EVENTS_DIR:
+                recentlyOpenedEventDir = file.getAbsolutePath();
+                break;
+            default:
+                break;
+        }
+
     }
-    
-    public File getRecentOpenedDirectory(){
-        if(recentlyOpenedDirectory.equals("")){
-            return null;
+
+    /**
+     * Gets recent  directory of directoryType from preferences
+     * @param directoryType
+     * @return directory File, or NULL if file does not exist....
+     */
+    public File getRecentDirectory(RecentlyOpenedDirectoryType directoryType) {
+        File file = null;
+        switch (directoryType) {
+            case NETWORKS_DIR:
+                if (recentlyOpenedNetworkDir.equals("")) {
+                    return null;
+                }
+                file = new File(recentlyOpenedNetworkDir);
+                break;
+            case EVENTS_DIR:
+                if (recentlyOpenedEventDir.equals("")) {
+                    return null;
+                }
+                file = new File(recentlyOpenedEventDir);
+                break;
+            default:
+                break;
         }
         
-        File file = new File(recentlyOpenedDirectory);
-        
-        if(file.exists() && file.isDirectory() && file.canRead() && file.canWrite()){
+        if (file.exists() && file.isDirectory() && file.canRead() && file.canWrite()) {
             return file;
         }
-        
+
         return null;
     }
-    
-    
-    public boolean isViewDetails(ViewDetailsType viewDetailsType){
-        switch(viewDetailsType){
+
+    public boolean isViewDetails(ViewDetailsType viewDetailsType) {
+        switch (viewDetailsType) {
             case CABLE_DELAYS:
                 return viewCableDelay;
             case DEVICE_NAMES:
@@ -318,9 +351,9 @@ public final class PreferencesManager extends Observable implements SaveableInte
                 return false;
         }
     }
-    
-    public void setViewDetails(ViewDetailsType viewDetailsType, boolean value){
-        switch(viewDetailsType){
+
+    public void setViewDetails(ViewDetailsType viewDetailsType, boolean value) {
+        switch (viewDetailsType) {
             case CABLE_DELAYS:
                 viewCableDelay = value;
                 break;
@@ -346,6 +379,4 @@ public final class PreferencesManager extends Observable implements SaveableInte
                 break;
         }
     }
-    
-    
 }

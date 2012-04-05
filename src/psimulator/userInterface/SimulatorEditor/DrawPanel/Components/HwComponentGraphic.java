@@ -12,7 +12,7 @@ import shared.Components.HwComponentModel;
 import shared.Components.HwTypeEnum;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.dataLayer.interfaces.ViewDetailsType;
+import psimulator.dataLayer.Enums.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
 /**
