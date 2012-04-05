@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
@@ -24,7 +22,6 @@ import psimulator.userInterface.SaveLoad.SaveLoadManagerEvents;
 import psimulator.userInterface.SaveLoad.SaveLoadManagerNetworkModel;
 import psimulator.userInterface.SaveLoad.SaveLoadManagerUserReaction;
 import psimulator.userInterface.SimulatorEditor.AnimationPanel.AnimationPanelOuterInterface;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.UndoRedo;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.Zoom;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.Graph;
@@ -57,6 +54,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     private JFrame mainWindow;
     private MainWindowGlassPane glassPane;
+    private Cursor defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
     //
     //private Map<Integer, JFrame> openedTelnetWindows;
     
@@ -115,10 +113,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     public void initView(ControllerFacade controller) {
         this.controller = controller;
 
-
-        // set translated texts to file chooser
-        //setTextsToFileChooser();
-
         updateProjectRelatedButtons();
 
         updateToolBarIconsSize(dataLayer.getToolbarIconSize());
@@ -132,8 +126,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
                 // if data can be lost after check
                 if (!checkDataLoss()) {
+                    mainWindow.setCursor(defaultCursor);
                     return;
                 }
+                mainWindow.setCursor(defaultCursor);
                 
                 refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
 
@@ -234,9 +230,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     }
     
     private boolean saveEventsAndInformAboutSuccess(SimulatorEventsWrapper simulatorEventsWrapper){
-        // save old cursor
-        Cursor tmpCursor = this.getCursor();
-        
         boolean success = saveLoadManagerEvents.doSaveAsEventsAction(simulatorEventsWrapper);
 
         if (success) {
@@ -246,7 +239,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     addAnnouncement(dataLayer.getString("EVENT_LIST_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
         }
         
-        this.setCursor(tmpCursor);
+        this.setCursor(defaultCursor);
         return success;
     }
 
@@ -258,9 +251,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
      */
     @Override
     public SimulatorEventsWrapper loadEventsAction() {
-        // save old cursor
-        Cursor tmpCursor = this.getCursor();
-        
         SimulatorEventsWrapper simulatorEventsWrapper = saveLoadManagerEvents.doLoadEventsAction();
 
         if (simulatorEventsWrapper != null) {
@@ -270,30 +260,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     addAnnouncement(dataLayer.getString("EVENT_LIST_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
         }
 
-        this.setCursor(tmpCursor);
+        this.setCursor(defaultCursor);
         return simulatorEventsWrapper;
     }
-    
-//    @Override
-//    public void removeTelnetWindow(Integer key) {
-//        openedTelnetWindows.remove(key);
-//    }
-//
-//    @Override
-//    public void addTelnetWindow(Integer key, JFrame frame) {
-//        openedTelnetWindows.put(key, frame);
-//    }
-//
-//    @Override
-//    public boolean hasTelnetWindow(Integer key) {
-//        return openedTelnetWindows.containsKey(key);
-//    }
-//
-//    @Override
-//    public JFrame getTelnetWindow(Integer key) {
-//        return openedTelnetWindows.get(key);
-//    }
-    
+
     /////////////////////-----------------------------------////////////////////
     /**
      * Action Listener for Undo and Redo button
@@ -473,8 +443,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             // if data can be lost after check
             if (!checkDataLoss()) {
+                mainWindow.setCursor(defaultCursor);
                 return;
             }
+            mainWindow.setCursor(defaultCursor);
 
             // create new network model
             NetworkModel networkModel = dataLayer.getNetworkFacade().createNetworkModel();
@@ -504,8 +476,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         public void actionPerformed(ActionEvent e) {
             // if data can be lost after check
             if (!checkDataLoss()) {
+                mainWindow.setCursor(defaultCursor);
                 return;
             }
+            mainWindow.setCursor(defaultCursor);
 
             // turn off playing recording and etc
             //jPanelUserInterfaceMain.stopSimulatorActivities();
@@ -565,11 +539,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
     private void openAction(String filePath){
         // if data can be lost after check
         if (!checkDataLoss()) {
+            this.setCursor(defaultCursor);
             return;
         }
-
-        // save old cursor
-        Cursor tmpCursor = this.getCursor();
+        mainWindow.setCursor(defaultCursor);
         
         // turn off playing recording and etc
         jPanelUserInterfaceMain.stopSimulatorActivities();
@@ -585,7 +558,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         }
 
         if (networkModel == null) {
-            this.setCursor(tmpCursor);
+            this.setCursor(defaultCursor);
             return;
         }
 
@@ -608,7 +581,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                     addAnnouncement(dataLayer.getString("NETWORK_OPEN_ACTION"), dataLayer.getString("OPENED_FROM"), file);
         }
         
-        this.setCursor(tmpCursor);
+        this.setCursor(defaultCursor);
     }
 
 /////////////////////-----------------------------------////////////////////
@@ -622,10 +595,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            //System.out.println("LISTENER Save");
-            // save old cursor
-            Cursor tmpCursor = mainWindow.getCursor();
-            
             boolean success = saveLoadManagerGraph.doSaveGraphAction();
 
             // inform user
@@ -635,7 +604,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                         addAnnouncement(dataLayer.getString("NETWORK_SAVE_ACTION"), dataLayer.getString("SAVED_TO"), file);
             }
             
-            mainWindow.setCursor(tmpCursor);
+            mainWindow.setCursor(defaultCursor);
         }
     }
 
@@ -650,9 +619,6 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
          */
         @Override
         public void actionPerformed(ActionEvent e) {
-            Cursor tmpCursor = mainWindow.getCursor();
-            
-            //System.out.println("LISTENER Save As");
             boolean success = saveLoadManagerGraph.doSaveAsGraphAction();
 
             // inform user
@@ -662,7 +628,7 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
                         addAnnouncement(dataLayer.getString("NETWORK_SAVE_AS_ACTION"), dataLayer.getString("SAVED_TO"), file);
             }
             
-            mainWindow.setCursor(tmpCursor);
+            mainWindow.setCursor(defaultCursor);
         }
     }
 
@@ -680,8 +646,10 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
 
             // if data can be lost after check
             if (!checkDataLoss()) {
+                mainWindow.setCursor(defaultCursor);
                 return;
             }
+            mainWindow.setCursor(defaultCursor);
 
             refreshUserInterfaceMainPanel(null, null, UserInterfaceMainPanelState.WELCOME, false);
 
