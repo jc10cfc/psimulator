@@ -330,7 +330,7 @@ public class Graph extends JComponent implements GraphOuterInterface, GraphBuild
 
         // remove cable from hash map
         cablesMap.remove(cable.getId().intValue());
-
+        
         // remove cable from network
         networkFacade.removeCable(cable.getCableModel());
 
@@ -379,7 +379,7 @@ public class Graph extends JComponent implements GraphOuterInterface, GraphBuild
     }
 
     @Override
-    public void removeHwComponent(HwComponentGraphic component) {
+    public void removeHwComponent(HwComponentGraphic component) {       
         //components.remove(component);
         Collection<HwComponentGraphic> colection = componentsMap.values();
         colection.remove(component);

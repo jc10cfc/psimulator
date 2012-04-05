@@ -8,6 +8,7 @@ import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.interfaces.SaveableInterface;
+import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 
 /**
@@ -27,6 +28,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private static final String VIEW_MAC_ADDRESSES = "VIEW_MAC_ADDRESSES";
     private static final String AUTO_LEVEL_OF_DETAILS = "AUTO_LEVEL_OF_DETAILS";
     //
+    private static final String VIEW_NETWORK_BOUNDS = "VIEW_NETWORK_BOUNDS";
+    //
     private static final String CONNECTION_IP_ADDRESS = "CONNECTION_IP_ADDRESS";
     private static final String CONNECTION_PORT = "CONNECTION_PORT";
     //
@@ -45,6 +48,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
     private boolean viewCableDelay = true;
     private boolean viewIpAddresses = true;
     private boolean viewMacAddresses = true;
+    //
+    private boolean viewNetworkBounds = false;
     //
     private String connectionIpAddress = "127.0.0.1";
     private String connectionPort = "12000";
@@ -77,6 +82,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
         prefs.putBoolean(VIEW_IP_ADDRESSES, viewIpAddresses);
         prefs.putBoolean(VIEW_MAC_ADDRESSES, viewMacAddresses);
 
+        prefs.putBoolean(VIEW_NETWORK_BOUNDS, viewNetworkBounds);
+        
         prefs.put(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString());
 
         prefs.put(CONNECTION_IP_ADDRESS, connectionIpAddress);
@@ -104,6 +111,8 @@ public final class PreferencesManager extends Observable implements SaveableInte
         viewIpAddresses = prefs.getBoolean(VIEW_IP_ADDRESSES, viewIpAddresses);
         viewMacAddresses = prefs.getBoolean(VIEW_MAC_ADDRESSES, viewMacAddresses);
 
+        viewNetworkBounds = prefs.getBoolean(VIEW_NETWORK_BOUNDS, viewNetworkBounds);
+        
         levelOfDetails = LevelOfDetailsMode.valueOf(prefs.get(AUTO_LEVEL_OF_DETAILS, levelOfDetails.toString()));
         
         connectionIpAddress = prefs.get(CONNECTION_IP_ADDRESS, connectionIpAddress);
@@ -230,6 +239,18 @@ public final class PreferencesManager extends Observable implements SaveableInte
         notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
     }
 
+    public boolean isViewNetworkBounds() {
+        return viewNetworkBounds;
+    }
+
+    public void setViewNetworkBounds(boolean viewNetworkBounds) {
+        this.viewNetworkBounds = viewNetworkBounds;
+        
+        // notify all observers
+        setChanged();
+        notifyObservers(ObserverUpdateEventType.NETWORK_BOUNDS);
+    }
+
     public String getConnectionIpAddress() {
         return connectionIpAddress;
     }
@@ -274,6 +295,56 @@ public final class PreferencesManager extends Observable implements SaveableInte
         }
         
         return null;
+    }
+    
+    
+    public boolean isViewDetails(ViewDetailsType viewDetailsType){
+        switch(viewDetailsType){
+            case CABLE_DELAYS:
+                return viewCableDelay;
+            case DEVICE_NAMES:
+                return viewDeviceNames;
+            case DEVICE_TYPES:
+                return viewDeviceTypes;
+            case INTERFACE_NAMES:
+                return viewInterfaceNames;
+            case IP_ADDRESS:
+                return viewIpAddresses;
+            case MAC_ADDRESS:
+                return viewMacAddresses;
+            case NETWORK_BOUNDS:
+                return viewNetworkBounds;
+            default:
+                return false;
+        }
+    }
+    
+    public void setViewDetails(ViewDetailsType viewDetailsType, boolean value){
+        switch(viewDetailsType){
+            case CABLE_DELAYS:
+                viewCableDelay = value;
+                break;
+            case DEVICE_NAMES:
+                viewDeviceNames = value;
+                break;
+            case DEVICE_TYPES:
+                viewDeviceTypes = value;
+                break;
+            case INTERFACE_NAMES:
+                viewInterfaceNames = value;
+                break;
+            case IP_ADDRESS:
+                viewIpAddresses = value;
+                break;
+            case MAC_ADDRESS:
+                viewMacAddresses = value;
+                break;
+            case NETWORK_BOUNDS:
+                viewNetworkBounds = value;
+                break;
+            default:
+                break;
+        }
     }
     
     

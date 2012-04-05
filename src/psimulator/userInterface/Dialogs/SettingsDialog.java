@@ -7,6 +7,7 @@ import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
+import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.RegexFormatter;
@@ -36,6 +37,9 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
     private JRadioButton jRadioButtonManualLOD;
     private JRadioButton jRadioButtonAutoLOD;
     //
+    private JCheckBox jCheckBoxNetworkBounds;
+    
+    //
     private JRadioButton envelopePacketIconButton;
     private JRadioButton classicPacketIconButton;
     private JRadioButton carPacketIconButton;
@@ -61,6 +65,8 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
     private boolean viewCableDelay;
     private boolean viewIpAddresses;
     private boolean viewMacAddresses;
+    //
+    private boolean viewNetworkBounds;
     //
     private LevelOfDetailsMode levelOfDetails;
     //
@@ -95,12 +101,14 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         toolbarIconSize = dataLayer.getToolbarIconSize();
         packetImageType = dataLayer.getPackageImageType();
         //
-        viewDeviceNames = dataLayer.isViewDeviceNames();
-        viewDeviceTypes = dataLayer.isViewDeviceTypes();
-        viewInterfaceNames = dataLayer.isViewInterfaceNames();
-        viewCableDelay = dataLayer.isViewCableDelay();
-        viewIpAddresses = dataLayer.isViewIpAddresses();
-        viewMacAddresses = dataLayer.isViewMacAddresses();
+        viewDeviceNames = dataLayer.isViewDetails(ViewDetailsType.DEVICE_NAMES);
+        viewDeviceTypes = dataLayer.isViewDetails(ViewDetailsType.DEVICE_TYPES);
+        viewInterfaceNames = dataLayer.isViewDetails(ViewDetailsType.INTERFACE_NAMES);
+        viewCableDelay = dataLayer.isViewDetails(ViewDetailsType.CABLE_DELAYS);
+        viewIpAddresses = dataLayer.isViewDetails(ViewDetailsType.IP_ADDRESS);
+        viewMacAddresses = dataLayer.isViewDetails(ViewDetailsType.MAC_ADDRESS);
+        viewNetworkBounds = dataLayer.isViewDetails(ViewDetailsType.NETWORK_BOUNDS);
+        //
         levelOfDetails = dataLayer.getLevelOfDetails();
         //
         connectionIpAddress = dataLayer.getConnectionIpAddress();
@@ -117,6 +125,7 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         viewCableDelay = jCheckBoxCableDelay.isSelected();
         viewIpAddresses = jCheckBoxIpAddresses.isSelected();
         viewMacAddresses = jCheckBoxMacAddresses.isSelected();
+        viewNetworkBounds = jCheckBoxNetworkBounds.isSelected();
         //
         
         connectionIpAddress = jTextFieldPsimulatorIpAddress.getText();
@@ -129,12 +138,14 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         dataLayer.setToolbarIconSize(toolbarIconSize);
         dataLayer.setPackageImageType(packetImageType);
         //
-        dataLayer.setViewDeviceNames(viewDeviceNames);
-        dataLayer.setViewDeviceTypes(viewDeviceTypes);
-        dataLayer.setViewInterfaceNames(viewInterfaceNames);
-        dataLayer.setViewCableDelay(viewCableDelay);
-        dataLayer.setViewIpAddresses(viewIpAddresses);
-        dataLayer.setViewMacAddresses(viewMacAddresses);
+        dataLayer.setViewDetails(ViewDetailsType.DEVICE_NAMES, viewDeviceNames);
+        dataLayer.setViewDetails(ViewDetailsType.DEVICE_TYPES, viewDeviceTypes);
+        dataLayer.setViewDetails(ViewDetailsType.INTERFACE_NAMES, viewInterfaceNames);
+        dataLayer.setViewDetails(ViewDetailsType.CABLE_DELAYS, viewCableDelay);
+        dataLayer.setViewDetails(ViewDetailsType.IP_ADDRESS, viewIpAddresses);
+        dataLayer.setViewDetails(ViewDetailsType.MAC_ADDRESS, viewMacAddresses);
+        dataLayer.setViewDetails(ViewDetailsType.NETWORK_BOUNDS, viewNetworkBounds);
+        //
         dataLayer.setLevelOfDetails(levelOfDetails);
         //
         dataLayer.setConnectionIpAddress(connectionIpAddress);
@@ -158,27 +169,31 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
             return true;
         }
 
-        if (viewDeviceNames != dataLayer.isViewDeviceNames()) {
+        if (viewDeviceNames != dataLayer.isViewDetails(ViewDetailsType.DEVICE_NAMES)) {
             return true;
         }
 
-        if (viewDeviceTypes != dataLayer.isViewDeviceTypes()) {
+        if (viewDeviceTypes != dataLayer.isViewDetails(ViewDetailsType.DEVICE_TYPES)) {
             return true;
         }
 
-        if (viewInterfaceNames != dataLayer.isViewInterfaceNames()) {
+        if (viewInterfaceNames != dataLayer.isViewDetails(ViewDetailsType.INTERFACE_NAMES)) {
             return true;
         }
 
-        if (viewCableDelay != dataLayer.isViewCableDelay()) {
+        if (viewCableDelay != dataLayer.isViewDetails(ViewDetailsType.CABLE_DELAYS)) {
             return true;
         }
 
-        if (viewIpAddresses != dataLayer.isViewIpAddresses()) {
+        if (viewIpAddresses != dataLayer.isViewDetails(ViewDetailsType.IP_ADDRESS)) {
             return true;
         }
 
-        if (viewMacAddresses != dataLayer.isViewMacAddresses()) {
+        if (viewMacAddresses != dataLayer.isViewDetails(ViewDetailsType.MAC_ADDRESS)) {
+            return true;
+        }
+        
+        if (viewNetworkBounds != dataLayer.isViewDetails(ViewDetailsType.NETWORK_BOUNDS)) {
             return true;
         }
 
@@ -227,6 +242,8 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
 
         tabbedPane.addTab(dataLayer.getString("SIMULATOR"), new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/exec.png")), createCardSimulator());
 
+        tabbedPane.addTab(dataLayer.getString("EDITOR"), new ImageIcon(getClass().getResource("/resources/toolbarIcons/32/editor.png")), createCardEditor());
+        
         mainPanel.add(tabbedPane);
 
         return mainPanel;
@@ -537,6 +554,36 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
         return addressesPanel;
     }
 
+    private JPanel createCardEditor(){
+        JPanel card = new JPanel();
+
+        card.add(createNetworkBoundsPanel());
+        
+        card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
+
+        card.add(Box.createRigidArea(new Dimension(0, 250)));
+
+        return card;
+    }
+    
+    private JPanel createNetworkBoundsPanel(){
+        JPanel displayPanel = new JPanel();
+        displayPanel.setBorder(BorderFactory.createTitledBorder(dataLayer.getString("DETAILS")));
+        
+        // set layout
+        GridLayout displayPanelLayout = new GridLayout(0, 2);
+        displayPanelLayout.setHgap(10);
+        displayPanel.setLayout(displayPanelLayout);
+        
+        // network bounds
+        jCheckBoxNetworkBounds = new JCheckBox(dataLayer.getString("NETWORK_BOUNDS"));
+        jCheckBoxNetworkBounds.setAlignmentX(Component.LEFT_ALIGNMENT);
+        jCheckBoxNetworkBounds.setSelected(viewNetworkBounds);
+        displayPanel.add(jCheckBoxNetworkBounds);
+        
+        return displayPanel;
+    }
+    
     private void setIconSize() {
         // set icon size
         switch (toolbarIconSize) {

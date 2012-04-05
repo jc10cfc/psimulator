@@ -26,12 +26,16 @@ public class UndoableAddCable extends AbstractUndoableEdit {
     @Override
     public void undo() {
       super.undo();
+      graph.doUnmarkAllComponents();
+      
       graph.removeCable(cable);
     }
 
     @Override
     public void redo() {
       super.redo();
+      graph.doUnmarkAllComponents();
+      
       graph.addCable(cable);
     }
 }

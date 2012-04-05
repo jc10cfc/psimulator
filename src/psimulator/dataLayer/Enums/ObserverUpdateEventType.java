@@ -8,6 +8,7 @@ public enum ObserverUpdateEventType {
     GRAPH_SIZE_CHANGED,             // when Graph size is changed
     GRAPH_COMPONENT_CHANGED,        //
     
+    NETWORK_BOUNDS,                 // when network bounds display boolean changed
     VIEW_DETAILS,                   // when view details changed
     LANGUAGE,                       // when language changed
     ICON_SIZE,                      // when icon size changed

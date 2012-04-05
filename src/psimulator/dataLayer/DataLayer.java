@@ -10,6 +10,7 @@ import psimulator.dataLayer.Simulator.SimulatorManager;
 import psimulator.dataLayer.Simulator.SimulatorManagerInterface;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.dataLayer.language.LanguageManager;
 import psimulator.dataLayer.preferences.PreferencesManager;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
@@ -153,36 +154,6 @@ public class DataLayer extends DataLayerFacade {
     }
 
     @Override
-    public boolean isViewDeviceNames() {
-        return preferencesManager.isViewDeviceNames();
-    }
-
-    @Override
-    public void setViewDeviceNames(boolean viewDeviceNames) {
-        preferencesManager.setViewDeviceNames(viewDeviceNames);
-    }
-
-    @Override
-    public boolean isViewDeviceTypes() {
-        return preferencesManager.isViewDeviceTypes();
-    }
-
-    @Override
-    public void setViewDeviceTypes(boolean viewDeviceTypes) {
-        preferencesManager.setViewDeviceTypes(viewDeviceTypes);
-    }
-
-    @Override
-    public boolean isViewInterfaceNames() {
-        return preferencesManager.isViewInterfaceNames();
-    }
-
-    @Override
-    public void setViewInterfaceNames(boolean viewInterfaceNames) {
-        preferencesManager.setViewInterfaceNames(viewInterfaceNames);
-    }
-
-    @Override
     public LevelOfDetailsMode getLevelOfDetails() {
         return preferencesManager.getLevelOfDetails();
     }
@@ -190,36 +161,6 @@ public class DataLayer extends DataLayerFacade {
     @Override
     public void setLevelOfDetails(LevelOfDetailsMode levelOfDetails) {
         preferencesManager.setLevelOfDetails(levelOfDetails);
-    }
-
-    @Override
-    public boolean isViewCableDelay() {
-        return preferencesManager.isViewCableDelay();
-    }
-
-    @Override
-    public void setViewCableDelay(boolean viewCableDelay) {
-        preferencesManager.setViewCableDelay(viewCableDelay);
-    }
-
-    @Override
-    public boolean isViewIpAddresses() {
-        return preferencesManager.isViewIpAddresses();
-    }
-
-    @Override
-    public void setViewIpAddresses(boolean viewIpAddresses) {
-        preferencesManager.setViewIpAddresses(viewIpAddresses);
-    }
-
-    @Override
-    public boolean isViewMacAddresses() {
-        return preferencesManager.isViewMacAddresses();
-    }
-
-    @Override
-    public void setViewMacAddresses(boolean viewMacAddresses) {
-        preferencesManager.setViewMacAddresses(viewMacAddresses);
     }
 
     @Override
@@ -285,5 +226,15 @@ public class DataLayer extends DataLayerFacade {
     @Override
     public File getRecentOpenedDirectory() {
         return preferencesManager.getRecentOpenedDirectory();
+    }
+
+    @Override
+    public void setViewDetails(ViewDetailsType viewDetailsType, boolean value) {
+        preferencesManager.setViewDetails(viewDetailsType, value);
+    }
+
+    @Override
+    public boolean isViewDetails(ViewDetailsType viewDetailsType) {
+        return preferencesManager.isViewDetails(viewDetailsType);
     }
 }

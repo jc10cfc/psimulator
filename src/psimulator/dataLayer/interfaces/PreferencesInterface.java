@@ -17,19 +17,9 @@ public interface PreferencesInterface {
     public LevelOfDetailsMode getLevelOfDetails();
     public void setLevelOfDetails(LevelOfDetailsMode levelOfDetails);
     
-    public boolean isViewDeviceNames();
-    public void setViewDeviceNames(boolean viewDeviceNames);
-    public boolean isViewDeviceTypes();
-    public void setViewDeviceTypes(boolean viewDeviceTypes);
-    public boolean isViewInterfaceNames();
-    public void setViewInterfaceNames(boolean viewInterfaceNames);
-    public boolean isViewCableDelay();
-    public void setViewCableDelay(boolean viewCableDelay);
-    public boolean isViewIpAddresses();
-    public void setViewIpAddresses(boolean viewIpAddresses);
-    public boolean isViewMacAddresses();
-    public void setViewMacAddresses(boolean viewMacAddresses);
-    
+    public boolean isViewDetails(ViewDetailsType viewDetailsType);
+    public void setViewDetails(ViewDetailsType viewDetailsType, boolean value);
+
     
     public PacketImageType getPackageImageType();
     public void setPackageImageType(PacketImageType packageImageType);
