@@ -47,12 +47,17 @@ public class Grid{
     public Point getNearestGridPoint(int x, int y, int distance){
         Point p = new Point();
         
-        int zbytek = x % distance;
+        int remainder = x % distance;
+        
+        // do not let the X be too close the left bound (because of its labels)
+        if(x < distance * 2){
+            x = distance * 2;
+        }
         
         // set of X coordinate;
-        if(zbytek < distance / 2){
+        if(remainder < distance / 2){
             // stick left
-            p.x = x - zbytek;
+            p.x = x - remainder;
             
             // just for sure
             if(p.x < distance){
@@ -60,15 +65,15 @@ public class Grid{
             }
         }else{
             // stick right
-            p.x = x - zbytek + distance;
+            p.x = x - remainder + distance;
         }
         
         // set of Y coordinate
-        zbytek = y % distance;
+        remainder = y % distance;
         
-        if(zbytek < distance / 2){
+        if(remainder < distance / 2){
             // stick up
-            p.y = y - zbytek;
+            p.y = y - remainder;
             
             // just for sure
             if(p.y < distance){
@@ -76,7 +81,7 @@ public class Grid{
             }
         }else{
             //stick down
-            p.y = y - zbytek + distance;
+            p.y = y - remainder + distance;
         }
         
         return p;
