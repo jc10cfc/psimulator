@@ -40,6 +40,10 @@ public class NetworkFacade {
         return cableModel;
     }
     
+    public EthInterfaceModel createEthInterface(HwComponentModel component, int sequence){
+        return networkComponentsFactory.createNextEthInterface(component, sequence);
+    }
+    
     // -----------------------------------------------
     
     public NetworkCounterModel getNetworkCounterModel(){
