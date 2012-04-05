@@ -12,7 +12,7 @@ import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import shared.Components.CableModel;
 import shared.Components.EthInterfaceModel;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.dataLayer.interfaces.ViewDetailsType;
+import psimulator.dataLayer.Enums.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
 /**

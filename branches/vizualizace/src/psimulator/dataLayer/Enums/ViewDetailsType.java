@@ -1,4 +1,4 @@
-package psimulator.dataLayer.interfaces;
+package psimulator.dataLayer.Enums;
 
 /**
  *

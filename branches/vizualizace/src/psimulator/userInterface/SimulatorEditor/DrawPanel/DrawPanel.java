@@ -13,7 +13,7 @@ import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
-import psimulator.dataLayer.interfaces.ViewDetailsType;
+import psimulator.dataLayer.Enums.ViewDetailsType;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
