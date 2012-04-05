@@ -13,6 +13,7 @@ import psimulator.dataLayer.Enums.ObserverUpdateEventType;
 import psimulator.dataLayer.Singletons.GeneratorSingleton;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.userInterface.MainWindowInnerInterface;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Actions.*;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.DrawPanelAction;
@@ -111,6 +112,7 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
 
         // DRAW makring rectangle
         if (rectangleInProgress) {
+            Color tmpColor = g2.getColor();
             g2.setColor(Color.BLUE);
             //
             Rectangle rectangleInActualZoom = new Rectangle(ZoomManagerSingleton.getInstance().doScaleToActual(rectangle.getLocation()), 
@@ -121,10 +123,13 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
             //g2.fill(rectangle);
             g2.fill(rectangleInActualZoom);
 
+            g2.setColor(tmpColor);
         }
         
-        g2.setColor(Color.GRAY);
-        g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
+        if(dataLayer.isViewDetails(ViewDetailsType.NETWORK_BOUNDS)){
+            g2.setColor(Color.GRAY);
+            g2.drawRect(0, 0, getWidth()-1, getHeight()-1);
+        }
         
         g2.dispose();
     }
@@ -150,6 +155,9 @@ public final class DrawPanel extends DrawPanelOuterInterface implements
                 break;
             case ZOOM_CHANGE:
                 break;
+            case NETWORK_BOUNDS:
+                break;
+                    
         }
         
         //this.revalidate();

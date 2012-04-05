@@ -79,6 +79,8 @@ public class UserInterfaceLayeredPane extends UserInterfaceLayeredPaneOuterInter
     @Override
     public void update(Observable o, Object o1) {
         switch ((ObserverUpdateEventType) o1) {
+            case NETWORK_BOUNDS:
+                break;
             case VIEW_DETAILS:
                 //System.out.println("Layered pane update:Details");
                 // update images

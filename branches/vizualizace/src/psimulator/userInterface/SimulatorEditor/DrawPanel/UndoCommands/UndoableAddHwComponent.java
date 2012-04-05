@@ -26,12 +26,16 @@ public class UndoableAddHwComponent extends AbstractUndoableEdit {
     @Override
     public void undo() {
       super.undo();
+      graph.doUnmarkAllComponents();
+      
       graph.removeHwComponent(component);
     }
 
     @Override
     public void redo() {
       super.redo();
+      graph.doUnmarkAllComponents();
+      
       graph.addHwComponent(component);
     }
 }

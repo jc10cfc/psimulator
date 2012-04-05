@@ -12,6 +12,7 @@ import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import shared.Components.CableModel;
 import shared.Components.EthInterfaceModel;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
 /**
@@ -265,10 +266,11 @@ public class CableGraphic extends AbstractComponentGraphic {
                     break;
             }
         } else { // if LOD not active
-            paintDelay = dataLayer.isViewCableDelay();
-            paintInterfaceNames = dataLayer.isViewInterfaceNames();
-            paintIpAddress = dataLayer.isViewIpAddresses();
-            paintMacAddress = dataLayer.isViewMacAddresses();
+            // dataLayer.isViewDetails(ViewDetailsType.DEVICE_NAMES)
+            paintDelay = dataLayer.isViewDetails(ViewDetailsType.CABLE_DELAYS);
+            paintInterfaceNames = dataLayer.isViewDetails(ViewDetailsType.INTERFACE_NAMES);
+            paintIpAddress = dataLayer.isViewDetails(ViewDetailsType.IP_ADDRESS);
+            paintMacAddress = dataLayer.isViewDetails(ViewDetailsType.MAC_ADDRESS);
         }
     }
 

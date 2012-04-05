@@ -12,6 +12,7 @@ import shared.Components.HwComponentModel;
 import shared.Components.HwTypeEnum;
 import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.dataLayer.Singletons.ZoomManagerSingleton;
+import psimulator.dataLayer.interfaces.ViewDetailsType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.GraphicUtils;
 
 /**
@@ -473,8 +474,8 @@ public final class HwComponentGraphic extends AbstractComponentGraphic {
                     break;
             }
         } else { // if LOD not active
-            paintName = dataLayer.isViewDeviceNames();
-            paintType = dataLayer.isViewDeviceTypes();
+            paintName = dataLayer.isViewDetails(ViewDetailsType.DEVICE_NAMES);
+            paintType = dataLayer.isViewDetails(ViewDetailsType.DEVICE_TYPES);
         }
 
         /*
