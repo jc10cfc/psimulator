@@ -156,13 +156,16 @@ public class DrawPanelListenerStrategyAddCable extends DrawPanelListenerStrategy
    
     @Override
     public void mousePressedRight(MouseEvent e) {
+        MouseEvent oldMouseEvent = e; 
+        
         // convert
         e = convertMouseEvent(e);
         
         HwComponentGraphic tmp = getClickedAbstractHwComponent(e.getPoint());
         // if something clicked, or has first component
         if(tmp!= null || hasFirstComponent){
-            mousePressedLeft(e);
+            // will be converted again in mousePressedLeft
+            mousePressedLeft(oldMouseEvent);
         }else{ // if nothing clicked
             drawPanel.doSetTollInEditorToolBar(MainTool.HAND);
         }
