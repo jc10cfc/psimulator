@@ -328,10 +328,10 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
             jButtonAddInterface.setToolTipText(dataLayer.getString("ADDS_INTERFACE_TO_LIST_END"));
             buttonPane.add(jButtonAddInterface);
             
-            jButtonRemoveInterface = new JButton(dataLayer.getString("REMOVE_INTERFACE"));
-            jButtonRemoveInterface.addActionListener(new JButtonRemoveInterfaceListener());
-            jButtonRemoveInterface.setToolTipText(dataLayer.getString("REMOVES_LAST_INTERFACE_FROM_LIST"));
-            buttonPane.add(jButtonRemoveInterface);
+//            jButtonRemoveInterface = new JButton(dataLayer.getString("REMOVE_INTERFACE"));
+//            jButtonRemoveInterface.addActionListener(new JButtonRemoveInterfaceListener());
+//            jButtonRemoveInterface.setToolTipText(dataLayer.getString("REMOVES_LAST_INTERFACE_FROM_LIST"));
+//            buttonPane.add(jButtonRemoveInterface);
         }
         
         jButtonOk = new JButton(dataLayer.getString("SAVE"));
