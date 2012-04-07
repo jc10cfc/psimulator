@@ -27,11 +27,18 @@ public class TimerKeeperSingleton {
         private static final TimerKeeperSingleton INSTANCE = new TimerKeeperSingleton();
     }
     
+    /**
+     * Initializes timing source. Need to do at program start.
+     */
     public void initTimingSource(){
         Animator.setDefaultTimingSource(ts);
         ts.init();
     }
     
+    /**
+     * Gets timing source.
+     * @return 
+     */
     public TimingSource getTimingSource(){
         return ts;
     }

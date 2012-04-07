@@ -13,9 +13,21 @@ import psimulator.dataLayer.SimulatorEvents.SimulatorEventWithDetails;
 public class EventTableModel extends AbstractTableModel {
 
     private List<SimulatorEventWithDetails> eventList;
+    /**
+     * Flag set to true when all events deleted. 
+     */
     private volatile boolean timeReset = true;
+    /**
+     * Current selected row in table.
+     */
     private volatile int currentPositionInList;
+    /**
+     * Flag whether user is in the list = if any row in table selected.
+     */
     private volatile boolean isInTheList;
+    /**
+     * Lock for synchronized methods.
+     */
     private final Object lock = new Object();
 
     public EventTableModel() {
@@ -25,10 +37,18 @@ public class EventTableModel extends AbstractTableModel {
         currentPositionInList = 0;
     }
     
+    /**
+     * Gets current position in the list
+     * @return 
+     */
     public int getCurrentPositionInList(){
         return currentPositionInList;
     }
 
+    /**
+     * Gets if any row selected.
+     * @return 
+     */
     public boolean isInTheList() {
         synchronized (lock) {
             return isInTheList;
@@ -46,6 +66,12 @@ public class EventTableModel extends AbstractTableModel {
         return 5;
     }
 
+    /**
+     * Gets value from row i, column i1
+     * @param i
+     * @param i1
+     * @return 
+     */
     @Override
     public Object getValueAt(int i, int i1) {
         synchronized (lock) {
@@ -53,6 +79,11 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Gets class of column c.
+     * @param c
+     * @return 
+     */
     @Override
     public Class getColumnClass(int c) {
         synchronized (lock) {
@@ -60,6 +91,11 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Sets current position in list on position in parameter.
+     * If less than zero, than isInTheList is set to false.
+     * @param position 
+     */
     public void setCurrentPositionInList(int position) {
         synchronized (lock) {
             if (position < 0) {
@@ -72,6 +108,10 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
     
+    /**
+     * Returns true if next event exists.
+     * @return 
+     */
     public boolean canMoveToNextEvent(){
          synchronized (lock) {
              if(currentPositionInList < eventList.size() - 1){
@@ -82,6 +122,9 @@ public class EventTableModel extends AbstractTableModel {
          }
     }
 
+    /**
+     * Moves to next event. If not inTheList, than it gets into list.
+     */
     public void moveToNextEvent() {
         synchronized (lock) {
             // next when not in the list (start playing)
@@ -98,6 +141,10 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
     
+    /**
+     * Gets next event or null if no next event.
+     * @return 
+     */
     public SimulatorEventWithDetails getNextEvent(){
         synchronized (lock) {
             if(eventList.size() > 0 && currentPositionInList < eventList.size() - 1){
@@ -108,6 +155,9 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Moves to previous event if any.
+     */
     public void moveToPreviousEvent() {
         synchronized (lock) {
             if (currentPositionInList > 0) {
@@ -117,6 +167,9 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Moves to first event if any.
+     */
     public void moveToFirstEvent() {
         synchronized (lock) {
             if (eventList.size() > 0) {
@@ -126,6 +179,9 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Moves to last event if any.
+     */
     public void moveToLastEvent() {
         synchronized (lock) {
             if (eventList.size() > 0) {
@@ -135,6 +191,11 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
     
+    /**
+     * Moves to last event and return the event. Use in realtime mode.
+     * If no event in list, return null.
+     * @return 
+     */
     public SimulatorEventWithDetails moveToLastEventAndReturn(){
         synchronized (lock) {
             if (eventList.size() > 0) {
@@ -146,6 +207,10 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Adds simulator event.
+     * @param simulatorEvent 
+     */
     public void addSimulatorEvent(SimulatorEventWithDetails simulatorEvent) {
         synchronized (lock) {
             eventList.add(simulatorEvent);
@@ -155,6 +220,9 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Removes all events. isInTheList is set to false and timeReset to true.
+     */
     public void deleteAllSimulatorEvents() {
         synchronized (lock) {
             timeReset = true;
@@ -169,6 +237,11 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Returns simulator event from specified position i.
+     * @param i
+     * @return 
+     */
     public SimulatorEventWithDetails getSimulatorEvent(int i) {
         synchronized (lock) {
             if(eventList.size()>i){
@@ -179,18 +252,30 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Returns true if has any event. False if no events.
+     * @return 
+     */
     public boolean hasEvents() {
         synchronized (lock) {
             return !eventList.isEmpty();
         }
     }
 
+    /**
+     * Returns true if should reset time.
+     * @return 
+     */
     public boolean isTimeReset() {
         synchronized (lock) {
             return timeReset;
         }
     }
 
+    /**
+     * Gets copy of event list. Simualtor events are not copied deeply.
+     * @return 
+     */
     public List<SimulatorEventWithDetails> getEventListCopy() {
         synchronized (lock) {
             List<SimulatorEventWithDetails> copy = new ArrayList<>(eventList);
@@ -198,6 +283,10 @@ public class EventTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Sets event list.
+     * @param eventList 
+     */
     public void setEventList(List<SimulatorEventWithDetails> eventList) {
         synchronized (lock) {
             // set event list

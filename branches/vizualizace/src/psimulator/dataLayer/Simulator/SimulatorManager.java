@@ -310,7 +310,7 @@ public class SimulatorManager extends Observable implements SimulatorManagerInte
     }
 
     @Override
-    public void setConcreteRawSelected(int row) {
+    public void setConcreteRowSelected(int row) {
         //currentPositionInList = row;
         eventTableModel.setCurrentPositionInList(row);
 

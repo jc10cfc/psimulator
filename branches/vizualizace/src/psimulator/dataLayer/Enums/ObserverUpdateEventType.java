@@ -15,7 +15,7 @@ public enum ObserverUpdateEventType {
     ZOOM_CHANGE,                    // when zoom changed
     UNDO_REDO,                      // when undo/redo
     PACKET_IMAGE_TYPE_CHANGE,       // when packet icon changed
-    RECENT_OPENED_FILES_CHANGED,
+    RECENT_OPENED_FILES_CHANGED,    // when file added to recently opened
     
     SIMULATOR_PLAYER_LIST_MOVE,     // when manually changed current event(NEXT, PREV, FIRST, LAST or DOUBLE CLICK on some event)
     SIMULATOR_PLAYER_PLAY,          // when playing starts
@@ -37,6 +37,5 @@ public enum ObserverUpdateEventType {
     CONNECTION_CONNECTION_FAILED,   // when connection failed called
     CONNECTION_CONNECTING_FAILED,   // when connecting failed
  
-    PACKET_RECIEVER_WRONG_PACKET;   //
-    //LIST_MOVE;
+    PACKET_RECIEVER_WRONG_PACKET;   // when wrong packet recieved
 }

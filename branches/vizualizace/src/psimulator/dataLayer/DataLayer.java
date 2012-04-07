@@ -65,17 +65,29 @@ public class DataLayer extends DataLayerFacade {
     }
     
     
-
+    /**
+     * Returns current icon toolbar size.
+     * @return 
+     */
     @Override
     public ToolbarIconSizeEnum getToolbarIconSize() {
         return preferencesManager.getToolbarIconSize();
     }
 
+    /**
+     * Sets toolbar icon size in preferences.
+     * @param size 
+     */
     @Override
     public void setToolbarIconSize(ToolbarIconSizeEnum size) {
         preferencesManager.setToolbarIconSize(size);
     }
 
+    /**
+     * Saves aplication preferences.
+     * 
+     * Call before program exit.
+     */
     @Override
     public void savePreferences() {
         preferencesManager.savePreferences();
@@ -83,6 +95,7 @@ public class DataLayer extends DataLayerFacade {
         ZoomManagerSingleton.getInstance().savePreferences();
     }
 
+    
     @Override
     public void setCurrentLanguage(int languagePosition) {
         languageManager.setCurrentLanguage(languagePosition);

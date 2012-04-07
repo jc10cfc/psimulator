@@ -69,6 +69,9 @@ public final class PreferencesManager extends Observable implements SaveableInte
         loadPreferences();
     }
 
+    /**
+     * Saves preferences to preferences store.
+     */
     @Override
     public void savePreferences() {
         // save toolbar icon size
@@ -99,6 +102,9 @@ public final class PreferencesManager extends Observable implements SaveableInte
         prefs.put(RECENTLY_OPENED_EVENT_DIR, recentlyOpenedEventDir);
     }
 
+    /**
+     * Loads preferences from preferences store.
+     */
     @Override
     public void loadPreferences() {
         // load toolbar icon size
@@ -133,10 +139,20 @@ public final class PreferencesManager extends Observable implements SaveableInte
     }
 
     // GETTERS AND SETTERS
+    
+    /**
+     * Gets current toolbar icon size.
+     * @return 
+     */
     public ToolbarIconSizeEnum getToolbarIconSize() {
         return toolbarIconSize;
     }
 
+    /**
+     * Sets current toolbar icon size and notifies observers.
+     * ICON_SIZE
+     * @param toolbarIconSize 
+     */
     public void setToolbarIconSize(ToolbarIconSizeEnum toolbarIconSize) {
         this.toolbarIconSize = toolbarIconSize;
 
@@ -145,10 +161,19 @@ public final class PreferencesManager extends Observable implements SaveableInte
         notifyObservers(ObserverUpdateEventType.ICON_SIZE);
     }
 
+    /**
+     * Gets current packet image type.
+     * @return 
+     */
     public PacketImageType getPackageImageType() {
         return packageImageType;
     }
 
+    /**
+     * Sets packet image type and notifies observers.
+     * PACKET_IMAGE_TYPE_CHANGE
+     * @param packageImageType 
+     */
     public void setPackageImageType(PacketImageType packageImageType) {
         this.packageImageType = packageImageType;
 
@@ -157,46 +182,19 @@ public final class PreferencesManager extends Observable implements SaveableInte
         notifyObservers(ObserverUpdateEventType.PACKET_IMAGE_TYPE_CHANGE);
     }
 
-    public boolean isViewDeviceNames() {
-        return viewDeviceNames;
-    }
-
-    public void setViewDeviceNames(boolean viewDeviceNames) {
-        this.viewDeviceNames = viewDeviceNames;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
-    }
-
-    public boolean isViewDeviceTypes() {
-        return viewDeviceTypes;
-    }
-
-    public void setViewDeviceTypes(boolean viewDeviceTypes) {
-        this.viewDeviceTypes = viewDeviceTypes;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
-    }
-
-    public boolean isViewInterfaceNames() {
-        return viewInterfaceNames;
-    }
-
-    public void setViewInterfaceNames(boolean viewInterfaceNames) {
-        this.viewInterfaceNames = viewInterfaceNames;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
-    }
-
+    /**
+     * Gets current level of details mode.
+     * @return 
+     */
     public LevelOfDetailsMode getLevelOfDetails() {
         return levelOfDetails;
     }
 
+    /**
+     * Sets level of details mode and notifies the observers.
+     * VIEW_DETAILS
+     * @param levelOfDetails 
+     */
     public void setLevelOfDetails(LevelOfDetailsMode levelOfDetails) {
         this.levelOfDetails = levelOfDetails;
 
@@ -205,74 +203,51 @@ public final class PreferencesManager extends Observable implements SaveableInte
         notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
     }
 
-    public boolean isViewCableDelay() {
-        return viewCableDelay;
-    }
-
-    public void setViewCableDelay(boolean viewCableDelay) {
-        this.viewCableDelay = viewCableDelay;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
-    }
-
-    public boolean isViewIpAddresses() {
-        return viewIpAddresses;
-    }
-
-    public void setViewIpAddresses(boolean viewIpAddresses) {
-        this.viewIpAddresses = viewIpAddresses;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
-    }
-
-    public boolean isViewMacAddresses() {
-        return viewMacAddresses;
-    }
-
-    public void setViewMacAddresses(boolean viewMacAddresses) {
-        this.viewMacAddresses = viewMacAddresses;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.VIEW_DETAILS);
-    }
-
-    public boolean isViewNetworkBounds() {
-        return viewNetworkBounds;
-    }
-
-    public void setViewNetworkBounds(boolean viewNetworkBounds) {
-        this.viewNetworkBounds = viewNetworkBounds;
-
-        // notify all observers
-        setChanged();
-        notifyObservers(ObserverUpdateEventType.NETWORK_BOUNDS);
-    }
-
+    /**
+     * Gets IP address to psimulator server.
+     * @return 
+     */
     public String getConnectionIpAddress() {
         return connectionIpAddress;
     }
 
+    /**
+     * Sets IP address to psimulator server
+     * @param connectionPort 
+     */
     public void setConnectionIpAddress(String connectionIpAddress) {
         this.connectionIpAddress = connectionIpAddress;
     }
 
+    /**
+     * Gets connection port to psimulator server.
+     * @return 
+     */
     public String getConnectionPort() {
         return connectionPort;
     }
 
+    /**
+     * Sets connection port to psimulator server
+     * @param connectionPort 
+     */
     public void setConnectionPort(String connectionPort) {
         this.connectionPort = connectionPort;
     }
 
+    /**
+     * Gets recently opened files.
+     * @return 
+     */
     public List<File> getRecentOpenedFiles() {
         return recentOpenedFilesManager.getRecentOpenedFiles();
     }
 
+    /**
+     * Adds file to recently opened and notifies observers.
+     * RECENT_OPENED_FILES_CHANGED
+     * @param file 
+     */
     public void addRecentOpenedFile(File file) {
         recentOpenedFilesManager.addFile(file);
 
@@ -331,6 +306,11 @@ public final class PreferencesManager extends Observable implements SaveableInte
         return null;
     }
 
+    /**
+     * Gets value of specified view details type.
+     * @param viewDetailsType
+     * @return 
+     */
     public boolean isViewDetails(ViewDetailsType viewDetailsType) {
         switch (viewDetailsType) {
             case CABLE_DELAYS:
@@ -352,6 +332,11 @@ public final class PreferencesManager extends Observable implements SaveableInte
         }
     }
 
+    /**
+     * Set specified view details to value.
+     * @param viewDetailsType
+     * @param value 
+     */
     public void setViewDetails(ViewDetailsType viewDetailsType, boolean value) {
         switch (viewDetailsType) {
             case CABLE_DELAYS:

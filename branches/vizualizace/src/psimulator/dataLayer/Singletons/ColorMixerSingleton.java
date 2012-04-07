@@ -38,6 +38,11 @@ public class ColorMixerSingleton {
         throw new CloneNotSupportedException();
     }
     
+    /**
+     * Gets color for packet type
+     * @param packetType
+     * @return 
+     */
     public static Color getColorAccodringToPacketType(PacketType packetType){
         switch(packetType){
             case TCP:
