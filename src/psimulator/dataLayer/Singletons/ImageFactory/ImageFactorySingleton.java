@@ -20,51 +20,7 @@ public class ImageFactorySingleton {
 
     BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2 = (Graphics2D) bufferedImage.getGraphics();
-    //
-    public static final int ICON_SIZE_MENU_BAR = 48;
-    public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
-    //
-    public static final String ICON_HOME_48_PATH = "/resources/toolbarIcons/48/home.png";
-    public static final String ICON_TERMINAL_32_PATH = "/resources/toolbarIcons/32/terminal.png";
-    //
-    public static final String TOOL_DRAG_MOVE_PATH = "/resources/toolbarIcons/editor_toolbar/move.png";
-    public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";
-    public static final String TOOL_CABLE_ETHERNET_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
-    public static final String TOOL_CABLE_OPTICS_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired_gray.png";
-    public static final String TOOL_REAL_PC_PATH = "/resources/toolbarIcons/editor_toolbar/local_network.png";
-    public static final String TOOL_ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor_toolbar/grid.png";
-    public static final String TOOL_FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor_toolbar/fit_to_size.png";
-    //
-    public static final String TOOL_END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor_toolbar/desktop.png";
-    public static final String TOOL_END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor_toolbar/pc.png";
-    public static final String TOOL_END_DEVICE_NOTEBOOK_PATH = "/resources/toolbarIcons/editor_toolbar/notebook.png";
-    public static final String TOOL_ROUTER_PATH = "/resources/toolbarIcons/editor_toolbar/router.png";
-    public static final String TOOL_ROUTER_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/router_linux.png";
-    public static final String TOOL_ROUTER_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/router_cisco.png";
-    public static final String TOOL_SWITCH_PATH = "/resources/toolbarIcons/editor_toolbar/switch.png";
-    public static final String TOOL_SWITCH_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/switch_linux.png";
-    public static final String TOOL_SWITCH_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/switch_cisco.png";
-    //
-    public static final String ICON_FILENEW_128_PATH = "/resources/toolbarIcons/128/filenew.png";
-    public static final String ICON_OPENFILE_GREEN_128_PATH = "/resources/toolbarIcons/128/folder_green_open.png";
-    public static final String ICON_ETH_INTERFACE_16_PATH = "/resources/toolbarIcons/16/eth_interface_image.png";
-    //
-    public static final String ICON_CONFIGURE_16_PATH = "/resources/toolbarIcons/16/configure.png";
-    public static final String ICON_GRID_16_PATH = "/resources/toolbarIcons/16/grid.png";
-    public static final String ICON_CANCEL_16_PATH = "/resources/toolbarIcons/16/button_cancel.png";
-    public static final String ICON_SELECT_ALL_16_PATH = "/resources/toolbarIcons/16/select_all.png";
-    public static final String ICON_FIT_TO_SIZE_16_PATH = "/resources/toolbarIcons/16/fit_to_size.png";
-    public static final String ICON_STOCK_ALIGNMENT_16_PATH = "/resources/toolbarIcons/16/stock_alignment.png";
-    public static final String ICON_FILENEW_16_PATH = "/resources/toolbarIcons/16/filenew.png";
-    public static final String ICON_FILECLOSE_16_PATH = "/resources/toolbarIcons/16/fileclose.png";
-    public static final String ICON_OPEN_GREEN_16_PATH = "/resources/toolbarIcons/16/folder_green_open.png";
-    public static final String ICON_FILESAVE_16_PATH = "/resources/toolbarIcons/16/filesave.png";
-    public static final String ICON_FILESAVEAS_16_PATH = "/resources/toolbarIcons/16/filesaveas.png";
-    public static final String ICON_TELNET_16_PATH = "/resources/toolbarIcons/16/terminal.png";
-    public static final String ICON_INFO_16_PATH = "/resources/toolbarIcons/16/messagebox_info.png";
-    //
-    public static final String PACKAGE_PREFIX_PATH = "/resources/toolbarIcons/simulator/packages/";
-    //
+    
     protected ImageBuffer imageBuffer;
     protected BufferedImageLoader bufferedImageLoader;
     // scales 3 je alpha
@@ -99,6 +55,9 @@ public class ImageFactorySingleton {
         return fm;
     }
 
+    /**
+     * Prealoads all images from files.
+     */
     private void preLoadAllImagesFromFiles() {
         HwTypeEnum hwTypes[] = HwTypeEnum.values();
         for (HwTypeEnum hwType : hwTypes) {
@@ -548,14 +507,26 @@ public class ImageFactorySingleton {
         return tmp;
     }
 
+    /**
+     * Clears all image buffers.
+     */
     public void clearBuffer() {
         imageBuffer.clearBuffer();
     }
 
+    /**
+     * Clears buffers with text labels. Call when project is closed.
+     */
     public void clearTextBuffers() {
         imageBuffer.clearTextBuffers();
     }
 
+    /**
+     * Gets pcket image path of specified type and color.
+     * @param packetType
+     * @param packageImageType
+     * @return 
+     */
     private String getImagePath(PacketType packetType, PacketImageType packageImageType) {
         String middle;
         String suffix;
@@ -600,6 +571,11 @@ public class ImageFactorySingleton {
         //return PACKAGE_PREFIX_PATH + middle + ".png";
     }
 
+    /**
+     * Gets image path for gw type
+     * @param type
+     * @return 
+     */
     private String getImagePath(HwTypeEnum type) {
         switch (type) {
             case CISCO_ROUTER:
@@ -626,4 +602,51 @@ public class ImageFactorySingleton {
                 return TOOL_REAL_PC_PATH;
         }
     }
+    
+    
+    //
+    public static final int ICON_SIZE_MENU_BAR = 48;
+    public static final int ICON_SIZE_MENU_BAR_POPUP = 30;
+    //
+    public static final String ICON_HOME_48_PATH = "/resources/toolbarIcons/48/home.png";
+    public static final String ICON_TERMINAL_32_PATH = "/resources/toolbarIcons/32/terminal.png";
+    //
+    public static final String TOOL_DRAG_MOVE_PATH = "/resources/toolbarIcons/editor_toolbar/move.png";
+    public static final String TOOL_HAND_PATH = "/resources/toolbarIcons/editor_toolbar/cursor_hand_mod_2.png";
+    public static final String TOOL_CABLE_ETHERNET_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired.png";
+    public static final String TOOL_CABLE_OPTICS_PATH = "/resources/toolbarIcons/editor_toolbar/network-wired_gray.png";
+    public static final String TOOL_REAL_PC_PATH = "/resources/toolbarIcons/editor_toolbar/local_network.png";
+    public static final String TOOL_ALIGN_TO_GRID_PATH = "/resources/toolbarIcons/editor_toolbar/grid.png";
+    public static final String TOOL_FIT_TO_SIZE_PATH = "/resources/toolbarIcons/editor_toolbar/fit_to_size.png";
+    //
+    public static final String TOOL_END_DEVICE_WORKSTATION_PATH = "/resources/toolbarIcons/editor_toolbar/desktop.png";
+    public static final String TOOL_END_DEVICE_PC_PATH = "/resources/toolbarIcons/editor_toolbar/pc.png";
+    public static final String TOOL_END_DEVICE_NOTEBOOK_PATH = "/resources/toolbarIcons/editor_toolbar/notebook.png";
+    public static final String TOOL_ROUTER_PATH = "/resources/toolbarIcons/editor_toolbar/router.png";
+    public static final String TOOL_ROUTER_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/router_linux.png";
+    public static final String TOOL_ROUTER_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/router_cisco.png";
+    public static final String TOOL_SWITCH_PATH = "/resources/toolbarIcons/editor_toolbar/switch.png";
+    public static final String TOOL_SWITCH_LINUX_PATH = "/resources/toolbarIcons/editor_toolbar/switch_linux.png";
+    public static final String TOOL_SWITCH_CISCO_PATH = "/resources/toolbarIcons/editor_toolbar/switch_cisco.png";
+    //
+    public static final String ICON_FILENEW_128_PATH = "/resources/toolbarIcons/128/filenew.png";
+    public static final String ICON_OPENFILE_GREEN_128_PATH = "/resources/toolbarIcons/128/folder_green_open.png";
+    public static final String ICON_ETH_INTERFACE_16_PATH = "/resources/toolbarIcons/16/eth_interface_image.png";
+    //
+    public static final String ICON_CONFIGURE_16_PATH = "/resources/toolbarIcons/16/configure.png";
+    public static final String ICON_GRID_16_PATH = "/resources/toolbarIcons/16/grid.png";
+    public static final String ICON_CANCEL_16_PATH = "/resources/toolbarIcons/16/button_cancel.png";
+    public static final String ICON_SELECT_ALL_16_PATH = "/resources/toolbarIcons/16/select_all.png";
+    public static final String ICON_FIT_TO_SIZE_16_PATH = "/resources/toolbarIcons/16/fit_to_size.png";
+    public static final String ICON_STOCK_ALIGNMENT_16_PATH = "/resources/toolbarIcons/16/stock_alignment.png";
+    public static final String ICON_FILENEW_16_PATH = "/resources/toolbarIcons/16/filenew.png";
+    public static final String ICON_FILECLOSE_16_PATH = "/resources/toolbarIcons/16/fileclose.png";
+    public static final String ICON_OPEN_GREEN_16_PATH = "/resources/toolbarIcons/16/folder_green_open.png";
+    public static final String ICON_FILESAVE_16_PATH = "/resources/toolbarIcons/16/filesave.png";
+    public static final String ICON_FILESAVEAS_16_PATH = "/resources/toolbarIcons/16/filesaveas.png";
+    public static final String ICON_TELNET_16_PATH = "/resources/toolbarIcons/16/terminal.png";
+    public static final String ICON_INFO_16_PATH = "/resources/toolbarIcons/16/messagebox_info.png";
+    //
+    public static final String PACKAGE_PREFIX_PATH = "/resources/toolbarIcons/simulator/packages/";
+    //
 }

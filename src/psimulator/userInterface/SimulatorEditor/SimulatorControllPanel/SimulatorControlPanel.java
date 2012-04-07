@@ -224,7 +224,7 @@ public class SimulatorControlPanel extends JPanel implements Observer {
                 
                 //System.out.println("Select concrete row");
                 // set concrete row in model
-                simulatorManagerInterface.setConcreteRawSelected(selectedRowNumber);
+                simulatorManagerInterface.setConcreteRowSelected(selectedRowNumber);
                 
             }
         });

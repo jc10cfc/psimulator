@@ -46,11 +46,17 @@ public final class ZoomManagerSingleton extends Observable implements SaveableIn
         return ZoomManagerSingletonHolder.INSTANCE;
     }
 
+    /**
+     * Saves zoom scale into preferences
+     */
     @Override
     public void savePreferences() {
         prefs.putInt(ZOOM_SCALE, scale);
     }
 
+    /**
+     * Loads zoom scale from preferenes
+     */
     @Override
     public void loadPreferences() {
         scale = prefs.getInt(ZOOM_SCALE, scale);
@@ -64,7 +70,10 @@ public final class ZoomManagerSingleton extends Observable implements SaveableIn
         private static final ZoomManagerSingleton INSTANCE = new ZoomManagerSingleton();
     }
     
-    
+    /**
+     * Gets zoom event wrapper created when zoom last changed
+     * @return 
+     */
     public ZoomEventWrapper getZoomEventWrapper() {
         return zoomEventWrapper;
     }
@@ -288,7 +297,11 @@ public final class ZoomManagerSingleton extends Observable implements SaveableIn
         }
     }
 
-    
+    /**
+     * Converts scale to double. (Divide by 10)
+     * @param scale
+     * @return 
+     */
     private double getScale(int scale){
         return (double)(scale / 10.0);
     }  

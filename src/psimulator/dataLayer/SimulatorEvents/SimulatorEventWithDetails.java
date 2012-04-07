@@ -41,38 +41,80 @@ public class SimulatorEventWithDetails {
         list = tmp;
     }
 
+    /**
+     * Returns event type
+     * @return 
+     */
     public EventType getEventType(){
         return simulatorEvent.getEventType();
     }
 
+    /**
+     * i=0..timestamp (long), i=1..from (String), 
+     * i=2..to (String), i=3..packet type(PacketType),
+     * i=4..color (Color)
+     * @param i
+     * @return 
+     */
     public Object getValueAt(int i) {
+        if(i< 0 || i >= list.length){
+            return null;
+        }
         return list[i];
     }
 
+    /**
+     * Gets packet type
+     * @return 
+     */
     public PacketType getPacketType() {
         return simulatorEvent.getPacketType();
     }
 
+    /**
+     * Gets simulator event
+     * @return 
+     */
     public SimulatorEvent getSimulatorEvent() {
         return simulatorEvent;
     }
 
+    /**
+     * Gets cable id
+     * @return 
+     */
     public int getCableId() {
         return simulatorEvent.getCableId();
     }
 
+    /**
+     * Gets detsination device id
+     * @return 
+     */
     public int getDestId() {
         return simulatorEvent.getDestId();
     }
 
+    /**
+     * Gets source device id
+     * @return 
+     */
     public int getSourcceId() {
         return simulatorEvent.getSourcceId();
     }
 
+    /**
+     * Gets timestamp of event
+     * @return 
+     */
     public long getTimeStamp() {
         return simulatorEvent.getTimeStamp();
     }
 
+    /**
+     * Gets detailed description of packet if any.
+     * @return 
+     */
     public String getDetailsText() {
         if(simulatorEvent.getDetailsText() == null){
             return "";
@@ -96,6 +138,11 @@ public class SimulatorEventWithDetails {
         return eth2;
     }
     
+    /**
+     * Retruns name of component with interface. If no inetrface, than return only name.
+     * If no name and interface, return empty string.
+     * @return 
+     */
     public String getComponent1NameAndInterface(){
         if(getComponent1()!=null && getEth1() != null){
             return getComponent1().getName()+":"+getEth1().getName();
@@ -107,6 +154,11 @@ public class SimulatorEventWithDetails {
         return "";
     }
     
+    /**
+     * Retruns name of component with interface. If no inetrface, than return only name.
+     * If no name and interface, return empty string.
+     * @return 
+     */
     public String getComponent2NameAndInterface(){
         if(getComponent2()!=null && getEth2() != null){
             return getComponent2().getName()+":"+getEth2().getName();

@@ -33,7 +33,7 @@ public class GeneratorSingleton {
     }
 
     /**
-     * Returns free id and incremets id by 1.
+     * Returns next free ID for unique identification in network model.
      *
      * @return Free id.
      */
@@ -41,13 +41,6 @@ public class GeneratorSingleton {
         return networkCounterModel.getNextId();
     }
 
-    public int getCurrentId() {
-        return networkCounterModel.getCurrentId();
-    }
-
-    public int getCurrentMacAddress() {
-        return networkCounterModel.getCurrentMacAddress();
-    }
 
     /**
      * Creates list with names of interfaces for one single device. Names are
@@ -222,6 +215,10 @@ public class GeneratorSingleton {
 //        return macAddress;
 //    }
 
+    /**
+     * Creates new random MAC address. Address will not be broadcast MAC address.
+     * @return 
+     */
     public static String getNextMacAddress() {
         byte[] representation = new byte[6];
         for (int i = 0; i < 6; i++) {
@@ -229,7 +226,7 @@ public class GeneratorSingleton {
         }
 
         boolean broadcast = true;
-        for (int i = 0; i < representation.length; i++) { // kontrola, ze to neni broadcast
+        for (int i = 0; i < representation.length; i++) { // check if broadcast address
             if ((int) representation[i] != -1) { // == 255
                 broadcast = false && broadcast;
             }
@@ -251,6 +248,6 @@ public class GeneratorSingleton {
         
         ret = ret.toUpperCase();
         
-        return ret.substring(0, ret.length() - 1);//aby se odmazala ta posledni dvojtecka
+        return ret.substring(0, ret.length() - 1);// remove last dash 
     }
 }

@@ -13,6 +13,10 @@ public class NetworkComponentsFactory {
     public NetworkComponentsFactory() {
     }
 
+    /**
+     * Creates empty network model with emtpty maps.
+     * @return 
+     */
     public NetworkModel createEmptyNetworkModel() {
         LinkedHashMap<Integer, HwComponentModel> componentsMap = new LinkedHashMap<Integer, HwComponentModel>();
         LinkedHashMap<Integer, CableModel> cablesMap = new LinkedHashMap<Integer, CableModel>();
@@ -25,6 +29,10 @@ public class NetworkComponentsFactory {
         return networkModel;
     }
     
+    /**
+     * Creates new initialized network counter.
+     * @return 
+     */
     public NetworkCounterModel createEmptyNetworkCounter(){
         
         int nextId = 0;
@@ -40,6 +48,15 @@ public class NetworkComponentsFactory {
         return networkCounterModel;
     }
 
+    /**
+     * Creates cable betweem two components.
+     * @param hwType
+     * @param component1
+     * @param component2
+     * @param interface1
+     * @param interface2
+     * @return 
+     */
     public CableModel createCable(HwTypeEnum hwType, HwComponentModel component1, HwComponentModel component2, EthInterfaceModel interface1, EthInterfaceModel interface2) {
         Integer id = GeneratorSingleton.getInstance().getNextId();
 
@@ -61,6 +78,14 @@ public class NetworkComponentsFactory {
         return cable;
     }
 
+    /**
+     * Creates component with desired parameters.
+     * @param hwType
+     * @param interfacesCount
+     * @param defaultZoomXPos
+     * @param defaultZoomYPos
+     * @return 
+     */
     public HwComponentModel createHwComponent(HwTypeEnum hwType, int interfacesCount, int defaultZoomXPos, int defaultZoomYPos) {
         // generate ID for HwComponent
         Integer id = GeneratorSingleton.getInstance().getNextId();
@@ -89,6 +114,12 @@ public class NetworkComponentsFactory {
         return hwComponent;
     }
 
+    /**
+     * Creates new EthInterfaceModel for device of hwType type and name interfaceName.
+     * @param interfaceName
+     * @param hwType
+     * @return 
+     */
     private EthInterfaceModel createEthInterface(String interfaceName, HwTypeEnum hwType) {
         String macAddress;
         String ipAddress;
@@ -135,7 +166,7 @@ public class NetworkComponentsFactory {
     }
     
     /**
-     * Creates next eth interface for component
+     * Creates next eth interface for existing component.
      * @param component
      * @return 
      */
