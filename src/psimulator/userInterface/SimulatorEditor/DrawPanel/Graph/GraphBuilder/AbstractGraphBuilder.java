@@ -1,8 +1,8 @@
 package psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilder;
 
+import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilderInterface;
 import shared.Components.CableModel;
 import shared.Components.HwComponentModel;
-import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.GraphBuilderInterface;
 
 /**
  *

@@ -102,6 +102,9 @@ public class MainWindowGlassPane extends JPanel implements TimingTarget{
         f_animator.start();
     }
     
+    /**
+     * Call when you want to stop animation.
+     */
     private void stopAnimation(){
         animationInProgress = false;
         
@@ -113,11 +116,19 @@ public class MainWindowGlassPane extends JPanel implements TimingTarget{
     }
 
 
+    /**
+     * Reaction on animation start.
+     * @param source 
+     */
     @Override
     public void begin(Animator source) {
         messageGraphic.setVisible(true);
     }
 
+    /**
+     * Reaction on animation end.
+     * @param source 
+     */
     @Override
     public void end(Animator source) {
         messageGraphic.setVisible(false);

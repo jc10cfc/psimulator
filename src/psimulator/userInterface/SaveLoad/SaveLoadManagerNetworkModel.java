@@ -109,6 +109,10 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
         return true;
     }
 
+    /**
+     * Opens dialog and loads model. If exception occours, warning dialog is shown.
+     * @return 
+     */
     public NetworkModel doLoadNetworkModel() {
         try {
             return open();
@@ -118,6 +122,11 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
         }
     }
 
+    /**
+     * Opens netwrok from file. If exception occours, warning dialog is shown.
+     * @param filePath
+     * @return 
+     */
     public NetworkModel doLoadNetworkModel(String filePath) {
         try {
             File fileToOpen = new File(filePath);
@@ -128,6 +137,11 @@ public class SaveLoadManagerNetworkModel extends AbstractSaveLoadManager {
         }
     }
 
+    /**
+     * Builds graph from networkModel.
+     * @param networkModel
+     * @return 
+     */
     public Graph buildGraphFromNetworkModel(NetworkModel networkModel) {
         GraphBuilderFacade graphBuilderFacade = new GraphBuilderFacade();
         Graph graph = graphBuilderFacade.buildGraph(networkModel);

@@ -10,9 +10,21 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.MainTool;
  */
 public interface UserInterfaceMainPanelInnerInterface {
 
+    /**
+     * Sets mainTool active in toolbar.
+     * @param mainTool 
+     */
     public void doSetToolInToolBar(MainTool mainTool);
     
+    /**
+     * Gets scroll pane
+     * @return 
+     */
     public JScrollPane getJScrollPane();
     
+    /**
+     * Gets view port.
+     * @return 
+     */
     public JViewport getJViewport();
 }

@@ -1,7 +1,6 @@
 package psimulator.userInterface;
 
 import java.awt.Component;
-import javax.swing.JFrame;
 import javax.swing.JRootPane;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
@@ -11,7 +10,6 @@ import shared.SimulatorEvents.SerializedComponents.SimulatorEventsWrapper;
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface MainWindowInnerInterface {
-    // used by view:
     /**
      * Updates Undo and Redo APP buttons according to undo manager
      */
@@ -26,17 +24,29 @@ public interface MainWindowInnerInterface {
      */
     public void updateToolBarIconsSize(ToolbarIconSizeEnum size);
     
+    /**
+     * Get root pane from main winfow
+     * @return 
+     */
     public JRootPane getRootPane();
 
+    /**
+     * Get main window component. Use for creating dialogs which has to have mainWindow
+     * as parent.
+     * @return 
+     */
     public Component getMainWindowComponent();
     
+    /**
+     * Call when user wants to save events.
+     * @param simulatorEventsWrapper 
+     */
     public void saveEventsAction(SimulatorEventsWrapper simulatorEventsWrapper);
     
+    /**
+     * Call when user wants to load events.
+     * @return 
+     */
     public SimulatorEventsWrapper loadEventsAction();
-    
-    // telnet windows add/remove
-//    public void removeTelnetWindow(Integer key);
-//    public void addTelnetWindow(Integer key, JFrame frame);
-//    public boolean hasTelnetWindow(Integer key);
-//    public JFrame getTelnetWindow(Integer key);
+
 }

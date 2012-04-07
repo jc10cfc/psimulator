@@ -14,5 +14,9 @@ public interface UserInterfaceOuterFacade {
      */
     public void initView(ControllerFacade controller);
     
+    /**
+     * Use from logicLayer to get animation panel.
+     * @return 
+     */
     public AnimationPanelOuterInterface getAnimationPanelOuterInterface();
 }
