@@ -151,6 +151,10 @@ public class AnimationPanel extends AnimationPanelOuterInterface implements Anim
         animations.remove(animation);
     }
 
+    /**
+     * Gets current packet image type
+     * @return 
+     */
     @Override
     public PacketImageType getPacketImageType() {
         return dataLayer.getPackageImageType();

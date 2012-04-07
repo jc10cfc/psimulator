@@ -161,15 +161,25 @@ public abstract class AbstractPropertiesDialog extends JDialog{
     
     protected abstract JPanel createMainPanel();
     
+    /**
+     * Copies values from model to local variables.
+     */
     protected abstract void copyValuesFromGlobalToLocal();
 
+    /**
+     * Call to copy values from swingg components to local variables.
+     */
     protected abstract void copyValuesFromFieldsToLocal();
 
     /**
-     * Call only when changes made
+     * Call only when changes made. Copies values from local variables to model.
      */
     protected abstract void copyValuesFromLocalToGlobal();
 
+    /**
+     * True if changes made. False if no value or property changed.
+     * @return 
+     */
     protected abstract boolean hasChangesMade();
     
     /////////////////////-----------------------------------////////////////////

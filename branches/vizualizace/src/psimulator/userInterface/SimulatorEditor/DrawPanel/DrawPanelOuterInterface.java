@@ -56,6 +56,10 @@ public abstract class DrawPanelOuterInterface extends JPanel implements DrawPane
      */
     public abstract boolean hasGraph();
     
+    /**
+     * Gets graph from panel
+     * @return 
+     */
     public abstract Graph getGraph();
 
    

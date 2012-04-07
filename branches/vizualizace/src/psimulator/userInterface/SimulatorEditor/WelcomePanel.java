@@ -1,6 +1,8 @@
 package psimulator.userInterface.SimulatorEditor;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;

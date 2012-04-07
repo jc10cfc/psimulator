@@ -38,11 +38,6 @@ public class Graph extends JComponent implements GraphOuterInterface, GraphBuild
     public Graph() {
     }
 
-    @Override
-    public NetworkFacade getNetworkFacade() {
-        return networkFacade;
-    }
-
     /**
      * Use to initialize references in all graph components after load.
      *

@@ -51,6 +51,11 @@ public class Validator {
             "^(([1-9]{1})|([1-9]{1}[0-9]{1}))$";
             //"^(([1-9]{1}[0-9]{0,4}))$"; // 1-199   
 
+    /**
+     * Returns true if IP address with mask is valid.
+     * @param address
+     * @return 
+     */
     public static boolean validateIpAddress(String address) {
 
         // check the IP address
@@ -65,6 +70,11 @@ public class Validator {
         return false;
     }
     
+    /**
+     * Returns true if mac address is valid
+     * @param address
+     * @return 
+     */
     public static boolean validateMacAddress(String address){
         // check the IP address
         Pattern pattern = Pattern.compile(MAC_PATTERN);

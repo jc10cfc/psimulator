@@ -72,21 +72,25 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
         }
 
-        //openedTelnetWindows = new HashMap<>();
-        
+        // create save load managers
         saveLoadManagerGraph = new SaveLoadManagerNetworkModel((Component) this, dataLayer);
         saveLoadManagerEvents = new SaveLoadManagerEvents((Component) this, dataLayer);
 
+        // create menu bar
         jMenuBar = new MenuBar(dataLayer);
+        // create tool bar
         jToolBar = new ToolBar(dataLayer);
 
         this.setTitle(dataLayer.getString("WINDOW_TITLE"));
 
+        // set menu bar
         this.setJMenuBar(jMenuBar);
         this.add(jToolBar, BorderLayout.PAGE_START);
 
+        // save reference to this for inner classes of ActionListeners
         this.mainWindow = (JFrame) this;
 
+        // crate and add main panel
         jPanelUserInterfaceMain = new UserInterfaceMainPanel(this, dataLayer, UserInterfaceMainPanelState.WELCOME);
         this.add(jPanelUserInterfaceMain, BorderLayout.CENTER);
 

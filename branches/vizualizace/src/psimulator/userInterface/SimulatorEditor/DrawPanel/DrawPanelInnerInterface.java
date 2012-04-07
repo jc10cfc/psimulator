@@ -32,6 +32,11 @@ public interface DrawPanelInnerInterface{
      * @return 
      */
     public abstract AbstractAction getAbstractAction(DrawPanelAction action);
+    
+    /**
+     * Sets cursor in draw panel
+     * @param cursor 
+     */
     public abstract void setCursor(Cursor cursor);
     public void repaint();
     /**

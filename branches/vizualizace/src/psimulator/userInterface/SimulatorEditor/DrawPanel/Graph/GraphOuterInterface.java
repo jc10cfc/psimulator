@@ -19,9 +19,7 @@ import psimulator.userInterface.SimulatorEditor.DrawPanel.Graph.LayoutAlgorithm.
  * @author Martin Švihlík <svihlma1 at fit.cvut.cz>
  */
 public interface GraphOuterInterface {
-    
-    public NetworkFacade getNetworkFacade();
-    
+
     /**
      * 
      * Returns width of Graph in actual zoom
@@ -34,8 +32,16 @@ public interface GraphOuterInterface {
      */
     public int getHeight();
     
+    /**
+     * Gets preffered size of graph
+     * @return 
+     */
     public Dimension getPreferredSize();
     
+    /**
+     * Gets preffered size of graph in default zoom
+     * @return 
+     */
     public Dimension getPreferredSizeDefaultZoom();
     
     /**
@@ -95,6 +101,9 @@ public interface GraphOuterInterface {
      */
     public void doMarkCable(CableGraphic cable);
     
+    /**
+     * Marks all components
+     */
     public void doMarkAllComponents();
     
     /**
@@ -199,6 +208,10 @@ public interface GraphOuterInterface {
      */
     public void addHwComponents(List<HwComponentGraphic> componentList);
 
+    /**
+     * Get timestamp of last edit
+     * @return 
+     */
     public long getLastEditTimestamp();
     
     /**
@@ -206,7 +219,15 @@ public interface GraphOuterInterface {
      */
     public void editHappend();
     
+    /**
+     * Adds observer to be notified with GRAPH_COMPONENT_CHANGED
+     * @param obsrvr 
+     */
     public void addObserver(Observer obsrvr);
     
+    /**
+     * Removes observer from observer list
+     * @param obsrvr 
+     */
     public void deleteObserver(Observer obsrvr);
 }

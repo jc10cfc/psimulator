@@ -9,6 +9,14 @@ import java.awt.Rectangle;
  */
 public class GraphicUtils {
     
+    /**
+     * Gets middle point of line with two end points.
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return 
+     */
     public static Point getMiddlePoint(double x1, double y1, double x2, double y2){
         int x,y;
         x = (int)((Math.abs(x2 + x1)) / 2.0);
@@ -17,6 +25,13 @@ public class GraphicUtils {
         return new Point(x,y);
     }
     
+    /**
+     * Gets intersection point of rectangle and line with one point inside and one outside
+     * @param r
+     * @param insidePoint
+     * @param outsidePoint
+     * @return 
+     */
     public static Point getIntersectingPoint(Rectangle r, Point insidePoint, Point outsidePoint) {
         //Rectangle r = new Rectangle(getX(), getY(), bi.getWidth(), bi.getHeight());
 
@@ -54,6 +69,14 @@ public class GraphicUtils {
         return findLineIntersection(insidePoint, outsidePoint, intersectonPointX, intersectonPointY);
     }
     
+    /**
+     * Finds intersection of two lines
+     * @param start1
+     * @param end1
+     * @param start2
+     * @param end2
+     * @return 
+     */
     public static Point findLineIntersection(Point start1, Point end1, Point start2, Point end2) {
         float denom = (float) (((end1.getX() - start1.getX()) * (end2.getY() - start2.getY())) - ((end1.getY() - start1.getY()) * (end2.getX() - start2.getX())));
 
