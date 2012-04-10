@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.Dialogs.AbstractPropertiesDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.RegexFormatter;
@@ -38,6 +39,9 @@ public final class ConnectToServerDialog extends AbstractPropertiesDialog {
     public ConnectToServerDialog(Component mainWindow, DataLayerFacade dataLayer) {
         super(mainWindow, dataLayer);
 
+        // set icon
+        this.setIconImage(ImageFactorySingleton.getInstance().getImageIcon("/resources/toolbarIcons/32/kwifimanager.png").getImage());
+        
         // set title
         this.setTitle(dataLayer.getString("CONNECT_TO_SERVER"));
 

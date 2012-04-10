@@ -8,6 +8,7 @@ import psimulator.dataLayer.DataLayerFacade;
 import psimulator.dataLayer.Enums.LevelOfDetailsMode;
 import psimulator.dataLayer.Enums.ToolbarIconSizeEnum;
 import psimulator.dataLayer.Enums.ViewDetailsType;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Enums.PacketImageType;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Support.Validator;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.SwingComponents.RegexFormatter;
@@ -79,6 +80,9 @@ public final class SettingsDialog extends AbstractPropertiesOkCancelDialog {
     public SettingsDialog(Component mainWindow, DataLayerFacade dataLayer) {
         super(mainWindow, dataLayer);
 
+        // set icon to dialog
+        this.setIconImage(ImageFactorySingleton.getInstance().getImageIcon("/resources/toolbarIcons/32/configure.png").getImage());
+        
         // set title
         this.setTitle(dataLayer.getString("PREFERENCES"));
 
