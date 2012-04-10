@@ -98,8 +98,8 @@ public class MainWindow extends JFrame implements MainWindowInnerInterface, User
         // set this as Observer to LanguageManager
         dataLayer.addLanguageObserver((Observer) this);
 
-        this.setIconImage(new ImageIcon(getClass().getResource(ImageFactorySingleton.ICON_HOME_48_PATH)).getImage());
-
+        // set icon
+        this.setIconImage(ImageFactorySingleton.getInstance().getImageIcon("/resources/toolbarIcons/32/home.png").getImage());
 
         // create glass pane and glass pane painter
         glassPane = new MainWindowGlassPane();
