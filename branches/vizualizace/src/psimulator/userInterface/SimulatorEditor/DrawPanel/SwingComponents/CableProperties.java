@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.Dialogs.AbstractPropertiesOkCancelDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.CableGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
@@ -40,6 +41,10 @@ public final class CableProperties extends AbstractPropertiesOkCancelDialog {
         // set title
         this.setTitle(dataLayer.getString("CABLE_PROPERTIES"));
 
+        
+        // set icon to dialog
+        this.setIconImage(ImageFactorySingleton.getInstance().getDialogIconForComponentProperties(cable.getHwType()).getImage());
+        
         // set minimum size
         this.setMinimumSize(new Dimension(300, 100));
 

@@ -89,8 +89,8 @@ public class SimulatorClientEventRecieverMockupThread implements Runnable, Obser
                         }
                     }
                     
-                    //int time = 1;
-                    int time = tmpRandom.nextInt(10) + 1; // 1000 + 100
+                    int time = 1;
+                    //int time = tmpRandom.nextInt(10) + 1; // 1000 + 100
                     //int time = tmpRandom.nextInt(100) + 100;
 
                     Thread.sleep(time);
