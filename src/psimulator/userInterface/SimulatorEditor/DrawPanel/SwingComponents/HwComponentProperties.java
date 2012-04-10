@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 import psimulator.dataLayer.DataLayerFacade;
+import psimulator.dataLayer.Singletons.ImageFactory.ImageFactorySingleton;
 import psimulator.userInterface.Dialogs.AbstractPropertiesOkCancelDialog;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.Components.HwComponentGraphic;
 import psimulator.userInterface.SimulatorEditor.DrawPanel.DrawPanelInnerInterface;
@@ -79,9 +80,10 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
                 break;
         }
         
-        
-        
+        // set icon to dialog
+        this.setIconImage(ImageFactorySingleton.getInstance().getDialogIconForComponentProperties(abstractHwComponent.getHwType()).getImage());
 
+        
         if(showAddresses){
             // set minimum size
             this.setMinimumSize(new Dimension(550, 300));
@@ -138,8 +140,10 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         // save name
         abstractHwComponent.setDeviceName(deviceName);
 
-        // if interfaces has addreses than save addreses
-        tableInterfacesModel.copyValuesFromLocalToGlobal();
+        if(showInterfaces){
+            // save interface changes
+            tableInterfacesModel.copyValuesFromLocalToGlobal();
+        }
         
         // fire edit happend on graph
         drawPanel.getGraphOuterInterface().editHappend();
@@ -164,7 +168,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
             return true;
         }
 
-        if(tableInterfacesModel.hasChangesMade()){
+        if(showInterfaces && tableInterfacesModel.hasChangesMade()){
             return true;
         }
 

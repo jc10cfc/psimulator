@@ -425,6 +425,24 @@ public class ImageFactorySingleton {
         // return scaled image
         return tmp;
     }
+    
+    /**
+     * Gets image for component properties dialog
+     * @param hwComponentType
+     * @return 
+     */
+    public ImageIcon getDialogIconForComponentProperties(HwTypeEnum hwComponentType){
+        String path = getImagePath(hwComponentType);
+        
+        ImageIcon tmp = null;
+        
+        try {
+            tmp = createSquareImage(getScaledImage(path, 32));
+        } catch (IOException ex) {
+            // should never happen, all hwComponentType default icons are in .jar as a resource
+        }
+        return tmp;
+    }
 
     /**
      * Creates square image of given image
