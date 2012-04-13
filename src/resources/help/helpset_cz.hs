@@ -18,6 +18,7 @@
       <label>Obsah</label>
       <type>javax.help.TOCView</type>
       <data>cz/help_toc.xml</data>
+      <image>book_icon</image>
    </view>
 
    <view xml:lang="cz-CZ">
@@ -25,11 +26,20 @@
      <label>Vyhledávání</label>
      <type>javax.help.SearchView</type>
      <data engine="com.sun.java.help.search.DefaultSearchEngine">JavaHelpSearch/cz</data>
+     <image>search_icon</image>
   </view>
 
   <presentation default="true">
       <size width="800" height="600" />
-      <image>image001</image>
+      <image>help_icon</image>
+      
+      <toolbar>
+        <helpaction image="previous_icon">javax.help.BackAction</helpaction>
+        <helpaction image="next_icon">javax.help.ForwardAction</helpaction>
+        <helpaction image="home_icon">javax.help.HomeAction</helpaction>
+        <helpaction image="print_icon">javax.help.PrintAction</helpaction>
+        <helpaction image="print_setup_icon">javax.help.PrintSetupAction</helpaction>
+      </toolbar>
   </presentation>
 
 </helpset>

@@ -26,5 +26,12 @@
 
    <mapID target="item401" url="topics/PSImulatorUI.html" />
 
-   <mapID target="image001" url="../images/window_icon.png" />
+   <mapID target="help_icon" url="../images/window_icon.png" />
+   <mapID target="search_icon" url="../images/search.png" />
+   <mapID target="book_icon" url="../images/book.png" />
+   <mapID target="print_icon" url="../images/print.png" />
+   <mapID target="print_setup_icon" url="../images/print_setup.png" />
+   <mapID target="previous_icon" url="../images/previous.png" />
+   <mapID target="next_icon" url="../images/next.png" />
+   <mapID target="home_icon" url="../images/home.png" />
 </map>
