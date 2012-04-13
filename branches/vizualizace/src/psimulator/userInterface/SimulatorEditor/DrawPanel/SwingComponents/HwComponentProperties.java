@@ -228,7 +228,7 @@ public final class HwComponentProperties extends AbstractPropertiesOkCancelDialo
         devicePanel.setLayout(devicePanelLayout);
 
         //
-        JLabel jLabelName = new JLabel(dataLayer.getString("NAME") + " (0-15):");
+        JLabel jLabelName = new JLabel(dataLayer.getString("NAME") + " (1-15):");
         fontBold = new Font(jLabelName.getFont().getName(), Font.BOLD, jLabelName.getFont().getSize());
         jLabelName.setFont(fontBold);
         devicePanel.add(jLabelName);
