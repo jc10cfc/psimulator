@@ -36,7 +36,9 @@
       <toolbar>
         <helpaction image="previous_icon">javax.help.BackAction</helpaction>
         <helpaction image="next_icon">javax.help.ForwardAction</helpaction>
+        <helpaction>javax.help.SeparatorAction</helpaction>
         <helpaction image="home_icon">javax.help.HomeAction</helpaction>
+        <helpaction>javax.help.SeparatorAction</helpaction>
         <helpaction image="print_icon">javax.help.PrintAction</helpaction>
         <helpaction image="print_setup_icon">javax.help.PrintSetupAction</helpaction>
       </toolbar>
