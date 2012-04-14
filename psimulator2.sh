@@ -14,6 +14,7 @@ cp ../trunk/psimulator2/dist/psimulator2.jar $NAME"_backend.jar"
 cp ../branches/vizualizace/dist/PSimulatorUI.jar $NAME"_frontend.jar"
 cp -r ../trunk/psimulator2/dist/lib .
 cp ../branches/vizualizace/dist/lib/* lib/
+cp ../branches/real_network_connection/virt_iface.sh .
 
 
 # names of wiki pages from directory wiki
