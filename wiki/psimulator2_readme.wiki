@@ -16,7 +16,7 @@
 
 = Instructions for installing psimulator2 = 
 
-Download it from [http://code.google.com/p/psimulator/downloads/list downloads] section and unzip.
+Download and unzip: [http://code.google.com/p/psimulator/downloads/list]
 
 
 = Instructions for running psimulator2 =
