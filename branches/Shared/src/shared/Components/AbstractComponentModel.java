@@ -21,8 +21,16 @@ public interface AbstractComponentModel extends Identifiable, Serializable{
      */
     public HwTypeEnum getHwType();
 
+    /**
+     * Sets HwType of component
+     * @param hwType 
+     */
     public void setHwType(HwTypeEnum hwType);
 
+    /**
+     * Gets unique identifier of component
+     * @return 
+     */
     public void setId(Integer id);
     
 }

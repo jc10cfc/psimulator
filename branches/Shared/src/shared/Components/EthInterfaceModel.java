@@ -169,37 +169,64 @@ public class EthInterfaceModel implements NameInterface,AbstractComponentModel {
         return name;
     }
 
+    /**
+     * Sets name of interface Used when restoring from XML.
+     * @param name 
+     */
     @Override
     public void setName(String name) {
         this.name = name;
     }
 
     
-
+    /**
+     * Gets hwType
+     * @return 
+     */
     @Override
     public HwTypeEnum getHwType() {
         return hwType;
     }
 
+    /**
+     * Sets hwType. Used when restoring from XML.
+     * @param hwType 
+     */
     @Override
     public void setHwType(HwTypeEnum hwType) {
         this.hwType = hwType;
     }
 
+    /**
+     * Gets unique ID of component
+     * @return 
+     */
     @Override
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets unique ID. Used when restoring from XML.
+     * @param id 
+     */
     @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Returns true if interface is turned ON.
+     * @return 
+     */
     public boolean isIsUp() {
         return isUp;
     }
 
+    /**
+     * Sets interface on (true), or off (false)
+     * @param isUp 
+     */
     public void setIsUp(boolean isUp) {
         this.isUp = isUp;
     }

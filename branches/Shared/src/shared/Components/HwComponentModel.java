@@ -100,6 +100,10 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
         return false;
     }
 
+    /**
+     * Gets interface names as array of Objects
+     * @return 
+     */
     public Object[] getInterfacesNames() {
         Object[] list = new Object[interfacesMap.size()];
 
@@ -111,15 +115,29 @@ public final class HwComponentModel implements PositionInterface, NameInterface,
         return list;
     }
 
+    /**
+     * Gets ethInterface with specified ID
+     * @param id
+     * @return 
+     */
     public EthInterfaceModel getEthInterface(Integer id) {
         return interfacesMap.get(id);
     }
 
+    /**
+     * Gets ethInterface at specified index
+     * @param index
+     * @return 
+     */
     public EthInterfaceModel getEthInterfaceAtIndex(int index) {
         List<EthInterfaceModel> list = new ArrayList<EthInterfaceModel>(interfacesMap.values());
         return list.get(index);
     }
 
+    /**
+     * Gets ethInterfaces count
+     * @return 
+     */
     public int getEthInterfaceCount() {
         return interfacesMap.size();
     }

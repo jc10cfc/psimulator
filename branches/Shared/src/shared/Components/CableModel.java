@@ -137,38 +137,70 @@ public class CableModel implements AbstractComponentModel{
         interface2 = tmpImterface;
     }
 
+    /**
+     * Gets HwType of component
+     * @return 
+     */
     @Override
     public HwTypeEnum getHwType() {
         return hwType;
     }
 
+    /**
+     * Sets HwType of component. Used when restoring from XML.
+     * @param hwType 
+     */
     @Override
     public void setHwType(HwTypeEnum hwType) {
         this.hwType = hwType;
     }
 
+    /**
+     * Gets unique identifier
+     * @return 
+     */
     @Override
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Sets ID of component. Used when restoring from XML.
+     * @param id 
+     */
     @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * Sets first componnent to cable.
+     * @param component1 
+     */
     public void setComponent1(HwComponentModel component1) {
         this.component1 = component1;
     }
 
+    /**
+     * Sets second componnent to cable.
+     * @param component1 
+     */
     public void setComponent2(HwComponentModel component2) {
         this.component2 = component2;
     }
 
+    /**
+     * Sets first interface that is connected
+     * @param interface1 
+     */
     public void setInterface1(EthInterfaceModel interface1) {
         this.interface1 = interface1;
     }
 
+    /**
+     * Sets second interface that is connected
+     * @param interface1 
+     */
     public void setInterface2(EthInterfaceModel interface2) {
         this.interface2 = interface2;
     }

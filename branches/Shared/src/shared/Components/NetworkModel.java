@@ -52,11 +52,18 @@ public class NetworkModel implements Identifiable, Serializable{
     }
 
     
-    
+    /**
+     * Gets timestamp of last edit
+     * @return 
+     */
     public long getLastEditTimestamp() {
         return lastEditTimestamp;
     }
 
+    /**
+     * Sets timestamp of last edit
+     * @param lastEditTimestamp 
+     */
     public void setLastEditTimestamp(long lastEditTimestamp) {
         this.lastEditTimestamp = lastEditTimestamp;
     }
@@ -66,79 +73,153 @@ public class NetworkModel implements Identifiable, Serializable{
         return networkCounterModel;
     }
     
+    /**
+     * Gets unique ID
+     * @return 
+     */
     @Override
     public Integer getId() {
         return id;
     }
     
+    /**
+     * Gets count of hw components
+     * @return 
+     */
     public int getHwComponentsCount() {
         return componentsMap.size();
     }
     
+    /**
+     * Gets all components as collection
+     * @return 
+     */
     public Collection<HwComponentModel> getHwComponents() {
         return componentsMap.values();
     }
     
+    /**
+     * Gets all cables as collection
+     * @return 
+     */
     public Collection<CableModel> getCables() {
         return cablesMap.values();
     }
 
+    /**
+     * Adds component to components
+     * @param component 
+     */
     public void addHwComponent(HwComponentModel component) {
         componentsMap.put(component.getId(), component);
     }
     
+    /**
+     * Adds all components from list to components
+     * @param componentList 
+     */
     public void addHwComponents(List<HwComponentModel> componentList) {
         for (HwComponentModel component : componentList) {
             addHwComponent(component);
         }
     }
     
+    /**
+     * Removes component from components
+     * @param component 
+     */
     public void removeHwComponent(HwComponentModel component) {
         componentsMap.remove(component.getId());
     }
     
+    /**
+     * Removes all components from components
+     * @param componentList 
+     */
     public void removeHwComponents(List<HwComponentModel> componentList) {
         for(HwComponentModel component : componentList){
             removeHwComponent(component);
         }
     }
 
+    /**
+     * Add cable to cables map
+     * @param cableModel 
+     */
     public void addCable(CableModel cableModel){
         cablesMap.put(cableModel.getId(), cableModel);
     }
     
+    /**
+     * Removes calbe from cables map
+     * @param cableModel 
+     */
     public void removeCable(CableModel cableModel){
         cablesMap.remove(cableModel.getId());
     }
     
+    /**
+     * Gets cables count
+     * @return 
+     */
     public int getCablesCount() {
         return cablesMap.size();
     }
     
+    /**
+     * Gets component by ID
+     * @param id
+     * @return 
+     */
     public HwComponentModel getHwComponentModelById(int id){
         return componentsMap.get(id);
     }
     
+    /**
+     * Gets cable by ID
+     * @param id
+     * @return 
+     */
     public CableModel getCableModelById(int id){
         return cablesMap.get(id);
     }
 
+    /**
+     * Gets all cables in map
+     * @return 
+     */
     public Map<Integer, CableModel> getCablesMap() {
         return cablesMap;
     }
 
+    /**
+     * Sets calbes map
+     * @param cablesMap 
+     */
     public void setCablesMap(Map<Integer, CableModel> cablesMap) {
         this.cablesMap = cablesMap;
     }
 
+    /**
+     * Gets components map
+     * @return 
+     */
     public Map<Integer, HwComponentModel> getComponentsMap() {
         return componentsMap;
     }
 
+    /**
+     * Sets components map
+     * @param componentsMap 
+     */
     public void setComponentsMap(Map<Integer, HwComponentModel> componentsMap) {
         this.componentsMap = componentsMap;
     }
 
+    /**
+     * Sets unique ID
+     * @param id 
+     */
     public void setId(Integer id) {
         this.id = id;
     }
