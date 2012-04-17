@@ -51,7 +51,9 @@ public class JTableEventList extends JTable {
             c.setBackground(getBackground());
             c.setForeground(Color.BLACK);
         }else{
-            c.setForeground(Color.WHITE);
+            if(tableModel.getSimulatorEvent(row).getEventType() != EventType.SUCCESSFULLY_TRANSMITTED){
+                c.setForeground(Color.WHITE);
+            }
         }
                 
         if(tableModel.getSimulatorEvent(row).getEventType() != EventType.SUCCESSFULLY_TRANSMITTED){
