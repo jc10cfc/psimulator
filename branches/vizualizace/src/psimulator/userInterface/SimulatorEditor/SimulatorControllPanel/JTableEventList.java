@@ -1,5 +1,6 @@
 package psimulator.userInterface.SimulatorEditor.SimulatorControllPanel;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -45,10 +46,14 @@ public class JTableEventList extends JTable {
         if(column == 4){
             return c;
         }
+        
         if (!isRowSelected(row)){
             c.setBackground(getBackground());
+            c.setForeground(Color.BLACK);
+        }else{
+            c.setForeground(Color.WHITE);
         }
-        
+                
         if(tableModel.getSimulatorEvent(row).getEventType() != EventType.SUCCESSFULLY_TRANSMITTED){
             if (!isRowSelected(row)) {
                 c.setBackground(ColorMixerSingleton.tableLostEventColor);
@@ -56,7 +61,7 @@ public class JTableEventList extends JTable {
                 c.setBackground(ColorMixerSingleton.tableLostEventMarkedColor);
             }
         }
-
+        
         return c;
     }
 

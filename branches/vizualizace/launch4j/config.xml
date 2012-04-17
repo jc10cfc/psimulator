@@ -1,7 +1,7 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>PSimulatorUI.jar</jar>
+  <jar>PSImulatorUI.jar</jar>
   <outfile>C:\Users\Martin\Desktop\Diplomka\Release\PSImulatorUI.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
@@ -20,12 +20,12 @@
     <jdkPreference>preferJre</jdkPreference>
   </jre>
   <versionInfo>
-    <fileVersion>1.1.1.0</fileVersion>
-    <txtFileVersion>1.10.RC1</txtFileVersion>
+    <fileVersion>1.2.1.0</fileVersion>
+    <txtFileVersion>1.2</txtFileVersion>
     <fileDescription>PSImualtorUI - GUI for PSImulator The network simualtor</fileDescription>
     <copyright>Copyright (C) 2012. Martin �vihl�k</copyright>
-    <productVersion>1.1.1.0</productVersion>
-    <txtProductVersion>1.10.RC1</txtProductVersion>
+    <productVersion>1.2.1.0</productVersion>
+    <txtProductVersion>1.2</txtProductVersion>
     <productName>PSImulatorUI</productName>
     <companyName></companyName>
     <internalName>PSImulatorUI</internalName>
