@@ -71,10 +71,5 @@
     nbproject/build-impl.xml file. 
 
     -->
-    <target name="copy" depends="jar">
-        <copy todir="../Release" >  
-            <fileset dir="./dist" includes="**"/>  
-        </copy>
-    </target>
     
 </project>
