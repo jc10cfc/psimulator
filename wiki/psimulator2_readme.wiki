@@ -46,4 +46,4 @@ telnet localhost <port of the requested device>
 }}}
  on windows use putty with telnet protocol and port of the requested device.
 
-When frontend and backend are started and frontend is connected to backend (top left button - "Simulator" and then "Connect to server" localhost:12000) there is a possibility to connect to virtual device through fronted with right-click on device and "Open telnet".
+When frontend and backend are started and frontend is connected to backend (top left button - "Simulator" and then "Connect to server" localhost:12000) there is a possibility to connect to virtual device through frontend with right-click on device and "Open telnet".
