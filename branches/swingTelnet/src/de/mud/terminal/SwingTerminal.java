@@ -37,15 +37,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 /**
  * Video Display Unit emulation for Swing/AWT. This class implements all necessary
@@ -64,7 +56,7 @@ import java.awt.event.MouseMotionListener;
  * @author  Matthias L. Jugel, Marcus Mei�ner
  */
 public class SwingTerminal extends Component
-  implements VDUDisplay, KeyListener, MouseListener, MouseMotionListener {
+  implements VDUDisplay, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
   private final static int debug = 0;
 
@@ -174,7 +166,7 @@ public class SwingTerminal extends Component
   public SwingTerminal(VDUBuffer buffer, Font font) {
     setVDUBuffer(buffer);
     addKeyListener(this);
-
+    
     /* we have to make sure the tab key stays within the component */
     String version = System.getProperty("java.version");
     String versionStart = version.substring(0,3);
@@ -311,6 +303,8 @@ public class SwingTerminal extends Component
         buffer.setWindowBase(evt.getValue());
       }
     });
+    
+    this.addMouseWheelListener(this);
   }
 
   /**
@@ -1069,4 +1063,24 @@ public class SwingTerminal extends Component
       (e.isActionKey() ? VDUInput.KEY_ACTION : 0);
 
   }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        
+        e.consume();
+        
+        int scrollBarValue = this.scrollBar.getValue();
+        int scrollBarMax = this.scrollBar.getMaximum();
+        int scrollBarMin = this.scrollBar.getMinimum();
+        
+        int newValue=scrollBarValue+e.getWheelRotation()*5;
+        
+        if(newValue < scrollBarMin)
+            newValue=scrollBarMin;
+        else if(newValue > scrollBarMax)
+            newValue=scrollBarMax;
+        
+        this.scrollBar.setValue(newValue);
+        
+    }
 }
