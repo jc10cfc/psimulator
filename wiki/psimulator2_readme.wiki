@@ -134,7 +134,6 @@ Configure interface tap0 on host system (/proc/sys/net/ipv4/ip_forward and NAT i
 
 
 
----
-
+<hr>
 
 *If you encounter any exception, please send us exception log ([http://groups.google.com/group/psimulator2-developers mailing list]) - in current directory should be file named "psimulator2_exceptions_yyyy-mm-dd.txt" with short description what you were just doing. Thank you!*
