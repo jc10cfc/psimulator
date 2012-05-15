@@ -119,7 +119,7 @@ For connection to real network work it has to exist 2 virtual interface on (real
 }}} 
  # In backend you have make connection to some device and run command {{{rnetconn}}}. This command was created for joining swichtport from simulator with sim0 from host system. This command you can run from any device. Command 
 {{{
-router0# rnetconn list
+router0:~# rnetconn list
 Device name     switchport no.  state
 router2         1               not tied
 }}}
