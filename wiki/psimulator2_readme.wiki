@@ -10,7 +10,7 @@
  * *Telnet client*
  You can use the built-in client but if you don't like it you can download putty (http://www.putty.org/) on Windows or just use telnet in case of linux/unix system.
 
- * *Connection to real network*
+ * *Connection psimulator2 to real network*
  See *Use case #3*
 
 
@@ -95,3 +95,47 @@ save new_configuration_file.xml
  # Connect fronted to backend - {{{Connect to server}}} button in frontend.
  # Right-click on device and "Open telnet".
 And now you are ready to type commands with this new telnet window.
+
+
+
+
+== Use case #3: Connect psimulator2 to real network ==
+Connecting psimulator2 to real network is available only on linux/unix systems because of some limitations of Winpcap.
+
+=== System requirements and instalation ===
+This extra requirements are needed for connecting simulator to real network:
+library libpcap - install from repository (this library is used by tcpdump, maybe you alrady have it)
+library libjnetpcap.so - provided in psimulator2 package, copy or link it to /usr/lib
+VDE2 - program for creating virtual network interfaces, install from repository (on debian: aptitude install vde2)
+
+
+=== Creating link between virtual and real network ===
+For connection to real network work it has to exist 2 virtual interface on (real) host system. First (tap0) will be used for communication of host system with simulator and the second (sim0) will be used and controlled by simulator. These two interfaces has to be connected to each other by virtual cable (with help of VDE util and script virt_iface.sh). Interface sim0 has to be tied together with some switchport of device in virtual network. Interface sim0 shouldn't be configured in host system.
+
+ # In frontend add {{{Real PC}}} to virtual network (icon with house), attach cable to this new Real PC and some other device. Save this configuration to a file and run backend with this file.
+ # On host system run script:
+{{{
+./virt_iface.sh pair sim0 tap0
+}}} This script creates 2 virtual interfaces connected with cable to each other.
+ # In backend you have make connection to some device and run command {{{rnetconn}}}. This command was created for joining swichtport from simulator with sim0 from host system. This command you can run from any device. Command 
+{{{
+router0# rnetconn list
+Device name     switchport no.  state
+router2         1               not tied
+}}}
+will print list of all switchports in simulator which can be tied to interface sim0. If in the simulator doesn't exist any Real PC this command produce empty list of switchports. In that case you have shutdown backend and add Real PC in frontend (procede from point 1).
+
+# Tie interface sim0 with swithport from output of {{{rnetconn list}}}:
+{{{
+rnetconn tie router2 1 sim0
+}}} This command ties switchport number 1 on device router2 with interface sim0 (host system interface).
+
+Configure interface tap0 on host system (/proc/sys/net/ipv4/ip_forward and NAT if needed).
+
+
+
+
+---
+
+
+*If you encounter any exception, please send us exception log ([http://groups.google.com/group/psimulator2-developers mailing list]) - in current directory should be file named "psimulator2_exceptions_yyyy-mm-dd.txt" with short description what you were just doing. Thank you!*
