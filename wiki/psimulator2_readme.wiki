@@ -1,8 +1,6 @@
 #summary system requirements and instructions
 #labels psimulator2,Phase-Requirements,Phase-Deploy
-<code language="xml">
-<hello target="bash"/>
-</code>
+
 
 = System requirements =
 
@@ -120,11 +118,10 @@ For connection to real network work it has to exist 2 virtual interface on (real
 ./virt_iface.sh pair sim0 tap0
 }}} 
  # In backend you have make connection to some device and run command {{{rnetconn}}}. This command was created for joining swichtport from simulator with sim0 from host system. This command you can run from any device. Command 
-{{{
+<code language="bash">
 router0:~# rnetconn list
 Device name     switchport no.  state
-router2         1               not tied
-}}}
+</code>
   will print list of all switchports in simulator which can be tied to interface sim0. If in the simulator doesn't exist any Real PC this command produce empty list of switchports. In that case you have shutdown backend and add Real PC in frontend (back to point 1).
  # Tie interface sim0 with switchport from output of {{{rnetconn list}}}:
 {{{
