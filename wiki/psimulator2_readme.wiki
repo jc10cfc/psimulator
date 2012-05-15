@@ -11,7 +11,7 @@
  You can use the built-in client but if you don't like it you can download putty (http://www.putty.org/) on Windows or just use telnet in case of linux/unix system.
 
  * *Connection to real network*
- This connection is possible only on unix systems. You must install the libpcap library (from repository), the jNetPcapLibrary (http://jnetpcap.com/download) and the virtual switch VDE (from repository). To run connection to real network see the "Real nework connection" section of this page. WARNING: This functionality is not yet completed. *TODO: hodit info, ze to bude na konci stranky*
+ See *Use case #3*
 
 
 
