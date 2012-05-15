@@ -89,7 +89,7 @@ for saving configuration to different file.
 
 
 
-== Use case #1: Configure already created network with built-in graphical telnet client ==
+== Use case #2: Configure already created network with built-in graphical telnet client ==
  # Run frontend, then open already created network file.
  # Run backend with the same configuration file.
  # Connect fronted to backend - {{{Connect to server}}} button in frontend.
