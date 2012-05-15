@@ -11,7 +11,10 @@
  You can use the built-in client but if you don't like it you can download putty (http://www.putty.org/) on Windows or just use telnet in case of linux/unix system.
 
  * *Connection to real network*
- This connection is possible only on unix systems. You must install the libpcap library (from repository), the jNetPcapLibrary (http://jnetpcap.com/download) and the virtual switch VDE (from repository). To run connection to real network see the "Real nework connection" section of this page. WARNING: This functionality is not yet completed.
+ This connection is possible only on unix systems. You must install the libpcap library (from repository), the jNetPcapLibrary (http://jnetpcap.com/download) and the virtual switch VDE (from repository). To run connection to real network see the "Real nework connection" section of this page. WARNING: This functionality is not yet completed. *TODO: hodit info, ze to bude na konci stranky*
+
+
+
 
 
 = Instructions for installing psimulator2 = 
@@ -19,31 +22,76 @@
 Download and unzip: [http://code.google.com/p/psimulator/downloads/list]
 
 
+
+
+
+
 = Instructions for running psimulator2 =
-Frontend contains manual Help -> Help, or just F1.
+Psimulator2 is devided into two parts - frontend and backend. Frontend is designed to easily create network topology and display sent or dropped packets in network. Backend handles simulations and everything else under the hood.
 
-== Build network topology ==
-To run psimulator you must at first build the network topology with simulator frontend (GUI) and save it to XML configuration file. Than you can run the simulator backend (simulation server) with the created XML configuration file.
-
-== Run frontend ==
-To run the the simulator frontend (GUI) type in the command line 
+== Use case #1: Create and configure network, send packets, display sent and dropped packets ==
+=== Create network ===
+Run the simulator frontend (GUI) in the command line:
 {{{
 java -jar psimulator2_frontend.jar
 }}}
- (with the correct path to the jar file).
+ (with the correct path to the jar file) or with double-click (it depends how your OS is set).
 
-== Run backend ==
-To run the simulator backend (simulation server) type:
+In frontend choose {{{New Project}}} then create your own desired network (hint: F1 -> 1. Network creation).
+I assume you created your network topology. If you want you can set IP addresses on interfaces with right-click on devices.
+
+
+=== Configure network ===
+Run simulator backend (simulation server) in command line:
 {{{
-java -jar psimulator2_backend.jar path_to_the_config_file.xml
+java -jar psimulator2_backend.jar path_to_the_config_file_you_created.xml
 }}}
-(with the correct path to the jar file). The program prints on startup telnet ports of all virtual network devices you can connect to (typically started on 11000 and the telnet port on which can be connected the frontend to listen simulator events (typically on 12000).
+(with the correct path to the jar file). The program prints after startup telnet ports of all virtual network devices you can connect to (typically started on 11000) and the telnet port on which can be connected the frontend to listen simulator events (typically on 12000).
 
-== Connect to virtual device ==
+
 To connect to virtual network device type in linux command line: 
 {{{
 telnet localhost <port of the requested device>
 }}}
  on windows use putty with telnet protocol and port of the requested device.
 
-When frontend and backend are started and frontend is connected to backend (top left button - "Simulator" and then "Connect to server" localhost:12000) there is a possibility to connect to virtual device through frontend with right-click on device and "Open telnet".
+
+Then you can configure linux and cisco routers via telnet.
+
+
+
+=== Display sent and dropped packets ===
+In fronted click on {{{Simulator}}} tab in the top right conner. Then click on {{{Connect to server}}} and fill in IP address of your PC (127.0.0.1) and port of {{{Event server}}} (should be 12000). Port of EventServer is written in backend console, example:
+{{{
+[IMPORTANT] EVENTS_SERVER: PACKET FLOW SERVER: : Server sucessfully started, listening on port: 12000
+}}}
+
+After successful connection to the Event server you can turn on packet capturing: {{{Capture}}} button.
+
+
+Send ICMP request from one device to another:
+ # connect to device1 via telnet
+ # type {{{ping IP}}}, with IP address of some interface on device2
+Now you can watch captured packets in frontend.
+
+
+=== Saving configuration ===
+For saving configuration of all devices you can run save command on any device:
+{{{
+save
+}}}
+or 
+{{{
+save new_configuration_file.xml
+}}}
+for saving configuration to different file.
+
+
+
+
+== Use case #1: Configure already created network with built-in graphical telnet client ==
+ # Run frontend, then open already created network file.
+ # Run backend with the same configuration file.
+ # Connect fronted to backend - {{{Connect to server}}} button in frontend.
+ # Right-click on device and "Open telnet".
+And now you are ready to type commands with this new telnet window.
