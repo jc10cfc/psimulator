@@ -56,7 +56,7 @@ telnet localhost <port of the requested device>
 }}}
  on windows use putty with telnet protocol and port of the requested device.
 
-Devices can be configured via built in graphical telnet client:
+Devices can be configured via built-in graphical telnet client:
  # right-click on desired device
  # click on {{{Open telnet}}}
 
