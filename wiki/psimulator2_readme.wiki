@@ -15,14 +15,9 @@
 
 
 
-
-
 = Instructions for installing psimulator2 = 
 
 Download and unzip: [http://code.google.com/p/psimulator/downloads/list]
-
-
-
 
 
 
@@ -64,7 +59,6 @@ Devices can be configured via built-in graphical telnet client:
 Then you can configure linux and cisco routers in command line environment.
 
 
-
 === Display sent and dropped packets ===
 In fronted click on {{{Simulator}}} tab in the top right conner. Then click on {{{Connect to server}}} and fill in IP address of your PC (127.0.0.1) and port of {{{Event server}}} (should be 12000). Port of EventServer is written in backend console, example:
 {{{
@@ -85,11 +79,12 @@ For saving configuration of all devices you can run save command on any device:
 {{{
 save
 }}}
-or 
+This command saves configured network to the currently open configuration file.
+Or you can save it to a different file:
 {{{
 save new_configuration_file.xml
 }}}
-for saving configuration to different file.
+
 
 
 
