@@ -40,6 +40,7 @@ java -jar psimulator2_frontend.jar
 In frontend choose {{{New Project}}} then create your own desired network (hint: F1 -> 1. Network creation).
 I assume you created your network topology. If you want you can set IP addresses on interfaces with right-click on devices.
 
+Now you can save created network to configuration file via menu: File -> Save.
 
 === Configure network ===
 Run simulator backend (simulation server) in command line:
@@ -55,8 +56,12 @@ telnet localhost <port of the requested device>
 }}}
  on windows use putty with telnet protocol and port of the requested device.
 
+Devices can be configured via built in graphical telnet client:
+ # right-click on desired device
+ # click on {{{Open telnet}}}
 
-Then you can configure linux and cisco routers via telnet.
+
+Then you can configure linux and cisco routers in command line environment.
 
 
 
