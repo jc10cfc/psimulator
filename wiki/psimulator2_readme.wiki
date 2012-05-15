@@ -1,6 +1,8 @@
 #summary system requirements and instructions
 #labels psimulator2,Phase-Requirements,Phase-Deploy
-
+<code language="xml">
+<hello target="bash"/>
+</code>
 
 = System requirements =
 
