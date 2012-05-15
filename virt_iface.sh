@@ -49,7 +49,8 @@ function createAndConnect(){
 # destroys all vde_switch
 function destroyAll(){
 	echo "Destroying all vde_switch."
-	killall vde_switch
+	killall vde_switch 2> /dev/null
+	rm -rf /var/run/vde/*
 }
 
 function existsIface(){
@@ -98,23 +99,26 @@ function oneSwitchPair() {
 
 
 function printHelp(){
-	name="virt_iface"
+	name="./virt_iface.sh"
 	
 	echo "This script helps you to create and connect virtual interfaces to connect simulator to real network."
-	echo "You can create, destroy and connect virtual switches based on vde2. "
+	echo "You can create, destroy and connect virtual switches based on vde2. To create 2 virtual interfaces for connecting simulator to real network type:"
+	echo "   $name pair sim0 tap0"
 	echo ""
 	echo "You must have installed vde2! You must be root to run this script!"
 	echo ""
 	echo "Usage:"
-	echo "   $name list			lists all network interfaces"
-	echo "   $name iface1 iface2		creates 2 connected interfaces"
+	echo "   $name pair iface1 iface2		create iface1 and iface2 and connect them"
+	echo "   $name list				lists all network interfaces"
 	echo "   $name destroy iface		destroys iface"
-	echo "   $name destroyall		destroys all vde_intefaces."
-	echo "   $name create iface		creates iface"
+	echo "   $name destroyall			destroys all vde_intefaces."
+	echo "   $name create iface			creates iface"
 	echo "   $name connect iface1 iface2	connect existing iface1 and iface2"
 	echo ""
 	echo "Examples:"
 	echo "   $name pair sim0 tap0	creates interfaces sim0 and tap0 and connect them."
+	echo ""
+	echo "For more information about real network connection read readme.txt or wikipage at https://code.google.com/p/psimulator/w/list."
 	echo
 	exit 1;
 }
