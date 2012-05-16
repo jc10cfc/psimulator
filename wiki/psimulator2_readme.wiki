@@ -11,7 +11,7 @@
  You can use the built-in client but if you don't like it you can download putty (http://www.putty.org/) on Windows or just use telnet in case of linux/unix system.
 
  * *Connection psimulator2 to real network*
- See *Use case #3*
+ See *Use case #3* [psimulator2_readme#Configure_network]
 
 
 
