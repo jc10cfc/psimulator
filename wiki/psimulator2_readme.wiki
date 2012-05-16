@@ -11,7 +11,7 @@
  You can use the built-in client but if you don't like it you can download putty (http://www.putty.org/) on Windows or just use telnet in case of linux/unix system.
 
  * *Connection psimulator2 to real network*
- See *Use case #3* [psimulator2_readme#Configure_network]
+ See *Use case #3* 
 
 
 
@@ -60,7 +60,7 @@ Then you can configure linux and cisco routers in command line environment.
 
 
 === Display sent and dropped packets ===
-In fronted click on {{{Simulator}}} tab in the top right conner. Then click on {{{Connect to server}}} and fill in IP address of your PC (127.0.0.1) and port of {{{Event server}}} (should be 12000). Port of EventServer is written in backend console, example:
+In fronted click on {{{Simulator}}} tab in the top right conner. Then click on {{{Connect to server}}} and fill in IP address of your PC (127.0.0.1) and port of {{{Event server}}} (should be 12000). Port of !EventServer is written in backend console, example:
 {{{
 [IMPORTANT] EVENTS_SERVER: PACKET FLOW SERVER: : Server sucessfully started, listening on port: 12000
 }}}
