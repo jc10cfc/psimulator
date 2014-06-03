@@ -100,22 +100,16 @@ And now you are ready to type commands with this new telnet window.
 This extra requirements are needed for connecting simulator to real network:
 
  # library libpcap or wincap - included in the project archive. Install libpcap on linux-based system and winpcap on Windows systems.
-
  # library jnetpcap - java wrapper for libpcap and winpcap. Download corresponding version from http://jnetpcap.com/download and extract to Psimulator2 folder. 
-
  # On OS Windows place jnetpcap.dll into C:\windows\system\
-
  # On linux-based system place jnetpcap.so into system shared libraries folder (typically /usr/lib).
-
  # On linux-based systems it is necessary to launch simulator frontend with super user privileges.
 
 
 === Configuration ===
 
  # In frontend add {{{Real PC}}} to virtual network (icon with house), attach cable to this new Real PC and some other device. In properties of Real PC select interface on the host pc, that is connected to real network.
-
  # Start the simulation.
-
  # After starting the simulation, use command rnetconn on any virtual device to open up connection with real network. For more information about this command use rnetconn help.
 
 In order to successfully connect to a real network, the user is required to prevent limitations defined on the real network. This means setting the same address of the second and third layers on the interface connected to the real network. User is also needed to set routing on a simulated device
