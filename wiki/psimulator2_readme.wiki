@@ -5,13 +5,10 @@
 = System requirements =
 
  * *Java Runtime Environment version 7+*
- http://www.oracle.com/technetwork/java/javase/downloads/
+  To run the simulator it is necessary to download JRE version 7 or higher from address: http://www.oracle.com/technetwork/java/javase/downloads/
 
  * *Telnet client*
  You can use the built-in client but if you don't like it you can download putty (http://www.putty.org/) on Windows or just use telnet in case of linux/unix system.
-
- * *Connection psimulator2 to real network*
- See *Use case #3* 
 
 
 
@@ -19,12 +16,13 @@
 
 Download and unzip: [http://code.google.com/p/psimulator/downloads/list]
 
+User guide is available in pdf in the archive.
 
 
 = Instructions for running psimulator2 =
 Psimulator2 is devided into two parts - frontend and backend. Frontend is designed to easily create network topology and display sent or dropped packets in network. Backend handles simulations and everything else under the hood.
 
-== Use case #1: Create and configure network, send packets, display sent and dropped packets ==
+== Create and configure network, send packets, display sent and dropped packets ==
 === Create network ===
 Run the simulator frontend (GUI) in the command line:
 {{{
@@ -35,15 +33,14 @@ java -jar psimulator2_frontend.jar
 In frontend choose {{{New Project}}} then create your own desired network (hint: F1 -> 1. Network creation).
 I assume you created your network topology. If you want you can set IP addresses on interfaces with right-click on devices.
 
-Now you can save created network to configuration file via menu: File -> Save.
+Now you can save created network to file via menu: File -> Save.
 
 === Configure network ===
-Run simulator backend (simulation server) in command line:
-{{{
-java -jar psimulator2_backend.jar path_to_the_config_file_you_created.xml
-}}}
-(with the correct path to the jar file). The program prints after startup telnet ports of all virtual network devices you can connect to (typically started on 11000) and the telnet port on which can be connected the frontend to listen simulator events (typically on 12000).
+In toolbar press the start button to run backend with current topology.
 
+After startup, backend prints telnet ports of all virtual network devices you can connect to (typically started on 11000) and the telnet port on which the frontend is automatically connected to listen to simulator events (typically on 12000).
+
+This information can be displayed by display log button, which is accessible from menu bar, when the simulation is active.
 
 To connect to virtual network device type in linux command line: 
 {{{
@@ -60,10 +57,8 @@ Then you can configure linux and cisco routers in command line environment.
 
 
 === Display sent and dropped packets ===
-In fronted click on {{{Simulator}}} tab in the top right conner. Then click on {{{Connect to server}}} and fill in IP address of your PC (127.0.0.1) and port of {{{Event server}}} (should be 12000). Port of !EventServer is written in backend console, example:
-{{{
-[IMPORTANT] EVENTS_SERVER: PACKET FLOW SERVER: : Server sucessfully started, listening on port: 12000
-}}}
+After entering the simulation mode you can turn on packet capturing: {{{Capture}}} button.
+
 
 After successful connection to the Event server you can turn on packet capturing: {{{Capture}}} button.
 
@@ -89,49 +84,42 @@ save new_configuration_file.xml
 
 
 
-== Use case #2: Configure already created network with built-in graphical telnet client ==
+== Configure already created network with built-in graphical telnet client ==
  # Run frontend, then open already created network file.
- # Run backend with the same configuration file.
- # Connect fronted to backend - {{{Connect to server}}} button in frontend.
+ # Start the simulation mode.
  # Right-click on device and "Open telnet".
 And now you are ready to type commands with this new telnet window.
 
 
 
 
-== Use case #3: Connect psimulator2 to real network ==
-Connecting psimulator2 to real network is available only on linux/unix systems because of some limitations of Winpcap.
+== Connect Psimulator2 to real network ==
 
 === System requirements and instalation ===
+
 This extra requirements are needed for connecting simulator to real network:
-library libpcap - install from repository (this library is used by tcpdump, maybe you alrady have it)
-library libjnetpcap.so - provided in psimulator2 package, copy or link it to /usr/lib
-VDE2 - program for creating virtual network interfaces, install from repository (on debian: aptitude install vde2)
+
+ # library libpcap or wincap - included in the project archive. Install libpcap on linux-based system and winpcap on Windows systems.
+
+ # library jnetpcap - java wrapper for libpcap and winpcap. Download corresponding version from http://jnetpcap.com/download and extract to Psimulator2 folder. 
+
+ # On OS Windows place jnetpcap.dll into C:\windows\system\
+
+ # On linux-based system place jnetpcap.so into system shared libraries folder (typically /usr/lib).
+
+ # On linux-based systems it is necessary to launch simulator frontend with super user privileges.
 
 
-=== Creating link between virtual and real network ===
-For connection to real network work it has to exist 2 virtual interface on (real) host system. First (tap0) will be used for communication of host system with simulator and the second (sim0) will be used and controlled by simulator. These two interfaces has to be connected to each other by virtual cable (with help of VDE util and script virt_iface.sh). Interface sim0 has to be tied together with some switchport of device in virtual network. Interface sim0 shouldn't be configured in host system.
+=== Configuration ===
 
- # In frontend add {{{Real PC}}} to virtual network (icon with house), attach cable to this new Real PC and some other device. Save this configuration to a file and run backend with this file.
- # On host system run script: (this script creates 2 virtual interfaces connected with cable to each other)
-{{{
-./virt_iface.sh pair sim0 tap0
-}}} 
- # In backend you have make connection to some device and run command {{{rnetconn}}}. This command was created for joining swichtport from simulator with sim0 from host system. This command you can run from any device. Command 
-{{{
-router0:~# rnetconn list
-Device name     switchport no.  state
-}}}
-  will print list of all switchports in simulator which can be tied to interface sim0. If in the simulator doesn't exist any Real PC this command produce empty list of switchports. In that case you have shutdown backend and add Real PC in frontend (back to point 1).
- # Tie interface sim0 with switchport from output of {{{rnetconn list}}}:
-{{{
-rnetconn tie router2 1 sim0
-}}} 
-This command ties switchport number 1 on device router2 with interface sim0 (host system interface).
+ # In frontend add {{{Real PC}}} to virtual network (icon with house), attach cable to this new Real PC and some other device. In properties of Real PC select interface on the host pc, that is connected to real network.
 
-Configure interface tap0 on host system (/proc/sys/net/ipv4/ip_forward and NAT if needed).
+ # Start the simulation.
 
+ # After starting the simulation, use command rnetconn on any virtual device to open up connection with real network. For more information about this command use rnetconn help.
 
+In order to successfully connect to a real network, the user is required to prevent limitations defined on the real network. This means setting the same address of the second and third layers on the interface connected to the real network. User is also needed to set routing on a simulated device
+accordingly. In the case that user would want to communicate to the real network from multiple different addresses or networks, it is needed to modify the system routing table accordingly.
 
 
 <hr>
